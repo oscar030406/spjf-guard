@@ -1,0 +1,225 @@
+% Submission build: MDPI's own class, Definitions/mdpi.cls, unmodified (see
+% README.md for where Definitions/ came from). The stand-in article build is
+% main_article.tex; both pull the same sections/ files.
+%
+% Build: "D:/environment/tools/tectonic/tectonic.exe" main.tex   (run from paper/)
+%
+% The template's first option is the journal; `mathematics' is in the class's
+% journal list. MDPI's own template.tex passes no graphics driver, and the
+% `pdftex' option that older MDPI templates carried must NOT be used here: it is
+% handed down to article.cls, which then forces pdftex.def, and xcolor breaks on
+% \pdfcolorstack under XeTeX. With no driver option, graphicx detects xetex.
+\documentclass[mathematics,article,submit,moreauthors]{Definitions/mdpi}
+
+% --- EPS logo under XeTeX -------------------------------------------------
+% mdpi.cls includes Definitions/logo-mdpi.eps on the title page. XeTeX's
+% xdvipdfmx cannot read EPS, so the include fails under tectonic. mdpi.cls is
+% not edited; instead every .eps request is answered with the PDF of the same
+% base name. Definitions/logo-mdpi.pdf is generated once from MDPI's own
+% Definitions/logo-mdpi.eps -- see README.md for the command. Under a pdflatex
+% build this block is harmless as long as the PDF is present; delete it if you
+% build with pdflatex and prefer the EPS.
+\makeatletter
+\let\mdpi@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \IfEndWith{#2}{.eps}%
+    {\StrGobbleRight{#2}{4}[\mdpi@gfile]%
+     \mdpi@includegraphics[#1]{\mdpi@gfile.pdf}}%
+    {\mdpi@includegraphics[#1]{#2}}%
+}
+\makeatother
+% --------------------------------------------------------------------------
+
+% The class already loads amsmath, amssymb, amsthm, booktabs, graphicx, tikz,
+% natbib, hyperref and cleveref, so none of those is loaded again here.
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usetikzlibrary{decorations.pathmorphing,positioning,arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% Theorem environments. mdpi.cls defines Theorem, Lemma, Corollary,
+% Proposition, Definition, Remark, Example and proof in the house style; the
+% section files were written against the lowercase amsthm names, so the two are
+% tied together here rather than declared a second time. sections/06_theory.tex
+% declares its own only when \theorem is still undefined, so this wins.
+\makeatletter
+\let\theorem\Theorem                 \let\endtheorem\endTheorem
+\let\lemma\Lemma                     \let\endlemma\endLemma
+\let\corollary\Corollary             \let\endcorollary\endCorollary
+\let\proposition\Proposition         \let\endproposition\endProposition
+\let\definition\Definition           \let\enddefinition\endDefinition
+\let\remark\Remark                   \let\endremark\endRemark
+\let\example\Example                 \let\endexample\endExample
+\makeatother
+
+% Marks a figure that comes from development data rather than from the sealed
+% semesters. It expands to its argument; the submission version can redefine it.
+\newcommand{\devnum}[1]{#1}
+
+% Pulls in a section if its file exists, and otherwise leaves a numbered
+% placeholder so that section numbers and cross-references stay correct.
+\newcommand{\papersection}[3]{%
+  \IfFileExists{sections/#1.tex}%
+    {\input{sections/#1}}%
+    {\section{#2}\label{#3}%
+     \textit{Not yet in the repository: the file
+     \texttt{\detokenize{sections/#1.tex}} was not found.}}%
+}
+
+%=================================================================
+% MDPI internal commands - do not modify
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+\datereceived{ }
+\daterevised{ }
+\dateaccepted{ }
+\datepublished{ }
+
+%=================================================================
+% Front matter. Everything only the authors can supply is marked
+% [to be completed by the authors]; no name, affiliation, e-mail or ORCID is
+% invented here.
+\Title{Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for
+Shared Execution Services under Deadline-Driven Bursty Load}
+% This version of mdpi.cls (v6.5a, 2026-09-11) has no \TitleCitation and no
+% \AuthorCitation; if the journal's current template adds them, the running-head
+% forms go here.
+
+% Two authors. Replace the bracketed fields; if both authors share one
+% affiliation, delete address 2 and change the second author's mark to $^{1}$.
+% ORCID (optional): add \orcidA{} / \orcidB{} after a name and define
+% \newcommand{\orcidauthorA}{0000-0000-0000-0000} in the preamble.
+\Author{[First Author Name] $^{1}$ and [Second Author Name] $^{2,}$*}
+\AuthorNames{[First Author Name] and [Second Author Name]}
+
+\address{%
+$^{1}$ \quad [First author: department, institution, city and postcode, country]; [first author e-mail]\\
+$^{2}$ \quad [Second author: department, institution, city and postcode, country]; [second author e-mail]}
+
+\corres{Correspondence: [corresponding author e-mail]}
+
+\abstract{A shared execution service runs submitted jobs on a fixed pool of servers, without preemption, under a per-job time limit $L$. Reordering by predicted cost shortens most waits and can leave one job far behind. We prove a conservation law. For every non-preemptive work-conserving policy on $k$ servers, every arrival sequence and every job, the delay relative to first-come first-served equals the net overtaken work divided by $k$, to within $(2-2/k)L$, an exact supremum. Bounding overtaken work is therefore sufficient and necessary for a per-job guarantee; counting overtakes is neither. A wrapper on that budget bounds every job's wait against first-come first-served under arbitrary arrivals and predictions. The bound reads the budget only through a cap, so the shape below the cap is free; the additive constant $(3-2/k)L$ is likewise an exact supremum, and the operator sets the cap from a promise in seconds. The score underneath should estimate expected cost, not a log-scale point prediction. We evaluate on two judging platforms, a serverless trace, two continuous-integration pools whose recorded waits check the simulator, and a compute farm. The method needs a time limit comparable to the waits at issue and heavy-tailed costs; we include a workload failing~each.}
+
+\keyword{non-preemptive scheduling; scheduling with predictions; multiserver queues; bounded overtaking; per-job guarantee; first-come first-served; runtime prediction}
+
+%=================================================================
+\begin{document}
+
+\maketitle
+
+\papersection{01_introduction}{Introduction}{sec:intro}
+\papersection{02_related_work}{Related Work}{sec:related}
+\papersection{03_problem_model}{Problem Model}{sec:model}
+\papersection{04_prediction}{Cost Prediction}{sec:prediction}
+\papersection{05_scheduling}{Scheduling Algorithm}{sec:scheduling}
+\papersection{06_theory}{Theory}{sec:theory}
+\papersection{07_data}{Traces and Workload Characterisation}{sec:data}
+\papersection{08_experiments}{Experiments}{sec:experiments}
+\papersection{09_limitations}{Limitations and Threats to Validity}{sec:limits}
+
+%=================================================================
+% Back matter. Anything only the authors can supply is marked
+% [to be completed by the authors] and is not invented.
+\authorcontributions{[to be completed by the authors]. The template expects the
+CRediT roles (conceptualization, methodology, software, validation, formal
+analysis, investigation, data curation, writing---original draft preparation,
+writing---review and editing, visualization, supervision, project
+administration, funding acquisition), each attributed by author initials,
+followed by ``All authors have read and agreed to the published version of the
+manuscript.''}
+
+\funding{[to be completed by the authors]. If there is no external funding, the
+template asks for ``This research received no external funding''; otherwise the
+grant number and the funding body go here.}
+
+\institutionalreview{Not applicable.}
+
+\informedconsent{Not applicable.}
+
+\dataavailability{Five of the six workloads used here are public at the
+locations cited, and we redistribute none of them. The CodeBench judging logs
+are published by the Universidade Federal do Amazonas \cite{codebench_dataset};
+the ACcoding dataset is published with its data descriptor \cite{accoding2024};
+the Open University Learning Analytics dataset is published with its own
+\cite{oulad2017}; the Azure Functions 2021 invocation trace is published in the
+Azure Public Dataset repository \cite{azure2021trace}, which asks that
+\cite{zhang2021harvested} be cited; and the Intel Netbatch logs are published in
+the Parallel Workloads Archive \cite{netbatch2012trace}, which asks that
+\cite{shai2014netbatch} be cited and that the logs be acknowledged to their
+depositors. The sixth, the continuous-integration trace of the two Firefox
+hardware worker pools, was collected by us from Mozilla's public,
+unauthenticated Taskcluster and Treeherder APIs
+\cite{taskcluster_docs,treeherder_docs}; we do not redistribute it, and the
+collection scripts that rebuild it from those APIs are part of the released
+code. No data were obtained under licence or under an access agreement, and no
+personal data were processed beyond the pseudonymous user identifiers the
+published judging datasets already carry. The simulator, the predictors, the
+guard implementation and the configuration files that reproduce every table and
+figure in this paper are to be released with the paper at [repository URL to be
+completed by the authors].}
+
+\conflictsofinterest{[to be completed by the authors]. The template asks for
+``The authors declare no conflicts of interest'' where that holds, and otherwise
+for the competing interest and for a statement on the role of any funder in the
+design, collection, analysis or interpretation, in the writing, or in the
+decision to publish.}
+
+\abbreviations{Abbreviations}{%
+The following abbreviations are used in this manuscript:\\
+
+\noindent
+\begin{tabular}{@{}ll}
+AUPRC & Area under the precision--recall curve\\
+AUROC & Area under the receiver operating characteristic curve\\
+CI & Continuous integration\\
+FCFS & First-come first-served\\
+GRU & Gated recurrent unit\\
+MLP & Multilayer perceptron\\
+OULAD & Open University Learning Analytics Dataset\\
+RMSE & Root mean squared error\\
+SJF & Shortest job first\\
+SPJF & Shortest predicted job first\\
+SRPT & Shortest remaining processing time
+\end{tabular}
+}
+
+%=================================================================
+% Appendix. The appendix sections carry headings, so \appendixtitles{yes};
+% \appendix itself is issued by sections/A_proofs.tex.
+\appendixtitles{yes}
+\appendixstart
+% \appendixstart resets the theorem-like counters, but hyperref builds its PDF
+% destinations from the raw counter value, so the appendix's Lemma A1 would
+% claim the destination the body's Lemma 1 already holds ("Object @lemma.1
+% already defined" from xdvipdfmx). Give the appendix its own anchor prefix.
+% hyperref already does this for \section and \equation through its own
+% \appendix patch; the theorem-like counters are the ones mdpi.cls adds.
+\def\theHtheorem{app.\arabic{theorem}}
+\def\theHlemma{app.\arabic{lemma}}
+\def\theHcorollary{app.\arabic{corollary}}
+\def\theHproposition{app.\arabic{proposition}}
+\def\theHremark{app.\arabic{remark}}
+\def\theHdefinition{app.\arabic{definition}}
+\IfFileExists{sections/A_proofs.tex}{\input{sections/A_proofs}}{}
+
+%=================================================================
+\begin{adjustwidth}{-\extralength}{0cm}
+
+\reftitle{References}
+
+% The class sets \bibliographystyle{Definitions/mdpi} itself; it is not set
+% again here. The x-verified fields of refs.bib are read by no bst and do not
+% print; only the short note fields (Accessed ..., Preprint arXiv:...) do.
+\bibliography{../docs/related_work/refs}
+
+\PublishersNote{}
+\end{adjustwidth}
+\end{document}

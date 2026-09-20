@@ -1,0 +1,744 @@
+% refs.bib — 2026-09-19
+% 只收录 docs/related_work/references_verified.md 里标为"已核实"或"题录已补全"的条目。
+% 标为"未核对"的（MDPI 特刊、Harchol-Balter 章节号、LightGBM 页码）不在此文件中，
+% 或以注释形式说明缺口。页码/卷期取自 Crossref REST API 回传的题录。
+
+% ========== 数据集 ==========
+
+@misc{codebench_dataset,
+  title        = {{CodeBench} Dataset},
+  author       = {{Universidade Federal do Amazonas, Instituto de Computa\c{c}\~{a}o}},
+  howpublished = {\url{https://codebench.icomp.ufam.edu.br/dataset/}},
+  note         = {Accessed 2026-09-19},
+  x-verified   = {Accessed 2026-09-19; 版本号未逐字核对}
+}
+
+@article{accoding2024,
+  author  = {Chen, Kairui and Huang, Fuqun and Liu, Zejing and Yu, Haomiao and Meng, Liuchang and Mo, Shasha and Zhang, Li and Song, You},
+  title   = {{ACcoding}: A graph-based dataset for online judge programming},
+  journal = {Scientific Data},
+  volume  = {11},
+  number  = {1},
+  year    = {2024},
+  doi     = {10.1038/s41597-024-03392-z},
+  note    = {See also Author Correction, doi:10.1038/s41597-024-03693-3}
+}
+
+@article{oulad2017,
+  author  = {Kuzilek, Jakub and Hlosta, Martin and Zdrahal, Zdenek},
+  title   = {Open University Learning Analytics dataset},
+  journal = {Scientific Data},
+  volume  = {4},
+  pages   = {170171},
+  year    = {2017},
+  doi     = {10.1038/sdata.2017.171}
+}
+
+@article{upc_campus2024,
+  author  = {Ruiz, Olga and S\'{a}nchez-Gonz\'{a}lez, Juan and P\'{e}rez-Romero, Jordi and Sallent, Oriol and Vil\`{a}, Irene},
+  title   = {Space and time user distribution measurements dataset in a university campus},
+  journal = {Computer Networks},
+  volume  = {243},
+  pages   = {110329},
+  year    = {2024},
+  doi     = {10.1016/j.comnet.2024.110329}
+}
+
+% ========== 带预测的调度：理论 ==========
+
+@inproceedings{mitzenmacher2020misprediction,
+  author    = {Mitzenmacher, Michael},
+  title     = {Scheduling with Predictions and the Price of Misprediction},
+  booktitle = {11th Innovations in Theoretical Computer Science Conference (ITCS 2020)},
+  series    = {LIPIcs},
+  volume    = {151},
+  pages     = {14:1--14:18},
+  publisher = {Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  year      = {2020},
+  doi       = {10.4230/LIPIcs.ITCS.2020.14},
+  note      = {Preprint arXiv:1902.00732}
+}
+
+@inproceedings{purohit2018predictions,
+  author    = {Purohit, Manish and Svitkina, Zoya and Kumar, Ravi},
+  title     = {Improving Online Algorithms via {ML} Predictions},
+  booktitle = {Advances in Neural Information Processing Systems 31 (NeurIPS 2018)},
+  year      = {2018},
+  url       = {https://papers.nips.cc/paper_files/paper/2018/hash/73a427badebe0e32caa2e1fc7530b7f3-Abstract.html}
+}
+
+@inproceedings{scully2022uniform,
+  author    = {Scully, Ziv and Grosof, Isaac and Mitzenmacher, Michael},
+  title     = {Uniform Bounds for Scheduling with Job Size Estimates},
+  booktitle = {13th Innovations in Theoretical Computer Science Conference (ITCS 2022)},
+  series    = {LIPIcs},
+  volume    = {215},
+  pages     = {114:1--114:30},
+  publisher = {Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  year      = {2022},
+  doi       = {10.4230/LIPIcs.ITCS.2022.114},
+  note      = {Preprint arXiv:2110.00633},
+  x-verified = {Preprint arXiv:2110.00633; arXiv 元数据登记的 DOI ...2022.41 与 DROPS 不符，以此处为准}
+}
+
+@inproceedings{azar2022distortion,
+  author    = {Azar, Yossi and Leonardi, Stefano and Touitou, Noam},
+  title     = {Distortion-Oblivious Algorithms for Minimizing Flow Time},
+  booktitle = {Proceedings of the 2022 Annual ACM-SIAM Symposium on Discrete Algorithms (SODA)},
+  pages     = {252--274},
+  year      = {2022},
+  note      = {Preprint arXiv:2109.08424}
+}
+
+@inproceedings{azar2021flowtime,
+  author    = {Azar, Yossi and Leonardi, Stefano and Touitou, Noam},
+  title     = {Flow Time Scheduling with Uncertain Processing Time},
+  booktitle = {Proceedings of the 53rd Annual ACM SIGACT Symposium on Theory of Computing (STOC)},
+  pages     = {1070--1080},
+  year      = {2021}
+}
+
+@article{dong2025sjf,
+  author  = {Dong, Jing and Ibrahim, Rouba},
+  title   = {Shortest-Job-First Scheduling in Many-Server Queues with Impatient Customers and Noisy Service-Time Estimates},
+  journal = {Operations Research},
+  volume  = {73},
+  number  = {6},
+  pages   = {3139--3155},
+  year    = {2025},
+  doi     = {10.1287/opre.2022.310}
+}
+
+@article{mitzenmacher2025queueing,
+  author  = {Mitzenmacher, Michael and Shahout, Rana},
+  title   = {Queueing, Predictions, and Large Language Models: Challenges and Open Problems},
+  journal = {Stochastic Systems},
+  year    = {2025},
+  doi     = {10.1287/stsy.2025.0106},
+  note    = {Preprint arXiv:2503.07545}
+}
+
+@inproceedings{shahout2024skippredict,
+  author    = {Shahout, Rana and Mitzenmacher, Michael},
+  title     = {{SkipPredict}: When to Invest in Predictions for Scheduling},
+  booktitle = {Advances in Neural Information Processing Systems 37 (NeurIPS 2024)},
+  pages     = {105663--105701},
+  year      = {2024},
+  doi       = {10.52202/079017-3352},
+  note      = {Preprint arXiv:2402.03564}
+}
+
+@misc{alps,
+  author       = {Lindermayr, Alexander and Megow, Nicole},
+  title        = {Algorithms with Predictions ({ALPS})},
+  howpublished = {\url{https://algorithms-with-predictions.github.io}},
+  note         = {Accessed 2026-09-19}
+}
+
+% ========== 有界超越 / Nudge 一族 ==========
+
+@article{grosof2021nudge,
+  author  = {Grosof, Isaac and Yang, Kunhe and Scully, Ziv and Harchol-Balter, Mor},
+  title   = {Nudge: Stochastically Improving upon {FCFS}},
+  journal = {Proceedings of the ACM on Measurement and Analysis of Computing Systems},
+  volume  = {5},
+  number  = {2},
+  pages   = {1--29},
+  year    = {2021},
+  doi     = {10.1145/3460088},
+  note    = {Preprint arXiv:2106.01492},
+  x-verified = {Preprint arXiv:2106.01492. 会议摘要版 doi:10.1145/3410220.3460102，PER 版 doi:10.1145/3543516.3460102，均只有 2 页，不作正式引用}
+}
+
+@article{vanhoudt2022nudgek,
+  author  = {Van Houdt, Benny},
+  title   = {On the Stochastic and Asymptotic Improvement of First-Come First-Served and Nudge Scheduling},
+  journal = {Proceedings of the ACM on Measurement and Analysis of Computing Systems},
+  volume  = {6},
+  number  = {3},
+  pages   = {1--22},
+  year    = {2022},
+  doi     = {10.1145/3570610},
+  note    = {Preprint arXiv:2206.10428},
+  x-verified = {Preprint arXiv:2206.10428; 文中算法名为 Nudge-$K$}
+}
+
+@article{charlet2026nudgestarm,
+  author  = {Charlet, Nils and Van Houdt, Benny},
+  title   = {Tail Optimality and Performance Analysis of the {Nudge*(M)} Scheduling Algorithm},
+  journal = {Operations Research},
+  volume  = {74},
+  number  = {4},
+  pages   = {2161--2178},
+  year    = {2026},
+  doi     = {10.1287/opre.2024.1061},
+  x-verified = {会议摘要版 ACM SIGMETRICS PER 52(2):21--23 (2024), doi:10.1145/3695411.3695420}
+}
+
+@article{grosof2022wcfs,
+  author  = {Grosof, Isaac and Harchol-Balter, Mor and Scheller-Wolf, Alan},
+  title   = {{WCFS}: a new framework for analyzing multiserver systems},
+  journal = {Queueing Systems},
+  volume  = {102},
+  number  = {1--2},
+  pages   = {143--174},
+  year    = {2022},
+  doi     = {10.1007/s11134-022-09848-6},
+  note    = {Preprint arXiv:2109.12663}
+}
+
+@misc{dai2025llmthroughput,
+  author = {Dai, J. G. and Deng, Tianze and Li, Yueying and Peng, Tianyi},
+  title  = {Throughput-Optimal Scheduling Algorithms for {LLM} Inference and {AI} Agents},
+  year   = {2025},
+  eprint = {2504.07347},
+  archivePrefix = {arXiv}
+}
+
+% ========== aging / 优先级 / 公平性 ==========
+
+@article{kleinrock1964delay,
+  author  = {Kleinrock, Leonard},
+  title   = {A delay dependent queue discipline},
+  journal = {Naval Research Logistics Quarterly},
+  volume  = {11},
+  number  = {3--4},
+  pages   = {329--341},
+  year    = {1964},
+  doi     = {10.1002/nav.3800110306}
+}
+
+@article{stanford2014apq,
+  author  = {Stanford, David A. and Taylor, Peter and Ziedins, Ilze},
+  title   = {Waiting time distributions in the accumulating priority queue},
+  journal = {Queueing Systems},
+  volume  = {77},
+  number  = {3},
+  pages   = {297--330},
+  year    = {2014},
+  doi     = {10.1007/s11134-013-9382-6},
+  note    = {Online first 2013-12-07},
+  x-verified = {Online first 2013-12-07; 常被引作 2014}
+}
+
+@inproceedings{bansal2001srpt,
+  author    = {Bansal, Nikhil and Harchol-Balter, Mor},
+  title     = {Analysis of {SRPT} scheduling},
+  booktitle = {Proceedings of the 2001 ACM SIGMETRICS International Conference on Measurement and Modeling of Computer Systems},
+  pages     = {279--290},
+  year      = {2001},
+  doi       = {10.1145/378420.378792},
+  x-verified = {同期 ACM SIGMETRICS Performance Evaluation Review 29(1) 上的题名为 ``Analysis of SRPT scheduling: investigating unfairness''}
+}
+
+@inproceedings{wierman2003classifying,
+  author    = {Wierman, Adam and Harchol-Balter, Mor},
+  title     = {Classifying scheduling policies with respect to unfairness in an {M/GI/1}},
+  booktitle = {Proceedings of the 2003 ACM SIGMETRICS International Conference on Measurement and Modeling of Computer Systems},
+  pages     = {238--249},
+  year      = {2003},
+  doi       = {10.1145/781027.781057}
+}
+
+@article{parekh1993gps,
+  author  = {Parekh, Abhay K. and Gallager, Robert G.},
+  title   = {A generalized processor sharing approach to flow control in integrated services networks: the single-node case},
+  journal = {IEEE/ACM Transactions on Networking},
+  volume  = {1},
+  number  = {3},
+  pages   = {344--357},
+  year    = {1993},
+  doi     = {10.1109/90.234856}
+}
+
+@article{parekh1994gps,
+  author  = {Parekh, Abhay K. and Gallager, Robert G.},
+  title   = {A generalized processor sharing approach to flow control in integrated services networks: the multiple node case},
+  journal = {IEEE/ACM Transactions on Networking},
+  volume  = {2},
+  number  = {2},
+  pages   = {137--150},
+  year    = {1994},
+  doi     = {10.1109/90.298432}
+}
+
+% ========== 多服务器 ==========
+
+@article{daley1987fcfs,
+  author  = {Daley, D. J.},
+  title   = {Certain optimality properties of the first-come first-served discipline for {G/G/s} queues},
+  journal = {Stochastic Processes and their Applications},
+  volume  = {25},
+  pages   = {301--308},
+  year    = {1987},
+  doi     = {10.1016/0304-4149(87)90208-0}
+}
+
+@article{kiefer1955queues,
+  author  = {Kiefer, J. and Wolfowitz, J.},
+  title   = {On the theory of queues with many servers},
+  journal = {Transactions of the American Mathematical Society},
+  volume  = {78},
+  number  = {1},
+  pages   = {1--18},
+  year    = {1955},
+  doi     = {10.2307/1992945}
+}
+
+% ========== HPC 回填与 FCFS 相对公平 ==========
+
+@article{mualem2001backfilling,
+  author  = {Mu'alem, Ahuva W. and Feitelson, Dror G.},
+  title   = {Utilization, predictability, workloads, and user runtime estimates in scheduling the {IBM SP2} with backfilling},
+  journal = {IEEE Transactions on Parallel and Distributed Systems},
+  volume  = {12},
+  number  = {6},
+  pages   = {529--543},
+  year    = {2001},
+  doi     = {10.1109/71.932708}
+}
+
+@inproceedings{sabin2005unfairness,
+  author    = {Sabin, Gerald and Sadayappan, P.},
+  title     = {Unfairness Metrics for Space-Sharing Parallel Job Schedulers},
+  booktitle = {Job Scheduling Strategies for Parallel Processing (JSSPP 2005)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {3834},
+  pages     = {238--256},
+  year      = {2005},
+  doi       = {10.1007/11605300_12}
+}
+
+@article{lindsay2013backfilling,
+  author  = {Lindsay, Alan M. and Galloway-Carson, Maxwell and Johnson, Christopher R. and Bunde, David P. and Leung, Vitus J.},
+  title   = {Backfilling with guarantees made as jobs arrive},
+  journal = {Concurrency and Computation: Practice and Experience},
+  volume  = {25},
+  number  = {4},
+  pages   = {513--523},
+  year    = {2013},
+  doi     = {10.1002/cpe.2860}
+}
+
+@article{tsafrir2007backfilling,
+  author  = {Tsafrir, Dan and Etsion, Yoav and Feitelson, Dror G.},
+  title   = {Backfilling Using System-Generated Predictions Rather than User Runtime Estimates},
+  journal = {IEEE Transactions on Parallel and Distributed Systems},
+  volume  = {18},
+  number  = {6},
+  pages   = {789--803},
+  year    = {2007},
+  doi     = {10.1109/TPDS.2007.70606}
+}
+
+@inproceedings{gaussier2015backfilling,
+  author    = {Gaussier, Eric and Glesser, David and Reis, Valentin and Trystram, Denis},
+  title     = {Improving backfilling by using machine learning to predict running times},
+  booktitle = {Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (SC '15)},
+  pages     = {1--10},
+  year      = {2015},
+  doi       = {10.1145/2807591.2807646}
+}
+
+@article{gaussier2018easytuning,
+  author  = {Gaussier, Eric and Lelong, J\'{e}r\^{o}me and Reis, Valentin and Trystram, Denis},
+  title   = {Online Tuning of {EASY}-Backfilling using Queue Reordering Policies},
+  journal = {IEEE Transactions on Parallel and Distributed Systems},
+  volume  = {29},
+  number  = {10},
+  pages   = {2304--2316},
+  year    = {2018},
+  doi     = {10.1109/TPDS.2018.2820699}
+}
+
+% ========== 在线评测 / GPU 集群 / LLM 推理 ==========
+
+@inproceedings{zhang2024ojscheduling,
+  author    = {Zhang, En and Wu, Fan and Lu, Xuesong},
+  title     = {An Intelligent Scheduling System for Large-Scale Online Judging},
+  booktitle = {Computer Science and Education. Computer Science and Technology (ICCSE 2023)},
+  series    = {Communications in Computer and Information Science},
+  pages     = {265--279},
+  publisher = {Springer Nature Singapore},
+  year      = {2024},
+  doi       = {10.1007/978-981-97-0730-0_24}
+}
+
+@article{wasik2018ojsurvey,
+  author  = {Wasik, Szymon and Antczak, Maciej and Badura, Jan and Laskowski, Artur and Sternal, Tomasz},
+  title   = {A Survey on Online Judge Systems and Their Applications},
+  journal = {ACM Computing Surveys},
+  volume  = {51},
+  number  = {1},
+  pages   = {1--34},
+  year    = {2018},
+  doi     = {10.1145/3143560}
+}
+
+@inproceedings{luo2025asrpt,
+  author    = {Luo, Ziyue and Liu, Jia and Lee, Myungjin and Shroff, Ness B.},
+  title     = {Prediction-Assisted Online Distributed Deep Learning Workload Scheduling in {GPU} Clusters},
+  booktitle = {IEEE INFOCOM 2025 -- IEEE Conference on Computer Communications},
+  pages     = {1--10},
+  year      = {2025},
+  doi       = {10.1109/INFOCOM55648.2025.11044761},
+  note      = {Preprint arXiv:2501.05563},
+  x-verified = {Preprint arXiv:2501.05563; 文中算法名为 A-SRPT}
+}
+
+@misc{fu2024ltr,
+  author = {Fu, Yichao and Zhu, Siqi and Su, Runlong and Qiao, Aurick and Stoica, Ion and Zhang, Hao},
+  title  = {Efficient {LLM} Scheduling by Learning to Rank},
+  year   = {2024},
+  eprint = {2408.15792},
+  archivePrefix = {arXiv},
+  x-verified = {作者名单经 arXiv API 核对}
+}
+
+@misc{li2026tailaware,
+  author = {Li, Yueying and Chen, Yuanfan and Chen, Jiayang and others},
+  title  = {Beyond Prediction: Tail-Aware Scheduling for {LLM} Inference},
+  year   = {2026},
+  eprint = {2606.18431},
+  archivePrefix = {arXiv},
+  x-verified = {完整作者名单未逐名核对}
+}
+
+% ========== 截止期驱动的到达与时变配置 ==========
+
+@article{konig2005deadline,
+  author  = {K{\"o}nig, Cornelius J. and Kleinmann, Martin},
+  title   = {Deadline Rush: A Time Management Phenomenon and Its Mathematical Description},
+  journal = {The Journal of Psychology},
+  volume  = {139},
+  number  = {1},
+  pages   = {33--45},
+  year    = {2005},
+  doi     = {10.3200/JRLP.139.1.33-45},
+  x-verified = {Crossref 题录中的标题后缀为元数据污染}
+}
+
+@article{alfi2007deadline,
+  author  = {Alfi, Valentina and Parisi, Giorgio and Pietronero, Luciano},
+  title   = {Conference registration: how people react to a deadline},
+  journal = {Nature Physics},
+  volume  = {3},
+  number  = {11},
+  pages   = {746},
+  year    = {2007},
+  doi     = {10.1038/nphys761}
+}
+
+@article{alfi2009deadline,
+  author  = {Alfi, Valentina and Gabrielli, Andrea and Pietronero, Luciano},
+  title   = {How people react to a deadline: time distribution of conference registrations and fee payments},
+  journal = {Open Physics},
+  volume  = {7},
+  number  = {3},
+  pages   = {483--489},
+  year    = {2009},
+  doi     = {10.2478/s11534-009-0059-z}
+}
+
+@article{jennings1996staffing,
+  author  = {Jennings, Otis B. and Mandelbaum, Avishai and Massey, William A. and Whitt, Ward},
+  title   = {Server Staffing to Meet Time-Varying Demand},
+  journal = {Management Science},
+  volume  = {42},
+  number  = {10},
+  pages   = {1383--1394},
+  year    = {1996},
+  doi     = {10.1287/mnsc.42.10.1383}
+}
+
+@article{massey1997peak,
+  author  = {Massey, William A. and Whitt, Ward},
+  title   = {Peak congestion in multi-server service systems with slowly varying arrival rates},
+  journal = {Queueing Systems},
+  volume  = {25},
+  number  = {1--4},
+  pages   = {157--172},
+  year    = {1997},
+  doi     = {10.1023/A:1019156418862}
+}
+
+@article{green2007coping,
+  author  = {Green, Linda V. and Kolesar, Peter J. and Whitt, Ward},
+  title   = {Coping with Time-Varying Demand When Setting Staffing Requirements for a Service System},
+  journal = {Production and Operations Management},
+  volume  = {16},
+  number  = {1},
+  pages   = {13--39},
+  year    = {2007},
+  doi     = {10.1111/j.1937-5956.2007.tb00164.x}
+}
+
+@article{feldman2008staffing,
+  author  = {Feldman, Zohar and Mandelbaum, Avishai and Massey, William A. and Whitt, Ward},
+  title   = {Staffing of Time-Varying Queues to Achieve Time-Stable Performance},
+  journal = {Management Science},
+  volume  = {54},
+  number  = {2},
+  pages   = {324--338},
+  year    = {2008},
+  doi     = {10.1287/mnsc.1070.0821}
+}
+
+@inproceedings{gibbs2021aci,
+  author    = {Gibbs, Isaac and Cand\`{e}s, Emmanuel},
+  title     = {Adaptive Conformal Inference Under Distribution Shift},
+  booktitle = {Advances in Neural Information Processing Systems 34 (NeurIPS 2021)},
+  year      = {2021},
+  note      = {Preprint arXiv:2106.00170}
+}
+
+% ========== 预测器与表示学习 ==========
+
+@inproceedings{schlichtkrull2018rgcn,
+  author    = {Schlichtkrull, Michael and Kipf, Thomas N. and Bloem, Peter and van den Berg, Rianne and Titov, Ivan and Welling, Max},
+  title     = {Modeling Relational Data with Graph Convolutional Networks},
+  booktitle = {The Semantic Web (ESWC 2018)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {10843},
+  pages     = {593--607},
+  year      = {2018},
+  doi       = {10.1007/978-3-319-93417-4_38},
+  note      = {Preprint arXiv:1703.06103}
+}
+
+@inproceedings{xu2019gin,
+  author    = {Xu, Keyulu and Hu, Weihua and Leskovec, Jure and Jegelka, Stefanie},
+  title     = {How Powerful are Graph Neural Networks?},
+  booktitle = {International Conference on Learning Representations (ICLR 2019)},
+  year      = {2019},
+  note      = {Preprint arXiv:1810.00826}
+}
+
+@inproceedings{ke2017lightgbm,
+  author    = {Ke, Guolin and Meng, Qi and Finley, Thomas and Wang, Taifeng and Chen, Wei and Ma, Weidong and Ye, Qiwei and Liu, Tie-Yan},
+  title     = {{LightGBM}: A Highly Efficient Gradient Boosting Decision Tree},
+  booktitle = {Advances in Neural Information Processing Systems 30 (NeurIPS 2017)},
+  year      = {2017},
+  x-verified = {页码未核对；Crossref 无该论文记录}
+}
+
+@inproceedings{robinson2024relbench,
+  author    = {Robinson, Joshua and Ranjan, Rishabh and Hu, Weihua and Huang, Kexin and Han, Jiaqi and Dobles, Alejandro and Fey, Matthias and Lenssen, Jan E. and Yuan, Yiwen and Zhang, Zecheng and He, Xinwei and Leskovec, Jure},
+  title     = {{RelBench}: A Benchmark for Deep Learning on Relational Databases},
+  booktitle = {Advances in Neural Information Processing Systems 37, Datasets and Benchmarks Track (NeurIPS 2024)},
+  year      = {2024},
+  note      = {Preprint arXiv:2407.20060}
+}
+
+@misc{gu2026relbenchv2,
+  author = {Gu, Justin and Ranjan, Rishabh and Kanatsoulis, Charilaos and Tang, Haiming and Jurkovic, Martin and Hudovernik, Valter and Znidar, Mark and Chaturvedi, Pranshu and Shroff, Parth and Li, Fengyu and Leskovec, Jure},
+  title  = {{RelBench} v2: A Large-Scale Benchmark and Repository for Relational Data},
+  year   = {2026},
+  eprint = {2602.12606},
+  archivePrefix = {arXiv}
+}
+
+@misc{akhter2026fairbench,
+  author = {Akhter, Kazi F. and Ajendla, Bharath and Samad, Manar D.},
+  title  = {A Fair Benchmarking of Deep Relational Database Learning Models},
+  year   = {2026},
+  eprint = {2607.03659},
+  archivePrefix = {arXiv}
+}
+
+@inproceedings{grinsztajn2022tabular,
+  author    = {Grinsztajn, L\'{e}o and Oyallon, Edouard and Varoquaux, Ga\"{e}l},
+  title     = {Why Do Tree-Based Models Still Outperform Deep Learning on Typical Tabular Data?},
+  booktitle = {Advances in Neural Information Processing Systems 35 (NeurIPS 2022)},
+  pages     = {507--520},
+  year      = {2022},
+  doi       = {10.52202/068431-0037}
+}
+
+% ========== 教材（章节号待核对，暂不写 chapter 字段）==========
+
+@book{harcholbalter2013,
+  author    = {Harchol-Balter, Mor},
+  title     = {Performance Modeling and Design of Computer Systems: Queueing Theory in Action},
+  publisher = {Cambridge University Press},
+  year      = {2013},
+  doi       = {10.1017/CBO9781139226424},
+  x-verified = {非抢占优先级等待公式所在章节本轮未核对；公式本身建议引 mitzenmacher2020misprediction}
+}
+
+@inproceedings{peveler2019sandbox,
+  author    = {Peveler, Matthew and Maicus, Evan and Cutler, Barbara},
+  title     = {Comparing Jailed Sandboxes vs Containers Within an Autograding System},
+  booktitle = {Proceedings of the 50th ACM Technical Symposium on Computer Science Education (SIGCSE '19)},
+  pages     = {139--145},
+  year      = {2019},
+  doi       = {10.1145/3287324.3287507},
+  x-verified = {Read: authors' full-text PDF; pages checked against Crossref}
+}
+
+@misc{domjudge_manual,
+  author       = {{DOMjudge team}},
+  title        = {{DOMjudge} Administrator's Manual: Overview and Judging},
+  howpublished = {\url{https://www.domjudge.org/docs/manual/main/overview.html}},
+  note         = {Accessed 2026-09-19}
+}
+
+% ========== 追加（2026-09-19，逐条联网核实，核实方式写在各自 note 里）==========
+
+@inproceedings{zhang2021harvested,
+  author    = {Zhang, Yanqi and Goiri, {\'I}{\~n}igo and Chaudhry, Gohar Irfan and Fonseca, Rodrigo and Elnikety, Sameh and Delimitrou, Christina and Bianchini, Ricardo},
+  title     = {Faster and Cheaper Serverless Computing on Harvested Resources},
+  booktitle = {Proceedings of the ACM SIGOPS 28th Symposium on Operating Systems Principles (SOSP '21)},
+  pages     = {724--739},
+  year      = {2021},
+  doi       = {10.1145/3477132.3483580},
+  x-verified = {Verified 2026-09-19 through the Crossref REST API: title, seven authors, ACM, pages 724--739, DOI as given. The Azure Public Dataset page for the 2021 invocation trace names this paper as the one to cite (see azure2021trace)}
+}
+
+@misc{azure2021trace,
+  author       = {{Microsoft Azure}},
+  title        = {{Azure Functions} Invocation Trace 2021},
+  howpublished = {\url{https://github.com/Azure/AzurePublicDataset/blob/master/AzureFunctionsInvocationTrace2021.md}},
+  year         = {2021},
+  x-verified   = {Verified 2026-09-19 by fetching the raw Markdown of that file: revision 1 dated 2021-11-30, two weeks of invocations starting 2021-01-31, fields app / func / end\_timestamp / duration, CC-BY licence, attribution request naming zhang2021harvested. The page also states that invocation timestamps were modified from those in the production trace}
+}
+
+@inproceedings{shahrad2020wild,
+  author    = {Shahrad, Mohammad and Fonseca, Rodrigo and Goiri, {\'I}{\~n}igo and Chaudhry, Gohar and Batum, Paul and Cooke, Jason and Laureano, Eduardo and Tresness, Colby and Russinovich, Mark and Bianchini, Ricardo},
+  title     = {Serverless in the Wild: Characterizing and Optimizing the Serverless Workload at a Large Cloud Provider},
+  booktitle = {2020 USENIX Annual Technical Conference (USENIX ATC 20)},
+  pages     = {205--218},
+  year      = {2020},
+  publisher = {USENIX Association},
+  x-verified = {Verified 2026-09-19 against the USENIX proceedings page \url{https://www.usenix.org/conference/atc20/presentation/shahrad}, which publishes this record itself (ISBN 978-1-939133-14-4, pages 205--218, July 2020). Not in Crossref}
+}
+
+@inproceedings{shai2014netbatch,
+  author    = {Shai, Ohad and Shmueli, Edi and Feitelson, Dror G.},
+  title     = {Heuristics for Resource Matching in {Intel}'s Compute Farm},
+  booktitle = {Job Scheduling Strategies for Parallel Processing (JSSPP 2013)},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer},
+  pages     = {116--135},
+  year      = {2014},
+  doi       = {10.1007/978-3-662-43779-7_7},
+  x-verified = {Verified 2026-09-19 through Crossref: three authors, pages 116--135, DOI, ISBN 978-3-662-43778-0 / 978-3-662-43779-7. The workshop was JSSPP 2013; the LNCS volume carries a 2014 imprint, which is why the year field reads 2014. The LNCS volume number is not asserted, Crossref does not carry it. This is the paper the archive page netbatch2012trace asks users of the log to cite}
+}
+
+@misc{netbatch2012trace,
+  author       = {{Parallel Workloads Archive}},
+  title        = {The {Intel} {Netbatch} Logs},
+  howpublished = {\url{https://www.cs.huji.ac.il/labs/parallel/workload/l_intel_netbatch/}},
+  year         = {2012},
+  x-verified   = {Verified 2026-09-19 by fetching the page: one month of accounting records from November 2012, four physical pools, 48,821,850 jobs, original CSV logs and SWF-converted logs. The page asks that the logs be acknowledged to Ohad Shai, Edi Shmueli and Nir Antebi of Intel and that shai2014netbatch be cited. We use pool D in its converted form, Intel-NetbatchD-2012-1}
+}
+
+@article{jorgensen1987edm,
+  author  = {J{\o}rgensen, Bent},
+  title   = {Exponential Dispersion Models},
+  journal = {Journal of the Royal Statistical Society, Series B},
+  volume  = {49},
+  number  = {2},
+  pages   = {127--145},
+  year    = {1987},
+  doi     = {10.1111/j.2517-6161.1987.tb01685.x},
+  x-verified = {Verified 2026-09-19 through Crossref: author, journal, 49(2), pages 127--145, DOI. Read-with-discussion paper; the range given here is the one Crossref records for the article itself}
+}
+
+@article{yang2018tweedieboost,
+  author  = {Yang, Yi and Qian, Wei and Zou, Hui},
+  title   = {Insurance Premium Prediction via Gradient Tree-Boosted {Tweedie} Compound {Poisson} Models},
+  journal = {Journal of Business \& Economic Statistics},
+  volume  = {36},
+  number  = {3},
+  pages   = {456--470},
+  year    = {2018},
+  doi     = {10.1080/07350015.2016.1200981},
+  x-verified = {Verified 2026-09-19 through Crossref: three authors, 36(3):456--470, DOI; Crossref gives 2017-05-10 as the online date and 2018 for the volume}
+}
+
+@misc{taskcluster_docs,
+  author       = {{Mozilla}},
+  title        = {{Taskcluster} Documentation: {Queue} Service Reference},
+  howpublished = {\url{https://docs.taskcluster.net/docs/reference/platform/queue}},
+  note         = {Accessed 2026-09-19},
+  x-verified   = {Accessed 2026-09-19; the URL answered HTTP 200, and the Firefox CI deployment of the same service, \url{https://firefox-ci-tc.services.mozilla.com/api/queue/v1/ping}, answered with alive = true. The documentation site renders client-side, so only the HTTP status was checked, not the page text}
+}
+
+@misc{treeherder_docs,
+  author       = {{Mozilla}},
+  title        = {{Treeherder} {REST} {API} Documentation},
+  howpublished = {\url{https://treeherder.mozilla.org/docs/}},
+  note         = {Accessed 2026-09-19},
+  x-verified   = {Accessed 2026-09-19; HTTP 200 with page title ``Treeherder'', and the API root \url{https://treeherder.mozilla.org/api/} answered as well}
+}
+
+@incollection{feitelson2021resampling,
+  author    = {Feitelson, Dror G.},
+  title     = {Resampling with Feedback: A New Paradigm of Using Workload Data for Performance Evaluation},
+  booktitle = {Job Scheduling Strategies for Parallel Processing (JSSPP 2021)},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer},
+  pages     = {3--32},
+  year      = {2021},
+  doi       = {10.1007/978-3-030-88224-2_1},
+  x-verified = {Verified 2026-09-19 through Crossref: author, title, pages 3--32, DOI, ISBN 978-3-030-88223-5 / 978-3-030-88224-2. The sentences quoted from it were checked word by word against the author's extended-version PDF, \url{https://www.cs.huji.ac.il/~feit/papers/Resamp21JSSPP.pdf}, sections 3.3 and 3.4; that check is recorded in docs/related\_work/shared\_queue\_evidence.md, section 3.4}
+}
+
+@article{shmueli2009simulation,
+  author  = {Shmueli, Edi and Feitelson, Dror G.},
+  title   = {On Simulation and Design of Parallel-Systems Schedulers: Are We Doing the Right Thing?},
+  journal = {IEEE Transactions on Parallel and Distributed Systems},
+  volume  = {20},
+  number  = {7},
+  pages   = {983--996},
+  year    = {2009},
+  doi     = {10.1109/TPDS.2008.152},
+  x-verified = {Verified 2026-09-19 through Crossref: authors, journal, 20(7):983--996, DOI. The quoted abstract and introduction sentences were checked against the authors' PDF, \url{https://www.cs.huji.ac.il/~feit/papers/UserAwareSched09TPDS.pdf}}
+}
+
+@article{harcholbalter2003sizebased,
+  author  = {Harchol-Balter, Mor and Schroeder, Bianca and Bansal, Nikhil and Agrawal, Mukesh},
+  title   = {Size-based scheduling to improve web performance},
+  journal = {ACM Transactions on Computer Systems},
+  volume  = {21},
+  number  = {2},
+  pages   = {207--233},
+  year    = {2003},
+  doi     = {10.1145/762483.762486},
+  x-verified = {Verified 2026-09-19 through Crossref: four authors, ACM TOCS 21(2):207--233, May 2003, DOI}
+}
+
+@article{harcholbalter2002tags,
+  author  = {Harchol-Balter, Mor},
+  title   = {Task assignment with unknown duration},
+  journal = {Journal of the ACM},
+  volume  = {49},
+  number  = {2},
+  pages   = {260--288},
+  year    = {2002},
+  doi     = {10.1145/506147.506154},
+  x-verified = {Verified 2026-09-19 through Crossref: title, Journal of the ACM 49(2):260--288, March 2002, DOI. The Crossref record carries no author list; authorship is taken from the earlier conference version, M. Harchol-Balter, ICDCS 2000, pages 214--224, doi:10.1109/icdcs.2000.840932, whose Crossref record was checked in the same pass}
+}
+
+@inproceedings{verma2015borg,
+  author    = {Verma, Abhishek and Pedrosa, Luis and Korupolu, Madhukar and Oppenheimer, David and Tune, Eric and Wilkes, John},
+  title     = {Large-scale cluster management at {Google} with {Borg}},
+  booktitle = {Proceedings of the Tenth European Conference on Computer Systems (EuroSys '15)},
+  pages     = {1--17},
+  year      = {2015},
+  doi       = {10.1145/2741948.2741964},
+  x-verified = {Verified 2026-09-19 through Crossref: six authors, EuroSys '15, article pages 1--17, DOI}
+}
+
+@article{smith1981pooling,
+  author  = {Smith, D. R. and Whitt, W.},
+  title   = {Resource Sharing for Efficiency in Traffic Systems},
+  journal = {Bell System Technical Journal},
+  volume  = {60},
+  number  = {1},
+  pages   = {39--55},
+  year    = {1981},
+  doi     = {10.1002/j.1538-7305.1981.tb00221.x},
+  x-verified = {Verified 2026-09-19 through Crossref: two authors, BSTJ 60(1):39--55, January 1981, DOI}
+}

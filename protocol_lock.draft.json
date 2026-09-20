@@ -1,0 +1,2696 @@
+{
+  "written_at": "2026-09-20T11:18:31-04:00",
+  "status": "draft",
+  "config": {
+    "path": "configs/main.yaml",
+    "sha256": "1e2701bedacaa6ee7e87f51e38a2d82476dcd91f8c3b84a5d6f5be6b907782a3",
+    "document": {
+      "name": "main",
+      "description": "CodeBench shared judge pool, development terms, five overlays, three loads",
+      "data": {
+        "archive_dir": "data/codebench/archives",
+        "raw_parquet_dir": "data/codebench/parquet",
+        "cache_dir": "data/derived/codebench_cache_r4",
+        "events_file": "ev.parquet",
+        "features_file": "feat_ires0.parquet",
+        "forward_predictions_file": "forward_ires0.parquet",
+        "score_predictions_file": "data/derived/ranking_score_predictions/rs_pred_ires0.parquet",
+        "overlay_dir": "data/derived/overlay_traces",
+        "score_dir": "data/derived/package_ranking_scores",
+        "input_hashes": {}
+      },
+      "semesters": {
+        "train": [
+          "2018-1",
+          "2018-2",
+          "2019-1",
+          "2019-2"
+        ],
+        "train_remote": [
+          "2020-ERE",
+          "2020-1",
+          "2020-2",
+          "2021-1",
+          "2021-2"
+        ],
+        "validation": [
+          "2022-1"
+        ],
+        "development_test": [
+          "2022-2"
+        ],
+        "sealed_test": [
+          "2023-1",
+          "2023-2",
+          "2024-1"
+        ],
+        "excluded_from_load": [
+          "2019-2",
+          "2020-1"
+        ],
+        "overlay_pool": [
+          "2020-ERE",
+          "2020-2",
+          "2021-1",
+          "2021-2",
+          "2022-1",
+          "2022-2"
+        ]
+      },
+      "clock": {
+        "reading": "result",
+        "arrival_rule": "t - C",
+        "done_rule": "t",
+        "delta_s": 0.0,
+        "test_block_outcome_lag_s": 60.0,
+        "jitter": {
+          "enabled": true,
+          "key": "cbjitter20260919",
+          "id_columns": [
+            "semester",
+            "class",
+            "user",
+            "assessment",
+            "exercise",
+            "blk_i"
+          ]
+        },
+        "limit_s": 60.0,
+        "drop_zero_cost_terms": [
+          "2020-ERE",
+          "2020-1",
+          "2020-2",
+          "2021-1",
+          "2021-2",
+          "2022-1",
+          "2022-2"
+        ]
+      },
+      "features": {
+        "visibility_rule": "done_j + delta <= a_i",
+        "set": "M4",
+        "groups": [
+          "code_static",
+          "exercise_history",
+          "user_history",
+          "user_exercise_prior",
+          "schedule"
+        ],
+        "heavy_quantile": 0.95,
+        "heavy_reference_semesters": [
+          "2018-1",
+          "2018-2",
+          "2019-1",
+          "2019-2"
+        ],
+        "class_cut_quantiles": [
+          0.3333333333333333,
+          0.6666666666666667
+        ]
+      },
+      "predictor": {
+        "model": "lightgbm",
+        "protocol": "rolling_origin",
+        "seed": 3,
+        "num_threads": 4,
+        "deterministic": true,
+        "force_row_wise": true,
+        "n_estimators": 300,
+        "learning_rate": 0.06,
+        "num_leaves": 63,
+        "min_child_samples": 50,
+        "colsample_bytree": 1.0,
+        "subsample": 0.8,
+        "subsample_freq": 1,
+        "fixed_cutoff_terms": [
+          "2018-1",
+          "2018-2",
+          "2019-1",
+          "2019-2"
+        ],
+        "forward_from": "2019-1",
+        "scores": {
+          "spjf_e": {
+            "objective": "tweedie",
+            "tweedie_variance_power": 1.5,
+            "target": "c_cap_seconds"
+          },
+          "spjf_log": {
+            "objective": "regression",
+            "target": "log1p_c_cap"
+          }
+        }
+      },
+      "scheduling": {
+        "ranking_score": "spjf_e",
+        "guard_budget": "min(B0 + gam * w_q + eta * k * (t - a_q), Bmax)",
+        "promises_s": [
+          300.0,
+          600.0,
+          1200.0
+        ],
+        "bmax_rule": "k * (G - (3 - 2/k) * L)",
+        "selection": {
+          "grids": {
+            "fixed": {
+              "log_points": 32,
+              "log_from_s": 15.0,
+              "log_to_s": 4200.0,
+              "anchors_s": [
+                15.0,
+                30.0,
+                60.0,
+                120.0,
+                240.0,
+                360.0,
+                480.0,
+                600.0
+              ],
+              "include_equal_promise": true
+            },
+            "capped": {
+              "b0_base_s": [
+                0.0,
+                15.0,
+                30.0,
+                60.0,
+                120.0,
+                240.0,
+                360.0,
+                480.0,
+                600.0
+              ],
+              "eta": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                0.9,
+                0.95
+              ]
+            },
+            "hybrid": {
+              "b0_base_s": [
+                0.0,
+                30.0,
+                120.0
+              ],
+              "gam_base_s": [
+                1.0,
+                4.0,
+                16.0
+              ],
+              "eta": [
+                0.0,
+                0.9
+              ]
+            }
+          },
+          "harm_fraction": 0.5,
+          "objective": "worst_cell_deadline_window_gap_closed",
+          "tie_break": [
+            "smaller_worst_harm",
+            "smaller_b0",
+            "smaller_eta",
+            "smaller_gam"
+          ],
+          "trace": "validation_only",
+          "joint_winner": "best worst-cell gap over the three families; this is the paper's Guard(G)",
+          "family_names": {
+            "fixed": "Guard-fixed",
+            "capped": "Guard-age",
+            "hybrid": "Guard-queue"
+          }
+        },
+        "selected": {
+          "300.0": {
+            "family": "capped",
+            "b0_base_s": 60.0,
+            "eta": 0.5,
+            "gam_base_s": 0.0
+          },
+          "600.0": {
+            "family": "capped",
+            "b0_base_s": 120.0,
+            "eta": 0.75,
+            "gam_base_s": 0.0
+          },
+          "1200.0": {
+            "family": "hybrid",
+            "b0_base_s": 0.0,
+            "eta": 0.0,
+            "gam_base_s": 16.0
+          }
+        },
+        "family_best": {
+          "300.0": {
+            "fixed": {
+              "b0_base_s": 329.671,
+              "eta": 0.0,
+              "gam_base_s": 0.0
+            },
+            "capped": {
+              "b0_base_s": 60.0,
+              "eta": 0.5,
+              "gam_base_s": 0.0
+            },
+            "hybrid": {
+              "b0_base_s": 0.0,
+              "eta": 0.0,
+              "gam_base_s": 16.0
+            }
+          },
+          "600.0": {
+            "fixed": {
+              "b0_base_s": 981.126,
+              "eta": 0.0,
+              "gam_base_s": 0.0
+            },
+            "capped": {
+              "b0_base_s": 120.0,
+              "eta": 0.75,
+              "gam_base_s": 0.0
+            },
+            "hybrid": {
+              "b0_base_s": 120.0,
+              "eta": 0.0,
+              "gam_base_s": 16.0
+            }
+          },
+          "1200.0": {
+            "fixed": {
+              "b0_base_s": 2029.958,
+              "eta": 0.0,
+              "gam_base_s": 0.0
+            },
+            "capped": {
+              "b0_base_s": 360.0,
+              "eta": 0.75,
+              "gam_base_s": 0.0
+            },
+            "hybrid": {
+              "b0_base_s": 0.0,
+              "eta": 0.0,
+              "gam_base_s": 16.0
+            }
+          }
+        },
+        "comparators": {
+          "fixed_equal_promise": true,
+          "skip_charge": "dispatch"
+        },
+        "corrupted_scores": [
+          "reversed",
+          "random",
+          "longest_one_percent_called_shortest"
+        ]
+      },
+      "overlay": {
+        "reference_monday_epoch_s": 1578268800,
+        "week_s": 604800,
+        "seed": 3,
+        "shift_weeks_max": 12,
+        "copies_probe": {
+          "min_servers_at_full_load": 4,
+          "distinct_server_counts": 3,
+          "stop_after_extra_copies": 5
+        },
+        "target_busy_hour_utilisation": [
+          0.5,
+          0.8,
+          1.0
+        ],
+        "server_count_rule": "round_half_up(W / (3600 * rho)), at least 1",
+        "overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "pools": {
+          "primary": [
+            "2020-ERE",
+            "2020-2",
+            "2021-1",
+            "2021-2",
+            "2022-1",
+            "2022-2"
+          ],
+          "validation": [
+            "2020-ERE",
+            "2020-2",
+            "2021-1",
+            "2021-2",
+            "2022-1"
+          ],
+          "sealed": [
+            "2023-1",
+            "2023-2",
+            "2024-1"
+          ]
+        },
+        "single_server": {
+          "pool": "primary",
+          "seed_offset": 50,
+          "target_utilisation": 0.8,
+          "utilisation_window": [
+            0.78,
+            0.82
+          ],
+          "pool_repeats": 8
+        }
+      },
+      "metrics": {
+        "primary": "deadline_window_p99_wait",
+        "deadline_window_s": 86400,
+        "starts_immediately_s": 1.0,
+        "secondary": [
+          "mean_wait",
+          "max_excess",
+          "harm",
+          "fired_rate_queue_weighted",
+          "worst_heavy_wait",
+          "gap_closed"
+        ]
+      },
+      "bootstrap": {
+        "method": "paired_week_block",
+        "resamples": 2000,
+        "seed": 20260919,
+        "block": "whole_week",
+        "paired_across": [
+          "policies",
+          "overlays"
+        ]
+      },
+      "run": {
+        "assert_per_job_bounds": true,
+        "output_dir": "outputs",
+        "segment_tree_window_ranks": 4194304,
+        "sealed_tables": [
+          "main_cells.csv",
+          "main_table.csv",
+          "main_table.tex",
+          "paired_differences.csv",
+          "bound_checks.csv",
+          "identity_residuals.csv",
+          "policy_parameters.csv",
+          "manifest.json"
+        ]
+      }
+    }
+  },
+  "code": {
+    "files": [
+      {
+        "path": "scripts/build_cache.py",
+        "sha256": "56603bf711ab345ebaa04d1ee3970f20e8932c50a1e0aec6bd692cfef12b6962"
+      },
+      {
+        "path": "scripts/build_overlays.py",
+        "sha256": "d6f578f9a33ca2571ed12e6101a37ad550f1cd0395b3b31e20c270ef9f999cac"
+      },
+      {
+        "path": "scripts/check_features.py",
+        "sha256": "80a999e8b2848156283b3d84f502431f9f6ba50c180782a288814e2b4945fe7f"
+      },
+      {
+        "path": "scripts/check_generated.py",
+        "sha256": "947aaff2b12b6ae825ff7733ba2910438c87bc44dd7848987a315c68687aeab9"
+      },
+      {
+        "path": "scripts/check_overlays.py",
+        "sha256": "4bbb8db86f9447e7444afda258c3896153f93696181657a21d9ec4911efba58b"
+      },
+      {
+        "path": "scripts/check_paper_numbers.py",
+        "sha256": "68a28bbd434f75017497b625cbdc69eca90efdc7fa6c15188f46d6798471e91d"
+      },
+      {
+        "path": "scripts/check_reproduction.py",
+        "sha256": "b403d49f17c983394ea7b26acb8025194c0e1124d6affcd7141548c1261ca81d"
+      },
+      {
+        "path": "scripts/compare_selection.py",
+        "sha256": "7d2a99d70b8a74efba25dbe8ab0c3e403e78e7a67e2d92aa1f92fb7efa298d83"
+      },
+      {
+        "path": "scripts/diff_dev_tables.py",
+        "sha256": "462245badf10ec4169cc6368eb33d77bfa16639ef53ed3fc69a8fefb2eeec35f"
+      },
+      {
+        "path": "scripts/emit_paper_tables.py",
+        "sha256": "14646997b0a082f880f5bd16a7d2284fe7c637cb7c083aff8c178a9f437174ad"
+      },
+      {
+        "path": "scripts/fit_scores.py",
+        "sha256": "4ec1678f4c30be3b00575ede9e7f50092f327950286a87eaeedffcdb32b27a24"
+      },
+      {
+        "path": "scripts/freeze_protocol.py",
+        "sha256": "28c45d7ab1799a13f94e5bf8c40b528fef58273ef456e7a12554deb308cdac73"
+      },
+      {
+        "path": "scripts/make_protocol_lock.py",
+        "sha256": "12abc0cce0f8e26e2227cf99b6eb22cfecf2e24ced5ecc0ea97233f3c8ebe3e1"
+      },
+      {
+        "path": "scripts/parse_archive.py",
+        "sha256": "0f686bb3f308c03c3c28a2df12c8c060c28c0370200b20f77a3ae91b48467703"
+      },
+      {
+        "path": "scripts/run_main.py",
+        "sha256": "0221d3128b36eaa1a6771befae863e145266e9be5664b20fc184c3b7ce44e0fa"
+      },
+      {
+        "path": "scripts/select_parameters.py",
+        "sha256": "5e197e0030285f2e6016b01037831d8b822a576a4b01a8f265ffa435962d92fa"
+      },
+      {
+        "path": "src/spjf_guard/__init__.py",
+        "sha256": "6a10ebfb20278383d6de19e65aae3253dde358dd51e34595012eea64f8247669"
+      },
+      {
+        "path": "src/spjf_guard/config.py",
+        "sha256": "3f33ec867abd83917c60b60f36221338916c0361b8a9e0a6022766b04a4d547a"
+      },
+      {
+        "path": "src/spjf_guard/data/__init__.py",
+        "sha256": "c8b6367797cbd898561e71f1044ef73bdaad6f67bcdeb9ca27210a0df1d267e7"
+      },
+      {
+        "path": "src/spjf_guard/data/archive.py",
+        "sha256": "91077c03cf5687b6e62e1ed64bd706c05c1f1d09a7ed4e713b35973244bb1b0d"
+      },
+      {
+        "path": "src/spjf_guard/data/cache.py",
+        "sha256": "6d962628e1c40a4e94be9ff84906c052b10359fb50ed2291f7ab17b9b3469d15"
+      },
+      {
+        "path": "src/spjf_guard/data/clock.py",
+        "sha256": "a36e794d35013de599f9e64c70fbb387cdde9304b88d0e6ea83c365929832e5b"
+      },
+      {
+        "path": "src/spjf_guard/data/events.py",
+        "sha256": "442781f34af18db397d0a66f6b694072437887eba6def90360a25e112a2c6f08"
+      },
+      {
+        "path": "src/spjf_guard/data/sealed.py",
+        "sha256": "d44a2fe2563dbbbe1344b689aea7f69c9bc686701d62c342c4908617b44e6a2b"
+      },
+      {
+        "path": "src/spjf_guard/experiment/__init__.py",
+        "sha256": "d4ef97d020940b4621db21f5d0493e2430461cb0a1da6b07e9a3e1d939977007"
+      },
+      {
+        "path": "src/spjf_guard/experiment/adversarial.py",
+        "sha256": "8366a8666433267c752994d1a3bf1d8340df5dc00e0e5ca9717206961ceb421c"
+      },
+      {
+        "path": "src/spjf_guard/experiment/bootstrap.py",
+        "sha256": "358f10f3540c48d20edef55994464b1024f291f71e8b46b4a53ff11e958b0f1d"
+      },
+      {
+        "path": "src/spjf_guard/experiment/grids.py",
+        "sha256": "c818befa586718c8e5b228039540a444cd13979488752fe15e5aa5e39406f4f4"
+      },
+      {
+        "path": "src/spjf_guard/experiment/metrics.py",
+        "sha256": "704fa09765c860bd4ba5b12395bef7f0f04e7445fc35abdec9988151146f552a"
+      },
+      {
+        "path": "src/spjf_guard/experiment/overlay.py",
+        "sha256": "d3a8cead675dd2b4b9f99d3f93ffd4157f38f4d2f03b5a539396ffa850114c70"
+      },
+      {
+        "path": "src/spjf_guard/experiment/paper_tables.py",
+        "sha256": "71f4714b931467be44e42170eda248cfed72cc1807d06814e3f59ff6936454ce"
+      },
+      {
+        "path": "src/spjf_guard/experiment/parallel.py",
+        "sha256": "7c4a8d245dea0fcbf4a8e9ba3cc4f7a803a6148c3bfea4d19eef710889bf3534"
+      },
+      {
+        "path": "src/spjf_guard/experiment/provenance.py",
+        "sha256": "95673af152c726f14c7106fc6607a91cc2d2497bfa372cb4bdb23f0cb866de97"
+      },
+      {
+        "path": "src/spjf_guard/experiment/report.py",
+        "sha256": "cff8e9216fa2a37bf45ae20e9bf896a71a743005506458463fe81a23ecedbef8"
+      },
+      {
+        "path": "src/spjf_guard/experiment/reproduce.py",
+        "sha256": "f26f5309c63ad2d237fdb43d08c019f16d28b0468b60b86c3b192642b9cc9ce2"
+      },
+      {
+        "path": "src/spjf_guard/experiment/select.py",
+        "sha256": "2374a4afcd71e7bdb07d7ab07a4c26a9a1d07da55f7932e6d21fcc24dcb24060"
+      },
+      {
+        "path": "src/spjf_guard/features/__init__.py",
+        "sha256": "82c22cfeb0c0c1b2026495f9185d1c63964e8aa8a9298ce39e2f31a442fc3b18"
+      },
+      {
+        "path": "src/spjf_guard/features/causal.py",
+        "sha256": "9d2d5c1d03be3acb80c75d4c64c644a787cce81f82a07dd881e2376f01a12eae"
+      },
+      {
+        "path": "src/spjf_guard/features/sweep.py",
+        "sha256": "354854d6b4172ae5bf98e07b3831e6878ba71bf7a208c0f04c17da4e54eb5c3d"
+      },
+      {
+        "path": "src/spjf_guard/predict/__init__.py",
+        "sha256": "d4e810ff79620bb77e1db4eb44df419d0315f43fd967ee5b77faed31dd60b854"
+      },
+      {
+        "path": "src/spjf_guard/predict/forward.py",
+        "sha256": "c1a105591669db920f11e5ac289c1bda9dcb8c278d418a7d20f253380fe123f5"
+      },
+      {
+        "path": "src/spjf_guard/predict/scores.py",
+        "sha256": "1b09f5bb438927dbfff1b249ae1ba6bee3c81f88f82d48ac70b041c1f8f15f65"
+      },
+      {
+        "path": "src/spjf_guard/sim/__init__.py",
+        "sha256": "b4b0aa81eb8c907f469a21ba0bd3dc67a24c8842c6d5e97afaf7634a21489fdb"
+      },
+      {
+        "path": "src/spjf_guard/sim/bounds.py",
+        "sha256": "6bd64b495d3eb8408d4e466ce8b189101903f144a793dcfad1095fc2533d13f9"
+      },
+      {
+        "path": "src/spjf_guard/sim/kernel.py",
+        "sha256": "f70ad598ff79962a1eb2a6794130f2458fa5c093269ef3d67d4a51cd91800f88"
+      },
+      {
+        "path": "src/spjf_guard/sim/policy.py",
+        "sha256": "54309b5fd9f7df832484dc7e26755151e7b766c874906f505cc72345882b0e60"
+      },
+      {
+        "path": "src/spjf_guard/sim/reference.py",
+        "sha256": "26bcdd2cece39afd792faa807be7c414f1b21b16ff1e43e8cfe261c0ae86a9bc"
+      },
+      {
+        "path": "src/spjf_guard/sim/runner.py",
+        "sha256": "7e061794fde171b130dfadf1f0229959cb3612bab56fcef2921e239bb5a42ad7"
+      },
+      {
+        "path": "src/spjf_guard/sim/tightness.py",
+        "sha256": "7583d56cd7f7573e92e52fdc807390d68e4a044f8211c233d6d29117fc91fde6"
+      },
+      {
+        "path": "tests/conftest.py",
+        "sha256": "b34a8fb2571de94b077c8ce6692c3a0c9c98bf839754b2df87dc6b4a37acb914"
+      },
+      {
+        "path": "tests/test_adversarial.py",
+        "sha256": "76813f4c9d3b4c55b65f338a788b0e98f3669e6559e3d4b9097a6cfa6188152c"
+      },
+      {
+        "path": "tests/test_archive_parse.py",
+        "sha256": "7605fcc273e5219067ead38a751b1c71e13f36c4473530ae3d4f50cc52f1fd2a"
+      },
+      {
+        "path": "tests/test_data_cache.py",
+        "sha256": "4deec46fe3762d079a7ee8514b7f59eee8399bbb66bf94acc6bfe40419193ebe"
+      },
+      {
+        "path": "tests/test_diff_dev_tables.py",
+        "sha256": "f78259fe8b2400589a90f8fbb71690c2f032003e27dbec9a1663a1ee2fb9f66a"
+      },
+      {
+        "path": "tests/test_experiment.py",
+        "sha256": "b1ba58f43f2c03649c529a6820602ef7db79a39e585e4f5d2e571fc747190341"
+      },
+      {
+        "path": "tests/test_features_causal.py",
+        "sha256": "2aa2c36850f94d240bac1a06200901785bd24f2c46b18cd115af60f65aebc5f9"
+      },
+      {
+        "path": "tests/test_grids.py",
+        "sha256": "6950526db247b27570a35fd5a5a8dc936c5175947080b4b4b5309c001c10e20b"
+      },
+      {
+        "path": "tests/test_overlay_pools.py",
+        "sha256": "4401b855cd0dc587a9e675b267a49a58bc3a3154bba9cc9b460ae49289821f75"
+      },
+      {
+        "path": "tests/test_paper_tables.py",
+        "sha256": "1a91af2a52a651cf9e004ef9b0ee17c026f23d94715d1b4326aabfdbfa3a078b"
+      },
+      {
+        "path": "tests/test_predict.py",
+        "sha256": "8a56f31b3f076acadc2650c372aacbf33910581657cda5387805977a84682cd5"
+      },
+      {
+        "path": "tests/test_provenance.py",
+        "sha256": "97b3786deaff6f40a82168ba65c6660313a302ac1d02afe6d84bb5767db905d4"
+      },
+      {
+        "path": "tests/test_repo_hygiene.py",
+        "sha256": "f14a8aa78c2c3d4fe65eaa04cbad5a2953b75a01a69421779547e8e3f8d3b10f"
+      },
+      {
+        "path": "tests/test_run_main_smoke.py",
+        "sha256": "b67886b1b9b216e35b3d72662e76e73e5f6d9c227156d9ee04b5d96550bdd18c"
+      },
+      {
+        "path": "tests/test_sealed_data.py",
+        "sha256": "e74439a001ea5b939306b2bf8d9c6b176cf639d38e1a82a74225e5d4d0101271"
+      },
+      {
+        "path": "tests/test_sim_crosscheck_prechecks.py",
+        "sha256": "3786d2f310f2facdddbbe642018e4d3249266bedaa867c2bb38702a0e5e10379"
+      },
+      {
+        "path": "tests/test_sim_guard.py",
+        "sha256": "056b8b61c223b9a23ce7d4fa4ba51ac139838a6f81d840ed268b2d6966695440"
+      },
+      {
+        "path": "tests/test_sim_invariants.py",
+        "sha256": "57ef5da31b008e57e5a6dda4c3fb6655e3d4883c4734f884298eaa4b8b7b53f8"
+      },
+      {
+        "path": "tests/test_sim_tightness.py",
+        "sha256": "7826be72c11aca65a0a4f8d1e0ba8a3cb41990c477f289990a0103c3290e1e30"
+      }
+    ],
+    "digest": "c92c71eb276f71521a881255250911269380f7905f34c243715edd62afcb9825"
+  },
+  "inputs": {
+    "artefacts": [
+      {
+        "key": "events_file",
+        "path": "data/derived/codebench_cache_r4/ev.parquet",
+        "present": true,
+        "sha256": "8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451",
+        "bytes": 67391982
+      },
+      {
+        "key": "features_file",
+        "path": "data/derived/codebench_cache_r4/feat_ires0.parquet",
+        "present": true,
+        "sha256": "19d0e80453d1428c36354f3772f7c3359bacdd61299466bbf58706eb2aa5f89f",
+        "bytes": 70566510
+      },
+      {
+        "key": "forward_predictions_file",
+        "path": "data/derived/codebench_cache_r4/forward_ires0.parquet",
+        "present": true,
+        "sha256": "c2b04f124b82b46110593368fcd263d7bfbdfdce13099dc4a35e5c767d94a1a9",
+        "bytes": 15564171
+      },
+      {
+        "key": "score_predictions_file",
+        "path": "data/derived/ranking_score_predictions/rs_pred_ires0.parquet",
+        "present": true,
+        "sha256": "af90bb2d8cee4cf3e6806a3665fae356c1ea7d32cab52c724a7300706763bc92",
+        "bytes": 33582476
+      }
+    ],
+    "digest": "d3b90d42e1863afe152513ac0089fd6d97aef990190bf049e492b48d6c76ec76"
+  },
+  "pinned": {
+    "semester_split": {
+      "train": [
+        "2018-1",
+        "2018-2",
+        "2019-1",
+        "2019-2"
+      ],
+      "train_remote": [
+        "2020-ERE",
+        "2020-1",
+        "2020-2",
+        "2021-1",
+        "2021-2"
+      ],
+      "validation": [
+        "2022-1"
+      ],
+      "development_test": [
+        "2022-2"
+      ],
+      "sealed_test": [
+        "2023-1",
+        "2023-2",
+        "2024-1"
+      ],
+      "excluded_from_load": [
+        "2019-2",
+        "2020-1"
+      ],
+      "overlay_pool": [
+        "2020-ERE",
+        "2020-2",
+        "2021-1",
+        "2021-2",
+        "2022-1",
+        "2022-2"
+      ]
+    },
+    "sealed": {
+      "semesters": [
+        "2023-1",
+        "2023-2",
+        "2024-1"
+      ],
+      "accoding_id_block": [
+        0.8,
+        1.0
+      ],
+      "oulad_year": "2014"
+    },
+    "visibility_protocol": {
+      "rule": "done_j + delta <= a_i",
+      "clock": {
+        "reading": "result",
+        "arrival_rule": "t - C",
+        "done_rule": "t",
+        "delta_s": 0.0,
+        "test_block_outcome_lag_s": 60.0,
+        "jitter": {
+          "enabled": true,
+          "key": "cbjitter20260919",
+          "id_columns": [
+            "semester",
+            "class",
+            "user",
+            "assessment",
+            "exercise",
+            "blk_i"
+          ]
+        },
+        "limit_s": 60.0,
+        "drop_zero_cost_terms": [
+          "2020-ERE",
+          "2020-1",
+          "2020-2",
+          "2021-1",
+          "2021-2",
+          "2022-1",
+          "2022-2"
+        ]
+      }
+    },
+    "feature_set": {
+      "visibility_rule": "done_j + delta <= a_i",
+      "set": "M4",
+      "groups": [
+        "code_static",
+        "exercise_history",
+        "user_history",
+        "user_exercise_prior",
+        "schedule"
+      ],
+      "heavy_quantile": 0.95,
+      "heavy_reference_semesters": [
+        "2018-1",
+        "2018-2",
+        "2019-1",
+        "2019-2"
+      ],
+      "class_cut_quantiles": [
+        0.3333333333333333,
+        0.6666666666666667
+      ]
+    },
+    "predictor": {
+      "model": "lightgbm",
+      "protocol": "rolling_origin",
+      "seed": 3,
+      "num_threads": 4,
+      "deterministic": true,
+      "force_row_wise": true,
+      "n_estimators": 300,
+      "learning_rate": 0.06,
+      "num_leaves": 63,
+      "min_child_samples": 50,
+      "colsample_bytree": 1.0,
+      "subsample": 0.8,
+      "subsample_freq": 1,
+      "fixed_cutoff_terms": [
+        "2018-1",
+        "2018-2",
+        "2019-1",
+        "2019-2"
+      ],
+      "forward_from": "2019-1",
+      "scores": {
+        "spjf_e": {
+          "objective": "tweedie",
+          "tweedie_variance_power": 1.5,
+          "target": "c_cap_seconds"
+        },
+        "spjf_log": {
+          "objective": "regression",
+          "target": "log1p_c_cap"
+        }
+      }
+    },
+    "ranking_score": "spjf_e",
+    "guard_budget": "min(B0 + gam * w_q + eta * k * (t - a_q), Bmax)",
+    "promises_s": [
+      300.0,
+      600.0,
+      1200.0
+    ],
+    "bmax_rule": "k * (G - (3 - 2/k) * L)",
+    "selection_rule": {
+      "grids": {
+        "fixed": {
+          "log_points": 32,
+          "log_from_s": 15.0,
+          "log_to_s": 4200.0,
+          "anchors_s": [
+            15.0,
+            30.0,
+            60.0,
+            120.0,
+            240.0,
+            360.0,
+            480.0,
+            600.0
+          ],
+          "include_equal_promise": true
+        },
+        "capped": {
+          "b0_base_s": [
+            0.0,
+            15.0,
+            30.0,
+            60.0,
+            120.0,
+            240.0,
+            360.0,
+            480.0,
+            600.0
+          ],
+          "eta": [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            0.9,
+            0.95
+          ]
+        },
+        "hybrid": {
+          "b0_base_s": [
+            0.0,
+            30.0,
+            120.0
+          ],
+          "gam_base_s": [
+            1.0,
+            4.0,
+            16.0
+          ],
+          "eta": [
+            0.0,
+            0.9
+          ]
+        }
+      },
+      "harm_fraction": 0.5,
+      "objective": "worst_cell_deadline_window_gap_closed",
+      "tie_break": [
+        "smaller_worst_harm",
+        "smaller_b0",
+        "smaller_eta",
+        "smaller_gam"
+      ],
+      "trace": "validation_only",
+      "joint_winner": "best worst-cell gap over the three families; this is the paper's Guard(G)",
+      "family_names": {
+        "fixed": "Guard-fixed",
+        "capped": "Guard-age",
+        "hybrid": "Guard-queue"
+      }
+    },
+    "search_grids": {
+      "definition": {
+        "fixed": {
+          "log_points": 32,
+          "log_from_s": 15.0,
+          "log_to_s": 4200.0,
+          "anchors_s": [
+            15.0,
+            30.0,
+            60.0,
+            120.0,
+            240.0,
+            360.0,
+            480.0,
+            600.0
+          ],
+          "include_equal_promise": true
+        },
+        "capped": {
+          "b0_base_s": [
+            0.0,
+            15.0,
+            30.0,
+            60.0,
+            120.0,
+            240.0,
+            360.0,
+            480.0,
+            600.0
+          ],
+          "eta": [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            0.9,
+            0.95
+          ]
+        },
+        "hybrid": {
+          "b0_base_s": [
+            0.0,
+            30.0,
+            120.0
+          ],
+          "gam_base_s": [
+            1.0,
+            4.0,
+            16.0
+          ],
+          "eta": [
+            0.0,
+            0.9
+          ]
+        }
+      },
+      "n_points": {
+        "fixed": 42,
+        "capped": 162,
+        "hybrid": 54
+      },
+      "points": {
+        "fixed": [
+          [
+            -1.0,
+            15.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            17.99,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            21.576,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            25.877,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            30.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            31.035,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            37.222,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            44.641,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            53.54,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            60.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            64.212,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            77.012,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            92.363,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            110.774,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            120.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            132.855,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            159.338,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            191.099,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            229.192,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            240.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            274.878,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            329.671,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            360.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            395.386,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            474.201,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            480.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            568.726,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            600.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            682.093,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            818.058,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            981.126,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            1176.699,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            1411.256,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            1692.569,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            2029.958,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            2434.6,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            2919.901,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            3501.94,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            4200.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            Infinity,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            Infinity,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            Infinity,
+            0.0,
+            0.0
+          ]
+        ],
+        "capped": [
+          [
+            300.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.95,
+            0.0
+          ]
+        ],
+        "hybrid": [
+          [
+            300.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.9,
+            1.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.0,
+            4.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.9,
+            4.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.0,
+            16.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.9,
+            16.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.0,
+            1.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.9,
+            1.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.0,
+            4.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.9,
+            4.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.0,
+            16.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.9,
+            16.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.0,
+            1.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.9,
+            1.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.0,
+            4.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.9,
+            4.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.0,
+            16.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.9,
+            16.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.9,
+            1.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.0,
+            4.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.9,
+            4.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.0,
+            16.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.9,
+            16.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.0,
+            1.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.9,
+            1.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.0,
+            4.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.9,
+            4.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.0,
+            16.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.9,
+            16.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.0,
+            1.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.9,
+            1.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.0,
+            4.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.9,
+            4.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.0,
+            16.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.9,
+            16.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.9,
+            1.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.0,
+            4.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.9,
+            4.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.0,
+            16.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.9,
+            16.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.0,
+            1.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.9,
+            1.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.0,
+            4.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.9,
+            4.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.0,
+            16.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.9,
+            16.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.0,
+            1.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.9,
+            1.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.0,
+            4.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.9,
+            4.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.0,
+            16.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.9,
+            16.0
+          ]
+        ]
+      },
+      "digest": "b06321638d2445059ee19a1633763daaeb7a04d0f6ddcc20845f95aa11314a34"
+    },
+    "selected_parameters": {
+      "300.0": {
+        "family": "capped",
+        "b0_base_s": 60.0,
+        "eta": 0.5,
+        "gam_base_s": 0.0
+      },
+      "600.0": {
+        "family": "capped",
+        "b0_base_s": 120.0,
+        "eta": 0.75,
+        "gam_base_s": 0.0
+      },
+      "1200.0": {
+        "family": "hybrid",
+        "b0_base_s": 0.0,
+        "eta": 0.0,
+        "gam_base_s": 16.0
+      }
+    },
+    "family_best": {
+      "300.0": {
+        "fixed": {
+          "b0_base_s": 329.671,
+          "eta": 0.0,
+          "gam_base_s": 0.0
+        },
+        "capped": {
+          "b0_base_s": 60.0,
+          "eta": 0.5,
+          "gam_base_s": 0.0
+        },
+        "hybrid": {
+          "b0_base_s": 0.0,
+          "eta": 0.0,
+          "gam_base_s": 16.0
+        }
+      },
+      "600.0": {
+        "fixed": {
+          "b0_base_s": 981.126,
+          "eta": 0.0,
+          "gam_base_s": 0.0
+        },
+        "capped": {
+          "b0_base_s": 120.0,
+          "eta": 0.75,
+          "gam_base_s": 0.0
+        },
+        "hybrid": {
+          "b0_base_s": 120.0,
+          "eta": 0.0,
+          "gam_base_s": 16.0
+        }
+      },
+      "1200.0": {
+        "fixed": {
+          "b0_base_s": 2029.958,
+          "eta": 0.0,
+          "gam_base_s": 0.0
+        },
+        "capped": {
+          "b0_base_s": 360.0,
+          "eta": 0.75,
+          "gam_base_s": 0.0
+        },
+        "hybrid": {
+          "b0_base_s": 0.0,
+          "eta": 0.0,
+          "gam_base_s": 16.0
+        }
+      }
+    },
+    "comparators": {
+      "fixed_equal_promise": true,
+      "skip_charge": "dispatch"
+    },
+    "event_cache_stage": {
+      "raw_parquet_dir": "data/codebench/parquet",
+      "code": [
+        {
+          "path": "src/spjf_guard/data/cache.py",
+          "sha256": "6d962628e1c40a4e94be9ff84906c052b10359fb50ed2291f7ab17b9b3469d15"
+        },
+        {
+          "path": "scripts/build_cache.py",
+          "sha256": "56603bf711ab345ebaa04d1ee3970f20e8932c50a1e0aec6bd692cfef12b6962"
+        }
+      ],
+      "sealed_inputs": [
+        "data/codebench/parquet/events/2023-1.parquet",
+        "data/codebench/parquet/code_features/2023-1.parquet",
+        "data/codebench/parquet/assessments/2023-1.parquet",
+        "data/codebench/parquet/events/2023-2.parquet",
+        "data/codebench/parquet/code_features/2023-2.parquet",
+        "data/codebench/parquet/assessments/2023-2.parquet",
+        "data/codebench/parquet/events/2024-1.parquet",
+        "data/codebench/parquet/code_features/2024-1.parquet",
+        "data/codebench/parquet/assessments/2024-1.parquet"
+      ],
+      "note": "sealed inputs are named, never hashed: hashing one would read it"
+    },
+    "sealed_tables": [
+      "main_cells.csv",
+      "main_table.csv",
+      "main_table.tex",
+      "paired_differences.csv",
+      "bound_checks.csv",
+      "identity_residuals.csv",
+      "policy_parameters.csv",
+      "manifest.json"
+    ],
+    "load": {
+      "target_busy_hour_utilisation": [
+        0.5,
+        0.8,
+        1.0
+      ],
+      "server_count_rule": "round_half_up(W / (3600 * rho)), at least 1",
+      "overlay_seed": 3,
+      "overlays": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "copies_probe": {
+        "min_servers_at_full_load": 4,
+        "distinct_server_counts": 3,
+        "stop_after_extra_copies": 5
+      }
+    },
+    "primary_metric": "deadline_window_p99_wait",
+    "bootstrap": {
+      "method": "paired_week_block",
+      "resamples": 2000,
+      "seed": 20260919,
+      "block": "whole_week",
+      "paired_across": [
+        "policies",
+        "overlays"
+      ]
+    }
+  }
+}

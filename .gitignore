@@ -1,0 +1,16 @@
+# environment
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# generated artefacts (regeneration recipes in GENERATED.md)
+outputs/
+*.npz
+*.npy
+
+
+# data stays out of the repository
+data/

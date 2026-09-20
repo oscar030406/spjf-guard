@@ -1,0 +1,58 @@
+% Figure: the guard as a wrapper, and the accounting it runs.  Everything drawn
+% here is Algorithm~\ref{alg:guard} and the definitions above it; the lower panel
+% is a schematic of over[q](t) against budget(q,t), not a measurement.
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize,
+   box/.style={draw, rounded corners=1pt, align=center, inner sep=3pt},
+   dec/.style={draw, align=center, inner sep=3pt},
+   ar/.style={-{Latex[length=4pt]}}]
+
+  \node[box]           (queue) at (0,0)    {waiting queue $Q$\\[-1pt]\scriptsize ranks, scores $\hat{C}$};
+  \node[dec, anchor=west] (test)  at (3.0,0)  {$E(t)=\emptyset$?\\[-1pt]
+        \scriptsize $E(t)=\{q:\mathrm{over}[q]\ge\mathrm{budget}(q,t)\}$};
+  \node[box, anchor=west] (base)  at (9.3,1.25) {base policy $A$\\[-1pt]\scriptsize any ranking, learned or not};
+  \node[box, anchor=west] (fire)  at (9.3,-1.25){guard fires\\[-1pt]\scriptsize min-rank member of $E(t)$};
+  \node[box, anchor=west] (disp)  at (13.9,0) {dispatch on\\the free server};
+  \node[box, anchor=east] (comp)  at (2.4,-2.6) {completion of $j$\\[-1pt]\scriptsize $C_j$ learned here, not earlier};
+
+  \draw[ar] (queue.east) -- (test.west);
+  \draw[ar] (test.east) -- ++(0.35,0) |- node[pos=0.72,above,font=\scriptsize] {yes} (base.west);
+  \draw[ar] (test.east) -- ++(0.35,0) |- node[pos=0.72,below,font=\scriptsize] {no}  (fire.west);
+  \draw[ar] (base.east) -- ++(0.35,0) |- (disp.west);
+  \draw[ar] (fire.east) -- ++(0.35,0) |- (disp.west);
+  \draw[ar] (comp.east) -- (test.south |- comp.east) -- (test.south);
+  \node[anchor=west,font=\scriptsize] at ([xshift=3mm]test.south |- comp.east)
+        {$\mathrm{over}[q] \mathrel{+}= C_j$ for every waiting $q$ of lower rank};
+\end{tikzpicture}}
+
+\vspace{3mm}
+
+\resizebox{0.52\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize,
+   ar/.style={-{Latex[length=4pt]}}]
+  \draw[ar] (0,0) -- (6.4,0) node[right] {$t$};
+  \draw[ar] (0,0) -- (0,3.4);
+  \draw[densely dashed] (0,1.1) -- (3.1,2.7) -- (6.0,2.7);
+  \node[anchor=west] at (3.3,3.15) {$\mathrm{budget}(q,t)$};
+  \node[anchor=east] at (-0.05,1.1) {$B_0$};
+  \node[anchor=east] at (-0.05,2.7) {$B_{\max}$};
+  \draw[thick] (0,0) -- (1.0,0) -- (1.0,0.7) -- (2.2,0.7) -- (2.2,1.5)
+               -- (3.4,1.5) -- (3.4,2.2) -- (4.6,2.2) -- (4.6,2.8) -- (5.2,2.8);
+  \node[anchor=west] at (0.15,2.35) {$\mathrm{over}[q](t)$};
+  \draw[ar] (5.6,1.75) -- (4.68,2.72);
+  \node[anchor=west] at (5.5,1.55) {guard fires};
+\end{tikzpicture}}
+\caption{The guard of Algorithm~\ref{alg:guard} wrapped around a base policy
+(above) and the accounting it runs for one waiting job (below). Only completed
+work is charged, because $C_j$ is unknown until $j$ finishes, so
+$\mathrm{over}[q]$ is a step function with a step at each completion of a
+higher-ranked job; the first dispatch epoch at which the step function reaches
+the budget sends $q$ next. The budget drawn is the age-relative shape, rising at
+rate $\eta k$ from $B_0$ and capped at $B_{\max}$; the guarantee depends on the
+cap alone, so any curve under the dashed ceiling carries the same promise. The
+lower panel is schematic. Sources: the definitions in Section~\ref{sec:guard};
+$B_{\max} = k(G - (3-2/k)L)$ is Corollary~\ref{cor:params}.}
+\label{fig:guard}
+\end{figure}

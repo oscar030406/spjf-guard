@@ -1,0 +1,306 @@
+\providecommand{\devnum}[1]{#1}
+
+\section{Traces and Workload Characterisation}
+\label{sec:data}
+
+\subsection{The Traces}
+
+The validation scenario is an educational one: two programming-assignment judging
+platforms supply the demand traces, and four further workloads bound the claim from
+outside that setting. What each trace can be used for is decided by whether its arrival
+times are real, whether the queue wait is recorded, and how long a job may run there
+(Table~\ref{tab:traces}).
+
+% Wider than the MDPI text block, so it is set across the full page with the
+% template's adjustwidth/\extralength mechanism; \fulllength is that measure.
+\begin{table}[htbp]
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\caption{The traces, their role and what they record. ``Arrivals'' says whether the arrival
+instants are recorded rather than drawn; ``Waits'' whether the queue wait of each job is
+itself recorded.}
+\label{tab:traces}
+\small
+\begin{tabular}{p{0.13\fulllength}p{0.15\fulllength}p{0.20\fulllength}p{0.16\fulllength}cc}
+\hline
+Trace & Role & Size & Time fields & Arrivals & Waits \\
+\hline
+CodeBench~\cite{codebench_dataset} &
+main demand trace &
+\devnum{4{,}611{,}325} blocks, \devnum{863{,}149} graded submissions in the development pool &
+one stamp per block, the end of the run &
+yes (as end $-$ $C$) & no \\
+ACcoding~\cite{accoding2024} &
+second judging platform &
+\devnum{4{,}046{,}652} rows, \devnum{3{,}237{,}322} non-sealed &
+none; submission id only &
+no, drawn & no \\
+Serverless invocations \cite{azure2021trace} &
+method applies outside education &
+\devnum{1{,}980{,}951} invocations over \devnum{14.000} d &
+end stamp and duration &
+yes & no \\
+CI pool A \cite{taskcluster_docs,treeherder_docs} &
+simulator validation, light tail &
+\devnum{191{,}970} runs over \devnum{21} d &
+created, scheduled, started, resolved &
+yes & yes \\
+CI pool B &
+second validation pool &
+\devnum{30{,}702} runs over \devnum{6.99} d &
+as above & yes & yes \\
+Compute farm \cite{netbatch2012trace,shai2014netbatch} &
+non-applicable case &
+\devnum{9{,}054{,}066} jobs over \devnum{30.00} d, \devnum{8{,}441{,}207} serial with positive run time &
+submit, wait, run &
+yes & yes \\
+OULAD~\cite{oulad2017} &
+calendar-driven load elsewhere &
+\devnum{9} course-presentations, daily counts &
+day &
+--- & --- \\
+\hline
+\end{tabular}
+\end{adjustwidth}
+\end{table}
+% Sources of Table~\ref{tab:traces}:
+%   CodeBench sizes: prechecks/codebench_audit/out_tail_and_counts.txt (4,611,325 events;
+%     1,398,801 submits; 3,212,524 tests) and prechecks/accoding_v2/out_accoding_v2.txt
+%     stage compare section B (861,478 graded submissions with C_cap > 0; 863,149 is the
+%     block count before the C == 0 drop, prechecks/codebench_service_v2/out_service_v2.txt).
+%   ACcoding sizes: prechecks/accoding_v2/out_accoding_v2.txt, stages selftest and audit 1b.
+%   Serverless: prechecks/cross_domain/out_audit_azure.txt (rows, span).
+%   CI pools: prechecks/firefox_ci/out_SUMMARY.txt section A and out_simval.txt (spans).
+%   Compute farm: prechecks/cross_domain/out_audit_netbatch.txt.
+%   OULAD: prechecks/oulad/out_load.txt (header line, nine 2013 course-presentations).
+
+Both CI pools and the compute farm carry a recorded queue wait. We validate the simulator
+against the CI pools, whose capacity is a countable set of physical machines that changes
+only on reimaging or quarantine. The second judging platform has no timestamp
+column, only a submission id, so job order inside a group and job sizes are real while
+every arrival instant is drawn. The correlation between a group's first id and its
+recorded start time is \devnum{0.9995} over \devnum{469} groups, but in \devnum{207} of
+\devnum{468} consecutive transitions the id ranges overlap, so the id is an ordering and
+not a clock. Its results are a check that the ordering mechanism transfers, not a wait in
+seconds.
+
+\subsection{What the Fields of the Main Trace Mean}
+
+Several fields of that trace needed a reading before they could carry a queueing model.
+
+The timestamp on an execution block is the moment the result was written, not the moment
+the code was received. Among later-period runs the gap to the same user's previous event
+grows one for one with the cost (slope \devnum{0.99} of the median gap on $C$) while the
+gap to the next event barely moves (slope \devnum{0.16}), and the feedback after a user
+kills a run arrives within about \devnum{0.1} s whatever its length. A result stamp
+predicts both readings; a receipt stamp neither. We take $\mathrm{done}_j$ to
+be the recorded stamp and reconstruct the arrival as $a_i = t_i - C_i$, carrying the
+opposite reading through the pipeline as a sensitivity with its own features and models.
+
+Stamps are recorded to the whole second while costs are recorded to the microsecond, which
+opens a leak: the fractional part of a job's cost appears in the gap between its own stamp
+and the next event, so a feature like ``seconds since the user's previous record'' reads
+the label off the clock. We close it by replacing $t$ with $t + u$,
+where $u \in [0,1)$ is drawn deterministically from a fixed key and the record's
+identifier. A classifier given only the fractional part of that gap separates heavy from
+light jobs with AUROC \devnum{0.8091} on the whole-second clock and \devnum{0.4499} after
+the jitter, while the forward models of the two clocks stay within \devnum{0.008} of AUROC
+of each other, so closing the channel costs almost nothing.
+
+The cost field is wall-clock occupancy of one evaluation including interpreter start-up,
+read from the 10th percentile of correct submissions (\devnum{0.12}--%
+\devnum{0.18} s across the two periods) and from its weak dependence on the number of test
+cases (median \devnum{$0.196 + 0.007 n$} s in the later period). The platform limit is
+\devnum{60} s: the last run to reach it ends at \devnum{2019-08-28} \devnum{10{:}32},
+after which the largest observed cost is \devnum{59.97} s, with \devnum{13} runs in
+$[59,60)$ s and none above. Before that date there was no fixed limit, the longest run is
+\devnum{8{,}901} s, and the \devnum{1{,}189} runs that end with a kill are almost all
+above \devnum{360.8} s, pointing at a container watchdog rather than judging demand. Those
+periods stay out of the primary pool, and where used at all they carry the later limit,
+$C^{\mathrm{cap}} = \min(C, 60)$ (Table~\ref{tab:tails}).
+
+Groups of runs by the same user that end in the same second are \devnum{7.53\%} of blocks
+and \devnum{26.28\%} of capped work; they overlapped and stretched each other, so we
+neither delete them silently nor treat each as an independent arrival. Every prediction
+table is repeated on rows outside such groups, and the scheduling trace is rebuilt twice,
+once with each group collapsed into one job and once with the groups removed
+(Table~\ref{tab:sens}). A further \devnum{1{,}671} blocks record a cost of exactly zero
+with empty outputs; they leave the simulated trace and stay in the features, the labels
+and every total. The \devnum{2019-2} archive stops at \devnum{2019-09-19}, months before
+that term's assessments end, and \devnum{2020-1} is short by about \devnum{3\%} of its
+blocks; both serve per-submission modelling and are excluded from anything that treats a
+term as a whole. Against the published release statistics we match the class count in
+\devnum{18} of \devnum{18} terms and the student and exercise counts in \devnum{16} of
+\devnum{18}, and parse \devnum{4.08\%} fewer execution blocks than the official column
+sums, whose printed totals disagree with those same columns by \devnum{$-248$} exercises
+and \devnum{$+246{,}246$} blocks. We quote the columns.
+
+\subsection{The Original Platform Has No Shared Queue}
+
+The platform that produced the main trace gives each logged-in student a dedicated
+container and runs their code inside it, so submissions there did not queue behind one
+another. We use the log as a demand trace: arrival instants and per-job costs are real;
+the server pool, the queue and the order are our design. Nothing in this paper claims
+that the original platform slowed down before a deadline.
+
+Three things support the design. The first is that a fixed pool of judging hosts on one
+queue is a standard deployment. A widely used contest judging
+system recommends ``one judgehost per 20 teams''~\cite{domjudge_manual} on dedicated
+machines, and the autograder study of Section~\ref{sec:intro} runs a configurable number
+of concurrent graders, replays the busiest hours before a shared deadline and measures the
+queue wait~\cite{peveler2019sandbox}. Dedicated per-entity capacity is also known to sit
+idle in the workloads this one resembles. In the serverless characterisation behind our
+invocation trace, \devnum{45\%} of applications are invoked once an hour or less and
+\devnum{81\%} once a minute or less, so the authors report that the cost of keeping them
+warm relative to their billable execution time can be prohibitively
+high~\cite{shahrad2020wild}; and a cluster manager that measured the alternative directly
+reports that splitting each large user's workload into its own cell would need
+\devnum{2} to \devnum{16} times as many cells and \devnum{20} to \devnum{150\%} more
+machines~\cite{verma2015borg}. Neither source is about judging, and neither licenses a
+number of our own.
+
+The second is a measurement on the same demand. Replaying the overlay of
+Section~\ref{sec:overlay} under the dedicated design, the 99th percentile of containers
+alive at once is \devnum{1{,}636} and each container executes code for \devnum{0.12\%} of
+the time it is alive; since only \devnum{11\%} to \devnum{35\%} of logins have a logout
+written after them, session boundaries are reconstructed, and across six reconstructions
+that percentile lies between \devnum{1{,}003} and \devnum{2{,}525} containers and the
+utilisation between \devnum{0.07\%} and \devnum{0.17\%}. A shared pool holds the 99th
+percentile of deadline-window waits under \devnum{1} s with \devnum{14} servers under
+FCFS and \devnum{13} under the predictor-ordered policy. Pooling is worth two orders of
+magnitude here and the scheduler is worth one server (\devnum{14} to \devnum{13} at
+\devnum{1} s, \devnum{11} to \devnum{10} at \devnum{5} s, \devnum{8} to \devnum{7} at
+\devnum{30} s). It does not support a claim that the platform ever queued, the pooled
+side being simulated, nor that the containers are over-provisioned, since they also run
+the editing session the pool does not replace, nor that any of it is a cost saving.
+
+The third is that the simulator reproduces waits somebody else recorded. The CI logs carry
+the queue wait of every run, so we replay the recorded arrivals and services through our
+own $k$-server non-preemptive kernel. Two quantities are fitted: the effective capacity
+$k_{\mathrm{eff}}$, the shortfall against the listed machine count being machines that are
+up but not claiming work, and a setup term, the median short gap between consecutive runs
+on the same machine, added to every service because a machine is not reusable the instant
+a task resolves. Fitting both on the window and then reporting agreement on that same
+window would be circular, so we refit both on one chronological part of each window and
+test on the other, five splits over the two pools.
+
+The capacity is stable across splits. On pool~A the three splits choose \devnum{155},
+\devnum{155} and \devnum{157} of \devnum{173} listed machines, and on pool~B the two
+splits choose \devnum{96} and \devnum{92} of \devnum{105}; the setup term moves between
+\devnum{54.2} and \devnum{55.3} s on the first and between \devnum{126.2} and
+\devnum{128.6} s on the second. The fit is sharp rather than flat: on a step-of-one grid
+only \devnum{5} to \devnum{8} values of $k$ put the simulated mean wait within
+\devnum{10\%} of the recorded one. With those parameters frozen, the held-out part comes
+back at \devnum{0.90} to \devnum{1.14} times the recorded mean wait, \devnum{0.86} to
+\devnum{1.16} at the 99th percentile and \devnum{0.89} to \devnum{1.28} at the 99.9th,
+with a per-hour mean-wait correlation of \devnum{0.936} to \devnum{0.981}, a per-job rank
+correlation of \devnum{0.940} to \devnum{0.963}, and a median per-job absolute error of
+\devnum{16} to \devnum{84} s.
+
+One quantile does not survive. The 90th percentile lands at \devnum{0.81} to \devnum{1.21}
+of the recorded one, and on the larger pool it is below the recorded value on all three
+splits while the 99th is above it, so the simulated distribution is too steep in its upper
+middle; the two-term objective hides this in sample by trading the mean against the p90,
+which is why we fit out of sample and say so. What the fit absorbs is nonetheless a
+property of the pool rather than an artefact of fitting: told instead that every listed
+machine is available, the same simulator underestimates the held-out mean wait by a factor
+of \devnum{1.3} to \devnum{2.6} and its per-hour correlation falls to \devnum{0.75}. The
+circularity of the original whole-window fit can be read off directly: on pool~A the
+whole-window and held-out rows are almost identical because every split picks nearly the
+same capacity, while on pool~B the reverse split's held-out capacity gives a mean ratio of
+\devnum{1.14} on its test part where the whole-window capacity gives \devnum{0.99}.
+% Sources of the three paragraphs above:
+%   prechecks/firefox_ci_holdout/out_SUMMARY.txt, section A (k_eff step-1 per split and the
+%   setup term on the fit part: osx 155/155/157 of 173, talos 96/92 of 105; setup 54.2-55.3 s
+%   and 126.2-128.6 s), section B (the HELD OUT rows: mean x, p99 x, p99.9 x, rho_h, sp,
+%   med|e|, and the "no fit k = nominal machines" rows for the 1.3-2.6x and the 0.75),
+%   section E (5-8 values of k inside 10% of the recorded mean) and section F (the p90
+%   range 0.81-1.21 and the circularity comparison 1.14 vs 0.99 on the talos reverse split).
+%   The same rows are in holdout.csv.  Pool A = releng-hardware/gecko-t-osx-1500-m4
+%   (173 machines, 21 d), pool B = releng-hardware/gecko-t-linux-talos-2404 (105, 7 d),
+%   matching Table~\ref{tab:traces} and the note under Table~\ref{tab:pred_cross}.
+
+\subsection{Building the Shared Pool}
+\label{sec:overlay}
+
+One course does not fill one server, so we overlay. The pool takes only the development
+terms that ran under the \devnum{60} s limit, \devnum{40} class-terms in all, and
+replicates them \devnum{44} times, each copy aligned by weekday and hour and shifted by a
+whole number of weeks drawn per copy. Overlaying whole terms rather than compressing
+inter-arrival times preserves the daily and weekly cycle and each job's position relative
+to its own deadline. The result is
+\devnum{17{,}634{,}760} jobs over \devnum{30} weeks and \devnum{208.8} days. The three
+load levels share that trace and differ only in the pool size. Four of the five overlays
+take \devnum{$k = 8/5/4$} and the fifth takes \devnum{$7/5/4$}, its work per busy hour
+being the lowest of the five; on the first overlay that gives busy-hour utilisations of
+\devnum{0.529}, \devnum{0.847} and \devnum{1.059}, and \devnum{0.502}, \devnum{0.783} and
+\devnum{0.979} averaged over the five. A
+deadline window is the \devnum{24} hours before an assessment's own end, and
+\devnum{4{,}219{,}556} jobs arrive inside one. Five overlays are week-shifts of the same
+terms rather than five platforms, and our intervals resample whole weeks, so they cover
+time and not the choice of terms. A trace built from the last development term alone is
+not available this way, since it would need \devnum{190} copies of its \devnum{8}
+class-terms to load a pool of four.
+
+\subsection{What the Load Looks Like}
+
+Arrivals follow the course calendar. Predicting the number of executions in an hour
+\devnum{168} hours ahead, a model with lag features alone reaches log-scale RMSE
+\devnum{1.243}, one with calendar features alone \devnum{1.159}, and one with both
+\devnum{1.112}; the paired difference between the last two is \devnum{$-0.1476$
+$[-0.1752, -0.1198]$} over class-week blocks. The corroborating trace shows the same shape
+elsewhere: clicks in the three days up to an assessment due date are \devnum{1.29} to
+\devnum{2.95} times the other test days across its nine course-presentations, and a
+seven-day-ahead peak warning on distinct active students goes from F1 \devnum{0.000} under
+a moving-average baseline to \devnum{0.593} once calendar features are added.
+
+Costs are heavy-tailed on every workload except the CI pools, which is where the method's
+second applicability condition shows up (Table~\ref{tab:tails}).
+
+\begin{table}[htbp]
+\centering
+\caption{Share of total executed work carried by the longest jobs.}
+\label{tab:tails}
+\small
+\begin{tabular}{lccc}
+\hline
+Trace & Top \devnum{1\%} & Top \devnum{5\%} & Per-job limit \\
+\hline
+CodeBench, \devnum{60} s regime & \devnum{0.375} & \devnum{0.432} & \devnum{60} s \\
+CodeBench, no-limit periods, raw & \devnum{0.941} & \devnum{0.960} & none \\
+CodeBench, no-limit periods, capped & \devnum{0.494} & \devnum{0.658} & \devnum{60} s applied \\
+ACcoding, measured cost & \devnum{0.275} & \devnum{0.628} & \devnum{30.0} s \\
+ACcoding, with the assumed fixed term & \devnum{0.122} & \devnum{0.290} & \devnum{30.5} s \\
+Serverless invocations & \devnum{0.443} & \devnum{0.879} & \devnum{286.8} s \\
+Compute farm & \devnum{0.372} & \devnum{0.628} & \devnum{493{,}857} s \\
+CI pool A & \devnum{0.034} & \devnum{0.107} & \devnum{5{,}066} s \\
+CI pool B & \devnum{0.052} & \devnum{0.159} & \devnum{4{,}140} s \\
+\hline
+\end{tabular}
+\end{table}
+% Sources of Table~\ref{tab:tails}:
+%   CodeBench rows: prechecks/codebench_audit/out_tail_and_counts.txt (eras 2020-ERE..2022-2
+%     and 2018-1..2019-2, columns top1_share / top5_share, raw C and C_cap = min(C,60)).
+%   ACcoding rows and both per-job limits: prechecks/accoding_v2/out_accoding_v2.txt,
+%     stage compare section B (time_cost and 0.5 + time_cost columns).
+%   Serverless and compute farm: prechecks/cross_domain/out_cross_domain_table.txt section A
+%     (L used column) and out_audit_azure.txt / out_audit_netbatch.txt (work-share lines).
+%   CI pools: prechecks/firefox_ci/out_SUMMARY.txt section A ("share of total work carried
+%     by the top" and "L' (train p99.9 of service)").
+
+The per-job limit in the last column is the unit in which the guarantee of
+Section~\ref{sec:theory} is denominated; Section~\ref{sec:exp_cross} compares it with the
+waits each operator cares about and decides on that basis which of the six workloads the
+method applies to.
+
+\subsection{Sealed Data}
+
+Part of every trace was sealed before the method was designed, and is opened once after
+the method, its parameters and the primary metric are frozen. On the main trace the sealed
+part is three terms, \devnum{2023-1}, \devnum{2023-2} and \devnum{2024-1}; on the second
+judging platform it is the last \devnum{20\%} of the submission-id range,
+\devnum{809{,}330} rows, of which only the row count and the first id have been read; on
+the corroborating trace it is the \devnum{2014} academic year. No cost distribution,
+prediction or scheduling result has been computed on any sealed part, and every access to
+one is entered in a ledger in the repository. Every number in this section and in
+Sections~\ref{sec:prediction} and \ref{sec:scheduling} is a development number.

@@ -1,0 +1,157 @@
+\providecommand{\devnum}[1]{#1}
+
+\section{Limitations and Threats to Validity}
+\label{sec:limits}
+
+\paragraph{The shared pool is our design.}
+CodeBench gives each logged-in student a private container, so on the real
+platform one job never waits behind another and there is no shared
+judging queue \cite{codebench_dataset}. We use its logs as a demand trace: the
+arrival instants and the per-job costs are recorded; the server pool, the
+queue and the scheduler are ours. Section~\ref{sec:data} sets out what supports
+that design, that a fixed pool of judge hosts on one queue is a standard
+deployment \cite{domjudge_manual,peveler2019sandbox} and that pooling replaces
+\devnum{1{,}636} concurrent containers with \devnum{14} servers on the same
+demand \cite{smith1981pooling}. What it cannot support is any statement about
+waiting on the real platform, the pooled side being simulated throughout. The
+container counts belong to the 44-fold overlay rather than to a deployment, and
+a container also serves the student's editing session, so the ratio is not a
+cost saving.
+
+\paragraph{Open-loop replay.}
+Arrivals come from the log at their recorded instants and do not react to our
+scheduler. Feitelson states the objection at its strongest, that
+``logged workloads actually contain a `signature' of the logged system''
+\cite{feitelson2021resampling}; a trace-driven simulation issues requests
+irrespective of system state, so a scheduler is neither rewarded with the work
+it would attract nor punished by the users it would drive away
+\cite{shmueli2009simulation}. We cannot restore that feedback, our logs
+carrying no session boundaries, no think times and no resubmission semantics,
+but its direction is known: a closed loop returns work to a service that
+answers quickly, so the omission suppresses the benefit of the policies that
+shorten waits, and our reported gains are a lower bound. Replaying into a
+differently sized pool is established practice
+\cite{harcholbalter2003sizebased}, and the width coupling that distorts
+parallel-job replays does not arise here, a job occupying one server whatever
+$k$ is. One choice is deliberate. We raise load by superposing whole
+class-semesters aligned on weekday and clock time rather than by compressing
+inter-arrival times, which Feitelson notes shrinks the daily load cycle along
+with the gaps \cite{feitelson2021resampling}.
+
+\paragraph{The guarantee is denominated in $L$.}
+Every constant in Section~\ref{sec:theory} is a multiple of the per-job time
+limit. The additive constant $(3-2/k)L$ is an exact supremum rather than an
+artefact of the proof, it grows with $k$ from $L$ at a single server towards
+$3L$, and an excess of at least $L$ is forced on some job for
+any non-preemptive work-conserving policy that reads a service time only at
+completion, so no mechanism of this family can promise less than $\Omega(L)$.
+We tested the obvious escape and it fails. Kill-and-restart tiering runs every
+job for a short first quantum $\tau$ and restarts the survivors, discarding the
+killed attempt; on $n$ jobs of length $L$ arriving together it leaves some job
+with an excess of $n\tau/k - L$ over first-come first-served, and that excess
+is wasted work rather than overtaking, so no budget removes it. The light-job
+constant does not improve either, a second-tier piece being still a
+non-preemptive block of length $L$: holding $\tau$ fixed and varying $L$, the
+worst light-job additive constant we measure grows as about \devnum{1.1}$L$ and
+is flat in $\tau$. The mechanism is TAGS \cite{harcholbalter2002tags} with the
+dedicated hosts removed.
+
+\paragraph{Two applicability conditions, each with a trace that fails it.}
+The first is that $L$ be comparable to the waits that matter. On the Intel
+Netbatch compute farm \cite{netbatch2012trace,shai2014netbatch} the service cap
+is \devnum{5.7} days while the first-come first-served p99 wait in the worst
+window we build is \devnum{18.7} hours, so the smallest expressible promise is
+about \devnum{17} days and the guard never fires at any admissible budget;
+predicted-cost ordering also makes the p99 wait worse than first-come
+first-served there under sustained overload. The second is that the cost
+distribution be heavy-tailed. On the two Firefox CI hardware pools
+\cite{taskcluster_docs,treeherder_docs} the longest \devnum{1\%} of jobs carry
+\devnum{3.4\%} and \devnum{5.2\%} of the work, at coefficients of variation
+\devnum{0.61} and \devnum{0.87}, and there even true-size ordering makes the
+p99 wait worse than first-come first-served on three of the four windows we
+ran. Section~\ref{sec:exp_cross} gives both conditions in numbers.
+
+\paragraph{The guarantee is per job, not per quantile.}
+The bound holds for each job separately and says nothing about a percentile. A
+guarded run can have a worse deadline-window p99 than the baseline its guarantee
+is stated against, by as much as the promise itself, and Table~\ref{tab:adv}
+shows it doing so under two of the three corrupted scores at the busiest load
+while the worst single job stays inside the promise. An operator who needs a
+percentile has to ask for one.
+
+\paragraph{Development data, and what is still sealed.}
+Every CodeBench number in this paper is development data. The guard family and
+an early parameter grid were explored on the same overlay the tables report,
+before the three pre-stated grids were searched on validation overlays that
+exclude the evaluation semester, so the selection is validation-only inside a
+family that is not, and no number here is out of sample. The rule is a
+worst-cell rule, so it is sensitive to which validation cells it sees: at the
+middle promise, dropping the one cell that decides the choice moves it to a
+different point of the same grid, and five overlays are five week-shifts of the
+same class-terms rather than five independent tests. We do not describe any of
+these parameters as validated. The guarantee does not depend
+on the parameters being well chosen; only the benefit does. The sealed semesters
+are opened once, after the method, the parameters and the primary metric have
+been frozen, and their numbers are reported separately.
+
+\paragraph{The budget shape is selected on one set of cells, and does not always
+transfer.} The promise holds for any budget under the cap, so nothing about the
+guarantee depends on the shape. What the shape decides is how much of the base
+policy's benefit survives, and that we select on \devnum{15} multi-server
+validation cells, which is the whole evidence we have for it. The single-server
+configuration shows the limit of that evidence. At $G = \devnum{1200}$ s the
+queue-length shape wins the joint comparison on those cells and closes
+\devnum{0.701} of the gap at $k = 1$, where the age-relative shape closes
+\devnum{0.895}; at the two tighter promises the same choice does transfer.
+We report the number the pre-stated rule produces rather than re-tuning on the
+configuration that exposes it, and an operator whose pool is much smaller than
+the validation pool should re-run the selection rather than take our shape. The
+three shapes also differ in where the harm falls rather than only in how much
+gap they keep, so which of them is preferable depends on a judgement about jobs
+first-come first-served would have started at once, and that judgement is the
+operator's.
+
+\paragraph{What the recorded costs mean.}
+The cost we replay is the platform's recorded execution time, a wall-clock
+duration for one evaluation that includes interpreter start-up. Runs of the
+same student that overlap stretch one another, and between \devnum{38\%} and
+\devnum{79\%} of jobs longer than a second end in the same second as
+another block of that student, so part of the recorded cost is contention we
+then re-impose inside the pool. How the platform enforces its
+\devnum{60}-second limit is documented nowhere we could find. We wrote to the
+maintainers about both points and had no answer.
+ACcoding \cite{accoding2024} records no submission timestamps, so its arrival
+process is synthetic. The Firefox CI check, the one trace whose queue waits are
+themselves recorded, fits an effective capacity and a setup term, both refitted
+on one chronological part of each window and tested on the other; out of sample
+the mean wait, the per-hour profile and the per-job ordering survive and the
+90th percentile does not, landing up to \devnum{21\%} from the recorded one and
+systematically low on the larger pool, so the simulated distribution is too steep
+in its upper middle. The split is chronological inside one \devnum{21}-day and
+one \devnum{7}-day window of two pools, not a different cluster, quarter or
+workload, and capacity is held constant over the test part although the real
+machine count varies.
+
+\paragraph{Not studied.}
+Preemption is outside the model, so nothing here applies to a system that can
+checkpoint or suspend. The wrapper applies unchanged to a learned or
+reinforcement-learned base policy, its bound assuming nothing about the base,
+but we did not test one. Capacity is fixed throughout, so this is not a
+capacity-planning study. The cost of computing features and running the
+predictor is not charged in the reported runs, which compare policies at a
+common set of enqueue instants, and at a median service time of a fraction of a
+second it is not negligible. Nothing here was deployed.
+
+\paragraph{Conclusion.}
+We asked whether a non-preemptive shared execution service can be reordered by
+predicted cost without exposing any single job to an unbounded wait. What the
+evidence supports is that the currency has to be work rather than positions. A
+job's delay relative to first-come first-served equals its net
+overtaken work divided by the number of servers, up to a constant multiple of
+the time limit, and a budget on that quantity is sufficient and necessary for a
+per-job guarantee. The wrapper built on it holds every job to a promise the
+operator states in seconds, whatever the predictor does, at a cost of about an
+eighth of the gap predicted-cost ordering closes at the busiest load we simulate
+and at a promise of ten time limits. The method needs a time limit comparable to
+the waits at issue and a heavy-tailed cost distribution, and we give a workload
+on which each fails.

@@ -1,0 +1,185 @@
+% Stand-in build: the standard article class, kept so that the manuscript can be
+% compiled and read without the MDPI class. The submission version is main.tex,
+% which uses Definitions/mdpi.cls. Both pull the same sections/ files, so any
+% edit to a section shows up in both.
+%
+% Build: "D:/environment/tools/tectonic/tectonic.exe" main_article.tex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{graphicx}
+% The four figures are drawn in LaTeX from numbers that are already in the
+% tables or in the cited precheck files; no external image is included.
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing,positioning,arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[hidelinks]{hyperref}
+
+% Three wide tables are set across the full page with the MDPI template's
+% adjustwidth/\extralength mechanism, where \extralength is the width of the
+% journal's left margin column. The article class has no such column, so the
+% two lengths are given here: 70 pt of the 125 pt left margin is lent to those
+% tables, which is what keeps them inside the measure now that the page-saving
+% \scriptsize has been removed. Setting \extralength to 0 pt puts the tables
+% back inside the text block.
+\usepackage{changepage}
+\newlength{\extralength}
+\setlength{\extralength}{70pt}
+\newlength{\fulllength}
+\setlength{\fulllength}{\textwidth}
+\addtolength{\fulllength}{\extralength}
+
+% unsrt prints the note field. The verification records that used to sit there,
+% including the Chinese ones that rendered as blanks under a Latin-only font,
+% now live in an x-verified field, which no bst reads; only the short
+% bibliographic notes (Accessed ..., Preprint arXiv:..., Author Correction) print.
+\bibliographystyle{unsrt}
+
+% Theorem environments are declared here and only here. sections/06_theory.tex
+% re-declares them only when they are still undefined, so this preamble wins.
+% main.tex instead maps these names onto the environments mdpi.cls provides.
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Marks a figure that comes from development data rather than from the sealed
+% semesters. It expands to its argument; the submission version can redefine it.
+\newcommand{\devnum}[1]{#1}
+
+% Pulls in a section if its file exists, and otherwise leaves a numbered
+% placeholder so that section numbers and cross-references stay correct.
+% Adjust the file name here if a section is committed under a different one.
+\newcommand{\papersection}[3]{%
+  \IfFileExists{sections/#1.tex}%
+    {\input{sections/#1}}%
+    {\section{#2}\label{#3}%
+     \textit{Not yet in the repository: the file
+     \texttt{\detokenize{sections/#1.tex}} was not found.}}%
+}
+
+\title{Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking
+for Shared Execution Services under Deadline-Driven Bursty Load}
+
+\author{[Authors]}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A shared execution service runs submitted jobs on a fixed pool of servers,
+without preemption, under a per-job time limit $L$. Reordering by predicted cost
+shortens most waits and can leave one job far behind first-come first-served. We
+prove a conservation law. For every non-preemptive work-conserving policy on $k$
+servers, every arrival sequence and every job, the delay relative to first-come
+first-served equals the net overtaken work divided by $k$, to within
+$(2-2/k)L$, an exact supremum, approached and never attained. Bounding overtaken
+work is therefore sufficient and necessary for a per-job guarantee; counting
+overtakes is neither. A wrapper on that budget bounds every job's wait against
+first-come first-served, additively and multiplicatively, under arbitrary
+arrivals and predictions; its additive constant $(3-2/k)L$ is likewise an exact
+supremum, and the operator sets it from a promise in seconds. The score underneath should estimate expected
+cost, not a point prediction on a log scale. We evaluate on two judging
+platforms, a serverless invocation trace, two continuous-integration pools whose
+recorded waits validate the simulator, and a compute farm. The method needs a
+time limit comparable to the waits at issue and a heavy-tailed cost
+distribution; we include a workload failing each.
+\end{abstract}
+
+% The MDPI class supplies \keyword{}; under the stand-in class the keywords are
+% typeset by hand here.
+\noindent\textit{Keywords:} non-preemptive scheduling; scheduling with
+predictions; multiserver queues; bounded overtaking; per-job guarantee;
+first-come first-served; runtime prediction
+
+\bigskip
+
+\papersection{01_introduction}{Introduction}{sec:intro}
+\papersection{02_related_work}{Related Work}{sec:related}
+\papersection{03_problem_model}{Problem Model}{sec:model}
+\papersection{04_prediction}{Cost Prediction}{sec:prediction}
+\papersection{05_scheduling}{Scheduling Algorithm}{sec:scheduling}
+\papersection{06_theory}{Theory}{sec:theory}
+\papersection{07_data}{Traces and Workload Characterisation}{sec:data}
+\papersection{08_experiments}{Experiments}{sec:experiments}
+\papersection{09_limitations}{Limitations and Threats to Validity}{sec:limits}
+
+\IfFileExists{sections/A_proofs.tex}{\input{sections/A_proofs}}{}
+
+% ---------------------------------------------------------------------------
+% Back matter.  Under the MDPI class each block below is one of the template's
+% own macros -- \authorcontributions{}, \funding{}, \institutionalreview{},
+% \informedconsent{}, \dataavailability{}, \conflictsofinterest{} -- and the
+% headings here are the stand-in for them; main.tex carries the same text in
+% those macros.  Anything the authors alone can supply is marked
+% [to be completed by the authors] and is not invented.
+\section*{Back Matter}
+\addcontentsline{toc}{section}{Back Matter}
+
+\paragraph{Author Contributions.}
+[to be completed by the authors]. The MDPI template expects the CRediT roles
+(conceptualization, methodology, software, validation, formal analysis,
+investigation, data curation, writing---original draft preparation,
+writing---review and editing, visualization, supervision, project
+administration, funding acquisition), each attributed by author initials,
+followed by ``All authors have read and agreed to the published version of the
+manuscript.''
+
+\paragraph{Funding.}
+[to be completed by the authors]. If there is no external funding, the template
+asks for ``This research received no external funding''; otherwise the grant
+number and the funding body go here.
+
+\paragraph{Institutional Review Board Statement.}
+Not applicable.
+
+\paragraph{Informed Consent Statement.}
+Not applicable.
+
+\paragraph{Data Availability Statement.}
+Five of the six workloads used here are public at the locations cited, and we
+redistribute none of them. The CodeBench judging logs are published by the
+Universidade Federal do Amazonas \cite{codebench_dataset}; the ACcoding dataset
+is published with its data descriptor \cite{accoding2024}; the Open University
+Learning Analytics dataset is published with its own \cite{oulad2017}; the Azure
+Functions 2021 invocation trace is published in the Azure Public Dataset
+repository \cite{azure2021trace}, which asks that \cite{zhang2021harvested} be
+cited; and the Intel Netbatch logs are published in the Parallel Workloads
+Archive \cite{netbatch2012trace}, which asks that \cite{shai2014netbatch} be
+cited and that the logs be acknowledged to their depositors. The sixth, the
+continuous-integration trace of the two Firefox hardware worker pools, was
+collected by us from Mozilla's public, unauthenticated Taskcluster and
+Treeherder APIs \cite{taskcluster_docs,treeherder_docs}; we do not redistribute
+it, and the collection scripts that rebuild it from those APIs are part of the
+released code. No data were obtained under licence or under an access agreement,
+and no personal data were processed beyond the pseudonymous user identifiers the
+published judging datasets already carry. The simulator, the predictors, the
+guard implementation and the configuration files that reproduce every table and
+figure in this paper are to be released with the paper at
+[repository URL to be completed by the authors].
+
+\paragraph{Conflicts of Interest.}
+[to be completed by the authors]. The MDPI template asks for ``The authors
+declare no conflicts of interest'' where that holds, and otherwise for the
+competing interest and for a statement on the role of any funder in the design,
+collection, analysis or interpretation, in the writing, or in the decision to
+publish.
+% ---------------------------------------------------------------------------
+
+\bibliography{../docs/related_work/refs}
+
+\end{document}

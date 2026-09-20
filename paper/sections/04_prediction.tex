@@ -1,0 +1,226 @@
+\providecommand{\devnum}[1]{#1}
+
+\section{Cost Prediction}
+\label{sec:prediction}
+
+The scheduler of Section~\ref{sec:scheduling} needs a number at the instant a job
+arrives. This section says what that number estimates, how we keep its inputs causally
+visible, which model families we compared under that one protocol, and which model we
+send into the queue. All figures are development figures, and the traces they come from
+are described in Section~\ref{sec:data}.
+
+\subsection{Two Targets}
+
+A scheduler and an evaluation want different things from the same model. Waiting time is
+additive in realised service, so the quantity that belongs in a ranking score is the
+conditional mean $\mathbb{E}[C_i \mid x_i]$, and Section~\ref{sec:rank} fits it directly.
+For comparing predictors we also need a target that stays interpretable when the mix of
+jobs shifts between periods, so we score each model on a binary label. A job is
+\emph{heavy} when its executed cost $C_i$ exceeds the 95th percentile of the training
+rows; this is the one definition of heavy used in the paper, and the worst heavy-job
+wait of Section~\ref{sec:model} is taken over the jobs it selects. On the
+main judging trace that cut-off is \devnum{1.559} s and heavy jobs are \devnum{1.31\%} of
+the test period; on the second judging trace it is \devnum{1{,}314} ms and
+\devnum{5.07\%}. The label is deliberately fixed on training rows and never refit on the
+period being scored, which is why its rate in the test period is a quarter of its rate in
+training. Because the positive class is small we report average precision next to
+AUROC, and we report RMSE on $\log(1+C)$ and Spearman correlation for the regression
+output, since a ranking policy consumes order rather than level.
+
+\subsection{The Visibility Protocol, Made Operational}
+
+Section~\ref{sec:model} defines visibility by result availability: information about job
+$j$ may enter $x_i$ exactly when $\mathrm{done}_j + \delta \le a_i$. Turning that into a
+feature pipeline takes three commitments.
+
+First, every historical feature is recomputed by streaming the log in availability order
+and reading each entity's state as of the query instant, rather than being assembled over
+the whole period and masked afterwards. We test this the expensive way: on
+\devnum{3{,}000} randomly drawn development jobs all \devnum{34} history and relational
+features are recomputed from scratch under each configuration's own rule and compared
+against the pipeline's values, and \devnum{0} rows disagree in any of the eight
+configurations. The same test applied to the natural but wrong construction, in which a
+feature may use any record with a smaller index, fails on \devnum{97.67\%} of rows under
+the primary rule. The graph pipeline is checked separately: an index assertion over
+\devnum{863{,}149} rows finds \devnum{0} timeline entries pointing at or after the read,
+brute-force recomputation on \devnum{600} rows matches on all \devnum{2{,}400} root states
+and all \devnum{2{,}400} neighbour sets, and perturbing or deleting every record after a
+cut time leaves all earlier predictions unchanged while a positive control moves the later
+ones.
+
+Second, thresholds are refit per target period. The heavy cut-off and the class
+boundaries used inside the models are recomputed from the training rows of that target,
+and each target period is predicted by a model fitted only on periods before it, frozen
+before the target's first arrival. Training rows whose results would not have been
+available by that instant are dropped; on the primary configuration the rule binds on
+\devnum{0} rows, which is worth reporting because a rule that never binds is easy to
+believe is absent.
+
+Third, we treat the delay $\delta$ with which results reach the feature store as a
+sensitivity rather than an assumption. At $\delta = 0$ the full tabular model reaches
+AUROC \devnum{0.9283}; at $\delta = \devnum{600}$ s it reaches \devnum{0.9066} and its
+average precision falls from \devnum{0.289} to \devnum{0.139}. On the second judging
+platform, where the log carries no clock and lag has to be expressed in records, the same
+model moves from \devnum{0.9266} at lag \devnum{0} to \devnum{0.8902} at lag
+\devnum{1{,}000}. Ranking survives a ten-minute feedback delay; the probability
+calibration does not survive it as well.
+
+\subsection{Predictor Families}
+
+All families see the same rows, the same split and the same availability rule. The
+tabular family is gradient-boosted trees~\cite{ke2017lightgbm} over five feature groups:
+task history (M1), user history (M2), static features of the submitted artefact (M3),
+everything tabular (M4), and M4 plus one-hop relational aggregates over the
+task-assignment and user-cohort neighbourhoods (M5). A control (M6) permutes task
+identity across assignments. The sequence family is a GRU over the earlier jobs of one
+user whose results are already available, used alone (R1) and as a state vector appended
+to M4's columns inside the boosted model (R1S). The relational family is a heterogeneous
+network over user, task, assignment and cohort nodes~\cite{schlichtkrull2018rgcn} with no
+node-identity embeddings, so an unseen task or user is handled by the same weights. Its
+ablation ladder runs N0 (a multilayer perceptron on exactly M4's columns), G0U (the
+relational architecture with every neighbour slot empty and the assignment and cohort
+roots removed, which leaves exactly M4's information), G0 (empty neighbour slots, roots
+kept), G1 (the real edges) and G2 (the same network on edges permuted within a period and
+time block, so that neighbour counts and recency are preserved and only the identity of
+the neighbour changes).
+
+\subsection{What the Comparison Shows}
+
+Table~\ref{tab:pred_edu} gives the two judging traces. One-hop relational aggregates add
+nothing on either: M5 $-$ M4 is \devnum{$+0.0019$} of AUROC on the first and
+\devnum{$-0.0002$} on the second. The ladder tells the same story with a trained model in
+place of hand-built aggregates. Deleting every edge (G0) and permuting the edges (G2)
+leave AUROC within \devnum{0.002} of G1, and the paired intervals for G1 $-$ G0
+(\devnum{$-0.0001$ $[-0.0019, 0.0018]$}) and G1 $-$ G2 (\devnum{$+0.0019$ $[-0.0000,
+0.0042]$}) cover zero. The one step of the ladder that resolves is N0 $\rightarrow$ G0U,
+\devnum{$+0.0139$ $[+0.0090, +0.0195]$} of AUROC at identical information, which is a
+statement about the encoder and not about edges.
+
+Edges do carry something, and it is confined to cold-start tasks. On the \devnum{1{,}092}
+test rows whose task has fewer than five visible prior results, G1 beats M4 by
+\devnum{$+0.1464$ $[+0.0997, +0.1887]$} of Spearman correlation, and beats its own
+permuted-edge control by \devnum{$+0.0282$ $[+0.0130, +0.0432]$}. Over all rows the
+G1 $-$ G2 Spearman difference is \devnum{$+0.0063$ $[+0.0014, +0.0111]$}, small and
+resolved; the corresponding AUROC and AUPRC differences are not. We read this as a task
+property rather than a verdict on relational models: when each entity's own recent record
+is visible and rich, a neighbourhood adds little, and the place where it adds anything is
+the entity that has no record yet.
+
+The sequence state is the strongest predictor we fitted and does not translate. R1S
+reaches AUROC \devnum{0.9366} against M4's \devnum{0.9283}, a difference of
+\devnum{$+0.0083$ $[+0.0038, +0.0131]$}, and it also wins on RMSE and Spearman. Inside
+the queue it is not a consistent improvement: against the same ranking objective it gains
+\devnum{$+0.007$ $[0.003, 0.011]$} of the deadline-window gap at busy-hour utilisation
+\devnum{0.8}, loses \devnum{$-0.010$ $[-0.022, -0.002]$} at \devnum{0.5}, and is
+unresolved at \devnum{1.0}. A control fitted on the same \devnum{90\%} of rows that the
+GRU's early stopping left available moves the same way, so the smaller training set does
+not explain it.
+
+Which information matters is not a constant across platforms. On the first judging trace
+the user's own history and the static features of the artefact beat the task's history;
+on the second the task's history beats the user's by \devnum{0.11} of AUROC
+(Table~\ref{tab:pred_edu}). A task on the first platform is attempted by one cohort within
+a few days, so who is writing still carries information; a task on the second is attempted
+by thousands of users over years, so the task's own record has already fixed the cost.
+Table~\ref{tab:pred_cross} pushes this further on the non-judging traces. On the
+serverless trace the identity of the function explains \devnum{0.867} of the variance of
+$\log(1+C)$ on its own, and static and calendar features alone are close to useless for
+ranking (Spearman \devnum{0.021}). The two CI pools sit at opposite ends, entity history
+giving AUROC \devnum{0.9968} on one and \devnum{0.6334} on the other, because that pool's
+job labels do not separate its costs; and the compute-farm trace is predictable in rank
+and not in level.
+
+\subsection{Cost of Predicting, and What Enters the Scheduler}
+
+Prediction has to be cheap enough to sit in front of a queue whose median job is
+\devnum{204} ms. Measured in a streaming loop over \devnum{20{,}000} jobs, the
+tabular path costs a median of \devnum{0.076} ms per job and a 99th percentile of
+\devnum{0.188} ms; the relational network costs \devnum{0.434} ms per row plus
+\devnum{0.121} ms of graph lookup, and the GRU \devnum{0.576} ms. Charging the measured
+feature and inference latency to the predictive policies before they enqueue changes the
+closed gap by less than \devnum{0.001} at every load we ran, so the choice between these
+predictors is not a latency decision at this job size.
+
+It is a queueing decision. M5 has the higher AUROC of the two tabular candidates and
+loses in the queue at all three loads, by \devnum{0.012}, \devnum{0.008} and
+\devnum{0.010} of the deadline-window gap, with intervals excluding zero in each case.
+R1S has the higher AUROC of everything we fitted and does not win consistently. We
+therefore take M4, the full tabular model, into Section~\ref{sec:scheduling}, and we say
+plainly why: it was selected on the queueing outcome on validation periods, not on
+prediction quality, and the two orderings do not agree.
+
+\begin{table}[htbp]
+\centering
+\caption{Predictors on the two judging traces under one visibility protocol and one split.
+Heavy is the training-period 95th percentile of executed cost. RMSE and Spearman (Sp.) are
+on $\log(1+C)$. R-net is the heterogeneous relational network.}
+\label{tab:pred_edu}
+\small
+\begin{tabular}{llcccc}
+\hline
+Model & Information & AUROC & AUPRC & RMSE & Sp. \\
+\hline
+\multicolumn{6}{l}{\textit{CodeBench}, $n = \devnum{40{,}844}$} \\
+M1  & task history            & \devnum{0.7960} & \devnum{0.053} & \devnum{0.3000} & \devnum{0.219} \\
+M2  & user history            & \devnum{0.8591} & \devnum{0.242} & \devnum{0.2605} & \devnum{0.302} \\
+M3  & static features         & \devnum{0.8632} & \devnum{0.082} & \devnum{0.2892} & \devnum{0.290} \\
+M4  & all tabular             & \devnum{0.9283} & \devnum{0.289} & \devnum{0.2519} & \devnum{0.312} \\
+M5  & M4 + one-hop            & \devnum{0.9302} & \devnum{0.299} & \devnum{0.2507} & \devnum{0.344} \\
+N0  & MLP on M4's columns     & \devnum{0.9209} & \devnum{0.306} & \devnum{0.2463} & \devnum{0.278} \\
+G0U & R-net, no edges or roots & \devnum{0.9348} & \devnum{0.322} & \devnum{0.2417} & \devnum{0.321} \\
+G0  & R-net, no edges         & \devnum{0.9325} & \devnum{0.316} & \devnum{0.2402} & \devnum{0.324} \\
+G1  & R-net, real edges       & \devnum{0.9324} & \devnum{0.322} & \devnum{0.2397} & \devnum{0.329} \\
+G2  & R-net, permuted edges   & \devnum{0.9305} & \devnum{0.318} & \devnum{0.2396} & \devnum{0.323} \\
+R1  & GRU over user history   & \devnum{0.9239} & \devnum{0.324} & \devnum{0.2396} & \devnum{0.313} \\
+R1S & M4 columns + GRU state  & \devnum{0.9366} & \devnum{0.315} & \devnum{0.2414} & \devnum{0.329} \\
+\hline
+\multicolumn{6}{l}{\textit{ACcoding}, $n = \devnum{647{,}465}$; the neural models were not fitted here} \\
+M1  & task history            & \devnum{0.8990} & \devnum{0.431} & \devnum{0.2904} & \devnum{0.683} \\
+M2  & user history            & \devnum{0.7855} & \devnum{0.292} & \devnum{0.3190} & \devnum{0.471} \\
+M3  & static features         & \devnum{0.7884} & \devnum{0.165} & \devnum{0.3429} & \devnum{0.493} \\
+M4  & all tabular             & \devnum{0.9266} & \devnum{0.527} & \devnum{0.2714} & \devnum{0.692} \\
+M5  & M4 + one-hop            & \devnum{0.9264} & \devnum{0.527} & \devnum{0.2713} & \devnum{0.696} \\
+\hline
+\end{tabular}
+\end{table}
+% Sources of Table~\ref{tab:pred_edu}:
+%   CodeBench column: prechecks/predictor_neural/out_evaluate_core.txt (test 2022-2, group
+%     "all", mean over seeds 3/4/5); the M1-M6 rows agree with
+%     prechecks/codebench_service_v2/out_service_v2.txt SUMMARY 1 (config ires0, train core).
+%   ACcoding column: prechecks/accoding_v2/out_accoding_v2.txt, stage boot, lag 0,
+%     "devtest rows = all" table; cross-platform row labels from its stage "compare", section C.
+%   Heavy cut-offs 1.559 s and 1,314 ms: the same two files.
+
+\begin{table}[htbp]
+\centering
+\caption{The same protocol on the non-judging traces, by feature group. ENT uses the
+entity's own visible history, STATIC uses only what is declared before the job runs, ALL
+is both. RMSE and Spearman are on $\log(1+C)$.}
+\label{tab:pred_cross}
+\small
+\begin{tabular}{llcccc}
+\hline
+Trace & Features & AUROC & AUPRC & RMSE & Spearman \\
+\hline
+Serverless invocations & ENT    & \devnum{0.9828} & \devnum{0.816} & \devnum{0.3401} & \devnum{0.953} \\
+                       & STATIC & \devnum{0.6238} & \devnum{0.084} & \devnum{0.8088} & \devnum{0.021} \\
+                       & ALL    & \devnum{0.9847} & \devnum{0.830} & \devnum{0.3185} & \devnum{0.932} \\
+CI pool, hardware A    & ENT    & \devnum{0.6334} & \devnum{0.157} & \devnum{0.3964} & \devnum{0.833} \\
+                       & STATIC & \devnum{0.4990} & \devnum{0.045} & \devnum{0.7659} & \devnum{0.277} \\
+                       & ALL    & \devnum{0.6512} & \devnum{0.177} & \devnum{0.3956} & \devnum{0.837} \\
+CI pool, hardware B    & ENT    & \devnum{0.9968} & \devnum{0.984} & \devnum{0.0887} & \devnum{0.985} \\
+                       & STATIC & \devnum{0.6915} & \devnum{0.077} & \devnum{0.6411} & \devnum{0.500} \\
+                       & ALL    & \devnum{0.9970} & \devnum{0.985} & \devnum{0.0860} & \devnum{0.988} \\
+Compute farm           & ENT    & \devnum{0.8903} & \devnum{0.265} & \devnum{1.4214} & \devnum{0.883} \\
+                       & STATIC & \devnum{0.8704} & \devnum{0.242} & \devnum{2.2559} & \devnum{0.750} \\
+                       & ALL    & \devnum{0.8902} & \devnum{0.260} & \devnum{1.3485} & \devnum{0.892} \\
+\hline
+\end{tabular}
+\end{table}
+% Sources of Table~\ref{tab:pred_cross}:
+%   Serverless invocations and compute farm: prechecks/cross_domain/out_cross_domain_table.txt,
+%     section B ("predictability of the cost from information at arrival"), rows azure */netbatch *.
+%   CI pools A and B: prechecks/firefox_ci/out_SUMMARY.txt, section C; A =
+%     releng-hardware/gecko-t-osx-1500-m4, B = releng-hardware/gecko-t-linux-talos-2404.
+%   The identity variance shares (0.867 serverless, 0.638 compute farm) quoted in the text
+%     are the eta^2 column of the same table in out_cross_domain_table.txt.

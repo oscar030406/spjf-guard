@@ -1,0 +1,426 @@
+\providecommand{\devnum}[1]{#1}
+
+\appendix
+
+\section{Proofs of the tightness results}
+\label{app:proofs}
+
+This appendix gives in full the constructions sketched in
+Section~\ref{sec:theory}. All of them are exact in integer arithmetic; we
+simulated every one of them and checked every intermediate quantity of every
+proof job by job, including an independent audit of work conservation and server
+capacity re-derived from the produced schedule.
+
+\subsection{The workload comparison}
+\label{app:strict}
+
+\begin{proof}[Proof of Lemma~\ref{lem:gap}]
+Put $D = U_A - U_B$. Arrivals add the same jump to both terms, so $D$ is
+continuous, and between arrivals it changes at rate
+$-(\min(N_A,k) - \min(N_B,k))$; it is therefore piecewise linear with
+breakpoints among the finitely many arrival and completion instants of the two
+runs.
+
+If $U_A(u) > (k-1)L$ then more than $k-1$ jobs are present under $A$, each
+carrying at most $L$, so every server of $A$ is busy and
+$\min(N_A,k) = k \ge \min(N_B,k)$: $D$ does not increase at $u$. Fix $t$ and let
+$S = \{u \le t : U_A(u) \le (k-1)L\}$, which is non-empty because $U_A$ vanishes
+before the first arrival, and put $t_0 = \sup S$. The supremum need not be
+attained, since $U_A$ jumps upwards at arrivals, so we use the left limit:
+there are $u_n \uparrow t_0$ with $U_A(u_n) \le (k-1)L$, hence
+$U_A(t_0^-) \le (k-1)L$ and, $D$ being continuous,
+$D(t_0^-) \le U_A(t_0^-) \le (k-1)L$ because $U_B \ge 0$. On $(t_0, t]$ we have
+$U_A > (k-1)L$, so $D$ does not increase there, and $D(t) \le (k-1)L$.
+Exchanging $A$ and $B$ gives the other direction. That the constant cannot be
+lowered is the cascade of Appendix~\ref{app:cascade}, which reaches
+$(k-1)L\,(1 - ((k-1)/k)^m)$ after $m$ rounds.
+\end{proof}
+
+\begin{proof}[Proof of the strict inequality in Lemma~\ref{lem:gap}]
+Keep the notation above, so $D = U_A - U_B$ is continuous and piecewise
+linear with finitely many pieces. Suppose $D(t) = (k-1)L$ for some $t$ and let
+$t_1$ be the smallest such $t$; it exists because $\{D = (k-1)L\}$ is closed and
+$D(0) = 0 < (k-1)L$, using $L > 0$.
+
+Let $I$ be the linear piece immediately to the left of $t_1$, which has positive
+length. Its slope is strictly positive: a negative slope would put
+$D > (k-1)L$ somewhere on $I$ and a zero slope would put $D = (k-1)L$ on all of
+$I$, and either contradicts the minimality of $t_1$. The slope of $D$ is
+$-(\min(N_A,k) - \min(N_B,k))$, so $\min(N_A,k) < \min(N_B,k)$ on $I$ and
+therefore $N_A \le k-1$ there.
+
+With at most $k-1$ jobs present and $A$ work-conserving, none of $A$'s jobs
+waits, so all of them are in service; hence $U_A$ falls at rate $N_A$ on $I$,
+and $U_A \le (k-1)L$ on $I$ because each of the at most $k-1$ present jobs
+carries at most $L$. Taking left limits at $t_1$ and using the continuity of
+$D$,
+\[
+  U_A(t_1^-) - U_B(t_1^-) = (k-1)L , \qquad U_A(t_1^-) \le (k-1)L ,
+  \qquad U_B \ge 0 ,
+\]
+which forces $U_B(t_1^-) = 0$ and $U_A(t_1^-) = (k-1)L$. Since $L > 0$, this
+gives $N_A \ge 1$ on $I$ --- with $N_A = 0$ we would have $U_A(t_1^-) = 0$ ---
+so $U_A$ is strictly decreasing on $I$ and
+$U_A(t_1^-) < \sup_I U_A \le (k-1)L$, a contradiction. Exchanging $A$ and $B$
+gives the other direction.
+\end{proof}
+
+\subsection{The cascade}
+\label{app:cascade}
+
+Both tightness results begin from the same construction, which drives the
+workload gap of Lemma~\ref{lem:gap} to its ceiling geometrically.
+
+\begin{lemma}
+\label{lem:cascade}
+Fix $k \ge 2$ and $m \ge 1$ and set $L = k^m$. There is an input and a
+work-conserving policy $P$ such that, at time $T_m = mL$, first-come first-served
+has completed every job and idles all $k$ servers, while $P$ holds exactly $k-1$
+jobs in service, each with remaining service
+\[
+  f \;=\; \frac{\rho_m}{k-1} \;=\; L\Bigl(1 - \bigl(\tfrac{k-1}{k}\bigr)^{m}\Bigr) ,
+  \qquad
+  \rho_m \;=\; (k-1)L\Bigl(1 - \bigl(\tfrac{k-1}{k}\bigr)^{m}\Bigr) ,
+\]
+so that $U_P(T_m) - U_{\mathrm{FCFS}}(T_m) = \rho_m \to (k-1)L$ as
+$m \to \infty$. Every $\rho_j$ and every intermediate time is an integer.
+\end{lemma}
+
+\begin{proof}
+The input consists of $m$ identical rounds; round $j$ occupies
+$[T_j, T_{j+1}) = [jL, (j+1)L)$. At time $T_j$ inject, in rank order, $k-1$
+\emph{long} jobs of service $L$ and then $L$ \emph{short} jobs of service $1$, so
+that the long jobs carry the lower ranks. Let $P$ be the static-priority policy
+that dispatches a waiting short job whenever one exists and a long job
+otherwise; it is work-conserving.
+
+We show by induction that at $T_j$ first-come first-served has completed
+everything and idles, while $P$ has exactly $k-1$ jobs in service with total
+remaining $\rho_j$, where $\rho_0 = 0$.
+
+\emph{First-come first-served in round $j$.} All $k$ servers are free at $T_j$,
+so it dispatches the $k-1$ long jobs and one short job. Its remaining server
+takes the $L$ short jobs back to back and finishes at $T_j + L$; the long jobs
+also finish at $T_j + L$. So all $k$ servers are busy on $(T_j, T_{j+1})$ and
+the system is empty and idle again at $T_{j+1}$.
+
+\emph{$P$ in round $j$.} At $T_j$, $P$ has one free server, which takes a short
+job. Its $k-1$ carried-over jobs all complete at $T_j + \rho_j/(k-1)$ and their
+servers take short jobs as well, and $P$ never touches a long job while a short
+one waits. So all $k$ servers are busy from $T_j$ until the short jobs run out,
+at $T_j + \tau_j$ with $k\tau_j = \rho_j + L$. ($P$ is indeed busy throughout:
+the carried-over jobs end at $\rho_j/(k-1) \le \tau_j$, which is
+$k\rho_j \le (k-1)(\rho_j + L)$, that is $\rho_j \le (k-1)L$, true by
+induction.) At $T_j + \tau_j$ the policy $P$ holds only the $k-1$ long jobs of
+the round; it dispatches them and leaves one server idle.
+
+\emph{The gain.} On $(T_j + \tau_j, T_{j+1}]$, first-come first-served has $k$
+busy servers and $P$ has $k-1$, so the gap grows at rate $1$ over a window of
+length $L - \tau_j$. At $T_{j+1}$ the reference system is empty, and each of
+$P$'s $k-1$ long jobs has run for $L - \tau_j$ and has $\tau_j$ left. The
+hypothesis is reproduced with $\rho_{j+1} = (k-1)\tau_j = (k-1)(\rho_j + L)/k$,
+whose solution with $\rho_0 = 0$ is
+$\rho_j = (k-1)L\,(1 - ((k-1)/k)^j)$. With $L = k^m$ every $\rho_j$ and $\tau_j$
+for $j \le m$ is an integer.
+\end{proof}
+
+\subsection{Tightness of the net-overtake identity}
+\label{app:tight1}
+
+\begin{proof}[Proof of Theorem~\ref{thm:tight1}]
+\emph{Upward.} Run the cascade of Lemma~\ref{lem:cascade} for $m$ rounds and, at
+$T_m$, inject in rank order $k-1$ jobs of service $L$, then the victim $i$ of
+service $L$, then $N > 2kL$ jobs of service $1$. Let $P$ continue as the static
+priority ``the $k-1$ new long jobs first, then the short jobs, then $i$''.
+
+At $T_m$ all $k$ servers of the reference policy are free and its waiting set in
+rank order is the $k-1$ new long jobs, then $i$, then the short ones. It
+dispatches the long jobs and then $i$, all in the phase at $T_m$. Hence
+$W_{\mathrm{FCFS}}[i] = 0$; the $k-1$ new long jobs are dispatched strictly
+before $i$ in its sequence and are in service at $s^{\mathrm{FCFS}}_i = T_m$
+with their full service, so $\rho^{\mathrm{FCFS}}_i = (k-1)L$ and
+$R^{\mathrm{FCFS}}_i = (k-1)L$.
+
+Under $P$, one server is free at $T_m$ and takes a new long job; when the $k-1$
+carried-over jobs finish, all at $T_m + f$ with $f < L$, their servers take the
+remaining new long jobs and then short jobs. The victim waits while any short
+job waits. Short jobs are executed at rate at most $k$, so they are not exhausted
+before $T_m + N/k$, and $N > 2kL > k(f+L)$ makes that later than $T_m + f + L$,
+by which time every new long job has completed. So $i$ is dispatched after all
+$k-1$ new long jobs have finished, and at $s^P_i$ the other $k-1$ servers hold
+short jobs, giving $0 \le \rho^P_i \le k-1$. Also
+$R^P_i = \rho_m + (k-1)L$, since the carried-over jobs and the new long jobs all
+have rank below $i$ and the new long jobs are untouched at $a_i$. Therefore
+$R^P_i - R^{\mathrm{FCFS}}_i = \rho_m$ and
+\begin{align*}
+  \Delta_i \;&=\; \bigl(R^P_i - R^{\mathrm{FCFS}}_i\bigr) - \rho^P_i
+                 + \rho^{\mathrm{FCFS}}_i
+  \;\ge\; \rho_m + (k-1)L - (k-1) \\
+  \;&=\; 2(k-1)L - (k-1)L\bigl(\tfrac{k-1}{k}\bigr)^{m} - (k-1) ,
+\end{align*}
+and both error terms are $o(L)$ as $m \to \infty$ with $L = k^m$.
+
+\emph{Downward.} Run the mirrored cascade: inject the $L$ short jobs first in
+rank order and the $k-1$ long jobs after, and let $P$ be ``long jobs before short
+ones''. The induction of Lemma~\ref{lem:cascade} runs with the roles of the two
+policies exchanged, so at $T_m$ the policy $P$ is empty and idle while the
+reference holds $k-1$ jobs with $f$ of service left each. At $T_m$ inject, in
+rank order, one \emph{filler} job of service $f$, the victim $i$ of service
+$L-1$, and $k-1$ jobs of service $L$; let $P$ be ``the $k-1$ new long jobs
+first, then $i$, then the filler''.
+
+At $T_m$ the reference policy has $k-1$ servers busy with carried-over jobs,
+each with exactly $f$ left, and one free server, which takes the filler --- the
+lowest-ranked waiting job --- which also has service $f$. So all $k$ of its
+servers complete simultaneously at $T_m + f$, and it then dispatches $i$, with
+nothing else dispatched in that phase before it. Hence
+$W_{\mathrm{FCFS}}[i] = f$ and $\rho^{\mathrm{FCFS}}_i = 0$.
+
+Under $P$ the system is empty at $T_m$ with $k$ free servers, and it dispatches
+the $k-1$ new long jobs and then $i$, all at $T_m$. So $W_P[i] = 0$,
+$\mathrm{In}_i = (k-1)L$, $\rho^P_i = (k-1)L$, and the filler, of rank below
+$i$, is dispatched after $i$, so $\mathrm{Out}_i = f$. Therefore
+\begin{align*}
+  \Delta_i \;&=\; k(0 - f) - \bigl((k-1)L - f\bigr)
+           \;=\; -(k-1)f - (k-1)L \\
+           \;&=\; -\rho_m - (k-1)L \;\longrightarrow\; -2(k-1)L .
+\end{align*}
+
+\emph{Non-attainment.} Lemma~\ref{lem:gap} gives
+$|R^P_i - R^{\mathrm{FCFS}}_i| < (k-1)L$ strictly, and step (ii) of
+Theorem~\ref{thm:identity} gives $0 \le \rho^P_i, \rho^{\mathrm{FCFS}}_i \le
+(k-1)L$; combining them in each direction gives $|\Delta_i| < 2(k-1)L$.
+\end{proof}
+
+For the record, the exact values of $\Delta_i / L$ produced by these two
+families, against the ceiling $2(k-1)$:
+
+\begin{center}
+\begin{tabular}{rrrrrr}
+\hline
+$k$ & $L$ & $m$ & upward $\Delta_i/L$ & downward $\Delta_i/L$ & $2(k-1)$ \\
+\hline
+2 & 64 & 6 & $127/64 = 1.984$ & $-127/64 = -1.984$ & 2 \\
+3 & 81 & 4 & $290/81 = 3.580$ & $-292/81 = -3.605$ & 4 \\
+4 & 64 & 3 & $303/64 = 4.734$ & $-303/64 = -4.734$ & 6 \\
+\hline
+\end{tabular}
+\end{center}
+
+In the executed-work convention of Remark~\ref{rem:directions} the upward
+column is unchanged to within $o(L)$, while the downward column becomes
+$-63/64$, $-130/81$ and $-111/64$, that is $-(k-1)L$ rather than $-2(k-1)L$.
+The same-phase share of $|\Delta_i|$ is \devnum{0.00\%}, \devnum{0.69\%} and
+\devnum{0.00\%} upward and \devnum{50.39\%}, \devnum{55.48\%} and
+\devnum{63.37\%} downward, and the victim's own excess is
+\devnum{$+3.00L$}, \devnum{$+3.20L$}, \devnum{$+3.19L$} upward and
+\devnum{$-0.98L$}, \devnum{$-0.80L$}, \devnum{$-0.58L$} downward.
+
+\subsection{Tightness of the guard bound}
+\label{app:tight2}
+
+\begin{proof}[Proof of Theorem~\ref{thm:tight2}(i)]
+At $t = 0$ let there arrive, in rank order, $k$ jobs of service $L$, the victim
+$i$, and at least $B + k$ jobs of service $1$; let the base policy be the static
+priority ``the $k$ long jobs, then the short ones, then $i$'', and take the
+constant budget $B$. First-come first-served dispatches the $k$ long jobs in the
+phase at $t = 0$, filling every server, so $W_{\mathrm{FCFS}}[i] = L$.
+
+If $B = 0$ then $E(t)$ contains every waiting job at every dispatch epoch and the
+wrapper is first-come first-served, so the excess is $0 = \lceil B/k \rceil$. If
+$B > 0$ then at $t = 0$ no job has completed, $E(0)$ is empty, and the base fills
+the servers with the $k$ long jobs. They complete at $t = L$, and
+$\mathrm{over}[i](L) = 0$ still, every completed job having rank below $i$. From
+$t = L$ on, all $k$ servers are free at each integer instant; while
+$\mathrm{over}[i] < B$ the set $E$ is empty --- the waiting jobs of rank above
+$i$ have no completed job of still higher rank ahead of them --- so the base
+dispatches $k$ short jobs, which complete one time unit later. Hence
+$\mathrm{over}[i](L + r) = rk$, the first instant at which
+$\mathrm{over}[i] \ge B$ is $L + \lceil B/k \rceil$, and there $i$ is the
+minimum-rank member of $E$ and is dispatched. So
+$\mathrm{excess}_P[i] = \lceil B/k \rceil$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:tight2}(ii)]
+The upper bound $c(k) < 3k-2$ is Theorem~\ref{thm:guard}: for a constant budget,
+$k\,\mathrm{excess}_P[i] \le \mathrm{In}_i - \mathrm{Out}_i + 2(k-1)L
+ \le \mathrm{In}_i + 2(k-1)L < B + kL + 2(k-1)L = B + (3k-2)L$, the last step
+being the strict inequality \eqref{eq:guardin}. When $i$ has no overtaker the
+excess is at most $(2-2/k)L$ and the inequality is strict as well.
+
+For the lower bound, fix $k \ge 2$, $m \ge 1$, $L = k^m$, and let $f$ and
+$\rho_m$ be as in Lemma~\ref{lem:cascade}. Run the cascade for $m$ rounds. At
+$T_m$ inject, all arriving at $T_m$ and in rank order,
+\begin{itemize}
+  \item $k-1$ \emph{new long} jobs of service $L$, of rank below the victim;
+  \item the victim $i$, of service $L$;
+  \item one \emph{sync} job of service $f$;
+  \item one \emph{pre} job of service $L$;
+  \item $k$ \emph{final} jobs of service $L$;
+\end{itemize}
+set the constant budget to $B = f + L + 1$, and let the base policy be the static
+priority ``short jobs of the cascade, then sync, then the new long jobs and pre,
+then the finals, and the victim last''.
+
+\emph{The reference run.} At $T_m$ it is empty with all $k$ servers free; it
+dispatches the $k-1$ new long jobs and then $i$ in the phase at $T_m$, so
+$W_{\mathrm{FCFS}}[i] = 0$.
+
+\emph{The guard does not fire during the cascade.} Inside round $j$ the only
+waiting jobs with completed higher-ranked work are that round's long jobs, whose
+higher-ranked jobs are the $L$ short jobs of the round and everything in later
+rounds, which have not arrived. Over $[T_j, T_j + \tau_j]$ the $k$ servers
+execute $k\tau_j = \rho_j + L$ units of work, of which $\rho_j$ belongs to the
+carried-over jobs, so at most $L$ units of short-job work can have completed.
+Hence $\mathrm{over}[q](t) \le L < B$ for every waiting $q$ at every dispatch
+epoch of the cascade, $E(t)$ is empty throughout, and the wrapped run reproduces
+Lemma~\ref{lem:cascade}.
+
+\emph{The finale.} At $T_m$ one server is free and $\mathrm{over}[q](T_m) = 0$
+for every waiting $q$, so the base chooses and takes the sync job. The $k-1$
+carried-over jobs have exactly $f$ left and the sync job has service $f$, so all
+$k$ servers free simultaneously at $T_m + f$. There $\mathrm{over}[i] = f$,
+because only the sync job has rank above $i$ among the completed jobs, and
+$f < B$; no other waiting job has a completed higher-ranked job either, so $E$ is
+empty and the base fills all $k$ servers with the $k-1$ new long jobs and pre.
+These all have service $L$ and complete simultaneously at $T_m + f + L$, where
+\[
+  \mathrm{over}[i] \;=\; f + L \;=\; B - 1 \;<\; B ,
+\]
+since only sync and pre have rank above $i$ among the completed jobs. So $E$ is
+still empty, the base fills all $k$ servers with the $k$ final jobs, and they
+complete at $T_m + f + 2L$, at which instant
+$\mathrm{over}[i] = B - 1 + kL \ge B$. The guard fires, $i$ is the minimum-rank
+member of $E$, and it is dispatched with every server free, so $\rho^P_i = 0$.
+
+\emph{The value.} $W_P[i] = f + 2L$, $\mathrm{In}_i = B - 1 + kL$,
+$\mathrm{Out}_i = 0$, and
+\[
+  \frac{k\,\mathrm{excess}_P[i] - B}{L}
+  \;=\; \frac{k(f + 2L) - (f + L + 1)}{L}
+  \;=\; \frac{(k-1)f + (2k-1)L - 1}{L} .
+\]
+As $m \to \infty$ with $L = k^m$ we have $f/L \to 1$ and $1/L \to 0$, so the
+ratio tends to $(k-1) + (2k-1) = 3k-2$.
+
+The same instance also has $\Delta_i = \rho_m + (k-1)L \to 2(k-1)L$, so the two
+sources of slack in Theorem~\ref{thm:guard} are saturated together.
+\end{proof}
+
+The values produced, against the ceiling $3k-2$:
+
+\begin{center}
+\begin{tabular}{rrrrrrr}
+\hline
+$k$ & $L$ & $m$ & jobs & $B$ & excess & $(k\,\mathrm{excess}-B)/L$ \\
+\hline
+2 & 64 & 6 & 396 & 128 & 191 & $127/32 = 3.969$ \\
+2 & 128 & 7 & 909 & 256 & 383 & $255/64 = 3.984$ \\
+3 & 81 & 4 & 340 & 147 & 227 & $178/27 = 6.593$ \\
+3 & 243 & 5 & 1233 & 455 & 697 & $1636/243 = 6.733$ \\
+4 & 64 & 3 & 211 & 102 & 165 & $279/32 = 8.719$ \\
+4 & 256 & 4 & 1046 & 432 & 687 & $579/64 = 9.047$ \\
+5 & 125 & 3 & 399 & 187 & 311 & $1368/125 = 10.944$ \\
+6 & 216 & 3 & 677 & 308 & 523 & $1415/108 = 13.102$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Consistency, and why the converse fails}
+\label{app:consistency}
+
+\begin{proof}[Proof of Proposition~\ref{prop:consistency}]
+Induct on dispatch epochs: up to the first epoch at which the two runs could
+differ their completion histories agree, hence so does $\mathrm{over}[\cdot]$,
+so $E(t)$ is empty in the wrapped run and it copies $A$. The first consequence
+uses $\mathrm{over}[q](t) \le \mathrm{In}^A_q$, a completed overtaker of $q$
+having been dispatched while $q$ waited; the second uses
+Corollary~\ref{cor:necessary}.
+\end{proof}
+
+The converse fails, so this is not an equivalence. Take $k = 1$, two jobs of
+service $1$ at $t = 0$, the base policy ``higher rank first'', and $B = 1$. Both
+runs dispatch in the order $(1,0)$, yet at the second dispatch the waiting job
+has $\mathrm{over} = 1 \ge B$, so the guard fires and happens to choose what the
+base would have chosen. Nor is there multiplicative consistency: with $k = 1$,
+one job of service $L$ followed by $m$ jobs of service $1$ all at $t = 0$, the
+wrapper with $B = 0$ is first-come first-served while the base ordering by
+service time is not, and the ratio of mean waits is $(2L + m - 1)/(m+1)$,
+unbounded in $L$.
+
+\subsection{Approaching the single-server bound}
+\label{app:floor}
+
+\begin{proof}[Proof of the second claim of Proposition~\ref{prop:floor}]
+Fix $L$, a budget $B$, and a granularity $g$ dividing $B$ with $0 < g \le L$.
+Take $k = 1$ and, at $t = 0$, the victim $i$ of rank $0$, then $B/g - 1$ jobs of
+service $g$, then one job of service $L$; let the base policy dispatch the jobs
+of service $g$ first, then the one of service $L$, and never the victim.
+First-come first-served starts $i$ at once, so $W_{\mathrm{FCFS}}[i] = 0$.
+
+Under the wrapper, after $r$ of the jobs of service $g$ have completed,
+$\mathrm{over}[i] = rg$, which stays below $B$ for $r \le B/g - 1$. At the last
+such instant $\mathrm{over}[i] = B - g < B$, the guard does not fire, and the
+base dispatches the job of service $L$. When it completes,
+$\mathrm{over}[i] = B - g + L \ge B$ and the guard releases $i$. Hence
+$\mathrm{excess}_P[i] = B - g + L$, so $\mathrm{excess}_P[i] - B = L - g$, which
+approaches $L$ as $g \to 0$ and never reaches it. For example
+$(L, B, g) = (100, 40, 1)$ gives $\mathrm{excess}_P[i] - B = 99$, and
+$(64, 32, 1)$ gives $63$.
+\end{proof}
+
+\subsection{The price of the guarantee}
+\label{app:price}
+
+\begin{proof}[Proof of Theorem~\ref{thm:price}]
+Let $S(Q)$ be the set of inverted pairs of a policy $Q$, that is the pairs
+$(u,v)$ with $u < v$ in rank and $v \prec u$. Counting the same pairs in two ways,
+\[
+  \sum_i \mathrm{In}_i \;=\; \sum_{(u,v) \in S(Q)} C_v ,
+  \qquad
+  \sum_i \mathrm{Out}_i \;=\; \sum_{(u,v) \in S(Q)} C_u ,
+\]
+exactly, for every $k$. Write $\Delta(Q) = \sum_i (W_{\mathrm{FCFS}}[i] -
+W_Q[i])$ for the total saving against the reference and $E = 2(1 - 1/k)L(m+n)$.
+Summing Theorem~\ref{thm:identity} over the $m+n$ jobs gives
+\begin{equation}
+  \Bigl| \Delta(Q) - \tfrac{1}{k} \sum_{(u,v) \in S(Q)} (C_u - C_v) \Bigr|
+  \;\le\; E
+  \qquad \text{for every } Q .
+  \label{eq:sumbound}
+\end{equation}
+
+\emph{Numerator.} A pair contributes positively only when $u$ is a long job and
+$v$ a short one, contributing $L - s$. For a fixed long job $u$, the number of
+short jobs dispatched before it is at most $\mathrm{In}_u / s$, and
+Corollary~\ref{cor:necessary} gives $\mathrm{In}_u \le kG + (3k-2)L$. Summing
+over the $m$ long jobs and applying \eqref{eq:sumbound},
+\[
+  \Delta(P) \;\le\; \tfrac{1}{k}\, m\,(L-s)\,\frac{kG + (3k-2)L}{s} \;+\; E .
+\]
+
+\emph{Denominator.} Sorting by service time inverts every one of the $mn$
+long--short pairs, so its pair sum is exactly $mn(L-s)$, and
+\eqref{eq:sumbound} applied to it gives
+$\Delta(\mathrm{SJF}) \ge \tfrac{1}{k} m n (L-s) - E$. At $k > 1$ the
+denominator carries the same error as the numerator, so treating the reference
+saving as exact would understate $\varepsilon$.
+
+\emph{Division.} Both bounds are positive once $mn(L-s)/k > E$, and then
+\[
+  \frac{\Delta(P)}{\Delta(\mathrm{SJF})}
+  \;\le\; \frac{\tfrac{1}{k} m (L-s)\,(kG + (3k-2)L)/s + E}
+               {\tfrac{1}{k} m n (L-s) - E}
+  \;=\; \frac{kG + (3k-2)L}{n s} \;+\; \varepsilon ,
+\]
+where $\varepsilon$ collects both corrections. The leading terms are
+$\Theta(mn)$ and $E = \Theta(m+n)$, so $\varepsilon = O((m+n)/(mn)) \to 0$.
+Dividing numerator and denominator by $m+n$ turns the two total savings into the
+two mean savings and leaves the ratio unchanged.
+\end{proof}
+
+At $k = 1$ the error term vanishes identically, the sum identity is exact, and
+the achievable fraction is $\min(1, G/(ns))$: the only way to beat first-come
+first-served in mean wait is to invert pairs in which the later-ranked job is
+the shorter one, and the saving is exactly the sum of the service-time
+differences over the inversions.
