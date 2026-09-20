@@ -244,9 +244,11 @@ depends on the promise and on the load. At $\rho = \devnum{1.0}$, Guard($\devnum
 \devnum{0.801} of the FCFS-to-SJF gap against \devnum{0.916} for the unguarded policy, so it
 gives up \devnum{0.115} of the gap at a promise of ten job-limits, about an eighth of what the
 unguarded ordering buys; at $G = \devnum{1200}$ s the cost is \devnum{0.087} and at
-$G = \devnum{300}$ s, five job-limits, \devnum{0.438}. These three are differences of the point
-values in Table~\ref{tab:guard}; the package's paired intervals are computed between guarded
-policies, which is where the comparisons below sit.
+$G = \devnum{300}$ s, five job-limits, \devnum{0.438}. The paired week-block intervals for
+these three differences are \devnum{[-0.142, -0.077]}, \devnum{[-0.098, -0.064]} and
+\devnum{[-0.526, -0.314]}; none contains zero, so the promise has a resolved cost at every
+$G$ we tested.
+% Source: outputs/dev_tables/paired_differences.csv, rows Guard(G) - SPJF-E, rho = 1.0.
 
 % Wider than the MDPI text block: set across the full page with the template's
 % adjustwidth/\extralength mechanism.
@@ -476,8 +478,10 @@ bound $2(k-1)L$ is \devnum{14}$L$, and across the nine cells the maximum sits be
 build the cascade of Theorem~\ref{thm:tight1} stops, so the measurement says the workload does
 not attain the constant, not that the constant is loose. Same-phase bookkeeping, the mechanism
 behind the degenerate extremal instances of Remark~\ref{rem:directions}, accounts for at most
-\devnum{0.36\%} of the total $\mathrm{In}$ in any cell, so the executed-work convention would
-not change the picture here. The net-overtake term carries the per-job excess almost entirely:
+\devnum{0.36\%} of the total $\mathrm{In}$ in any of the nine cells of
+Table~\ref{tab:resid}, so the executed-work convention would not change the picture for these
+policies. It is not negligible everywhere: under the randomised ranking, which ties many jobs
+into one dispatch instant, the share reaches \devnum{14.95\%}. The net-overtake term carries the per-job excess almost entirely:
 $(\mathrm{In}_i - \mathrm{Out}_i)/k$ explains $R^2 = \devnum{0.983}$ to \devnum{0.9996} of the
 variance of $W_P[i] - W_{\mathrm{FCFS}}[i]$, with a worst per-job error of \devnum{44.9} to
 \devnum{50.9} s where the theorem permits $(2-2/k)L$, that is \devnum{90} s at $k = 4$ and
