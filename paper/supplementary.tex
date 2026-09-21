@@ -134,9 +134,9 @@ Compute farm           & ENT    & \devnum{0.8903} & \devnum{0.265} & \devnum{1.4
 \end{table}
 % Sources of Table~\ref{tab:s_pred_cross} (carried over from 04_prediction.tex, where this
 %   table was Table 2 until the sixth revision pass):
-%   Serverless invocations and compute farm: prechecks/cross_domain/out_cross_domain_table.txt,
+%   Serverless invocations and compute farm: evidence/cross_domain/out_cross_domain_table.txt,
 %     section B ("predictability of the cost from information at arrival"), rows azure */netbatch *.
-%   CI pools A and B: prechecks/firefox_ci/out_SUMMARY.txt, section C; A =
+%   CI pools A and B: evidence/firefox_ci/out_SUMMARY.txt, section C; A =
 %     releng-hardware/gecko-t-osx-1500-m4, B = releng-hardware/gecko-t-linux-talos-2404.
 %   The identity variance shares (0.867 serverless, 0.638 compute farm) quoted in Section 4.4
 %     are the eta^2 column of the same table in out_cross_domain_table.txt.
@@ -209,11 +209,11 @@ mean ratio of \devnum{1.14} on its test part where the whole-window capacity giv
 \devnum{0.99}. The difference between those two numbers is the size of the circularity
 that fitting on the reported window would have hidden.
 % Sources of Section~\ref{sec:supp_data} (carried over from 07_data.tex):
-%   Field audit: prechecks/codebench_audit/out_tail_and_counts.txt and
-%     prechecks/codebench_service_v2/out_service_v2.txt (slopes, kill feedback, the 60 s
+%   Field audit: evidence/codebench_audit/out_tail_and_counts.txt and
+%     evidence/codebench_service_v2/out_service_v2.txt (slopes, kill feedback, the 60 s
 %     limit and its last over-limit run, the zero-cost blocks, the two short archives and
 %     the release-statistics comparison).
-%   Sharpness and circularity: prechecks/firefox_ci_holdout/out_SUMMARY.txt, section E
+%   Sharpness and circularity: evidence/firefox_ci_holdout/out_SUMMARY.txt, section E
 %     (5-8 values of k inside 10% of the recorded mean) and section F (the circularity
 %     comparison 1.14 vs 0.99 on the talos reverse split); the same rows are in holdout.csv.
 
@@ -528,7 +528,7 @@ unbounded in $L$.
 %   \ref into the manuscript does not resolve from this file: Lemma~\ref{lem:gap} is
 %   Lemma 1, Proposition~\ref{prop:consistency} is Proposition 1,
 %   Corollary~\ref{cor:necessary} is Corollary 2 and Appendix~\ref{app:cascade} is
-%   Appendix A.2.  Simulated and checked in prechecks/guard_theory; nothing was
+%   Appendix A.2.  Simulated and checked in evidence/guard_theory; nothing was
 %   recomputed for this file.
 
 %=================================================================

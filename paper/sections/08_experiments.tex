@@ -49,7 +49,7 @@ Comparators & As named in Table~\ref{tab:policies}. Fixed($G$) is the equal-prom
 % Source of Table~\ref{tab:setup}: outputs/paper_tables/tab_setup.tex, produced by
 %   `python scripts/emit_paper_tables.py` from outputs/dev_tables/ (see GENERATED.md for the
 %   regeneration recipe and its check).  The trace, load-level, single-server, metric and
-%   interval rows are unchanged from prechecks/main_v3/out_main_v31.txt section 2 (trace table,
+%   interval rows are unchanged from evidence/main_v3/out_main_v31.txt section 2 (trace table,
 %   rows primary 0-4 and k1) and are not produced by the package.  The grids, the rule, the
 %   three selected points, the per-shape winners and the feasible counts are
 %   protocol_lock.draft.json (search_grids.n_points 42/162/54, selection_rule, selected_parameters,
@@ -87,7 +87,7 @@ parameters unchanged.
 % Source of the paragraph above: protocol_lock.draft.json (grids, rule, selected points);
 %   docs/repo_build_status.md third pass, sections 1 and 3 (the three grids at comparable
 %   density, the nine family winners, the integer-microsecond kernel and the deterministic
-%   refit); prechecks/main_v3/out_main_v32.txt section 4 (the drop-one-cell sensitivity table,
+%   refit); evidence/main_v3/out_main_v32.txt section 4 (the drop-one-cell sensitivity table,
 %   row G = 600 capped) and section 1 (what the second decimal of the older floating-point runs
 %   does).
 
@@ -155,7 +155,7 @@ $\rho = \devnum{1.0}$, $k = \devnum{4}$
 \footnotesize
 \textsuperscript{a} These two rows are not produced by the released package, which fits only
 the expected-cost and log-scale scores. They come from the earlier development study
-(\texttt{prechecks/main\_v3}), which used a floating-point clock and a stored copy of the
+(\texttt{evidence/main\_v3}), which used a floating-point clock and a stored copy of the
 predictions, and are printed at the values that study reported; the remaining rows differ from
 it in the second decimal of a wait.
 \end{minipage}
@@ -168,7 +168,7 @@ it in the second decimal of a wait.
 %   The paired differences quoted in the text are outputs/dev_tables/paired_differences.csv,
 %   rows left = SPJF-E, right = SPJF-log at levels 0, 1, 2, columns difference_gap, gap_lo,
 %   gap_hi.  The two footnote-a rows and the refit-noise control in the text are
-%   prechecks/main_v3/out_main_v31.txt sections 4 and 5, rows SPJF-M4refit and SPJF-r1s.
+%   evidence/main_v3/out_main_v31.txt sections 4 and 5, rows SPJF-M4refit and SPJF-r1s.
 
 Scores other than a conditional mean were fitted on the same features and run through the same
 simulator (Table~\ref{tab:scores}). A predicted quantile loses at every load, and the loss grows
@@ -203,13 +203,13 @@ Squared error, raw seconds & \devnum{0.7197} & \devnum{0.8585} & \devnum{0.8873}
 \bottomrule
 \end{tabular}
 \end{table}
-% Source of Table~\ref{tab:scores}: prechecks/ranking_score/out_table_primary_5reps.txt, the
+% Source of Table~\ref{tab:scores}: evidence/ranking_score/out_table_primary_5reps.txt, the
 %   three blocks "primary, reps 0,1,2,3,4, busy-hour rho target 0.5 / 0.8 / 1.0"; column
 %   gain_p99dl for the three load columns and column dgain_p99dl_vs_M4 of the rho 1.0 block for
 %   the last column.  Rows SPJF-M4 / SPJF-tweedie / SPJF-hurdle / SPJF-phv / SPJF-q99 /
 %   SPJF-q90 / SPJF-q50 / SPJF-l2raw.  This is a separate study with its own fits, which is why
 %   its M4 and Tweedie figures differ in the third decimal from Table~\ref{tab:rank}.
-%   Two-class figures in the text: prechecks/ranking_score/out_sim_primary_rep0_twoclass.txt,
+%   Two-class figures in the text: evidence/ranking_score/out_sim_primary_rep0_twoclass.txt,
 %   block primary_rep0_r0.8_twoclass, rows 2CLASS-FCFS-tau0.02 and SPJF-tweedie, column w_p99_dl.
 
 The two kinds of error do not cost the same. Replacing the largest \devnum{1\%} of
@@ -222,7 +222,7 @@ is \devnum{0.26} and \devnum{0.24} of that distance. At \devnum{0.1\%} the two f
 \devnum{0.47} and \devnum{0.04}. Treating a heavy job as light and letting it run first is the
 expensive mistake, by about an order of magnitude. Section~\ref{sec:rank} argues from that
 asymmetry for fitting an estimand instead of minimising a symmetric loss.
-% Source of the asymmetry figures: prechecks/ranking_score/out_sim_primary_rep0_mech.txt and
+% Source of the asymmetry figures: evidence/ranking_score/out_sim_primary_rep0_mech.txt and
 %   out_sim_primary_rep1_mech.txt, blocks primary_rep{0,1}_r1_mech, column w_p99_dl, rows
 %   SPJF-M4, SJF-ref, ORACLE-top1.0pct-under, ORACLE-top1.0pct-over, ORACLE-top0.1pct-under,
 %   ORACLE-top0.1pct-over.  The fractions are (SPJF-M4 - ORACLE)/(SPJF-M4 - SJF-ref) per
@@ -539,8 +539,8 @@ $\rho = \devnum{1.0}$, $k = \devnum{4}$
 %   jobs_checked summing to 5,554,949,400, violations 0, column used_over_allowed with maxima
 %   0.9311 at k = 4, 0.9219 at k = 5, 0.8975 at k = 7 and 0.8850 at k = 8) and
 %   outputs/dev_tables/k1/bound_checks.csv (21 rows, 67,396,287 checks, worst used/allowed
-%   0.9950).  The independent simulator figures are prechecks/main_v3_verify/out_VERDICT.txt,
-%   C2 and the "MAY" list, and prechecks/main_v3/out_main_v31.txt section 10 (finite-skip
+%   0.9950).  The independent simulator figures are evidence/main_v3_verify/out_VERDICT.txt,
+%   C2 and the "MAY" list, and evidence/main_v3/out_main_v31.txt section 10 (finite-skip
 %   used/allowed 1.0000); they verify the earlier pipeline, not the package.
 
 \subsection{A Single Server}
@@ -628,30 +628,30 @@ not survive. The tail share and the AUROC do not depend on the capacity.
 \end{adjustwidth}
 \end{table}
 % Source of Table~\ref{tab:cross}:
-%   CodeBench row: tail share from prechecks/codebench_audit/out_tail_and_counts.txt via
-%     Table~\ref{tab:tails}; AUROC from prechecks/codebench_service_v2/out_service_v2.txt
+%   CodeBench row: tail share from evidence/codebench_audit/out_tail_and_counts.txt via
+%     Table~\ref{tab:tails}; AUROC from evidence/codebench_service_v2/out_service_v2.txt
 %     SUMMARY 1 (config ires0, train core, M4); FCFS p99/L is now 273.50 s / 60 s = 4.56,
 %     the five-overlay mean of Table~\ref{tab:guard}'s rho = 1.0 block header, replacing the
-%     overlay-0 figure 4.39 (263.4 s) that prechecks/cross_domain/out_cross_domain_table.txt
+%     overlay-0 figure 4.39 (263.4 s) that evidence/cross_domain/out_cross_domain_table.txt
 %     section C, row "CodeBench busy-hour rho=1.06" carries: every other CodeBench entry in
 %     this row is the five-overlay aggregation, and the row now uses one aggregation
 %     throughout (referee item RR-10).  The gap, the unguarded max excess (5,904.5 s / 60 = 98.4 L)
 %     and the guard entry (Guard(300): gap 0.478, max excess 229.1 s = 3.82 L) from
 %     Table~\ref{tab:guard}, level rho = 1.0, which supersedes the CodeBench rows
 %     of the cross-domain file.
-%   ACcoding, Serverless and Compute farm rows: prechecks/cross_domain/out_cross_domain_table.txt,
+%   ACcoding, Serverless and Compute farm rows: evidence/cross_domain/out_cross_domain_table.txt,
 %     sections A (top1% work), B (AUROC), C (FCFS p99/L, gap SPJF, SPJF max excess in L) and D
 %     (guard 5 L: gap p99 and max excess in L); the ACcoding guard entry is instead
-%     prechecks/accoding_v2/out_accoding_v2.txt, block "sim poisson_rho0.8_main", row
+%     evidence/accoding_v2/out_accoding_v2.txt, block "sim poisson_rho0.8_main", row
 %     GUARD-M4-B305, columns gain_p99 (0.974) and max_exces (67.5 s = 2.21 L).
-%   CI pool rows: prechecks/firefox_ci/out_SUMMARY.txt, section A (top 1% work share), section C
+%   CI pool rows: evidence/firefox_ci/out_SUMMARY.txt, section A (top 1% work share), section C
 %     (ALL/log AUROC), section D (FCFS p99/L', gap SPJF, SPJF max excess, and the G = 5 L' guard
 %     rows: gap mean 0.7351 and max excess 2.6441 L' for pool A, gap p99 0.9576 and max excess
 %     0.3384 L' for pool B), section E (the p99/L' ratios).  Section D exists only at the
 %     whole-window fitted capacities k_eff = 156 (pool A) and 96 (pool B), which is why the two
 %     scheduling columns and the FCFS p99/L of those rows keep the whole-window fit; footnote c
 %     says so.  The held-out figures in footnote c are
-%     prechecks/firefox_ci_holdout/out_SUMMARY.txt section A (k_eff step-1 grid per split:
+%     evidence/firefox_ci_holdout/out_SUMMARY.txt section A (k_eff step-1 grid per split:
 %     osx 155/155/157 of 173, talos 96/92 of 105) and section F (held-out mean 0.90-1.14,
 %     p99 0.86-1.16, p90 0.81-1.21); the same rows are in holdout.csv.  The row labels now name
 %     the fitted capacity instead of calling it "recorded capacity", which it was not.
@@ -712,7 +712,7 @@ Opposite timestamp reading   & \devnum{4.000} & \devnum{268.75} & \devnum{0.926 
 \bottomrule
 \end{tabular}
 \end{table}
-% Source of Table~\ref{tab:sens}: prechecks/codebench_service_v2/out_service_v2.txt, SUMMARY 5,
+% Source of Table~\ref{tab:sens}: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 5,
 %   the four blocks "pool19 / sbatch / sdrop / isub0 (3 reps), target rho 1.0"; columns k,
 %   p99_dl (FCFS row), and the variant's own gain_p99_dl for rows SPJF-M4 and GUARD-M4-B600.
 %   The "Primary pool" row is the "primary(0-2) gain_p99_dl" column of the same blocks, which

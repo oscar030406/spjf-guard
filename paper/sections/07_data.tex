@@ -67,15 +67,15 @@ day &
 \end{adjustwidth}
 \end{table}
 % Sources of Table~\ref{tab:traces}:
-%   CodeBench sizes: prechecks/codebench_audit/out_tail_and_counts.txt (4,611,325 events;
-%     1,398,801 submits; 3,212,524 tests) and prechecks/accoding_v2/out_accoding_v2.txt
+%   CodeBench sizes: evidence/codebench_audit/out_tail_and_counts.txt (4,611,325 events;
+%     1,398,801 submits; 3,212,524 tests) and evidence/accoding_v2/out_accoding_v2.txt
 %     stage compare section B (861,478 graded submissions with C_cap > 0; 863,149 is the
-%     block count before the C == 0 drop, prechecks/codebench_service_v2/out_service_v2.txt).
-%   ACcoding sizes: prechecks/accoding_v2/out_accoding_v2.txt, stages selftest and audit 1b.
-%   Serverless: prechecks/cross_domain/out_audit_azure.txt (rows, span).
-%   CI pools: prechecks/firefox_ci/out_SUMMARY.txt section A and out_simval.txt (spans).
-%   Compute farm: prechecks/cross_domain/out_audit_netbatch.txt.
-%   OULAD: prechecks/oulad/out_load.txt (header line, nine 2013 course-presentations).
+%     block count before the C == 0 drop, evidence/codebench_service_v2/out_service_v2.txt).
+%   ACcoding sizes: evidence/accoding_v2/out_accoding_v2.txt, stages selftest and audit 1b.
+%   Serverless: evidence/cross_domain/out_audit_azure.txt (rows, span).
+%   CI pools: evidence/firefox_ci/out_SUMMARY.txt section A and out_simval.txt (spans).
+%   Compute farm: evidence/cross_domain/out_audit_netbatch.txt.
+%   OULAD: evidence/oulad/out_load.txt (header line, nine 2013 course-presentations).
 
 Both CI pools and the compute farm carry a recorded queue wait. We validate the simulator
 against the CI pools, whose capacity is a countable set of physical machines that changes
@@ -188,7 +188,7 @@ of \devnum{1.3} to \devnum{2.6} and its per-hour correlation falls to \devnum{0.
 Supplementary Section~S2 gives the step-of-one sharpness check and reads the circularity
 of the original whole-window fit off the two pools directly.
 % Sources of the three paragraphs above:
-%   prechecks/firefox_ci_holdout/out_SUMMARY.txt, section A (k_eff step-1 per split and the
+%   evidence/firefox_ci_holdout/out_SUMMARY.txt, section A (k_eff step-1 per split and the
 %   setup term on the fit part: osx 155/155/157 of 173, talos 96/92 of 105; setup 54.2-55.3 s
 %   and 126.2-128.6 s), section B (the HELD OUT rows: mean x, p99 x, p99.9 x, rho_h, sp,
 %   med|e|, and the "no fit k = nominal machines" rows for the 1.3-2.6x and the 0.75),
@@ -259,13 +259,13 @@ CI pool B & \devnum{0.052} & \devnum{0.159} & \devnum{4{,}140} s \\
 \end{tabular}
 \end{table}
 % Sources of Table~\ref{tab:tails}:
-%   CodeBench rows: prechecks/codebench_audit/out_tail_and_counts.txt (eras 2020-ERE..2022-2
+%   CodeBench rows: evidence/codebench_audit/out_tail_and_counts.txt (eras 2020-ERE..2022-2
 %     and 2018-1..2019-2, columns top1_share / top5_share, raw C and C_cap = min(C,60)).
-%   ACcoding rows and both per-job limits: prechecks/accoding_v2/out_accoding_v2.txt,
+%   ACcoding rows and both per-job limits: evidence/accoding_v2/out_accoding_v2.txt,
 %     stage compare section B (time_cost and 0.5 + time_cost columns).
-%   Serverless and compute farm: prechecks/cross_domain/out_cross_domain_table.txt section A
+%   Serverless and compute farm: evidence/cross_domain/out_cross_domain_table.txt section A
 %     (L used column) and out_audit_azure.txt / out_audit_netbatch.txt (work-share lines).
-%   CI pools: prechecks/firefox_ci/out_SUMMARY.txt section A ("share of total work carried
+%   CI pools: evidence/firefox_ci/out_SUMMARY.txt section A ("share of total work carried
 %     by the top" and "L' (train p99.9 of service)").
 
 The per-job limit in the last column is the unit in which the guarantee of

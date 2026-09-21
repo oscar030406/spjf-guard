@@ -986,3 +986,90 @@
   doi     = {10.1002/j.1538-7305.1981.tb00221.x},
   x-verified = {Verified 2026-09-19 through Crossref: two authors, BSTJ 60(1):39--55, January 1981, DOI}
 }
+
+% ========== 2026-09-20 第二轮审稿补入：多服务器工作量比较的前人结果 ==========
+
+@article{grosof2018srpt,
+  author  = {Grosof, Isaac and Scully, Ziv and Harchol-Balter, Mor},
+  title   = {{SRPT} for multiserver systems},
+  journal = {Performance Evaluation},
+  volume  = {127--128},
+  pages   = {154--175},
+  year    = {2018},
+  doi     = {10.1016/j.peva.2018.10.001},
+  note    = {Preprint arXiv:1805.07686},
+  x-verified = {Verified 2026-09-20 through Crossref (three authors, Performance Evaluation 127--128:154--175, November 2018, DOI) and read in full text twice: the arXiv LaTeX source of 1805.07686 via the arXiv MCP, and the authors' accepted Elsevier manuscript at https://isaacg1.github.io/assets/srpt.pdf (dated 12 June 2019). THE TWO VERSIONS NUMBER THE LEMMAS DIFFERENTLY. Elsevier numbering, which is what the printed article carries and therefore what a citation must use: Lemma 1 (Section 5.1) bounds VIRTUAL work, VirtWork^{SRPT-k}(x) <= (k-1)x, where virtual work is server time spent idle or on jobs irrelevant to the tagged job -- this is NOT a difference between two systems; Lemma 2 (Section 5.2) is the work-difference lemma, Delta_{<=x}(t) = RelWork^{(k)}_{<=x}(t) - RelWork^{(1)}_{<=x}(t) <= kx, pathwise ("for any arrival sequence and at any time t"), one-sided, comparing SRPT-k against SRPT-1 of the same total speed, and bounding only RELEVANT work, that is the work of jobs of remaining size at most the tagged size x, not total unfinished work; Appendix Lemma 5 gives the same comparison for PSJF-k with the tighter constant (k-1)x. The arXiv source numbers these Lemma 5.1, Lemma 5.2 and Lemma 9.x. Their model has k servers of speed 1/k each (total speed 1) and is preempt-resume, so the comparison is preemptive throughout and crosses a k-server system with a 1-server system; ours does neither. ScienceDirect returned 403 on every path, so the published PDF itself was not opened; the accepted manuscript is in Elsevier article format and its numbering is taken to be the printed one}
+}
+
+@article{wolff1987work,
+  author  = {Wolff, Ronald W.},
+  title   = {Upper bounds on work in system for multichannel queues},
+  journal = {Journal of Applied Probability},
+  volume  = {24},
+  number  = {2},
+  pages   = {547--551},
+  year    = {1987},
+  doi     = {10.1017/S0021900200031193},
+  note    = {Also indexed as doi:10.2307/3214279},
+  x-verified = {Verified 2026-09-20 through Crossref (Wolff, Journal of Applied Probability 24(2):547--551, June 1987) and on the Cambridge Core landing page https://www.cambridge.org/core/journals/journal-of-applied-probability/article/abs/upper-bounds-on-work-in-system-for-multichannel-queues/4A90D68F2F30C58F6811E947E329E556 . READING DEPTH: ABSTRACT ONLY. Unpaywall reports the article closed with no open-access location; Cambridge, JSTOR and every mirror tried were paywalled, and no author or department scan was found. Printed abstract in full: "Previously derived sample path upper bounds for multi-channel work in system and work in queue are shown to be false. A new proof is given for the corresponding stochastic bounds on these quantities." Keywords: stochastic upper bound, sample path, inequalities, cyclic assignment. The reference list, read through OpenAlex, names the refuted work: Wolff's own 1977 "An upper bound for multi-channel queues", J. Appl. Prob. 14(4):884--888, doi:10.1017/S0021900200105431, whose abstract bounds multi-channel performance above by "corresponding quantities for one or a collection of single-channel queues", and Loulou 1983 "Two sample-path inequalities for G/G/K queues", INFOR 21(2):136--144, doi:10.1080/03155986.1983.11731892. Loulou's two results, at abstract depth only (the Taylor and Francis page returns 403 to curl and a Cloudflare interstitial to a browser; the text comes from two independent web-search renderings of the publisher abstract that agree): for the G/G/k-FIFS system, (i) an explicit upper bound on the difference between the WORKLOADS OF ANY TWO SERVERS, the bounding variable being a Markov chain that stays finite even for rho >= 1, and (ii) that k consecutive delays in G/G/k-FIFS need not all exceed the corresponding delays under cyclical assignment of servers. Quantity (i) is per-server and therefore assignment-dependent; our Lemma 1 bounds the POOLED unfinished work, which no assignment can change. Related: Whitt, "On stochastic bounds for the delay distribution in the GI/G/s queue", Operations Research 29(3):604--608 (1981), doi:10.1287/opre.29.3.604, had already refuted the STOCHASTIC version of the delay ordering that Wolff conjectured, so delay and work in system behave differently here. The failure mode was obtained instead from a peer-reviewed secondary description read in full: Connor and Kendall, "Perfect simulation of M/G/c queues", Adv. Appl. Prob. 47(4):1039--1063 (2015), doi:10.1239/aap/1449859799, p.~1039 and p.~1044. Both DOIs above resolve and both Crossref records are registered by Cambridge University Press; the landing page displays the 10.2307 one, so it is kept in the note field. NOT CITED IN THE MANUSCRIPT: the documented failure mode was checked against Lemma 1 and does not apply; see the 2026-09-21 section of references_verified.md for the step-by-step check}
+}
+
+% ========== 2026-09-21 第二轮审稿补入：R2-17 的三条一句话引用 ==========
+
+@article{sharif2014mapq,
+  author  = {Sharif, Azaz Bin and Stanford, David A. and Taylor, Peter and Ziedins, Ilze},
+  title   = {A multi-class multi-server accumulating priority queue with application to health care},
+  journal = {Operations Research for Health Care},
+  volume  = {3},
+  number  = {2},
+  pages   = {73--79},
+  year    = {2014},
+  doi     = {10.1016/j.orhc.2014.01.002},
+  x-verified = {Verified 2026-09-21 through Crossref: four authors in this order, Operations Research for Health Care 3(2):73--79, June 2014, DOI. Reading depth: abstract plus the model and the result as restated in Na Li's open-access doctoral thesis, section 2.2.2 "The M/M/c linear APQ", https://ir.lib.uwo.ca/etd/3401/ ; the Elsevier full text is paywalled and ScienceDirect returned 403 on every path. Model: M/M/c, Poisson arrivals per class, COMMON exponential service rate for every class, priority credit accumulating linearly in time-in-queue at a class-dependent rate, and at each completion the waiting customer with the greatest accumulated credit enters service. The class-k waiting-time result is EXACT (a transform), not an approximation and not simulation; the key identity is that the delay-conditional waiting distribution in M/M/c equals that of a single server of rate c*mu. Note this is a DIFFERENT paper from stanford2014apq, which is the single-server accumulating priority queue in Queueing Systems 77(3)}
+}
+
+@article{li2016mapq,
+  author  = {Li, Na and Stanford, David A.},
+  title   = {Multi-server accumulating priority queues with heterogeneous servers},
+  journal = {European Journal of Operational Research},
+  volume  = {252},
+  number  = {3},
+  pages   = {866--878},
+  year    = {2016},
+  doi     = {10.1016/j.ejor.2016.02.010},
+  x-verified = {Verified 2026-09-21 through Crossref: TWO authors only, Li and Stanford, European Journal of Operational Research 252(3):866--878, August 2016, DOI. The round-2 referee report's "Li/Sharif and Stanford et al., EJOR 2016" is loose on both counts: the author list is two people, and there is no 2017 second version. Reading depth: full publisher abstract through RePEc, https://ideas.repec.org/a/eee/ejores/v252y2016i3p866-878.html , with the derivations cross-read in Na Li's thesis chapter 3; Elsevier full text paywalled. Heterogeneous-server multi-class APQ, credit again linear in waiting time at class-distinct rates, an r-dispatch rule choosing among idle servers; per-class waiting-time distributions are established exactly, with a conservation law for mean waiting in M/M_i/c. Simulation is used only for validation}
+}
+
+@article{whitt1984overtaking,
+  author  = {Whitt, Ward},
+  title   = {The amount of overtaking in a network of queues},
+  journal = {Networks},
+  volume  = {14},
+  number  = {3},
+  pages   = {411--426},
+  year    = {1984},
+  doi     = {10.1002/net.3230140305},
+  x-verified = {Verified 2026-09-21 through Crossref: single author, Networks 14(3):411--426, 1984, DOI. Reading depth: full published PDF, pages 411--412 read directly from the author's own posted copy at http://www.columbia.edu/~ww2040/AmountOvertaking.pdf . The definition, printed on page 411, is "Customer B overtakes customer A in a queueing system if A arrives before B but B departs first". Two stochastic measures are defined, the number of customers an arbitrary customer overtakes and the random permutation of the original order on departure, and DIRECT overtaking is distinguished from INDIRECT. The paper proves no general bound: for open Jackson networks it states conjectures, with results only in special cases such as a single FCFS node with instantaneous Bernoulli feedback. The multiserver queue appears only as a state-dependent-rate node}
+}
+
+@article{kim2016overtaking,
+  author  = {Kim, Woo-Sung and Lim, Dae-Eun},
+  title   = {Analysis of overtaking in {M/M/c} queues},
+  journal = {Computers \& Industrial Engineering},
+  volume  = {101},
+  pages   = {177--183},
+  year    = {2016},
+  doi     = {10.1016/j.cie.2016.09.005},
+  x-verified = {Verified 2026-09-21 through Crossref: two authors, Computers and Industrial Engineering 101:177--183, November 2016, DOI. THIS ENTRY REPLACES A CITATION THAT DOES NOT EXIST. The round-2 referee report's "Legros, Computers and Industrial Engineering 101 (2016) 190--201" could not be found: the full Crossref listing of volume 101 was enumerated and no article occupies pages 190--201 (the neighbours run 184--193 and 194--215), and no Legros paper on overtaking exists in Crossref or HAL. Kim and Lim is the volume-101 overtaking paper. Reading depth: Crossref and OpenAlex records plus the publisher-derived summary on Semantic Scholar; the Elsevier full text is paywalled. Overtaking is defined as in whitt1984overtaking, a customer served ahead of and departing before one who arrived earlier, specialised to one M/M/c station where parallel servers permute the first-come first-served order; the paper gives the distribution of the number a tagged customer overtakes and of the number who overtake it. Corroborated by the open-access follow-up W. Kim, B. Kim and S.-S. Ko, "Joint distribution of overtaking and being overtaken in the M/M/c queue", Journal of Industrial and Management Optimization 22(1):486--503, doi:10.3934/jimo.2026018}
+}
+
+@techreport{stoica1995eevdf,
+  author      = {Stoica, Ion and Abdel-Wahab, Hussein},
+  title       = {Earliest Eligible Virtual Deadline First: A Flexible and Accurate Mechanism for Proportional Share Resource Allocation},
+  institution = {Department of Computer Science, Old Dominion University},
+  number      = {TR-95-22},
+  address     = {Norfolk, Virginia},
+  year        = {1995},
+  note        = {Revised 26 January 1996},
+  x-verified  = {Verified and read in FULL TEXT 2026-09-21 from https://people.eecs.berkeley.edu/~istoica/papers/eevdf-tr-95.pdf (Ion Stoica's own page). Report number TR-95-22, Department of Computer Science, Old Dominion University, Norfolk, Virginia 23529-0162; the PDF carries the footnote "Revised January 26, 1996", so the report is 1995 and the posted revision is 1996. No DOI exists. The reference system is a FLUID-FLOW ideal (the resource granted in arbitrarily small intervals, equivalently quantum q to 0), with client i's instantaneous share its weight divided by the total weight of active clients; lag is the ideal entitled service minus the service actually received. THE BOUND: Theorem 1, equation (35), page 18, gives -r_max < lag_k < max(r_max, q) in a steady system, where r_max is the longest request the client issues and q the quantum, and the paper states these are asymptotically tight; Corollary 2, equation (42), page 20, gives -q < lag_k(t) < q at every t when no request of the client exceeds one quantum, and Lemma 5 shows plus or minus q is optimal for any proportional-share algorithm with quantum q. THE SETTING IS PREEMPTIVE: the resource is allocated in quanta and a client is preempted when its quantum expires or its shorter request is fulfilled; the paper names non-preemptible packets as the reason q cannot be driven to zero}
+}
