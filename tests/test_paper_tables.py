@@ -65,13 +65,14 @@ def _undecorated_digits(text: str) -> list[str]:
     """Every body row with a digit outside a `\\devnum{}`.
 
     Two exceptions, both of which the paper also leaves bare: the column count of a
-    `\\multicolumn` and the skip count `$N=...$`, which is a policy's name, not a result.
+    `\\multicolumn` and the skip count `$\\kappa=...$`, which is a policy's name, not a
+    result.
     """
     bad = []
     for line in _body(text):
         stripped = DEVNUM.sub("", line)
         stripped = re.sub(r"\\multicolumn\{\d+\}\{[a-z]\}", "", stripped)
-        stripped = re.sub(r"\$N=\d+\$", "", stripped)
+        stripped = re.sub(r"\$\\kappa=\d+\$", "", stripped)
         stripped = stripped.replace("p99", "")
         if DIGITS.search(stripped):
             bad.append(line)
@@ -174,6 +175,107 @@ def test_a_number_the_package_should_produce_is_never_called_external():
     assert spearman == "predictor-comparison"
     assert emit.classify("six terms", "07_data", "") == "data-description"
     assert emit.classify("whatever", "11_future_work", "") == ""
+
+
+TINY = r"""
+\section{The guard at three promises}
+The gap closed is \devnum{0.705} and the harm \devnum{132.1} s.
+\begin{table}
+\caption{A table.}
+\label{tab:guard}
+\begin{tabular}{ll}
+Guard($\devnum{300}$) & \devnum{15.58} \\
+\end{tabular}
+\end{table}
+More prose, with \devnum{1.35} in it.
+"""
+
+
+def test_the_numbers_map_is_keyed_by_where_a_number_sits_not_by_its_line(tmp_path):
+    """The paper is re-laid-out between passes: floats move, an appendix becomes a
+    supplementary section.  A key that carried the line number would change under all of
+    that, and every list that names one -- the coincidence list, a report handed to an
+    editor -- would go stale without a single number having moved."""
+    import emit_paper_tables as emit
+
+    paper = tmp_path / "paper"
+    paper.mkdir()
+    (paper / "08_experiments.tex").write_text(TINY, encoding="utf-8")
+    before = [r["key"] for r in emit.paper_numbers(paper, {})]
+    assert before == [
+        "08_experiments:the-guard-at-three-promises:1",
+        "08_experiments:the-guard-at-three-promises:2",
+        "08_experiments:tab:guard:1",
+        "08_experiments:tab:guard:2",
+        "08_experiments:the-guard-at-three-promises:3",
+    ]
+    lines = [r["line"] for r in emit.paper_numbers(paper, {})]
+    (paper / "08_experiments.tex").write_text(
+        "% a comment the float placement left behind\n\n\n" + TINY, encoding="utf-8"
+    )
+    after = emit.paper_numbers(paper, {})
+    assert [r["key"] for r in after] == before, "the keys must survive a re-layout"
+    assert [r["line"] for r in after] == [n + 3 for n in lines], "the line is still recorded"
+
+
+HAVE_PAPER = (
+    (ROOT / "paper" / "supplementary.tex").is_file()
+    and (ROOT / "outputs" / "paper_tables" / "tab_k1.tex").is_file()
+    and (ROOT / "outputs" / "dev_tables" / "identity_residuals.csv").is_file()
+)
+
+
+def _paper_copy(tmp_path):
+    """A writable copy of the paper's sources; the originals are never touched."""
+    import shutil
+
+    paper = tmp_path / "paper"
+    shutil.copytree(
+        ROOT / "paper",
+        paper,
+        ignore=shutil.ignore_patterns("*.pdf", "*.eps", "*.png", "*.bib", "Definitions"),
+    )
+    return paper
+
+
+def _complaints(paper):
+    import check_paper_numbers as cpn
+
+    residuals = cpn.resid_table_rows(
+        cpn.read_rows(ROOT / "outputs" / "dev_tables" / "identity_residuals.csv")
+    )
+    return cpn.check_tables(paper, ROOT / "outputs" / "paper_tables", residuals, {})
+
+
+def _edit(paper, old, new):
+    path = paper / "supplementary.tex"
+    text = path.read_text(encoding="utf-8")
+    assert old in text, old
+    path.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+@pytest.mark.parametrize(
+    "old,new,expected",
+    [
+        (r"\devnum{221.27}", r"\devnum{221.28}", "221.27"),
+        (r"& --- \\", r"& \devnum{100.00} \\", "'---'"),
+        (r"$\kappa=5$", r"$\kappa=6$", "skip counts"),
+    ],
+    ids=["a cell moves", "a convention becomes a number", "a skip count moves"],
+)
+def test_the_table_check_fails_when_the_paper_stops_agreeing(tmp_path, old, new, expected):
+    """The three ways a table body can disagree, each on the real files.
+
+    Without this the exemptions added for the supplement -- a table split in two, a firing
+    rate printed as a rule, a renamed symbol -- could quietly have turned check A into a
+    check that passes on anything.
+    """
+    paper = _paper_copy(tmp_path)
+    assert _complaints(paper) == []
+    _edit(paper, old, new)
+    complaints = _complaints(paper)
+    assert any(expected in c for c in complaints), complaints
 
 
 def test_the_paper_is_never_written_to():

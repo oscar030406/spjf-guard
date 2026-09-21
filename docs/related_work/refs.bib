@@ -175,6 +175,31 @@
   x-verified = {会议摘要版 ACM SIGMETRICS PER 52(2):21--23 (2024), doi:10.1145/3695411.3695420}
 }
 
+@article{yu2024boost,
+  author  = {Yu, George and Scully, Ziv},
+  title   = {Strongly Tail-Optimal Scheduling in the Light-Tailed {M/G/1}},
+  journal = {Proceedings of the ACM on Measurement and Analysis of Computing Systems},
+  volume  = {8},
+  number  = {2},
+  pages   = {1--33},
+  year    = {2024},
+  doi     = {10.1145/3656011},
+  note    = {Preprint arXiv:2404.08826},
+  x-verified = {Verified 2026-09-20 through the Crossref REST API (two authors, POMACS 8(2), pages 1--33, published 2024-05-21) and read in the arXiv v2 full text. Definition 3.2 defines the crossing work V(u) of a tagged job as the work of jobs arriving in (0,u) whose boosted arrival time is at most 0; Lemma 3.3 bounds the tagged job's response time under Boost and under Cheat from below by W - B + V(W) + S and from above by (W - min(B,u))^+ + V(infinity) + S + Vbar(u) 1(W < min(B,u)), where W is the stationary work in system at the boosted arrival instant, B the boost and S the size. Remark 3.4 states that the proof holds for preemptive, non-preemptive and intermediate Boost. Single server, Poisson arrivals, light-tailed sizes, no bound on service times; the reference term is a stationary workload variable and not the same job's FCFS wait on the same input}
+}
+
+@article{yu2025twotraffics,
+  author  = {Yu, George and Harlev, Amit and Adakroy, Reevu and Scully, Ziv},
+  title   = {A Tale of Two Traffics: Optimizing Tail Latency in the Light-Tailed {M/G/k}},
+  journal = {Proceedings of the ACM on Measurement and Analysis of Computing Systems},
+  volume  = {9},
+  number  = {3},
+  pages   = {1--40},
+  year    = {2025},
+  doi     = {10.1145/3771561},
+  x-verified = {Verified 2026-09-20 through the Crossref REST API (four authors, POMACS 9(3), pages 1--40, December 2025) and read in the authors' PDF at https://ziv.codes/pdf/sigmetrics2026-yu.pdf, which prints Article 46. No arXiv version was found. Notation 3.2 carries crossing work to k servers of speed 1/k; Lemma 3.4 bounds the tagged job's response time by W - min(B,u) + kS + V(infinity) on the event that at least k older jobs are present at its arrival, and by k(S + V(infinity) + Vbar(min(B,u))) otherwise, the second branch being where a non-preemptive server already running a lower-priority job enters. Section 2 states that the proofs apply to preemptive and non-preemptive boost policies and that the simulations use the non-preemptive version. FCFS is the empirical baseline throughout: the paper reports a tail improvement ratio against FCFS, finds that gamma-Boost can be worse than FCFS at lighter loads, and designs gamma-CombinedBoost to repair that. The theorems compare tail constants, not per-job waits. SIGMETRICS 2026 abstract version doi:10.1145/3801489.3806888}
+}
+
 @article{grosof2022wcfs,
   author  = {Grosof, Isaac and Harchol-Balter, Mor and Scheller-Wolf, Alan},
   title   = {{WCFS}: a new framework for analyzing multiserver systems},
@@ -271,7 +296,8 @@
   volume  = {25},
   pages   = {301--308},
   year    = {1987},
-  doi     = {10.1016/0304-4149(87)90208-0}
+  doi     = {10.1016/0304-4149(87)90208-0},
+  x-verified = {Pages 301--308 confirmed. The weak-majorization minimality of the FCFS workload vector is Daley's result and is stated under the hypothesis that arrivals are allocated to servers independently of their service times; the workload-vector recursion itself is Kiefer and Wolfowitz's. Section 2 of the manuscript cites the two separately for that reason}
 }
 
 @article{kiefer1955queues,
@@ -282,7 +308,127 @@
   number  = {1},
   pages   = {1--18},
   year    = {1955},
-  doi     = {10.2307/1992945}
+  doi     = {10.1090/S0002-9947-1955-0066587-3},
+  x-verified = {Verified 2026-09-20 and read in full text from the AMS PDF. Section 2 gives the workload-vector recursion for GI/G/s under first-come first-served: subtract the interarrival time from the vector with the service time added to its first component, reorder ascending, replace negatives by zero. The paper contains no majorization result and no comparison across disciplines, which is why Section 2 of the manuscript cites it separately from daley1987fcfs. The JSTOR DOI 10.2307/1992945 also resolves, but its Crossref record carries no end page, so the AMS DOI is used here}
+}
+
+% ========== 守恒律与逐个体加性界的同型结果 ==========
+
+@article{kleinrock1965conservation,
+  author  = {Kleinrock, Leonard},
+  title   = {A conservation law for a wide class of queueing disciplines},
+  journal = {Naval Research Logistics Quarterly},
+  volume  = {12},
+  number  = {2},
+  pages   = {181--192},
+  year    = {1965},
+  doi     = {10.1002/nav.3800120206},
+  x-verified = {Verified 2026-09-20 and read in full text, pages 181--183, from the author's own scan. Theorem 1: for a single service facility that is never idle while units are present, with Poisson arrivals, arbitrary service and steady state assumed throughout, the rho-weighted sum of mean queueing times over the priority classes is invariant under variation of the queue discipline. Single server; steady state; the conserved quantity is a weighted sum of means, not a per-job comparison}
+}
+
+@article{green2000samplepath,
+  author  = {Green, Tuell C. and Stidham, Jr., Shaler},
+  title   = {Sample-path conservation laws, with applications to scheduling queues and fluid systems},
+  journal = {Queueing Systems},
+  volume  = {36},
+  number  = {1--3},
+  pages   = {175--199},
+  year    = {2000},
+  doi     = {10.1023/A:1019183220080},
+  x-verified = {Verified 2026-09-20 through the publisher record; abstract read, full text paywalled. Strong conservation laws that hold at every time point on every sample path, used to settle optimal scheduling control pathwise. The non-preemptive instance, minimising a weighted sum of the number of customers of each class, is stated only when all classes share one service-time distribution. Whether that instance is specifically the multiserver one could not be confirmed from the abstract, so the manuscript cites this entry only for the sample-path framing}
+}
+
+@article{eltaha2017workload,
+  author  = {El-Taha, Muhammad},
+  title   = {A general workload conservation law with applications to queueing systems},
+  journal = {Queueing Systems},
+  volume  = {85},
+  number  = {3--4},
+  pages   = {361--381},
+  year    = {2017},
+  doi     = {10.1007/s11134-017-9515-4},
+  x-verified = {Verified 2026-09-20 through the publisher record; abstract read, full text paywalled. A sample-path conservation law of the H = lambda G form relating asymptotic average workload to conditional asymptotic average sojourn time, which the abstract states generalises earlier conservation laws for single- and multi-server systems and for both anticipating and non-anticipating disciplines. Aggregate, not per job}
+}
+
+@article{bartsch1978conservation,
+  author  = {Bartsch, B. and Bolch, G.},
+  title   = {A conservation law for {G/G/m} queueing systems},
+  journal = {Acta Informatica},
+  volume  = {10},
+  number  = {1},
+  pages   = {105--109},
+  year    = {1978},
+  doi     = {10.1007/BF00260928},
+  x-verified = {Verified 2026-09-20 through the publisher record; abstract read. It extends to G/G/m the priority conservation law previously proved for G/G/1, that preferential treatment of one class is paid for by the others. Crossref's record carries no page field at all, so an automatically pulled entry will lose 105--109; El-Taha's reference list misprints the volume as 810}
+}
+
+@article{federgruen1988mgc,
+  author  = {Federgruen, Awi and Groenevelt, Henri},
+  title   = {{M/G/c} Queueing Systems with Multiple Customer Classes: Characterization and Control of Achievable Performance Under Nonpreemptive Priority Rules},
+  journal = {Management Science},
+  volume  = {34},
+  number  = {9},
+  pages   = {1121--1138},
+  year    = {1988},
+  doi     = {10.1287/mnsc.34.9.1121},
+  x-verified = {Verified 2026-09-20 and read in full text from the first author's copy. Its multiserver restriction is condition (C) on page 1123: if c > 1, assume all customers have the same service time distribution. That is equality of the distribution, not identical exponential service and not mu_j = mu; those stronger statements belong to the companion preemptive paper, Federgruen and Groenevelt, Operations Research 36(5):733--741, 1988, doi:10.1287/opre.36.5.733, whose Lemma 1 assumes mu_j = mu for c > 1 and whose page 739 says a multiserver work conservation law only applies when all customers have identical exponential service time distributions. The manuscript is non-preemptive, so it cites this entry and its condition (C)}
+}
+
+@inproceedings{bennett1996wf2q,
+  author    = {Bennett, Jon C. R. and Zhang, Hui},
+  title     = {{WF$^2$Q}: Worst-case Fair Weighted Fair Queueing},
+  booktitle = {Proceedings of IEEE INFOCOM '96},
+  volume    = {1},
+  pages     = {120--128},
+  year      = {1996},
+  doi       = {10.1109/INFCOM.1996.497885},
+  x-verified = {Verified 2026-09-20 and read in full text. Theorem 1 is three inequalities and the two service-direction bounds are NOT symmetric: the session falls behind the GPS fluid reference by at most L_max, the maximum packet over all sessions, and runs ahead of it by at most (1 - r_i/r) times its own maximum packet, which is strictly less than one packet. The abstract's looser phrase ``no more than one maximum size packet'' must not be quoted as the theorem. Crossref mangles the superscript to ``WF/sup 2/Q''}
+}
+
+@article{bennett2002psrg,
+  author  = {Bennett, J. C. R. and Benson, K. and Charny, A. and Courtney, W. F. and Le Boudec, J.-Y.},
+  title   = {Delay Jitter Bounds and Packet Scale Rate Guarantee for Expedited Forwarding},
+  journal = {IEEE/ACM Transactions on Networking},
+  volume  = {10},
+  number  = {4},
+  pages   = {529--540},
+  year    = {2002},
+  doi     = {10.1109/TNET.2002.801404},
+  x-verified = {Verified 2026-09-20 and read in full text from the identical EPFL technical-report version DSC/2000/030. Theorem 2: a strict non-preemptive priority scheduler satisfies the packet scale rate guarantee with rate R = C and error term E = L_max/C, where L_max is the maximum packet size of the non-expedited traffic; the term exists because that packet cannot be preempted. Theorem 3 gives the WFQ-family case. RFC 3246 Appendix A names the inability to preempt an MTU-sized non-EF packet as the main factor in the error term. Earlier version at IEEE INFOCOM 2001}
+}
+
+@article{graham1969bounds,
+  author  = {Graham, R. L.},
+  title   = {Bounds on Multiprocessing Timing Anomalies},
+  journal = {SIAM Journal on Applied Mathematics},
+  volume  = {17},
+  number  = {2},
+  pages   = {416--429},
+  year    = {1969},
+  doi     = {10.1137/0117039},
+  x-verified = {Verified 2026-09-20 and read in full text from the author's scan. Theorem 1 is the anomaly bound; the list-scheduling makespan ratio 2 - 1/n appears as a remark on page 421 and not as a numbered theorem, and Theorem 2 is the LPT bound 4/3 - 1/(3n). The additive form, makespan at most the optimum plus (1 - 1/n) times the processing time of the last task to finish, occurs inside the proof of Theorem 2 on page 422 and only where the precedence order is empty. The manuscript therefore cites the ratio as the stated result and the additive form as a step in that proof. Graham writes n for the number of processors}
+}
+
+@inproceedings{jeffay1991nonpreemptive,
+  author    = {Jeffay, Kevin and Stanat, Donald F. and Martel, Charles U.},
+  title     = {On Non-Preemptive Scheduling of Periodic and Sporadic Tasks},
+  booktitle = {Proceedings of the 12th IEEE Real-Time Systems Symposium (RTSS 1991)},
+  pages     = {129--139},
+  year      = {1991},
+  doi       = {10.1109/REAL.1991.160366},
+  x-verified = {Verified 2026-09-20 and read in full text from the first author's copy. Theorem 4.1 gives necessary and sufficient conditions for non-preemptive uniprocessor scheduling without inserted idle time, the second of which requires every interval L between two periods to satisfy L >= c_i + sum of the interference from higher-rate tasks. The cost of non-preemption enters as the candidate task's own whole execution c_i. The word ``blocking'' does not occur in the paper and there is no ``maximum job length over lower-priority tasks'' term; the blocking-factor formulation B_i = max_{j>i} c_j belongs to the later fixed-priority literature and must not be attributed here. Crossref, DBLP and IEEE Xplore all print the title with ``period'' for ``Periodic''; that is a defect in IEEE's deposit and the printed title is as given here}
+}
+
+@article{smith1956,
+  author  = {Smith, Wayne E.},
+  title   = {Various optimizers for single-stage production},
+  journal = {Naval Research Logistics Quarterly},
+  volume  = {3},
+  number  = {1--2},
+  pages   = {59--66},
+  year    = {1956},
+  doi     = {10.1002/nav.3800030106},
+  x-verified = {Bibliographic record verified 2026-09-20 through the Crossref REST API: sole author Wayne E. Smith, NRLQ 3(1-2):59--66, March 1956, DOI as given; the double issue 1-2 is correct. DEPTH: metadata plus a secondary source only. The paper is paywalled at Wiley and no open-access copy was found, so the content statement, that it characterises when a transitive pairwise preference order yields an optimal sequence and thereby originates both Smith's rule and the adjacent-pairwise-interchange exchange argument, rests on Baker and Trietsch, Principles of Sequencing and Scheduling, research notes to chapter 2, and not on the primary source. Do not attribute a numbered theorem to it without opening it}
 }
 
 % ========== HPC 回填与 FCFS 相对公平 ==========
@@ -298,6 +444,17 @@
   doi     = {10.1109/71.932708}
 }
 
+@inproceedings{sabin2004fairness,
+  author    = {Sabin, Gerald and Kochhar, Garima and Sadayappan, P.},
+  title     = {Job Fairness in Non-Preemptive Job Scheduling},
+  booktitle = {Proceedings of the 2004 International Conference on Parallel Processing (ICPP 2004)},
+  pages     = {186--194},
+  publisher = {IEEE Computer Society},
+  year      = {2004},
+  doi       = {10.1109/ICPP.2004.1327920},
+  x-verified = {Verified 2026-09-20 and read in full text from the authors' copy. Section 4 defines a job's fair start time by removing every job queued after it and re-simulating under the scheduler being tested, and defines BOTH variants, naming them itself: the ``strict'' fair start time allows the job to backfill in the counterfactual, the ``relaxed'' one forces it to wait until all previously queued jobs have started. Two limits on what this entry may be cited for: the abbreviation FST does not appear in this paper, it enters with sabin2005unfairness; and a precursor exists, Srinivasan, Kettimuthu, Subramani and Sadayappan, JSSPP 2002, LNCS 2537, pp.~55--71, which defines a fair start time against a fixed conservative-backfill reference, so this paper is credited here with defining the quantity and its two variants and is not called the first of its kind. Crossref prints the page field as ``186-194 vol.1''}
+}
+
 @inproceedings{sabin2005unfairness,
   author    = {Sabin, Gerald and Sadayappan, P.},
   title     = {Unfairness Metrics for Space-Sharing Parallel Job Schedulers},
@@ -306,7 +463,56 @@
   volume    = {3834},
   pages     = {238--256},
   year      = {2005},
-  doi       = {10.1007/11605300_12}
+  doi       = {10.1007/11605300_12},
+  x-verified = {Verified 2026-09-20 and read in full text. Sections 3.1.1 and 3.1.2 define the strict and relaxed fair start time, the relaxed one being the variant in which the job is not allowed to backfill and cannot start until all jobs submitted before it have started; that is the variant our reference matches. Section 3.1 credits the notion to sabin2004fairness, reference [25] there}
+}
+
+@inproceedings{rajbhandary2013fairness,
+  author    = {Rajbhandary, Avinab and Bunde, David P. and Leung, Vitus J.},
+  title     = {Variations of Conservative Backfilling to Improve Fairness},
+  booktitle = {Job Scheduling Strategies for Parallel Processing (JSSPP 2013)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {8429},
+  pages     = {177--191},
+  publisher = {Springer},
+  year      = {2014},
+  doi       = {10.1007/978-3-662-43779-7_10},
+  x-verified = {Verified 2026-09-20 and read in full text from the second author's copy. Section 3.1 defines strict and relaxed fair start time and reports average strict and relaxed unfairness as job-level metrics. The workshop was JSSPP 2013; the LNCS volume carries a 2014 imprint, which is why the year field reads 2014}
+}
+
+@inproceedings{lifka1995easy,
+  author    = {Lifka, David A.},
+  title     = {The {ANL/IBM SP} Scheduling System},
+  booktitle = {Job Scheduling Strategies for Parallel Processing (IPPS '95 Workshop)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {949},
+  pages     = {295--303},
+  publisher = {Springer},
+  year      = {1995},
+  doi       = {10.1007/3-540-60153-8_35},
+  x-verified = {Verified 2026-09-20 and read in full text. It introduces the scheme it calls ``FIFO with backfilling'', in which idle nodes may be filled provided the first job in the queue is not made to wait longer, which is the single-reservation rule now known as aggressive or EASY backfilling. The acronym EASY does not appear in this paper, so it must not be quoted as the paper's own term}
+}
+
+@inproceedings{yuan2010pveasy,
+  author    = {Yuan, Yulai and Yang, Guangwen and Wu, Yongwei and Zheng, Weimin},
+  title     = {{PV-EASY}: A Strict Fairness Guaranteed and Prediction Enabled Scheduler in Parallel Job Scheduling},
+  booktitle = {Proceedings of the 19th ACM International Symposium on High Performance Distributed Computing (HPDC '10)},
+  pages     = {240--251},
+  year      = {2010},
+  doi       = {10.1145/1851476.1851505},
+  x-verified = {Verified 2026-09-20 through the Crossref REST API (four authors, HPDC '10, pages 240--251, DOI as given); the Crossref title field is truncated to ``PV-EASY'', so the full title here is taken from the paper itself. Read in full text from the authors' PDF at madsys.cs.tsinghua.edu.cn. Section 3.1 defines strict fairness verbatim as ``If no job is delayed by any jobs with lower priority, this scheduling sequence can be viewed as strict fair'', with submission time as the usual priority factor; the setting is space-sharing parallel job scheduling on N processors with EASY backfilling. Section 4.2 obtains it by shadow load preemption, and states that ``the simplest and universally supported kill/restart preemption mode is adopted in SLP''. Section 5.1.2 states that no fairness metric is used and that the method achieves the objective with the help of preemption. The paper contains no theorem, lemma or proof: the property holds by construction and is supported by trace-driven simulation}
+}
+
+@article{yuan2014strictfairness,
+  author  = {Yuan, Yulai and Wu, Yongwei and Zheng, Weimin and Li, Keqin},
+  title   = {Guarantee Strict Fairness and Utilize Prediction Better in Parallel Job Scheduling},
+  journal = {IEEE Transactions on Parallel and Distributed Systems},
+  volume  = {25},
+  number  = {4},
+  pages   = {971--981},
+  year    = {2014},
+  doi     = {10.1109/TPDS.2013.88},
+  x-verified = {Verified 2026-09-20 through the Crossref REST API (four authors, TPDS 25(4):971--981, April 2014); the Crossref title field reads ``UtilizePrediction'' with a missing space, corrected here against the article itself. Journal version of yuan2010pveasy, read in full text from the authors' PDF; it likewise contains no theorem, lemma or proof}
 }
 
 @article{lindsay2013backfilling,
@@ -358,10 +564,12 @@
   title     = {An Intelligent Scheduling System for Large-Scale Online Judging},
   booktitle = {Computer Science and Education. Computer Science and Technology (ICCSE 2023)},
   series    = {Communications in Computer and Information Science},
+  volume    = {2023},
   pages     = {265--279},
   publisher = {Springer Nature Singapore},
   year      = {2024},
-  doi       = {10.1007/978-981-97-0730-0_24}
+  doi       = {10.1007/978-981-97-0730-0_24},
+  x-verified = {The series volume number is 2023 and is not a year: CCIS vol. 2023 carries the ICCSE 2023 proceedings, published in 2024. Do not ``correct'' the volume field to match the year. Verified 2026-09-20 against the Springer record; abstract read, full text paywalled and not opened, which is why the sentences about this work in Section 2 are limited to what its abstract and results state}
 }
 
 @article{wasik2018ojsurvey,
@@ -396,12 +604,46 @@
 }
 
 @misc{li2026tailaware,
-  author = {Li, Yueying and Chen, Yuanfan and Chen, Jiayang and others},
+  author = {Li, Yueying and Chen, Yuanfan and Chen, Jiayang and Choukse, Esha and Qiu, Haoran and Suh, G. Edward and Fonseca, Rodrigo and Scully, Ziv and Gupta, Udit},
   title  = {Beyond Prediction: Tail-Aware Scheduling for {LLM} Inference},
   year   = {2026},
   eprint = {2606.18431},
   archivePrefix = {arXiv},
-  x-verified = {完整作者名单未逐名核对}
+  primaryClass = {cs.LG},
+  doi    = {10.48550/arXiv.2606.18431},
+  x-verified = {Full author list read from the arXiv v1 metadata and title block on 2026-09-20: nine authors, the eighth being Ziv Scully. OpenAlex garbles author 2 as ``Yanlun Chen''; arXiv and the paper's own title block say Yuanfan Chen. Read in full text (HTML v1). The method, UniBoost, scores requests with the generalized gamma-Boost function of yu2024boost, and its Appendix A.2 starvation argument is written in that paper's crossing-work terms, so this belongs to the Boost line and not only to the LLM-serving literature. The arXiv journal-ref declares ICML 2026, but that field is author-supplied and PMLR carries no such volume yet, so it is cited here as a preprint}
+}
+
+@inproceedings{zhao2025fairpredictions,
+  author    = {Zhao, Tianming and Xia, Chunqiu and Chang, Xiaomin and Li, Chunhao and Li, Wei and Zomaya, Albert},
+  title     = {Competitive Fair Scheduling with Predictions},
+  booktitle = {The Thirteenth International Conference on Learning Representations (ICLR 2025)},
+  year      = {2025},
+  url       = {https://openreview.net/forum?id=jBYQAtzp5Z},
+  x-verified = {Verified 2026-09-20 on OpenReview, forum id jBYQAtzp5Z, poster; no DOI and no arXiv version. Model and results read in the submission PDF: a SINGLE unit-speed machine, PREEMPTIVE and non-clairvoyant, minimising the maximum stretch over all jobs. Section 2 states verbatim that jobs are preemptive and may resume later. The prediction error is multiplicative and the competitive ratios are polynomial in it, for instance 3 eta^3 sqrt(P) for the base algorithm. The camera-ready PDF returned a 403 challenge, so theorem numbers should be re-checked against it before any is quoted; the model statement and the bounds match the published abstract}
+}
+
+@inproceedings{fu2024alps,
+  author    = {Fu, Yuqi and Shi, Ruizhe and Wang, Haoliang and Chen, Songqing and Cheng, Yue},
+  title     = {{ALPS}: An Adaptive Learning, Priority {OS} Scheduler for Serverless Functions},
+  booktitle = {2024 USENIX Annual Technical Conference (USENIX ATC 24)},
+  pages     = {19--36},
+  publisher = {USENIX Association},
+  year      = {2024},
+  url       = {https://www.usenix.org/conference/atc24/presentation/fu},
+  x-verified = {Verified 2026-09-20 against the USENIX proceedings page and the PDF page footers; ISBN 978-1-939133-41-0, pages 19--36. USENIX mints no DOI. Read in full text. ALPS does NOT predict per-function durations: its frontend replays recent traces through an offline shortest-remaining-processing-time simulation and learns, per function UID, an integer priority rank and a soft time-slice cap. Reusing the Linux Completely Fair Scheduler to avoid starvation is one of its two stated key insights, and the eBPF backend falls back to the CFS branch whenever the soft cap is not in play. The paper contains no theorem, lemma, proof or competitive ratio: the only ``guarantee'' is an unformalised design aspiration. Note the author list differs from fu2022sfs in positions 2, 4 and 5}
+}
+
+@inproceedings{fu2022sfs,
+  author    = {Fu, Yuqi and Liu, Li and Wang, Haoliang and Cheng, Yue and Chen, Songqing},
+  title     = {{SFS}: Smart {OS} Scheduling for Serverless Functions},
+  booktitle = {SC22: International Conference for High Performance Computing, Networking, Storage and Analysis},
+  pages     = {1--16},
+  publisher = {IEEE},
+  year      = {2022},
+  doi       = {10.1109/SC41404.2022.00047},
+  note      = {Preprint arXiv:2209.01709},
+  x-verified = {Verified 2026-09-20 through the Crossref REST API and the arXiv v2 record; abstract read. SFS works entirely in user space and orchestrates the existing Linux FIFO and Completely Fair schedulers to approximate shortest-remaining-time-first, using a two-level scheme that combines a FILTER policy with CFS and trades longer durations for long functions against a large gain for short ones. No bound is claimed. The author list differs from fu2024alps in positions 2, 4 and 5}
 }
 
 % ========== 截止期驱动的到达与时变配置 ==========
@@ -681,8 +923,9 @@
   publisher = {Springer},
   pages     = {3--32},
   year      = {2021},
+  volume    = {12985},
   doi       = {10.1007/978-3-030-88224-2_1},
-  x-verified = {Verified 2026-09-19 through Crossref: author, title, pages 3--32, DOI, ISBN 978-3-030-88223-5 / 978-3-030-88224-2. The sentences quoted from it were checked word by word against the author's extended-version PDF, \url{https://www.cs.huji.ac.il/~feit/papers/Resamp21JSSPP.pdf}, sections 3.3 and 3.4; that check is recorded in docs/related\_work/shared\_queue\_evidence.md, section 3.4}
+  x-verified = {Verified 2026-09-19 through Crossref: author, title, pages 3--32, DOI, ISBN 978-3-030-88223-5 / 978-3-030-88224-2; LNCS volume 12985. The Crossref title carries the suffix ``(Extended Version)''; the printed LNCS chapter title does not, and the form without it is kept here. The sentences quoted from it were checked word by word against the author's extended-version PDF, \url{https://www.cs.huji.ac.il/~feit/papers/Resamp21JSSPP.pdf}, sections 3.3 and 3.4; that check is recorded in docs/related\_work/shared\_queue\_evidence.md, section 3.4}
 }
 
 @article{shmueli2009simulation,
@@ -718,7 +961,8 @@
   pages   = {260--288},
   year    = {2002},
   doi     = {10.1145/506147.506154},
-  x-verified = {Verified 2026-09-19 through Crossref: title, Journal of the ACM 49(2):260--288, March 2002, DOI. The Crossref record carries no author list; authorship is taken from the earlier conference version, M. Harchol-Balter, ICDCS 2000, pages 214--224, doi:10.1109/icdcs.2000.840932, whose Crossref record was checked in the same pass}
+  note    = {Conference version: Proceedings of the 20th International Conference on Distributed Computing Systems (ICDCS 2000), pp.~214--224, doi:10.1109/ICDCS.2000.840932},
+  x-verified = {Verified 2026-09-19 through Crossref: title, Journal of the ACM 49(2):260--288, March 2002, DOI. The Crossref record carries no author list; authorship is taken from the earlier conference version, M. Harchol-Balter, ICDCS 2000, pages 214--224, doi:10.1109/icdcs.2000.840932, whose Crossref record was checked in the same pass and which is now recorded in the printed note field}
 }
 
 @inproceedings{verma2015borg,

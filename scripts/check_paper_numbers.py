@@ -9,14 +9,23 @@ this package as their source are the ones the package actually prints.  Three ch
 of which can fail on its own:
 
 A. **Table bodies.**  For each package table, the multiset of `\\devnum{}` payloads in its
-   body against the same extraction from the paper's table of the same label.  Typography
-   is normalised away (thousands braces, math mode); everything else has to match.  The
-   deliberate differences are listed below with their reasons, and a difference that is
-   not on that list is a leftover.
+   body against the same extraction from the paper tables that carry its rows -- which is
+   one table in the manuscript, one in the supplementary file, or both, since the referee's
+   length cuts moved three of the five.  Typography is normalised away (thousands braces,
+   math mode); everything else has to match.  The deliberate differences are listed below
+   with their reasons, and a difference that is not on that list is a leftover.  The skip
+   counts, which name a policy rather than report a result and so carry no `\\devnum{}`,
+   are compared as well, and a table the paper prints twice at two lengths is checked
+   against its own longer copy.
+
+   Nothing here is keyed by a line number: a table is found by its label and a figure by
+   the file that has to contain it, so moving a float or lifting an appendix into the
+   supplement does not make this script stale.
 
 B. **Running text, captions and plot coordinates.**  Figures the paper quotes from this
    package are recomputed here from `outputs/dev_tables/*.csv` and looked for in the file
-   that should carry them.  This is the check that catches a number rounded by hand, or a
+   that should carry them, or in either of two when the sentence may sit in the manuscript
+   or in the supplement.  This is the check that catches a number rounded by hand, or a
    number that was right before a rerun and was not updated after it.
 
 C. **The sourced rows of `numbers.csv`.**  Every row in the "has a source" state must
@@ -30,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 import re
 from collections import Counter
 from pathlib import Path
@@ -51,6 +61,56 @@ PACKAGE_FILE = {
     "tab:resid": "tab_resid.tex",
 }
 
+EXPERIMENTS = "sections/08_experiments.tex"
+LIMITATIONS = "sections/09_limitations.tex"
+THEORY = "sections/06_theory.tex"
+SUPPLEMENT = "supplementary.tex"
+
+PAPER_TABLES = {
+    "tab:rank": ((EXPERIMENTS, "tab:rank"),),
+    "tab:guard": ((EXPERIMENTS, "tab:guard"), (SUPPLEMENT, "tab:s_guard_abl")),
+    "tab:adv": ((EXPERIMENTS, "tab:adv"),),
+    "tab:k1": ((SUPPLEMENT, "tab:s_k1"),),
+    "tab:resid": ((SUPPLEMENT, "tab:s_resid"),),
+}
+"""Which of the paper's tables carry each package table's rows.
+
+The referee asked for a shorter manuscript, so three of the five moved: the single-server
+table and the residual table went to the supplementary file whole, and the guard table was
+split, its two ablation shapes going to Table S3 while the winner, its fixed-budget
+ablation, the equal-promise budget and the skip count stayed in the main text.  A package
+table is therefore compared against the union of the paper tables listed here, as one
+multiset: a row that was moved is still printed, a row that was dropped is not."""
+
+SUBSETS = (
+    (
+        (EXPERIMENTS, "tab:resid"),
+        (SUPPLEMENT, "tab:s_resid"),
+        "the main text keeps four of the nine cells the supplement prints in full",
+    ),
+)
+"""(smaller table, larger table, why).  A table the paper prints twice at different
+lengths is checked against its own longer copy, which is the one checked against the
+package.  Any cell that disagrees between the two is a hand edit to one of them."""
+
+PAPER_PLAIN = (
+    (
+        "tab:k1",
+        "100.00",
+        "---",
+        "FCFS has no guard, so no dispatch epoch can fire one; the package's 100.00 is the"
+        " convention that every FCFS dispatch serves the queue head (referee item RR-24)",
+    ),
+    ("tab:k1", "0.00", "---", "SJF has no guard, so its firing rate is not defined"),
+    ("tab:k1", "0.00", "---", "SPJF-E has no guard, so its firing rate is not defined"),
+)
+"""(table, what the package prints, the literal the paper prints instead, why).
+
+Unlike a respelling, the paper's side is not a number at all, so it cannot be matched in
+the multiset.  The check instead counts that literal in both bodies and requires the
+paper's count to exceed the package's by exactly the number of entries here: replacing one
+of these cells with a different number, or silently dropping a row, still fails."""
+
 RESPELT = (
     (
         "tab:rank",
@@ -69,16 +129,12 @@ RESPELT = (
     ("tab:rank", "1", "1.0", "load label: rho = 1 is printed 1.0"),
     ("tab:guard", "1", "1.0", "load label: rho = 1 is printed 1.0"),
     ("tab:adv", "1", "1.0", "load label: rho = 1 is printed 1.0"),
-    (
-        "tab:guard",
-        "23",
-        "26",
-        "the skip count differs between the overlays of one load"
-        " level (verifier finding G3); the column carries the value at k = 8 and the"
-        " caption gives both 26/66/146 and 23/58/128",
-    ),
 )
-"""(table, what the package prints, what the paper prints, why they differ)."""
+"""(table, what the package prints, what the paper prints, why they differ).
+
+An entry that never fires is reported at the end of check A.  It means the paper stopped
+respelling that cell, and the entry is then excusing nothing -- it has to be removed, or it
+will one day excuse a real difference that happens to take the same two values."""
 
 PACKAGE_ONLY = (
     (
@@ -130,9 +186,9 @@ reported apart from real leftovers, because dropping them is the right outcome.
 
 Empty at the moment.  The two the editor found (an old `tab:resid` ratio cell and the old
 same-phase cell) are gone: the package now produces the same-phase share itself, and the
-table was regenerated.  A key here is `<section>:<line>:<index>`, which moves when the
-paper is re-laid-out, so an entry that stops matching should be re-derived rather than
-kept."""
+table was regenerated.  A key here is `<file>:<table or section>:<n>`, which survives a
+re-layout of the paper; it does not survive the number moving to another section, and an
+entry that stops matching should be re-derived rather than kept."""
 
 SECTION_FILE = {
     "01_introduction": "sections/01_introduction.tex",
@@ -144,14 +200,15 @@ SECTION_FILE = {
     "08_experiments": "sections/08_experiments.tex",
     "09_limitations": "sections/09_limitations.tex",
     "A_proofs": "sections/A_proofs.tex",
+    "supplementary": "supplementary.tex",
     "fig_threejob": "figures/fig_threejob.tex",
     "fig_excess": "figures/fig_excess.tex",
     "fig_gapvsg": "figures/fig_gapvsg.tex",
     "fig_guard": "figures/fig_guard.tex",
 }
-
-EXPERIMENTS = "sections/08_experiments.tex"
-LIMITATIONS = "sections/09_limitations.tex"
+"""Which file a `numbers.csv` row is looked for in.  A file missing from the paper -- the
+supplement before it existed, an appendix after it is folded in -- is skipped rather than
+reported, because check C asks whether a number is still printed, not where it lives."""
 
 
 def normalise(value: str) -> str:
@@ -161,8 +218,8 @@ def normalise(value: str) -> str:
     return " ".join(text.split())
 
 
-def body_values(tex: str, label: str) -> Counter:
-    """The `\\devnum{}` payloads inside the tabular that carries `label`."""
+def table_body(tex: str, label: str) -> str:
+    """The tabular that carries `label`, from `\\begin{tabular}` to `\\end{tabular}`."""
     at = tex.find("\\label{" + label + "}")
     if at < 0:
         raise SystemExit(f"no table labelled {label}")
@@ -170,7 +227,22 @@ def body_values(tex: str, label: str) -> Counter:
     end = tex.find("\\end{tabular}", start)
     if start < 0 or end < 0:
         raise SystemExit(f"no tabular for {label}")
-    return Counter(normalise(v) for v in DEVNUM.findall(tex[start:end]))
+    return tex[start:end]
+
+
+def body_values(tex: str, label: str) -> Counter:
+    """The `\\devnum{}` payloads inside the tabular that carries `label`."""
+    return Counter(normalise(v) for v in DEVNUM.findall(table_body(tex, label)))
+
+
+def skip_counts(body: str) -> Counter:
+    """The skip counts spelled into the policy names of a table body.
+
+    They sit outside `\\devnum{}` because they name a policy rather than report a result,
+    which would leave them unchecked; they come from `policy_parameters.csv` like every
+    other number in the row.  The symbol was `N` and is now `\\kappa` (referee item RR-13),
+    so both are read."""
+    return Counter(re.findall(r"\$(?:\\kappa|N)\s*=\s*(\d+)\$", body))
 
 
 def read_rows(path: Path) -> list[dict]:
@@ -198,34 +270,142 @@ def resid_table_rows(residuals: list[dict]) -> list[dict]:
     return [r for r in residuals if r["policy"] in printed and int(float(r["overlay"])) == 0]
 
 
-def check_tables(paper_tex: str, package_dir: Path, residuals: list[dict]) -> list[str]:
-    """A: the package's table bodies against the paper's, value for value."""
+def _paper_bodies(paper: Path, cache: dict, label: str) -> tuple[str, list[str]]:
+    """The tabulars the paper carries a package table's rows in, and where they are."""
+    bodies, where = [], []
+    for relative, paper_label in PAPER_TABLES[label]:
+        text = cache.setdefault(relative, (paper / relative).read_text(encoding="utf-8"))
+        bodies.append(table_body(text, paper_label))
+        where.append(f"{paper_label} in {relative}")
+    return "\n".join(bodies), where
+
+
+def _plain_cells(label: str, package_body: str, paper_body: str) -> tuple[Counter, str]:
+    """The cells the paper prints as a literal instead of a number, and what is wrong.
+
+    Each literal has to be as common in the paper's table as in the package's plus one per
+    entry: a cell that became a number again, or a row that went missing, moves the count.
+    """
+    drop: Counter = Counter()
+    wanted: Counter = Counter()
+    for table, ours, literal, _ in PAPER_PLAIN:
+        if table != label:
+            continue
+        drop[normalise(ours)] += 1
+        wanted[literal] += 1
+    for literal, extra in wanted.items():
+        expected = package_body.count(literal) + extra
+        found = paper_body.count(literal)
+        if found != expected:
+            return drop, (
+                f"{label}: the paper prints {literal!r} {found} times where"
+                f" {expected} are accounted for"
+            )
+    return drop, ""
+
+
+def _respell(label: str, package: Counter, paper: Counter, used: set) -> None:
+    """Take the cells the paper deliberately spells differently out of both sides."""
+    for entry in RESPELT:
+        table, ours, theirs, _ = entry
+        if table == label and package[ours] and paper[theirs]:
+            shared = min(package[ours], paper[theirs])
+            package[ours] -= shared
+            paper[theirs] -= shared
+            used.add(entry)
+
+
+def _one_table(
+    label: str, package_body: str, paper_body: str, residuals: list[dict], used: set
+) -> tuple[list[str], bool]:
+    """One package table against the paper's copies of it."""
     complaints = []
+    package = Counter(normalise(v) for v in DEVNUM.findall(package_body))
+    paper = Counter(normalise(v) for v in DEVNUM.findall(paper_body))
+    _respell(label, package, paper, used)
+    dropped, complaint = _plain_cells(label, package_body, paper_body)
+    if complaint:
+        complaints.append(complaint)
+    for value, count in (dropped + _package_only_values(label, residuals)).items():
+        package[value] -= min(count, package[value])
+    for value in PAPER_ONLY.get(label, []):
+        if paper[normalise(value)]:
+            paper[normalise(value)] -= 1
+    package_only, paper_only = +(package - paper), +(paper - package)
+    ours, theirs = skip_counts(package_body), skip_counts(paper_body)
+    if package_only:
+        complaints.append(f"{label}: the paper does not print {dict(package_only)}")
+    if paper_only:
+        complaints.append(f"{label}: the package does not print {dict(paper_only)}")
+    if ours != theirs:
+        complaints.append(
+            f"{label}: the skip counts differ, package {sorted(ours.elements())}"
+            f" against paper {sorted(theirs.elements())}"
+        )
+    return complaints, not complaints
+
+
+def check_tables(
+    paper: Path, package_dir: Path, residuals: list[dict], cache: dict
+) -> list[str]:
+    """A: the package's table bodies against the paper's, value for value."""
+    complaints: list[str] = []
+    used: set[tuple] = set()
     print("A. table bodies, package against paper")
     for label in TABLES:
-        package = body_values((package_dir / PACKAGE_FILE[label]).read_text("utf-8"), label)
-        paper = body_values(paper_tex, label)
-        total = sum(package.values()), sum(paper.values())
-        for table, ours, theirs, _ in RESPELT:
-            if table == label and package[ours] and paper[theirs]:
-                shared = min(package[ours], paper[theirs])
-                package[ours] -= shared
-                paper[theirs] -= shared
-        for value, count in _package_only_values(label, residuals).items():
-            package[value] -= min(count, package[value])
-        for value in PAPER_ONLY.get(label, []):
-            if paper[normalise(value)]:
-                paper[normalise(value)] -= 1
-        package_only, paper_only = +(package - paper), +(paper - package)
-        ok = not package_only and not paper_only
+        package_body = table_body((package_dir / PACKAGE_FILE[label]).read_text("utf-8"), label)
+        paper_body, where = _paper_bodies(paper, cache, label)
+        found, ok = _one_table(label, package_body, paper_body, residuals, used)
+        complaints += found
         print(
-            f"   {label:11s} package {total[0]:4d} values, paper {total[1]:4d}"
-            f"  ->  {'ok' if ok else 'MISMATCH'}"
+            f"   {label:11s} package {len(DEVNUM.findall(package_body)):4d} values,"
+            f" paper {len(DEVNUM.findall(paper_body)):4d}"
+            f" in {', '.join(where)}  ->  {'ok' if ok else 'MISMATCH'}"
         )
-        if package_only:
-            complaints.append(f"{label}: the paper does not print {dict(package_only)}")
-        if paper_only:
-            complaints.append(f"{label}: the package does not print {dict(paper_only)}")
+    complaints += check_subsets(paper, cache)
+    for entry in RESPELT:
+        if entry not in used:
+            print(f"   unused exemption: {entry[0]} {entry[1]!r} -> {entry[2]!r}")
+    return complaints
+
+
+LOAD_LABEL = re.compile(r"(?:\\rho|k)\s*=\s*\\devnum\{([^{}]*)\}")
+
+
+def _load_labels(body: str) -> set[str]:
+    """The load a block of rows is headed with.  The full table heads each block once; a
+    table that keeps some of the rows repeats the head on each kept row, so these are
+    compared as a set while every other cell is compared as a multiset."""
+    return {normalise(v) for v in LOAD_LABEL.findall(body)}
+
+
+def check_subsets(paper: Path, cache: dict) -> list[str]:
+    """Every cell of a shortened copy of a table is a cell of the full one."""
+    complaints = []
+    for (short_file, short_label), (long_file, long_label), why in SUBSETS:
+        short_text = cache.setdefault(
+            short_file, (paper / short_file).read_text(encoding="utf-8")
+        )
+        long_text = cache.setdefault(long_file, (paper / long_file).read_text(encoding="utf-8"))
+        short_body, long_body = (
+            table_body(short_text, short_label),
+            table_body(long_text, long_label),
+        )
+        labels = _load_labels(short_body) | _load_labels(long_body)
+        short = Counter(normalise(v) for v in DEVNUM.findall(short_body))
+        long = Counter(normalise(v) for v in DEVNUM.findall(long_body))
+        data = Counter({v: c for v, c in short.items() if v not in labels})
+        extra = +(data - long)
+        stray = _load_labels(short_body) - _load_labels(long_body)
+        print(
+            f"   {short_label:11s} {sum(short.values()):4d} values, all of them in"
+            f" {long_label}  ->  {'ok' if not extra and not stray else 'MISMATCH'}"
+            f"   ({why})"
+        )
+        if extra:
+            complaints.append(f"{short_label}: {long_label} does not print {dict(extra)}")
+        if stray:
+            complaints.append(f"{short_label}: {long_label} has no block headed {stray}")
     return complaints
 
 
@@ -366,6 +546,27 @@ def assertion_expectations(t: Tables, promises=(300, 600, 1200)) -> list:
     return want
 
 
+def residual_expectations(t: Tables) -> list:
+    """The range of the identity residual, as the theory and the experiments quote it.
+
+    Both sentences are the same two numbers out of `identity_residuals.csv`: the smallest
+    and the largest `ratio_to_bound` over all 81 cells.  Section 6 gives the range and
+    section 8 the upper end, and the upper end is rounded *outwards* in both, so that
+    "never exceeds" stays true of the printed figure; the lower end is rounded to nearest,
+    which is also outwards of nothing the text claims.  Rounding the maximum the ordinary
+    way would print 0.517 and make the sentence false by 0.0003.
+    """
+    low = min(float(r["ratio_to_bound"]) for r in t.residuals)
+    high = max(float(r["ratio_to_bound"]) for r in t.residuals)
+    outward = math.ceil(high * 1000) / 1000
+    return [
+        ((THEORY, SUPPLEMENT), "smallest identity ratio over all cells", f"{low:.3f}"),
+        ((THEORY, SUPPLEMENT), "largest identity ratio, rounded outwards", f"{outward:.3f}"),
+        (EXPERIMENTS, "largest identity ratio, four decimals", f"{high:.4f}"),
+        (EXPERIMENTS, "largest identity ratio, rounded outwards", f"{outward:.3f}"),
+    ]
+
+
 def figure_expectations(t: Tables, promises=(300, 600, 1200), levels=(0, 1, 2)) -> list:
     """The plot coordinates, which the figures carry as plain text rather than devnum."""
     want = []
@@ -403,6 +604,7 @@ def expectations(dev: Path) -> list[tuple[str, str, str]]:
     return (
         policy_expectations(tables)
         + assertion_expectations(tables)
+        + residual_expectations(tables)
         + figure_expectations(tables)
     )
 
@@ -417,13 +619,22 @@ def _printed(text: str, value: str) -> bool:
     return value.replace("{,}", ",").replace("\\%", "%") in flat
 
 
-def check_recomputed(paper: Path, want: list[tuple[str, str, str]], cache: dict) -> list[str]:
-    """B: every recomputed figure is present in the file that should carry it."""
+def check_recomputed(paper: Path, want: list[tuple], cache: dict) -> list[str]:
+    """B: every recomputed figure is present in a file that may carry it.
+
+    A figure may be quoted in either of two files when the sentence around it can sit in
+    the manuscript or in the supplement; the expectation then names both, and finding it in
+    one is enough.  Naming both is what keeps the check from going stale the next time a
+    section is moved.
+    """
     complaints = []
     for where, what, value in want:
-        text = cache.setdefault(where, (paper / where).read_text(encoding="utf-8"))
-        if not _printed(text, value):
-            complaints.append(f"{where}: {what} = {value} is not printed there")
+        files = (where,) if isinstance(where, str) else where
+        texts = [
+            cache.setdefault(name, (paper / name).read_text(encoding="utf-8")) for name in files
+        ]
+        if not any(_printed(text, value) for text in texts):
+            complaints.append(f"{' or '.join(files)}: {what} = {value} is not printed there")
     print(
         f"\nB. running text, captions and plot coordinates recomputed from the CSVs\n"
         f"   {len(want) - len(complaints)} of {len(want)} found where they belong"
@@ -437,7 +648,7 @@ def check_sourced(paper: Path, package_dir: Path, cache: dict) -> list[str]:
     gone, dropped = [], []
     for row in rows:
         relative = SECTION_FILE.get(row["section"])
-        if relative is None:
+        if relative is None or not (paper / relative).is_file():
             continue
         text = cache.setdefault(relative, (paper / relative).read_text(encoding="utf-8"))
         if "\\devnum{" + row["value"] + "}" in text:
@@ -462,8 +673,7 @@ def run(paper: Path, dev: Path, package_dir: Path, only: str | None = None) -> l
     complaints: list[str] = []
     residuals = resid_table_rows(read_rows(dev / "identity_residuals.csv"))
     if only in (None, "A"):
-        experiments = (paper / EXPERIMENTS).read_text(encoding="utf-8")
-        complaints += check_tables(experiments, package_dir, residuals)
+        complaints += check_tables(paper, package_dir, residuals, cache)
     if only in (None, "B"):
         complaints += check_recomputed(paper, expectations(dev), cache)
     if only in (None, "C"):

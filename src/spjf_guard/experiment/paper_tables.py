@@ -134,7 +134,7 @@ def guard_table(table: list[dict], parameters: dict, guard_names) -> str:
             params = parameters.get((level, name), {})
             label = policy_label(name)
             if params.get("skip_count"):
-                label = rf"{label}, $N={int(params['skip_count'])}$"
+                label = rf"{label}, $\kappa={int(params['skip_count'])}$"
             body.append(
                 f" & {label:<26s} & "
                 + " & ".join(
@@ -218,7 +218,7 @@ def single_server_table(table: list[dict], parameters: dict, policies) -> str:
         params = parameters.get((0, name), {})
         label = policy_label(name)
         if params.get("skip_count"):
-            label = rf"{label}, $N={int(params['skip_count'])}$"
+            label = rf"{label}, $\kappa={int(params['skip_count'])}$"
         promise = params.get("promise_s")
         body.append(
             f"{label:<28s} & "

@@ -30,6 +30,8 @@ from spjf_guard.experiment import paper_tables as pt  # noqa: E402
 
 DEVNUM = re.compile(r"\\devnum\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}")
 LABEL = re.compile(r"\\label\{(tab:[A-Za-z0-9_]+)\}")
+SECTION_CMD = re.compile(r"\\(?:sub){0,2}section\*?\{([^{}]*)\}")
+NOT_WORD = re.compile(r"[^a-z0-9]+")
 
 NOT_PRODUCED = (
     ("cross-domain", ("cross-domain", "OULAD", "Kaggle", "transfer")),
@@ -51,17 +53,27 @@ BY_SECTION = {
     "A_proofs": "theory-constant",
     "main": "abstract-quote",
     "main_article": "abstract-quote",
+    "supplementary": "moved-from-main",
 }
 """What a number belongs to when nothing in its own line says otherwise.  A headline
 quote is a number this package does produce, restated in prose; the rest are outside the
-package: the data description, the predictor comparison, the theory's own constants."""
+package: the data description, the predictor comparison, the theory's own constants.
+`supplementary` is the running text of the supplementary file, whose every item was in the
+main manuscript until the referee asked for the paper to be shortened; the tables it
+carries are classified by their own label below, not by this entry."""
 
 BY_TABLE = {
     "tab:cross": "cross-domain",
     "tab:scores": "predictor-comparison",
     "tab:sens": "sensitivity-study",
     "tab:policies": "mechanism-constant",
+    "tab:s_pred_cross": "predictor-comparison",
 }
+
+OURS_TABLES = ("tab:s_guard_abl", "tab:s_resid", "tab:s_k1", "tab:s_setup")
+"""Tables of the supplement whose rows this package produces.  A value of theirs that
+matches nothing is this package printing something else, exactly as it would be in the
+main text, so it is counted as `package-differs` rather than excused by its file."""
 
 OURS = ("08_experiments", "fig_")
 """Where a number that fails to match is this package's own: the experiment section and
@@ -170,28 +182,49 @@ def classify(context: str, section: str, table: str) -> str:
             return label
     if table in BY_TABLE:
         return BY_TABLE[table]
+    if table in OURS_TABLES:
+        return DIFFERS
     if section in BY_SECTION:
         return BY_SECTION[section]
     return DIFFERS if section.startswith(OURS) else ""
 
 
+def slug(title: str) -> str:
+    """A section title as an anchor: lower case, punctuation and macros dropped."""
+    text = re.sub(r"\\[A-Za-z]+", " ", title).lower()
+    return NOT_WORD.sub("-", text).strip("-")[:40] or "untitled"
+
+
 def paper_numbers(paper_dir: Path, produced: dict) -> list[dict]:
-    """Every `\\devnum{}` in the paper, with where it sits and who produces it."""
+    """Every `\\devnum{}` in the paper, with where it sits and who produces it.
+
+    The key is `<file>:<anchor>:<n>`, where the anchor is the table's label when the number
+    sits in a table and the enclosing section otherwise, and `n` counts the numbers under
+    that anchor.  It carries no line number on purpose: the paper is re-laid-out between
+    passes -- floats move, appendices become supplementary sections -- and a key that moved
+    with them would make every list that names one stale.  The line is kept as its own
+    column, for a person looking the number up.
+    """
     rows = []
     for path in sorted(paper_dir.rglob("*.tex")):
-        table = ""
+        table, anchor = "", "front-matter"
+        seen: dict[str, int] = {}
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            heading = SECTION_CMD.search(line)
+            if heading:
+                anchor = slug(heading.group(1))
             found = LABEL.search(line)
             if found:
                 table = found.group(1)
             if r"\end{table}" in line:
                 table = ""
-            for index, value in enumerate(DEVNUM.findall(line)):
-                key = f"{path.stem}:{number}:{index}"
+            for value in DEVNUM.findall(line):
+                where = table or anchor
+                seen[where] = seen.get(where, 0) + 1
                 cleaned = value.replace("{,}", "").replace(r"\%", "")
                 rows.append(
                     {
-                        "key": key,
+                        "key": f"{path.stem}:{where}:{seen[where]}",
                         "section": path.stem,
                         "line": number,
                         "table": table or "running text",
