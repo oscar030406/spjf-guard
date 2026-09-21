@@ -42,10 +42,13 @@ with the gaps \cite{feitelson2021resampling}.
 Every constant in Section~\ref{sec:theory} is a multiple of the per-job time
 limit. The additive constant $(3-2/k)L$ is an exact supremum and no
 artefact of the proof, it grows with $k$ from $L$ at a single server towards
-$3L$, and a wrapper of this family cannot promise less than $L$, whatever base policy
-it is given: an excess of at least $L$ is forced on some job whenever the base policy
-reads a service time only at completion, so no mechanism of this family can promise
-less than $\Omega(L)$.
+$3L$, and a promise that is to hold around every base policy cannot be less than
+$L$ unless the wrapper gives up reordering altogether: whenever the budget is positive
+for the waiting jobs at the first dispatch epoch there are a base policy and an input
+on which some job's excess is at least $L$, and the only budget rules of this family
+that escape are those that make the wrapper first-come first-served itself
+(Proposition~\ref{prop:floor}). So no mechanism of this family that reorders at all
+can promise less than $\Omega(L)$.
 The obvious escape from the $\Omega(L)$ floor is kill-and-restart tiering, and it
 fails. Kill-and-restart tiering runs every
 job for a short first quantum $\tau$ and restarts the survivors, discarding the
@@ -62,9 +65,9 @@ kill is terminal.
 
 \paragraph{Two applicability conditions, each with traces that fail it.}
 The first is that $L$ be comparable to the waits that matter, and four of the six
-workloads fail it: the first-come first-served p99 wait is \devnum{0.021},
-\devnum{0.136}, \devnum{0.373} and \devnum{1.78} times $L$ on ACcoding, the compute
-farm and the two continuous-integration pools, against the floor of about
+workloads fail it: the first-come first-served p99 wait, in multiples of $L$, is \devnum{0.021} on ACcoding, \devnum{0.136} on the
+compute farm, \devnum{0.373} on continuous-integration pool~B and \devnum{1.78} on
+pool~A, against the floor of about
 \devnum{3}$L$ below which no promise can be stated. On the Intel
 Netbatch compute farm \cite{netbatch2012trace,shai2014netbatch} the service cap
 is \devnum{5.7} days while the first-come first-served p99 wait in the worst

@@ -479,6 +479,15 @@ def policy_expectations(t: Tables, promises=(300, 600, 1200), levels=(0, 1, 2)) 
                     t.cell(level, policy, "harm_s", 1),
                 )
             )
+        for policy in ("FCFS", "SPJF-E", "Guard(600)"):
+            worst_heavy = float(t.main[(level, policy)]["max_heavy_s"])
+            want.append(
+                (
+                    EXPERIMENTS,
+                    f"{policy} worst heavy-job wait at level {level}",
+                    f"{worst_heavy:,.0f}",
+                )
+            )
         for promise in promises:
             want.append(
                 (

@@ -176,7 +176,8 @@ $k$ & $L$ & $m$ & upward $\Delta_i/L$ & downward $\Delta_i/L$ & $2(k-1)$ \\
 
 In the executed-work convention of Remark~\ref{rem:directions} the upward
 column is unchanged to within $o(L)$, while the downward column becomes
-$-63/64$, $-130/81$ and $-111/64$, that is $-(k-1)L$ rather than $-2(k-1)L$.
+$-63/64$, $-130/81$ and $-111/64$, values that tend to $-(k-1)L$ as $m$ grows
+rather than to $-2(k-1)L$.
 The same-phase share of $|\Delta_i|$ is \devnum{0.00\%}, \devnum{0.69\%} and
 \devnum{0.00\%} upward and \devnum{50.39\%}, \devnum{55.48\%} and
 \devnum{63.37\%} downward, and the victim's own excess is
@@ -216,7 +217,9 @@ $k\,\mathrm{excess}_P[i] \le \mathrm{In}_i - \mathrm{Out}_i + 2(k-1)L
 being the strict inequality \eqref{eq:guardin}. When $i$ has no overtaker the
 excess is at most $(2-2/k)L$ and the inequality is strict as well.
 
-For the lower bound, fix $k \ge 2$, $m \ge 1$, $L = k^m$, and let $f$ and
+For the lower bound at $k = 1$, the family of Appendix~\ref{app:floor} gives
+$\mathrm{excess}_P[i] - B = L - g \to L$, so
+$(k\,\mathrm{excess}_P[i] - B)/L \to 1 = 3k - 2$. For $k \ge 2$, fix $m \ge 1$, $L = k^m$, and let $f$ and
 $\rho_m$ be as in Lemma~\ref{lem:cascade}. Run the cascade for $m$ rounds. At
 $T_m$ inject, all arriving at $T_m$ and in rank order,
 \begin{itemize}
@@ -389,13 +392,14 @@ The leading terms are
 $\Theta(mn)$ and $\mathcal{E} = \Theta(m+n)$, so
 $\varepsilon = O((m+n)/(mn)) \to 0$; since
 $\mathcal{E}/\mathcal{D} = 2(k-1)L(m+n)/(mn(L-\sigma))$ and
-$\mathcal{N}/\mathcal{D} = (kG+(3k-2)L)/(n\sigma)$, the implied constant is
+$\mathcal{N}/\mathcal{D} = (kG+(3k-2)L)/(n\sigma)$, the product $\varepsilon\,mn/(m+n)$ equals
 \[
   \frac{2(k-1)L}{L-\sigma}
-  \Bigl(1 + \frac{kG + (3k-2)L}{n\sigma}\Bigr) ,
+  \Bigl(1 + \frac{kG + (3k-2)L}{n\sigma}\Bigr)
+  \Big/ \Bigl(1 - \frac{\mathcal{E}}{\mathcal{D}}\Bigr) ,
 \]
-which $\varepsilon\,mn/(m+n)$ approaches from above as $m, n$ grow, and which
-vanishes at $k = 1$.
+which exceeds the same expression without the last factor, approaches it as
+$m, n$ grow, tends with it to $2(k-1)L/(L-\sigma)$, and vanishes at $k = 1$.
 Dividing numerator and denominator by $m+n$ turns the two total savings into the
 two mean savings and leaves the ratio unchanged.
 \end{proof}

@@ -415,7 +415,9 @@ the parameter rule of Section~\ref{sec:scheduling}:
 \label{cor:params}
 $B_{\max} = k\bigl(G - (3 - 2/k)L\bigr)$ makes Algorithm~\ref{alg:guard} offer
 the service guarantee $G$, whatever the budget shape below the cap and whatever
-the base policy $A$. The choice is available exactly when $G > (3 - 2/k)L$.
+the base policy $A$. The choice is available when $G \ge (3 - 2/k)L$, and gives a positive budget only when
+the inequality is strict; at equality $B_{\max} = 0$ and the wrapper is first-come
+first-served.
 \end{corollary}
 
 \subsection{Both constants of the guarantee are exact}
@@ -504,9 +506,11 @@ $\mathrm{excess}_P[i] < B_{\max}/k + \Lambda(s^P_i)
  + (2-2/k)\,\Lambda(a_i)$,
 and since $\Lambda(a_i) \le \Lambda(s^P_i)$ they give
 \eqref{eq:guardadd} with $\Lambda(s^P_i)$ throughout. The downward
-direction of Theorem~\ref{thm:identity} needs
-$\Lambda(\max(s^P_i, s^{\mathrm{FCFS}}_i))$ and Corollary~\ref{cor:necessary}
-needs $\Lambda(s^{\mathrm{FCFS}}_i + G)$, both being false with $\Lambda(a_i)$.
+direction of Theorem~\ref{thm:identity} holds with
+$\Lambda(\max(s^P_i, s^{\mathrm{FCFS}}_i))$, which we do not claim to be the
+smallest horizon that works, and Corollary~\ref{cor:necessary}
+holds with $\Lambda(s^{\mathrm{FCFS}}_i + G)$, since Lemma~\ref{lem:outbound}
+bounds jobs that start as late as that; both are false with $\Lambda(a_i)$.
 \item \emph{Servers may have different speeds.} With speeds $v_1, \dots, v_k$
 and $V = \sum_{\ell} v_{\ell}$, Theorem~\ref{thm:identity} holds with $k$ replaced by $V$
 on the left and the same $2(k-1)L$ on the right, and the guard satisfies
@@ -538,11 +542,15 @@ forced idle time, and ranking on release repairs it.
 
 \begin{proposition}[Impossibility]
 \label{prop:floor}
-Let $A$ be any base policy that observes a job's service time only at its
-completion, and run Algorithm~\ref{alg:guard} around it with any budget rule
-that is positive at the first dispatch epoch. Then there is an input on which
-some job has $\mathrm{excess} \ge L$. Consequently no such wrapper can promise
-$G < L$, and at $k = 1$ the bound $B + L$ of
+Fix any budget rule that assigns a positive budget to every waiting job at the
+first dispatch epoch. Then there are a base policy $A$ that observes a job's
+service time only at its completion, and an input, such that
+Algorithm~\ref{alg:guard} run around $A$ with that rule leaves some job with
+$\mathrm{excess} \ge L$. For a base policy that ranks by predictions, such as
+SPJF-E, the predictions in the input are enough and $A$ need not be chosen.
+Consequently no promise $G < L$ can be made that holds for every base policy, or
+for one prediction-ranked base policy under arbitrary predictions, which is the
+generality in which Theorem~\ref{thm:guard} is stated; and at $k = 1$ the bound $B + L$ of
 Theorem~\ref{thm:guard} is the exact supremum of the excess, approached and not
 attained.
 \end{proposition}
@@ -553,9 +561,10 @@ jobs arrive together, all of service $L$. First-come first-served starts $i$ at
 once. Nothing has completed, so $\mathrm{over}[q](0) = 0$ for every waiting $q$
 and in particular $\mathrm{over}[i](0) = 0 < \mathrm{budget}(i,0)$ at each of
 the $k$ dispatches made there: the guard
-does not release $i$ at $t = 0$. The base policy is therefore free to fill all
-$k$ servers with the higher-ranked jobs --- work conservation permits it, and
-$A$ has observed no service time that would distinguish the $k+1$ jobs --- so
+does not release $i$ at $t = 0$. Take $A$ to be a policy that prefers the $k$
+higher-ranked jobs; a prediction-ranked policy does so as soon as $i$ carries the
+largest prediction, work conservation permits it, and $A$ has observed no service
+time that could tell it the $k+1$ jobs are alike. All $k$ servers are filled, so
 $i$ waits until the first completion and $\mathrm{excess} = L$. (If instead the
 guard fires at $t = 0$ on some job other than $i$, that job has rank above $i$
 and the same $k$ dispatches follow.) At $k = 1$, \eqref{eq:guardin} gives
@@ -567,8 +576,11 @@ Two remarks on the hypothesis, because the proposition is easy to state too
 widely and too narrowly. It cannot be dropped: as a claim about policies the
 statement is false, since first-come first-served is non-preemptive,
 work-conserving, reads no service time before completion, and has excess $0$ on
-every input, as does any rank-ordered policy. The force comes from the guard's
-not firing, which is a property of the budget rule and not of work conservation.
+every input, as does any rank-ordered policy. For the same reason it is false as
+a claim about every base policy: the guard run around first-come first-served is
+first-come first-served, whatever the budget. The force comes from the guard's
+not firing, which is a property of the budget rule and not of work conservation,
+together with a base policy that uses the freedom this leaves it.
 It is also not necessary. A rule that is $0$ at the first dispatch epoch and
 positive later, such as the age-relative shape with $B_0 = 0$ and $\eta > 0$,
 falls to the same instance placed behind a saturating prefix: let $k$ jobs
@@ -579,9 +591,19 @@ and the $k$ newcomers then take every server. The remaining case is degenerate:
 if the rule gives budget $0$ to a job whenever no completed work has overtaken
 it, then at every dispatch epoch the lowest-ranked waiting job $h$ has
 $\mathrm{over}[h] = 0$, so $h$ lies in $E(t)$ and is its minimum-rank member and
-is dispatched, and by induction the wrapper is first-come first-served itself.
-A wrapper of this family therefore either never overtakes anything, or admits an
-input with excess at least $L$.
+is dispatched, and by induction the wrapper is first-come first-served itself,
+whatever the base policy. For the budget of Algorithm~\ref{alg:guard} these cases
+are exhaustive. If $B_{\max} = 0$ or $B_0 = \gamma = \eta = 0$ the budget is
+identically zero and the wrapper is first-come first-served. If $B_0 > 0$ the
+proposition applies, and if $B_0 = 0 < \eta$ the saturating prefix does. If
+$B_0 = \eta = 0 < \gamma$, let $k+2$ jobs of service $L$ arrive together at
+$t = 0$: the first has $n_q = 0$, hence budget $0$, and is released at once,
+every other job has a positive budget and nothing has overtaken it, so a base
+policy that prefers the highest ranks passes over the second job at $t = 0$ when
+$k \ge 2$, and at $t = L$ when $k = 1$, and that job's excess is $L$. A budget
+rule of this family therefore either makes the wrapper first-come first-served
+around every base policy, or admits a base policy and an input with excess at
+least $L$.
 
 The guarantee also caps how much reordering can buy at all, and not only how much
 it may cost a single job.
@@ -596,9 +618,10 @@ work-conserving policy with $\mathrm{excess}_P[j] \le G$ for every job. Then
        {\overline{W}_{\mathrm{FCFS}} - \overline{W}_{\mathrm{SJF}}}
   \;\le\; \frac{kG + (3k-2)L}{n \sigma} \;+\; \varepsilon ,
 \]
-with $\varepsilon = O\bigl((m+n)/(mn)\bigr) \to 0$ as $m, n$ grow, the implied
-constant being
-$2(k-1)L\bigl(1 + (kG + (3k-2)L)/(n\sigma)\bigr)/(L-\sigma)$.
+with $\varepsilon = O\bigl((m+n)/(mn)\bigr) \to 0$ as $m, n$ grow; explicitly,
+$\varepsilon\,mn/(m+n)$ stays above
+$2(k-1)L\bigl(1 + (kG + (3k-2)L)/(n\sigma)\bigr)/(L-\sigma)$ and tends to
+$2(k-1)L/(L-\sigma)$ (Appendix~\ref{app:price}).
 \end{theorem}
 
 The proof is in Appendix~\ref{app:price}. The right-hand side is capacity times

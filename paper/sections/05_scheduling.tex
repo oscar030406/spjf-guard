@@ -97,7 +97,7 @@ into a queue that is already long, and is flat in the wait. $B_0$, $\gamma$ and
 $B_{\max}$ are measured in work and scale with $k$.
 
 Only the age-relative shape carries a second, multiplicative bound,
-$W \le (W_{\mathrm{FCFS}} + B_0/k + (3-2/k)L)/(1-\eta)$, and only when $\gamma = 0$:
+$W < (W_{\mathrm{FCFS}} + B_0/k + (3-2/k)L)/(1-\eta)$, and only when $\gamma = 0$:
 with $\gamma > 0$ the constant part of the budget differs from job to job, so the
 multiplicative form holds per job with that job's own constant, and no single
 number is available for the operator to state in advance
@@ -140,8 +140,9 @@ The operator states $G$, the number of seconds by which any job may exceed its F
 waiting time, and reads off $B_{\max} = k\bigl(G - (3 - 2/k)\,L\bigr)$, the inversion
 of the bound proved in Section~\ref{sec:theory}. No data are needed for this step. The rule requires $G > (3 - 2/k)L$; below that threshold no
 positive budget is admissible, which is not an artefact of the wrapper but a floor of
-order $L$ that Section~\ref{sec:theory} shows to be unavoidable for any policy
-learning service times at completion. The promise $G$ follows from $B_{\max}$ alone.
+order $L$ that Section~\ref{sec:theory} shows to be unavoidable for any wrapper of
+this family that overtakes at all, if its promise is to hold whatever base policy it
+is given. The promise $G$ follows from $B_{\max}$ alone.
 The shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of the base policy's
 benefit survives and which jobs pay for it, so we choose them on a validation trace
 that excludes the test period; that pool is held out of the selection and not of the

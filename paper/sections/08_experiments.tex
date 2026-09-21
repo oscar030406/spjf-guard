@@ -353,6 +353,17 @@ within \devnum{0.005} of one another on the validation objective and it has the 
 harm. The shape decides which jobs pay for the promise more than it decides how much of the
 benefit survives.
 
+The jobs that pay are the heavy ones, and the worst wait among them is the last of the
+secondary metrics of Section~\ref{sec:model}. Over the five overlays it is \devnum{487},
+\devnum{1{,}023} and \devnum{1{,}543} s under FCFS at the three loads, \devnum{1{,}375},
+\devnum{3{,}313} and \devnum{6{,}286} s under SPJF-E, and \devnum{921}, \devnum{1{,}467} and
+\devnum{1{,}993} s under Guard($\devnum{600}$). The guard leaves the worst heavy job within
+about \devnum{450} s of the FCFS figure at every load (\devnum{434}, \devnum{444} and
+\devnum{450} s), inside the promise, where the unguarded
+ranking multiplies it by \devnum{2.8}, \devnum{3.2} and \devnum{4.1}.
+% Source: outputs/dev_tables/main_table.csv, column max_heavy_s (worst over the five
+%   overlays), rows FCFS, SPJF-E and Guard(600) at levels 0, 1, 2.
+
 Fixed($G$), which spends the whole cap, is reported for reference and is not a candidate: its
 worst-overlay harm is \devnum{181.8}, \devnum{195.4} and \devnum{208.2} s at
 $G = \devnum{300}$ s against a \devnum{150} s limit, \devnum{237.0}, \devnum{447.1} and
@@ -447,8 +458,9 @@ finite-skip bound, by contrast, is attained exactly on small instances, at a rat
 The net-overtake identity had been tested on small synthetic instances and never measured on
 the trace this paper runs on, so we measured it. Table~\ref{tab:resid} reports the residual
 $D_i = k(W_P[i] - W_{\mathrm{FCFS}}[i]) - (\mathrm{In}_i - \mathrm{Out}_i)$ on overlay~0 at
-the three load levels, under SPJF-E, Guard($\devnum{600}$) and the reversed score, with FCFS
-on the same input as the reference schedule in every cell. Recovering $\mathrm{In}_i$ and
+the three load levels under Guard($\devnum{600}$), with the reversed score at the busiest
+load beside it and the other five cells, SPJF-E among them, in Supplementary Table~S4, and
+with FCFS on the same input as the reference schedule in every cell. Recovering $\mathrm{In}_i$ and
 $\mathrm{Out}_i$ needs the dispatch sequence, which the guard kernel does not expose, so the
 kernel and the independent reference simulator were each copied verbatim and given recorders
 that add no branch and no state update; the two agree on the dispatch sequence of every job of
@@ -585,7 +597,7 @@ no promise finer than the wait itself can be stated.}
  & Tail & & FCFS & Cond. & Gap & Unguarded & Guard at $G \approx \devnum{5}L$ \\
 Trace and load & share & AUROC & p99$/L$ & 1? & SPJF-E & max exc. & gap kept / max exc. \\
 \midrule
-CodeBench, busy-hour $\rho = \devnum{1.06}$ & \devnum{0.375} & \devnum{0.928} & \devnum{4.56} & yes & \devnum{0.916} & \devnum{98.4}$L$ & \devnum{0.478} / \devnum{3.82}$L$ \\
+CodeBench, busy-hour $\rho \approx \devnum{1.0}$ & \devnum{0.375} & \devnum{0.928} & \devnum{4.56} & yes & \devnum{0.916} & \devnum{98.4}$L$ & \devnum{0.478} / \devnum{3.82}$L$ \\
 ACcoding, drawn arrivals, $\rho = \devnum{0.8}$ & \devnum{0.122} & \devnum{0.927} & \devnum{0.021} & no & \devnum{0.980} & \devnum{20}$L$ & \devnum{0.974} / \devnum{2.21}$L$\textsuperscript{a} \\
 Serverless, busy-hour $\rho = \devnum{1.0}$ & \devnum{0.443} & \devnum{0.985} & \devnum{4.22} & yes & \devnum{0.858} & \devnum{10.07}$L$ & \devnum{0.710} / \devnum{2.52}$L$ \\
 CI pool A\textsuperscript{c}, $k_{\mathrm{eff}} = \devnum{156}$ of \devnum{173} & \devnum{0.034} & \devnum{0.651} & \devnum{1.78} & no & n/a\textsuperscript{b} & \devnum{11.53}$L$ & \devnum{0.735}\textsuperscript{b} / \devnum{2.64}$L$ \\
@@ -600,7 +612,9 @@ Compute farm, window $\rho = \devnum{0.95}$ & \devnum{0.372} & \devnum{0.890} & 
 \textsuperscript{a} ACcoding arrival instants are drawn, not recorded, so every scheduling figure
 in this row is a statement about the ordering mechanism and not about waiting on that platform;
 its budgets were set at fixed multiples of $L$ instead of from a promise, and the entry shown
-is the largest one tested, $B = \devnum{10}L$.
+is the largest one tested, $B = \devnum{10}L$. Its tail share is the simulated one, with the
+assumed fixed term and $L = \devnum{30.5}$ s; on measured cost alone, at $L = \devnum{30.0}$ s,
+it is \devnum{0.275} (Table~\ref{tab:tails}), the figure the introduction quotes.
 \textsuperscript{b} On CI pool A, SJF is itself worse than FCFS at the p99, so the p99 gap has
 no usable denominator; the guard entry is the mean-wait gap.
 \textsuperscript{c} (on the two $k_{\mathrm{eff}}$ row labels) The CI capacities are fitted, not recorded, and the two scheduling
