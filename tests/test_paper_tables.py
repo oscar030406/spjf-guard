@@ -278,6 +278,80 @@ def test_the_table_check_fails_when_the_paper_stops_agreeing(tmp_path, old, new,
     assert any(expected in c for c in complaints), complaints
 
 
+def _all_complaints(paper):
+    """Checks A, B and C on a copy of the paper, against the tables on disk."""
+    import check_paper_numbers as cpn
+
+    return cpn.run(paper, ROOT / "outputs" / "dev_tables", ROOT / "outputs" / "paper_tables")
+
+
+MOVED_SENTENCE = r"gives up \devnum{0.115} of the gap"
+"""A line of section 8 whose figures check B recomputes and whose \\devnum{0.115} the
+paper prints exactly once.  Moving it is what shows the check follows the sentence."""
+
+
+def _shorten_the_manuscript(paper: Path) -> None:
+    """Move one table and one sentence into the supplementary file.
+
+    This is the operation the manuscript is being shortened by: the `tab:rank` float goes
+    over whole and is renamed to its supplement spelling, one sentence of running text
+    goes with it, and not a digit of either changes.  Nothing is deleted.
+    """
+    section = paper / "sections" / "08_experiments.tex"
+    text = section.read_text(encoding="utf-8")
+    at = text.index(r"\label{tab:rank}")
+    start = text.rindex(r"\begin{table}", 0, at)
+    end = text.index(r"\end{table}", at) + len(r"\end{table}")
+    float_ = text[start:end].replace(r"\label{tab:rank}", r"\label{tab:s_rank}")
+    line = next(one for one in text.splitlines() if MOVED_SENTENCE in one)
+    kept = (text[:start] + text[end:]).replace(line + "\n", "", 1)
+    section.write_text(kept, encoding="utf-8")
+    supplement = paper / "supplementary.tex"
+    body = supplement.read_text(encoding="utf-8")
+    ends = body.rindex(r"\end{document}")
+    supplement.write_text(
+        body[:ends] + float_ + "\n\n" + line + "\n\n" + body[ends:], encoding="utf-8"
+    )
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+def test_every_check_agrees_with_the_paper_as_it_stands(tmp_path):
+    assert _all_complaints(_paper_copy(tmp_path)) == []
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+def test_a_table_and_a_sentence_that_move_into_the_supplement_are_still_checked(tmp_path):
+    """The referee's length cuts are not finished, and `scripts/` will be frozen before
+    they are.  Every check therefore finds a table by its label and a figure by the
+    sources that print it, so that moving either changes nothing here."""
+    paper = _paper_copy(tmp_path)
+    _shorten_the_manuscript(paper)
+    assert r"\label{tab:s_rank}" in (paper / "supplementary.tex").read_text(encoding="utf-8")
+    assert _all_complaints(paper) == []
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+def test_a_digit_edited_in_the_moved_table_still_fails(tmp_path):
+    """The move must not cost the comparison: the table is checked where it landed."""
+    paper = _paper_copy(tmp_path)
+    _shorten_the_manuscript(paper)
+    _edit(paper, r"\devnum{27.64}", r"\devnum{27.65}")
+    assert any("27.64" in c or "27.65" in c for c in _all_complaints(paper))
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+def test_a_sentence_deleted_after_the_move_fails(tmp_path):
+    """A figure printed in none of the sources is still a failure, and says which."""
+    paper = _paper_copy(tmp_path)
+    _shorten_the_manuscript(paper)
+    supplement = paper / "supplementary.tex"
+    text = supplement.read_text(encoding="utf-8")
+    line = next(one for one in text.splitlines() if MOVED_SENTENCE in one)
+    supplement.write_text(text.replace(line + "\n", "", 1), encoding="utf-8")
+    complaints = _all_complaints(paper)
+    assert any("0.115" in c for c in complaints), complaints
+
+
 def test_the_paper_is_never_written_to():
     """The emitter's own source must not open anything under paper/ for writing."""
     source = (ROOT / "scripts" / "emit_paper_tables.py").read_text(encoding="utf-8")

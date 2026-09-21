@@ -20,26 +20,28 @@ A. **Table bodies.**  For each package table, the multiset of `\\devnum{}` paylo
    are compared as well, and a table the paper prints twice at two lengths is checked
    against its own longer copy.
 
-   Nothing here is keyed by a line number: a table is found by its label and a figure by
-   the file that has to contain it, so moving a float or lifting an appendix into the
-   supplement does not make this script stale.
-
 B. **Running text, captions and plot coordinates.**  Figures the paper quotes from this
-   package are recomputed here from `outputs/dev_tables/*.csv` and looked for in the file
-   that should carry them, or in either of two when the sentence may sit in the manuscript
-   or in the supplement.  This is the check that catches a number rounded by hand, or a
-   number that was right before a rerun and was not updated after it.
+   package are recomputed here from `outputs/dev_tables/*.csv` and looked for in the paper.
+   This is the check that catches a number rounded by hand, or a number that was right
+   before a rerun and was not updated after it.
 
 C. **The sourced rows of `numbers.csv`.**  Every row in the "has a source" state must
-   still be printed in the section it was found in; one that is not is either a leftover
-   or a coincidence match, and the coincidences are listed with their reasons.
+   still be printed; one that is not is either a leftover or a coincidence match, and the
+   coincidences are listed with their reasons.
 
 D. **The sealed tables**, only when `--sealed-dir` is given.  The package's
    `tab_*_sealed.tex` against the paper's tables of the same label, on the `\\sealednum{}`
-   figures, and every sealed figure section 4 prints against the sealed terms' predictor
-   table.  A sealed table the paper does not carry yet is reported and skipped: the
+   figures, and every sealed figure the paper quotes in prose against the sealed terms'
+   predictor table.  A sealed table the paper does not carry yet is reported and skipped: the
    sealed run comes first and the paper is written after it.  Without the option nothing
    in A, B or C changes, which is the point of it being an option.
+
+None of the four is keyed to a place in the paper.  A table is found by its label in any
+of the sources and under either spelling of it, a figure by the sources that print it; the
+file an expectation names is where the check looks first and what it reports a move
+against, not a requirement.  The manuscript is being shortened by moving tables,
+paragraphs and proofs into the supplementary file, and a move changes nothing here: the
+same values are compared either way, and a figure printed nowhere at all still fails.
 
 Nothing here writes into `paper/`, and the paper is only ever read.
 """
@@ -89,7 +91,11 @@ table and the residual table went to the supplementary file whole, and the guard
 split, its two ablation shapes going to Table S3 while the winner, its fixed-budget
 ablation, the equal-promise budget and the skip count stayed in the main text.  A package
 table is therefore compared against the union of the paper tables listed here, as one
-multiset: a row that was moved is still printed, a row that was dropped is not."""
+multiset: a row that was moved is still printed, a row that was dropped is not.
+
+The file is where the table sat when this list was written, and is printed so that a
+reader can find it; the label is what the table is looked for by, in every source and
+under either spelling, so a table that moves again is found where it lands."""
 
 SUBSETS = (
     (
@@ -101,6 +107,11 @@ SUBSETS = (
 """(smaller table, larger table, why).  A table the paper prints twice at different
 lengths is checked against its own longer copy, which is the one checked against the
 package.  Any cell that disagrees between the two is a hand edit to one of them."""
+
+SHORT_COPIES = frozenset(short for (_, short), _, _ in SUBSETS)
+"""The labels of the paper's own shortened copies.  Check A compares the package against
+the union of the paper's tables, and a shortened copy would add its cells to that union a
+second time, so it is left out of it and checked by `check_subsets` instead."""
 
 PAPER_PLAIN = (
     (
@@ -215,9 +226,70 @@ SECTION_FILE = {
     "fig_gapvsg": "figures/fig_gapvsg.tex",
     "fig_guard": "figures/fig_guard.tex",
 }
-"""Which file a `numbers.csv` row is looked for in.  A file missing from the paper -- the
-supplement before it existed, an appendix after it is folded in -- is skipped rather than
-reported, because check C asks whether a number is still printed, not where it lives."""
+"""Which file a `numbers.csv` row was found in when it was emitted.  It is where check C
+looks first and what it reports a move against; the check itself asks whether the number
+is still printed, not where it lives, so a file missing from the paper -- the supplement
+before it existed, an appendix after it is folded in -- costs nothing."""
+
+PAPER_GLOBS = ("*.tex", "sections/*.tex", "figures/*.tex")
+"""Where the paper's own text sits, relative to `--paper`.  The class files under
+`Definitions/` are the journal's, not the paper's, and are never read: they are long lists
+of names and code points, and a figure found in one of those would mean nothing."""
+
+SOURCES = "\x00sources"
+"""The key the list of source names is cached under.  No file can be named this."""
+
+SUPPLEMENT_PREFIX = "tab:s_"
+"""What a table's label gains when it moves into the supplementary file."""
+
+
+def paper_files(paper: Path) -> list[str]:
+    """Every source of the paper, as paper-relative names."""
+    return sorted(
+        {
+            str(path.relative_to(paper)).replace("\\", "/")
+            for pattern in PAPER_GLOBS
+            for path in paper.glob(pattern)
+            if path.is_file()
+        }
+    )
+
+
+def _text(paper: Path, cache: dict, relative: str) -> str:
+    return cache.setdefault(relative, (paper / relative).read_text(encoding="utf-8"))
+
+
+def paper_texts(paper: Path, cache: dict) -> dict[str, str]:
+    """Every source, read once and kept for the checks that follow."""
+    names = cache.get(SOURCES)
+    if names is None:
+        names = cache[SOURCES] = paper_files(paper)
+    return {name: _text(paper, cache, name) for name in names}
+
+
+def spellings(label: str) -> tuple[str, ...]:
+    """A table's label and the other spelling of it, main text against supplement.
+
+    A table moved into the supplementary file is renamed there -- `tab:rank` becomes
+    `tab:s_rank` -- so both are looked for, and whichever the paper carries is the one
+    checked.  A table split between the two is carried under both, and both are taken.
+    """
+    if label.startswith(SUPPLEMENT_PREFIX):
+        return label, "tab:" + label[len(SUPPLEMENT_PREFIX) :]
+    if label.startswith("tab:"):
+        return label, SUPPLEMENT_PREFIX + label[len("tab:") :]
+    return (label,)
+
+
+def find_label(paper: Path, cache: dict, label: str) -> list[tuple[str, str]]:
+    """Every (file, spelling) the paper carries this table under, its own spelling first."""
+    texts = paper_texts(paper, cache)
+    return [
+        (name, spelling)
+        for spelling in spellings(label)
+        for name, text in texts.items()
+        if "\\label{" + spelling + "}" in text
+    ]
 
 
 def normalise(value: str) -> str:
@@ -286,13 +358,28 @@ def resid_table_rows(residuals: list[dict]) -> list[dict]:
     return [r for r in residuals if r["policy"] in printed and int(float(r["overlay"])) == 0]
 
 
+def _wanted(label: str) -> list[str]:
+    """The labels the paper may carry a package table's rows under."""
+    return [s for _, paper_label in PAPER_TABLES[label] for s in spellings(paper_label)]
+
+
 def _paper_bodies(paper: Path, cache: dict, label: str) -> tuple[str, list[str]]:
-    """The tabulars the paper carries a package table's rows in, and where they are."""
-    bodies, where = [], []
-    for relative, paper_label in PAPER_TABLES[label]:
-        text = cache.setdefault(relative, (paper / relative).read_text(encoding="utf-8"))
-        bodies.append(table_body(text, paper_label))
-        where.append(f"{paper_label} in {relative}")
+    """The tabulars the paper carries a package table's rows in, and where they are.
+
+    The label is looked for in every source and in either spelling, so a table that moved
+    into the supplementary file is found there, and one whose rows were spread over a main
+    and a supplement table is the union of the two.  Nothing is added twice, and the
+    paper's own shortened copy of a table is left to `check_subsets`.
+    """
+    bodies, where, seen = [], [], set()
+    for _, paper_label in PAPER_TABLES[label]:
+        for name, spelling in find_label(paper, cache, paper_label):
+            short = spelling in SHORT_COPIES and spelling != paper_label
+            if short or (name, spelling) in seen:
+                continue
+            seen.add((name, spelling))
+            bodies.append(table_body(_text(paper, cache, name), spelling))
+            where.append(f"{spelling} in {name}")
     return "\n".join(bodies), where
 
 
@@ -371,6 +458,11 @@ def check_tables(
     for label in TABLES:
         package_body = table_body((package_dir / PACKAGE_FILE[label]).read_text("utf-8"), label)
         paper_body, where = _paper_bodies(paper, cache, label)
+        if not where:
+            wanted = " or ".join(_wanted(label))
+            complaints.append(f"{label}: the paper carries no table labelled {wanted}")
+            print(f"   {label:11s} labelled {wanted}  ->  NOT IN THE PAPER")
+            continue
         found, ok = _one_table(label, package_body, paper_body, residuals, used)
         complaints += found
         print(
@@ -395,33 +487,61 @@ def _load_labels(body: str) -> set[str]:
     return {normalise(v) for v in LOAD_LABEL.findall(body)}
 
 
-def check_subsets(paper: Path, cache: dict) -> list[str]:
-    """Every cell of a shortened copy of a table is a cell of the full one."""
+def _one_body(paper: Path, cache: dict, label: str) -> tuple[str, str] | None:
+    """The tabular the paper carries this label under, and where, or None.
+
+    Its own spelling wins when the paper carries both, so a table that was moved and
+    renamed is compared in its new spelling and one that stayed in its old one.
+    """
+    found = find_label(paper, cache, label)
+    if not found:
+        return None
+    name, spelling = found[0]
+    return table_body(_text(paper, cache, name), spelling), f"{spelling} in {name}"
+
+
+def _subset(short: tuple[str, str], long: tuple[str, str], why: str) -> list[str]:
+    """One shortened copy of a table against the full one, cell for cell."""
     complaints = []
-    for (short_file, short_label), (long_file, long_label), why in SUBSETS:
-        short_text = cache.setdefault(
-            short_file, (paper / short_file).read_text(encoding="utf-8")
-        )
-        long_text = cache.setdefault(long_file, (paper / long_file).read_text(encoding="utf-8"))
-        short_body, long_body = (
-            table_body(short_text, short_label),
-            table_body(long_text, long_label),
-        )
-        labels = _load_labels(short_body) | _load_labels(long_body)
-        short = Counter(normalise(v) for v in DEVNUM.findall(short_body))
-        long = Counter(normalise(v) for v in DEVNUM.findall(long_body))
-        data = Counter({v: c for v, c in short.items() if v not in labels})
-        extra = +(data - long)
-        stray = _load_labels(short_body) - _load_labels(long_body)
-        print(
-            f"   {short_label:11s} {sum(short.values()):4d} values, all of them in"
-            f" {long_label}  ->  {'ok' if not extra and not stray else 'MISMATCH'}"
-            f"   ({why})"
-        )
-        if extra:
-            complaints.append(f"{short_label}: {long_label} does not print {dict(extra)}")
-        if stray:
-            complaints.append(f"{short_label}: {long_label} has no block headed {stray}")
+    (short_body, short_where), (long_body, long_where) = short, long
+    labels = _load_labels(short_body) | _load_labels(long_body)
+    counts = Counter(normalise(v) for v in DEVNUM.findall(short_body))
+    full = Counter(normalise(v) for v in DEVNUM.findall(long_body))
+    data = Counter({v: c for v, c in counts.items() if v not in labels})
+    extra = +(data - full)
+    stray = _load_labels(short_body) - _load_labels(long_body)
+    print(
+        f"   {short_where:24s} {sum(counts.values()):4d} values, all of them in"
+        f" {long_where}  ->  {'ok' if not extra and not stray else 'MISMATCH'}"
+        f"   ({why})"
+    )
+    if extra:
+        complaints.append(f"{short_where}: {long_where} does not print {dict(extra)}")
+    if stray:
+        complaints.append(f"{short_where}: {long_where} has no block headed {stray}")
+    return complaints
+
+
+def check_subsets(paper: Path, cache: dict) -> list[str]:
+    """Every cell of a shortened copy of a table is a cell of the full one.
+
+    Both copies are found by their labels, so the pair may sit anywhere; when the shorter
+    copy has been folded into the longer one the two resolve to the same table, which is
+    the right answer and says so in the line it prints.
+    """
+    complaints = []
+    for (_, short_label), (_, long_label), why in SUBSETS:
+        short = _one_body(paper, cache, short_label)
+        long = _one_body(paper, cache, long_label)
+        if short is None or long is None:
+            absent = [
+                lab for lab, body in ((short_label, short), (long_label, long)) if body is None
+            ]
+            complaints.append(
+                f"{short_label}: the paper carries no table labelled {', '.join(absent)}"
+            )
+            continue
+        complaints += _subset(short, long, why)
     return complaints
 
 
@@ -644,44 +764,70 @@ def _printed(text: str, value: str) -> bool:
     return value.replace("{,}", ",").replace("\\%", "%") in flat
 
 
-def check_recomputed(paper: Path, want: list[tuple], cache: dict) -> list[str]:
-    """B: every recomputed figure is present in a file that may carry it.
+def _where_printed(texts: dict[str, str], files, value: str) -> str | None:
+    """The source that prints this figure: the file it is expected in, then the
+    supplement, then every other source.  A file the paper no longer has is passed over."""
+    order: list[str] = []
+    for name in [*files, SUPPLEMENT, *sorted(texts)]:
+        if name in texts and name not in order:
+            order.append(name)
+    return next((name for name in order if _printed(texts[name], value)), None)
 
-    A figure may be quoted in either of two files when the sentence around it can sit in
-    the manuscript or in the supplement; the expectation then names both, and finding it in
-    one is enough.  Naming both is what keeps the check from going stale the next time a
-    section is moved.
+
+def check_recomputed(paper: Path, want: list[tuple], cache: dict) -> list[str]:
+    """B: every recomputed figure is printed somewhere in the paper.
+
+    The expectation names the file the sentence was written in, and that is where the
+    search starts; a sentence that has since moved into the supplement, or into another
+    section, is found there and the move is reported.  A figure printed in none of the
+    sources is the failure this check exists for: a number rounded by hand, or one that
+    was right before a rerun.
     """
-    complaints = []
+    texts = paper_texts(paper, cache)
+    complaints: list[str] = []
+    moved: Counter = Counter()
     for where, what, value in want:
         files = (where,) if isinstance(where, str) else where
-        texts = [
-            cache.setdefault(name, (paper / name).read_text(encoding="utf-8")) for name in files
-        ]
-        if not any(_printed(text, value) for text in texts):
-            complaints.append(f"{' or '.join(files)}: {what} = {value} is not printed there")
+        found = _where_printed(texts, files, value)
+        if found is None:
+            complaints.append(
+                f"{' or '.join(files)}: {what} = {value} is not printed in the paper"
+            )
+        elif found not in files:
+            moved[f"{files[0]} -> {found}"] += 1
     print(
         f"\nB. running text, captions and plot coordinates recomputed from the CSVs\n"
-        f"   {len(want) - len(complaints)} of {len(want)} found where they belong"
+        f"   {len(want) - len(complaints)} of {len(want)} printed,"
+        f" {sum(moved.values())} of them outside the file they were written in"
     )
+    for move, count in sorted(moved.items()):
+        print(f"   moved: {count:4d} figure(s) {move}")
     return complaints
 
 
 def check_sourced(paper: Path, package_dir: Path, cache: dict) -> list[str]:
-    """C: the rows of `numbers.csv` that name a package source are still printed."""
+    """C: the rows of `numbers.csv` that name a package source are still printed.
+
+    Somewhere in the paper.  The row records the file the number was found in when the map
+    was emitted, and that is where the search starts; a number whose paragraph has since
+    moved into the supplement is counted as moved, not as gone.
+    """
     rows = [r for r in read_rows(package_dir / "numbers.csv") if r["produced_by"]]
-    gone, dropped = [], []
+    texts = paper_texts(paper, cache)
+    gone: list[dict] = []
+    dropped: list[dict] = []
+    moved = 0
     for row in rows:
-        relative = SECTION_FILE.get(row["section"])
-        if relative is None or not (paper / relative).is_file():
-            continue
-        text = cache.setdefault(relative, (paper / relative).read_text(encoding="utf-8"))
-        if "\\devnum{" + row["value"] + "}" in text:
-            continue
-        (dropped if row["key"] in COINCIDENCE else gone).append(row)
+        home = SECTION_FILE.get(row["section"], "")
+        found = _where_printed(texts, (home,), "\\devnum{" + row["value"] + "}")
+        if found is None:
+            (dropped if row["key"] in COINCIDENCE else gone).append(row)
+        elif found != home:
+            moved += 1
     print(
         f"\nC. the {len(rows)} numbers.csv rows with a package source\n"
-        f"   {len(rows) - len(gone) - len(dropped)} still printed unchanged, "
+        f"   {len(rows) - len(gone) - len(dropped)} still printed unchanged "
+        f"({moved} of them in another file than the one they were found in), "
         f"{len(dropped)} dropped as coincidence matches"
     )
     for row in dropped:
@@ -698,20 +844,34 @@ two are never read from the same expression."""
 
 SEALED_SUFFIX = "_sealed"
 PREDICTOR_SECTION = "sections/04_prediction.tex"
+"""Where the sentences that quote a sealed predictor figure sit today.  Check D2 reads
+every source rather than this one, so moving them into the supplement neither breaks the
+check nor turns it silent."""
+
+TABLE_ENV = re.compile(r"\\begin\{table\*?\}.*?\\end\{table\*?\}", re.S)
+MACRO_DEFINITION = re.compile(r"^.*\\newcommand\{\\(?:dev|sealed)num\}.*$", re.M)
 
 
-def _labelled_body(paper: Path, label: str) -> str | None:
-    """The tabular carrying `label`, wherever in the paper it sits, or None."""
-    for path in sorted(paper.rglob("*.tex")):
-        text = path.read_text(encoding="utf-8")
-        if "\\label{" + label + "}" in text:
-            return table_body(text, label)
-    return None
+def _running_text(paper: Path, cache: dict) -> dict[str, str]:
+    """The paper's prose: every source without its table floats.
+
+    A sealed figure inside a table is check D1's business, and the line that defines the
+    macro is not a printed figure at all.
+    """
+    return {
+        name: MACRO_DEFINITION.sub(" ", TABLE_ENV.sub(" ", text))
+        for name, text in paper_texts(paper, cache).items()
+    }
 
 
-def check_sealed_tables(paper: Path, package_dir: Path, labels) -> list[str]:
-    """D1: the package's sealed tables against the paper's, figure for figure."""
+def check_sealed_tables(paper: Path, package_dir: Path, labels, cache=None) -> list[str]:
+    """D1: the package's sealed tables against the paper's, figure for figure.
+
+    The paper's copy is found by its label wherever it sits and in either spelling, so a
+    sealed table that lands in the supplementary file is checked there.
+    """
     complaints = []
+    cache = {} if cache is None else cache
     print("\nD. sealed tables, package against paper")
     for label in labels:
         name = PACKAGE_FILE[label].replace(".tex", f"{SEALED_SUFFIX}.tex")
@@ -724,15 +884,15 @@ def check_sealed_tables(paper: Path, package_dir: Path, labels) -> list[str]:
             normalise(v)
             for v in SEALEDNUM.findall(table_body(path.read_text("utf-8"), sealed_label))
         )
-        body = _labelled_body(paper, sealed_label)
-        if body is None:
+        found = _one_body(paper, cache, sealed_label)
+        if found is None:
             print(f"   {label + SEALED_SUFFIX:18s} not in the paper yet, skipped")
             continue
-        theirs = Counter(normalise(v) for v in SEALEDNUM.findall(body))
+        theirs = Counter(normalise(v) for v in SEALEDNUM.findall(found[0]))
         extra, missing = +(ours - theirs), +(theirs - ours)
         print(
             f"   {label + SEALED_SUFFIX:18s} package {sum(ours.values()):4d} values,"
-            f" paper {sum(theirs.values()):4d}"
+            f" paper {sum(theirs.values()):4d} in {found[1]}"
             f"  ->  {'ok' if not extra and not missing else 'MISMATCH'}"
         )
         if extra:
@@ -744,25 +904,32 @@ def check_sealed_tables(paper: Path, package_dir: Path, labels) -> list[str]:
     return complaints
 
 
-def check_sealed_predictor(paper: Path, rows: list[dict]) -> list[str]:
-    """D2: every sealed figure the predictor section prints comes from that table."""
+def check_sealed_predictor(paper: Path, rows: list[dict], cache=None) -> list[str]:
+    """D2: every sealed figure the paper quotes in prose comes from that table.
+
+    The predictor's figures have no table of their own: the paper states them in running
+    text, and that text is read wherever it sits.
+    """
     from emit_paper_tables import predictor_values
 
+    if not rows:
+        return []
     values: dict[str, str] = {}
     predictor_values(rows, values)
     known = {normalise(v) for v in values}
-    path = paper / PREDICTOR_SECTION
-    if not rows or not path.is_file():
-        return []
-    printed = [normalise(v) for v in SEALEDNUM.findall(path.read_text(encoding="utf-8"))]
-    stray = [v for v in printed if v not in known]
+    printed, stray = 0, []
+    for name, text in _running_text(paper, {} if cache is None else cache).items():
+        for value in SEALEDNUM.findall(text):
+            printed += 1
+            if normalise(value) not in known:
+                stray.append((name, normalise(value)))
     print(
-        f"   predictor section  {len(printed) - len(stray)} of {len(printed)} sealed figures"
+        f"   predictor prose    {printed - len(stray)} of {printed} sealed figures"
         f" come from predictor_metrics.csv"
     )
     return [
-        f"{PREDICTOR_SECTION}: sealed figure {v} is not in the sealed predictor table"
-        for v in stray
+        f"{name}: sealed figure {value} is not in the sealed predictor table"
+        for name, value in stray
     ]
 
 
@@ -788,12 +955,13 @@ def run(
     if only in (None, "D") and sealed is not None:
         k1 = read_rows((sealed_k1 or sealed / "k1") / "main_table.csv", optional=True)
         labels = [t for t in TABLES if t != "tab:k1" or k1]
-        complaints += check_sealed_tables(paper, package_dir, labels)
+        complaints += check_sealed_tables(paper, package_dir, labels, cache)
         complaints += check_sealed_predictor(
             paper,
             read_rows(sealed_predictor / "predictor_metrics.csv", optional=True)
             if sealed_predictor
             else [],
+            cache,
         )
     return complaints
 

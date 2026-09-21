@@ -85,13 +85,39 @@ BY_TABLE = {
     "tab:scores": "predictor-comparison",
     "tab:sens": "sensitivity-study",
     "tab:policies": "mechanism-constant",
-    "tab:s_pred_cross": "predictor-comparison",
+    "tab:pred_cross": "predictor-comparison",
 }
+"""What a table's numbers belong to, by the table's main-text label.  A table that has
+moved into the supplementary file carries the same rows under `tab:s_...` and is read
+under the same entry."""
 
-OURS_TABLES = ("tab:s_guard_abl", "tab:s_resid", "tab:s_k1", "tab:s_setup")
-"""Tables of the supplement whose rows this package produces.  A value of theirs that
-matches nothing is this package printing something else, exactly as it would be in the
-main text, so it is counted as `package-differs` rather than excused by its file."""
+OURS_TABLES = (
+    "tab:rank",
+    "tab:guard",
+    "tab:guard_abl",
+    "tab:adv",
+    "tab:resid",
+    "tab:k1",
+    "tab:setup",
+)
+"""Tables whose rows this package produces.  A value of theirs that matches nothing is
+this package printing something else, so it is counted as `package-differs` rather than
+excused by the file the table happens to sit in.  The manuscript is being shortened by
+moving tables into the supplementary file, where they are renamed `tab:s_...`; the names
+here are the main-text spelling, and a label is read under that spelling."""
+
+SUPPLEMENT_PREFIX = "tab:s_"
+
+
+def base_label(table: str) -> str:
+    """A table's label in its main-text spelling: `tab:s_k1` is `tab:k1` moved.
+
+    What a table is classified as follows the table, not the file it ended up in.
+    """
+    if table.startswith(SUPPLEMENT_PREFIX):
+        return "tab:" + table[len(SUPPLEMENT_PREFIX) :]
+    return table
+
 
 OURS = ("08_experiments", "fig_")
 """Where a number that fails to match is this package's own: the experiment section and
@@ -209,9 +235,10 @@ def classify(context: str, section: str, table: str, not_produced=NOT_PRODUCED) 
     for label, needles in not_produced:
         if any(needle in context for needle in needles):
             return label
-    if table in BY_TABLE:
-        return BY_TABLE[table]
-    if table in OURS_TABLES:
+    base = base_label(table)
+    if base in BY_TABLE:
+        return BY_TABLE[base]
+    if base in OURS_TABLES:
         return DIFFERS
     if section in BY_SECTION:
         return BY_SECTION[section]

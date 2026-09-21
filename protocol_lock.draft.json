@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-21T03:17:56-04:00",
+  "written_at": "2026-09-21T07:01:53-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -441,7 +441,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "473ef65d0f69f4d52d5fa00a5db179a1d8d323ba07745c0a4c073117c6b9e2fb"
+        "sha256": "70b0359fca66302844c6bb087c599e3e4b44a2eeaf5b2c333683aa947f138aac"
       },
       {
         "path": "scripts/check_reproduction.py",
@@ -457,7 +457,7 @@
       },
       {
         "path": "scripts/emit_paper_tables.py",
-        "sha256": "f47e4a6ff4851757e8cc17acecebbe0597708162b2f95dd82bc61cb7a21197f7"
+        "sha256": "53930885c703e641cc46925aa77a2f73ce1449382384fca47405cf88bcbc84f0"
       },
       {
         "path": "scripts/eval_scores.py",
@@ -665,7 +665,7 @@
       },
       {
         "path": "tests/test_paper_tables.py",
-        "sha256": "870f8ad59e224c23e08f139eddf8669428aeabe4e61b9b78f87ed8cbec2ddf4c"
+        "sha256": "83eed43abb0639313bdd4024a8277a230090acec9d7d7fa27965eb6ca8aad8e7"
       },
       {
         "path": "tests/test_predict.py",
@@ -712,7 +712,7 @@
         "sha256": "7826be72c11aca65a0a4f8d1e0ba8a3cb41990c477f289990a0103c3290e1e30"
       }
     ],
-    "digest": "f4825a4bb0d64e4472814d2c202f3d3027d9e469a8cbb55d7ed258b47f9506c2"
+    "digest": "ae3faae7a3f1f6493bfb94b17127d2305a3543875b07a1ef157751203e66d046"
   },
   "inputs": {
     "artefacts": [
