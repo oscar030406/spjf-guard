@@ -1,0 +1,15 @@
+<repo-root>\prechecks\guard_variants\guardkern.py:37: SyntaxWarning: "\-" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\-"? A raw string is also an option.
+  \--------- Z(q), suffix range-add -/    \--- T(t), recomputed per decision ---/
+[     1s] rep0 level2: k=4 rho_busy=1.0589 n=17,634,760 predictor=M4 groups=base,fixed,rel
+[     2s]   FCFS p99_dl 263.1202s mean 10.0987s | SJF-ref p99_dl 42.8808s mean 1.6498s | gap 220.2394s / 8.4488s
+[     9s]   FIX-B300                 7.5s p99_dl   217.561 gap  0.207 | max_excess     162.7 guar@0    225.0 guar@p99     225.0 used 0.723 | maxheavy   1617.9 | forced  0.716% qw  43.21%
+[    16s]   FIX-B1200                7.0s p99_dl   107.124 gap  0.708 | max_excess     370.7 guar@0    450.0 guar@p99     450.0 used 0.824 | maxheavy   1842.9 | forced  0.168% qw  15.68%
+[    23s]   FIX-B7200                6.6s p99_dl    72.275 gap  0.867 | max_excess    1856.1 guar@0   1950.0 guar@p99    1950.0 used 0.952 | maxheavy   3296.2 | forced  0.003% qw   0.26%
+[    31s]   REL-B30-e0.9             8.1s p99_dl    69.087 gap  0.881 | max_excess    4888.9 guar@0   1575.0 guar@p99    3943.1 used 0.709 | maxheavy   5927.9 | forced  0.010% qw   0.24%
+[    39s]   REL-B120-e0.9            8.3s p99_dl    68.012 gap  0.886 | max_excess    4883.2 guar@0   1800.0 guar@p99    4168.1 used 0.758 | maxheavy   5925.3 | forced  0.003% qw   0.10%
+[    48s]   REL-B600-e0.9            8.5s p99_dl    67.050 gap  0.890 | max_excess    4889.0 guar@0   3000.0 guar@p99    5368.1 used 0.789 | maxheavy   5927.8 | forced  0.001% qw   0.01%
+[    56s]   REL-B1800-e0.25          8.2s p99_dl    78.015 gap  0.840 | max_excess    1145.0 guar@0    800.0 guar@p99     887.7 used 0.885 | maxheavy   2659.3 | forced  0.022% qw   1.43%
+[    64s]   REL-B1800-e0.5           8.1s p99_dl    72.613 gap  0.865 | max_excess    2469.9 guar@0   1200.0 guar@p99    1463.1 used 0.907 | maxheavy   3940.5 | forced  0.006% qw   0.18%
+[    73s]   REL-B1800-e0.75          8.6s p99_dl    67.766 gap  0.887 | max_excess    4888.9 guar@0   2400.0 guar@p99    3189.4 used 0.891 | maxheavy   5927.9 | forced  0.001% qw   0.02%
+[    80s]   REL-B1800-e0.9           6.9s p99_dl    66.571 gap  0.892 | max_excess    5882.9 guar@0   6000.0 guar@p99    8368.1 used 0.761 | maxheavy   6264.1 | forced  0.000% qw   0.00%
+[    80s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L2_M4.csv

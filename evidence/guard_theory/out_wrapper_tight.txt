@@ -1,0 +1,68 @@
+==============================================================================
+R3-1  the wrapper constant c(k) = (k*excess_guard[i] - B)/L
+      family rebuilt from the referee's prose, measured by sharp_kernel.py
+==============================================================================
+
+A. measured c(k), against revision 2's best search and the proved ceiling
+
+    k     L   m     n      B  excess   c(k) measured       rev.2 search  3k-2
+    2    64   6    396    128     191   127/32 = 3.9688     3.4444        4
+    2   128   7    909    256     383   255/64 = 3.9844     3.4444        4
+    3    81   4    340    147     227   178/27 = 6.5926     5.3125        7
+    3   243   5   1233    455     697   1636/243 = 6.7325   5.3125        7
+    4    64   3    211    102     165   279/32 = 8.7188     6.9375        10
+    4   256   4   1046    432     687   579/64 = 9.0469     6.9375        10
+    5   125   3    399    187     311   1368/125 = 10.9440  8.6875        13
+    6   216   3    677    308     523   1415/108 = 13.1019  10.5000       16
+
+   closed form  c = ((k-1) f + (2k-1) L - 1)/L  with f = L(1-((k-1)/k)^m);
+   every row matches it exactly, and c -> (k-1) + (2k-1) = 3k-2.
+
+   revision 2's best-found frontier is beaten at k = 2, 3, 4, 5, 6
+
+B. is the excess REAL waiting, or same-phase bookkeeping?
+
+    k     L   m   W_guard  W_FCFS  excess/L    In_i  same-phase  Ine_i   D_i/L
+    2    64   6       191       0     2.984     255           0     255  1.9844
+    2   128   7       383       0     2.992     511           0     511  1.9922
+    3    81   4       227       0     2.802     389           0     389  3.6049
+    3   243   5       697       0     2.868    1183           0    1183  3.7366
+    4    64   3       165       0     2.578     357           0     357  4.7344
+    4   256   4       687       0     2.684    1455           0    1455  5.0508
+    5   125   3       311       0     2.488     811           0     811  5.9520
+    6   216   3       523       0     2.421    1603           0    1603  7.1065
+
+   same-phase share of In_i is 0 in every row: every overtaker is
+   dispatched at a strictly earlier instant than the victim and has
+   completed before it, so In_i = Ine_i and the whole excess is time the
+   victim spends waiting while all k servers run other jobs.
+
+C. audits of the produced schedules (capacity, work conservation,
+   replay through sharp_kernel.sched_guard):
+
+   work-conservation / capacity failures over 16 schedules : 0
+   replay mismatches against sharp_kernel.sched_guard       : 0
+   Theorem-1 decomposition D = (R^P-R^F) - rho^P + rho^F    : asserted, held
+
+D. the victim in full, and the two slacks saturated together
+
+   k=2 L=64 m=6 :  f=63  B=128  victim rank 391, dispatched at t=575
+      In_i = 255   against  B + kL = 256        (slack 1)
+      D_i  = 127 = 1.9844 L   against  2(k-1)L = 128   (slack 1)
+      R^P-R^F = 63, rho^P = 0, rho^F = 64 = (k-1)L
+   k=3 L=81 m=4 :  f=65  B=147  victim rank 334, dispatched at t=551
+      In_i = 389   against  B + kL = 390        (slack 1)
+      D_i  = 292 = 3.6049 L   against  2(k-1)L = 324   (slack 32)
+      R^P-R^F = 130, rho^P = 0, rho^F = 162 = (k-1)L
+   k=4 L=64 m=3 :  f=37  B=102  victim rank 204, dispatched at t=357
+      In_i = 357   against  B + kL = 358        (slack 1)
+      D_i  = 303 = 4.7344 L   against  2(k-1)L = 384   (slack 81)
+      R^P-R^F = 111, rho^P = 0, rho^F = 192 = (k-1)L
+
+   Theorem 1's constant and In < B + kL are within one time unit of
+   saturation on the SAME instance, which revision 2's open problem 8.1
+   conjectured to be impossible.
+
+E. the k=1 case, for comparison (Proposition 14's family is separate):
+   at k=1 the cascade is empty and 3k-2 = 1, already proved optimal.
+

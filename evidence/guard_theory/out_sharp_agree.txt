@@ -1,0 +1,4 @@
+agree: 20,000 instances, 90188 job-checks
+  kernel vs sim_core, schedules+FCFS   : 0 mismatches
+  kernel D vs sim_core In/Out          : 0 mismatches
+  busy-period identity k*W = executed  : 0 failures

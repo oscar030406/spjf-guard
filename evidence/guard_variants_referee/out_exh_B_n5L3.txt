@@ -1,0 +1,16 @@
+n=5 L=3 amax=4 |arr|=126 |srv|=243 |pred|=120 B0 in 0..16 caps=[0, 2, 5, 1000000]
+k=1 eps=[(0, 1), (1, 2), (1, 2)] sims=1499087898 48.1s
+   ThmB violations=0  ThmA(cap) violations=0  Lemma violations=0  head-rule differs in 7887852 cases (expected >0 for eps>0)
+   max ThmB constant c = 0.6667  (claim <= 1.0000)
+   max ThmA(cap) constant c = 0.6667
+   ThmB argmax: arrivals=[0, 0, 0, 0, 0] services=[1, 1, 1, 1, 3] pred=[0, 1, 2, 4, 3] eps=(0, 1) B0=1 cap=+0 job=3
+k=2 eps=[(0, 1), (1, 2), (1, 1), (3, 2)] sims=1998773658 64.2s
+   ThmB violations=0  ThmA(cap) violations=0  Lemma violations=0  head-rule differs in 4420980 cases (expected >0 for eps>0)
+   max ThmB constant c = 1.3333  (claim <= 2.0000)
+   max ThmA(cap) constant c = 1.3333
+   ThmB argmax: arrivals=[0, 0, 0, 0, 0] services=[3, 1, 3, 3, 3] pred=[0, 4, 1, 2, 3] eps=(0, 1) B0=4 cap=+0 job=1
+k=3 eps=[(0, 1), (1, 2), (1, 1), (5, 2)] sims=1998773658 67.6s
+   ThmB violations=0  ThmA(cap) violations=0  Lemma violations=0  head-rule differs in 588060 cases (expected >0 for eps>0)
+   max ThmB constant c = 0.8889  (claim <= 2.3333)
+   max ThmA(cap) constant c = 0.8889
+   ThmB argmax: arrivals=[0, 0, 0, 0, 0] services=[1, 1, 2, 3, 3] pred=[0, 4, 3, 1, 2] eps=(0, 1) B0=1 cap=+0 job=1

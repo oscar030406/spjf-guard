@@ -1,0 +1,12 @@
+N0_remote_lr0.001_mean_wd0.0_dr0.1_s3_final  params {'model': 'N0', 'seed': 3, 'lr': 0.001, 'agg': 'mean', 'variant': 'remote', 'epochs': 30, 'batch': 4096, 'patience': 5, 'p_mask': 0.15, 'p_drop': 0.1, 'w_cls': 0.5, 'wd': 0.0, 'drop': 0.1, 'tag': '_final', 'save_emb': False}
+tabular block (863149, 86), submission-level block (863149, 102)
+rows train 770,758 valid 51,547 test 40,844
+parameters 55,426
+  epoch  0 train 0.13930 valid 0.07572 (rmse 0.2221) 1s
+  epoch  1 train 0.09959 valid 0.07740 (rmse 0.2259) 1s
+  epoch  2 train 0.09416 valid 0.07639 (rmse 0.2240) 1s
+  epoch  3 train 0.09094 valid 0.07971 (rmse 0.2304) 1s
+  epoch  4 train 0.08892 valid 0.08035 (rmse 0.2315) 2s
+  epoch  5 train 0.08759 valid 0.07812 (rmse 0.2273) 2s
+  early stop at epoch 5
+{"name": "N0_remote_lr0.001_mean_wd0.0_dr0.1_s3_final", "model": "N0", "variant": "remote", "seed": 3, "lr": 0.001, "agg": "mean", "wd": 0.0, "drop": 0.1, "valid_loss": 0.07571614533662796, "valid_rmse": 0.22209769487380981}

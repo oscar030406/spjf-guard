@@ -1,0 +1,9 @@
+## 2026-09-19 22:41:08 manifest=423adbc90d3c1ceb9ab9dcaa2cad7ec224c73f9a7c662f98fd15c070ee8730e0 argv=--small 3000 --trace primary --rep 0 --level 2
+small instances: 3000 drawn {'fcfs': 477, 'pri': 535, 'cap': 491, 'fix': 498, 'skipc': 482, 'skip': 517}; job-by-job mismatches and anchor failures: 0; 517 finite-skip instances also reproduced FCFS at N = 0 and the pure predictor order at N >= n; both per-job bounds asserted on the INDEPENDENT waits, worst used/allowed 0.9412 (work budget) and 1.0000 (finite skip)
+[     6s] real primary rep0 level2 (k=4, 17,634,760 jobs) FCFS: vs the project simulator, differing jobs 0, max |diff| 0
+[    12s] real primary rep0 level2 (k=4, 17,634,760 jobs) SPJF-tweedie: vs the project simulator, differing jobs 0, max |diff| 0
+[    51s] real primary rep0 level2 (k=4, 17,634,760 jobs) FIX-G600: vs the project simulator, differing jobs 0, max |diff| 0
+[    51s] real busy slice, 1,000 jobs from the busiest arrival hour, finite skip (dispatch charge, N=34, k=4): kernel vs the literal reference, differing jobs 0, max |diff| 0
+[    51s] real busy slice, 400 jobs, selected capped relative guard (B0=120 s, eta=0.75, Bmax=1800 s): kernel vs the referee's reference simulator, differing jobs 0, max |diff| 0
+TOTAL disagreements: 0
+## done in 51 s

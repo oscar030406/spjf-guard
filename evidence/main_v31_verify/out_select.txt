@@ -1,0 +1,103 @@
+================================================================================================
+A. select_grid.csv REBUILT FROM THE RAW CELLS
+================================================================================================
+  rows: mine 720, builder 720  (expected 48 configs x 15 cells = 720)
+  index identical: True
+  max |mine - builder| per column: k=0, G=0, B0_base=0, eta=0, gap=6.94e-17, red_pct=7.11e-15, harm=5.68e-14, w_p99_dl=3.55e-15, used_over_allowed=0
+  feasible_cell flag disagreements: 0
+  cells: 15  (5 validation overlays x 3 levels)
+  k per cell: {(0, 0): 7, (0, 1): 5, (0, 2): 4, (1, 0): 8, (1, 1): 5, (1, 2): 4, (2, 0): 8, (2, 1): 5, (2, 2): 4, (3, 0): 7, (3, 1): 5, (3, 2): 4, (4, 0): 8, (4, 1): 5, (4, 2): 4}
+
+================================================================================================
+B. THE RULE, APPLIED HERE
+================================================================================================
+  select_worst.csv rows 48, joined 48
+    max |mine - builder| worst_gap   = 6.68e-17
+    max |mine - builder| worst_harm  = 0
+    max |mine - builder| worst_red   = 7.11e-15
+    max |mine - builder| mean_gap    = 5.55e-17
+    max |mine - builder| max_used    = 0
+    n_feasible_cells disagreements: 0
+
+  family  G      my pick             builder pick        n_feas(mine/builder)  worst_gap  worst_harm
+  cap        300  B0=       30 eta=0.50   B0=       30 eta=0.50    5/15 vs  5/15   0.4102/0.4102  122.74/122.74  SAME=True fellback=False
+  fixsel     300  B0=      120 eta=0.00   B0=      120 eta=0.00    2/4 vs  2/4   0.0057/0.0057  102.65/102.65  SAME=True fellback=False
+  cap        600  B0=      120 eta=0.75   B0=      120 eta=0.75   10/15 vs 10/15   0.7216/0.7216  293.29/293.29  SAME=True fellback=False
+  fixsel     600  B0=      600 eta=0.00   B0=      600 eta=0.00    3/4 vs  3/4   0.3693/0.3693  212.04/212.04  SAME=True fellback=False
+  cap       1200  B0=      120 eta=0.90   B0=      120 eta=0.90   13/15 vs 13/15   0.7273/0.7273  536.07/536.07  SAME=True fellback=False
+  fixsel    1200  B0=      600 eta=0.00   B0=      600 eta=0.00    3/4 vs  3/4   0.3693/0.3693  212.04/212.04  SAME=True fellback=False
+  DISAGREEMENTS with selected_params.csv: 0
+
+  the v3 choice under the new rule (report section 3 claims):
+    G=   300 v3=(30*k/4, 0.5): worst_gap 0.4102  worst_harm 122.74 s  limit 150  feasible=True  feasible cells 15/15
+    G=   600 v3=(30*k/4, 0.9): worst_gap 0.7210  worst_harm 358.92 s  limit 300  feasible=False  feasible cells 14/15
+    G=  1200 v3=(120*k/4, 0.9): worst_gap 0.7273  worst_harm 536.07 s  limit 600  feasible=True  feasible cells 15/15
+    claimed 358.9 s for the REJECTED v3 G=600 setting -> 358.92 MATCH=True
+    claimed 293.3 s for the SELECTED G=600 setting     -> 293.29 MATCH=True
+    worst cells for the rejected setting (harm, rep, level):
+       harm   358.92 s  rep 1 level 2  gap 0.7706
+       harm   276.36 s  rep 2 level 2  gap 0.7777
+       harm   269.50 s  rep 3 level 2  gap 0.7644
+       harm   266.13 s  rep 4 level 2  gap 0.7782
+       harm   255.18 s  rep 4 level 1  gap 0.8308
+    worst cells for the selected setting:
+       harm   293.29 s  rep 1 level 2  gap 0.7647
+       harm   232.55 s  rep 1 level 1  gap 0.8236
+       harm   223.40 s  rep 4 level 2  gap 0.7682
+    worst-GAP cell for the selected setting: gap 0.7216 at rep 1 level 0
+
+================================================================================================
+C. THE FIXED-BUDGET FAMILY UNDER THE SAME RULE
+================================================================================================
+  G=   300  FIX (eta=0, B0=Bmax): worst_gap 0.3693  worst_harm 212.04 s  limit 150  FEASIBLE=False  (2/15 cells)
+           fixsel pool (4 points):
+             B0_base=       30 eta=0.00 worst_gap -0.0103 worst_harm   71.32 feasible=True
+             B0_base=      120 eta=0.00 worst_gap  0.0057 worst_harm  102.65 feasible=True
+             B0_base=      600 eta=0.00 worst_gap  0.3693 worst_harm  212.04 feasible=False
+             B0_base=1000000000 eta=0.00 worst_gap  0.3693 worst_harm  212.04 feasible=False
+  G=   600  FIX (eta=0, B0=Bmax): worst_gap 0.7238  worst_harm 490.53 s  limit 300  FEASIBLE=False  (6/15 cells)
+           fixsel pool (4 points):
+             B0_base=       30 eta=0.00 worst_gap -0.0103 worst_harm   71.32 feasible=True
+             B0_base=      120 eta=0.00 worst_gap  0.0057 worst_harm  102.65 feasible=True
+             B0_base=      600 eta=0.00 worst_gap  0.3693 worst_harm  212.04 feasible=True
+             B0_base=1000000000 eta=0.00 worst_gap  0.7238 worst_harm  490.53 feasible=False
+  G=  1200  FIX (eta=0, B0=Bmax): worst_gap 0.7273  worst_harm 1093.78 s  limit 600  FEASIBLE=False  (10/15 cells)
+           fixsel pool (4 points):
+             B0_base=       30 eta=0.00 worst_gap -0.0103 worst_harm   71.32 feasible=True
+             B0_base=      120 eta=0.00 worst_gap  0.0057 worst_harm  102.65 feasible=True
+             B0_base=      600 eta=0.00 worst_gap  0.3693 worst_harm  212.04 feasible=True
+             B0_base=1000000000 eta=0.00 worst_gap  0.7273 worst_harm 1093.78 feasible=False
+  claim 'FIX infeasible at all three G': True
+  claim 'FIXSEL = 120*k/4 at G=300, 600*k/4 at G=600 and 1200': [120.0, 600.0, 600.0]
+
+================================================================================================
+D. SECTION 3 TABLE OF out_main_v31.txt, NUMBER BY NUMBER
+================================================================================================
+  cap     G=   300  printed vs mine OK
+  fixsel  G=   300  printed vs mine OK
+  cap     G=   600  printed vs mine OK
+  fixsel  G=   600  printed vs mine OK
+  cap     G=  1200  printed vs mine OK
+  fixsel  G=  1200  printed vs mine OK
+  section-3 mismatches: 0
+
+================================================================================================
+E. VALIDATION POOL: NO 2022-2 JOB
+================================================================================================
+  primary rep0: 44 copies x 400,790 jobs = 17,634,760
+  valid   rep0: 49 copies x 360,125 jobs = 17,646,125
+  per-copy service multiset of valid is a sub-multiset of primary: values absent from primary 0, values with a larger count 0  (jobs removed per copy 40,665)
+  distinct service values: primary 160,117, valid 153,316; per-copy jobs primary 400,790 valid 360,125
+  trace_summary class_semesters: primary 40, valid 32, t222 8  -> 40 - 32 = 8 = the 2022-2 count: True
+  code path (v31_common.pool_of):
+    def pool_of(trace, I):
+        if trace in ("primary", "k1"):
+            return sorted(I["per_cs"])
+        if trace == "valid":
+            return sorted(cs for cs in I["per_cs"] if cs.split("|")[0] != TEST_SEM)
+        if trace == "t222":
+            return sorted(cs for cs in I["per_cs"] if cs.split("|")[0] == TEST_SEM)
+        raise SystemExit(trace)
+  TEST_SEM = TEST_SEM = "2022-2"
+  NOTE: the npz carries no semester label, so this is a structural + code check,
+        exactly as the v3 verifier recorded it.

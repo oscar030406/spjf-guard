@@ -1,0 +1,163 @@
+=== simulator validation against the RECORDED waits of a real shared non-preemptive queue ===
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+
+================ releng-hardware/gecko-t-osx-1500-m4 ================
+runs=191970  span=20.99 d  total service=2118.8 server-days  distinct workers=173
+k(t) (distinct workers busy per hour): min=1 p10=120 median=169 p90=170 max=172
+k(t) (workers seen within +/- 6 h, the capacity estimate): min=164 p10=167 median=170 p90=172 max=172  (coefficient of variation 0.009 -- this is how far from constant k is)
+recorded wait: mean=1880.9 p50=315.9 p90=5429.2 p99=20675.4 max=60856.2
+
+-- kernel cross-check (constant k=172, FCFS) --
+  local k(t) kernel vs guardkern_snapshot.py: max |difference| = 0.000000000 s over 191970 jobs  -> AGREE
+  priority mix: low=78420, very-low=65124, medium=22871, high=16730, very-high=7092, highest=940, lowest=793
+  setup/teardown estimate from 146804 short inter-run gaps: median 54.2 s, mean 91.3 s, p90 178.8 s
+
+-- simulated vs RECORDED wait  (sim/rec at each quantile) --
+  k = max busy in any hour = 172 | FCFS | service as recorded mean    856.4 (rec   1880.9, ratio  0.46)  p50    213.1/   315.9  p90   2409.8/  5429.2  p99   7786.8/ 20675.4  p99.9   8799.6/ 57843.3
+                                                 per-job: median|err|    255.5  Spearman 0.6794  Pearson 0.3802  frac within 60 s 0.344
+      per-hour mean wait over 502 hours: Pearson 0.6065, Spearman 0.8850
+  k = max busy in any hour = 172 | FCFS | service + 54s setup mean   1112.9 (rec   1880.9, ratio  0.59)  p50    408.3/   315.9  p90   3189.8/  5429.2  p99   9301.9/ 20675.4  p99.9  10357.9/ 57843.3
+                                                 per-job: median|err|    280.5  Spearman 0.7045  Pearson 0.3816  frac within 60 s 0.362
+      per-hour mean wait over 502 hours: Pearson 0.6166, Spearman 0.9154
+  k = max busy in any hour = 172 | priority-then-FIFO | service as recorded mean    820.6 (rec   1880.9, ratio  0.44)  p50     71.8/   315.9  p90   2003.8/  5429.2  p99  12156.2/ 20675.4  p99.9  28664.0/ 57843.3
+                                                 per-job: median|err|    106.2  Spearman 0.8129  Pearson 0.7458  frac within 60 s 0.421
+      per-hour mean wait over 502 hours: Pearson 0.7744, Spearman 0.8898
+  k = max busy in any hour = 172 | priority-then-FIFO | service + 54s setup mean   1068.1 (rec   1880.9, ratio  0.57)  p50    148.7/   315.9  p90   2574.4/  5429.2  p99  14492.4/ 20675.4  p99.9  35414.7/ 57843.3
+                                                 per-job: median|err|     55.1  Spearman 0.8701  Pearson 0.7910  frac within 60 s 0.511
+      per-hour mean wait over 502 hours: Pearson 0.8276, Spearman 0.9255
+  k = median busy per hour = 169 | FCFS | service as recorded mean    935.3 (rec   1880.9, ratio  0.50)  p50    270.7/   315.9  p90   2665.5/  5429.2  p99   8328.6/ 20675.4  p99.9   9322.4/ 57843.3
+                                                 per-job: median|err|    259.8  Spearman 0.6883  Pearson 0.3808  frac within 60 s 0.355
+      per-hour mean wait over 502 hours: Pearson 0.6106, Spearman 0.8930
+  k = median busy per hour = 169 | FCFS | service + 54s setup mean   1221.7 (rec   1880.9, ratio  0.65)  p50    490.1/   315.9  p90   3460.7/  5429.2  p99   9807.3/ 20675.4  p99.9  10938.9/ 57843.3
+                                                 per-job: median|err|    273.2  Spearman 0.7145  Pearson 0.3817  frac within 60 s 0.374
+      per-hour mean wait over 502 hours: Pearson 0.6194, Spearman 0.9247
+  k = median busy per hour = 169 | priority-then-FIFO | service as recorded mean    897.2 (rec   1880.9, ratio  0.48)  p50     96.2/   315.9  p90   2166.1/  5429.2  p99  12790.8/ 20675.4  p99.9  31131.4/ 57843.3
+                                                 per-job: median|err|     89.4  Spearman 0.8315  Pearson 0.7596  frac within 60 s 0.444
+      per-hour mean wait over 502 hours: Pearson 0.7943, Spearman 0.8991
+  k = median busy per hour = 169 | priority-then-FIFO | service + 54s setup mean   1172.6 (rec   1880.9, ratio  0.62)  p50    185.7/   315.9  p90   2834.4/  5429.2  p99  16897.6/ 20675.4  p99.9  37456.4/ 57843.3
+                                                 per-job: median|err|     40.1  Spearman 0.8914  Pearson 0.8040  frac within 60 s 0.554
+      per-hour mean wait over 502 hours: Pearson 0.8408, Spearman 0.9348
+  k = workers seen in the window = 173 | FCFS | service as recorded mean    831.7 (rec   1880.9, ratio  0.44)  p50    194.4/   315.9  p90   2328.7/  5429.2  p99   7614.7/ 20675.4  p99.9   8666.6/ 57843.3
+                                                 per-job: median|err|    253.8  Spearman 0.6772  Pearson 0.3799  frac within 60 s 0.344
+      per-hour mean wait over 502 hours: Pearson 0.6049, Spearman 0.8801
+  k = workers seen in the window = 173 | FCFS | service + 54s setup mean   1080.2 (rec   1880.9, ratio  0.57)  p50    385.1/   315.9  p90   3102.4/  5429.2  p99   9121.4/ 20675.4  p99.9  10160.2/ 57843.3
+                                                 per-job: median|err|    278.4  Spearman 0.7012  Pearson 0.3816  frac within 60 s 0.359
+      per-hour mean wait over 502 hours: Pearson 0.6160, Spearman 0.9118
+  k = workers seen in the window = 173 | priority-then-FIFO | service as recorded mean    797.1 (rec   1880.9, ratio  0.42)  p50     65.4/   315.9  p90   1954.9/  5429.2  p99  11931.6/ 20675.4  p99.9  28386.2/ 57843.3
+                                                 per-job: median|err|    110.8  Spearman 0.8071  Pearson 0.7417  frac within 60 s 0.416
+      per-hour mean wait over 502 hours: Pearson 0.7670, Spearman 0.8862
+  k = workers seen in the window = 173 | priority-then-FIFO | service + 54s setup mean   1036.6 (rec   1880.9, ratio  0.55)  p50    138.0/   315.9  p90   2494.7/  5429.2  p99  14165.6/ 20675.4  p99.9  35143.3/ 57843.3
+                                                 per-job: median|err|     61.4  Spearman 0.8638  Pearson 0.7860  frac within 60 s 0.497
+      per-hour mean wait over 502 hours: Pearson 0.8226, Spearman 0.9215
+  k(t) = workers seen within +/- 6 h | FCFS | service as recorded mean    910.0 (rec   1880.9, ratio  0.48)  p50    258.6/   315.9  p90   2583.6/  5429.2  p99   8152.9/ 20675.4  p99.9   9148.6/ 57843.3
+                                                 per-job: median|err|    256.6  Spearman 0.6873  Pearson 0.3813  frac within 60 s 0.352
+      per-hour mean wait over 502 hours: Pearson 0.6116, Spearman 0.8917
+  k(t) = workers seen within +/- 6 h | FCFS | service + 54s setup mean   1187.1 (rec   1880.9, ratio  0.63)  p50    471.3/   315.9  p90   3396.0/  5429.2  p99   9634.0/ 20675.4  p99.9  10733.6/ 57843.3
+                                                 per-job: median|err|    272.7  Spearman 0.7123  Pearson 0.3825  frac within 60 s 0.376
+      per-hour mean wait over 502 hours: Pearson 0.6215, Spearman 0.9227
+  k(t) = workers seen within +/- 6 h | priority-then-FIFO | service as recorded mean    873.5 (rec   1880.9, ratio  0.46)  p50     90.5/   315.9  p90   2133.5/  5429.2  p99  12533.1/ 20675.4  p99.9  30895.7/ 57843.3
+                                                 per-job: median|err|     92.4  Spearman 0.8265  Pearson 0.7557  frac within 60 s 0.436
+      per-hour mean wait over 502 hours: Pearson 0.7912, Spearman 0.8967
+  k(t) = workers seen within +/- 6 h | priority-then-FIFO | service + 54s setup mean   1138.9 (rec   1880.9, ratio  0.61)  p50    177.6/   315.9  p90   2778.1/  5429.2  p99  16318.9/ 20675.4  p99.9  36956.2/ 57843.3
+                                                 per-job: median|err|     38.7  Spearman 0.8874  Pearson 0.8007  frac within 60 s 0.550
+      per-hour mean wait over 502 hours: Pearson 0.8391, Spearman 0.9336
+
+-- effective capacity: which constant k reproduces the recorded waits --
+     k=  86: mean 233289.1 (rec   1880.9)  p90  825112.4 (rec    5429.2)  log-error 9.8435
+     k=  93: mean 149626.9 (rec   1880.9)  p90  496641.9 (rec    5429.2)  log-error 8.8917
+     k= 100: mean 103751.1 (rec   1880.9)  p90  365007.3 (rec    5429.2)  log-error 8.2176
+     k= 107: mean  68137.5 (rec   1880.9)  p90  255313.3 (rec    5429.2)  log-error 7.4398
+     k= 114: mean  37845.0 (rec   1880.9)  p90  132560.0 (rec    5429.2)  log-error 6.1963
+     k= 121: mean  23447.0 (rec   1880.9)  p90   84753.9 (rec    5429.2)  log-error 5.2703
+     k= 128: mean  14187.1 (rec   1880.9)  p90   49980.6 (rec    5429.2)  log-error 4.2398
+     k= 135: mean   8768.9 (rec   1880.9)  p90   27781.0 (rec    5429.2)  log-error 3.1714
+     k= 142: mean   4991.8 (rec   1880.9)  p90   14768.8 (rec    5429.2)  log-error 1.9763
+     k= 149: mean   2728.4 (rec   1880.9)  p90    7696.7 (rec    5429.2)  log-error 0.7207
+     k= 156: mean   1918.4 (rec   1880.9)  p90    5046.9 (rec    5429.2)  log-error 0.0927
+     k= 163: mean   1453.6 (rec   1880.9)  p90    3563.2 (rec    5429.2)  log-error 0.6786
+     k= 170: mean   1134.7 (rec   1880.9)  p90    2743.9 (rec    5429.2)  log-error 1.1873
+  -> effective k = 156 against 173 distinct workers seen and 172 busy at once; the shortfall is the machines that are up but not claiming (reboot, reimage, quarantine, worker restart between tasks)
+  effective k = 156 | priority-then-FIFO | service + setup mean   1918.4 (rec   1880.9, ratio  1.02)  p50    362.0/   315.9  p90   5046.9/  5429.2  p99  22245.4/ 20675.4  p99.9  56896.5/ 57843.3
+                                                 per-job: median|err|     68.5  Spearman 0.9496  Pearson 0.9367  frac within 60 s 0.480
+      per-hour mean wait over 502 hours: Pearson 0.9527, Spearman 0.9728
+
+================ releng-hardware/gecko-t-linux-talos-2404 ================
+runs=30702  span=6.99 d  total service=261.1 server-days  distinct workers=105
+k(t) (distinct workers busy per hour): min=1 p10=21 median=94 p90=100 max=100
+k(t) (workers seen within +/- 6 h, the capacity estimate): min=93 p10=94 median=98 p90=100 max=101  (coefficient of variation 0.025 -- this is how far from constant k is)
+recorded wait: mean=1074.8 p50=426.0 p90=2536.6 p99=9881.6 max=11883.0
+
+-- kernel cross-check (constant k=100, FCFS) --
+  local k(t) kernel vs guardkern_snapshot.py: max |difference| = 0.000000000 s over 30702 jobs  -> AGREE
+  priority mix: low=16993, very-low=7154, medium=6000, lowest=366, high=132, highest=57
+  setup/teardown estimate from 22454 short inter-run gaps: median 126.8 s, mean 165.7 s, p90 268.0 s
+
+-- simulated vs RECORDED wait  (sim/rec at each quantile) --
+  k = max busy in any hour = 100 | FCFS | service as recorded mean    700.0 (rec   1074.8, ratio  0.65)  p50    196.3/   426.0  p90   2024.9/  2536.6  p99   5403.1/  9881.6  p99.9   6231.2/ 11649.9
+                                                 per-job: median|err|    247.8  Spearman 0.8969  Pearson 0.7589  frac within 60 s 0.363
+      per-hour mean wait over 156 hours: Pearson 0.8294, Spearman 0.9345
+  k = max busy in any hour = 100 | FCFS | service + 127s setup mean    985.3 (rec   1074.8, ratio  0.92)  p50    450.5/   426.0  p90   2775.0/  2536.6  p99   6462.0/  9881.6  p99.9   7265.5/ 11649.9
+                                                 per-job: median|err|     57.7  Spearman 0.9116  Pearson 0.7490  frac within 60 s 0.505
+      per-hour mean wait over 156 hours: Pearson 0.8573, Spearman 0.9612
+  k = max busy in any hour = 100 | priority-then-FIFO | service as recorded mean    661.2 (rec   1074.8, ratio  0.62)  p50    171.3/   426.0  p90   1613.2/  2536.6  p99   6921.4/  9881.6  p99.9   9635.4/ 11649.9
+                                                 per-job: median|err|    220.1  Spearman 0.9336  Pearson 0.9278  frac within 60 s 0.372
+      per-hour mean wait over 156 hours: Pearson 0.8797, Spearman 0.9279
+  k = max busy in any hour = 100 | priority-then-FIFO | service + 127s setup mean    925.8 (rec   1074.8, ratio  0.86)  p50    331.4/   426.0  p90   2300.8/  2536.6  p99   8458.5/  9881.6  p99.9  11429.7/ 11649.9
+                                                 per-job: median|err|     38.5  Spearman 0.9619  Pearson 0.9582  frac within 60 s 0.583
+      per-hour mean wait over 156 hours: Pearson 0.9384, Spearman 0.9666
+  k = median busy per hour = 94 | FCFS | service as recorded mean    824.2 (rec   1074.8, ratio  0.77)  p50    279.5/   426.0  p90   2355.4/  2536.6  p99   5892.6/  9881.6  p99.9   6709.2/ 11649.9
+                                                 per-job: median|err|    159.1  Spearman 0.9091  Pearson 0.7597  frac within 60 s 0.377
+      per-hour mean wait over 156 hours: Pearson 0.8484, Spearman 0.9486
+  k = median busy per hour = 94 | FCFS | service + 127s setup mean   1170.4 (rec   1074.8, ratio  1.09)  p50    636.7/   426.0  p90   3279.6/  2536.6  p99   7024.3/  9881.6  p99.9   7795.2/ 11649.9
+                                                 per-job: median|err|     48.8  Spearman 0.9086  Pearson 0.7406  frac within 60 s 0.529
+      per-hour mean wait over 156 hours: Pearson 0.8607, Spearman 0.9546
+  k = median busy per hour = 94 | priority-then-FIFO | service as recorded mean    773.1 (rec   1074.8, ratio  0.72)  p50    218.0/   426.0  p90   1872.1/  2536.6  p99   7635.5/  9881.6  p99.9  10333.6/ 11649.9
+                                                 per-job: median|err|    142.8  Spearman 0.9495  Pearson 0.9430  frac within 60 s 0.382
+      per-hour mean wait over 156 hours: Pearson 0.9045, Spearman 0.9421
+  k = median busy per hour = 94 | priority-then-FIFO | service + 127s setup mean   1099.9 (rec   1074.8, ratio  1.02)  p50    470.2/   426.0  p90   2723.9/  2536.6  p99   9986.2/  9881.6  p99.9  12223.2/ 11649.9
+                                                 per-job: median|err|     25.5  Spearman 0.9686  Pearson 0.9652  frac within 60 s 0.634
+      per-hour mean wait over 156 hours: Pearson 0.9671, Spearman 0.9653
+  k = workers seen in the window = 105 | FCFS | service as recorded mean    613.1 (rec   1074.8, ratio  0.57)  p50    150.0/   426.0  p90   1779.6/  2536.6  p99   5048.6/  9881.6  p99.9   5888.2/ 11649.9
+                                                 per-job: median|err|    267.1  Spearman 0.8893  Pearson 0.7551  frac within 60 s 0.365
+      per-hour mean wait over 156 hours: Pearson 0.8132, Spearman 0.9281
+  k = workers seen in the window = 105 | FCFS | service + 127s setup mean    863.6 (rec   1074.8, ratio  0.80)  p50    332.4/   426.0  p90   2440.7/  2536.6  p99   6092.1/  9881.6  p99.9   6820.6/ 11649.9
+                                                 per-job: median|err|    132.0  Spearman 0.9052  Pearson 0.7517  frac within 60 s 0.409
+      per-hour mean wait over 156 hours: Pearson 0.8464, Spearman 0.9597
+  k = workers seen in the window = 105 | priority-then-FIFO | service as recorded mean    580.0 (rec   1074.8, ratio  0.54)  p50    131.8/   426.0  p90   1394.0/  2536.6  p99   5772.4/  9881.6  p99.9   9062.5/ 11649.9
+                                                 per-job: median|err|    262.4  Spearman 0.9183  Pearson 0.9132  frac within 60 s 0.367
+      per-hour mean wait over 156 hours: Pearson 0.8582, Spearman 0.9172
+  k = workers seen in the window = 105 | priority-then-FIFO | service + 127s setup mean    818.5 (rec   1074.8, ratio  0.76)  p50    288.4/   426.0  p90   2002.1/  2536.6  p99   7760.0/  9881.6  p99.9  10703.1/ 11649.9
+                                                 per-job: median|err|    114.7  Spearman 0.9477  Pearson 0.9446  frac within 60 s 0.426
+      per-hour mean wait over 156 hours: Pearson 0.9134, Spearman 0.9614
+  k(t) = workers seen within +/- 6 h | FCFS | service as recorded mean    714.1 (rec   1074.8, ratio  0.66)  p50    205.9/   426.0  p90   2046.3/  2536.6  p99   5412.4/  9881.6  p99.9   6231.2/ 11649.9
+                                                 per-job: median|err|    234.0  Spearman 0.8990  Pearson 0.7595  frac within 60 s 0.363
+      per-hour mean wait over 156 hours: Pearson 0.8322, Spearman 0.9371
+  k(t) = workers seen within +/- 6 h | FCFS | service + 127s setup mean   1003.9 (rec   1074.8, ratio  0.93)  p50    483.2/   426.0  p90   2781.2/  2536.6  p99   6485.5/  9881.6  p99.9   7265.5/ 11649.9
+                                                 per-job: median|err|     40.6  Spearman 0.9132  Pearson 0.7492  frac within 60 s 0.556
+      per-hour mean wait over 156 hours: Pearson 0.8594, Spearman 0.9612
+  k(t) = workers seen within +/- 6 h | priority-then-FIFO | service as recorded mean    674.2 (rec   1074.8, ratio  0.63)  p50    181.1/   426.0  p90   1634.0/  2536.6  p99   6921.4/  9881.6  p99.9   9635.4/ 11649.9
+                                                 per-job: median|err|    212.0  Spearman 0.9359  Pearson 0.9290  frac within 60 s 0.371
+      per-hour mean wait over 156 hours: Pearson 0.8801, Spearman 0.9269
+  k(t) = workers seen within +/- 6 h | priority-then-FIFO | service + 127s setup mean    943.7 (rec   1074.8, ratio  0.88)  p50    344.9/   426.0  p90   2339.7/  2536.6  p99   8458.5/  9881.6  p99.9  11429.7/ 11649.9
+                                                 per-job: median|err|     29.6  Spearman 0.9643  Pearson 0.9593  frac within 60 s 0.643
+      per-hour mean wait over 156 hours: Pearson 0.9393, Spearman 0.9675
+
+-- effective capacity: which constant k reproduces the recorded waits --
+     k=  52: mean  26392.7 (rec   1074.8)  p90  116506.1 (rec    2536.6)  log-error 7.0268
+     k=  56: mean  17416.4 (rec   1074.8)  p90   33064.2 (rec    2536.6)  log-error 5.3517
+     k=  60: mean  10407.4 (rec   1074.8)  p90   21323.8 (rec    2536.6)  log-error 4.3982
+     k=  64: mean   6256.7 (rec   1074.8)  p90   13710.2 (rec    2536.6)  log-error 3.4478
+     k=  68: mean   4305.4 (rec   1074.8)  p90   10790.3 (rec    2536.6)  log-error 2.8346
+     k=  72: mean   3028.0 (rec   1074.8)  p90    8437.4 (rec    2536.6)  log-error 2.2368
+     k=  76: mean   2286.6 (rec   1074.8)  p90    6038.2 (rec    2536.6)  log-error 1.6215
+     k=  80: mean   1853.9 (rec   1074.8)  p90    4848.7 (rec    2536.6)  log-error 1.1925
+     k=  84: mean   1562.6 (rec   1074.8)  p90    3967.3 (rec    2536.6)  log-error 0.8211
+     k=  88: mean   1336.1 (rec   1074.8)  p90    3346.1 (rec    2536.6)  log-error 0.4944
+     k=  92: mean   1167.4 (rec   1074.8)  p90    2914.4 (rec    2536.6)  log-error 0.2214
+     k=  96: mean   1033.3 (rec   1074.8)  p90    2547.8 (rec    2536.6)  log-error 0.0438
+     k= 100: mean    925.8 (rec   1074.8)  p90    2300.8 (rec    2536.6)  log-error 0.2466
+     k= 104: mean    839.0 (rec   1074.8)  p90    2071.7 (rec    2536.6)  log-error 0.4497
+  -> effective k = 96 against 105 distinct workers seen and 100 busy at once; the shortfall is the machines that are up but not claiming (reboot, reimage, quarantine, worker restart between tasks)
+  effective k = 96 | priority-then-FIFO | service + setup mean   1033.3 (rec   1074.8, ratio  0.96)  p50    416.8/   426.0  p90   2547.8/  2536.6  p99   9136.7/  9881.6  p99.9  11878.5/ 11649.9
+                                                 per-job: median|err|     24.4  Spearman 0.9691  Pearson 0.9689  frac within 60 s 0.637
+      per-hour mean wait over 156 hours: Pearson 0.9633, Spearman 0.9688

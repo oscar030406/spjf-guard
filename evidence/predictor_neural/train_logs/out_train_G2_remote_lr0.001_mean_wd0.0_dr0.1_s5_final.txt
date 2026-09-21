@@ -1,0 +1,14 @@
+G2_remote_lr0.001_mean_wd0.0_dr0.1_s5_final  params {'model': 'G2', 'seed': 5, 'lr': 0.001, 'agg': 'mean', 'variant': 'remote', 'epochs': 30, 'batch': 4096, 'patience': 5, 'p_mask': 0.15, 'p_drop': 0.1, 'w_cls': 0.5, 'wd': 0.0, 'drop': 0.1, 'tag': '_final', 'save_emb': False}
+tabular block (863149, 86), submission-level block (863149, 102)
+rows train 770,758 valid 51,547 test 40,844
+parameters 168,642
+  epoch  0 train 0.13955 valid 0.07473 (rmse 0.2198) 2s
+  epoch  1 train 0.09794 valid 0.07615 (rmse 0.2239) 4s
+  epoch  2 train 0.09270 valid 0.07334 (rmse 0.2178) 6s
+  epoch  3 train 0.09007 valid 0.07371 (rmse 0.2191) 8s
+  epoch  4 train 0.08809 valid 0.07589 (rmse 0.2233) 10s
+  epoch  5 train 0.08634 valid 0.07839 (rmse 0.2284) 12s
+  epoch  6 train 0.08546 valid 0.07668 (rmse 0.2244) 14s
+  epoch  7 train 0.08382 valid 0.07632 (rmse 0.2226) 16s
+  early stop at epoch 7
+{"name": "G2_remote_lr0.001_mean_wd0.0_dr0.1_s5_final", "model": "G2", "variant": "remote", "seed": 5, "lr": 0.001, "agg": "mean", "wd": 0.0, "drop": 0.1, "valid_loss": 0.07334165275096893, "valid_rmse": 0.21775957942008972}

@@ -1,0 +1,8 @@
+2020-ERE: max|diff| 0.000000  spearman-ish corr 1.00000000
+2020-2: max|diff| 0.497686  spearman-ish corr 0.98990669
+2021-1: max|diff| 0.000000  spearman-ish corr 1.00000000
+2021-2: max|diff| 0.000000  spearman-ish corr 1.00000000
+2022-1: max|diff| 0.011009  spearman-ish corr 0.99999393
+2022-2: max|diff| 0.000000  spearman-ish corr 1.00000000
+2020-ERE num_threads=4: max|diff| vs cached 0.000000
+2020-ERE num_threads=6: max|diff| vs cached 0.000000

@@ -1,0 +1,113 @@
+==============================================================================
+ITEM 1 -- Theorem 3 / Lemma 1''  (referee 3, own simulator)
+==============================================================================
+
+--- A. the note's own four rows, rebuilt from the TEXT ---
+
+  k   L  m   n(up)  D_up/L        De_up/L       n(lo)  D_lo/L        De_lo/L       2(k-1)
+  2  64  3    454  119/64 = 1.8594 15/8 = 1.8750   198  -15/8 = -1.8750 -7/8 = -0.8750 2
+  2  64  6    649  127/64 = 1.9844 127/64 = 1.9844   393  -127/64 = -1.9844 -63/64 = -0.9844 2
+  3  81  4    822  290/81 = 3.5802 292/81 = 3.6049   336  -292/81 = -3.6049 -130/81 = -1.6049 4
+  4  64  3    718  303/64 = 4.7344 303/64 = 4.7344   206  -303/64 = -4.7344 -111/64 = -1.7344 6
+
+--- B. full decomposition of the victim, both families ---
+
+  k=2 L=64 m=3  [upper]  n=454  victim=196
+     W_P=188  W_F=0  excess=188 (=2.9375 L)
+     In=257  Out=0  In_samephase=1  rho_new=1
+     R^P=120 R^F=64  R^P-R^F=56 (pred rho_m=56)  rho^P=1 rho^F=64
+     D=119 = 1.8594 L   De=120 = 1.8750 L   (k-1)L=64  2(k-1)L=128
+     Lemma1'' gap U_surplus-U_other at T_m = 56 (predicted 56) OK
+     audit: clean   identities: clean
+
+  k=2 L=64 m=3  [lower]  n=198  victim=196
+     W_P=0  W_F=56  excess=-56 (=-0.8750 L)
+     In=64  Out=56  In_samephase=64  rho_new=64
+     R^P=56 R^F=112  R^P-R^F=-56 (pred rho_m=56)  rho^P=64 rho^F=0
+     D=-120 = -1.8750 L   De=-56 = -0.8750 L   (k-1)L=64  2(k-1)L=128
+     Lemma1'' gap U_surplus-U_other at T_m = 56 (predicted 56) OK
+     audit: clean   identities: clean
+
+  k=2 L=64 m=6  [upper]  n=649  victim=391
+     W_P=192  W_F=0  excess=192 (=3.0000 L)
+     In=257  Out=0  In_samephase=0  rho_new=0
+     R^P=127 R^F=64  R^P-R^F=63 (pred rho_m=63)  rho^P=0 rho^F=64
+     D=127 = 1.9844 L   De=127 = 1.9844 L   (k-1)L=64  2(k-1)L=128
+     Lemma1'' gap U_surplus-U_other at T_m = 63 (predicted 63) OK
+     audit: clean   identities: clean
+
+  k=2 L=64 m=6  [lower]  n=393  victim=391
+     W_P=0  W_F=63  excess=-63 (=-0.9844 L)
+     In=64  Out=63  In_samephase=64  rho_new=64
+     R^P=63 R^F=126  R^P-R^F=-63 (pred rho_m=63)  rho^P=64 rho^F=0
+     D=-127 = -1.9844 L   De=-63 = -0.9844 L   (k-1)L=64  2(k-1)L=128
+     Lemma1'' gap U_surplus-U_other at T_m = 63 (predicted 63) OK
+     audit: clean   identities: clean
+
+  k=3 L=81 m=4  [upper]  n=822  victim=334
+     W_P=259  W_F=0  excess=259 (=3.1975 L)
+     In=487  Out=0  In_samephase=2  rho_new=2
+     R^P=292 R^F=162  R^P-R^F=130 (pred rho_m=130)  rho^P=2 rho^F=162
+     D=290 = 3.5802 L   De=292 = 3.6049 L   (k-1)L=162  2(k-1)L=324
+     Lemma1'' gap U_surplus-U_other at T_m = 130 (predicted 130) OK
+     audit: clean   identities: clean
+
+  k=3 L=81 m=4  [lower]  n=336  victim=333
+     W_P=0  W_F=65  excess=-65 (=-0.8025 L)
+     In=162  Out=65  In_samephase=162  rho_new=162
+     R^P=65 R^F=195  R^P-R^F=-130 (pred rho_m=130)  rho^P=162 rho^F=0
+     D=-292 = -3.6049 L   De=-130 = -1.6049 L   (k-1)L=162  2(k-1)L=324
+     Lemma1'' gap U_surplus-U_other at T_m = 130 (predicted 130) OK
+     audit: clean   identities: clean
+
+  k=4 L=64 m=3  [upper]  n=718  victim=204
+     W_P=204  W_F=0  excess=204 (=3.1875 L)
+     In=513  Out=0  In_samephase=0  rho_new=0
+     R^P=303 R^F=192  R^P-R^F=111 (pred rho_m=111)  rho^P=0 rho^F=192
+     D=303 = 4.7344 L   De=303 = 4.7344 L   (k-1)L=192  2(k-1)L=384
+     Lemma1'' gap U_surplus-U_other at T_m = 111 (predicted 111) OK
+     audit: clean   identities: clean
+
+  k=4 L=64 m=3  [lower]  n=206  victim=202
+     W_P=0  W_F=37  excess=-37 (=-0.5781 L)
+     In=192  Out=37  In_samephase=192  rho_new=192
+     R^P=37 R^F=148  R^P-R^F=-111 (pred rho_m=111)  rho^P=192 rho^F=0
+     D=-303 = -4.7344 L   De=-111 = -1.7344 L   (k-1)L=192  2(k-1)L=384
+     Lemma1'' gap U_surplus-U_other at T_m = 111 (predicted 111) OK
+     audit: clean   identities: clean
+
+--- C. limit in m, both directions, several k (does D/L -> 2(k-1)?) ---
+
+  k=2 L=128 m=1 : D_up=191/128 = 1.4922 D_lo=-3/2 = -1.5000  pred |D|~1.5000 L   2(k-1)L=256  audit=clean
+  k=2 L=128 m=2 : D_up=223/128 = 1.7422 D_lo=-7/4 = -1.7500  pred |D|~1.7500 L   2(k-1)L=256  audit=clean
+  k=2 L=128 m=3 : D_up=239/128 = 1.8672 D_lo=-15/8 = -1.8750  pred |D|~1.8750 L   2(k-1)L=256  audit=clean
+  k=2 L=128 m=4 : D_up=247/128 = 1.9297 D_lo=-31/16 = -1.9375  pred |D|~1.9375 L   2(k-1)L=256  audit=clean
+  k=2 L=128 m=5 : D_up=251/128 = 1.9609 D_lo=-63/32 = -1.9688  pred |D|~1.9688 L   2(k-1)L=256  audit=clean
+  k=2 L=128 m=6 : D_up=253/128 = 1.9766 D_lo=-127/64 = -1.9844  pred |D|~1.9844 L   2(k-1)L=256  audit=clean
+  k=2 L=128 m=7 : D_up=255/128 = 1.9922 D_lo=-255/128 = -1.9922  pred |D|~1.9922 L   2(k-1)L=256  audit=clean
+  k=3 L= 81 m=1 : D_up=215/81 = 2.6543 D_lo=-8/3 = -2.6667  pred |D|~2.6667 L   2(k-1)L=324  audit=clean
+  k=3 L= 81 m=2 : D_up=251/81 = 3.0988 D_lo=-28/9 = -3.1111  pred |D|~3.1111 L   2(k-1)L=324  audit=clean
+  k=3 L= 81 m=3 : D_up=275/81 = 3.3951 D_lo=-92/27 = -3.4074  pred |D|~3.4074 L   2(k-1)L=324  audit=clean
+  k=3 L= 81 m=4 : D_up=290/81 = 3.5802 D_lo=-292/81 = -3.6049  pred |D|~3.6049 L   2(k-1)L=324  audit=clean
+  k=4 L= 64 m=1 : D_up=239/64 = 3.7344 D_lo=-15/4 = -3.7500  pred |D|~3.7500 L   2(k-1)L=384  audit=clean
+  k=4 L= 64 m=2 : D_up=275/64 = 4.2969 D_lo=-69/16 = -4.3125  pred |D|~4.3125 L   2(k-1)L=384  audit=clean
+  k=4 L= 64 m=3 : D_up=303/64 = 4.7344 D_lo=-303/64 = -4.7344  pred |D|~4.7344 L   2(k-1)L=384  audit=clean
+  k=5 L= 25 m=1 : D_up=119/25 = 4.7600 D_lo=-24/5 = -4.8000  pred |D|~4.8000 L   2(k-1)L=200  audit=clean
+  k=5 L= 25 m=2 : D_up=134/25 = 5.3600 D_lo=-136/25 = -5.4400  pred |D|~5.4400 L   2(k-1)L=200  audit=clean
+  k=6 L= 36 m=1 : D_up=209/36 = 5.8056 D_lo=-35/6 = -5.8333  pred |D|~5.8333 L   2(k-1)L=360  audit=clean
+  k=6 L= 36 m=2 : D_up=233/36 = 6.4722 D_lo=-235/36 = -6.5278  pred |D|~6.5278 L   2(k-1)L=360  audit=clean
+
+--- D. how much of the extremal |D| is same-phase bookkeeping ---
+
+  (In_samephase = work of overtakers dispatched in i's OWN phase, which
+   execute nothing while i waits; De = the executed-work convention)
+
+  k=2 m=3 [upper]: |D|=119  In_samephase=1 (0.8% of |D|)  real excess=188=2.938L  De/|2(k-1)L|=0.938
+  k=2 m=3 [lower]: |D|=120  In_samephase=64 (53.3% of |D|)  real excess=-56=-0.875L  De/|2(k-1)L|=0.438
+  k=2 m=6 [upper]: |D|=127  In_samephase=0 (0.0% of |D|)  real excess=192=3.000L  De/|2(k-1)L|=0.992
+  k=2 m=6 [lower]: |D|=127  In_samephase=64 (50.4% of |D|)  real excess=-63=-0.984L  De/|2(k-1)L|=0.492
+  k=3 m=4 [upper]: |D|=290  In_samephase=2 (0.7% of |D|)  real excess=259=3.198L  De/|2(k-1)L|=0.901
+  k=3 m=4 [lower]: |D|=292  In_samephase=162 (55.5% of |D|)  real excess=-65=-0.802L  De/|2(k-1)L|=0.401
+  k=4 m=3 [upper]: |D|=303  In_samephase=0 (0.0% of |D|)  real excess=204=3.188L  De/|2(k-1)L|=0.789
+  k=4 m=3 [lower]: |D|=303  In_samephase=192 (63.4% of |D|)  real excess=-37=-0.578L  De/|2(k-1)L|=0.289
+

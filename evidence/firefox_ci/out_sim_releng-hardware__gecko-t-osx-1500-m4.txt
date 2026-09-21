@@ -1,0 +1,36 @@
+=== scheduling on the RECORDED arrival times, releng-hardware__gecko-t-osx-1500-m4 (test window) ===
+k from keff_releng-hardware__gecko-t-osx-1500-m4.csv: effective k = 156 (pool lists 173 workers, 172 busy at once; setup/teardown 54.2s is already inside the service times)
+runs=46722  span=4.99 days  L'=5066.1s  total work=539.98 server-days  heavy share=0.0449
+recorded k over the test window: max busy in an hour = 156, median = 169, min = 31
+busiest hour of the test window needs 336.78 server-equivalents; at k=156 that is utilisation 2.1588; whole-window utilisation 0.6931
+RECORDED wait in this window: mean=1712.3 p50=431.1 p90=5509.2 p99=13080.6 max=15698.9
+  score selection on the validation window (n=23440, k=170): FCFS p99 3854.2s / mean 621.3s, SJF-true p99 6816.7s / mean 424.8s
+  !! true-size SJF has a WORSE p99 wait than FCFS on this window, so the 'gap closed on p99' statistic has no usable denominator here (same situation as Intel Netbatch in prechecks/cross_domain).  The ranking score is therefore selected on the p99 wait itself, and the p99 gap is reported as not-a-number wherever the denominator is non-positive.
+     pred_tweedie   p99=   7980.8  mean=    453.9  gap_p99=nan
+     pred_log       p99=   8162.1  mean=    455.7  gap_p99=nan
+     pred_ent       p99=   8289.3  mean=    454.9  gap_p99=nan
+  -> ranking score frozen to pred_tweedie (smallest validation p99 7980.7713)
+
+---- recorded k=156  (busy-hour utilisation 2.1588, whole-window 0.6931) ----
+policy                                 mean_s       p50        p90      p99_s       max_s   p99heavy   gapP99  gapMean   maxExcess   fire%   boundOK
+FCFS                                   1855.3    1204.1     4622.1     8998.9      9655.8     8974.9      nan   0.0000         0.0   0.000         -
+SJF-true (reference)                   1125.7     131.4     2576.0    18278.0     47246.9    41938.5      nan   1.0000     46280.8   0.000         -
+SPJF pred_tweedie [chosen]             1312.6     136.6     3029.7    19883.5     59065.4    43616.5      nan   0.7439     58400.0   0.000         -
+SPJF pred_log                          1285.7     130.1     2913.0    19874.7     58411.4    43182.9      nan   0.7807     57584.2   0.000         -
+SPJF pred_ent                          1289.6     134.0     2948.3    20812.1     58980.3    41805.5      nan   0.7753     58553.3   0.000         -
+guard G=3L' (B=10132s)                 1662.1     886.1     4421.2     9027.6      9721.7     9050.7      nan   0.2649      1397.9  42.783       yes
+guard G=5L' (B=1590756s)               1319.0     142.7     3546.7    15479.2     20857.6    19741.9      nan   0.7351     13395.4   2.667       yes
+guard G=10L' (B=5542315s)              1306.7     137.3     3067.8    20631.1     40059.0    38328.2      nan   0.7520     37422.4   0.257       yes
+  applicability: FCFS p99 wait / L' = 1.776; the theorem's smallest expressible guarantee is (3-2/k)L' = 15133.4s = 2.99 L'
+
+---- reduced k=124  (busy-hour utilisation 2.7160, whole-window 0.8720) ----
+policy                                 mean_s       p50        p90      p99_s       max_s   p99heavy   gapP99  gapMean   maxExcess   fire%   boundOK
+FCFS                                  15779.4   14677.5    30957.1    36055.5     37399.8    35907.6      nan   0.0000         0.0   0.000         -
+SJF-true (reference)                   7417.3     325.7     9656.5   193868.2    290276.9   270680.2      nan   1.0000    289125.7   0.000         -
+SPJF pred_tweedie [chosen]            10673.3     327.9    18528.6   217528.2    295885.1   253989.5      nan   0.6106    294840.4   0.000         -
+SPJF pred_log                         10424.8     326.3    19050.9   217524.9    297105.1   251827.1      nan   0.6403    295772.4   0.000         -
+SPJF pred_ent                         10422.3     328.3    16075.9   218305.2    295818.9   253208.0      nan   0.6406    293436.9   0.000         -
+guard G=3L' (B=10132s)                15290.5   14436.3    30896.4    36103.2     37476.9    35974.2      nan   0.0585      1284.8  78.909       yes
+guard G=5L' (B=1266525s)              11443.1    1591.2    37632.5    45180.7     47965.8    46107.2      nan   0.5186     13463.7  29.207       yes
+guard G=10L' (B=4407508s)             11040.4     509.6    51364.6    67421.3     73840.8    71595.4      nan   0.5667     38956.3  12.326       yes
+  applicability: FCFS p99 wait / L' = 7.117; the theorem's smallest expressible guarantee is (3-2/k)L' = 15116.6s = 2.98 L'

@@ -1,0 +1,18 @@
+base 6 s; heavy_thr 1.5590; heavy rate overall 0.0287; targets ['2021-2', '2022-1', '2022-2']
+resumed from <cache-dir>\rank_score\rs_pred_ires0.parquet
+
+[2021-2] train 714,801 (2018-1..2021-1), target 55,957, train heavy rate 0.0320
+  {'target': '2021-2', 'n_train': 714801, 'n_target': 55957, 'train_sems': '2018-1..2021-1', 'heavy_rate_train': 0.032, 'heavy_rate_target': 0.0099, 'mean_C_target': 0.3984, 's2_mean': 0.0465, 'sec': 59}
+
+[2022-1] train 770,758 (2018-1..2021-2), target 51,547, train heavy rate 0.0304
+  {'target': '2022-1', 'n_train': 770758, 'n_target': 51547, 'train_sems': '2018-1..2021-2', 'heavy_rate_train': 0.0304, 'heavy_rate_target': 0.0163, 'mean_C_target': 0.4084, 's2_mean': 0.057, 'sec': 62}
+
+[2022-2] train 822,305 (2018-1..2022-1), target 40,844, train heavy rate 0.0295
+  {'target': '2022-2', 'n_train': 822305, 'n_target': 40844, 'train_sems': '2018-1..2022-1', 'heavy_rate_train': 0.0295, 'heavy_rate_target': 0.0131, 'mean_C_target': 0.4181, 's2_mean': 0.0559, 'sec': 65}
+
+target  n_train  n_target     train_sems  heavy_rate_train  heavy_rate_target  mean_C_target  s2_mean  sec
+2021-2   714801     55957 2018-1..2021-1            0.0320             0.0099         0.3984   0.0465   59
+2022-1   770758     51547 2018-1..2021-2            0.0304             0.0163         0.4084   0.0570   62
+2022-2   822305     40844 2018-1..2022-1            0.0295             0.0131         0.4181   0.0559   65
+
+wrote <cache-dir>\rank_score\rs_pred_ires0.parquet; total 193 s

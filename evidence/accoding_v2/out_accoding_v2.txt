@@ -1,0 +1,1235 @@
+==============================================================================
+ACcoding service pre-check v2  (prechecks/accoding_v2/accoding_v2.py)
+==============================================================================
+script sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+every stage log below carries this hash (checked before writing).
+
+ACcoding = the Beihang University online judge, Zenodo 6522395, v1.0.0.
+Split by submission-id quantile: 0-48% train, 48-64% validation, 64-80%
+development test, 80-100% SEALED (never opened; only its row count and its
+first id were read, and those define the split).  Ids are an ordering, not a
+clock, so every history feature is 'the record with a smaller id' and the lag
+sweep m = 0/10/100/1000 stands in for result latency.  In the scheduling part
+only the job ORDER inside a contest and the job SIZES are real; every arrival
+time is drawn.  No source code and no personal attribute is read or stored.
+
+Stage logs in run order:
+  selftest
+  audit
+  cbprofile
+  feat  lags0
+  feat  lags10_100_1000
+  leak  lags0_10_100_1000
+  pred  lag0_main
+  pred  lag0_select
+  pred  lag1000_M1M4
+  pred  lag100_M1M4
+  pred  lag10_M1M4
+  boot  lag0
+  boot  lag10
+  boot  lag100
+  boot  lag1000
+  trace
+  sim  deadline_rho0.5_main
+  sim  deadline_rho0.8_main
+  sim  deadline_rho1.0_alt
+  sim  deadline_rho1.0_main
+  sim  poisson_rho0.5_main
+  sim  poisson_rho0.8_alt
+  sim  poisson_rho0.8_main
+  sim  poisson_rho1.0_main
+  guardk1  deadline
+  guardk1  poisson
+  compare
+
+==============================================================================
+selftest
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage selftest  argv --cache <cache-dir>/ac_v2_cache --stage selftest
+k=1 FCFS vs the Lindley recursion: max |diff| = 0.000e+00
+k=1 guard with B=0 vs FCFS: max |diff| = 0.000e+00 (B=0 must degenerate to FCFS)
+k=1 guard B=1.0: max_i (W_guard - W_FCFS) = 5.5441, bound B+L = 7.0791 -> OK
+k=1 guard B=5.0: max_i (W_guard - W_FCFS) = 8.2039, bound B+L = 11.0791 -> OK
+k=1 guard B=50.0: max_i (W_guard - W_FCFS) = 51.0086, bound B+L = 56.0791 -> OK
+the Fenwick cross-check inside simulate_guard validated the O(k) overtaking identity on every decision of those runs
+k=3 FCFS vs an independent direct implementation: max |diff| = 0.000e+00
+k=1: mean wait FCFS 2.525 vs true-size SJF 1.293 (SJF must not be worse in the mean at k=1)
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+split assertion: devtest max id 3246173 < first sealed id 3246174 -> True
+stage selftest finished in 0.2 s at 2026-09-19 09:11:52
+
+==============================================================================
+audit
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage audit  argv --cache <cache-dir>/ac_v2_cache --stage audit
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+
+--- 1a. fields present ---
+submissions   rows=3237322   cols=['id', 'lang', 'result', 'score', 'time_cost', 'memory_cost', 'code_length', 'detail_len', 'detail_empty', 'detail_n_cases', 'detail_sum_ms', 'detail_max_ms', 'detail_max_kb', 'creator_id', 'problem_id', 'contest_id', 'blk']
+problems      rows=4559      cols=['id', 'access_level', 'difficulty', 'creator_id', 'updated_at', 'n_tests', 'time_limit', 'memory_limit', 'n_supported_langs', 'has_special_judge', 'partial_score', 'test_weight_sum', 'test_setting_ok']
+contests      rows=606       cols=['id', 'start_time', 'end_time', 'access_level', 'updated_at']
+problem_tags  rows=4397      cols=['tag_id', 'problem_id', 'weight']
+tags          rows=100       cols=['id', 'content']
+users table holds id and last_login only; no gender / school / employment field
+is parsed or stored, and source code is never read -- code_length is a count.
+per submission: runtime (time_cost), memory (memory_cost), verdict (result),
+language (lang), code length (code_length), problem, contest (null = practice),
+author, score, and a per-test summary (detail_n_cases / detail_sum_ms /
+detail_max_ms / detail_max_kb).  Problem tags are in problem_tags.  There is NO
+timestamp column on submissions.
+
+--- 1b. rows per split block ---
+train 0-48%      rows=1942393  ids [1,1951042] judged=1942354 users=15623 problems=2192 contests=312
+valid 48-64%     rows=647464   ids [1951043,2598675] judged=647464 users=4043 problems=1870 contests=68
+devtest 64-80%   rows=647465   ids [2598676,3246173] judged=647465 users=6056 problems=2366 contests=101
+SEALED 80-100%   rows=809330   ids [3246174,...]  (row count only; never opened)
+
+--- 1c. verdicts (non-sealed rows) ---
+  WT           12  0.00000
+  JG           22  0.00001
+  AC      1267636  0.39157
+  WA      1282659  0.39621
+  CE       166882  0.05155
+  REG      131982  0.04077
+  MLE       12720  0.00393
+  REP       10858  0.00335
+  PE       112751  0.03483
+  TLE      217089  0.06706
+  IFNR        122  0.00004
+  OE        34589  0.01068
+unjudged (WT/JG) 34;  time_cost sentinel -1 39;  modelling rows 3237283
+
+--- 1d. runtime field: units, cap, distribution ---
+time_cost (ms) p0=0 p10=1 p25=3 p50=8 p75=131 p90=820 p95=1498 p99=6000 p99.9=14302.2 max=30000 mean=334.05
+share time_cost == 0 : 0.0853
+memory_cost (KB) p50=1644 p90=8308 p99=21984 max=2.09936e+06   share 0 = 0.0780
+code_length (chars) p50=418 p90=1120 p99=3181 max=520820
+languages: {'c++': 587027, 'c': 2317008, 'python': 7647, 'java': 3975, 'python2': 225, 'python3': 321401}
+top 0.1%   of submissions by runtime carry 0.0620 of total recorded runtime
+top 1.0%   of submissions by runtime carry 0.2905 of total recorded runtime
+top 5.0%   of submissions by runtime carry 0.6483 of total recorded runtime
+top 10.0%  of submissions by runtime carry 0.8083 of total recorded runtime
+service model C = 0.5 s + time_cost/1000 (see 1e): mean 0.834 s, median 0.508 s, p95 1.998 s, p99 6.500 s, max 30.500 s
+  top 1% of jobs carry 0.1224 of total SERVICE work
+  top 5% of jobs carry 0.2896 of total SERVICE work
+  coefficient of variation of C: 1.476  (of raw time_cost: 3.686)
+
+--- 1e. is the recorded runtime judge occupancy or per-test execution time? ---
+rows with a per-test table in `detail`: 2417547 (0.7468); empty detail 0.1988; detail present but no per-test lines (CE/OE text) 0.0544
+time_cost == SUM of the per-test ms  : 0.9998
+time_cost == MAX of the per-test ms  : 0.0524
+memory_cost == MAX of the per-test KB: 0.9999
+TLE rows 217087: the per-test MAX ms equals the problem time_limit exactly on 0.7130
+share time_cost > problem time_limit            : 0.0828
+share time_cost > n_tests * time_limit (the cap): 0.0003
+problem time_limit (ms) p50=1000 p90=1000 p99=5000 max=30000; n_tests p50=4 p90=10 max=37
+implied per-submission cap n_tests*time_limit: p50=5000 ms p99=20000 ms max=1.11e+06 ms; observed max time_cost = 30000 ms
+the 276262 rows with time_cost == 0: verdicts {'CE': 166882, 'AC': 52233, 'WA': 46813, 'PE': 8143, 'OE': 733}
+
+READING: time_cost is the SUM over the problem's test cases of each test's
+measured execution time, each TEST capped at the problem's time limit.  It is
+per-test execution time aggregated per submission, NOT judge occupancy: it
+excludes compilation, container start-up, fixture copying and result write-back,
+which is why 8.53% of judged rows record exactly 0 ms (CE and other rows that
+never ran a test).
+EVIDENCE  (i) time_cost equals the sum of the per-test ms on 0.9998 of the rows that
+  carry a per-test table and the max on only 0.0524; (ii) memory_cost equals the
+  per-test MAX on 0.9999, so the two fields aggregate the same per-test
+  measurements with different operators, which one wall-clock occupancy number
+  could not do; (iii) on TLE rows the per-test max equals the time limit exactly
+  on 0.7130 of them, so the cap is applied per test, and time_cost can reach
+  n_tests * time_limit, which is what the observed maximum does.
+CONFIDENCE high for 'sum of per-test measured run times, per-test capped'.
+  Whether each per-test number is CPU time or sandbox wall clock is NOT decidable
+  from this dump (no timestamps, no second clock).  The service-time model
+  therefore adds an explicit constant for the parts of judge occupancy the field
+  does not contain; that constant is an assumption and a sensitivity with a
+  per-test term is run.  Contrast with CodeBench, where C is wall-clock judge
+  occupancy including interpreter start-up (codebench_semantics, medium
+  confidence).  The two platforms measure different things, and the paper must
+  say so rather than putting the two distributions on one axis.
+
+--- 1f. duplicates ---
+distinct ids 3237322 in 3237322 rows (id unique by construction)
+rows sharing the full key ['creator_id', 'problem_id', 'contest_id', 'lang', 'code_length', 'time_cost', 'memory_cost', 'result', 'score']: 51160 (0.0158); rows that repeat an earlier one: 27965 (0.0086)
+same user+problem+language+code_length (a resubmission of same-length code): 589541 rows (0.1821)
+KEPT: on an online judge the same code submitted twice is two real judge jobs.
+
+--- 1g. problems, tags, contests in the non-sealed blocks ---
+distinct users 21072, problems 3556, contests 469; share of rows inside a contest 0.7435
+problems with >=1 tag 3699 of 4559; tags per problem p50=1 p90=2 max=3; distinct tags 100
+contest duration (h) p10=1.500 p50=24.917 p90=698.0 p99=3860.5 max=11186.0; longer than 72 h: 254 of 606
+
+--- 1h. id is an ordering, not a clock ---
+Spearman(contest first id, contest start_time) = 0.9995 over 469 contests with non-sealed submissions
+contests whose id range overlaps the previous contest's: 207 of 468 transitions
+=> id orders submissions exactly but carries no duration.  Arrival times must be
+synthesised and the paper must say so.
+stage audit finished in 4.1 s at 2026-09-19 09:11:57
+
+==============================================================================
+cbprofile
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage cbprofile  argv --cache <cache-dir>/ac_v2_cache --stage cbprofile --cb-cache <cache-dir>/cb_v2_cache_r4/ev.parquet
+CodeBench v2 cache <cache-dir>/cb_v2_cache_r4/ev.parquet
+graded submissions with an execution time and an assessment window: 863149
+distinct class-semester assessments: 1253; window length (h) p10 1.8 p50 288.0 p90 1549.8 max 5606.0
+arrivals inside the 168 h before their own deadline: 469360 (0.5438 of the submissions)
+
+  hours-to-deadline bin      arrivals   assessment-hours   rate   rate/far-bin
+     0.000 -    0.050        3235            62.6   51.6361      23.22
+     0.088 -    0.116        1514            35.4   42.7219      19.21
+     0.116 -    0.153        1914            46.9   40.8196      18.36
+     0.153 -    0.203        2773            62.0   44.6970      20.10
+     0.203 -    0.268        4276            82.1   52.0917      23.43
+     0.268 -    0.355        5064           108.6   46.6259      20.97
+     0.355 -    0.470        6377           143.7   44.3764      19.96
+     0.470 -    0.621        8389           190.1   44.1212      19.84
+     0.621 -    0.822       11258           251.6   44.7508      20.13
+     0.822 -    1.088       14441           332.8   43.3948      19.52
+     1.088 -    1.439       21042           437.3   48.1148      21.64
+     1.439 -    1.904       20075           561.0   35.7870      16.10
+     1.904 -    2.520        8439           579.7   14.5584       6.55
+     2.520 -    3.334        8639           752.4   11.4821       5.16
+     3.334 -    4.411        8831           990.5    8.9161       4.01
+     4.411 -    5.836        9591          1306.1    7.3431       3.30
+     5.836 -    7.722       10468          1727.4    6.0600       2.73
+     7.722 -   10.217       11766          2285.5    5.1480       2.32
+    10.217 -   13.518       13927          3024.0    4.6055       2.07
+    13.518 -   17.887       16244          4001.1    4.0599       1.83
+    17.887 -   23.666       18774          5294.0    3.5463       1.59
+    23.666 -   31.313       23304          7004.5    3.3270       1.50
+    31.313 -   41.430       19179          9267.8    2.0694       0.93
+    41.430 -   54.817       42898         12211.5    3.5129       1.58
+    54.817 -   72.530       21145         16047.4    1.3177       0.59
+    72.530 -   95.965       22965         21153.9    1.0856       0.49
+    95.965 -  126.973       49358         27896.8    1.7693       0.80
+   126.973 -  168.000       81576         36688.9    2.2235       1.00
+
+least squares  log(rate) = c - gamma*log(u + tau)  over the 28 usable bins:
+  gamma = 0.7209, tau = 0.500 h, residual SS = 3.2856
+  implied rate ratio, 15 min before the deadline vs 24 h before: 12.34
+  implied ratio, 15 min before vs 2 h before: 2.38
+The ACcoding deadline-shaped trace uses the same (gamma, tau) with u measured
+to each CONTEST's end.  ACcoding contest windows are much shorter than CodeBench
+assessment windows (median 24.9 h against 288.0 h), so only the small-u part of
+the fitted profile is exercised; that is the part that carries the rise.
+stage cbprofile finished in 0.4 s at 2026-09-19 09:11:58
+
+==============================================================================
+feat  lags0
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage feat  argv --cache <cache-dir>/ac_v2_cache --stage feat --lags 0
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+heavy threshold = train-block p95 of time_cost = 1314.0 ms (fixed for every block and every lag)
+
+lag m = 0: train rows kept 1000000 of 1942354, valid 647464, devtest 647465, total 2294929
+   ... 2000000 / 3237322 rows, 13 s
+   ... 3000000 / 3237322 rows, 23 s
+lag 0: 54 features built in 27 s
+wrote <cache-dir>/ac_v2_cache\feat_lag0.parquet (2294929 rows)
+stage feat finished in 31.9 s at 2026-09-19 09:12:30
+
+==============================================================================
+feat  lags10_100_1000
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage feat  argv --cache <cache-dir>/ac_v2_cache --stage feat --lags 10,100,1000 --tag lags10_100_1000
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+heavy threshold = train-block p95 of time_cost = 1314.0 ms (fixed for every block and every lag)
+
+lag m = 10: train rows kept 500000 of 1942354, valid 0, devtest 647465, total 1147465
+   ... 3000000 / 3237322 rows, 17 s
+lag 10: 54 features built in 21 s
+wrote <cache-dir>/ac_v2_cache\feat_lag10.parquet (1147465 rows)
+
+lag m = 100: train rows kept 500000 of 1942354, valid 0, devtest 647465, total 1147465
+   ... 1000000 / 3237322 rows, 5 s
+   ... 3000000 / 3237322 rows, 17 s
+lag 100: 54 features built in 21 s
+wrote <cache-dir>/ac_v2_cache\feat_lag100.parquet (1147465 rows)
+
+lag m = 1000: train rows kept 500000 of 1942354, valid 0, devtest 647465, total 1147465
+   ... 3000000 / 3237322 rows, 18 s
+lag 1000: 54 features built in 22 s
+wrote <cache-dir>/ac_v2_cache\feat_lag1000.parquet (1147465 rows)
+stage feat finished in 70.8 s at 2026-09-19 09:13:42
+
+==============================================================================
+leak  lags0_10_100_1000
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage leak  argv --cache <cache-dir>/ac_v2_cache --stage leak --lags 0,10,100,1000 --leak-rows 2500 --perturb-rows 60 --tag lags0_10_100_1000
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+building the independent reference index (heavy threshold 1314.0 ms)
+  reference built in 3 s
+
+lag m = 0: from-scratch recomputation of all 54 features on 2500 random rows
+cells checked 2500 x 54 = 135000; mismatching cells: 0
+  (8 s)
+perturbation test: for each of 60 target rows, the RESULT fields (time_cost, memory_cost, result) of every row with rank >= rank_i - m are replaced by random garbage; the target's features must not move.
+  feature cells that moved: 0 (must be 0)  (3 s)
+
+lag m = 10: from-scratch recomputation of all 54 features on 2500 random rows
+cells checked 2500 x 54 = 135000; mismatching cells: 0
+  (9 s)
+perturbation test: for each of 60 target rows, the RESULT fields (time_cost, memory_cost, result) of every row with rank >= rank_i - m are replaced by random garbage; the target's features must not move.
+  feature cells that moved: 0 (must be 0)  (3 s)
+
+lag m = 100: from-scratch recomputation of all 54 features on 2500 random rows
+cells checked 2500 x 54 = 135000; mismatching cells: 0
+  (9 s)
+perturbation test: for each of 60 target rows, the RESULT fields (time_cost, memory_cost, result) of every row with rank >= rank_i - m are replaced by random garbage; the target's features must not move.
+  feature cells that moved: 0 (must be 0)  (3 s)
+
+lag m = 1000: from-scratch recomputation of all 54 features on 2500 random rows
+cells checked 2500 x 54 = 135000; mismatching cells: 0
+  (9 s)
+perturbation test: for each of 60 target rows, the RESULT fields (time_cost, memory_cost, result) of every row with rank >= rank_i - m are replaced by random garbage; the target's features must not move.
+  feature cells that moved: 0 (must be 0)  (3 s)
+stage leak finished in 52.7 s at 2026-09-19 09:14:35
+
+==============================================================================
+pred  lag0_main
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage pred  argv --cache <cache-dir>/ac_v2_cache --stage pred --lag 0 --models M1,M2,M3,M4,M5 --seeds 0,1,2 --rounds 400 --tag lag0_main
+features <cache-dir>/ac_v2_cache\feat_lag0.parquet; train 1000000 valid 647464 devtest 647465; heavy threshold 1314.0 ms
+heavy rate: train 0.0502  valid 0.0798  devtest 0.0507
+using num_leaves = 31, num_boost_round = 244
+  M1 seed 0: 8 s; devtest RMSE(log1p s) 0.2906  AUROC 0.8987
+  M1 seed 1: 8 s; devtest RMSE(log1p s) 0.2905  AUROC 0.8988
+  M1 seed 2: 8 s; devtest RMSE(log1p s) 0.2905  AUROC 0.8987
+  M2 seed 0: 8 s; devtest RMSE(log1p s) 0.3191  AUROC 0.7838
+  M2 seed 1: 8 s; devtest RMSE(log1p s) 0.3191  AUROC 0.7849
+  M2 seed 2: 8 s; devtest RMSE(log1p s) 0.3192  AUROC 0.7850
+  M3 seed 0: 8 s; devtest RMSE(log1p s) 0.3442  AUROC 0.7879
+  M3 seed 1: 8 s; devtest RMSE(log1p s) 0.3426  AUROC 0.7875
+  M3 seed 2: 8 s; devtest RMSE(log1p s) 0.3427  AUROC 0.7871
+  M4 seed 0: 14 s; devtest RMSE(log1p s) 0.2715  AUROC 0.9263
+  M4 seed 1: 14 s; devtest RMSE(log1p s) 0.2716  AUROC 0.9263
+  M4 seed 2: 14 s; devtest RMSE(log1p s) 0.2715  AUROC 0.9263
+  M5 seed 0: 17 s; devtest RMSE(log1p s) 0.2714  AUROC 0.9262
+  M5 seed 1: 17 s; devtest RMSE(log1p s) 0.2715  AUROC 0.9260
+  M5 seed 2: 17 s; devtest RMSE(log1p s) 0.2714  AUROC 0.9260
+stage pred finished in 169.1 s at 2026-09-19 09:18:06
+
+==============================================================================
+pred  lag0_select
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage pred  argv --cache <cache-dir>/ac_v2_cache --stage pred --lag 0 --models M4 --seeds 0 --select-leaves --rounds 400 --tag lag0_select
+features <cache-dir>/ac_v2_cache\feat_lag0.parquet; train 1000000 valid 647464 devtest 647465; heavy threshold 1314.0 ms
+heavy rate: train 0.0502  valid 0.0798  devtest 0.0507
+  M4 num_leaves 31 -> validation-block RMSE 0.3151 (best_iter 244)
+  M4 num_leaves 127 -> validation-block RMSE 0.3158 (best_iter 133)
+SELECTED on the validation block: num_leaves = 31, rounds = 244
+using num_leaves = 31, num_boost_round = 244
+  M4 seed 0: 15 s; devtest RMSE(log1p s) 0.2715  AUROC 0.9263
+stage pred finished in 31.1 s at 2026-09-19 09:15:16
+
+==============================================================================
+pred  lag1000_M1M4
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage pred  argv --cache <cache-dir>/ac_v2_cache --stage pred --lag 1000 --models M1,M4 --seeds 0 --rounds 400 --tag lag1000_M1M4
+features <cache-dir>/ac_v2_cache\feat_lag1000.parquet; train 500000 valid 0 devtest 647465; heavy threshold 1314.0 ms
+heavy rate: train 0.0500  valid -  devtest 0.0507
+using num_leaves = 31, num_boost_round = 244
+  M1 seed 0: 5 s; devtest RMSE(log1p s) 0.3004  AUROC 0.8757
+  M4 seed 0: 9 s; devtest RMSE(log1p s) 0.2967  AUROC 0.8902
+stage pred finished in 14.6 s at 2026-09-19 09:18:55
+
+==============================================================================
+pred  lag100_M1M4
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage pred  argv --cache <cache-dir>/ac_v2_cache --stage pred --lag 100 --models M1,M4 --seeds 0 --rounds 400 --tag lag100_M1M4
+features <cache-dir>/ac_v2_cache\feat_lag100.parquet; train 500000 valid 0 devtest 647465; heavy threshold 1314.0 ms
+heavy rate: train 0.0496  valid -  devtest 0.0507
+using num_leaves = 31, num_boost_round = 244
+  M1 seed 0: 5 s; devtest RMSE(log1p s) 0.2961  AUROC 0.8887
+  M4 seed 0: 9 s; devtest RMSE(log1p s) 0.2887  AUROC 0.9047
+stage pred finished in 14.8 s at 2026-09-19 09:18:40
+
+==============================================================================
+pred  lag10_M1M4
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage pred  argv --cache <cache-dir>/ac_v2_cache --stage pred --lag 10 --models M1,M4 --seeds 0 --rounds 400 --tag lag10_M1M4
+features <cache-dir>/ac_v2_cache\feat_lag10.parquet; train 500000 valid 0 devtest 647465; heavy threshold 1314.0 ms
+heavy rate: train 0.0505  valid -  devtest 0.0507
+using num_leaves = 31, num_boost_round = 244
+  M1 seed 0: 5 s; devtest RMSE(log1p s) 0.2934  AUROC 0.8947
+  M4 seed 0: 9 s; devtest RMSE(log1p s) 0.2790  AUROC 0.9186
+stage pred finished in 14.4 s at 2026-09-19 09:18:24
+
+==============================================================================
+boot  lag0
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage boot  argv --cache <cache-dir>/ac_v2_cache --stage boot --lag 0 --boot 2000
+devtest rows 647465; models ['M1', 'M2', 'M3', 'M4', 'M5']; seeds averaged: {'M1': 3, 'M2': 3, 'M3': 3, 'M4': 3, 'M5': 3}
+target = log1p(time_cost / 1000) i.e. log1p seconds; heavy = true time_cost > train-block p95 = 1314.0 ms; devtest heavy rate 0.0507
+
+-- devtest rows = all (n=647465, heavy rate 0.0507, users 6056) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.3591       nan           nan           nan          2.2677
+  M1            0.2904    0.6826        0.8990        0.4313          2.1779
+  M2            0.3190    0.4706        0.7855        0.2923          2.8119
+  M3            0.3429    0.4932        0.7884        0.1651          2.6900
+  M4            0.2714    0.6924        0.9266        0.5267          2.0029
+  M5            0.2713    0.6960        0.9264        0.5271          1.9943
+
+-- devtest rows = cold-problem(<5 visible) (n=3771, heavy rate 0.0636, users 365) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.4044       nan           nan           nan          2.3011
+  M1            0.3361    0.5978        0.8541        0.4280          2.2427
+  M2            0.3704    0.4467        0.7961        0.2652          2.7106
+  M3            0.3655    0.4928        0.8227        0.2681          2.5020
+  M4            0.3264    0.6265        0.9075        0.4934          2.0526
+  M5            0.3243    0.6235        0.8997        0.5009          2.0587
+
+-- devtest rows = cold-user(<5 visible) (n=14271, heavy rate 0.0167, users 2957) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.2515       nan           nan           nan          1.7225
+  M1            0.2062    0.6216        0.8834        0.2483          2.1140
+  M2            0.2193    0.2940        0.6988        0.1381          2.8000
+  M3            0.2266    0.6497        0.8347        0.1040          2.3113
+  M4            0.1992    0.6064        0.8995        0.3189          2.0045
+  M5            0.1992    0.6157        0.8994        0.3243          1.9852
+
+-- devtest rows = cold-both (n=65, heavy rate 0.0769, users 36) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.4342       nan           nan           nan          2.5069
+  M1            0.2267    0.7779        1.0000        1.0000          2.3211
+  M2            0.3891    0.4767        0.8367        0.3544          2.5304
+  M3            0.3432    0.6669        0.8033        0.2433          2.4255
+  M4            0.1898    0.8117        0.9933        0.9429          2.0649
+  M5            0.1852    0.8173        0.9933        0.9429          2.0587
+
+-- paired bootstrap of the differences, 2000 resamples, blocks = users --
+
+  rows = all (n=647465, user blocks=6056)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (2000 resamples in 180 s)
+  M4   -M1     -0.0190 [ -0.0200, -0.0180]     +0.0275 [ +0.0260, +0.0292]
+  M4   -M2     -0.0476 [ -0.0493, -0.0459]     +0.1411 [ +0.1366, +0.1459]
+  M4   -M3     -0.0714 [ -0.0740, -0.0688]     +0.1382 [ +0.1341, +0.1425]
+  M5   -M4     -0.0001 [ -0.0002, -0.0000]     -0.0002 [ -0.0003, -0.0001]
+  M1   -M2     -0.0286 [ -0.0304, -0.0268]     +0.1136 [ +0.1093, +0.1181]
+  M1   -M3     -0.0524 [ -0.0547, -0.0502]     +0.1107 [ +0.1071, +0.1146]
+
+  rows = cold-problem(<5 visible) (n=3771, user blocks=365)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (2000 resamples in 0 s)
+  M4   -M1     -0.0096 [ -0.0144, -0.0045]     +0.0534 [ +0.0365, +0.0715]
+  M4   -M2     -0.0440 [ -0.0615, -0.0278]     +0.1115 [ +0.0775, +0.1580]
+  M4   -M3     -0.0391 [ -0.0581, -0.0200]     +0.0848 [ +0.0508, +0.1265]
+  M5   -M4     -0.0021 [ -0.0085, +0.0028]     -0.0078 [ -0.0141, -0.0028]
+  M1   -M2     -0.0344 [ -0.0501, -0.0190]     +0.0580 [ +0.0224, +0.1038]
+  M1   -M3     -0.0294 [ -0.0486, -0.0105]     +0.0314 [ -0.0153, +0.0845]
+
+  rows = cold-user(<5 visible) (n=14271, user blocks=2957)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (2000 resamples in 1 s)
+  M4   -M1     -0.0070 [ -0.0116, -0.0026]     +0.0161 [ +0.0083, +0.0241]
+  M4   -M2     -0.0200 [ -0.0261, -0.0143]     +0.2007 [ +0.1689, +0.2355]
+  M4   -M3     -0.0274 [ -0.0348, -0.0202]     +0.0648 [ +0.0444, +0.0866]
+  M5   -M4     -0.0001 [ -0.0008, +0.0006]     -0.0001 [ -0.0024, +0.0025]
+  M1   -M2     -0.0131 [ -0.0197, -0.0065]     +0.1846 [ +0.1546, +0.2190]
+  M1   -M3     -0.0204 [ -0.0263, -0.0148]     +0.0487 [ +0.0289, +0.0711]
+
+  rows = cold-both: n=65, too small for a user-block bootstrap, skipped
+stage boot finished in 188.4 s at 2026-09-19 09:22:21
+
+==============================================================================
+boot  lag10
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage boot  argv --cache <cache-dir>/ac_v2_cache --stage boot --lag 10 --models M1,M4 --seeds 0 --boot 400
+devtest rows 647465; models ['M1', 'M4']; seeds averaged: {'M1': 1, 'M4': 1}
+target = log1p(time_cost / 1000) i.e. log1p seconds; heavy = true time_cost > train-block p95 = 1314.0 ms; devtest heavy rate 0.0507
+
+-- devtest rows = all (n=647465, heavy rate 0.0507, users 6056) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.3591       nan           nan           nan          2.2677
+  M1            0.2934    0.6789        0.8947        0.4141          2.2036
+  M4            0.2790    0.6882        0.9186        0.4870          2.0668
+
+-- devtest rows = cold-problem(<5 visible) (n=4472, heavy rate 0.0673, users 486) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.4128       nan           nan           nan          2.3139
+  M1            0.3653    0.5444        0.8074        0.3285          2.3034
+  M4            0.3551    0.6014        0.8861        0.4004          2.1507
+
+-- devtest rows = cold-user(<5 visible) (n=14999, heavy rate 0.0173, users 2957) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.2534       nan           nan           nan          1.7453
+  M1            0.2091    0.6207        0.8800        0.2535          2.1846
+  M4            0.2057    0.6059        0.8946        0.2848          2.0745
+
+-- devtest rows = cold-both (n=122, heavy rate 0.0738, users 57) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.3878       nan           nan           nan          2.4774
+  M1            0.2471    0.7160        0.9351        0.7546          2.3994
+  M4            0.2145    0.7632        0.9592        0.7412          2.1723
+
+-- paired bootstrap of the differences, 400 resamples, blocks = users --
+
+  rows = all (n=647465, user blocks=6056)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 14 s)
+  M4   -M1     -0.0144 [ -0.0154, -0.0136]     +0.0238 [ +0.0226, +0.0256]
+
+  rows = cold-problem(<5 visible) (n=4472, user blocks=486)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 0 s)
+  M4   -M1     -0.0102 [ -0.0164, -0.0034]     +0.0787 [ +0.0537, +0.0993]
+
+  rows = cold-user(<5 visible) (n=14999, user blocks=2957)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 0 s)
+  M4   -M1     -0.0034 [ -0.0081, +0.0001]     +0.0145 [ +0.0056, +0.0231]
+
+  rows = cold-both: n=122, too small for a user-block bootstrap, skipped
+stage boot finished in 16.7 s at 2026-09-19 09:22:39
+
+==============================================================================
+boot  lag100
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage boot  argv --cache <cache-dir>/ac_v2_cache --stage boot --lag 100 --models M1,M4 --seeds 0 --boot 400
+devtest rows 647465; models ['M1', 'M4']; seeds averaged: {'M1': 1, 'M4': 1}
+target = log1p(time_cost / 1000) i.e. log1p seconds; heavy = true time_cost > train-block p95 = 1314.0 ms; devtest heavy rate 0.0507
+
+-- devtest rows = all (n=647465, heavy rate 0.0507, users 6056) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.3591       nan           nan           nan          2.2677
+  M1            0.2961    0.6800        0.8887        0.3976          2.2397
+  M4            0.2887    0.6848        0.9047        0.4312          2.1497
+
+-- devtest rows = cold-problem(<5 visible) (n=8475, heavy rate 0.0664, users 1286) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.4074       nan           nan           nan          2.2954
+  M1            0.3671    0.5348        0.7896        0.2865          2.4595
+  M4            0.3501    0.6178        0.8651        0.3518          2.2624
+
+-- devtest rows = cold-user(<5 visible) (n=17500, heavy rate 0.0203, users 2957) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.2674       nan           nan           nan          1.8219
+  M1            0.2257    0.6154        0.8785        0.2951          2.2729
+  M4            0.2243    0.6082        0.8821        0.2790          2.1498
+
+-- devtest rows = cold-both (n=496, heavy rate 0.0948, users 159) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.5288       nan           nan           nan          2.5698
+  M1            0.4750    0.4615        0.8183        0.5067          3.1328
+  M4            0.4472    0.6168        0.8920        0.5410          2.5912
+
+-- paired bootstrap of the differences, 400 resamples, blocks = users --
+
+  rows = all (n=647465, user blocks=6056)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 13 s)
+  M4   -M1     -0.0074 [ -0.0082, -0.0067]     +0.0160 [ +0.0146, +0.0176]
+
+  rows = cold-problem(<5 visible) (n=8475, user blocks=1286)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 0 s)
+  M4   -M1     -0.0170 [ -0.0249, -0.0103]     +0.0755 [ +0.0519, +0.0958]
+
+  rows = cold-user(<5 visible) (n=17500, user blocks=2957)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 0 s)
+  M4   -M1     -0.0014 [ -0.0040, +0.0012]     +0.0036 [ -0.0039, +0.0119]
+
+  rows = cold-both: n=496, too small for a user-block bootstrap, skipped
+stage boot finished in 15.8 s at 2026-09-19 09:22:55
+
+==============================================================================
+boot  lag1000
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage boot  argv --cache <cache-dir>/ac_v2_cache --stage boot --lag 1000 --models M1,M4 --seeds 0 --boot 400
+devtest rows 647465; models ['M1', 'M4']; seeds averaged: {'M1': 1, 'M4': 1}
+target = log1p(time_cost / 1000) i.e. log1p seconds; heavy = true time_cost > train-block p95 = 1314.0 ms; devtest heavy rate 0.0507
+
+-- devtest rows = all (n=647465, heavy rate 0.0507, users 6056) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.3590       nan           nan           nan          2.2677
+  M1            0.3004    0.6814        0.8757        0.3760          2.2777
+  M4            0.2967    0.6886        0.8902        0.3915          2.2377
+
+-- devtest rows = cold-problem(<5 visible) (n=37806, heavy rate 0.0737, users 3285) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.4355       nan           nan           nan          2.3060
+  M1            0.3626    0.5680        0.8362        0.4261          2.3985
+  M4            0.3504    0.6672        0.9013        0.5147          2.2645
+
+-- devtest rows = cold-user(<5 visible) (n=24550, heavy rate 0.0250, users 2957) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.2836       nan           nan           nan          1.9522
+  M1            0.2526    0.6069        0.8526        0.2447          2.4132
+  M4            0.2470    0.6425        0.8715        0.2575          2.2593
+
+-- devtest rows = cold-both (n=2805, heavy rate 0.0549, users 378) --
+  model   RMSE(log1p s)  Spearman   AUROC(heavy)  AUPRC(heavy)  RMSE(log1p ms)
+  M0            0.4042       nan           nan           nan          2.2191
+  M1            0.4075    0.1796        0.7306        0.2108          3.1129
+  M4            0.3760    0.4981        0.8787        0.3153          2.6890
+
+-- paired bootstrap of the differences, 400 resamples, blocks = users --
+
+  rows = all (n=647465, user blocks=6056)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 13 s)
+  M4   -M1     -0.0036 [ -0.0042, -0.0030]     +0.0145 [ +0.0132, +0.0159]
+
+  rows = cold-problem(<5 visible) (n=37806, user blocks=3285)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 0 s)
+  M4   -M1     -0.0122 [ -0.0168, -0.0082]     +0.0651 [ +0.0551, +0.0754]
+
+  rows = cold-user(<5 visible) (n=24550, user blocks=2957)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 0 s)
+  M4   -M1     -0.0056 [ -0.0093, -0.0027]     +0.0188 [ +0.0081, +0.0289]
+
+  rows = cold-both (n=2805, user blocks=378)
+  comparison    dRMSE (neg = first better)        dAUROC (pos = first better)
+  (400 resamples in 0 s)
+  M4   -M1     -0.0314 [ -0.0446, -0.0180]     +0.1480 [ +0.0986, +0.1987]
+stage boot finished in 15.4 s at 2026-09-19 09:23:12
+
+==============================================================================
+trace
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage trace  argv --cache <cache-dir>/ac_v2_cache --stage trace
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+devtest trace: 647465 jobs, total service work 514824.2 s (143.01 h); C mean 0.795 s median 0.507 s p99 5.543 s max 30.500 s
+platform service cap L = 30.500 s (the largest n_tests*time_limit in the block plus the 0.5 s fixed term); guard budgets B = 15.2 / 61.0 / 305.0 s = 0.5L / 2L / 10L
+alternative service model 0.2 + 0.05*n_tests + time_cost/1000: total 491358.6 s, max 30.350 s
+deadline shape taken from codebench_v2_cache ev.parquet: gamma = 0.7209, tau = 0.500 h
+id -> calendar anchors from 469 contests of the non-sealed blocks; the devtest block maps to 2020-05-11 15:42:47.094515800 .. 2021-03-13 08:00:00 (306 days)
+of the 101 devtest contests, 3 have a recorded start_time more than 30 days before the calendar position of their first devtest id (archive contests that keep collecting submissions years later); Spearman(anchor, true start) = 0.9771
+
+shape=poisson  gap-compression scale 0.01489 -> busiest-hour work 14394.1 s (target 14400); span 181.2 h; 182 non-empty hours; k: rho=0.5->k=8, rho=0.8->k=5, rho=1.0->k=4
+   Spearman(submission id, synthetic arrival) = 0.7234 (id order is preserved INSIDE each episode, not globally: contests overlap in id space)
+   hourly work (server-equivalents a[h] = work/3600): p50 0.47 p90 2.00 p99 3.06 max 4.00
+   k=1 configuration: same clock, every 5-th arrival kept (129493 jobs) -> busiest-hour work 2933.4 s, rho 0.815 on one server
+   episode windows keep their real length (h): p10 2.00 p50 45.79 p90 72.00 max 72.00 over 177 episodes
+   episodes running at once after compression (median-window proxy): p50 41 p90 121 max 126  (the real platform peaked at 21 concurrent contests; this is the 'many more courses at once' construction)
+
+shape=deadline gap-compression scale 0.01486 -> busiest-hour work 14399.7 s (target 14400); span 181.0 h; 181 non-empty hours; k: rho=0.5->k=8, rho=0.8->k=5, rho=1.0->k=4
+   Spearman(submission id, synthetic arrival) = 0.6364 (id order is preserved INSIDE each episode, not globally: contests overlap in id space)
+   hourly work (server-equivalents a[h] = work/3600): p50 0.69 p90 1.83 p99 3.10 max 4.00
+   k=1 configuration: same clock, every 5-th arrival kept (129493 jobs) -> busiest-hour work 2861.4 s, rho 0.795 on one server
+   episode windows keep their real length (h): p10 2.00 p50 45.79 p90 72.00 max 72.00 over 177 episodes
+   episodes running at once after compression (median-window proxy): p50 41 p90 121 max 126  (the real platform peaked at 21 concurrent contests; this is the 'many more courses at once' construction)
+
+FOR THE PAPER: ACcoding has no submission timestamps.  Only the job ORDER inside a contest and the job SIZES are real; every arrival time is drawn, and the compression factor is a construction parameter chosen to put a fixed judge pool at the three target utilisations.
+stage trace finished in 4.2 s at 2026-09-19 09:23:17
+
+==============================================================================
+sim  deadline_rho0.5_main
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage sim  argv --cache <cache-dir>/ac_v2_cache --stage sim --shape deadline --rho 0.5 --reps 5
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+jobs 647465; service model 'main' (L = 30.500 s); heavy = true time_cost > 1314.0 ms (0.0507 of jobs); predictors ['M1', 'M2', 'M3', 'M4', 'M5']
+shape deadline, target rho 0.5 -> k = 8; compression scale 0.01486; gamma 0.7209, tau 0.500 h (codebench_v2_cache ev.parquet); B = 15.2 / 61.0 / 305.0 s = 0.5L / 2L / 10L
+ARRIVALS ARE SYNTHETIC: only the order inside each contest and the sizes are real.
+  draw 0: busy-hour work 14399.7 s, achieved busy-hour rho 0.500, deadline-window jobs 148932, 12 policies, 7 s
+  draw 1: busy-hour work 14457.0 s, achieved busy-hour rho 0.502, deadline-window jobs 148533, 12 policies, 7 s
+  draw 2: busy-hour work 14456.8 s, achieved busy-hour rho 0.502, deadline-window jobs 148952, 12 policies, 7 s
+  draw 3: busy-hour work 14650.8 s, achieved busy-hour rho 0.509, deadline-window jobs 148485, 12 policies, 7 s
+  draw 4: busy-hour work 14439.8 s, achieved busy-hour rho 0.501, deadline-window jobs 148492, 12 policies, 7 s
+
+--- deadline arrivals, target rho 0.5, k = 8, 5 draws, waits in s (mean over draws) ---
+policy                mean gain_mean      p99 gain_p99   p99_dl  gain_dl      p95 mean_heavy max_heavy max_exces
+FCFS                 0.001     0.000    0.000      nan    0.037    0.000    0.000     0.001       2.2       0.0
+SJF-ref              0.001     1.000    0.000      nan    0.022    1.000    0.000     0.003       6.4       6.2
+SPJF-M1              0.001     0.661    0.000      nan    0.024    0.914    0.000     0.002       7.0       9.6
+SPJF-M2              0.001     0.610    0.000      nan    0.023    0.942    0.000     0.002       7.8       9.5
+SPJF-M3              0.001     0.269    0.000      nan    0.023    0.924    0.000     0.002       6.0       9.7
+SPJF-M4              0.001     0.766    0.000      nan    0.023    0.967    0.000     0.002       7.2       8.5
+SPJF-M5              0.001     0.783    0.000      nan    0.023    0.957    0.000     0.002       6.6       7.9
+ADV-top1short        0.001     0.658    0.000      nan    0.023    0.943    0.000     0.002       8.5      14.0
+GUARD-M4-B15         0.001     0.729    0.000      nan    0.023    0.961    0.000     0.002       5.2       6.1
+GUARD-M4-B61         0.001     0.766    0.000      nan    0.023    0.967    0.000     0.002       7.2       8.5
+GUARD-ADV-B61        0.001     0.656    0.000      nan    0.023    0.943    0.000     0.002       8.5      10.4
+GUARD-M4-B305        0.001     0.766    0.000      nan    0.023    0.967    0.000     0.002       7.2       8.5
+    gain denominator FCFS - SJF-ref on mean    =    0.000 s -> UNSTABLE
+    gain denominator FCFS - SJF-ref on p99     =    0.000 s -> UNSTABLE
+    gain denominator FCFS - SJF-ref on p99_dl  =    0.014 s -> UNSTABLE
+p99_dl = p99 wait among arrivals in the last 10 percent of their contest's window, the ACcoding analogue of CodeBench's deadline-window p99 (research_plan.md 6.5).  On the stationary stream that window carries no extra load by construction, so p99_dl and p99 nearly coincide there.
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-ref), computed on the draw means; SJF-ref uses the TRUE sizes and is a reference, not a bound.  max_excess = max over jobs and draws of (W_policy - W_FCFS).  Bound at k=1 is B + L; at k>1 there is no bound and these are reported as measurements.
+achieved busy-hour rho per draw: 0.500, 0.502, 0.502, 0.509, 0.501
+stage sim finished in 37.6 s at 2026-09-19 09:26:02
+
+==============================================================================
+sim  deadline_rho0.8_main
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage sim  argv --cache <cache-dir>/ac_v2_cache --stage sim --shape deadline --rho 0.8 --reps 5
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+jobs 647465; service model 'main' (L = 30.500 s); heavy = true time_cost > 1314.0 ms (0.0507 of jobs); predictors ['M1', 'M2', 'M3', 'M4', 'M5']
+shape deadline, target rho 0.8 -> k = 5; compression scale 0.01486; gamma 0.7209, tau 0.500 h (codebench_v2_cache ev.parquet); B = 15.2 / 61.0 / 305.0 s = 0.5L / 2L / 10L
+ARRIVALS ARE SYNTHETIC: only the order inside each contest and the sizes are real.
+  draw 0: busy-hour work 14399.7 s, achieved busy-hour rho 0.800, deadline-window jobs 148932, 12 policies, 7 s
+  draw 1: busy-hour work 14457.0 s, achieved busy-hour rho 0.803, deadline-window jobs 148533, 12 policies, 7 s
+  draw 2: busy-hour work 14456.8 s, achieved busy-hour rho 0.803, deadline-window jobs 148952, 12 policies, 7 s
+  draw 3: busy-hour work 14650.8 s, achieved busy-hour rho 0.814, deadline-window jobs 148485, 12 policies, 7 s
+  draw 4: busy-hour work 14439.8 s, achieved busy-hour rho 0.802, deadline-window jobs 148492, 12 policies, 7 s
+
+--- deadline arrivals, target rho 0.8, k = 5, 5 draws, waits in s (mean over draws) ---
+policy                mean gain_mean      p99 gain_p99   p99_dl  gain_dl      p95 mean_heavy max_heavy max_exces
+FCFS                 0.359     0.000    3.273    0.000   38.333    0.000    0.212     0.416      76.1       0.0
+SJF-ref              0.065     1.000    0.763    1.000    1.475    1.000    0.115     0.670     750.7     929.1
+SPJF-M1              0.131     0.775    0.803    0.984    1.657    0.995    0.118     0.771     762.5     943.8
+SPJF-M2              0.137     0.755    0.831    0.973    1.726    0.993    0.118     0.813     780.7     966.5
+SPJF-M3              0.228     0.443    0.885    0.951    1.716    0.993    0.120     0.527     787.9     982.9
+SPJF-M4              0.096     0.892    0.785    0.991    1.536    0.998    0.116     0.835     738.5     940.0
+SPJF-M5              0.098     0.885    0.787    0.990    1.523    0.999    0.116     0.854     765.9     950.6
+ADV-top1short        0.211     0.501    0.818    0.978    1.769    0.992    0.117     1.063     872.4    1046.2
+GUARD-M4-B15         0.329     0.099    1.956    0.525   39.114   -0.021    0.128     0.471      79.2       9.6
+GUARD-M4-B61         0.287     0.242    1.258    0.803   32.016    0.171    0.123     0.540      88.3      23.5
+GUARD-ADV-B61        0.384    -0.087    1.670    0.639   48.017   -0.263    0.126     0.429      94.3      28.6
+GUARD-M4-B305        0.191     0.569    0.890    0.949    2.526    0.971    0.118     0.709     137.4      69.3
+    gain denominator FCFS - SJF-ref on mean    =    0.294 s -> stable
+    gain denominator FCFS - SJF-ref on p99     =    2.510 s -> stable
+    gain denominator FCFS - SJF-ref on p99_dl  =   36.858 s -> stable
+p99_dl = p99 wait among arrivals in the last 10 percent of their contest's window, the ACcoding analogue of CodeBench's deadline-window p99 (research_plan.md 6.5).  On the stationary stream that window carries no extra load by construction, so p99_dl and p99 nearly coincide there.
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-ref), computed on the draw means; SJF-ref uses the TRUE sizes and is a reference, not a bound.  max_excess = max over jobs and draws of (W_policy - W_FCFS).  Bound at k=1 is B + L; at k>1 there is no bound and these are reported as measurements.
+achieved busy-hour rho per draw: 0.800, 0.803, 0.803, 0.814, 0.802
+stage sim finished in 35.1 s at 2026-09-19 09:26:38
+
+==============================================================================
+sim  deadline_rho1.0_alt
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage sim  argv --cache <cache-dir>/ac_v2_cache --stage sim --shape deadline --rho 1.0 --reps 3 --service alt
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+jobs 647465; service model 'alt' (L = 30.350 s); heavy = true time_cost > 1314.0 ms (0.0507 of jobs); predictors ['M1', 'M2', 'M3', 'M4', 'M5']
+shape deadline, target rho 1.0 -> k = 4; compression scale 0.01486; gamma 0.7209, tau 0.500 h (codebench_v2_cache ev.parquet); B = 15.2 / 60.7 / 303.5 s = 0.5L / 2L / 10L
+ARRIVALS ARE SYNTHETIC: only the order inside each contest and the sizes are real.
+  draw 0: busy-hour work 13502.9 s, achieved busy-hour rho 0.938, deadline-window jobs 148932, 12 policies, 7 s
+  draw 1: busy-hour work 13598.3 s, achieved busy-hour rho 0.944, deadline-window jobs 148533, 12 policies, 7 s
+  draw 2: busy-hour work 13622.0 s, achieved busy-hour rho 0.946, deadline-window jobs 148952, 12 policies, 7 s
+
+--- deadline arrivals, target rho 1.0, k = 4, 3 draws, waits in s (mean over draws) ---
+policy                mean gain_mean      p99 gain_p99   p99_dl  gain_dl      p95 mean_heavy max_heavy max_exces
+FCFS                 1.762     0.000   49.525    0.000  149.952    0.000    1.120     2.122     253.8       0.0
+SJF-ref              0.247     1.000    1.813    1.000    3.150    1.000    0.349     3.465    1509.5    1596.0
+SPJF-M1              0.630     0.747    2.407    0.988    5.483    0.984    0.370     3.578    1569.5    1622.0
+SPJF-M2              0.760     0.662    2.880    0.978    7.091    0.973    0.381     3.893    1580.3    1652.3
+SPJF-M3              1.113     0.429    3.084    0.973    7.349    0.971    0.376     2.372    1595.4    1675.8
+SPJF-M4              0.495     0.837    2.194    0.992    4.320    0.992    0.367     3.866    1552.8    1598.8
+SPJF-M5              0.491     0.839    2.188    0.992    4.288    0.992    0.368     3.867    1560.2    1596.8
+ADV-top1short        1.029     0.484    2.839    0.979    9.237    0.959    0.376     4.091    1677.9    1798.8
+GUARD-M4-B15         1.642     0.079   44.002    0.116  153.805   -0.026    0.487     2.262     257.7      12.1
+GUARD-M4-B61         1.499     0.173   23.789    0.539  160.414   -0.071    0.435     2.446     269.4      34.1
+GUARD-ADV-B61        1.887    -0.082   61.549   -0.252  166.538   -0.113    0.457     2.131     275.8      40.6
+GUARD-M4-B304        1.115     0.427    4.017    0.954  110.754    0.267    0.395     2.957     330.9      83.5
+    gain denominator FCFS - SJF-ref on mean    =    1.514 s -> stable
+    gain denominator FCFS - SJF-ref on p99     =   47.712 s -> stable
+    gain denominator FCFS - SJF-ref on p99_dl  =  146.802 s -> stable
+p99_dl = p99 wait among arrivals in the last 10 percent of their contest's window, the ACcoding analogue of CodeBench's deadline-window p99 (research_plan.md 6.5).  On the stationary stream that window carries no extra load by construction, so p99_dl and p99 nearly coincide there.
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-ref), computed on the draw means; SJF-ref uses the TRUE sizes and is a reference, not a bound.  max_excess = max over jobs and draws of (W_policy - W_FCFS).  Bound at k=1 is B + L; at k>1 there is no bound and these are reported as measurements.
+achieved busy-hour rho per draw: 0.938, 0.944, 0.946
+stage sim finished in 20.9 s at 2026-09-19 09:27:35
+
+==============================================================================
+sim  deadline_rho1.0_main
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage sim  argv --cache <cache-dir>/ac_v2_cache --stage sim --shape deadline --rho 1.0 --reps 5
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+jobs 647465; service model 'main' (L = 30.500 s); heavy = true time_cost > 1314.0 ms (0.0507 of jobs); predictors ['M1', 'M2', 'M3', 'M4', 'M5']
+shape deadline, target rho 1.0 -> k = 4; compression scale 0.01486; gamma 0.7209, tau 0.500 h (codebench_v2_cache ev.parquet); B = 15.2 / 61.0 / 305.0 s = 0.5L / 2L / 10L
+ARRIVALS ARE SYNTHETIC: only the order inside each contest and the sizes are real.
+  draw 0: busy-hour work 14399.7 s, achieved busy-hour rho 1.000, deadline-window jobs 148932, 12 policies, 7 s
+  draw 1: busy-hour work 14457.0 s, achieved busy-hour rho 1.004, deadline-window jobs 148533, 12 policies, 7 s
+  draw 2: busy-hour work 14456.8 s, achieved busy-hour rho 1.004, deadline-window jobs 148952, 12 policies, 7 s
+  draw 3: busy-hour work 14650.8 s, achieved busy-hour rho 1.017, deadline-window jobs 148485, 12 policies, 7 s
+  draw 4: busy-hour work 14439.8 s, achieved busy-hour rho 1.003, deadline-window jobs 148492, 12 policies, 7 s
+
+--- deadline arrivals, target rho 1.0, k = 4, 5 draws, waits in s (mean over draws) ---
+policy                mean gain_mean      p99 gain_p99   p99_dl  gain_dl      p95 mean_heavy max_heavy max_exces
+FCFS                 2.708     0.000   71.567    0.000  207.217    0.000    2.299     3.196     334.4       0.0
+SJF-ref              0.406     1.000    2.775    1.000    4.550    1.000    0.445     6.051    1814.4    1968.1
+SPJF-M1              1.009     0.738    3.592    0.988    7.531    0.985    0.449     6.145    1963.7    2156.7
+SPJF-M2              1.265     0.627    4.216    0.979    9.997    0.973    0.455     6.041    1926.2    2160.6
+SPJF-M3              1.887     0.356    5.590    0.959   15.548    0.946    0.470     4.242    2028.9    2276.1
+SPJF-M4              0.835     0.814    3.190    0.994    5.932    0.993    0.447     6.628    1939.1    2103.1
+SPJF-M5              0.830     0.816    3.181    0.994    5.861    0.994    0.447     6.616    1930.5    2099.7
+ADV-top1short        1.661     0.455    4.407    0.976   12.704    0.960    0.459     6.947    2058.4    2221.1
+GUARD-M4-B15         2.595     0.049   61.974    0.139  211.344   -0.020    0.949     3.415     338.4      14.2
+GUARD-M4-B61         2.419     0.125   51.230    0.296  220.352   -0.065    0.654     3.728     349.9      33.2
+GUARD-ADV-B61        2.823    -0.050   86.966   -0.224  224.103   -0.083    0.731     3.328     357.3      41.0
+GUARD-M4-B305        1.903     0.350   10.064    0.894  222.619   -0.076    0.503     4.666     410.8      85.4
+    gain denominator FCFS - SJF-ref on mean    =    2.301 s -> stable
+    gain denominator FCFS - SJF-ref on p99     =   68.791 s -> stable
+    gain denominator FCFS - SJF-ref on p99_dl  =  202.666 s -> stable
+p99_dl = p99 wait among arrivals in the last 10 percent of their contest's window, the ACcoding analogue of CodeBench's deadline-window p99 (research_plan.md 6.5).  On the stationary stream that window carries no extra load by construction, so p99_dl and p99 nearly coincide there.
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-ref), computed on the draw means; SJF-ref uses the TRUE sizes and is a reference, not a bound.  max_excess = max over jobs and draws of (W_policy - W_FCFS).  Bound at k=1 is B + L; at k>1 there is no bound and these are reported as measurements.
+achieved busy-hour rho per draw: 1.000, 1.004, 1.004, 1.017, 1.003
+stage sim finished in 34.6 s at 2026-09-19 09:27:14
+
+==============================================================================
+sim  poisson_rho0.5_main
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage sim  argv --cache <cache-dir>/ac_v2_cache --stage sim --shape poisson --rho 0.5 --reps 5
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+jobs 647465; service model 'main' (L = 30.500 s); heavy = true time_cost > 1314.0 ms (0.0507 of jobs); predictors ['M1', 'M2', 'M3', 'M4', 'M5']
+shape poisson, target rho 0.5 -> k = 8; compression scale 0.01489; gamma 0.7209, tau 0.500 h (codebench_v2_cache ev.parquet); B = 15.2 / 61.0 / 305.0 s = 0.5L / 2L / 10L
+ARRIVALS ARE SYNTHETIC: only the order inside each contest and the sizes are real.
+  draw 0: busy-hour work 14394.1 s, achieved busy-hour rho 0.500, deadline-window jobs 49599, 12 policies, 8 s
+  draw 1: busy-hour work 14232.1 s, achieved busy-hour rho 0.494, deadline-window jobs 49627, 12 policies, 8 s
+  draw 2: busy-hour work 14108.7 s, achieved busy-hour rho 0.490, deadline-window jobs 49454, 12 policies, 8 s
+  draw 3: busy-hour work 14213.9 s, achieved busy-hour rho 0.494, deadline-window jobs 49831, 12 policies, 8 s
+  draw 4: busy-hour work 14423.7 s, achieved busy-hour rho 0.501, deadline-window jobs 49654, 12 policies, 8 s
+
+--- poisson arrivals, target rho 0.5, k = 8, 5 draws, waits in s (mean over draws) ---
+policy                mean gain_mean      p99 gain_p99   p99_dl  gain_dl      p95 mean_heavy max_heavy max_exces
+FCFS                 0.001     0.000    0.000      nan    0.000      nan    0.000     0.001       1.9       0.0
+SJF-ref              0.001     1.000    0.000      nan    0.000      nan    0.000     0.002       4.6       6.9
+SPJF-M1              0.001     0.675    0.000      nan    0.000      nan    0.000     0.001       4.8       7.8
+SPJF-M2              0.001     0.608    0.000      nan    0.000      nan    0.000     0.001       5.0       9.1
+SPJF-M3              0.001     0.397    0.000      nan    0.000      nan    0.000     0.001       5.0       7.8
+SPJF-M4              0.001     0.782    0.000      nan    0.000      nan    0.000     0.002       4.5       6.6
+SPJF-M5              0.001     0.806    0.000      nan    0.000      nan    0.000     0.002       4.7       6.8
+ADV-top1short        0.001     0.446    0.000      nan    0.000      nan    0.000     0.001       4.0      11.3
+GUARD-M4-B15         0.001     0.749    0.000      nan    0.000      nan    0.000     0.001       3.7       6.6
+GUARD-M4-B61         0.001     0.782    0.000      nan    0.000      nan    0.000     0.002       4.5       6.6
+GUARD-ADV-B61        0.001     0.446    0.000      nan    0.000      nan    0.000     0.001       4.0      11.3
+GUARD-M4-B305        0.001     0.782    0.000      nan    0.000      nan    0.000     0.002       4.5       6.6
+    gain denominator FCFS - SJF-ref on mean    =    0.000 s -> UNSTABLE
+    gain denominator FCFS - SJF-ref on p99     =    0.000 s -> UNSTABLE
+    gain denominator FCFS - SJF-ref on p99_dl  =    0.000 s -> UNSTABLE
+p99_dl = p99 wait among arrivals in the last 10 percent of their contest's window, the ACcoding analogue of CodeBench's deadline-window p99 (research_plan.md 6.5).  On the stationary stream that window carries no extra load by construction, so p99_dl and p99 nearly coincide there.
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-ref), computed on the draw means; SJF-ref uses the TRUE sizes and is a reference, not a bound.  max_excess = max over jobs and draws of (W_policy - W_FCFS).  Bound at k=1 is B + L; at k>1 there is no bound and these are reported as measurements.
+achieved busy-hour rho per draw: 0.500, 0.494, 0.490, 0.494, 0.501
+stage sim finished in 38.6 s at 2026-09-19 09:23:56
+
+==============================================================================
+sim  poisson_rho0.8_alt
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage sim  argv --cache <cache-dir>/ac_v2_cache --stage sim --shape poisson --rho 0.8 --reps 3 --service alt
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+jobs 647465; service model 'alt' (L = 30.350 s); heavy = true time_cost > 1314.0 ms (0.0507 of jobs); predictors ['M1', 'M2', 'M3', 'M4', 'M5']
+shape poisson, target rho 0.8 -> k = 5; compression scale 0.01489; gamma 0.7209, tau 0.500 h (codebench_v2_cache ev.parquet); B = 15.2 / 60.7 / 303.5 s = 0.5L / 2L / 10L
+ARRIVALS ARE SYNTHETIC: only the order inside each contest and the sizes are real.
+  draw 0: busy-hour work 13440.9 s, achieved busy-hour rho 0.747, deadline-window jobs 49599, 12 policies, 7 s
+  draw 1: busy-hour work 13274.2 s, achieved busy-hour rho 0.737, deadline-window jobs 49627, 12 policies, 7 s
+  draw 2: busy-hour work 13170.7 s, achieved busy-hour rho 0.732, deadline-window jobs 49454, 12 policies, 7 s
+
+--- poisson arrivals, target rho 0.8, k = 5, 3 draws, waits in s (mean over draws) ---
+policy                mean gain_mean      p99 gain_p99   p99_dl  gain_dl      p95 mean_heavy max_heavy max_exces
+FCFS                 0.045     0.000    0.904    0.000    3.533    0.000    0.064     0.054      16.2       0.0
+SJF-ref              0.021     1.000    0.448    1.000    0.704    1.000    0.036     0.085      96.9     123.4
+SPJF-M1              0.026     0.804    0.481    0.929    0.810    0.962    0.038     0.075      93.0     151.2
+SPJF-M2              0.029     0.648    0.506    0.873    0.888    0.935    0.038     0.078     103.8     134.3
+SPJF-M3              0.029     0.669    0.491    0.906    0.670    1.012    0.038     0.068     117.0     187.5
+SPJF-M4              0.025     0.840    0.479    0.933    0.798    0.967    0.037     0.080      92.7     130.0
+SPJF-M5              0.025     0.836    0.481    0.929    0.802    0.965    0.037     0.081      89.2     131.7
+ADV-top1short        0.034     0.443    0.489    0.910    0.869    0.942    0.038     0.085     162.5     250.6
+GUARD-M4-B15         0.032     0.542    0.515    0.854    1.367    0.765    0.037     0.077      20.1       9.7
+GUARD-M4-B61         0.027     0.751    0.485    0.919    0.862    0.944    0.037     0.083      29.5      25.7
+GUARD-ADV-B61        0.038     0.312    0.506    0.873    1.222    0.817    0.038     0.076      32.3      30.3
+GUARD-M4-B304        0.025     0.837    0.479    0.933    0.792    0.969    0.037     0.081      69.7      66.2
+    gain denominator FCFS - SJF-ref on mean    =    0.024 s -> UNSTABLE
+    gain denominator FCFS - SJF-ref on p99     =    0.456 s -> stable
+    gain denominator FCFS - SJF-ref on p99_dl  =    2.829 s -> stable
+p99_dl = p99 wait among arrivals in the last 10 percent of their contest's window, the ACcoding analogue of CodeBench's deadline-window p99 (research_plan.md 6.5).  On the stationary stream that window carries no extra load by construction, so p99_dl and p99 nearly coincide there.
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-ref), computed on the draw means; SJF-ref uses the TRUE sizes and is a reference, not a bound.  max_excess = max over jobs and draws of (W_policy - W_FCFS).  Bound at k=1 is B + L; at k>1 there is no bound and these are reported as measurements.
+achieved busy-hour rho per draw: 0.747, 0.737, 0.732
+stage sim finished in 21.5 s at 2026-09-19 09:27:57
+
+==============================================================================
+sim  poisson_rho0.8_main
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage sim  argv --cache <cache-dir>/ac_v2_cache --stage sim --shape poisson --rho 0.8 --reps 5
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+jobs 647465; service model 'main' (L = 30.500 s); heavy = true time_cost > 1314.0 ms (0.0507 of jobs); predictors ['M1', 'M2', 'M3', 'M4', 'M5']
+shape poisson, target rho 0.8 -> k = 5; compression scale 0.01489; gamma 0.7209, tau 0.500 h (codebench_v2_cache ev.parquet); B = 15.2 / 61.0 / 305.0 s = 0.5L / 2L / 10L
+ARRIVALS ARE SYNTHETIC: only the order inside each contest and the sizes are real.
+  draw 0: busy-hour work 14394.1 s, achieved busy-hour rho 0.800, deadline-window jobs 49599, 12 policies, 7 s
+  draw 1: busy-hour work 14232.1 s, achieved busy-hour rho 0.791, deadline-window jobs 49627, 12 policies, 7 s
+  draw 2: busy-hour work 14108.7 s, achieved busy-hour rho 0.784, deadline-window jobs 49454, 12 policies, 7 s
+  draw 3: busy-hour work 14213.9 s, achieved busy-hour rho 0.790, deadline-window jobs 49831, 12 policies, 7 s
+  draw 4: busy-hour work 14423.7 s, achieved busy-hour rho 0.801, deadline-window jobs 49654, 12 policies, 7 s
+
+--- poisson arrivals, target rho 0.8, k = 5, 5 draws, waits in s (mean over draws) ---
+policy                mean gain_mean      p99 gain_p99   p99_dl  gain_dl      p95 mean_heavy max_heavy max_exces
+FCFS                 0.101     0.000    1.531    0.000   13.596    0.000    0.155     0.129      25.8       0.0
+SJF-ref              0.035     1.000    0.623    1.000    1.088    1.000    0.090     0.189     204.4     334.1
+SPJF-M1              0.045     0.854    0.648    0.972    1.119    0.998    0.091     0.191     344.3     600.8
+SPJF-M2              0.049     0.793    0.667    0.951    1.119    0.997    0.091     0.173     327.2     628.4
+SPJF-M3              0.054     0.712    0.691    0.925    0.878    1.017    0.092     0.167     357.7     643.2
+SPJF-M4              0.042     0.887    0.641    0.980    1.090    1.000    0.090     0.200     337.0     601.7
+SPJF-M5              0.041     0.900    0.638    0.983    1.076    1.001    0.090     0.194     304.2     602.2
+ADV-top1short        0.069     0.479    0.663    0.956    1.158    0.994    0.091     0.274     438.4     753.3
+GUARD-M4-B15         0.081     0.304    0.860    0.739   13.268    0.026    0.094     0.168      29.2       9.4
+GUARD-M4-B61         0.063     0.580    0.703    0.911    8.031    0.445    0.091     0.194      39.1      20.5
+GUARD-ADV-B61        0.097     0.065    0.806    0.798   16.481   -0.231    0.093     0.169      42.2      30.6
+GUARD-M4-B305        0.047     0.824    0.647    0.974    1.169    0.994    0.090     0.212      87.2      67.5
+    gain denominator FCFS - SJF-ref on mean    =    0.066 s -> stable
+    gain denominator FCFS - SJF-ref on p99     =    0.908 s -> stable
+    gain denominator FCFS - SJF-ref on p99_dl  =   12.508 s -> stable
+p99_dl = p99 wait among arrivals in the last 10 percent of their contest's window, the ACcoding analogue of CodeBench's deadline-window p99 (research_plan.md 6.5).  On the stationary stream that window carries no extra load by construction, so p99_dl and p99 nearly coincide there.
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-ref), computed on the draw means; SJF-ref uses the TRUE sizes and is a reference, not a bound.  max_excess = max over jobs and draws of (W_policy - W_FCFS).  Bound at k=1 is B + L; at k>1 there is no bound and these are reported as measurements.
+achieved busy-hour rho per draw: 0.800, 0.791, 0.784, 0.790, 0.801
+stage sim finished in 35.4 s at 2026-09-19 09:24:32
+
+==============================================================================
+sim  poisson_rho1.0_main
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage sim  argv --cache <cache-dir>/ac_v2_cache --stage sim --shape poisson --rho 1.0 --reps 5
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+jobs 647465; service model 'main' (L = 30.500 s); heavy = true time_cost > 1314.0 ms (0.0507 of jobs); predictors ['M1', 'M2', 'M3', 'M4', 'M5']
+shape poisson, target rho 1.0 -> k = 4; compression scale 0.01489; gamma 0.7209, tau 0.500 h (codebench_v2_cache ev.parquet); B = 15.2 / 61.0 / 305.0 s = 0.5L / 2L / 10L
+ARRIVALS ARE SYNTHETIC: only the order inside each contest and the sizes are real.
+  draw 0: busy-hour work 14394.1 s, achieved busy-hour rho 1.000, deadline-window jobs 49599, 12 policies, 7 s
+  draw 1: busy-hour work 14232.1 s, achieved busy-hour rho 0.988, deadline-window jobs 49627, 12 policies, 7 s
+  draw 2: busy-hour work 14108.7 s, achieved busy-hour rho 0.980, deadline-window jobs 49454, 12 policies, 7 s
+  draw 3: busy-hour work 14213.9 s, achieved busy-hour rho 0.987, deadline-window jobs 49831, 12 policies, 7 s
+  draw 4: busy-hour work 14423.7 s, achieved busy-hour rho 1.002, deadline-window jobs 49654, 12 policies, 7 s
+
+--- poisson arrivals, target rho 1.0, k = 4, 5 draws, waits in s (mean over draws) ---
+policy                mean gain_mean      p99 gain_p99   p99_dl  gain_dl      p95 mean_heavy max_heavy max_exces
+FCFS                 1.893     0.000   44.384    0.000  208.422    0.000    1.679     2.251     232.9       0.0
+SJF-ref              0.257     1.000    2.415    1.000    2.652    1.000    0.407     3.220    1820.0    2105.0
+SPJF-M1              0.566     0.811    2.716    0.993    2.970    0.998    0.411     4.072    2051.7    2213.6
+SPJF-M2              0.721     0.716    3.170    0.982    3.987    0.994    0.415     4.423    1850.3    2082.1
+SPJF-M3              0.870     0.625    3.527    0.973    2.977    0.998    0.420     3.140    1927.7    2253.3
+SPJF-M4              0.473     0.868    2.603    0.996    2.717    1.000    0.409     4.415    2032.5    2175.9
+SPJF-M5              0.455     0.879    2.598    0.996    2.749    1.000    0.409     4.286    2021.5    2166.7
+ADV-top1short        1.112     0.477    3.234    0.980    6.396    0.982    0.416     5.553    2034.2    2145.3
+GUARD-M4-B15         1.796     0.059   42.626    0.042  212.410   -0.019    0.712     2.433     237.0      10.7
+GUARD-M4-B61         1.633     0.159   41.978    0.057  223.350   -0.073    0.521     2.690     248.5      24.8
+GUARD-ADV-B61        2.005    -0.068   56.866   -0.297  229.663   -0.103    0.577     2.339     256.9      45.3
+GUARD-M4-B305        1.176     0.438    5.328    0.931  262.878   -0.265    0.441     3.448     310.0      91.9
+    gain denominator FCFS - SJF-ref on mean    =    1.636 s -> stable
+    gain denominator FCFS - SJF-ref on p99     =   41.969 s -> stable
+    gain denominator FCFS - SJF-ref on p99_dl  =  205.770 s -> stable
+p99_dl = p99 wait among arrivals in the last 10 percent of their contest's window, the ACcoding analogue of CodeBench's deadline-window p99 (research_plan.md 6.5).  On the stationary stream that window carries no extra load by construction, so p99_dl and p99 nearly coincide there.
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-ref), computed on the draw means; SJF-ref uses the TRUE sizes and is a reference, not a bound.  max_excess = max over jobs and draws of (W_policy - W_FCFS).  Bound at k=1 is B + L; at k>1 there is no bound and these are reported as measurements.
+achieved busy-hour rho per draw: 1.000, 0.988, 0.980, 0.987, 1.002
+stage sim finished in 34.5 s at 2026-09-19 09:25:07
+
+==============================================================================
+guardk1  deadline
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage guardk1  argv --cache <cache-dir>/ac_v2_cache --stage guardk1 --shape deadline --reps 3
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+k = 1, deadline arrivals, the main compressed clock (scale 0.01486) with every 5-th arrival kept, L = 30.500 s, B = ['15.2', '61.0', '305.0']
+PER-JOB ASSERTION  W_guard[i] <= W_FCFS[i] + B + L  for every job, every B, every predictor (including two adversarial ones) and every draw.
+  draw 0: 129493 jobs, busy-hour rho on one server 0.795; every assertion passed
+  draw 1: 129493 jobs, busy-hour rho on one server 0.800; every assertion passed
+  draw 2: 129493 jobs, busy-hour rho on one server 0.812; every assertion passed
+
+jobs checked (job x predictor x B x draw): 8158059; violations 0 (asserted)
+policy                          mean  gain_mean        p99  gain_p99  max_excess   max_heavy
+FCFS                           0.796      0.000     17.009     0.000         0.0        77.7
+SJF-ref                        0.368      1.000      8.164     1.000       955.6       754.0
+SPJF-M1                        0.492      0.710      9.210     0.882      1062.5       748.1
+GUARD-M1-B15                   0.678      0.274     13.251     0.425        32.9        93.3
+GUARD-M1-B61                   0.588      0.484     10.331     0.755        68.9       136.3
+GUARD-M1-B305                  0.499      0.693      9.386     0.862       312.6       352.3
+SPJF-M2                        0.527      0.629      9.742     0.822      1047.7       810.1
+GUARD-M2-B15                   0.726      0.163     14.601     0.272        34.8        93.1
+GUARD-M2-B61                   0.665      0.304     11.315     0.644        74.7       140.7
+GUARD-M2-B305                  0.574      0.519     10.041     0.788       318.6       362.5
+SPJF-M3                        0.637      0.370     10.264     0.763       955.6       761.1
+GUARD-M3-B15                   0.737      0.137     15.311     0.192        25.3        92.8
+GUARD-M3-B61                   0.688      0.253     11.713     0.599        72.5       137.6
+GUARD-M3-B305                  0.691      0.244     10.531     0.732       312.7       359.7
+SPJF-M4                        0.437      0.837      8.911     0.916      1036.2       781.5
+GUARD-M4-B15                   0.652      0.335     12.243     0.539        23.9        93.1
+GUARD-M4-B61                   0.543      0.592      9.878     0.806        73.3       138.9
+GUARD-M4-B305                  0.467      0.769      9.087     0.896       312.4       360.9
+SPJF-M5                        0.439      0.833      8.913     0.915      1076.8       764.0
+GUARD-M5-B15                   0.651      0.338     12.146     0.550        24.6        93.2
+GUARD-M5-B61                   0.543      0.591      9.869     0.807        68.1       139.1
+GUARD-M5-B305                  0.467      0.769      9.094     0.895       315.2       360.8
+SPJF-ADVtop1short              0.618      0.415     10.286     0.760      1177.1       691.6
+GUARD-ADVtop1short-B15         0.792      0.009     17.877    -0.098        33.0        96.1
+GUARD-ADVtop1short-B61         0.722      0.172     12.499     0.510        73.8       142.5
+GUARD-ADVtop1short-B305        0.627      0.394     10.525     0.733       315.7       365.2
+SPJF-ADVreversed               1.113     -0.741     14.267     0.310      1199.1       399.1
+GUARD-ADVreversed-B15          0.935     -0.325     24.544    -0.852        35.6        90.7
+GUARD-ADVreversed-B61          1.026     -0.538     19.072    -0.233        81.1       127.4
+GUARD-ADVreversed-B305         1.096     -0.703     15.102     0.216       315.5       336.4
+bound: B=15.2 -> B+L=45.8, B=61.0 -> B+L=91.5, B=305.0 -> B+L=335.5
+stage guardk1 finished in 10.5 s at 2026-09-19 09:28:09
+
+==============================================================================
+guardk1  poisson
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage guardk1  argv --cache <cache-dir>/ac_v2_cache --stage guardk1 --shape poisson --reps 3
+rows total 4046652; split row bounds [0, 1942393, 2589857, 3237322, 4046652]
+id ranges  train [1,1951042]  valid [1951043,2598675]  devtest [2598676,3246173]  SEALED [3246174,...]  (disjoint, asserted)
+sealed block: 809330 rows; only its row count and its first id were read
+k = 1, poisson arrivals, the main compressed clock (scale 0.01489) with every 5-th arrival kept, L = 30.500 s, B = ['15.2', '61.0', '305.0']
+PER-JOB ASSERTION  W_guard[i] <= W_FCFS[i] + B + L  for every job, every B, every predictor (including two adversarial ones) and every draw.
+  draw 0: 129493 jobs, busy-hour rho on one server 0.815; every assertion passed
+  draw 1: 129493 jobs, busy-hour rho on one server 0.786; every assertion passed
+  draw 2: 129493 jobs, busy-hour rho on one server 0.757; every assertion passed
+
+jobs checked (job x predictor x B x draw): 8158059; violations 0 (asserted)
+policy                          mean  gain_mean        p99  gain_p99  max_excess   max_heavy
+FCFS                           0.526      0.000     11.263     0.000         0.0        48.1
+SJF-ref                        0.331      1.000      8.064     1.000       324.3       265.3
+SPJF-M1                        0.379      0.755      8.634     0.822       503.0       289.7
+GUARD-M1-B15                   0.432      0.481      9.616     0.515        26.4        61.1
+GUARD-M1-B61                   0.390      0.698      8.817     0.765        70.0       105.0
+GUARD-M1-B305                  0.380      0.750      8.657     0.815       306.1       223.8
+SPJF-M2                        0.398      0.656      9.017     0.702       346.2       278.9
+GUARD-M2-B15                   0.459      0.344     10.245     0.318        37.5        62.8
+GUARD-M2-B61                   0.427      0.506      9.338     0.602        71.8       104.2
+GUARD-M2-B305                  0.398      0.653      9.027     0.699       309.0       265.2
+SPJF-M3                        0.408      0.602      9.165     0.656       589.6       282.6
+GUARD-M3-B15                   0.464      0.315     10.483     0.244        34.8        61.7
+GUARD-M3-B61                   0.432      0.483      9.404     0.581        71.1       102.0
+GUARD-M3-B305                  0.412      0.586      9.198     0.646       311.8       243.8
+SPJF-M4                        0.364      0.830      8.534     0.853       451.6       301.8
+GUARD-M4-B15                   0.420      0.543      9.392     0.585        34.6        61.8
+GUARD-M4-B61                   0.380      0.747      8.701     0.801        71.6       104.9
+GUARD-M4-B305                  0.365      0.826      8.546     0.849       305.6       254.1
+SPJF-M5                        0.363      0.835      8.573     0.841       451.6       333.7
+GUARD-M5-B15                   0.420      0.541      9.402     0.582        34.6        62.0
+GUARD-M5-B61                   0.379      0.753      8.713     0.797        71.3       104.9
+GUARD-M5-B305                  0.365      0.827      8.591     0.835       311.1       253.3
+SPJF-ADVtop1short              0.467      0.299      9.658     0.502       565.8       377.7
+GUARD-ADVtop1short-B15         0.512      0.068     11.633    -0.115        37.2        65.6
+GUARD-ADVtop1short-B61         0.492      0.173     10.098     0.364        73.0       105.8
+GUARD-ADVtop1short-B305        0.470      0.287      9.680     0.495       313.4       260.1
+SPJF-ADVreversed               0.685     -0.819     12.828    -0.489       671.9        86.6
+GUARD-ADVreversed-B15          0.618     -0.478     15.862    -1.437        38.2        67.2
+GUARD-ADVreversed-B61          0.659     -0.687     13.892    -0.822        78.2        89.5
+GUARD-ADVreversed-B305         0.685     -0.818     12.901    -0.512       315.6        86.6
+bound: B=15.2 -> B+L=45.8, B=61.0 -> B+L=91.5, B=305.0 -> B+L=335.5
+stage guardk1 finished in 10.7 s at 2026-09-19 09:28:22
+
+==============================================================================
+compare
+==============================================================================
+script_sha256 2a1c0d1b22f27789a3908ba947977e486ae13afead7681cac4e1a15e84a7e395
+stage compare  argv --cache <cache-dir>/ac_v2_cache --stage compare --cb-cache <cache-dir>/cb_v2_cache_r4/ev.parquet
+Cross-platform comparison: ACcoding (this run) against CodeBench v2.1
+(prechecks/codebench_service_v2/out_service_v2.txt).  CodeBench entries are
+quoted from the tables named in CB{} inside this script; ACcoding entries are
+read back from this run's own caches.  Where the two platforms measure
+different things the numbers are kept apart rather than averaged.
+
+--- A. what the cost variable is ---
+CodeBench  C = wall-clock judge occupancy of one submission, interpreter
+           start-up included (medium confidence, codebench_semantics);
+           platform limit L = 60 s; C_cap = min(C, 60).
+ACcoding   time_cost = SUM over the problem's test cases of each test's measured
+           execution time, each TEST capped at the problem's time limit (high
+           confidence, audit 1e).  Compilation, container start-up and result
+           write-back are NOT in it, so the service model has to add them:
+           C = 0.5 s + time_cost/1000, giving L = 30.5 s.
+AGREE      both are heavy-tailed positive costs with a hard per-submission
+           ceiling, and on both the ceiling is enforced by the platform.
+DIFFER     one measures occupancy, the other execution.  Waiting times in
+           seconds are therefore not comparable across the two platforms; gain
+           ratios and orderings are.  The 0.5 s constant is an assumption of
+           this precheck, not a measurement, and section B shows how much of
+           the tail shape it decides.
+
+--- B. tail heaviness ---
+                            CodeBench       ACcoding       ACcoding
+                            C_cap (s)  time_cost (s)     0.5+tc (s)
+median                          0.205          0.010          0.508
+p95                             0.935          1.704          1.998
+p99                             5.619          6.002          6.500
+max                            60.000         30.000         30.500
+coeff. of variation             5.918          3.513          1.476
+work in the top 1%              0.465          0.275          0.122
+work in the top 5%              0.600          0.628          0.290
+(CodeBench: 861478 graded submissions with C_cap > 0, read from the v2 cache.
+ ACcoding: 3237283 judged non-sealed rows; column 2 drops the 276262 rows at exactly
+ 0 ms, column 3 keeps them because they still occupy a judge.)
+AGREE      on the MEASURED variable the two tails are of the same kind: the top
+           1% of jobs carry 0.46 of the work on CodeBench and 0.28 on ACcoding,
+           the top 5% carry 0.60 and 0.63.  Both have a hard ceiling that a
+           few per mille of jobs reach.
+DIFFER     the assumed fixed term flattens ACcoding's SERVICE distribution:
+           adding 0.5 s moves the top-1% work share from 0.28 to 0.12 and the
+           coefficient of variation from 3.51 to 1.48.  ACcoding's median
+           measured job is 8 ms against CodeBench's 205 ms, so on ACcoding
+           the per-job overhead the log does not record dominates the service
+           time.  The paper must report the ACcoding scheduling results as
+           conditional on that constant, and the sensitivity run with a
+           per-test overhead term is the check.
+
+--- C. predictability by information source (heavy-job AUROC, dev-test) ---
+model information source                       CodeBench    ACcoding
+M1    problem / exercise history only             0.7960      0.8990
+M2    user history only                           0.8591      0.7855
+M3    static submission features only             0.8632      0.7884
+M4    all tabular (history + static)              0.9283      0.9266
+M5    M4 + one-hop relational aggregates          0.9302      0.9264
+NOTE       M3 is not the same feature set on the two platforms.  On CodeBench it
+           is static features of the SOURCE CODE (loop counts, nesting depth,
+           while True, recursion).  ACcoding stores no source code, so M3 there
+           is code_length, language and the problem's static metadata (test
+           count, time and memory limit, difficulty, special judge).  M1, M2, M4
+           and M5 are the same construction on both.
+AGREE      the all-tabular model reaches the same place on both platforms
+           (0.928 against 0.927), every single-source model is well below it, and
+           one-hop relational aggregates add nothing: M5 - M4 is +0.0019 on
+           CodeBench and -0.0002 on ACcoding.  Whichever platform you look at, a
+           judge can tell a heavy submission from a light one before running it.
+DIFFER     WHICH single source carries the signal flips.  On CodeBench the user
+           history (0.859) and the code features (0.863) beat the exercise history
+           (0.796); on ACcoding the problem history (0.899) beats the user history
+           (0.785) by 0.11 of AUROC.  A CodeBench exercise is attempted by one
+           class within a few days, so who is writing matters; an ACcoding
+           problem is attempted by thousands of students over years, so the
+           problem's own record already fixes the cost.  A method that leans on
+           one of the two sources will not transfer; the all-tabular model does.
+
+--- D. gap closed by prediction-driven scheduling ---
+gain = (W_FCFS - W_policy) / (W_FCFS - W_SJF-on-true-sizes) on the deadline-
+window p99 wait.  CodeBench: REAL arrival times, 44 overlay copies of 40 class-
+semesters, k = 7.8 / 5 / 4.  ACcoding: SYNTHETIC arrivals (order and sizes real,
+times drawn), k = 8 / 5 / 4.
+                                  rho 0.5    rho 0.8    rho 1.0
+CodeBench   SPJF-M4                 0.753      0.873      0.897
+CodeBench   SPJF-M1                 0.499      0.542      0.492
+ACcoding poisson  SPJF-M4             nan      1.000      1.000
+ACcoding poisson  SPJF-M1             nan      0.998      0.998
+ACcoding deadline SPJF-M4             nan      0.998      0.993
+ACcoding deadline SPJF-M1             nan      0.995      0.985
+                                                               
+ACcoding poisson  FCFS deadline-window p99 =   208.42 s, SJF-ref   2.65 s, SPJF-M4   2.72 s (rho 1.0)
+ACcoding deadline FCFS deadline-window p99 =   207.22 s, SJF-ref   4.55 s, SPJF-M4   5.93 s (rho 1.0)
+CodeBench          FCFS deadline-window p99 =   273.50 s, SJF-ref  43.63 s (rho 1.0)
+nan = the gain denominator FCFS - SJF-ref fell under the stability floor.  At
+busy-hour rho 0.5 the ACcoding trace does not queue at all (mean wait 1 ms,
+p99 0 s on 8 judges), so there is nothing for any policy to close.
+AGREE      the transmission from prediction quality to waiting time is the same
+           on both platforms and in the same order: M4 ~ M5 > M1 > M2 > M3, the
+           same ordering as section C, and the all-tabular predictor takes most
+           of the true-size reference's gap at every load where a queue exists.
+DIFFER     the ACcoding gains are HIGHER (0.993-1.000 against CodeBench's
+           0.873-0.897) and the gap between SPJF-M4 and the true-size reference
+           nearly vanishes.  That is a property of the synthetic arrivals, not
+           of the platform: a drawn stream carries no sub-hour burstiness beyond
+           what the deadline ramp puts in, so the queue is driven almost purely
+           by the size distribution, which is exactly what the predictor knows.
+           CodeBench's real timestamps contain arrival bursts that no cost
+           predictor can anticipate, and that residual is why its gains stop
+           short of 1.  ACcoding therefore CONFIRMS the mechanism and must not
+           be used to claim a better gain number.
+           Note also SPJF-M3 reaches gain 1.017 at poisson rho 0.8: the true-
+           size reference is not optimal for a tail objective, as research_plan
+           4.4 already states for S2.
+
+--- E. guard cost, guard benefit ---
+CodeBench L = 60 s, B in {30, 120, 600} s = 0.5L / 2L / 10L.
+ACcoding  L = 30.5 s, B in {15.2, 61.0, 305.0} s = the same multiples.
+gap kept by the guard (deadline-window p99):
+                                  rho 0.5    rho 0.8    rho 1.0
+CodeBench   B = 2L                  0.511      0.272      0.061
+CodeBench   B = 10L                 0.699      0.726      0.449
+ACcoding poisson  B = 0.5L            nan      0.026     -0.019
+ACcoding poisson  B = 2L              nan      0.445     -0.073
+ACcoding poisson  B = 10L             nan      0.994     -0.265
+ACcoding deadline B = 0.5L            nan     -0.021     -0.020
+ACcoding deadline B = 2L              nan      0.171     -0.065
+ACcoding deadline B = 10L             nan      0.971     -0.076
+
+longest wait of a genuinely heavy job (true cost above the training p95):
+                                         FCFS    SPJF-M4   GUARD-2L  GUARD-10L
+CodeBench rho 0.8, k = 5                  862       2874        886        982
+ACcoding pois rho 0.8                      26        337         39         87
+ACcoding pois rho 1.0                     233       2032        249        310
+ACcoding dead rho 0.8                      76        739         88        137
+ACcoding dead rho 1.0                     334       1939        350        411
+AGREE      this is the clearest cross-platform result.  Unguarded SPJF buys its
+           gain by starving the genuinely long jobs -- CodeBench 862 s -> 2,874 s,
+           ACcoding 233 s -> 2,033 s at rho 1.0, both a factor of 3 to 9 -- and
+           the overtaking-budget guard puts that back to within a few tens of
+           per cent of the FCFS figure on both platforms.  The cost of the guard
+           in gap closed rises with the load on both: at rho 0.8 B = 2L keeps
+           0.27 of the gap on CodeBench and 0.17-0.45 on ACcoding, and at
+           rho 1.0 it keeps 0.06 on CodeBench and nothing on ACcoding.
+DIFFER     at rho 1.0 CodeBench's B = 10L still keeps 0.449 of the gap while on
+           ACcoding every B tested keeps none of it, and B = 10L is slightly
+           WORSE than FCFS on the deadline-window p99 (gain about -0.1 to -0.27).
+           A partially reordered queue can be worse in the tail than either
+           extreme; the paper should report this as an observed failure mode of
+           the guard at saturation rather than hide it behind an average.
+
+--- F. the per-job guarantee at k = 1 ---
+                                                    CodeBench       ACcoding
+per-job assertions W_guard <= W_FCFS + B + L        260896920       16316118
+violations                                                  0              0
+L (s)                                                    60.0           30.5
+observed max excess at B = 0.5L / 2L / 10L         87/173/646      24/73/312
+the bound B + L                                    90/180/660      46/92/336
+   ACcoding deadline  max excess   23.9 /   73.3 /  312.4 s against the bound 45.8 / 91.5 / 335.5 s
+   ACcoding poisson   max excess   34.6 /   71.6 /  305.6 s against the bound 45.8 / 91.5 / 335.5 s
+AGREE      the bound holds on every single job of both platforms, the observed
+           excess is always strictly inside B + L, and B = 0 degenerates to FCFS
+           exactly (checked in the selftest).  This is the one part of the
+           method that does not depend on the arrival process at all, which is
+           why it transfers to a platform whose arrival times are invented.
+
+--- G. per-submission prediction cost ---
+CodeBench measured 0.081 ms mean for features plus a single-row LightGBM predict,
+which is 0.0004 of its median job.  This ACcoding precheck did NOT re-time the
+loop, and the feature set here is a different one (54 features against 34), so
+the paper must either time it on ACcoding or make the deployment-cost claim for
+CodeBench only.  For scale: ACcoding's median MEASURED execution is 8 ms, so a
+sub-millisecond prediction is a larger fraction of the measured cost than on
+CodeBench, and a small fraction of the modelled service time.
+stage compare finished in 0.8 s at 2026-09-19 09:28:41
+

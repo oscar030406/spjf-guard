@@ -1,0 +1,56 @@
+================================================================================================
+A FINER FIXED-BUDGET GRID ON ALL 15 VALIDATION CELLS (my own simulator)
+================================================================================================
+  16 budgets x 15 cells = 240 runs, eta = 0 throughout
+
+   B0 (x k/4 s)   worst-cell gap   worst-cell harm   promise range over the cells
+             30          -0.0103             71.32     157.5 -   172.5 s
+             60          -0.0129             96.28     165.0 -   180.0 s
+             90          -0.0091             96.28     172.5 -   187.5 s
+            120           0.0057            102.65     180.0 -   195.0 s
+            180           0.0536            121.17     195.0 -   210.0 s
+            240           0.1006            122.56     210.0 -   225.0 s
+            300           0.1535            131.80     225.0 -   240.0 s
+            360           0.1991            151.19     240.0 -   255.0 s
+            420           0.2469            171.55     255.0 -   270.0 s
+            480           0.3067            178.88     270.0 -   285.0 s
+            540           0.3423            183.29     285.0 -   300.0 s
+            600           0.3693            212.04     300.0 -   315.0 s
+            900           0.5795            283.46     375.0 -   390.0 s
+           1200           0.6620            345.62     450.0 -   465.0 s
+           2400           0.7273            625.68     750.0 -   765.0 s
+           4800           0.7273           1231.30    1350.0 -  1365.0 s
+
+================================================================================================
+THE REPORT'S OWN RULE ON THE FINER GRID
+================================================================================================
+  G =    300 s (harm limit 150 s):
+     builder's admitted fixed budget  B0 = 120 k/4 s: worst gap 0.0057, worst harm 102.65 s
+     best on the finer grid           B0 = 300 k/4 s: worst gap 0.1535, worst harm 131.80 s
+     -> the objective the fixed family can reach rises by +0.1478 on validation
+  G =    600 s (harm limit 300 s):
+     builder's admitted fixed budget  B0 = 600 k/4 s: worst gap 0.3693, worst harm 212.04 s
+     best on the finer grid           B0 = 900 k/4 s: worst gap 0.5795, worst harm 283.46 s
+     -> the objective the fixed family can reach rises by +0.2102 on validation
+  G =   1200 s (harm limit 600 s):
+     builder's admitted fixed budget  B0 = 600 k/4 s: worst gap 0.3693, worst harm 212.04 s
+     best on the finer grid           B0 = 1200 k/4 s: worst gap 0.6620, worst harm 345.62 s
+     -> the objective the fixed family can reach rises by +0.2927 on validation
+
+================================================================================================
+WHAT IT DOES TO THE REPORTED CAP - FIXSEL MARGIN (primary trace, 5 overlays)
+================================================================================================
+  level  G      gap CAP   gap FIXSEL(builder)   gap FIXSEL'(finer grid)   d_reported   d_corrected   harm CAP / FIXSEL'
+      0    300     0.6800                0.6003                    0.6891      +0.0797       -0.0091     97.2 /  132.1   (report d = +0.080)
+      0    600     0.7392                0.7233                    0.7321      +0.0159       +0.0071    238.1 /  238.1   (report d = +0.016)
+      0   1200     0.7504                0.7233                    0.7336      +0.0271       +0.0168    238.1 /  238.1   (report d = +0.027)
+      1    300     0.7281                0.3148                    0.6040      +0.4133       +0.1241    109.6 /  152.2   (report d = +0.413)
+      1    600     0.8371                0.7660                    0.8054      +0.0712       +0.0317    313.2 /  266.4   (report d = +0.071)
+      1   1200     0.8616                0.7660                    0.8238      +0.0957       +0.0379    320.2 /  309.5   (report d = +0.096)
+      2    300     0.4670                0.0363                    0.1857      +0.4307       +0.2813    113.8 /  150.5   (report d = +0.431)
+      2    600     0.7997                0.4496                    0.6531      +0.3502       +0.1467    339.1 /  288.4   (report d = +0.350)
+      2   1200     0.8717                0.4496                    0.7321      +0.4221       +0.1396    576.0 /  355.7   (report d = +0.422)
+
+  Read: 'd_corrected' is the same comparison the report makes, but against the
+  best fixed budget the SAME rule admits on a grid that is not coarse.  The
+  capped budget still wins every cell, but by much less than the report prints.

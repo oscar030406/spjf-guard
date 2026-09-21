@@ -1,0 +1,39 @@
+=== G2 THEOREM A FOR AN ARBITRARY BASE POLICY ===
+claim: k*W_guard[i] <= k*W_FCFS[i] + B + (3k-2)*L  for every job, every base
+   ... 100000
+   ... 200000
+   ... 300000
+instances=400000  violations of Theorem A = 0
+k=1  max [k(W_g-W_F)-B]/L = 10/11   (Theorem A allows 3k-2 = 1)
+     witness: jobs=[(0, 7), (0, 8), (0, 9), (0, 7), (0, 10), (0, 5), (0, 4), (0, 7), (0, 5), (0, 11), (0, 2)] B=1 base=EDF(random deadlines) job=7
+k=2  max [k(W_g-W_F)-B]/L = 14/5   (Theorem A allows 3k-2 = 4)
+     witness: jobs=[(0, 5), (0, 3), (0, 4), (0, 5), (0, 5), (0, 5)] B=6 base=ljf(true sizes, adversarial) job=1
+k=3  max [k(W_g-W_F)-B]/L = 17/4   (Theorem A allows 3k-2 = 7)
+     witness: jobs=[(0, 4), (1, 3), (1, 2), (1, 1), (1, 4), (1, 1), (2, 4), (2, 4), (2, 1), (2, 4)] B=7 base=lifo job=2
+k=4  max [k(W_g-W_F)-B]/L = 23/4   (Theorem A allows 3k-2 = 10)
+     witness: jobs=[(0, 3), (0, 4), (0, 3), (0, 1), (0, 3), (1, 4), (1, 3), (1, 1), (1, 4), (1, 2), (1, 0), (2, 4), (2, 4)] B=5 base=ljf(true sizes, adversarial) job=3
+base policies exercised: 3-class priority:64597, EDF(random deadlines):47834, by_pred(random perm):47736, fcfs:47719, lifo:47955, ljf(true sizes, adversarial):47995, sjf(true sizes):48289, uniform random:47875
+
+=== G2 CONSISTENCY ===
+(C1) exact: wrapped run == base run  iff  max_i In_i^base < B is enough;
+     tested as: In^base_max < B  =>  identical dispatch order and identical waits
+(C2) sufficient in FCFS-robust terms: if the BASE already obeys
+     W_base[i] <= W_FCFS[i] + G for all i, then B > kG + (3k-2)L never fires.
+Out-bound lemma  Out_i <= k(G - excess_i + L):  tested 1800004, failures 0
+(C1) B = max_i In_i^base + 1 :  tested 300000, wrapped != base in 21857
+(C2) B = kG + (3k-2)L + 1   :  tested 300000, wrapped != base in 21931
+
+=== G2 LOSS WHEN IT FIRES (there is no bound relative to the base) ===
+  m=  4  mean W: base(SJF)=   2.000  guard(B=0)=  81.200  FCFS=  81.200   guard/base=40.60
+  m= 10  mean W: base(SJF)=   5.000  guard(B=0)=  95.000  FCFS=  95.000   guard/base=19.00
+  m= 40  mean W: base(SJF)=  20.000  guard(B=0)= 116.585  FCFS= 116.585   guard/base=5.83
+  m=200  mean W: base(SJF)= 100.000  guard(B=0)= 198.507  FCFS= 198.507   guard/base=1.99
+  ratio guard/base is unbounded as m grows -> no multiplicative consistency;
+  the only consistency statement available is the exact one (C1)/(C2) above.
+
+=== G2 LAZINESS ===
+the guard fires on q only when over[q] >= B, and over[q] <= In_q always;
+so at every firing the constraint In_q <= B is already saturated.  Combined
+with the necessity proposition (any policy with excess <= G has In <= kG+(3k-2)L),
+no wrapper enforcing a work budget can defer q longer and still promise G.
+

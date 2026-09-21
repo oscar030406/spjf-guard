@@ -1,0 +1,57 @@
+================================================================================================
+1. N = floor(Gk/L - (2k-2)) IS THE LARGEST N THE eq:skip GUARANTEE ALLOWS
+================================================================================================
+   bound  (N + 2k - 2) L / k <= G,   L = 60 s
+   k    G      N(mine)  promise(N)    promise(N+1)  report N   match
+    1     300       5      300.00 s      360.00 s        5   True
+    1     600      10      600.00 s      660.00 s       10   True
+    1    1200      20     1200.00 s     1260.00 s       20   True
+    4     300      14      300.00 s      315.00 s       14   True
+    4     600      34      600.00 s      615.00 s       34   True
+    4    1200      74     1200.00 s     1215.00 s       74   True
+    5     300      17      300.00 s      312.00 s       17   True
+    5     600      42      600.00 s      612.00 s       42   True
+    5    1200      92     1200.00 s     1212.00 s       92   True
+    7     300      23      300.00 s      308.57 s       23   True
+    7     600      58      600.00 s      608.57 s       58   True
+    7    1200     128     1200.00 s     1208.57 s      128   True
+    8     300      26      300.00 s      307.50 s       26   True
+    8     600      66      600.00 s      607.50 s       66   True
+    8    1200     146     1200.00 s     1207.50 s      146   True
+   disagreements with the report's Ncap column: 0
+   (also: the completion charge (N + 3k - 2)L/k <= G gives k=4,G=600 -> N=30, which is v3's 30)
+
+================================================================================================
+2. SMALL INSTANCES: my literal reference vs my fast kernel vs v31_skipkern
+================================================================================================
+   instances 4000, jobs compared 30,147
+   max |literal reference - my fast kernel|   = 0
+   max |literal reference - v31_skipkern|     = 0
+   N = 0 anchors (must equal FCFS): 425, all exact
+   N >= n instances: 1281
+   bound violations on MY waits: 0
+   worst used/allowed 0.9833 at (1443, 7, 1, 1)
+   NOTE the literal reference takes min(fired) over the whole waiting set and
+        never assumes the head; the fast kernel uses cnt[head] = TD - head.
+        disagreements between the two: 0
+
+================================================================================================
+3. TRYING TO BREAK THE BOUND ON PURPOSE
+================================================================================================
+   structured adversarial instances: 12000, jobs 101,950
+   violations: 0
+   worst used/allowed 1.000000 at (k, N, n, mode) = (1, 1, 12, 3)
+
+   exhaustive: n <= 5, arrivals in {0,1,2}, services in {1, 30, 60}, all pred permutations
+   exhaustive instances 277,992, violations 0, worst used/allowed 1.0000
+
+================================================================================================
+4. FULL CELL: my kernel vs v31_skipkern, and the bound on my waits
+================================================================================================
+   primary rep0 L2: k=4 n=17,634,760 max service 59.9738 s
+   G=   300 N=  14: differing jobs 0, max |diff| 0; bound violations 0; max excess 65.4711 s (allowed 300.0, used/allowed 0.2182)
+            my p99_dl 262.8515 s, harm(W_FCFS<=1s) 45.8400 s, FCFS p99_dl 263.1202 s
+   G=   600 N=  34: differing jobs 0, max |diff| 0; bound violations 0; max excess 100.4235 s (allowed 600.0, used/allowed 0.1674)
+            my p99_dl 262.5456 s, harm(W_FCFS<=1s) 62.5342 s, FCFS p99_dl 263.1202 s
+   G=  1200 N=  74: differing jobs 0, max |diff| 0; bound violations 0; max excess 118.8931 s (allowed 1200.0, used/allowed 0.0991)
+            my p99_dl 262.8495 s, harm(W_FCFS<=1s) 84.7016 s, FCFS p99_dl 263.1202 s

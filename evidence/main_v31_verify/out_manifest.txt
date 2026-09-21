@@ -1,0 +1,159 @@
+================================================================================================
+1. MANIFEST
+================================================================================================
+  core scripts hashed: 7  ['v31_build.py', 'v31_common.py', 'v31_gain.py', 'v31_run.py', 'v31_select.py', 'v31_skipkern.py', 'v31_xcheck.py']
+  recomputed manifest 423adbc90d3c1ceb9ab9dcaa2cad7ec224c73f9a7c662f98fd15c070ee8730e0
+  report header       423adbc90d3c1ceb9ab9dcaa2cad7ec224c73f9a7c662f98fd15c070ee8730e0
+  MATCH: True
+  per-file hash lines wrong: 0
+  file mtimes (all code a number depends on):
+    v31_build.py             2026-09-19 22:05:03
+    v31_common.py            2026-09-19 22:03:34
+    v31_gain.py              2026-09-19 22:07:24
+    v31_run.py               2026-09-19 22:05:52
+    v31_select.py            2026-09-19 22:06:46
+    v31_skipkern.py          2026-09-19 22:04:08
+    v31_xcheck.py            2026-09-19 22:09:06
+    v31_report.py            2026-09-19 22:43:47
+    [ext] codebench_service_v2/service_precheck_v2.py    2026-09-19 05:26:53
+    [ext] guard_variants/guardkern.py                    2026-09-19 21:10:18
+    [ext] guard_variants_referee/refsim.py               2026-09-19 09:55:23
+    [ext] ranking_score/rs_fit.py                        2026-09-19 08:14:42
+  data artefacts:
+    cb_v2_cache_r4/ev.parquet              8e37c80715369880... report_match=True mtime=2026-09-19 05:40:31
+    cb_v2_cache_r4/feat_ires0.parquet      19d0e80453d1428c... report_match=True mtime=2026-09-19 05:41:12
+    cb_v2_cache_r4/forward_ires0.parquet   c2b04f124b82b461... report_match=True mtime=2026-09-19 06:24:49
+    mv3/r1s_forward.parquet                8e55ec1fe8eaa7a9... report_match=True mtime=2026-09-19 20:40:24
+    rank_score/rs_pred_ires0.parquet       af90bb2d8cee4cf3... report_match=True mtime=2026-09-19 08:20:35
+  data artefact hash mismatches: 0
+
+================================================================================================
+2. STAGE LOGS
+================================================================================================
+  out_*.txt in v31/: ['out_build.txt', 'out_gain.txt', 'out_run.txt', 'out_select.txt', 'out_xcheck.txt']
+  out_build.txt      lines=   88 invocations=  4 done=  4 manifests=1 all_match=True OK=True
+      section 12 says 88 lines; actual 88  MATCH=True
+      ctime 2026-09-19 22:09:15   first logged invocation 2026-09-19 22:09:15
+  out_gain.txt       lines=  316 invocations=  2 done=  2 manifests=1 all_match=True OK=True
+      section 12 says 316 lines; actual 316  MATCH=True
+      ctime 2026-09-19 22:41:02   first logged invocation 2026-09-19 22:41:02
+  out_run.txt        lines= 1430 invocations= 31 done= 31 manifests=1 all_match=True OK=True
+      section 12 says 1430 lines; actual 1430  MATCH=True
+      ctime 2026-09-19 22:10:47   first logged invocation 2026-09-19 22:10:47
+  out_select.txt     lines=   81 invocations=  1 done=  1 manifests=1 all_match=True OK=True
+      section 12 says 81 lines; actual 81  MATCH=True
+      ctime 2026-09-19 22:29:41   first logged invocation 2026-09-19 22:29:41
+  out_xcheck.txt     lines=    9 invocations=  1 done=  1 manifests=1 all_match=True OK=True
+      section 12 says 9 lines; actual 9  MATCH=True
+      ctime 2026-09-19 22:41:08   first logged invocation 2026-09-19 22:41:08
+  total invocations 39
+  selection ran at        2026-09-19 22:29:41
+  last  grid cell ran at  2026-09-19 22:28:20  (15 grid)
+  first main cell ran at  2026-09-19 22:29:54  (16 main)
+  ORDER OK (all grid < select < all main): True
+
+================================================================================================
+3. CELLS
+================================================================================================
+  csv cells in <cache-dir>\mv31\sim: 31
+  k1_rep0_L0_main.csv                pol= 28 guarded= 18 jobs=3,209,347 k=1 viol=0 max_used=0.9950 mtime=2026-09-19 22:40:55
+  primary_rep0_L0_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=8 viol=0 max_used=0.8958 mtime=2026-09-19 22:30:32
+  primary_rep0_L1_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=5 viol=0 max_used=0.9199 mtime=2026-09-19 22:31:16
+  primary_rep0_L2_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=4 viol=0 max_used=0.9289 mtime=2026-09-19 22:31:59
+  primary_rep1_L0_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=8 viol=0 max_used=0.8877 mtime=2026-09-19 22:32:39
+  primary_rep1_L1_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=5 viol=0 max_used=0.9258 mtime=2026-09-19 22:33:21
+  primary_rep1_L2_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=4 viol=0 max_used=0.9304 mtime=2026-09-19 22:34:04
+  primary_rep2_L0_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=8 viol=0 max_used=0.8285 mtime=2026-09-19 22:34:47
+  primary_rep2_L1_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=5 viol=0 max_used=0.9128 mtime=2026-09-19 22:35:30
+  primary_rep2_L2_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=4 viol=0 max_used=0.9196 mtime=2026-09-19 22:36:14
+  primary_rep3_L0_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=8 viol=0 max_used=0.8094 mtime=2026-09-19 22:37:06
+  primary_rep3_L1_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=5 viol=0 max_used=0.9163 mtime=2026-09-19 22:37:48
+  primary_rep3_L2_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=4 viol=0 max_used=0.9281 mtime=2026-09-19 22:38:34
+  primary_rep4_L0_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=7 viol=0 max_used=0.8989 mtime=2026-09-19 22:39:16
+  primary_rep4_L1_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=5 viol=0 max_used=0.9198 mtime=2026-09-19 22:39:58
+  primary_rep4_L2_main.csv           pol= 28 guarded= 18 jobs=17,634,760 k=4 viol=0 max_used=0.9245 mtime=2026-09-19 22:40:41
+  valid_rep0_L0_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=7 viol=0 max_used=0.9067 mtime=2026-09-19 22:11:53
+  valid_rep0_L1_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=5 viol=0 max_used=0.9272 mtime=2026-09-19 22:13:04
+  valid_rep0_L2_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=4 viol=0 max_used=0.9270 mtime=2026-09-19 22:14:14
+  valid_rep1_L0_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=8 viol=0 max_used=0.8239 mtime=2026-09-19 22:15:23
+  valid_rep1_L1_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=5 viol=0 max_used=0.9163 mtime=2026-09-19 22:16:34
+  valid_rep1_L2_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=4 viol=0 max_used=0.9439 mtime=2026-09-19 22:17:45
+  valid_rep2_L0_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=8 viol=0 max_used=0.8538 mtime=2026-09-19 22:18:59
+  valid_rep2_L1_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=5 viol=0 max_used=0.9314 mtime=2026-09-19 22:20:09
+  valid_rep2_L2_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=4 viol=0 max_used=0.9255 mtime=2026-09-19 22:21:21
+  valid_rep3_L0_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=7 viol=0 max_used=0.8105 mtime=2026-09-19 22:23:33
+  valid_rep3_L1_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=5 viol=0 max_used=0.9161 mtime=2026-09-19 22:24:44
+  valid_rep3_L2_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=4 viol=0 max_used=0.9156 mtime=2026-09-19 22:25:55
+  valid_rep4_L0_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=8 viol=0 max_used=0.8089 mtime=2026-09-19 22:27:05
+  valid_rep4_L1_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=5 viol=0 max_used=0.9241 mtime=2026-09-19 22:28:17
+  valid_rep4_L2_grid.csv             pol= 51 guarded= 48 jobs=17,646,125 k=4 viol=0 max_used=0.9247 mtime=2026-09-19 22:29:29
+  grid cells 15, main cells 16, total 31
+  report claims 31 cells: True
+  bootstrap replicate files: 16
+    bw_k1_rep0_L0_main.npz             arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep0_L0_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep0_L1_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep0_L2_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep1_L0_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep1_L1_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep1_L2_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep2_L0_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep2_L1_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep2_L2_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep3_L0_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep3_L1_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep3_L2_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep4_L0_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep4_L1_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+    bw_primary_rep4_L2_main.npz        arrays= 56 len={2000} finite[min,max]=[2000,2000]
+
+  trace npz files: 11 ['k1_rep0.npz', 'primary_rep0.npz', 'primary_rep1.npz', 'primary_rep2.npz', 'primary_rep3.npz', 'primary_rep4.npz', 'valid_rep0.npz', 'valid_rep1.npz', 'valid_rep2.npz', 'valid_rep3.npz', 'valid_rep4.npz']
+    k1_rep0.npz          n=3,209,347 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:10:40
+    primary_rep0.npz     n=17,634,760 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:09:25
+    primary_rep1.npz     n=17,634,760 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:09:29
+    primary_rep2.npz     n=17,634,760 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:09:33
+    primary_rep3.npz     n=17,634,760 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:09:46
+    primary_rep4.npz     n=17,634,760 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:09:50
+    valid_rep0.npz       n=17,646,125 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:10:15
+    valid_rep1.npz       n=17,646,125 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:10:19
+    valid_rep2.npz       n=17,646,125 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:10:22
+    valid_rep3.npz       n=17,646,125 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:10:26
+    valid_rep4.npz       n=17,646,125 keys=['K', 'M4', 'M4refit', 'W', 'a', 'copies', 'dl', 'exam', 'hvt', 'r1s', 'svc', 'tweedie', 'tweedie_itr', 'weeks', 'wk'] mtime=2026-09-19 22:10:30
+
+================================================================================================
+4. STALE OUTPUT HUNT
+================================================================================================
+  report mtime 2026-09-19 22:43:53
+    README.md                    2026-09-19 22:43:06
+    copies_probe_t222.csv        2026-09-19 22:10:39
+    copies_probe_valid.csv       2026-09-19 22:10:04
+    gain_k1.csv                  2026-09-19 22:41:05
+    gain_primary.csv             2026-09-19 22:41:03
+    gaindiff_k1.csv              2026-09-19 22:41:05
+    gaindiff_primary.csv         2026-09-19 22:41:03
+    out_build.txt                2026-09-19 22:10:40
+    out_gain.txt                 2026-09-19 22:41:05
+    out_run.txt                  2026-09-19 22:40:55
+    out_select.txt               2026-09-19 22:29:41
+    out_xcheck.txt               2026-09-19 22:41:59
+    report_adversarial.csv       2026-09-19 22:43:53
+    report_bound.csv             2026-09-19 22:43:53
+    report_cap_vs_fix.csv        2026-09-19 22:43:53
+    report_diff.csv              2026-09-19 22:43:53
+    report_k1.csv                2026-09-19 22:43:53
+    report_main.csv              2026-09-19 22:43:53
+    select_grid.csv              2026-09-19 22:29:41
+    select_worst.csv             2026-09-19 22:29:41
+    selected_params.csv          2026-09-19 22:29:41
+    table_main_k1.csv            2026-09-19 22:41:05
+    table_main_primary.csv       2026-09-19 22:41:03
+    trace_summary.csv            2026-09-19 22:10:40
+    v31_build.py                 2026-09-19 22:05:03
+    v31_common.py                2026-09-19 22:03:34
+    v31_gain.py                  2026-09-19 22:07:24
+    v31_report.py                2026-09-19 22:43:47
+    v31_run.py                   2026-09-19 22:05:52
+    v31_select.py                2026-09-19 22:06:46
+    v31_skipkern.py              2026-09-19 22:04:08
+    v31_xcheck.py                2026-09-19 22:09:06
+  mv3/ (the v3 study) files younger than the v31 report:

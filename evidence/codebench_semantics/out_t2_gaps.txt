@@ -1,0 +1,99 @@
+
+=== T2 same user, same exercise file (task definition); SUBMITION blocks, era 2018-19 ===
+                         n  exec_med  pre_gap_med  post_gap_med  share_pre<exec  share_post<exec  share_pre<0.5exec  share_post<0.5exec
+bin                                                                                                                                    
+[0.0, 1.0)          370418     0.176         12.0          14.0           0.093            0.121              0.093               0.121
+[1.0, 5.0)           27541     1.531          2.0           1.0           0.490            0.541              0.395               0.425
+[5.0, 10.0)           3306     6.318          1.0           1.0           0.839            0.804              0.797               0.729
+[10.0, 20.0)           535    12.917          2.0           3.0           0.660            0.669              0.614               0.598
+[20.0, 40.0)           312    28.451          7.0           7.0           0.625            0.713              0.579               0.593
+[40.0, 60.0)           148    46.801         11.5          12.0           0.676            0.736              0.568               0.639
+[60.0, 200.0)          355   106.846          2.0           4.5           0.737            0.823              0.660               0.730
+[200.0, 1000.0)       1019   524.449         53.5          56.0           0.861            0.703              0.685               0.648
+[1000.0, 100000.0)     940  1923.445          1.0           1.0           0.966            0.910              0.901               0.899
+
+=== T2 same user, same exercise file (task definition); SUBMITION blocks, era 2020-22 ===
+                   n  exec_med  pre_gap_med  post_gap_med  share_pre<exec  share_post<exec  share_pre<0.5exec  share_post<0.5exec
+bin                                                                                                                              
+[0.0, 1.0)    452227     0.212         22.0          23.0           0.018            0.029              0.018               0.029
+[1.0, 5.0)      2909     1.715          1.0           2.0           0.523            0.501              0.435               0.383
+[5.0, 10.0)      740     7.186         11.5          11.0           0.403            0.429              0.381               0.344
+[10.0, 20.0)     904    14.102         22.0          13.0           0.326            0.515              0.313               0.425
+[20.0, 40.0)     881    27.823         35.5          17.0           0.347            0.579              0.325               0.471
+[40.0, 60.0)     411    48.287         55.0          21.0           0.344            0.655              0.328               0.527
+
+  gap = t_next - t_this - exec_this for exec_this > 10 s (same file): n=5,344 p1=-4273.03 p5=-2241.47 p25=-315.16 p50=-17.81 p75=17.68 p95=13662.06 p99=313697.62
+  share gap < 0: 0.688  (n=5,344)
+  2018-19: share(t_next - t - E < 0)=0.772 (n=3168), share(t - t_prev - E < 0)=0.816 (n=3263)
+  2020-22: share(t_next - t - E < 0)=0.567 (n=2176), share(t - t_prev - E < 0)=0.338 (n=2028)
+  next block is submit: n=3,362 share(t_next - t - E < 0)=0.745
+  prev block is submit: n=3,008 share(t - t_prev - E < 0)=0.718
+  next block is test  : n=1,982 share(t_next - t - E < 0)=0.592
+  prev block is test  : n=2,283 share(t - t_prev - E < 0)=0.520
+
+=== T2 same user, any exercise; SUBMITION blocks, era 2018-19 ===
+                         n  exec_med  pre_gap_med  post_gap_med  share_pre<exec  share_post<exec  share_pre<0.5exec  share_post<0.5exec
+bin                                                                                                                                    
+[0.0, 1.0)          370418     0.176         14.0          28.0           0.084            0.090              0.084               0.090
+[1.0, 5.0)           27541     1.531          3.0           3.0           0.470            0.469              0.378               0.369
+[5.0, 10.0)           3306     6.318          1.0           1.0           0.840            0.806              0.797               0.730
+[10.0, 20.0)           535    12.917          2.0           3.0           0.650            0.671              0.606               0.594
+[20.0, 40.0)           312    28.451          5.0           5.5           0.628            0.739              0.587               0.619
+[40.0, 60.0)           148    46.801          7.5           8.0           0.709            0.782              0.615               0.673
+[60.0, 200.0)          355   106.846          1.0           4.0           0.766            0.848              0.696               0.755
+[200.0, 1000.0)       1019   524.449         31.0          43.0           0.897            0.771              0.752               0.705
+[1000.0, 100000.0)     940  1923.445          1.0           1.0           0.977            0.914              0.950               0.901
+
+=== T2 same user, any exercise; SUBMITION blocks, era 2020-22 ===
+                   n  exec_med  pre_gap_med  post_gap_med  share_pre<exec  share_post<exec  share_pre<0.5exec  share_post<0.5exec
+bin                                                                                                                              
+[0.0, 1.0)    452227     0.212         25.0          51.0           0.017            0.020              0.017               0.020
+[1.0, 5.0)      2909     1.715          1.0           3.0           0.519            0.452              0.431               0.345
+[5.0, 10.0)      740     7.186         12.0          11.0           0.384            0.445              0.364               0.355
+[10.0, 20.0)     904    14.102         23.0          12.0           0.306            0.530              0.294               0.436
+[20.0, 40.0)     881    27.823         37.0          15.0           0.336            0.596              0.316               0.488
+[40.0, 60.0)     411    48.287         58.0          19.0           0.326            0.676              0.309               0.550
+
+=== T2b clustering of long runs (exec >= 100 s): distinct users sharing a 10-s window ===
+  ts              : windows with >=3 distinct users: 1, with >=5: 0; top counts [3, 2, 2, 2, 2]
+  start_if_result : windows with >=3 distinct users: 0, with >=5: 0; top counts [2, 2, 2, 2, 2]
+  end_if_receipt  : windows with >=3 distinct users: 0, with >=5: 0; top counts [2, 2, 2, 2, 2]
+  null (exec_time permuted within semester, 20 draws), windows with >=3 users:
+       mean  max
+col             
+end    1.15    4
+start  0.95    4
+
+=== T2c distance from header time to the same user's nearest logout / login record ===
+  nearest logout after the header:
+                         n     med  share_le60s  share_le10s
+cls                                                         
+[0.0, 1.0)          822645  8659.0        0.017        0.003
+[1.0, 10.0)          34496  3672.5        0.037        0.009
+[10.0, 60.0)          3191  7015.0        0.047        0.027
+[60.0, 1000.0)        1374  2625.5        0.225        0.203
+[1000.0, 100000.0)     940  3793.0        0.260        0.238
+  nearest logout before the header:
+                         n       med  share_le60s  share_le10s
+cls                                                           
+[0.0, 1.0)          822645  386391.0        0.001        0.000
+[1.0, 10.0)          34496  228684.0        0.004        0.003
+[10.0, 60.0)          3191  426667.5        0.028        0.024
+[60.0, 1000.0)        1374   73884.5        0.202        0.195
+[1000.0, 100000.0)     940  170071.5        0.152        0.150
+  nearest login after the header:
+                         n      med  share_le60s  share_le10s
+cls                                                          
+[0.0, 1.0)          822645  51353.0        0.003        0.000
+[1.0, 10.0)          34496  32363.0        0.008        0.001
+[10.0, 60.0)          3191  30247.0        0.014        0.002
+[60.0, 1000.0)        1374  32351.0        0.059        0.015
+[1000.0, 100000.0)     940  44654.0        0.057        0.038
+  nearest login before the header:
+                         n     med  share_le60s  share_le10s
+cls                                                         
+[0.0, 1.0)          822645  2476.0        0.010        0.000
+[1.0, 10.0)          34496  2490.5        0.017        0.001
+[10.0, 60.0)          3191  2549.0        0.017        0.000
+[60.0, 1000.0)        1374  2451.0        0.063        0.011
+[1000.0, 100000.0)     940  4487.5        0.074        0.052

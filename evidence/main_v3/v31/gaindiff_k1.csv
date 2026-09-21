@@ -1,0 +1,101 @@
+trace,level,metric,quantity,pair,label,diff,lo,hi,resolved,verdict
+k1,0,p99dl,gain,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,0.0216785064363193,0.008313038023721454,0.03596500157407193,True,SPJF-tweedie better
+k1,0,p99dl,red_pct,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,1.723798004083264,0.6513205628007512,2.8460256170637743,True,SPJF-tweedie better
+k1,0,p99dl,gain,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit",0.00022896139871653176,-0.0009663447986970719,0.0016110963323461148,False,unresolved
+k1,0,p99dl,red_pct,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit",0.018206198996196576,-0.07981973302078416,0.12233497373432908,False,unresolved
+k1,0,p99dl,gain,SPJF-r1s - SPJF-tweedie,R1S-Tweedie vs Tweedie,0.0009707512539524066,-0.004965865301217296,0.018992072133331355,False,unresolved
+k1,0,p99dl,red_pct,SPJF-r1s - SPJF-tweedie,R1S-Tweedie vs Tweedie,0.0771906994118865,-0.3887176326421482,1.5615494521187196,False,unresolved
+k1,0,p99dl,gain,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control on the same 90% of rows,0.004036433471229617,-0.0039695728208692434,0.02271025446936862,False,unresolved
+k1,0,p99dl,red_pct,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control on the same 90% of rows,0.3209628846784085,-0.3057971427244567,1.8212419101067872,False,unresolved
+k1,0,p99dl,gain,CAP-G300 - FIXSEL-G300,"capped relative vs the BEST FEASIBLE fixed budget, G = 300 s",0.49939464396412014,0.35345914320597543,0.5944450101402345,True,CAP-G300 better
+k1,0,p99dl,red_pct,CAP-G300 - FIXSEL-G300,"capped relative vs the BEST FEASIBLE fixed budget, G = 300 s",39.71009225400235,26.176417908773693,49.733957770030095,True,CAP-G300 better
+k1,0,p99dl,gain,CAP-G300 - FIX-G300,capped relative vs B0 = Bmax at G = 300 s,-0.041619647208193555,-0.06546676168937948,-0.021741603937590837,True,FIX-G300 better
+k1,0,p99dl,red_pct,CAP-G300 - FIX-G300,capped relative vs B0 = Bmax at G = 300 s,-3.309446847682139,-5.131217640897937,-1.796423483587958,True,FIX-G300 better
+k1,0,p99dl,gain,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s",-0.168431205798385,-0.3116066772246517,-0.09920069934494492,True,SPJF-tweedie better
+k1,0,p99dl,red_pct,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s",-13.393052571839888,-25.86954579748814,-7.330598735185307,True,SPJF-tweedie better
+k1,0,p99dl,gain,SKIP-G300 - SPJF-tweedie,finite skip vs unguarded at G = 300 s,-0.9058901009909148,-0.9282564175548259,-0.851164076975393,True,SPJF-tweedie better
+k1,0,p99dl,red_pct,SKIP-G300 - SPJF-tweedie,finite skip vs unguarded at G = 300 s,-72.03317039363618,-76.45053547675016,-64.20599613978035,True,SPJF-tweedie better
+k1,0,p99dl,gain,CAP-G300 - SKIP-G300,capped relative vs finite skip at G = 300 s,0.7374588951925298,0.5552785649438345,0.8058428872459203,True,CAP-G300 better
+k1,0,p99dl,red_pct,CAP-G300 - SKIP-G300,capped relative vs finite skip at G = 300 s,58.640117821796295,46.633725598807125,62.837590214158304,True,CAP-G300 better
+k1,0,p99dl,gain,SKIP-G300 - SKIPC-G300,"finite skip: dispatch vs completion charge, G = 300 s",0.0011693125158174491,-0.0006902864739196299,0.005265156680872862,False,unresolved
+k1,0,p99dl,red_pct,SKIP-G300 - SKIPC-G300,"finite skip: dispatch vs completion charge, G = 300 s",0.09297958726246691,-0.05637707834781624,0.3935075490835032,False,unresolved
+k1,0,p99dl,gain,CAP-G600 - FIXSEL-G600,"capped relative vs the BEST FEASIBLE fixed budget, G = 600 s",0.16803859705920654,0.06932684940295736,0.4142607610563998,True,CAP-G600 better
+k1,0,p99dl,red_pct,CAP-G600 - FIXSEL-G600,"capped relative vs the BEST FEASIBLE fixed budget, G = 600 s",13.361833716289588,5.103206698682773,35.366004817045074,True,CAP-G600 better
+k1,0,p99dl,gain,CAP-G600 - FIX-G600,capped relative vs B0 = Bmax at G = 600 s,-0.012782194827056226,-0.01783649341275082,-0.003781010337036631,True,FIX-G600 better
+k1,0,p99dl,red_pct,CAP-G600 - FIX-G600,capped relative vs B0 = Bmax at G = 600 s,-1.0163948330761343,-1.4379457779339107,-0.2883073588154091,True,FIX-G600 better
+k1,0,p99dl,gain,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s",-0.05475875180501244,-0.08796675516439845,-0.02257822719052211,True,SPJF-tweedie better
+k1,0,p99dl,red_pct,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s",-4.354221880776294,-7.3843669569273835,-1.6818216485941975,True,SPJF-tweedie better
+k1,0,p99dl,gain,SKIP-G600 - SPJF-tweedie,finite skip vs unguarded at G = 600 s,-0.9034208768321539,-0.9277745594446092,-0.8461189494894829,True,SPJF-tweedie better
+k1,0,p99dl,red_pct,SKIP-G600 - SPJF-tweedie,finite skip vs unguarded at G = 600 s,-71.8368264393601,-76.51187730027561,-63.26589066844889,True,SPJF-tweedie better
+k1,0,p99dl,gain,CAP-G600 - SKIP-G600,capped relative vs finite skip at G = 600 s,0.8486621250271414,0.7729143883083167,0.8842817284955969,True,CAP-G600 better
+k1,0,p99dl,red_pct,CAP-G600 - SKIP-G600,capped relative vs finite skip at G = 600 s,67.4826045585838,60.47200672081483,71.11488704098629,True,CAP-G600 better
+k1,0,p99dl,gain,SKIP-G600 - SKIPC-G600,"finite skip: dispatch vs completion charge, G = 600 s",0.00038248762701011216,-0.0008606013910320079,0.004073307593312092,False,unresolved
+k1,0,p99dl,red_pct,SKIP-G600 - SKIPC-G600,"finite skip: dispatch vs completion charge, G = 600 s",0.03041406057946683,-0.06901664943268457,0.31196905317236284,False,unresolved
+k1,0,p99dl,gain,CAP-G1200 - FIXSEL-G1200,"capped relative vs the BEST FEASIBLE fixed budget, G = 1200 s",0.20955429600751718,0.08836632891890901,0.47805620024977497,True,CAP-G1200 better
+k1,0,p99dl,red_pct,CAP-G1200 - FIXSEL-G1200,"capped relative vs the BEST FEASIBLE fixed budget, G = 1200 s",16.66301496673419,6.476955878697935,40.805900132267354,True,CAP-G1200 better
+k1,0,p99dl,gain,CAP-G1200 - FIX-G1200,capped relative vs B0 = Bmax at G = 1200 s,-0.0005521702207852419,-0.002806559013495119,0.002989024435458639,False,unresolved
+k1,0,p99dl,red_pct,CAP-G1200 - FIX-G1200,capped relative vs B0 = Bmax at G = 1200 s,-0.04390661908833238,-0.21944506287923424,0.250599851604067,False,unresolved
+k1,0,p99dl,gain,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s",-0.013243052856701798,-0.02825614253460497,-0.0032576372372067784,True,SPJF-tweedie better
+k1,0,p99dl,red_pct,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s",-1.0530406303316937,-2.292890872992634,-0.2516016626850682,True,SPJF-tweedie better
+k1,0,p99dl,gain,SKIP-G1200 - SPJF-tweedie,finite skip vs unguarded at G = 1200 s,-0.8894092429818349,-0.9235706213997814,-0.8121459879787241,True,SPJF-tweedie better
+k1,0,p99dl,red_pct,SKIP-G1200 - SPJF-tweedie,finite skip vs unguarded at G = 1200 s,-70.72267097223529,-76.48032786777172,-59.941043575425034,True,SPJF-tweedie better
+k1,0,p99dl,gain,CAP-G1200 - SKIP-G1200,capped relative vs finite skip at G = 1200 s,0.8761661901251331,0.7989407675942033,0.9096702701114522,True,CAP-G1200 better
+k1,0,p99dl,red_pct,CAP-G1200 - SKIP-G1200,capped relative vs finite skip at G = 1200 s,69.6696303419036,59.16318985537308,74.97938099599824,True,CAP-G1200 better
+k1,0,p99dl,gain,SKIP-G1200 - SKIPC-G1200,"finite skip: dispatch vs completion charge, G = 1200 s",0.002335913272527742,-0.0005090129804748136,0.005395343928785605,False,unresolved
+k1,0,p99dl,red_pct,SKIP-G1200 - SKIPC-G1200,"finite skip: dispatch vs completion charge, G = 1200 s",0.18574354505109536,-0.04199848769987825,0.4090828661280289,False,unresolved
+k1,0,p99dl,gain,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,0.18038424804729036,0.050046003698186216,0.25991125786154934,True,CAP-G600-reversed better
+k1,0,p99dl,red_pct,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,14.343516130384018,3.7678669267061338,20.68248245220929,True,CAP-G600-reversed better
+k1,0,p99dl,gain,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,-0.14848928356510852,-0.18499874066529853,-0.10371246947636949,True,SPJF-random better
+k1,0,p99dl,red_pct,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,-11.807341589199787,-15.046653229534622,-7.761624322205543,True,SPJF-random better
+k1,0,p99dl,gain,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,0.0154573207367944,-0.08035786644861335,0.09826148845286778,False,unresolved
+k1,0,p99dl,red_pct,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,1.2291113648826126,-6.523158448392598,7.597039032047547,False,unresolved
+k1,0,mean,gain,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,0.0159942965754315,0.011039404327404126,0.022252242038658006,True,SPJF-tweedie better
+k1,0,mean,red_pct,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,1.1454991836621815,0.8023490536350405,1.5327855035982632,True,SPJF-tweedie better
+k1,0,mean,gain,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit",-0.0004046471146836872,-0.0012625544018101454,0.00018760505061115863,False,unresolved
+k1,0,mean,red_pct,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit",-0.028980514232394228,-0.08862534792432353,0.013368743220840605,False,unresolved
+k1,0,mean,gain,SPJF-r1s - SPJF-tweedie,R1S-Tweedie vs Tweedie,0.004835353687545174,-0.0033973748638361583,0.01628481685944574,False,unresolved
+k1,0,mean,red_pct,SPJF-r1s - SPJF-tweedie,R1S-Tweedie vs Tweedie,0.34630430139134916,-0.250920452230239,1.10598453546821,False,unresolved
+k1,0,mean,gain,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control on the same 90% of rows,0.00584384022619866,-0.0034137831516566548,0.018671438324546052,False,unresolved
+k1,0,mean,red_pct,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control on the same 90% of rows,0.41853132940185134,-0.25206482646512607,1.2810428369667648,False,unresolved
+k1,0,mean,gain,CAP-G300 - FIXSEL-G300,"capped relative vs the BEST FEASIBLE fixed budget, G = 300 s",0.26926068513913093,0.2226545725486702,0.30530840207832427,True,CAP-G300 better
+k1,0,mean,red_pct,CAP-G300 - FIXSEL-G300,"capped relative vs the BEST FEASIBLE fixed budget, G = 300 s",19.284242577630927,14.989737983979479,22.847416008738826,True,CAP-G300 better
+k1,0,mean,gain,CAP-G300 - FIX-G300,capped relative vs B0 = Bmax at G = 300 s,-0.02765704420975723,-0.03499114485886662,-0.021365684822982168,True,FIX-G300 better
+k1,0,mean,red_pct,CAP-G300 - FIX-G300,capped relative vs B0 = Bmax at G = 300 s,-1.9807761732673086,-2.4422456606385636,-1.5143500544251536,True,FIX-G300 better
+k1,0,mean,gain,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s",-0.16026277586624804,-0.20246982725841475,-0.10188742684769497,True,SPJF-tweedie better
+k1,0,mean,red_pct,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s",-11.477896390155486,-15.047653098965572,-6.960941318979738,True,SPJF-tweedie better
+k1,0,mean,gain,SKIP-G300 - SPJF-tweedie,finite skip vs unguarded at G = 300 s,-0.8129992135337196,-0.8568197697630494,-0.7512183085983742,True,SPJF-tweedie better
+k1,0,mean,red_pct,SKIP-G300 - SPJF-tweedie,finite skip vs unguarded at G = 300 s,-58.22637657297176,-64.16149024507949,-50.91491292224797,True,SPJF-tweedie better
+k1,0,mean,gain,CAP-G300 - SKIP-G300,capped relative vs finite skip at G = 300 s,0.6527364376674716,0.5975056151175808,0.7069686946599214,True,CAP-G300 better
+k1,0,mean,red_pct,CAP-G300 - SKIP-G300,capped relative vs finite skip at G = 300 s,46.74848018281627,41.57388649510922,50.86171062307908,True,CAP-G300 better
+k1,0,mean,gain,SKIP-G300 - SKIPC-G300,"finite skip: dispatch vs completion charge, G = 300 s",0.011494749936625206,0.0096462518578765,0.014568467038124972,True,SKIP-G300 better
+k1,0,mean,red_pct,SKIP-G300 - SKIPC-G300,"finite skip: dispatch vs completion charge, G = 300 s",0.8232451240794756,0.7056408042765674,0.9813282962134029,True,SKIP-G300 better
+k1,0,mean,gain,CAP-G600 - FIXSEL-G600,"capped relative vs the BEST FEASIBLE fixed budget, G = 600 s",0.14420845899322876,0.09455793171396251,0.18016152014025483,True,CAP-G600 better
+k1,0,mean,red_pct,CAP-G600 - FIXSEL-G600,"capped relative vs the BEST FEASIBLE fixed budget, G = 600 s",10.328098599076235,6.452085915471768,13.386380163619103,True,CAP-G600 better
+k1,0,mean,gain,CAP-G600 - FIX-G600,capped relative vs B0 = Bmax at G = 600 s,-0.0017432478783699912,-0.005741545123127115,0.0022245870487332614,False,unresolved
+k1,0,mean,red_pct,CAP-G600 - FIX-G600,capped relative vs B0 = Bmax at G = 600 s,-0.12485006840883273,-0.4016462240076608,0.16062933188684314,False,unresolved
+k1,0,mean,gain,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s",-0.05407124269889618,-0.07499021590310004,-0.024981382972454853,True,SPJF-tweedie better
+k1,0,mean,red_pct,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s",-3.8725406946828542,-5.607628901734795,-1.7030246198203998,True,SPJF-tweedie better
+k1,0,mean,gain,SKIP-G600 - SPJF-tweedie,finite skip vs unguarded at G = 600 s,-0.7621709907470909,-0.8104071816519804,-0.6978615864834262,True,SPJF-tweedie better
+k1,0,mean,red_pct,SKIP-G600 - SPJF-tweedie,finite skip vs unguarded at G = 600 s,-54.58609846292855,-60.751821534163234,-47.111021878653716,True,SPJF-tweedie better
+k1,0,mean,gain,CAP-G600 - SKIP-G600,capped relative vs finite skip at G = 600 s,0.7080997480481948,0.658468389350383,0.7424117479919035,True,CAP-G600 better
+k1,0,mean,red_pct,CAP-G600 - SKIP-G600,capped relative vs finite skip at G = 600 s,50.71355776824569,44.86046646896358,55.4613706692083,True,CAP-G600 better
+k1,0,mean,gain,SKIP-G600 - SKIPC-G600,"finite skip: dispatch vs completion charge, G = 600 s",0.009447520757264696,0.007896403861883344,0.011854488776426118,True,SKIP-G600 better
+k1,0,mean,red_pct,SKIP-G600 - SKIPC-G600,"finite skip: dispatch vs completion charge, G = 600 s",0.676624149367206,0.5775301362853138,0.8054479990377124,True,SKIP-G600 better
+k1,0,mean,gain,CAP-G1200 - FIXSEL-G1200,"capped relative vs the BEST FEASIBLE fixed budget, G = 1200 s",0.17668625232743718,0.11423723795137054,0.2219433017350211,True,CAP-G1200 better
+k1,0,mean,red_pct,CAP-G1200 - FIXSEL-G1200,"capped relative vs the BEST FEASIBLE fixed budget, G = 1200 s",12.654133106191217,7.813080013085165,16.45882458842627,True,CAP-G1200 better
+k1,0,mean,gain,CAP-G1200 - FIX-G1200,capped relative vs B0 = Bmax at G = 1200 s,0.0012968967488174998,-0.0037186634969577663,0.006711880994881904,False,unresolved
+k1,0,mean,red_pct,CAP-G1200 - FIX-G1200,capped relative vs B0 = Bmax at G = 1200 s,0.09288274479958147,-0.26259067878799824,0.4919309824140645,False,unresolved
+k1,0,mean,gain,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s",-0.021593449364687767,-0.036488936127568955,-0.0045696880842240025,True,SPJF-tweedie better
+k1,0,mean,red_pct,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s",-1.5465061875678714,-2.7056441367970407,-0.3083072132117451,True,SPJF-tweedie better
+k1,0,mean,gain,SKIP-G1200 - SPJF-tweedie,finite skip vs unguarded at G = 1200 s,-0.6844772966634127,-0.7393392267665684,-0.6096084151269524,True,SPJF-tweedie better
+k1,0,mean,red_pct,SKIP-G1200 - SPJF-tweedie,finite skip vs unguarded at G = 1200 s,-49.021736021052845,-55.496959158176054,-40.94799799841376,True,SPJF-tweedie better
+k1,0,mean,gain,CAP-G1200 - SKIP-G1200,capped relative vs finite skip at G = 1200 s,0.662883847298725,0.6051347243173458,0.7059071762773282,True,CAP-G1200 better
+k1,0,mean,red_pct,CAP-G1200 - SKIP-G1200,capped relative vs finite skip at G = 1200 s,47.475229833484974,40.56397744319737,52.96040428108222,True,CAP-G1200 better
+k1,0,mean,gain,SKIP-G1200 - SKIPC-G1200,"finite skip: dispatch vs completion charge, G = 1200 s",0.006746741546405699,0.005537920436292763,0.008592227128718348,True,SKIP-G1200 better
+k1,0,mean,red_pct,SKIP-G1200 - SKIPC-G1200,"finite skip: dispatch vs completion charge, G = 1200 s",0.4831964255095045,0.4049032594922479,0.583222444534492,True,SKIP-G1200 better
+k1,0,mean,gain,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,0.21244346468078046,0.12321351462626917,0.2873312692422574,True,CAP-G600-reversed better
+k1,0,mean,red_pct,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,15.215037073903517,8.497254205781203,20.48301928155991,True,CAP-G600-reversed better
+k1,0,mean,gain,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,-0.08582481810264345,-0.131119893237486,-0.03432198372874083,True,SPJF-random better
+k1,0,mean,red_pct,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,-6.1467072722377925,-9.759645254892229,-2.328932099218962,True,SPJF-random better
+k1,0,mean,gain,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,0.06545722467998738,0.04532391269326246,0.08487826937752428,True,CAP-G600-top1short better
+k1,0,mean,red_pct,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,4.687995941684257,3.1078140004782653,6.287138420924751,True,CAP-G600-top1short better

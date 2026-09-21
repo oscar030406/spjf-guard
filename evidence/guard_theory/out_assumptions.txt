@@ -1,0 +1,63 @@
+=== G3(i) NO GLOBAL SIZE BOUND ===
+Lam_pref(i)  = max{x_j : a_j <= a_i}            (prefix max; no global bound)
+Lam^P_i      = max size among the <= k-1 jobs OTHER than i that are in
+               service under P at the instant i starts
+Lam^F_i      = the same for FCFS at i's FCFS start
+claim A (two-sided, fully local):
+   -(k-1)(Lam_pref + Lam^P) <= k(W_P-W_F)-(In-Out) <= (k-1)(Lam_pref + Lam^F)
+claim B: the same with Lam^P/Lam^F only (drop Lam_pref) -- expected to FAIL
+claim A failures: 0 / 1199111 job-checks   (worst |D|/max(Lam) seen = 9/4)
+claim B failures: 0 / 1199111 job-checks by random search (the constructed
+   family in ce_local_L.py is what refutes it -- random instances do not
+   build a long enough saturated epoch to separate the two quantities)
+
+-- hand-built counterexample for claim B: see ce_local_L.py / out_ce_local_L.txt
+   family with k=2 in which D grows linearly in M while every job in service
+   around i has size 1; D/((k-1)(Lam^P+Lam^F)) = M/4 -> infinity.
+   So Lam_pref (or the epoch max) cannot be dropped.
+
+=== G3(ii) SERVERS WITH DIFFERENT SPEEDS ===
+V = v_1 + ... + v_k.  claim: |V*(W_P-W_F) - (In-Out)| <= 2(k-1)L
+so the budget is divided by total CAPACITY, not by the server count: B/k -> B/V
+failures: 0 / 150000 instances
+  k=1 worst |D|/L = 0   (bound 2(k-1) = 0)
+  k=2 worst |D|/L = 3/2   (bound 2(k-1) = 2)
+  k=3 worst |D|/L = 7/3   (bound 2(k-1) = 4)
+  k=4 worst |D|/L = 3   (bound 2(k-1) = 6)
+
+=== G3(iii) NON-WORK-CONSERVING PAUSES, VACATIONS, SETUP ===
+general identity: k*W_P[i] = R_i + In_i - Out_i - rho_i + Gam_i
+Gam_i = server-time idle while some job waited, during [a_i, s_i^P)
+  501458 job-checks.
+  plain bound 2(k-1)L violated in 7427 of them -> pauses genuinely break it
+  with the crude allowance 2k*(total pause time): violations = 0
+  => no bound survives unless cumulative forced idleness is bounded.
+  minimal counterexample: k=1, pause the single server for T while i waits.
+  In = Out = 0 and the excess is exactly T, unbounded.
+
+-- setup time sigma before every service, paid by BOTH policies --
+   absorb it into the job: x'_j = x_j + sigma <= L + sigma.  The model is
+   then unchanged, so every result holds with L -> L + sigma.
+   setup-absorbed model: 300214 job-checks, violations 0
+
+=== G3(iv) RELEASE CONSTRAINTS AND A TIMEOUT KILL ===
+-- timeout kill at L: both policies kill at the same elapsed service, so the
+   EXECUTED work min(x_j, L) is identical in the two runs.  Relabel
+   x_j := min(x_j, L); every result holds verbatim (the proof only ever
+   uses executed work).  Checked on heavy-tailed raw sizes:
+   truncated-size identity: 401723 job-checks, violations 0
+
+-- release times r_j > a_j with rank still keyed on a_j: DISPROVED.
+   k=1.  job0: a=0, r=10, x=1.  job1: a=1, r=1, x=1.
+   Every work-conserving policy runs job1 at t=1 and job0 at t=10, so all
+   policies coincide and W_P[0] - W_FCFS[0] = 0.  But job1 has higher rank
+   and is dispatched first, so In_0 = 1 and Out_0 = 0: the identity predicts
+   a difference of 1.  Slack 1 = exactly the forced idle time on [0,1).
+   Fix: rank by release, rank = (r_j, index), and read a_j as r_j.  The proof
+   only needs 'no server idles while i is eligible and waiting', so with that
+   relabelling every result holds verbatim.
+
+=== G3(v) BATCH / SIMULTANEOUS ARRIVALS AND ZERO-LENGTH JOBS ===
+  300000 instances, all with ties, 779751 zero-length jobs, 1798465 job-checks, violations 0
+  confirmed: nothing in the statement or the proof uses distinct arrivals or x>0.
+

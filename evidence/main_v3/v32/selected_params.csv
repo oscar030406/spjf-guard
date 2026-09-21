@@ -1,0 +1,10 @@
+family,G,B0_base,eta,gam_base,policy,worst_gap,worst_harm_s,harm_limit_s,harm_slack_s,binds,worst_promise_s,n_feasible,n_grid,next_better_point,note
+fixed,300.0,329.671,0.0,0.0,FIXG-B329.671,0.1761,131.8,150.0,18.2,False,247.4,22,27,"FIXG-B360 (gap 0.1991, harm 151.2 s, infeasible by 1.2 s)",
+capped,300.0,60.0,0.5,0.0,CAPG-G300-B60-e0.5,0.4251,122.76,150.0,27.24,False,300.0,15,54,none: the chosen point has the best worst-cell gap in the family,
+hybrid,300.0,0.0,0.0,16.0,HYBG-G300-B0-g16-e0,0.3565,145.25,150.0,4.75,True,300.0,7,18,"HYBG-G300-B120-g1-e0.9 (gap 0.3693, harm 212.0 s, infeasible by 62.0 s)",
+fixed,600.0,981.126,0.0,0.0,FIXG-B981.126,0.6095,288.16,300.0,11.84,True,410.3,32,36,"FIXG-B1176.7 (gap 0.6564, harm 345.5 s, infeasible by 45.5 s)",
+capped,600.0,120.0,0.75,0.0,CAPG-G600-B120-e0.75,0.7216,293.29,300.0,6.71,True,600.0,30,54,"CAPG-G600-B480-e0.5 (gap 0.7228, harm 328.5 s, infeasible by 28.5 s)",
+hybrid,600.0,120.0,0.0,16.0,HYBG-G600-B120-g16-e0,0.7173,152.15,300.0,147.85,False,600.0,9,18,"HYBG-G600-B0-g1-e0.9 (gap 0.7225, harm 358.9 s, infeasible by 58.9 s)",
+fixed,1200.0,2029.96,0.0,0.0,FIXG-B2029.96,0.7257,560.26,600.0,39.74,False,672.5,37,41,"FIXEQ-G1200 (gap 0.7273, harm 1093.8 s, infeasible by 493.8 s)",
+capped,1200.0,360.0,0.75,0.0,CAPG-G1200-B360-e0.75,0.7273,483.92,600.0,116.08,False,1020.0,43,54,none: the chosen point has the best worst-cell gap in the family,
+hybrid,1200.0,0.0,0.0,16.0,HYBG-G1200-B0-g16-e0,0.7283,145.25,600.0,454.75,False,1200.0,17,18,none: the chosen point has the best worst-cell gap in the family,

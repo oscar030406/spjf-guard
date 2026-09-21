@@ -1,0 +1,91 @@
+test rows 40,844  heavy 536 (1.3123%)  users 190
+cold-start exercises 1092  cold-start users 579 (heavy among cold users: 0)
+training variant core
+w_ap self-check against the pre-check's average_precision_score: 0.285655 OK
+models ['G0', 'G0U', 'G1', 'G2', 'G3', 'M0', 'M1', 'M2', 'M3', 'M4', 'M4R', 'M5', 'M6', 'N0', 'R1', 'R1S']
+
+--- test 2022-2, group all (mean over seeds 3/4/5; sd in parentheses) ---
+  M0   n=40,844  rmse 0.2828(0.0000)  spearman nan(nan)  auroc 0.5000(0.0000)  auprc 0.0131(0.0000)
+  M1   n=40,844  rmse 0.3000(0.0016)  spearman 0.2185(0.0142)  auroc 0.7960(0.0149)  auprc 0.0527(0.0064)
+  M2   n=40,844  rmse 0.2605(0.0015)  spearman 0.3015(0.0013)  auroc 0.8591(0.0046)  auprc 0.2422(0.0008)
+  M3   n=40,844  rmse 0.2892(0.0011)  spearman 0.2895(0.0024)  auroc 0.8632(0.0025)  auprc 0.0824(0.0018)
+  M4   n=40,844  rmse 0.2519(0.0010)  spearman 0.3119(0.0065)  auroc 0.9283(0.0020)  auprc 0.2891(0.0025)
+  M4R  n=40,844  rmse 0.2519(0.0010)  spearman 0.3119(0.0065)  auroc 0.9283(0.0020)  auprc 0.2891(0.0025)
+  M5   n=40,844  rmse 0.2507(0.0011)  spearman 0.3443(0.0019)  auroc 0.9302(0.0002)  auprc 0.2991(0.0014)
+  M6   n=40,844  rmse 0.2534(0.0017)  spearman 0.3077(0.0052)  auroc 0.9288(0.0006)  auprc 0.2944(0.0056)
+  N0   n=40,844  rmse 0.2463(0.0024)  spearman 0.2778(0.0178)  auroc 0.9209(0.0083)  auprc 0.3063(0.0098)
+  G0U  n=40,844  rmse 0.2417(0.0011)  spearman 0.3208(0.0070)  auroc 0.9348(0.0008)  auprc 0.3216(0.0034)
+  G0   n=40,844  rmse 0.2402(0.0012)  spearman 0.3244(0.0092)  auroc 0.9325(0.0011)  auprc 0.3162(0.0071)
+  G1   n=40,844  rmse 0.2397(0.0008)  spearman 0.3291(0.0023)  auroc 0.9324(0.0023)  auprc 0.3219(0.0013)
+  G2   n=40,844  rmse 0.2396(0.0007)  spearman 0.3228(0.0096)  auroc 0.9305(0.0006)  auprc 0.3178(0.0042)
+  G3   n=40,844  rmse 0.2490(0.0042)  spearman 0.3125(0.0287)  auroc 0.9295(0.0020)  auprc 0.2585(0.0317)
+  R1   n=40,844  rmse 0.2396(0.0005)  spearman 0.3133(0.0049)  auroc 0.9239(0.0072)  auprc 0.3236(0.0073)
+  R1S  n=40,844  rmse 0.2414(0.0009)  spearman 0.3286(0.0096)  auroc 0.9366(0.0011)  auprc 0.3148(0.0068)
+
+--- test 2022-2, group cold_ex (mean over seeds 3/4/5; sd in parentheses) ---
+  M0   n= 1,092  rmse 0.3554(0.0000)  spearman nan(nan)  auroc 0.5000(0.0000)  auprc 0.0284(0.0000)
+  M1   n= 1,092  rmse 0.3340(0.0034)  spearman 0.3922(0.0044)  auroc 0.6594(0.0144)  auprc 0.1654(0.0064)
+  M2   n= 1,092  rmse 0.3312(0.0037)  spearman 0.2987(0.0141)  auroc 0.7889(0.0165)  auprc 0.2339(0.0317)
+  M3   n= 1,092  rmse 0.3506(0.0013)  spearman 0.3730(0.0037)  auroc 0.8506(0.0010)  auprc 0.1606(0.0062)
+  M4   n= 1,092  rmse 0.3302(0.0046)  spearman 0.3312(0.0355)  auroc 0.8593(0.0084)  auprc 0.2887(0.0132)
+  M4R  n= 1,092  rmse 0.3302(0.0046)  spearman 0.3312(0.0355)  auroc 0.8593(0.0084)  auprc 0.2887(0.0132)
+  M5   n= 1,092  rmse 0.3235(0.0032)  spearman 0.3596(0.0293)  auroc 0.8698(0.0038)  auprc 0.2888(0.0145)
+  M6   n= 1,092  rmse 0.3449(0.0042)  spearman 0.2933(0.0060)  auroc 0.8616(0.0039)  auprc 0.2641(0.0148)
+  N0   n= 1,092  rmse 0.3152(0.0036)  spearman 0.4376(0.0310)  auroc 0.8582(0.0175)  auprc 0.2647(0.0307)
+  G0U  n= 1,092  rmse 0.3150(0.0011)  spearman 0.4732(0.0043)  auroc 0.8734(0.0051)  auprc 0.2947(0.0062)
+  G0   n= 1,092  rmse 0.3228(0.0035)  spearman 0.4325(0.0031)  auroc 0.8659(0.0043)  auprc 0.2875(0.0004)
+  G1   n= 1,092  rmse 0.3175(0.0020)  spearman 0.4776(0.0233)  auroc 0.8657(0.0018)  auprc 0.2924(0.0079)
+  G2   n= 1,092  rmse 0.3198(0.0019)  spearman 0.4494(0.0121)  auroc 0.8711(0.0062)  auprc 0.3099(0.0146)
+  G3   n= 1,092  rmse 0.3172(0.0027)  spearman 0.4333(0.0184)  auroc 0.8649(0.0093)  auprc 0.3037(0.0162)
+  R1   n= 1,092  rmse 0.3202(0.0006)  spearman 0.4390(0.0114)  auroc 0.8571(0.0259)  auprc 0.2446(0.0218)
+  R1S  n= 1,092  rmse 0.3171(0.0043)  spearman 0.3900(0.0258)  auroc 0.8824(0.0043)  auprc 0.2712(0.0152)
+
+--- test 2022-2, group cold_user (mean over seeds 3/4/5; sd in parentheses) ---
+  M0   n=   579  rmse 0.1420(0.0000)  spearman nan(nan)  auroc nan(nan)  auprc nan(nan)
+  M1   n=   579  rmse 0.0938(0.0214)  spearman 0.0114(0.0112)  auroc nan(nan)  auprc nan(nan)
+  M2   n=   579  rmse 0.0392(0.0020)  spearman 0.0971(0.0062)  auroc nan(nan)  auprc nan(nan)
+  M3   n=   579  rmse 0.0864(0.0019)  spearman -0.0282(0.0099)  auroc nan(nan)  auprc nan(nan)
+  M4   n=   579  rmse 0.0424(0.0107)  spearman 0.0770(0.0096)  auroc nan(nan)  auprc nan(nan)
+  M4R  n=   579  rmse 0.0424(0.0107)  spearman 0.0770(0.0096)  auroc nan(nan)  auprc nan(nan)
+  M5   n=   579  rmse 0.0318(0.0004)  spearman 0.0942(0.0143)  auroc nan(nan)  auprc nan(nan)
+  M6   n=   579  rmse 0.0382(0.0124)  spearman 0.0847(0.0018)  auroc nan(nan)  auprc nan(nan)
+  N0   n=   579  rmse 0.0746(0.0126)  spearman 0.0307(0.0235)  auroc nan(nan)  auprc nan(nan)
+  G0U  n=   579  rmse 0.0295(0.0045)  spearman 0.0229(0.0037)  auroc nan(nan)  auprc nan(nan)
+  G0   n=   579  rmse 0.0335(0.0040)  spearman -0.0007(0.0098)  auroc nan(nan)  auprc nan(nan)
+  G1   n=   579  rmse 0.0339(0.0067)  spearman 0.0012(0.0054)  auroc nan(nan)  auprc nan(nan)
+  G2   n=   579  rmse 0.0282(0.0065)  spearman 0.0228(0.0408)  auroc nan(nan)  auprc nan(nan)
+  G3   n=   579  rmse 0.0537(0.0055)  spearman 0.0765(0.0130)  auroc nan(nan)  auprc nan(nan)
+  R1   n=   579  rmse 0.0725(0.0061)  spearman 0.0418(0.0153)  auroc nan(nan)  auprc nan(nan)
+  R1S  n=   579  rmse 0.0338(0.0052)  spearman 0.0843(0.0243)  auroc nan(nan)  auprc nan(nan)
+
+--- paired user-block bootstrap, 2000 resamples, group all (delta = first - second; negative dRMSE = first better) ---
+  G1-G2    dRMSE +0.0001 [-0.0012,+0.0013]   dSpear +0.0063 [+0.0014,+0.0111]*  dAUROC +0.0019 [-0.0000,+0.0042]   dAUPRC +0.0040 [-0.0041,+0.0111] 
+  G1-G0    dRMSE -0.0005 [-0.0013,+0.0004]   dSpear +0.0046 [-0.0018,+0.0106]   dAUROC -0.0001 [-0.0019,+0.0018]   dAUPRC +0.0057 [-0.0022,+0.0137] 
+  G0-G0U   dRMSE -0.0015 [-0.0032,+0.0004]   dSpear +0.0036 [-0.0045,+0.0115]   dAUROC -0.0023 [-0.0045,-0.0003]*  dAUPRC -0.0054 [-0.0177,+0.0047] 
+  G0U-N0    dRMSE -0.0046 [-0.0066,-0.0027]*  dSpear +0.0430 [+0.0344,+0.0523]*  dAUROC +0.0139 [+0.0090,+0.0195]*  dAUPRC +0.0153 [-0.0010,+0.0323] 
+  G1-M5    dRMSE -0.0110 [-0.0142,-0.0079]*  dSpear -0.0152 [-0.0274,-0.0031]*  dAUROC +0.0022 [-0.0038,+0.0084]   dAUPRC +0.0228 [+0.0003,+0.0464]*
+  G1-M4    dRMSE -0.0122 [-0.0157,-0.0087]*  dSpear +0.0172 [+0.0055,+0.0289]*  dAUROC +0.0041 [-0.0017,+0.0102]   dAUPRC +0.0328 [+0.0129,+0.0545]*
+  G0-M4    dRMSE -0.0117 [-0.0150,-0.0085]*  dSpear +0.0125 [+0.0027,+0.0227]*  dAUROC +0.0042 [-0.0013,+0.0100]   dAUPRC +0.0271 [+0.0061,+0.0509]*
+  N0-M4    dRMSE -0.0056 [-0.0088,-0.0025]*  dSpear -0.0341 [-0.0444,-0.0239]*  dAUROC -0.0074 [-0.0154,+0.0008]   dAUPRC +0.0172 [-0.0038,+0.0418] 
+  G3-M4    dRMSE -0.0028 [-0.0059,+0.0002]   dSpear +0.0005 [-0.0066,+0.0081]   dAUROC +0.0012 [-0.0022,+0.0043]   dAUPRC -0.0305 [-0.0526,-0.0052]*
+  R1-M4    dRMSE -0.0123 [-0.0160,-0.0088]*  dSpear +0.0014 [-0.0082,+0.0112]   dAUROC -0.0044 [-0.0150,+0.0059]   dAUPRC +0.0346 [+0.0107,+0.0574]*
+  R1S-M4    dRMSE -0.0105 [-0.0133,-0.0079]*  dSpear +0.0167 [+0.0104,+0.0236]*  dAUROC +0.0083 [+0.0038,+0.0131]*  dAUPRC +0.0258 [+0.0091,+0.0406]*
+  R1-N0    dRMSE -0.0068 [-0.0082,-0.0052]*  dSpear +0.0356 [+0.0288,+0.0425]*  dAUROC +0.0030 [-0.0020,+0.0079]   dAUPRC +0.0173 [+0.0018,+0.0312]*
+  M5-M4    dRMSE -0.0012 [-0.0028,+0.0004]   dSpear +0.0324 [+0.0247,+0.0404]*  dAUROC +0.0019 [-0.0002,+0.0040]   dAUPRC +0.0100 [-0.0018,+0.0214] 
+
+--- paired user-block bootstrap, 2000 resamples, group cold_ex (delta = first - second; negative dRMSE = first better) ---
+  G1-G2    dRMSE -0.0023 [-0.0061,+0.0012]   dSpear +0.0282 [+0.0130,+0.0432]*  dAUROC -0.0054 [-0.0286,+0.0160]   dAUPRC -0.0175 [-0.0500,+0.0120] 
+  G1-G0    dRMSE -0.0053 [-0.0099,-0.0018]*  dSpear +0.0451 [+0.0290,+0.0595]*  dAUROC -0.0002 [-0.0151,+0.0155]   dAUPRC +0.0049 [-0.0272,+0.0393] 
+  G0-G0U   dRMSE +0.0078 [+0.0040,+0.0126]*  dSpear -0.0406 [-0.0618,-0.0194]*  dAUROC -0.0075 [-0.0184,+0.0026]   dAUPRC -0.0072 [-0.0334,+0.0101] 
+  G0U-N0    dRMSE -0.0002 [-0.0104,+0.0117]   dSpear +0.0355 [+0.0123,+0.0623]*  dAUROC +0.0152 [-0.0153,+0.0408]   dAUPRC +0.0300 [-0.0192,+0.0815] 
+  G1-M5    dRMSE -0.0060 [-0.0206,+0.0067]   dSpear +0.1181 [+0.0795,+0.1616]*  dAUROC -0.0041 [-0.0306,+0.0211]   dAUPRC +0.0036 [-0.0455,+0.0466] 
+  G1-M4    dRMSE -0.0127 [-0.0336,+0.0054]   dSpear +0.1464 [+0.0997,+0.1887]*  dAUROC +0.0064 [-0.0225,+0.0356]   dAUPRC +0.0037 [-0.0693,+0.0530] 
+  G0-M4    dRMSE -0.0073 [-0.0270,+0.0114]   dSpear +0.1013 [+0.0649,+0.1399]*  dAUROC +0.0066 [-0.0179,+0.0322]   dAUPRC -0.0012 [-0.0906,+0.0595] 
+  N0-M4    dRMSE -0.0150 [-0.0319,-0.0016]*  dSpear +0.1064 [+0.0598,+0.1479]*  dAUROC -0.0011 [-0.0363,+0.0377]   dAUPRC -0.0240 [-0.1022,+0.0484] 
+  G3-M4    dRMSE -0.0130 [-0.0303,+0.0033]   dSpear +0.1021 [+0.0658,+0.1359]*  dAUROC +0.0056 [-0.0152,+0.0283]   dAUPRC +0.0150 [-0.0577,+0.0750] 
+  R1-M4    dRMSE -0.0099 [-0.0290,+0.0046]   dSpear +0.1078 [+0.0614,+0.1519]*  dAUROC -0.0021 [-0.0635,+0.0557]   dAUPRC -0.0441 [-0.1418,+0.0565] 
+  R1S-M4    dRMSE -0.0131 [-0.0231,-0.0043]*  dSpear +0.0588 [+0.0316,+0.0848]*  dAUROC +0.0231 [+0.0022,+0.0466]*  dAUPRC -0.0175 [-0.0878,+0.0462] 
+  R1-N0    dRMSE +0.0050 [-0.0006,+0.0103]   dSpear +0.0014 [-0.0223,+0.0266]   dAUROC -0.0011 [-0.0402,+0.0324]   dAUPRC -0.0201 [-0.0668,+0.0305] 
+  M5-M4    dRMSE -0.0067 [-0.0180,+0.0031]   dSpear +0.0283 [-0.0007,+0.0541]   dAUROC +0.0105 [-0.0031,+0.0262]   dAUPRC +0.0001 [-0.0687,+0.0428] 
+
+(* = the 95% interval excludes zero)

@@ -1,0 +1,118 @@
+====================================================================================================
+CROSS-DOMAIN CHECK OF THE SPJF + OVERTAKE-BUDGET-GUARD METHOD
+====================================================================================================
+Education side quoted from: prechecks/guard_variants/out_grid_rep0_L{0,1,2}_M4_1.txt (rep0, M4 predictor) and prechecks/ranking_score/out_table_primary_5reps.txt
+                            prechecks/accoding_v2/out_accoding_v2.txt (audit l.114-120, prediction l.390-396, deadline_rho0.8_main l.899-911)
+New side: prechecks/cross_domain/out_audit_*.txt, out_predict_*.txt, out_sim_*.txt (this study).
+
+-- A. cost distribution (how heavy is the tail) ---------------------------------------------
+trace                                  unit     median       mean        p99  top1% work  top5% work       L used
+CodeBench (education)                     s      ~0.19          -          -         n/a         n/a 60 (platform)
+ACcoding (education)                      s      0.508      0.834       6.50       0.122       0.290 30.5 (n_tests*limit)
+Azure Functions 2021 (serverless invocations)        s      0.031      3.348       72.2       0.443       0.879 286.8 (train p99.9)
+Intel Netbatch pool D 2012 (EDA compute farm)        s        486       6875      93482       0.372       0.628 493857 (train p99.9)
+
+  Azure is at least as heavy-tailed as the education traces (top 1% of invocations = 44% of
+  the work, top 5% = 88%); Netbatch is comparable (37% / 63%).  The tail assumption transfers.
+
+-- B. predictability of the cost from information at arrival -------------------------------
+trace                                          entity  RMSE log1p   Spearman    AUROC    AUPRC  eta^2 of identity
+CodeBench (M4, dev test)              user x exercise         n/a        n/a   0.9283      n/a                  -
+ACcoding (M4, dev test)                user x problem      0.2714     0.6924   0.9266   0.5267                  -
+  azure ALL/log                          app/function      0.3185     0.9322   0.9847   0.8298             0.8670
+  azure ENT/log (history only)           app/function      0.3401     0.9532   0.9828   0.8159                   
+  azure STATIC/log (no history)          app/function      0.8088     0.0210   0.6238   0.0835                   
+  netbatch ALL/log                      command (exe)      1.3485     0.8923   0.8902   0.2600             0.6379
+  netbatch ENT/log (history only)       command (exe)      1.4214     0.8825   0.8903   0.2647                   
+  netbatch STATIC/log (no history)      command (exe)      2.2559     0.7500   0.8704   0.2419                   
+
+-- C. scheduling on the real arrival times -------------------------------------------------
+gap = (W_FCFS - W_policy) / (W_FCFS - W_SJF-true) on the p99 wait; excess in units of L.
+trace / load                                         k   FCFS p99  FCFS p99/L  gap SPJF  SPJF max excess
+CodeBench busy-hour rho=0.50                       4-8      22.17        0.37     0.735     1244.8 =   21 L
+CodeBench busy-hour rho=0.78                       4-8     109.71        1.83     0.861     3055.1 =   51 L
+CodeBench busy-hour rho=1.06                       4-8     263.12        4.39     0.892     5882.9 =   98 L
+ACcoding poisson rho=0.8 (synthetic arrivals)        -      0.648      0.0212     0.980      601.7 =   20 L
+azure busy-hour rho=0.5                             30     166.38      0.5802     0.797     1137.9 = 3.97 L
+azure busy-hour rho=0.8                             19     690.15      2.4066     0.869     2162.9 = 7.54 L
+azure busy-hour rho=1.0                             15    1209.65      4.2181     0.858     2887.2 = 10.07 L
+azure window rho=0.8                                 4   10863.71     37.8820     0.643    33990.8 = 118.53 L
+azure window rho=0.95                                3   27614.25     96.2917     0.625   245851.0 = 857.29 L
+netbatch busy-hour rho=1.0                       21013      34.00      0.0001     1.000     1099.0 = 0.00 L
+netbatch window rho=0.8                          19374    7787.00      0.0158    -0.121   250265.0 = 0.51 L
+netbatch window rho=0.95                         16315   67220.00      0.1361    -4.111   420914.0 = 0.85 L
+
+-- D. what the guard costs and what it buys ------------------------------------------------
+The theorem's smallest expressible guarantee is (3-2/k) L ~ 3 L, so a guarantee is only
+useful when L is small next to the waits one cares about.  FCFS p99 / L above is that ratio.
+trace / load                                                   policy  gap p99  max excess (L)   fire %
+CodeBench busy-hour rho=1.06                              guard 5.0 L    0.429            3.59     0.38
+CodeBench busy-hour rho=0.78                              guard 4.6 L    0.705            3.26     0.14
+azure busy-hour rho=0.5                                     guard 5 L    0.767          2.1882    0.012
+azure busy-hour rho=0.5                              guard B/k=0.001L    0.100          0.2272    3.740
+azure busy-hour rho=0.5                               guard B/k=0.01L    0.254          0.3380    2.028
+azure busy-hour rho=0.5                                guard B/k=0.1L    0.470          0.6667    0.876
+azure busy-hour rho=0.8                                     guard 5 L    0.801          2.3973    0.156
+azure busy-hour rho=0.8                              guard B/k=0.001L    0.050          0.3419    7.509
+azure busy-hour rho=0.8                               guard B/k=0.01L    0.145          0.4393    5.017
+azure busy-hour rho=0.8                                guard B/k=0.1L    0.296          0.5787    1.897
+azure busy-hour rho=1.0                                     guard 5 L    0.710          2.5219    0.304
+azure busy-hour rho=1.0                              guard B/k=0.001L    0.061          0.4093   10.490
+azure busy-hour rho=1.0                               guard B/k=0.01L    0.126          0.4919    7.142
+azure busy-hour rho=1.0                                guard B/k=0.1L    0.231          0.6124    3.096
+azure window rho=0.8                                        guard 5 L    0.016          3.2013    6.588
+azure window rho=0.8                                 guard B/k=0.001L    0.007          0.6648   41.186
+azure window rho=0.8                                  guard B/k=0.01L    0.016          0.6648   32.986
+azure window rho=0.8                                   guard B/k=0.1L    0.024          0.8673   23.475
+azure window rho=0.95                                       guard 5 L    0.060          3.6948   17.672
+azure window rho=0.95                                guard B/k=0.001L    0.007          0.6650   62.409
+azure window rho=0.95                                 guard B/k=0.01L    0.040          0.6650   51.427
+azure window rho=0.95                                  guard B/k=0.1L    0.060          0.6650   40.428
+netbatch busy-hour rho=1.0                                  guard 5 L    1.000          0.0022    0.000
+netbatch busy-hour rho=1.0                           guard B/k=0.001L    1.000          0.0022    0.000
+netbatch busy-hour rho=1.0                            guard B/k=0.01L    1.000          0.0022    0.000
+netbatch busy-hour rho=1.0                             guard B/k=0.1L    1.000          0.0022    0.000
+netbatch window rho=0.8                                     guard 5 L   -0.362          0.4433    0.000
+netbatch window rho=0.8                              guard B/k=0.001L   -0.730          0.0164    6.332
+netbatch window rho=0.8                               guard B/k=0.01L   -4.264          0.0540    1.128
+netbatch window rho=0.8                                guard B/k=0.1L   -0.780          0.1897    0.169
+netbatch window rho=0.95                                    guard 5 L   -4.346          0.8315    0.000
+netbatch window rho=0.95                             guard B/k=0.001L   -0.013          0.0121   31.180
+netbatch window rho=0.95                              guard B/k=0.01L   -0.150          0.0436   15.913
+netbatch window rho=0.95                               guard B/k=0.1L   -1.409          0.1938    3.391
+
+-- E. reading ------------------------------------------------------------------------------
+1. Tail.  Both new traces are heavy-tailed in the same way the education traces are: on
+   Azure the top 1% of invocations carry 0.44 of the work and the top 5% carry 0.88; on
+   Netbatch 0.37 and 0.63.  Nothing about the method depended on education-specific tails.
+
+2. Prediction.  The direction of the education result survives, and gets stronger where the
+   entity is a program rather than a person.  On Azure a function's own recent history is
+   almost the whole signal (identity alone explains eta^2 = 0.87 of the variance of
+   log1p(duration); heavy-job AUROC 0.985, AUPRC 0.83, Spearman 0.93-0.95) while calendar
+   features alone are worthless (Spearman 0.02).  On Netbatch the same features give
+   AUROC 0.89-0.91 but AUPRC only 0.26-0.32 and RMSE(log1p) 1.35: which command will run
+   long is predictable in rank order, how long it will run is not.  Note that the
+   Netbatch STATIC set contains the group id, which is an identity, not a clock feature;
+   its Spearman of 0.75 should not be read as "the calendar predicts".
+
+3. Scheduling.  Azure behaves like the education traces: sizing k from the busiest hour,
+   SPJF closes 0.85-0.87 of the FCFS -> true-SJF gap on p99 wait and 0.88-0.91 on the mean,
+   and unguarded it delays some job by 2,900 s beyond FCFS (10 L).  The guard at a 5 L
+   guarantee keeps 0.71 of the p99 gain and caps the observed harm at 2.5 L, firing on
+   0.3% of dispatches.  This is the education result, on a different workload.
+
+4. Where it does not transfer.  On Netbatch, sized for the busiest hour (k = 21,013
+   servers) there is almost no queue at all: FCFS p99 wait is 34 s against service times
+   of hours, so the ordering hardly matters.  Pushed into sustained overload (whole-window
+   utilisation 0.8-0.95) SPJF improves the mean by 0.85 of the reference gap but makes the
+   p99 wait WORSE than FCFS (gap -0.12 to -4.35): with a pool of ~16,000 servers and a
+   service cap of 5.7 days, the jobs that lose are enormously starved (max wait 4.9 days
+   against 18.7 h under FCFS).  And the guard's guarantee family cannot express a useful
+   promise there, because its floor (3-2/k)L is 17 days while the FCFS p99 wait is 18.7 h;
+   at G = 5 L the budget is so large the guard never fires.  The mechanism itself still
+   works when the budget is set in absolute terms: B/k = 0.001 L = 494 s caps the observed
+   harm at 5,953 s instead of 410,655 s and keeps a third of the mean gain.  The lesson is
+   that the method needs L (the service cap) to be of the same order as the waits that
+   matter; that holds for a judge with a 60 s timeout and for serverless functions, and
+   fails for a farm whose jobs run for days.

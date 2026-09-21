@@ -1,0 +1,25 @@
+<repo-root>\prechecks\guard_variants\guardkern.py:37: SyntaxWarning: "\-" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\-"? A raw string is also an option.
+  \--------- Z(q), suffix range-add -/    \--- T(t), recomputed per decision ---/
+[     1s] rep0 level2: k=4 rho_busy=1.0589 n=17,634,760 predictor=M4 groups=qlen,thresh,blend,relblend
+[     2s]   FCFS p99_dl 263.1202s mean 10.0987s | SJF-ref p99_dl 42.8808s mean 1.6498s | gap 220.2394s / 8.4488s
+[     9s]   QL-B30-g1                7.5s p99_dl   169.934 gap  0.423 | max_excess    1347.4 guar@0   1490.8 guar@p99    1490.8 used 0.918 | maxheavy   2611.0 | forced  0.673% qw  11.44%
+[    18s]   QL-B30-g4                8.4s p99_dl   110.981 gap  0.691 | max_excess    3111.3 guar@0   3804.5 guar@p99    3804.5 used 0.960 | maxheavy   4543.5 | forced  0.201% qw   2.91%
+[    26s]   QL-B30-g16               7.8s p99_dl    81.723 gap  0.824 | max_excess    4221.5 guar@0  10285.5 guar@p99   10285.5 used 0.968 | maxheavy   5583.6 | forced  0.048% qw   0.78%
+[    34s]   QL-B120-g1               8.4s p99_dl   159.361 gap  0.471 | max_excess    1317.2 guar@0   1490.0 guar@p99    1490.0 used 0.916 | maxheavy   2600.2 | forced  0.364% qw   9.63%
+[    42s]   QL-B120-g4               7.5s p99_dl   105.484 gap  0.716 | max_excess    3501.1 guar@0   4193.0 guar@p99    4193.0 used 0.961 | maxheavy   4972.4 | forced  0.117% qw   2.35%
+[    50s]   QL-B120-g16              8.2s p99_dl    80.702 gap  0.828 | max_excess    3805.3 guar@0  10744.0 guar@p99   10744.0 used 0.969 | maxheavy   5252.7 | forced  0.031% qw   0.65%
+[    63s]   TH-B120-t1-N10          12.7s p99_dl   263.017 gap  0.000 | max_excess      86.3 guar@0    182.5 guar@p99     182.5 used 0.473 | maxheavy   1543.4 | forced  9.834% qw  90.88%
+[    74s]   TH-B120-t1-N50          11.4s p99_dl   263.980 gap -0.004 | max_excess      89.5 guar@0    192.5 guar@p99     192.5 used 0.465 | maxheavy   1545.5 | forced  5.780% qw  83.03%
+[    85s]   TH-B120-t5-N10          10.8s p99_dl   262.983 gap  0.001 | max_excess      86.3 guar@0    192.5 guar@p99     192.5 used 0.448 | maxheavy   1543.4 | forced  9.854% qw  90.90%
+[    97s]   TH-B120-t5-N50          11.9s p99_dl   263.957 gap -0.004 | max_excess      88.6 guar@0    242.5 guar@p99     242.5 used 0.365 | maxheavy   1545.5 | forced  5.805% qw  83.08%
+[   108s]   TH-B600-t1-N10          11.4s p99_dl   262.999 gap  0.001 | max_excess     104.1 guar@0    302.5 guar@p99     302.5 used 0.344 | maxheavy   1543.4 | forced  9.834% qw  90.88%
+[   120s]   TH-B600-t1-N50          11.6s p99_dl   263.980 gap -0.004 | max_excess     105.0 guar@0    312.5 guar@p99     312.5 used 0.336 | maxheavy   1545.5 | forced  5.778% qw  83.03%
+[   130s]   TH-B600-t5-N10          10.8s p99_dl   262.979 gap  0.001 | max_excess     104.1 guar@0    312.5 guar@p99     312.5 used 0.333 | maxheavy   1543.4 | forced  9.854% qw  90.90%
+[   141s]   TH-B600-t5-N50          11.0s p99_dl   263.956 gap -0.004 | max_excess     105.0 guar@0    362.5 guar@p99     362.5 used 0.290 | maxheavy   1545.5 | forced  5.803% qw  83.07%
+[   143s]   BLEND-a1e-05             1.4s p99_dl    66.558 gap  0.892 | max_excess    5786.0 guar@0      inf guar@p99       inf used nan | maxheavy   6133.4 | forced  0.000% qw   0.00%
+[   144s]   BLEND-a0.0001            1.4s p99_dl    67.062 gap  0.890 | max_excess    5555.3 guar@0      inf guar@p99       inf used nan | maxheavy   5937.0 | forced  0.000% qw   0.00%
+[   146s]   BLEND-a0.001             1.4s p99_dl    83.834 gap  0.814 | max_excess    2480.5 guar@0      inf guar@p99       inf used nan | maxheavy   2793.7 | forced  0.000% qw   0.00%
+[   153s]   RELBL-B120-e0.5-a0.0001   6.9s p99_dl   103.342 gap  0.725 | max_excess    1646.8 guar@0    360.0 guar@p99     623.1 used 0.866 | maxheavy   3159.4 | forced  0.113% qw   2.85%
+[   160s]   RELBL-B600-e0.5-a0.0001   7.2s p99_dl    79.259 gap  0.835 | max_excess    1884.8 guar@0    600.0 guar@p99     863.1 used 0.880 | maxheavy   3382.2 | forced  0.025% qw   0.87%
+[   168s]   RELBL-B120-e0.5-a0.001   7.8s p99_dl   155.503 gap  0.489 | max_excess    1399.3 guar@0    360.0 guar@p99     623.1 used 0.849 | maxheavy   2784.7 | forced  0.076% qw   1.37%
+[   168s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L2_M4.csv

@@ -1,0 +1,11 @@
+instances=60000  job-checks=330071
+  step 1 k*W=E_old+E_new      failures=0
+  step 2 E_old<=R_i           failures=0
+  step 3a over<budget         failures=0
+  step 3b <=k-1 in service    failures=0
+  step 3c S_new<bud+kL        failures=0
+  step 3d E_new<=S_new        failures=0
+  step 4 kW_F>=R_F-(k-1)L     failures=0
+  step 5 R_i<=R_F+(k-1)L      failures=0
+  max overtakers in service at the last overtaker dispatch = 3 (bound k-1)
+  tightest slack in step (3c) = 0.5

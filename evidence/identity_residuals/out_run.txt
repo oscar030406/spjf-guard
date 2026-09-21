@@ -1,0 +1,78 @@
+## 2026-09-19 23:37:37 manifest=c3df766f7a55015237b173c58a55b5de186849b2db25239ce59dc1b7866556c7 argv=--level 2
+[     1s] primary rep0 level 2: k=4 (K=[8, 5, 4]) n=17,634,760 busy-hour rho=1.0589 L=60s  total work=81.6 d
+[     3s] FCFS: dispatch order == rank order, In = Out = 0 on all 17,634,760 jobs; mean wait 10.099 s, p99 210.527 s
+[     5s] spjf: pred = Tweedie expected-cost score
+    n=17,634,760  max|D| = 3.126748 L  (bound 2(k-1)L = 6 L, ratio 0.52112)
+    D/L quantiles min=-2.985535  p0.1=-1.473717  p1=-0.488308  p50=+0.000000  p99=+0.674107  p99.9=+1.746844  max=+3.126748
+    D_i = 0 on 81.1088% of jobs;  In>0 on 10.4492%,  Out>0 on 15.9826%
+    same-phase share of sum In = 0.1047%;  In_i entirely same-phase on 3.0991% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.998485  max abs err = 46.9012 s  mean 0.514777 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 4.006e-06 s
+[    19s] cap600: guard, G = 600 s, B0 = 120*k/4 = 120 s, eta = 0.75 (eps = 3), Bmax = 1800.0 s
+    n=17,634,760  max|D| = 3.126748 L  (bound 2(k-1)L = 6 L, ratio 0.52112)
+    D/L quantiles min=-2.985535  p0.1=-1.483110  p1=-0.494354  p50=+0.000000  p99=+0.673559  p99.9=+1.744821  max=+3.126748
+    D_i = 0 on 81.1105% of jobs;  In>0 on 10.5253%,  Out>0 on 15.9005%
+    same-phase share of sum In = 0.0714%;  In_i entirely same-phase on 3.0768% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.997794  max abs err = 46.9012 s  mean 0.517337 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 4.006e-06 s
+[    25s] adv: pred = -service time (reversed score)
+    n=17,634,760  max|D| = 2.994460 L  (bound 2(k-1)L = 6 L, ratio 0.49908)
+    D/L quantiles min=-2.994032  p0.1=-0.842391  p1=-0.097013  p50=+0.000000  p99=+0.579243  p99.9=+1.698026  max=+2.994460
+    D_i = 0 on 81.6477% of jobs;  In>0 on 12.2410%,  Out>0 on 16.0753%
+    same-phase share of sum In = 0.0181%;  In_i entirely same-phase on 2.2480% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.999641  max abs err = 44.9169 s  mean 0.327898 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 4.007e-06 s
+[    28s] wrote <repo-root>\prechecks\identity_residuals\cells.csv (3 cells)
+## done in 28 s
+## 2026-09-19 23:38:15 manifest=c3df766f7a55015237b173c58a55b5de186849b2db25239ce59dc1b7866556c7 argv=--level 1
+[     1s] primary rep0 level 1: k=5 (K=[8, 5, 4]) n=17,634,760 busy-hour rho=0.8471 L=60s  total work=81.6 d
+[     3s] FCFS: dispatch order == rank order, In = Out = 0 on all 17,634,760 jobs; mean wait 4.106 s, p99 79.826 s
+[     5s] spjf: pred = Tweedie expected-cost score
+    n=17,634,760  max|D| = 3.943425 L  (bound 2(k-1)L = 8 L, ratio 0.49293)
+    D/L quantiles min=-3.861071  p0.1=-1.575588  p1=-0.356032  p50=+0.000000  p99=+0.610695  p99.9=+1.859484  max=+3.943425
+    D_i = 0 on 87.1997% of jobs;  In>0 on 7.0013%,  Out>0 on 10.4626%
+    same-phase share of sum In = 0.1848%;  In_i entirely same-phase on 4.4879% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.996291  max abs err = 47.3211 s  mean 0.334644 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 5.003e-06 s
+[    20s] cap600: guard, G = 600 s, B0 = 120*k/4 = 150 s, eta = 0.75 (eps = 3.75), Bmax = 2220.0 s
+    n=17,634,760  max|D| = 3.919162 L  (bound 2(k-1)L = 8 L, ratio 0.48990)
+    D/L quantiles min=-3.830281  p0.1=-1.562140  p1=-0.365386  p50=+0.000000  p99=+0.611635  p99.9=+1.860953  max=+3.919162
+    D_i = 0 on 87.1991% of jobs;  In>0 on 7.0205%,  Out>0 on 10.4462%
+    same-phase share of sum In = 0.1589%;  In_i entirely same-phase on 4.4759% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.995160  max abs err = 47.0299 s  mean 0.336226 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 5.003e-06 s
+[    25s] adv: pred = -service time (reversed score)
+    n=17,634,760  max|D| = 3.880822 L  (bound 2(k-1)L = 8 L, ratio 0.48510)
+    D/L quantiles min=-3.880822  p0.1=-0.985543  p1=-0.085122  p50=+0.000000  p99=+0.495659  p99.9=+1.866301  max=+3.878475
+    D_i = 0 on 87.4965% of jobs;  In>0 on 8.1144%,  Out>0 on 10.6683%
+    same-phase share of sum In = 0.0418%;  In_i entirely same-phase on 3.2207% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.998937  max abs err = 46.5699 s  mean 0.234105 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 5.007e-06 s
+[    28s] wrote <repo-root>\prechecks\identity_residuals\cells.csv (6 cells)
+## done in 28 s
+## 2026-09-19 23:38:52 manifest=c3df766f7a55015237b173c58a55b5de186849b2db25239ce59dc1b7866556c7 argv=--level 0
+[     1s] primary rep0 level 0: k=8 (K=[8, 5, 4]) n=17,634,760 busy-hour rho=0.5294 L=60s  total work=81.6 d
+[     3s] FCFS: dispatch order == rank order, In = Out = 0 on all 17,634,760 jobs; mean wait 0.602 s, p99 11.832 s
+[     5s] spjf: pred = Tweedie expected-cost score
+    n=17,634,760  max|D| = 6.785755 L  (bound 2(k-1)L = 14 L, ratio 0.48470)
+    D/L quantiles min=-6.424284  p0.1=-1.284257  p1=-0.044657  p50=+0.000000  p99=+0.040326  p99.9=+1.742297  max=+6.785755
+    D_i = 0 on 95.5919% of jobs;  In>0 on 2.1777%,  Out>0 on 3.3064%
+    same-phase share of sum In = 0.3616%;  In_i entirely same-phase on 5.7628% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.984736  max abs err = 50.8932 s  mean 0.091810 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 8.004e-06 s
+[    19s] cap600: guard, G = 600 s, B0 = 120*k/4 = 240 s, eta = 0.75 (eps = 6), Bmax = 3480.0 s
+    n=17,634,760  max|D| = 6.785755 L  (bound 2(k-1)L = 14 L, ratio 0.48470)
+    D/L quantiles min=-6.424284  p0.1=-1.266282  p1=-0.044862  p50=+0.000000  p99=+0.040259  p99.9=+1.741078  max=+6.785755
+    D_i = 0 on 95.5924% of jobs;  In>0 on 2.1820%,  Out>0 on 3.3065%
+    same-phase share of sum In = 0.3529%;  In_i entirely same-phase on 5.7514% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.982680  max abs err = 50.8932 s  mean 0.091145 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 8.004e-06 s
+[    23s] adv: pred = -service time (reversed score)
+    n=17,634,760  max|D| = 6.788019 L  (bound 2(k-1)L = 14 L, ratio 0.48486)
+    D/L quantiles min=-6.560315  p0.1=-0.873458  p1=-0.021113  p50=+0.000000  p99=+0.057245  p99.9=+1.751707  max=+6.788019
+    D_i = 0 on 95.5936% of jobs;  In>0 on 2.5120%,  Out>0 on 3.4936%
+    same-phase share of sum In = 0.1202%;  In_i entirely same-phase on 4.0959% of the jobs with In>0
+    (In-Out)/k vs real excess:  R2 = 0.995719  max abs err = 50.9101 s  mean 0.077251 s  median 0.000000 s
+    float64-seconds D vs integer-microsecond D: max diff 8.005e-06 s
+[    27s] wrote <repo-root>\prechecks\identity_residuals\cells.csv (9 cells)
+## done in 27 s

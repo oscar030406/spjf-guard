@@ -1,0 +1,68 @@
+## 2026-09-19 20:44:47 manifest=7d6ed04de3219c6982328c8d3b82ace5dec84547405fdeeea0aeb1cd4eba5687 argv=
+
+=== G = 300 s  (harm limit 150 s) [valid rep0] ===
+             policy  B0_base  eta  worst_gap  worst_harm  feasible
+    CAP-G300-B30-e0     30.0 0.00    -0.0051     71.3179      True
+ CAP-G300-B30-e0.25     30.0 0.25     0.2908     93.0247      True
+  CAP-G300-B30-e0.5     30.0 0.50     0.4102    102.7618      True
+ CAP-G300-B30-e0.75     30.0 0.75     0.4009    152.5472     False
+  CAP-G300-B30-e0.9     30.0 0.90     0.3719    183.2805     False
+   CAP-G300-B120-e0    120.0 0.00     0.0154    102.6526      True
+CAP-G300-B120-e0.25    120.0 0.25     0.3404    102.7618      True
+ CAP-G300-B120-e0.5    120.0 0.50     0.4040    145.6661      True
+CAP-G300-B120-e0.75    120.0 0.75     0.3712    183.2805     False
+ CAP-G300-B120-e0.9    120.0 0.90     0.3693    186.1175     False
+   CAP-G300-B600-e0    600.0 0.00     0.3693    186.1175     False
+CAP-G300-B600-e0.25    600.0 0.25     0.3693    186.1175     False
+ CAP-G300-B600-e0.5    600.0 0.50     0.3693    186.1175     False
+CAP-G300-B600-e0.75    600.0 0.75     0.3693    186.1175     False
+ CAP-G300-B600-e0.9    600.0 0.90     0.3693    186.1175     False
+fixed-budget baseline FIX-G300 (eta = 0, B0 = Bmax): worst-level gap 0.3693, worst-level harm 186.12 s, feasible=False
+-> selected B0 = 30 * k/4 s, eta = 0.5: worst-level gap 0.4102, worst-level harm 102.76 s (6 of 15 grid points feasible) 
+
+=== G = 600 s  (harm limit 300 s) [valid rep0] ===
+             policy  B0_base  eta  worst_gap  worst_harm  feasible
+    CAP-G600-B30-e0     30.0 0.00    -0.0051     71.3179      True
+ CAP-G600-B30-e0.25     30.0 0.25     0.3210     93.0247      True
+  CAP-G600-B30-e0.5     30.0 0.50     0.5858    102.7618      True
+ CAP-G600-B30-e0.75     30.0 0.75     0.7214    152.5472      True
+  CAP-G600-B30-e0.9     30.0 0.90     0.7434    223.6005      True
+   CAP-G600-B120-e0    120.0 0.00     0.0154    102.6526      True
+CAP-G600-B120-e0.25    120.0 0.25     0.3969    102.7618      True
+ CAP-G600-B120-e0.5    120.0 0.50     0.6311    145.6661      True
+CAP-G600-B120-e0.75    120.0 0.75     0.7379    219.7274      True
+ CAP-G600-B120-e0.9    120.0 0.90     0.7518    360.8555     False
+   CAP-G600-B600-e0    600.0 0.00     0.3693    186.1175      True
+CAP-G600-B600-e0.25    600.0 0.25     0.6767    233.2785      True
+ CAP-G600-B600-e0.5    600.0 0.50     0.7541    333.0588     False
+CAP-G600-B600-e0.75    600.0 0.75     0.7521    490.5264     False
+ CAP-G600-B600-e0.9    600.0 0.90     0.7521    490.5264     False
+fixed-budget baseline FIX-G600 (eta = 0, B0 = Bmax): worst-level gap 0.7521, worst-level harm 490.53 s, feasible=False
+-> selected B0 = 30 * k/4 s, eta = 0.9: worst-level gap 0.7434, worst-level harm 223.60 s (11 of 15 grid points feasible) 
+
+=== G = 1200 s  (harm limit 600 s) [valid rep0] ===
+              policy  B0_base  eta  worst_gap  worst_harm  feasible
+    CAP-G1200-B30-e0     30.0 0.00    -0.0051     71.3179      True
+ CAP-G1200-B30-e0.25     30.0 0.25     0.3210     93.0247      True
+  CAP-G1200-B30-e0.5     30.0 0.50     0.6103    102.7618      True
+ CAP-G1200-B30-e0.75     30.0 0.75     0.7504    152.5472      True
+  CAP-G1200-B30-e0.9     30.0 0.90     0.7640    223.6005      True
+   CAP-G1200-B120-e0    120.0 0.00     0.0154    102.6526      True
+CAP-G1200-B120-e0.25    120.0 0.25     0.3969    102.7618      True
+ CAP-G1200-B120-e0.5    120.0 0.50     0.6663    145.6661      True
+CAP-G1200-B120-e0.75    120.0 0.75     0.7534    219.7274      True
+ CAP-G1200-B120-e0.9    120.0 0.90     0.7645    360.8555      True
+   CAP-G1200-B600-e0    600.0 0.00     0.3693    186.1175      True
+CAP-G1200-B600-e0.25    600.0 0.25     0.6820    233.2785      True
+ CAP-G1200-B600-e0.5    600.0 0.50     0.7593    333.0588      True
+CAP-G1200-B600-e0.75    600.0 0.75     0.7648    637.8303     False
+ CAP-G1200-B600-e0.9    600.0 0.90     0.7657    678.5047     False
+fixed-budget baseline FIX-G1200 (eta = 0, B0 = Bmax): worst-level gap 0.7657, worst-level harm 678.50 s, feasible=False
+-> selected B0 = 120 * k/4 s, eta = 0.9: worst-level gap 0.7645, worst-level harm 360.86 s (13 of 15 grid points feasible) 
+
+=== selected parameters (validation only) ===
+     G  B0_base  eta     B0_rule              Bmax_rule  worst_gap  worst_red_pct  worst_harm_s  harm_limit_s  n_feasible  n_grid  fix_worst_gap  fix_worst_harm_s  fix_feasible note
+ 300.0     30.0  0.5  30 * k/4 s k*(G - (3 - 2/k)*60) s     0.4102         33.395        102.76         150.0           6      15         0.3693            186.12         False     
+ 600.0     30.0  0.9  30 * k/4 s k*(G - (3 - 2/k)*60) s     0.7434         42.524        223.60         300.0          11      15         0.7521            490.53         False     
+1200.0    120.0  0.9 120 * k/4 s k*(G - (3 - 2/k)*60) s     0.7645         42.906        360.86         600.0          13      15         0.7657            678.50         False     
+## done in 0 s

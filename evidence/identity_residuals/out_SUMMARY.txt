@@ -1,0 +1,196 @@
+====================================================================================================
+NET-OVERTAKE IDENTITY: THE RESIDUAL D_i ON THE REAL TRACE
+Theorem 1 of ../guard_theory/theory.md / paper/sections/06_theory.tex, measured job by job
+====================================================================================================
+written 2026-09-19 23:50:23
+
+manifest of the code that produced every number below: c3df766f7a55015237b173c58a55b5de186849b2db25239ce59dc1b7866556c7
+    ir_common.py                                     d64fc8f83bae68b9186ccc5e762b7ab4e07f4d6a68ed6d136a769900c6290195
+    ir_kern.py                                       8d6b4f217f84670e1cc63e34865e42f893b1d9bc23e986d639ed92b1231b186c
+    ir_overtake.py                                   fbb82d73f4f5e0ccc7f824adf650d3d949fcb3f71685c20ce04ba37451a2a189
+    ir_refsim.py                                     97494f9532dd806825108e44e40a9a4a3be7527d70a8623601e5dc2b5f7ed789
+    ir_run.py                                        93e7ab1495a7a4d00118cd6afc7fb0deff2025ccef433c28f562e666144761d8
+    ir_validate.py                                   9c42f99dc2b4c2e7899ebff783f97a791b0ae2af519cf93bd073f07f60e60c20
+    [ext] guard_variants/guardkern.py                e8b8578d5b53874440d2f37f285bc422c127512595b544fe5427b5a3acdd1c58
+    [ext] guard_variants_referee/refsim.py           1195a8983303e8100cd852b2b0e42774bf4ea458d3c3f15a938b82f07ffec656
+    [ext] main_v3/v31/selected_params.csv            f797c5da565aae946cfc30382a7e9111fb17d99505442b252118719e2555ea74
+    [ext] main_v3/v31/v31_common.py                  10fd6978afd5b31ca349e149877117a4e7f303a404b9de9d675a394266702104
+
+----------------------------------------------------------------------------------------------------
+0. WHAT WAS MEASURED
+----------------------------------------------------------------------------------------------------
+Theorem 1 states that for every non-preemptive work-conserving k-server policy P, every
+input and every job i,
+
+    D_i := k * ( W_P[i] - W_FCFS[i] ) - ( In_i - Out_i ),        |D_i| <= 2(k-1) L
+
+with the conventions of theory.md 1.1: jobs are ranked by (arrival, input index); at an
+instant, completions are processed, then arrivals, then dispatches, one at a time; the
+dispatches form ONE sequence and `j -< i` means j precedes i in it; a maximal run of
+dispatches at one instant is a phase; and
+
+    In_i  = sum{ x_j : rank j > i and j -< i }   (arrived after i, dispatched before i)
+    Out_i = sum{ x_j : rank j < i and i -< j }   (arrived before i, dispatched after i)
+
+Both are defined by the dispatch SEQUENCE, not by the clock, so a job dispatched in i's
+own phase before i contributes its whole x_j to In_i even though it executes nothing
+while i waits (Remark 1.0).  The theorem had been attacked exhaustively and at random on
+small synthetic instances; it had never been measured on the trace this paper runs on.
+That is what this directory does.
+
+Setting: the primary development trace, overlay rep 0, 17,634,760 jobs, 81.6 days of
+work, L = 60 s; the three load levels of ../main_v3/v31 (k = 8, 5, 4 at busy-hour
+rho = 0.53, 0.85, 1.06 -- the k vector of THIS overlay; overlay rep 4 and validation
+overlays 0 and 3 are the 7/5/4 ones).  Policies: the unguarded expected-cost score
+(SPJF-tweedie), the selected v3.1 guard at G = 600 s (CAP-G600: B0 = 120*k/4 s,
+eta = 0.75, Bmax = k(G - (3 - 2/k)L)), and the reversed-score adversarial SPJF.  FCFS on
+the same input is the reference schedule in every cell.
+
+Units.  In_i and Out_i are exact int64 microseconds: a service time is metered as
+round(x * 1e6), which is exactly how ../guard_variants/guardkern.py charges a completed
+overtaker, so In and Out are measured in the currency the guard itself meters.  Waits are
+metered as round(start * 1e6) - round(a * 1e6) off the project's float64 clock, so each
+reported D_i differs from the D of the exact float64 schedule by at most 2k microseconds.
+The last column of the table below is that difference, measured rather than assumed: it
+never exceeds 8 us = 1.3e-7 L, against residuals of order L and a bound of 2(k-1)L.
+
+----------------------------------------------------------------------------------------------------
+1. THE TOOLS, PROVED BEFORE ANY NUMBER (out_validate.txt)
+----------------------------------------------------------------------------------------------------
+guardkern.py exposes waits only, not the dispatch sequence, so ir_kern.py is a verbatim
+copy of it (sha256 e8b8578d...) with two additive recorders: the position of each job in
+the dispatch sequence and the instant it was dispatched.  No branch, comparison or state
+update is touched.  ir_refsim.py is the same additive edit to the independent reference
+simulator ../guard_variants_referee/refsim.py (pure python, exact integers).  Checks:
+
+  random instances          3,000 (n <= 40, k <= 6, ties and equal predictions included); 66,350 jobs, 199,050 job-checks
+  A waits == guardkern      exact, every job of every instance
+  B sequence == refsim      exact, every job of every instance
+  C sweep == O(n^2)         exact, In, Out and the same-phase part
+  D Theorem 1               0 violations; worst |D| / ((k-1)L) = 0.8789
+  E FCFS In = Out = 0       holds on every job
+  real slice: the densest 5,000 consecutive jobs of primary rep0 (ranks 6,690,498..6,695,497, span 511.2 s, work 1477.3 s)
+    k=8 spjf     sweep == O(n^2): True   max|D| = 0.276092 L   bound 2(k-1)L = 14 L   In>0 on 282 jobs, same-phase share of sum In = 5.258%
+    k=8 cap600   sweep == O(n^2): True   max|D| = 0.276092 L   bound 2(k-1)L = 14 L   In>0 on 282 jobs, same-phase share of sum In = 5.258%
+    k=8 adv      sweep == O(n^2): True   max|D| = 0.233337 L   bound 2(k-1)L = 14 L   In>0 on 330 jobs, same-phase share of sum In = 3.596%
+    k=5 spjf     sweep == O(n^2): True   max|D| = 0.840389 L   bound 2(k-1)L = 8 L   In>0 on 1,044 jobs, same-phase share of sum In = 0.385%
+    k=5 cap600   sweep == O(n^2): True   max|D| = 0.840389 L   bound 2(k-1)L = 8 L   In>0 on 1,044 jobs, same-phase share of sum In = 0.385%
+    k=5 adv      sweep == O(n^2): True   max|D| = 0.977430 L   bound 2(k-1)L = 8 L   In>0 on 1,151 jobs, same-phase share of sum In = 0.411%
+    k=4 spjf     sweep == O(n^2): True   max|D| = 0.899638 L   bound 2(k-1)L = 6 L   In>0 on 1,565 jobs, same-phase share of sum In = 0.100%
+    k=4 cap600   sweep == O(n^2): True   max|D| = 0.899638 L   bound 2(k-1)L = 6 L   In>0 on 1,565 jobs, same-phase share of sum In = 0.100%
+    k=4 adv      sweep == O(n^2): True   max|D| = 1.173797 L   bound 2(k-1)L = 6 L   In>0 on 1,808 jobs, same-phase share of sum In = 0.170%
+
+On the full 17.6 M-job traces the same check is repeated inside every cell: ir_kern.py is
+run beside guardkern.run on the identical input and the two wait vectors must be equal
+element for element (9 cells x 17,634,760 jobs, plus the 3 FCFS runs -- 0 differences).
+FCFS's recorded dispatch sequence is asserted to be rank order, hence In = Out = 0 on
+every one of its jobs, in every cell.
+
+----------------------------------------------------------------------------------------------------
+2. THE RESIDUAL, PER (LOAD LEVEL, POLICY)
+----------------------------------------------------------------------------------------------------
+max|D| is over all 17,634,760 jobs of the cell.  ratio = max|D| / 2(k-1)L.
+Theorem 1 is asserted on every job of every cell before the row is written; 0 violations.
+
+ level  k    rho        policy   n_jobs  max|D|/L  2(k-1)    ratio  mean|D|/L  frac D=0  viol  f64-int(s)
+     0  8 0.5294 SPJF-reversed 17634760   6.78802      14 0.484858  0.0103002  0.955936     0 8.00545e-06
+     0  8 0.5294      CAP-G600 17634760   6.78576      14 0.484697  0.0121527  0.955924     0 8.00385e-06
+     0  8 0.5294  SPJF-tweedie 17634760   6.78576      14 0.484697  0.0122413  0.955919     0 8.00385e-06
+     1  5 0.8471 SPJF-reversed 17634760   3.88082       8 0.485103  0.0195088  0.874965     0 5.00743e-06
+     1  5 0.8471      CAP-G600 17634760   3.91916       8 0.489895  0.0280188  0.871991     0 5.00331e-06
+     1  5 0.8471  SPJF-tweedie 17634760   3.94343       8 0.492928   0.027887  0.871997     0 5.00331e-06
+     2  4 1.0589 SPJF-reversed 17634760   2.99446       6 0.499077  0.0218599  0.816477     0 4.00693e-06
+     2  4 1.0589      CAP-G600 17634760   3.12675       6 0.521125  0.0344891  0.811105     0 4.00602e-06
+     2  4 1.0589  SPJF-tweedie 17634760   3.12675       6 0.521125  0.0343185  0.811088     0 4.00602e-06
+
+----------------------------------------------------------------------------------------------------
+3. THE DISTRIBUTION OF D_i / L
+----------------------------------------------------------------------------------------------------
+ level  k        policy   D_L_min  D_L_p0.1    D_L_p1   D_L_p50   D_L_p99  D_L_p99.9   D_L_max  frac_D_zero
+     0  8 SPJF-reversed -6.560315 -0.873458 -0.021113 +0.000000 +0.057245  +1.751707 +6.788019    +0.955936
+     0  8      CAP-G600 -6.424284 -1.266282 -0.044862 +0.000000 +0.040259  +1.741078 +6.785755    +0.955924
+     0  8  SPJF-tweedie -6.424284 -1.284257 -0.044657 +0.000000 +0.040326  +1.742297 +6.785755    +0.955919
+     1  5 SPJF-reversed -3.880822 -0.985543 -0.085122 +0.000000 +0.495659  +1.866301 +3.878475    +0.874965
+     1  5      CAP-G600 -3.830281 -1.562140 -0.365386 +0.000000 +0.611635  +1.860953 +3.919162    +0.871991
+     1  5  SPJF-tweedie -3.861071 -1.575588 -0.356032 +0.000000 +0.610695  +1.859484 +3.943425    +0.871997
+     2  4 SPJF-reversed -2.994032 -0.842391 -0.097013 +0.000000 +0.579243  +1.698026 +2.994460    +0.816477
+     2  4      CAP-G600 -2.985535 -1.483110 -0.494354 +0.000000 +0.673559  +1.744821 +3.126748    +0.811105
+     2  4  SPJF-tweedie -2.985535 -1.473717 -0.488308 +0.000000 +0.674107  +1.746844 +3.126748    +0.811088
+
+D_i = 0 exactly (no overtaking at all, and the two schedules agree at i) on the fraction in the last column.
+
+----------------------------------------------------------------------------------------------------
+4. HOW MUCH OF In_i IS SAME-PHASE BOOKKEEPING (Remark 1.0 / 1.3)
+----------------------------------------------------------------------------------------------------
+A job dispatched in i's own phase before i executes no work while i waits: it contributes
+x_j to In_i and x_j to rho_new, and the two cancel inside the proof.  Remark 1.0 points
+out that the easiest extremal instances of Theorem 1 are made entirely of this
+bookkeeping (every wait 0, D = -(k-1)L).  On the trace it is a rounding error:
+
+ level  k        policy  n_phases  frac In>0  same-phase/sum In  In all same-phase  sum In (s)  sum Out (s)
+     0  8 SPJF-reversed   5443641  0.0251198         0.00120209          0.0409588 8.82281e+07  1.59614e+07
+     0  8      CAP-G600   5445246  0.0218203         0.00352918          0.0575136 8.59112e+06  5.89882e+07
+     0  8  SPJF-tweedie   5445197   0.021777         0.00361568          0.0576279 8.38582e+06  6.14984e+07
+     1  5 SPJF-reversed   6950427  0.0811444        0.000418215           0.032207 3.88702e+08  8.96845e+07
+     1  5      CAP-G600   6947114  0.0702055         0.00158895          0.0447588  3.5207e+07  2.67985e+08
+     1  5  SPJF-tweedie   6947208  0.0700133         0.00184811          0.0448793 3.02681e+07  2.89705e+08
+     2  4 SPJF-reversed   8220449    0.12241        0.000180828          0.0224805 8.09541e+08  2.15604e+08
+     2  4      CAP-G600   8225161   0.105253        0.000713805          0.0307675 7.80171e+07  5.31357e+08
+     2  4  SPJF-tweedie   8225307   0.104492         0.00104687          0.0309906 5.31918e+07  6.14215e+08
+
+So the executed-work convention De_i of Remark 1.3 would move max|D| by at most a fraction of a percent here;
+the degenerate witnesses that drive the k >= 2 lower bounds do not occur naturally on this workload.
+
+----------------------------------------------------------------------------------------------------
+5. DOES (In_i - Out_i)/k PREDICT THE REAL EXCESS?
+----------------------------------------------------------------------------------------------------
+Regression-free comparison of W_P[i] - W_FCFS[i] against (In_i - Out_i)/k, over all jobs of the cell.
+R2 = 1 - sum(excess - net/k)^2 / sum(excess - mean excess)^2.
+
+ level  k        policy  mean excess  max excess       R2  max|err| s  mean|err| s  med|err| s
+     0  8 SPJF-reversed     0.540355     1217.57 0.995719     50.9101    0.0772515           0
+     0  8      CAP-G600    -0.343083     489.089  0.98268     50.8932    0.0911449           0
+     0  8  SPJF-tweedie    -0.362682     1242.48 0.984736     50.8932    0.0918099           0
+     1  5 SPJF-reversed      3.50966     3387.89 0.998937     46.5699     0.234105           0
+     1  5      CAP-G600     -2.57503     513.833  0.99516     47.0299     0.336226           0
+     1  5  SPJF-tweedie     -2.87554     3044.47 0.996291     47.3211     0.334644           0
+     2  4 SPJF-reversed      8.60892     6295.65 0.999641     44.9169     0.327898           0
+     2  4      CAP-G600     -6.33499     510.683 0.997794     46.9012     0.517337           0
+     2  4  SPJF-tweedie     -7.85849     5904.52 0.998485     46.9012     0.514777           0
+
+----------------------------------------------------------------------------------------------------
+6. WHAT THE PAPER MAY SAY
+----------------------------------------------------------------------------------------------------
+On the 17,634,760-job development trace, at all three load levels and for all three
+policies, the net-overtake identity holds with room to spare.  The largest residual in
+absolute terms is |D_i| = 6.788 L, at k = 8 (SPJF-reversed), where the bound is
+2(k-1)L = 14 L; the closest any cell comes to its own bound is 0.521 of it
+(k = 4, CAP-G600).  Across the nine cells the maximum sits between 0.485 and
+0.521 of the bound -- that is, at about (k-1)L rather than 2(k-1)L, which is where
+Remark 1.0 says a search that does not construct the cascade of Theorem 3 stops.  The
+residual is exactly 0 on 81.1-95.6% of jobs, and the net-overtake term carries the
+per-job excess almost entirely: (In_i - Out_i)/k explains R2 = 0.9827-0.9996 of the
+variance of W_P[i] - W_FCFS[i], with a worst-case per-job error of 44.9-50.9 s.  The theorem
+allows that error to reach (2 - 2/k)L, i.e. 90 s at k = 4 and 105 s at k = 8, so the
+observed worst case is under one L where up to 1.75 L is permitted.  Same-phase
+bookkeeping, the mechanism behind the
+degenerate extremal instances of Remark 1.0, accounts for at most 0.36% of the total In
+in any cell, so the executed-work convention of Remark 1.3 would not change the picture.
+
+Suggested sentence: "On the real trace the identity holds with a residual of at most
+0.52 of the proved bound 2(k-1)L in every cell -- 6.79 L in absolute terms, at
+k = 8, against a bound of 14 L -- and the net-overtake term (In_i - Out_i)/k explains
+98.3% or more of the variance of the per-job excess over FCFS."
+
+----------------------------------------------------------------------------------------------------
+7. WHAT THIS IS NOT
+----------------------------------------------------------------------------------------------------
+* Not held out.  The primary trace is built from CodeBench DEVELOPMENT semesters; the
+  sealed semesters 2023-1, 2023-2 and 2024-1 were not opened, and neither were the ACcoding
+  id block 80-100% or OULAD 2014.  The guard parameters measured here were selected on
+  validation overlays in ../main_v3/v31; nothing here is out-of-sample.
+* One overlay.  Overlay rep 0 only, so the 8/5/4 k vector of that overlay.  The residual
+  is a property of the schedule, not a statistic with a confidence interval, so no
+  bootstrap is reported -- but the numbers below are one overlay's, not five.
+* A measurement, not a proof.  It cannot show the constant 2(k-1)L is loose; theory.md 6.1
+  proves it is attained.  What it shows is that the workload does not attain it.

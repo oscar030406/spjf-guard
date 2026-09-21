@@ -1,0 +1,41 @@
+==========================================================================
+Theorem 1's constant 2(k-1)L: explicit families approaching it
+==========================================================================
+
+UPPER family, k=2, L=64 (= k**m_max), tiny size 1, proved bound 2(k-1)L = 128
+   m=1 n=324   D = 95/64   L   [R^P-R^F = 1/2    L, rho^F = 1    L, rho^P = 1/64   L]  De = 3/2 L
+   m=2 n=389   D = 111/64  L   [R^P-R^F = 3/4    L, rho^F = 1    L, rho^P = 1/64   L]  De = 7/4 L
+   m=3 n=454   D = 119/64  L   [R^P-R^F = 7/8    L, rho^F = 1    L, rho^P = 1/64   L]  De = 15/8 L
+   m=4 n=519   D = 123/64  L   [R^P-R^F = 15/16  L, rho^F = 1    L, rho^P = 1/64   L]  De = 31/16 L
+   m=5 n=584   D = 125/64  L   [R^P-R^F = 31/32  L, rho^F = 1    L, rho^P = 1/64   L]  De = 63/32 L
+   m=6 n=649   D = 127/64  L   [R^P-R^F = 63/64  L, rho^F = 1    L, rho^P = 0      L]  De = 127/64 L
+   predicted limit 2(k-1) = 2 ;  round-j gap (k-1)L(1-((k-1)/k)^j)
+LOWER (mirror) family, k=2, L=64
+   m=1 n=68    D = -3/2    L   [R^F-R^P = 1/2    L, rho^P = 1    L, rho^F = 0      L]  De = -1/2 L
+   m=2 n=133   D = -7/4    L   [R^F-R^P = 3/4    L, rho^P = 1    L, rho^F = 0      L]  De = -3/4 L
+   m=3 n=198   D = -15/8   L   [R^F-R^P = 7/8    L, rho^P = 1    L, rho^F = 0      L]  De = -7/8 L
+   m=4 n=263   D = -31/16  L   [R^F-R^P = 15/16  L, rho^P = 1    L, rho^F = 0      L]  De = -15/16 L
+   m=5 n=328   D = -63/32  L   [R^F-R^P = 31/32  L, rho^P = 1    L, rho^F = 0      L]  De = -31/32 L
+   m=6 n=393   D = -127/64 L   [R^F-R^P = 63/64  L, rho^P = 1    L, rho^F = 0      L]  De = -63/64 L
+
+UPPER family, k=3, L=81 (= k**m_max), tiny size 1, proved bound 2(k-1)L = 324
+   m=1 n=573   D = 215/81  L   [R^P-R^F = 2/3    L, rho^F = 2    L, rho^P = 1/81   L]  De = 8/3 L
+   m=2 n=656   D = 251/81  L   [R^P-R^F = 10/9   L, rho^F = 2    L, rho^P = 1/81   L]  De = 28/9 L
+   m=3 n=739   D = 275/81  L   [R^P-R^F = 38/27  L, rho^F = 2    L, rho^P = 1/81   L]  De = 92/27 L
+   m=4 n=822   D = 290/81  L   [R^P-R^F = 130/81 L, rho^F = 2    L, rho^P = 2/81   L]  De = 292/81 L
+   predicted limit 2(k-1) = 4 ;  round-j gap (k-1)L(1-((k-1)/k)^j)
+LOWER (mirror) family, k=3, L=81
+   m=1 n=87    D = -8/3    L   [R^F-R^P = 2/3    L, rho^P = 2    L, rho^F = 0      L]  De = -2/3 L
+   m=2 n=170   D = -28/9   L   [R^F-R^P = 10/9   L, rho^P = 2    L, rho^F = 0      L]  De = -10/9 L
+   m=3 n=253   D = -92/27  L   [R^F-R^P = 38/27  L, rho^P = 2    L, rho^F = 0      L]  De = -38/27 L
+   m=4 n=336   D = -292/81 L   [R^F-R^P = 130/81 L, rho^P = 2    L, rho^F = 0      L]  De = -130/81 L
+
+UPPER family, k=4, L=64 (= k**m_max), tiny size 1, proved bound 2(k-1)L = 384
+   m=1 n=584   D = 239/64  L   [R^P-R^F = 3/4    L, rho^F = 3    L, rho^P = 1/64   L]  De = 15/4 L
+   m=2 n=651   D = 275/64  L   [R^P-R^F = 21/16  L, rho^F = 3    L, rho^P = 1/64   L]  De = 69/16 L
+   m=3 n=718   D = 303/64  L   [R^P-R^F = 111/64 L, rho^F = 3    L, rho^P = 0      L]  De = 303/64 L
+   predicted limit 2(k-1) = 6 ;  round-j gap (k-1)L(1-((k-1)/k)^j)
+LOWER (mirror) family, k=4, L=64
+   m=1 n=72    D = -15/4   L   [R^F-R^P = 3/4    L, rho^P = 3    L, rho^F = 0      L]  De = -3/4 L
+   m=2 n=139   D = -69/16  L   [R^F-R^P = 21/16  L, rho^P = 3    L, rho^F = 0      L]  De = -21/16 L
+   m=3 n=206   D = -303/64 L   [R^F-R^P = 111/64 L, rho^P = 3    L, rho^F = 0      L]  De = -111/64 L

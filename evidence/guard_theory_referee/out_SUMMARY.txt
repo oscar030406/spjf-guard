@@ -1,0 +1,70 @@
+REFEREE REPORT ON prechecks/guard_theory/theory.md
+==================================================
+All numbers below come from this directory's own code (refsim2.py pure python,
+fastsim.py numba, cross-checked by agree.py).  No code from
+prechecks/guard_theory/ was used.  Exact integer arithmetic throughout.
+
+SIMULATOR RE-VALIDATION (validate.py, agree.py)
+  FCFS k=1 vs Lindley                      5,061 instances, 0 mismatches
+  FCFS k>=2 vs Kiefer-Wolfowitz           20,000 instances, 0 mismatches
+  work-conservation / no-idle invariants  20,000 instances, 0 failures
+  vs predecessor referee's refsim.py FCFS  6,320 instances, 0 mismatches
+  vs predecessor referee's refsim.py guard 6,320 instances, 0 mismatches
+  fastsim (numba) vs refsim2, 6 policies  36,000 comparisons, 0 mismatches
+  enumerator: no duplicate schedules, FCFS and every score policy present,
+              start times agree with the direct simulation
+
+COVERAGE
+  exhaustive:  1,130,777 work-conserving schedules (EVERY dispatch order, not
+               just named policies), 6,400,411 job-checks, n<=7, k in 1..4,
+               includes tied arrivals, zero-length jobs, all-sizes-equal-L,
+               one-huge-job families
+  random:      300,000,000 instances / 2,249,983,356 job-checks, n<=14,
+               k in 1..6, 5 arrival patterns x 4 size patterns x 6 policy
+               families (free-choice tape = every work-conserving schedule,
+               random, LIFO-by-rank, SJF, LJF, guard)
+  hill-climb:  ~2.5e8 evaluations over (arrivals, sizes, dispatch tape, B)
+  heavy tails: 599,400 job-checks with Pareto(0.6/0.7/1.0) UNBOUNDED sizes
+  speeds:      532,396 job-checks, k in 2..4, speeds in 1..4, 4 combinations
+               of the server-selection rule
+  timeout kill:180,085 job-checks, Pareto(0.6) raw sizes
+  Theorem 5:   20,001 exhaustive (instance, base, B) triples + 28,922 random
+  per-step audit of Theorem 1's proof: 268,188 job-checks
+
+VERDICTS
+  Theorem 1      HOLDS.  0 counterexamples.  Every displayed proof step
+                 verified separately.  Constant NOT tight: see below.
+  Corollary 1.1  HOLDS exactly at k=1 (0 nonzero residuals anywhere).
+  Corollary 1.2  HOLDS.
+  Lemma 2        HOLDS.  Hypothesis is stronger than the proof needs (see P1).
+  Theorem 2      HOLDS.
+  Theorem 4      HOLDS.  (3) is strict; sup(In-B) = kL - 1 in integer units.
+  Theorem 5(a)   BROKEN as an "iff".  The "=>" half is false.
+  Theorem 5(b,c) HOLD.  The guard never fires at all in the (c) regime.
+  Prop 8         the displayed inequality HOLDS; the sentence that follows it
+                 ("L replaced by the running prefix maximum") is FALSE.
+  Prop 9         HOLDS, and is robust to the unspecified server-selection rule.
+  Prop 11a       HOLDS (tautologically) provided In/Out are read in EXECUTED
+                 work; false if read in raw work.
+  Prop 13        HOLDS, reproduced exactly (excess == B/k on all 24 configs).
+  Lemma 15       sums and the k=1 identity HOLD exactly; the k>1 clause is only
+                 true in the per-job-summed reading, where it is vacuous.
+  Theorem 16     HOLDS (bound never violated); at k=1 the realised fraction is
+                 exactly min(1, G/(ns)) as claimed; at k>=2 it is not.
+
+WORST CONSTANTS FOUND (all witnesses re-verified in pure python,
+out_witness.txt)
+  Theorem 1, |D|/L         k=1 0 | k=2 3/2 | k=3 5/2 | k=4 7/2 | k=5 4 | k=6 5
+  theory.md's own table    k=1 0 | k=2 3/2 | k=3 2   | k=4 3
+  proved bound 2(k-1)      k=1 0 | k=2 2   | k=3 4   | k=4 6   | k=5 8 | k=6 10
+  observed max |D| is (k-1)L + 1 time unit whenever the search reaches it, so
+  the true constant of Theorem 1 looks like (k-1)L, i.e. HALF of what is
+  proved; in the normalised form the observed constant is 1 - 1/k against the
+  proved 2 - 2/k.
+
+  Theorem 4, (k*excess-B)/L
+    found      k=1 8/9 | k=2 3 | k=3 44/9 | k=4 62/9 | k=5 80/9 | k=6 98/9
+    theory.md  k=1 10/11| k=2 14/5| k=3 40/9| k=4 41/7
+    proved     k=1 1   | k=2 4 | k=3 7    | k=4 10   | k=5 13   | k=6 16
+  the found frontier is 2k - 10/9 (successive differences 2.00, 2.00, 2.00),
+  so theory.md's conjectured slope interval [3/2, 3] should read [2, 3].

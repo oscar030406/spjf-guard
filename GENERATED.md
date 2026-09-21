@@ -31,14 +31,14 @@ env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
 
 ## 不由本仓库生成的输入
 
-以下几样本仓库只读，并在配置锁里记哈希。
+以下几样本仓库只读，并在配置锁里记哈希。表里写 `prechecks/` 的那几行，可发布副本在 `evidence/` 下同名位置，路径对照见 `evidence/PATHS.md`。
 
 | 输入 | 内容 | 谁产生的 |
 |---|---|---|
 | `data/codebench/archives/*.tar.gz` | 数据发布方的每学期归档，整条链路的源头 | CodeBench 数据集发布方，`data/codebench/download_codebench.sh` 下载 |
 | `data/derived/codebench_cache_r4/feat_ires0.parquet` | I-res 时钟下的因果特征 | `prechecks/codebench_service_v2/`。本仓库只用它做逐列对照，不再依赖它跑实验 |
 | `data/derived/ranking_score_predictions/rs_pred_ires0.parquet` | v3.1 的排序分数前向预测 | `prechecks/ranking_score/rs_fit.py`。同上，现在只作对照 |
-| `prechecks/main_v3/v31/primary_rep*.npz` | v3.1 的五次叠加轨迹 | `prechecks/main_v3/v31/v31_build.py`。同上，`scripts/check_overlays.py` 拿它作对照 |
+| v3.1 的五次叠加轨迹 `primary_rep*.npz` | 不在仓库里，也不在 `evidence/` 里：由 `evidence/main_v3/v31/v31_build.py` 写到仓库外的缓存目录 | 先用该脚本重建，再用 `scripts/check_overlays.py --theirs <缓存目录>` 逐数组比对。这是一次性的交叉核对（结果在 `outputs/overlay_check.csv`），不属于每次提交都跑的检查 |
 | `prechecks/main_v3/v31/table_main_primary.csv` | v3.1 报出的汇总表 | 同上，`scripts/check_reproduction.py` 与 `scripts/diff_dev_tables.py` 拿它作对照 |
 
 ## 规矩

@@ -1,0 +1,18 @@
+G0U_core_lr0.001_mean_wd0.0_dr0.1_s5_final  params {'model': 'G0U', 'seed': 5, 'lr': 0.001, 'agg': 'mean', 'variant': 'core', 'epochs': 30, 'batch': 4096, 'patience': 5, 'p_mask': 0.15, 'p_drop': 0.1, 'w_cls': 0.5, 'wd': 0.0, 'drop': 0.1, 'tag': '_final', 'save_emb': False}
+tabular block (863149, 86), submission-level block (863149, 102)
+rows train 404,578 valid 51,547 test 40,844
+parameters 168,642
+  epoch  0 train 0.22886 valid 0.07881 (rmse 0.2285) 1s
+  epoch  1 train 0.14434 valid 0.08028 (rmse 0.2324) 2s
+  epoch  2 train 0.13389 valid 0.07884 (rmse 0.2296) 3s
+  epoch  3 train 0.12738 valid 0.08068 (rmse 0.2329) 4s
+  epoch  4 train 0.12368 valid 0.07823 (rmse 0.2282) 5s
+  epoch  5 train 0.12037 valid 0.07897 (rmse 0.2292) 6s
+  epoch  6 train 0.11859 valid 0.07765 (rmse 0.2267) 7s
+  epoch  7 train 0.11705 valid 0.07951 (rmse 0.2294) 8s
+  epoch  8 train 0.11500 valid 0.08033 (rmse 0.2320) 9s
+  epoch  9 train 0.11315 valid 0.08153 (rmse 0.2340) 10s
+  epoch 10 train 0.11217 valid 0.07804 (rmse 0.2266) 11s
+  epoch 11 train 0.11077 valid 0.07941 (rmse 0.2293) 12s
+  early stop at epoch 11
+{"name": "G0U_core_lr0.001_mean_wd0.0_dr0.1_s5_final", "model": "G0U", "variant": "core", "seed": 5, "lr": 0.001, "agg": "mean", "wd": 0.0, "drop": 0.1, "valid_loss": 0.0776451826095581, "valid_rmse": 0.22666214406490326}

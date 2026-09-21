@@ -1,0 +1,19 @@
+n=7 L=2 amax=3  |arr|=120 |srv|=128 |pred|=5040  B in 0..15
+k=2  sims=2477276160  113.4s
+   ThmA violations=0   supB-form violations=0   Lemma violations=0   head-equiv mismatches=0
+   max (k*Wg-k*Wf-B)/L = 2.5000  (claim <= 4)   -> c = 1.2500 (claim <= 2.0000)
+   sup-B form: max = 3.0000 L  -> c = 1.5000
+   worst used/allowed ratio = 0.8000
+   argmax: arrivals=[0, 0, 0, 0, 0, 0, 0] services=[1, 1, 2, 1, 1, 2, 2] pred=[0, 2, 1, 5, 6, 3, 4] B=1 job=3
+k=3  sims=2477276160  112.3s
+   ThmA violations=0   supB-form violations=0   Lemma violations=0   head-equiv mismatches=0
+   max (k*Wg-k*Wf-B)/L = 4.5000  (claim <= 7)   -> c = 1.5000 (claim <= 2.3333)
+   sup-B form: max = 5.0000 L  -> c = 1.6667
+   worst used/allowed ratio = 0.7059
+   argmax: arrivals=[0, 0, 0, 0, 0, 0, 0] services=[2, 2, 1, 2, 2, 2, 2] pred=[0, 1, 6, 2, 3, 4, 5] B=3 job=2
+k=4  sims=2477276160  121.3s
+   ThmA violations=0   supB-form violations=0   Lemma violations=0   head-equiv mismatches=0
+   max (k*Wg-k*Wf-B)/L = 3.5000  (claim <= 10)   -> c = 0.8750 (claim <= 2.5000)
+   sup-B form: max = 4.0000 L  -> c = 1.0000
+   worst used/allowed ratio = 0.3810
+   argmax: arrivals=[0, 0, 0, 0, 0, 0, 0] services=[1, 1, 1, 1, 1, 2, 2] pred=[0, 1, 4, 6, 5, 2, 3] B=1 job=3

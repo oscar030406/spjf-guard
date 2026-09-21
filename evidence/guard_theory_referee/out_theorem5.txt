@@ -1,0 +1,16 @@
+=== Theorem 5(a): is the characterisation really an 'iff'? ===
+  checks: 20001 ; violations of the '<=' (sufficient) direction: 0
+  '=>' DIRECTION FALSE.  Smallest witness found:
+     a=[3, 3] x=[2, 3] k=1 base-tape=[0, 0] B=0
+     base dispatch order  = [0, 1]
+     guard dispatch order = [0, 1]  (IDENTICAL run)
+     but the base run has a waiting q with over_q(t) >= B
+  hand-made minimal: k=1, a=[0,0], x=[1,1], base=LIFO, B=1
+     base starts [1, 0] order [1, 0] ; guard starts [1, 0] order [1, 0] ; identical=True ; 5(a) condition holds in base run=False ; guard actually fired=True
+
+=== Theorem 5(b) max In^A < B  ==>  guard == base ===
+=== Theorem 5(c) excess_A <= G, B > kG+(3k-2)L ==> guard == base ===
+  5(b) checks=28922 failures=0
+  5(c) checks=28922 failures=0 ; runs where E(t) ever fired=0
+  sharpness: B = max In^A exactly changes the run in 2087/28922 cases
+  sharpness: B = kG+(3k-2)L exactly changes the run in 0/28922 cases

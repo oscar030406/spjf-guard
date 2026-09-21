@@ -1,0 +1,353 @@
+
+=== primary, reps 0,1: gain on p99dl (point [95% week-block CI]) ===
+rho                                        0.5                     0.8                     1.0
+policy                                                                                        
+FCFS                    0.0000 [0.0000,0.0000]  0.0000 [0.0000,0.0000]  0.0000 [0.0000,0.0000]
+SJF-ref                 1.0000 [1.0000,1.0000]  1.0000 [1.0000,1.0000]  1.0000 [1.0000,1.0000]
+SPJF-M4                 0.7484 [0.7155,0.7792]  0.8648 [0.8413,0.8835]  0.9000 [0.8742,0.9201]
+SPJF-tweedie            0.7378 [0.7085,0.7660]  0.8792 [0.8553,0.8978]  0.9192 [0.8947,0.9349]
+ORACLE-on-true-heavy    0.9382 [0.9192,0.9523]  0.9802 [0.9717,0.9861]  0.9913 [0.9856,0.9938]
+ORACLE-on-true-light    0.8810 [0.8566,0.9124]  0.9273 [0.9155,0.9374]  0.9492 [0.9355,0.9585]
+ORACLE-top0.1pct-under  0.7828 [0.7477,0.8107]  0.9038 [0.8793,0.9199]  0.9471 [0.9272,0.9575]
+ORACLE-top0.1pct-over   0.7520 [0.7207,0.7819]  0.8667 [0.8439,0.8855]  0.9043 [0.8799,0.9234]
+ORACLE-top1.0pct-under  0.9401 [0.9217,0.9522]  0.9796 [0.9699,0.9862]  0.9910 [0.9844,0.9938]
+ORACLE-top1.0pct-over   0.8063 [0.7801,0.8293]  0.8958 [0.8820,0.9084]  0.9254 [0.9072,0.9391]
+SPJF-M4refit            0.7511 [0.7178,0.7824]  0.8642 [0.8409,0.8832]  0.8994 [0.8732,0.9196]
+SPJF-l2raw              0.7112 [0.6768,0.7424]  0.8527 [0.8207,0.8751]  0.8933 [0.8584,0.9152]
+SPJF-gamma              0.7385 [0.7079,0.7689]  0.8749 [0.8496,0.8943]  0.9158 [0.8897,0.9324]
+SPJF-hurdle             0.7294 [0.6970,0.7606]  0.8748 [0.8479,0.8944]  0.9170 [0.8917,0.9325]
+SPJF-q50                0.7114 [0.6813,0.7395]  0.8124 [0.7874,0.8356]  0.8460 [0.8111,0.8740]
+SPJF-q90                0.6926 [0.6544,0.7304]  0.8358 [0.8045,0.8581]  0.8787 [0.8477,0.9010]
+SPJF-q99                0.7166 [0.6862,0.7475]  0.8663 [0.8412,0.8858]  0.9043 [0.8757,0.9235]
+SPJF-phv                0.7423 [0.7127,0.7718]  0.8755 [0.8493,0.8955]  0.9148 [0.8878,0.9320]
+SPJF-logvar             0.7356 [0.7053,0.7659]  0.8713 [0.8462,0.8906]  0.9142 [0.8901,0.9307]
+2CLASS-FCFS-tau0.02     0.4936 [0.4070,0.5515]  0.6049 [0.5165,0.6882]  0.5388 [0.4469,0.6222]
+2CLASS-SPJF-tau0.02     0.7558 [0.7219,0.7864]  0.8700 [0.8467,0.8890]  0.9080 [0.8833,0.9259]
+2CLASS-TWEEDIE-tau0.02  0.7430 [0.7136,0.7696]  0.8815 [0.8572,0.8996]  0.9202 [0.8960,0.9355]
+2CLASS-FCFS-tau0.05     0.5308 [0.4380,0.5873]  0.7786 [0.7017,0.8187]  0.7744 [0.6849,0.8278]
+2CLASS-SPJF-tau0.05     0.7458 [0.7112,0.7788]  0.8685 [0.8449,0.8872]  0.9062 [0.8816,0.9241]
+2CLASS-TWEEDIE-tau0.05  0.7359 [0.7058,0.7633]  0.8798 [0.8563,0.8977]  0.9198 [0.8964,0.9354]
+2CLASS-FCFS-tau0.1      0.5530 [0.4656,0.6088]  0.8065 [0.7449,0.8408]  0.8310 [0.7620,0.8678]
+2CLASS-SPJF-tau0.1      0.7530 [0.7195,0.7816]  0.8683 [0.8451,0.8863]  0.9060 [0.8814,0.9239]
+2CLASS-TWEEDIE-tau0.1   0.7329 [0.7049,0.7584]  0.8784 [0.8547,0.8967]  0.9189 [0.8949,0.9345]
+2CLASS-FCFS-tau0.2      0.5582 [0.4950,0.6067]  0.8188 [0.7776,0.8466]  0.8419 [0.7989,0.8732]
+2CLASS-SPJF-tau0.2      0.7502 [0.7185,0.7811]  0.8656 [0.8419,0.8833]  0.9020 [0.8762,0.9216]
+2CLASS-TWEEDIE-tau0.2   0.7310 [0.7020,0.7566]  0.8778 [0.8539,0.8959]  0.9184 [0.8941,0.9345]
+2CLASS-FCFS-tau0.4      0.5665 [0.5169,0.6067]  0.7908 [0.7487,0.8226]  0.8232 [0.7754,0.8578]
+2CLASS-SPJF-tau0.4      0.7500 [0.7171,0.7803]  0.8637 [0.8401,0.8824]  0.8991 [0.8730,0.9194]
+2CLASS-TWEEDIE-tau0.4   0.7356 [0.7072,0.7607]  0.8770 [0.8516,0.8956]  0.9173 [0.8925,0.9337]
+
+wait (s), p99dl:
+rho                         0.5       0.8       1.0
+policy                                             
+FCFS                    21.6869  110.5858  270.4788
+SJF-ref                  7.9364   33.1997   43.1232
+SPJF-M4                 11.3978   43.6585   65.7952
+SPJF-tweedie            11.5440   42.5346   61.4520
+ORACLE-on-true-heavy     8.7866   34.7350   45.0997
+ORACLE-on-true-light     9.5736   38.8242   54.6599
+ORACLE-top0.1pct-under  10.9244   40.6394   55.1455
+ORACLE-top0.1pct-over   11.3474   43.5078   64.8461
+ORACLE-top1.0pct-under   8.7597   34.7871   45.1653
+ORACLE-top1.0pct-over   10.5999   41.2520   60.0426
+SPJF-M4refit            11.3599   43.6969   65.9326
+SPJF-l2raw              11.9089   44.5909   67.3316
+SPJF-gamma              11.5338   42.8765   62.2344
+SPJF-hurdle             11.6587   42.8786   61.9600
+SPJF-q50                11.9067   47.7133   78.0808
+SPJF-q90                12.1653   45.8912   70.6351
+SPJF-q99                11.8341   43.5303   64.8123
+SPJF-phv                11.4813   42.8213   62.4355
+SPJF-logvar             11.5734   43.1477   62.5811
+2CLASS-FCFS-tau0.02     14.9005   63.7762  147.9023
+2CLASS-SPJF-tau0.02     11.2959   43.2529   63.9936
+2CLASS-TWEEDIE-tau0.02  11.4717   42.3602   61.2158
+2CLASS-FCFS-tau0.05     14.3891   50.3361   94.3185
+2CLASS-SPJF-tau0.05     11.4337   43.3699   64.4092
+2CLASS-TWEEDIE-tau0.05  11.5704   42.4904   61.3061
+2CLASS-FCFS-tau0.1      14.0856   48.1596   81.4486
+2CLASS-SPJF-tau0.1      11.3339   43.3832   64.4440
+2CLASS-TWEEDIE-tau0.1   11.6105   42.5977   61.5202
+2CLASS-FCFS-tau0.2      14.0139   47.2074   78.9807
+2CLASS-SPJF-tau0.2      11.3732   43.5949   65.3572
+2CLASS-TWEEDIE-tau0.2   11.6368   42.6444   61.6208
+2CLASS-FCFS-tau0.4      13.8988   49.3916   83.2501
+2CLASS-SPJF-tau0.4      11.3755   43.7403   66.0111
+2CLASS-TWEEDIE-tau0.4   11.5743   42.7038   61.8674
+
+=== primary, reps 0,1: gain on mean (point [95% week-block CI]) ===
+rho                                        0.5                     0.8                     1.0
+policy                                                                                        
+FCFS                    0.0000 [0.0000,0.0000]  0.0000 [0.0000,0.0000]  0.0000 [0.0000,0.0000]
+SJF-ref                 1.0000 [1.0000,1.0000]  1.0000 [1.0000,1.0000]  1.0000 [1.0000,1.0000]
+SPJF-M4                 0.8778 [0.8058,0.9086]  0.9155 [0.8799,0.9312]  0.9277 [0.9035,0.9391]
+SPJF-tweedie            0.8802 [0.8102,0.9092]  0.9197 [0.8862,0.9346]  0.9334 [0.9116,0.9439]
+ORACLE-on-true-heavy    0.9757 [0.9596,0.9826]  0.9835 [0.9760,0.9871]  0.9886 [0.9831,0.9910]
+ORACLE-on-true-light    0.9376 [0.8957,0.9563]  0.9568 [0.9382,0.9658]  0.9609 [0.9476,0.9681]
+ORACLE-top0.1pct-under  0.9028 [0.8363,0.9304]  0.9392 [0.9056,0.9535]  0.9538 [0.9327,0.9628]
+ORACLE-top0.1pct-over   0.8809 [0.8089,0.9116]  0.9178 [0.8832,0.9332]  0.9310 [0.9071,0.9420]
+ORACLE-top1.0pct-under  0.9739 [0.9585,0.9806]  0.9839 [0.9757,0.9877]  0.9891 [0.9835,0.9916]
+ORACLE-top1.0pct-over   0.9111 [0.8562,0.9350]  0.9351 [0.9105,0.9463]  0.9447 [0.9279,0.9528]
+SPJF-M4refit            0.8779 [0.8062,0.9085]  0.9151 [0.8790,0.9310]  0.9272 [0.9030,0.9385]
+SPJF-l2raw              0.8639 [0.7850,0.8983]  0.9058 [0.8669,0.9233]  0.9187 [0.8914,0.9319]
+SPJF-gamma              0.8795 [0.8117,0.9085]  0.9155 [0.8816,0.9306]  0.9307 [0.9084,0.9417]
+SPJF-hurdle             0.8749 [0.8042,0.9047]  0.9183 [0.8844,0.9335]  0.9319 [0.9083,0.9428]
+SPJF-q50                0.8661 [0.7934,0.8967]  0.8935 [0.8565,0.9103]  0.9020 [0.8749,0.9154]
+SPJF-q90                0.8603 [0.7839,0.8927]  0.8985 [0.8550,0.9179]  0.9150 [0.8867,0.9286]
+SPJF-q99                0.8471 [0.7616,0.8856]  0.8929 [0.8511,0.9127]  0.9087 [0.8803,0.9237]
+SPJF-phv                0.8714 [0.8002,0.9010]  0.9136 [0.8797,0.9289]  0.9292 [0.9050,0.9407]
+SPJF-logvar             0.8727 [0.7981,0.9044]  0.9168 [0.8820,0.9324]  0.9307 [0.9081,0.9413]
+2CLASS-FCFS-tau0.02     0.6815 [0.5955,0.7232]  0.7165 [0.6635,0.7466]  0.7195 [0.6774,0.7468]
+2CLASS-SPJF-tau0.02     0.8832 [0.8116,0.9138]  0.9190 [0.8844,0.9344]  0.9318 [0.9083,0.9425]
+2CLASS-TWEEDIE-tau0.02  0.8841 [0.8145,0.9131]  0.9206 [0.8879,0.9351]  0.9346 [0.9134,0.9447]
+2CLASS-FCFS-tau0.05     0.7250 [0.6296,0.7656]  0.7928 [0.7413,0.8165]  0.8139 [0.7781,0.8316]
+2CLASS-SPJF-tau0.05     0.8792 [0.8078,0.9097]  0.9179 [0.8830,0.9334]  0.9292 [0.9054,0.9403]
+2CLASS-TWEEDIE-tau0.05  0.8798 [0.8089,0.9099]  0.9202 [0.8866,0.9349]  0.9341 [0.9126,0.9444]
+2CLASS-FCFS-tau0.1      0.7345 [0.6392,0.7752]  0.8016 [0.7504,0.8259]  0.8278 [0.7901,0.8455]
+2CLASS-SPJF-tau0.1      0.8794 [0.8081,0.9094]  0.9159 [0.8807,0.9316]  0.9287 [0.9053,0.9396]
+2CLASS-TWEEDIE-tau0.1   0.8770 [0.8070,0.9064]  0.9189 [0.8858,0.9336]  0.9334 [0.9118,0.9438]
+2CLASS-FCFS-tau0.2      0.7462 [0.6522,0.7865]  0.8087 [0.7584,0.8324]  0.8335 [0.7968,0.8507]
+2CLASS-SPJF-tau0.2      0.8794 [0.8079,0.9096]  0.9154 [0.8797,0.9313]  0.9283 [0.9042,0.9397]
+2CLASS-TWEEDIE-tau0.2   0.8788 [0.8094,0.9083]  0.9195 [0.8860,0.9344]  0.9336 [0.9117,0.9441]
+2CLASS-FCFS-tau0.4      0.7355 [0.6371,0.7790]  0.7871 [0.7307,0.8138]  0.8062 [0.7671,0.8249]
+2CLASS-SPJF-tau0.4      0.8773 [0.8040,0.9088]  0.9158 [0.8802,0.9317]  0.9277 [0.9038,0.9391]
+2CLASS-TWEEDIE-tau0.4   0.8787 [0.8072,0.9094]  0.9199 [0.8863,0.9350]  0.9336 [0.9112,0.9442]
+
+wait (s), mean:
+rho                        0.5     0.8      1.0
+policy                                         
+FCFS                    0.5915  4.1896  10.4819
+SJF-ref                 0.1826  0.9416   1.6675
+SPJF-M4                 0.2325  1.2158   2.3029
+SPJF-tweedie            0.2316  1.2019   2.2532
+ORACLE-on-true-heavy    0.1925  0.9951   1.7681
+ORACLE-on-true-light    0.2081  1.0817   2.0113
+ORACLE-top0.1pct-under  0.2223  1.1391   2.0739
+ORACLE-top0.1pct-over   0.2313  1.2083   2.2746
+ORACLE-top1.0pct-under  0.1932  0.9939   1.7632
+ORACLE-top1.0pct-over   0.2189  1.1520   2.1540
+SPJF-M4refit            0.2325  1.2171   2.3074
+SPJF-l2raw              0.2382  1.2471   2.3827
+SPJF-gamma              0.2318  1.2157   2.2774
+SPJF-hurdle             0.2338  1.2065   2.2666
+SPJF-q50                0.2373  1.2871   2.5295
+SPJF-q90                0.2397  1.2710   2.4149
+SPJF-q99                0.2451  1.2890   2.4704
+SPJF-phv                0.2352  1.2219   2.2902
+SPJF-logvar             0.2347  1.2114   2.2773
+2CLASS-FCFS-tau0.02     0.3128  1.8621   4.1376
+2CLASS-SPJF-tau0.02     0.2303  1.2042   2.2677
+2CLASS-TWEEDIE-tau0.02  0.2300  1.1989   2.2429
+2CLASS-FCFS-tau0.05     0.2951  1.6140   3.3048
+2CLASS-SPJF-tau0.05     0.2320  1.2080   2.2899
+2CLASS-TWEEDIE-tau0.05  0.2318  1.2004   2.2470
+2CLASS-FCFS-tau0.1      0.2912  1.5853   3.1826
+2CLASS-SPJF-tau0.1      0.2319  1.2145   2.2950
+2CLASS-TWEEDIE-tau0.1   0.2329  1.2045   2.2538
+2CLASS-FCFS-tau0.2      0.2864  1.5620   3.1325
+2CLASS-SPJF-tau0.2      0.2319  1.2161   2.2981
+2CLASS-TWEEDIE-tau0.2   0.2321  1.2027   2.2520
+2CLASS-FCFS-tau0.4      0.2907  1.6321   3.3714
+2CLASS-SPJF-tau0.4      0.2328  1.2146   2.3029
+2CLASS-TWEEDIE-tau0.4   0.2322  1.2013   2.2512
+
+=== differences of the gain against SPJF-M4 (paired week-block bootstrap) ===
+  trace reps  rho metric                             pair  d_gain      lo      hi  resolved                       verdict     wait  wait_base  d_wait_pct
+primary  0,1  0.5  p99dl                   FCFS - SPJF-M4 -0.7484 -0.7792 -0.7155      True                SPJF-M4 better  21.6869    11.3978     90.2735
+primary  0,1  0.5  p99dl                SJF-ref - SPJF-M4  0.2516  0.2208  0.2845      True                SJF-ref better   7.9364    11.3978    -30.3691
+primary  0,1  0.5  p99dl           SPJF-tweedie - SPJF-M4 -0.0106 -0.0325  0.0060     False                    unresolved  11.5440    11.3978      1.2827
+primary  0,1  0.5  p99dl   ORACLE-on-true-heavy - SPJF-M4  0.1898  0.1563  0.2176      True   ORACLE-on-true-heavy better   8.7866    11.3978    -22.9096
+primary  0,1  0.5  p99dl   ORACLE-on-true-light - SPJF-M4  0.1326  0.1164  0.1557      True   ORACLE-on-true-light better   9.5736    11.3978    -16.0047
+primary  0,1  0.5  p99dl ORACLE-top0.1pct-under - SPJF-M4  0.0344  0.0191  0.0459      True ORACLE-top0.1pct-under better  10.9244    11.3978     -4.1536
+primary  0,1  0.5  p99dl  ORACLE-top0.1pct-over - SPJF-M4  0.0037 -0.0006  0.0074     False                    unresolved  11.3474    11.3978     -0.4424
+primary  0,1  0.5  p99dl ORACLE-top1.0pct-under - SPJF-M4  0.1918  0.1586  0.2180      True ORACLE-top1.0pct-under better   8.7597    11.3978    -23.1456
+primary  0,1  0.5  p99dl  ORACLE-top1.0pct-over - SPJF-M4  0.0580  0.0419  0.0722      True  ORACLE-top1.0pct-over better  10.5999    11.3978     -6.9998
+primary  0,1  0.5  p99dl           SPJF-M4refit - SPJF-M4  0.0027 -0.0009  0.0057     False                    unresolved  11.3599    11.3978     -0.3321
+primary  0,1  0.5  p99dl             SPJF-l2raw - SPJF-M4 -0.0372 -0.0535 -0.0221      True                SPJF-M4 better  11.9089    11.3978      4.4845
+primary  0,1  0.5  p99dl             SPJF-gamma - SPJF-M4 -0.0099 -0.0248  0.0045     False                    unresolved  11.5338    11.3978      1.1936
+primary  0,1  0.5  p99dl            SPJF-hurdle - SPJF-M4 -0.0190 -0.0394 -0.0028      True                SPJF-M4 better  11.6587    11.3978      2.2895
+primary  0,1  0.5  p99dl               SPJF-q50 - SPJF-M4 -0.0370 -0.0542 -0.0214      True                SPJF-M4 better  11.9067    11.3978      4.4649
+primary  0,1  0.5  p99dl               SPJF-q90 - SPJF-M4 -0.0558 -0.0720 -0.0392      True                SPJF-M4 better  12.1653    11.3978      6.7343
+primary  0,1  0.5  p99dl               SPJF-q99 - SPJF-M4 -0.0317 -0.0488 -0.0155      True                SPJF-M4 better  11.8341    11.3978      3.8281
+primary  0,1  0.5  p99dl               SPJF-phv - SPJF-M4 -0.0061 -0.0216  0.0105     False                    unresolved  11.4813    11.3978      0.7327
+primary  0,1  0.5  p99dl            SPJF-logvar - SPJF-M4 -0.0128 -0.0228 -0.0034      True                SPJF-M4 better  11.5734    11.3978      1.5411
+primary  0,1  0.5  p99dl    2CLASS-FCFS-tau0.02 - SPJF-M4 -0.2547 -0.3261 -0.2096      True                SPJF-M4 better  14.9005    11.3978     30.7319
+primary  0,1  0.5  p99dl    2CLASS-SPJF-tau0.02 - SPJF-M4  0.0074 -0.0011  0.0148     False                    unresolved  11.2959    11.3978     -0.8938
+primary  0,1  0.5  p99dl 2CLASS-TWEEDIE-tau0.02 - SPJF-M4 -0.0054 -0.0284  0.0104     False                    unresolved  11.4717    11.3978      0.6483
+primary  0,1  0.5  p99dl    2CLASS-FCFS-tau0.05 - SPJF-M4 -0.2176 -0.2946 -0.1724      True                SPJF-M4 better  14.3891    11.3978     26.2447
+primary  0,1  0.5  p99dl    2CLASS-SPJF-tau0.05 - SPJF-M4 -0.0026 -0.0088  0.0034     False                    unresolved  11.4337    11.3978      0.3154
+primary  0,1  0.5  p99dl 2CLASS-TWEEDIE-tau0.05 - SPJF-M4 -0.0125 -0.0313 -0.0002      True                SPJF-M4 better  11.5704    11.3978      1.5148
+primary  0,1  0.5  p99dl     2CLASS-FCFS-tau0.1 - SPJF-M4 -0.1954 -0.2672 -0.1531      True                SPJF-M4 better  14.0856    11.3978     23.5822
+primary  0,1  0.5  p99dl     2CLASS-SPJF-tau0.1 - SPJF-M4  0.0047 -0.0007  0.0074     False                    unresolved  11.3339    11.3978     -0.5608
+primary  0,1  0.5  p99dl  2CLASS-TWEEDIE-tau0.1 - SPJF-M4 -0.0154 -0.0359 -0.0002      True                SPJF-M4 better  11.6105    11.3978      1.8662
+primary  0,1  0.5  p99dl     2CLASS-FCFS-tau0.2 - SPJF-M4 -0.1902 -0.2427 -0.1536      True                SPJF-M4 better  14.0139    11.3978     22.9531
+primary  0,1  0.5  p99dl     2CLASS-SPJF-tau0.2 - SPJF-M4  0.0018 -0.0040  0.0074     False                    unresolved  11.3732    11.3978     -0.2156
+primary  0,1  0.5  p99dl  2CLASS-TWEEDIE-tau0.2 - SPJF-M4 -0.0174 -0.0376 -0.0032      True                SPJF-M4 better  11.6368    11.3978      2.0970
+primary  0,1  0.5  p99dl     2CLASS-FCFS-tau0.4 - SPJF-M4 -0.1819 -0.2295 -0.1479      True                SPJF-M4 better  13.8988    11.3978     21.9433
+primary  0,1  0.5  p99dl     2CLASS-SPJF-tau0.4 - SPJF-M4  0.0016 -0.0022  0.0047     False                    unresolved  11.3755    11.3978     -0.1955
+primary  0,1  0.5  p99dl  2CLASS-TWEEDIE-tau0.4 - SPJF-M4 -0.0128 -0.0317  0.0004     False                    unresolved  11.5743    11.3978      1.5485
+primary  0,1  0.5   mean                   FCFS - SPJF-M4 -0.8778 -0.9086 -0.8058      True                SPJF-M4 better   0.5915     0.2325    154.3745
+primary  0,1  0.5   mean                SJF-ref - SPJF-M4  0.1222  0.0914  0.1942      True                SJF-ref better   0.1826     0.2325    -21.4895
+primary  0,1  0.5   mean           SPJF-tweedie - SPJF-M4  0.0024 -0.0013  0.0080     False                    unresolved   0.2316     0.2325     -0.4169
+primary  0,1  0.5   mean   ORACLE-on-true-heavy - SPJF-M4  0.0979  0.0720  0.1568      True   ORACLE-on-true-heavy better   0.1925     0.2325    -17.2123
+primary  0,1  0.5   mean   ORACLE-on-true-light - SPJF-M4  0.0598  0.0471  0.0912      True   ORACLE-on-true-light better   0.2081     0.2325    -10.5092
+primary  0,1  0.5   mean ORACLE-top0.1pct-under - SPJF-M4  0.0250  0.0183  0.0364      True ORACLE-top0.1pct-under better   0.2223     0.2325     -4.4003
+primary  0,1  0.5   mean  ORACLE-top0.1pct-over - SPJF-M4  0.0030  0.0007  0.0048      True  ORACLE-top0.1pct-over better   0.2313     0.2325     -0.5293
+primary  0,1  0.5   mean ORACLE-top1.0pct-under - SPJF-M4  0.0961  0.0701  0.1550      True ORACLE-top1.0pct-under better   0.1932     0.2325    -16.8969
+primary  0,1  0.5   mean  ORACLE-top1.0pct-over - SPJF-M4  0.0333  0.0245  0.0526      True  ORACLE-top1.0pct-over better   0.2189     0.2325     -5.8529
+primary  0,1  0.5   mean           SPJF-M4refit - SPJF-M4  0.0000 -0.0025  0.0016     False                    unresolved   0.2325     0.2325     -0.0096
+primary  0,1  0.5   mean             SPJF-l2raw - SPJF-M4 -0.0140 -0.0221 -0.0091      True                SPJF-M4 better   0.2382     0.2325      2.4601
+primary  0,1  0.5   mean             SPJF-gamma - SPJF-M4  0.0017 -0.0020  0.0087     False                    unresolved   0.2318     0.2325     -0.2937
+primary  0,1  0.5   mean            SPJF-hurdle - SPJF-M4 -0.0030 -0.0059  0.0009     False                    unresolved   0.2338     0.2325      0.5274
+primary  0,1  0.5   mean               SPJF-q50 - SPJF-M4 -0.0118 -0.0196 -0.0063      True                SPJF-M4 better   0.2373     0.2325      2.0704
+primary  0,1  0.5   mean               SPJF-q90 - SPJF-M4 -0.0175 -0.0243 -0.0131      True                SPJF-M4 better   0.2397     0.2325      3.0819
+primary  0,1  0.5   mean               SPJF-q99 - SPJF-M4 -0.0307 -0.0510 -0.0196      True                SPJF-M4 better   0.2451     0.2325      5.4091
+primary  0,1  0.5   mean               SPJF-phv - SPJF-M4 -0.0065 -0.0091 -0.0023      True                SPJF-M4 better   0.2352     0.2325      1.1412
+primary  0,1  0.5   mean            SPJF-logvar - SPJF-M4 -0.0052 -0.0092 -0.0026      True                SPJF-M4 better   0.2347     0.2325      0.9132
+primary  0,1  0.5   mean    2CLASS-FCFS-tau0.02 - SPJF-M4 -0.1964 -0.2206 -0.1789      True                SPJF-M4 better   0.3128     0.2325     34.5373
+primary  0,1  0.5   mean    2CLASS-SPJF-tau0.02 - SPJF-M4  0.0054  0.0035  0.0072      True    2CLASS-SPJF-tau0.02 better   0.2303     0.2325     -0.9461
+primary  0,1  0.5   mean 2CLASS-TWEEDIE-tau0.02 - SPJF-M4  0.0062  0.0022  0.0122      True 2CLASS-TWEEDIE-tau0.02 better   0.2300     0.2325     -1.0978
+primary  0,1  0.5   mean    2CLASS-FCFS-tau0.05 - SPJF-M4 -0.1529 -0.1786 -0.1408      True                SPJF-M4 better   0.2951     0.2325     26.8902
+primary  0,1  0.5   mean    2CLASS-SPJF-tau0.05 - SPJF-M4  0.0013 -0.0003  0.0038     False                    unresolved   0.2320     0.2325     -0.2322
+primary  0,1  0.5   mean 2CLASS-TWEEDIE-tau0.05 - SPJF-M4  0.0019 -0.0019  0.0066     False                    unresolved   0.2318     0.2325     -0.3316
+primary  0,1  0.5   mean     2CLASS-FCFS-tau0.1 - SPJF-M4 -0.1434 -0.1709 -0.1314      True                SPJF-M4 better   0.2912     0.2325     25.2277
+primary  0,1  0.5   mean     2CLASS-SPJF-tau0.1 - SPJF-M4  0.0016 -0.0003  0.0039     False                    unresolved   0.2319     0.2325     -0.2767
+primary  0,1  0.5   mean  2CLASS-TWEEDIE-tau0.1 - SPJF-M4 -0.0008 -0.0042  0.0043     False                    unresolved   0.2329     0.2325      0.1415
+primary  0,1  0.5   mean     2CLASS-FCFS-tau0.2 - SPJF-M4 -0.1317 -0.1616 -0.1184      True                SPJF-M4 better   0.2864     0.2325     23.1659
+primary  0,1  0.5   mean     2CLASS-SPJF-tau0.2 - SPJF-M4  0.0015  0.0000  0.0031      True     2CLASS-SPJF-tau0.2 better   0.2319     0.2325     -0.2706
+primary  0,1  0.5   mean  2CLASS-TWEEDIE-tau0.2 - SPJF-M4  0.0010 -0.0029  0.0065     False                    unresolved   0.2321     0.2325     -0.1681
+primary  0,1  0.5   mean     2CLASS-FCFS-tau0.4 - SPJF-M4 -0.1423 -0.1789 -0.1251      True                SPJF-M4 better   0.2907     0.2325     25.0342
+primary  0,1  0.5   mean     2CLASS-SPJF-tau0.4 - SPJF-M4 -0.0006 -0.0027  0.0006     False                    unresolved   0.2328     0.2325      0.1049
+primary  0,1  0.5   mean  2CLASS-TWEEDIE-tau0.4 - SPJF-M4  0.0009 -0.0031  0.0049     False                    unresolved   0.2322     0.2325     -0.1502
+primary  0,1  0.8  p99dl                   FCFS - SPJF-M4 -0.8648 -0.8835 -0.8413      True                SPJF-M4 better 110.5858    43.6585    153.2972
+primary  0,1  0.8  p99dl                SJF-ref - SPJF-M4  0.1352  0.1165  0.1587      True                SJF-ref better  33.1997    43.6585    -23.9559
+primary  0,1  0.8  p99dl           SPJF-tweedie - SPJF-M4  0.0144  0.0040  0.0216      True           SPJF-tweedie better  42.5346    43.6585     -2.5743
+primary  0,1  0.8  p99dl   ORACLE-on-true-heavy - SPJF-M4  0.1155  0.1004  0.1329      True   ORACLE-on-true-heavy better  34.7350    43.6585    -20.4393
+primary  0,1  0.8  p99dl   ORACLE-on-true-light - SPJF-M4  0.0625  0.0530  0.0756      True   ORACLE-on-true-light better  38.8242    43.6585    -11.0731
+primary  0,1  0.8  p99dl ORACLE-top0.1pct-under - SPJF-M4  0.0390  0.0314  0.0437      True ORACLE-top0.1pct-under better  40.6394    43.6585     -6.9153
+primary  0,1  0.8  p99dl  ORACLE-top0.1pct-over - SPJF-M4  0.0019  0.0011  0.0034      True  ORACLE-top0.1pct-over better  43.5078    43.6585     -0.3452
+primary  0,1  0.8  p99dl ORACLE-top1.0pct-under - SPJF-M4  0.1148  0.1003  0.1309      True ORACLE-top1.0pct-under better  34.7871    43.6585    -20.3201
+primary  0,1  0.8  p99dl  ORACLE-top1.0pct-over - SPJF-M4  0.0311  0.0232  0.0433      True  ORACLE-top1.0pct-over better  41.2520    43.6585     -5.5122
+primary  0,1  0.8  p99dl           SPJF-M4refit - SPJF-M4 -0.0005 -0.0013  0.0007     False                    unresolved  43.6969    43.6585      0.0878
+primary  0,1  0.8  p99dl             SPJF-l2raw - SPJF-M4 -0.0121 -0.0250 -0.0052      True                SPJF-M4 better  44.5909    43.6585      2.1357
+primary  0,1  0.8  p99dl             SPJF-gamma - SPJF-M4  0.0101  0.0011  0.0157      True             SPJF-gamma better  42.8765    43.6585     -1.7913
+primary  0,1  0.8  p99dl            SPJF-hurdle - SPJF-M4  0.0100 -0.0021  0.0179     False                    unresolved  42.8786    43.6585     -1.7864
+primary  0,1  0.8  p99dl               SPJF-q50 - SPJF-M4 -0.0524 -0.0613 -0.0436      True                SPJF-M4 better  47.7133    43.6585      9.2875
+primary  0,1  0.8  p99dl               SPJF-q90 - SPJF-M4 -0.0289 -0.0398 -0.0233      True                SPJF-M4 better  45.8912    43.6585      5.1139
+primary  0,1  0.8  p99dl               SPJF-q99 - SPJF-M4  0.0016 -0.0108  0.0122     False                    unresolved  43.5303    43.6585     -0.2938
+primary  0,1  0.8  p99dl               SPJF-phv - SPJF-M4  0.0108  0.0011  0.0175      True               SPJF-phv better  42.8213    43.6585     -1.9177
+primary  0,1  0.8  p99dl            SPJF-logvar - SPJF-M4  0.0065  0.0006  0.0118      True            SPJF-logvar better  43.1477    43.6585     -1.1700
+primary  0,1  0.8  p99dl    2CLASS-FCFS-tau0.02 - SPJF-M4 -0.2599 -0.3333 -0.1797      True                SPJF-M4 better  63.7762    43.6585     46.0796
+primary  0,1  0.8  p99dl    2CLASS-SPJF-tau0.02 - SPJF-M4  0.0052  0.0021  0.0078      True    2CLASS-SPJF-tau0.02 better  43.2529    43.6585     -0.9291
+primary  0,1  0.8  p99dl 2CLASS-TWEEDIE-tau0.02 - SPJF-M4  0.0167  0.0058  0.0238      True 2CLASS-TWEEDIE-tau0.02 better  42.3602    43.6585     -2.9739
+primary  0,1  0.8  p99dl    2CLASS-FCFS-tau0.05 - SPJF-M4 -0.0862 -0.1426 -0.0596      True                SPJF-M4 better  50.3361    43.6585     15.2950
+primary  0,1  0.8  p99dl    2CLASS-SPJF-tau0.05 - SPJF-M4  0.0037  0.0013  0.0064      True    2CLASS-SPJF-tau0.05 better  43.3699    43.6585     -0.6611
+primary  0,1  0.8  p99dl 2CLASS-TWEEDIE-tau0.05 - SPJF-M4  0.0150  0.0045  0.0223      True 2CLASS-TWEEDIE-tau0.05 better  42.4904    43.6585     -2.6756
+primary  0,1  0.8  p99dl     2CLASS-FCFS-tau0.1 - SPJF-M4 -0.0582 -0.0983 -0.0389      True                SPJF-M4 better  48.1596    43.6585     10.3096
+primary  0,1  0.8  p99dl     2CLASS-SPJF-tau0.1 - SPJF-M4  0.0036  0.0003  0.0067      True     2CLASS-SPJF-tau0.1 better  43.3832    43.6585     -0.6306
+primary  0,1  0.8  p99dl  2CLASS-TWEEDIE-tau0.1 - SPJF-M4  0.0136  0.0033  0.0210      True  2CLASS-TWEEDIE-tau0.1 better  42.5977    43.6585     -2.4298
+primary  0,1  0.8  p99dl     2CLASS-FCFS-tau0.2 - SPJF-M4 -0.0460 -0.0697 -0.0310      True                SPJF-M4 better  47.2074    43.6585      8.1287
+primary  0,1  0.8  p99dl     2CLASS-SPJF-tau0.2 - SPJF-M4  0.0008 -0.0014  0.0018     False                    unresolved  43.5949    43.6585     -0.1458
+primary  0,1  0.8  p99dl  2CLASS-TWEEDIE-tau0.2 - SPJF-M4  0.0130  0.0025  0.0196      True  2CLASS-TWEEDIE-tau0.2 better  42.6444    43.6585     -2.3229
+primary  0,1  0.8  p99dl     2CLASS-FCFS-tau0.4 - SPJF-M4 -0.0740 -0.1009 -0.0571      True                SPJF-M4 better  49.3916    43.6585     13.1315
+primary  0,1  0.8  p99dl     2CLASS-SPJF-tau0.4 - SPJF-M4 -0.0011 -0.0026  0.0007     False                    unresolved  43.7403    43.6585      0.1873
+primary  0,1  0.8  p99dl  2CLASS-TWEEDIE-tau0.4 - SPJF-M4  0.0123  0.0007  0.0191      True  2CLASS-TWEEDIE-tau0.4 better  42.7038    43.6585     -2.1867
+primary  0,1  0.8   mean                   FCFS - SPJF-M4 -0.9155 -0.9312 -0.8799      True                SPJF-M4 better   4.1896     1.2158    244.5851
+primary  0,1  0.8   mean                SJF-ref - SPJF-M4  0.0845  0.0688  0.1201      True                SJF-ref better   0.9416     1.2158    -22.5570
+primary  0,1  0.8   mean           SPJF-tweedie - SPJF-M4  0.0043  0.0025  0.0069      True           SPJF-tweedie better   1.2019     1.2158     -1.1496
+primary  0,1  0.8   mean   ORACLE-on-true-heavy - SPJF-M4  0.0681  0.0548  0.0970      True   ORACLE-on-true-heavy better   0.9951     1.2158    -18.1596
+primary  0,1  0.8   mean   ORACLE-on-true-light - SPJF-M4  0.0413  0.0339  0.0591      True   ORACLE-on-true-light better   1.0817     1.2158    -11.0308
+primary  0,1  0.8   mean ORACLE-top0.1pct-under - SPJF-M4  0.0237  0.0193  0.0285      True ORACLE-top0.1pct-under better   1.1391     1.2158     -6.3101
+primary  0,1  0.8   mean  ORACLE-top0.1pct-over - SPJF-M4  0.0023  0.0018  0.0032      True  ORACLE-top0.1pct-over better   1.2083     1.2158     -0.6222
+primary  0,1  0.8   mean ORACLE-top1.0pct-under - SPJF-M4  0.0684  0.0556  0.0965      True ORACLE-top1.0pct-under better   0.9939     1.2158    -18.2546
+primary  0,1  0.8   mean  ORACLE-top1.0pct-over - SPJF-M4  0.0196  0.0143  0.0311      True  ORACLE-top1.0pct-over better   1.1520     1.2158     -5.2498
+primary  0,1  0.8   mean           SPJF-M4refit - SPJF-M4 -0.0004 -0.0012  0.0001     False                    unresolved   1.2171     1.2158      0.1052
+primary  0,1  0.8   mean             SPJF-l2raw - SPJF-M4 -0.0097 -0.0137 -0.0067      True                SPJF-M4 better   1.2471     1.2158      2.5689
+primary  0,1  0.8   mean             SPJF-gamma - SPJF-M4  0.0000 -0.0012  0.0026     False                    unresolved   1.2157     1.2158     -0.0085
+primary  0,1  0.8   mean            SPJF-hurdle - SPJF-M4  0.0028  0.0012  0.0057      True            SPJF-hurdle better   1.2065     1.2158     -0.7673
+primary  0,1  0.8   mean               SPJF-q50 - SPJF-M4 -0.0220 -0.0263 -0.0188      True                SPJF-M4 better   1.2871     1.2158      5.8592
+primary  0,1  0.8   mean               SPJF-q90 - SPJF-M4 -0.0170 -0.0253 -0.0130      True                SPJF-M4 better   1.2710     1.2158      4.5357
+primary  0,1  0.8   mean               SPJF-q99 - SPJF-M4 -0.0226 -0.0322 -0.0153      True                SPJF-M4 better   1.2890     1.2158      6.0155
+primary  0,1  0.8   mean               SPJF-phv - SPJF-M4 -0.0019 -0.0028  0.0000     False                    unresolved   1.2219     1.2158      0.4959
+primary  0,1  0.8   mean            SPJF-logvar - SPJF-M4  0.0013  0.0002  0.0031      True            SPJF-logvar better   1.2114     1.2158     -0.3687
+primary  0,1  0.8   mean    2CLASS-FCFS-tau0.02 - SPJF-M4 -0.1990 -0.2222 -0.1816      True                SPJF-M4 better   1.8621     1.2158     53.1505
+primary  0,1  0.8   mean    2CLASS-SPJF-tau0.02 - SPJF-M4  0.0035  0.0026  0.0047      True    2CLASS-SPJF-tau0.02 better   1.2042     1.2158     -0.9535
+primary  0,1  0.8   mean 2CLASS-TWEEDIE-tau0.02 - SPJF-M4  0.0052  0.0034  0.0082      True 2CLASS-TWEEDIE-tau0.02 better   1.1989     1.2158     -1.3901
+primary  0,1  0.8   mean    2CLASS-FCFS-tau0.05 - SPJF-M4 -0.1226 -0.1389 -0.1143      True                SPJF-M4 better   1.6140     1.2158     32.7456
+primary  0,1  0.8   mean    2CLASS-SPJF-tau0.05 - SPJF-M4  0.0024  0.0013  0.0042      True    2CLASS-SPJF-tau0.05 better   1.2080     1.2158     -0.6473
+primary  0,1  0.8   mean 2CLASS-TWEEDIE-tau0.05 - SPJF-M4  0.0047  0.0030  0.0076      True 2CLASS-TWEEDIE-tau0.05 better   1.2004     1.2158     -1.2699
+primary  0,1  0.8   mean     2CLASS-FCFS-tau0.1 - SPJF-M4 -0.1139 -0.1327 -0.1053      True                SPJF-M4 better   1.5853     1.2158     30.3898
+primary  0,1  0.8   mean     2CLASS-SPJF-tau0.1 - SPJF-M4  0.0004 -0.0006  0.0017     False                    unresolved   1.2145     1.2158     -0.1064
+primary  0,1  0.8   mean  2CLASS-TWEEDIE-tau0.1 - SPJF-M4  0.0034  0.0019  0.0061      True  2CLASS-TWEEDIE-tau0.1 better   1.2045     1.2158     -0.9367
+primary  0,1  0.8   mean     2CLASS-FCFS-tau0.2 - SPJF-M4 -0.1068 -0.1267 -0.0980      True                SPJF-M4 better   1.5620     1.2158     28.4737
+primary  0,1  0.8   mean     2CLASS-SPJF-tau0.2 - SPJF-M4 -0.0001 -0.0009  0.0006     False                    unresolved   1.2161     1.2158      0.0191
+primary  0,1  0.8   mean  2CLASS-TWEEDIE-tau0.2 - SPJF-M4  0.0040  0.0026  0.0063      True  2CLASS-TWEEDIE-tau0.2 better   1.2027     1.2158     -1.0791
+primary  0,1  0.8   mean     2CLASS-FCFS-tau0.4 - SPJF-M4 -0.1284 -0.1555 -0.1157      True                SPJF-M4 better   1.6321     1.2158     34.2358
+primary  0,1  0.8   mean     2CLASS-SPJF-tau0.4 - SPJF-M4  0.0004 -0.0005  0.0013     False                    unresolved   1.2146     1.2158     -0.0988
+primary  0,1  0.8   mean  2CLASS-TWEEDIE-tau0.4 - SPJF-M4  0.0044  0.0028  0.0070      True  2CLASS-TWEEDIE-tau0.4 better   1.2013     1.2158     -1.1938
+primary  0,1  1.0  p99dl                   FCFS - SPJF-M4 -0.9000 -0.9201 -0.8742      True                SPJF-M4 better 270.4788    65.7952    311.0922
+primary  0,1  1.0  p99dl                SJF-ref - SPJF-M4  0.1000  0.0799  0.1258      True                SJF-ref better  43.1232    65.7952    -34.4584
+primary  0,1  1.0  p99dl           SPJF-tweedie - SPJF-M4  0.0191  0.0100  0.0251      True           SPJF-tweedie better  61.4520    65.7952     -6.6011
+primary  0,1  1.0  p99dl   ORACLE-on-true-heavy - SPJF-M4  0.0912  0.0728  0.1125      True   ORACLE-on-true-heavy better  45.0997    65.7952    -31.4544
+primary  0,1  1.0  p99dl   ORACLE-on-true-light - SPJF-M4  0.0491  0.0372  0.0634      True   ORACLE-on-true-light better  54.6599    65.7952    -16.9241
+primary  0,1  1.0  p99dl ORACLE-top0.1pct-under - SPJF-M4  0.0470  0.0337  0.0587      True ORACLE-top0.1pct-under better  55.1455    65.7952    -16.1860
+primary  0,1  1.0  p99dl  ORACLE-top0.1pct-over - SPJF-M4  0.0042  0.0026  0.0058      True  ORACLE-top0.1pct-over better  64.8461    65.7952     -1.4425
+primary  0,1  1.0  p99dl ORACLE-top1.0pct-under - SPJF-M4  0.0910  0.0726  0.1118      True ORACLE-top1.0pct-under better  45.1653    65.7952    -31.3547
+primary  0,1  1.0  p99dl  ORACLE-top1.0pct-over - SPJF-M4  0.0254  0.0178  0.0348      True  ORACLE-top1.0pct-over better  60.0426    65.7952     -8.7431
+primary  0,1  1.0  p99dl           SPJF-M4refit - SPJF-M4 -0.0006 -0.0020  0.0002     False                    unresolved  65.9326    65.7952      0.2089
+primary  0,1  1.0  p99dl             SPJF-l2raw - SPJF-M4 -0.0067 -0.0189 -0.0013      True                SPJF-M4 better  67.3316    65.7952      2.3352
+primary  0,1  1.0  p99dl             SPJF-gamma - SPJF-M4  0.0157  0.0069  0.0206      True             SPJF-gamma better  62.2344    65.7952     -5.4120
+primary  0,1  1.0  p99dl            SPJF-hurdle - SPJF-M4  0.0169  0.0084  0.0233      True            SPJF-hurdle better  61.9600    65.7952     -5.8289
+primary  0,1  1.0  p99dl               SPJF-q50 - SPJF-M4 -0.0541 -0.0673 -0.0436      True                SPJF-M4 better  78.0808    65.7952     18.6726
+primary  0,1  1.0  p99dl               SPJF-q90 - SPJF-M4 -0.0213 -0.0311 -0.0161      True                SPJF-M4 better  70.6351    65.7952      7.3560
+primary  0,1  1.0  p99dl               SPJF-q99 - SPJF-M4  0.0043 -0.0075  0.0117     False                    unresolved  64.8123    65.7952     -1.4939
+primary  0,1  1.0  p99dl               SPJF-phv - SPJF-M4  0.0148  0.0053  0.0200      True               SPJF-phv better  62.4355    65.7952     -5.1063
+primary  0,1  1.0  p99dl            SPJF-logvar - SPJF-M4  0.0142  0.0075  0.0192      True            SPJF-logvar better  62.5811    65.7952     -4.8850
+primary  0,1  1.0  p99dl    2CLASS-FCFS-tau0.02 - SPJF-M4 -0.3612 -0.4332 -0.2935      True                SPJF-M4 better 147.9023    65.7952    124.7921
+primary  0,1  1.0  p99dl    2CLASS-SPJF-tau0.02 - SPJF-M4  0.0079  0.0035  0.0113      True    2CLASS-SPJF-tau0.02 better  63.9936    65.7952     -2.7381
+primary  0,1  1.0  p99dl 2CLASS-TWEEDIE-tau0.02 - SPJF-M4  0.0202  0.0106  0.0265      True 2CLASS-TWEEDIE-tau0.02 better  61.2158    65.7952     -6.9601
+primary  0,1  1.0  p99dl    2CLASS-FCFS-tau0.05 - SPJF-M4 -0.1257 -0.1947 -0.0882      True                SPJF-M4 better  94.3185    65.7952     43.3517
+primary  0,1  1.0  p99dl    2CLASS-SPJF-tau0.05 - SPJF-M4  0.0061  0.0021  0.0083      True    2CLASS-SPJF-tau0.05 better  64.4092    65.7952     -2.1065
+primary  0,1  1.0  p99dl 2CLASS-TWEEDIE-tau0.05 - SPJF-M4  0.0198  0.0115  0.0260      True 2CLASS-TWEEDIE-tau0.05 better  61.3061    65.7952     -6.8228
+primary  0,1  1.0  p99dl     2CLASS-FCFS-tau0.1 - SPJF-M4 -0.0691 -0.1149 -0.0491      True                SPJF-M4 better  81.4486    65.7952     23.7911
+primary  0,1  1.0  p99dl     2CLASS-SPJF-tau0.1 - SPJF-M4  0.0060  0.0028  0.0088      True     2CLASS-SPJF-tau0.1 better  64.4440    65.7952     -2.0536
+primary  0,1  1.0  p99dl  2CLASS-TWEEDIE-tau0.1 - SPJF-M4  0.0188  0.0099  0.0241      True  2CLASS-TWEEDIE-tau0.1 better  61.5202    65.7952     -6.4974
+primary  0,1  1.0  p99dl     2CLASS-FCFS-tau0.2 - SPJF-M4 -0.0581 -0.0802 -0.0419      True                SPJF-M4 better  78.9807    65.7952     20.0402
+primary  0,1  1.0  p99dl     2CLASS-SPJF-tau0.2 - SPJF-M4  0.0019  0.0006  0.0028      True     2CLASS-SPJF-tau0.2 better  65.3572    65.7952     -0.6657
+primary  0,1  1.0  p99dl  2CLASS-TWEEDIE-tau0.2 - SPJF-M4  0.0184  0.0095  0.0235      True  2CLASS-TWEEDIE-tau0.2 better  61.6208    65.7952     -6.3445
+primary  0,1  1.0  p99dl     2CLASS-FCFS-tau0.4 - SPJF-M4 -0.0769 -0.1109 -0.0553      True                SPJF-M4 better  83.2501    65.7952     26.5293
+primary  0,1  1.0  p99dl     2CLASS-SPJF-tau0.4 - SPJF-M4 -0.0009 -0.0023 -0.0003      True                SPJF-M4 better  66.0111    65.7952      0.3281
+primary  0,1  1.0  p99dl  2CLASS-TWEEDIE-tau0.4 - SPJF-M4  0.0173  0.0086  0.0227      True  2CLASS-TWEEDIE-tau0.4 better  61.8674    65.7952     -5.9697
+primary  0,1  1.0   mean                   FCFS - SPJF-M4 -0.9277 -0.9391 -0.9035      True                SPJF-M4 better  10.4819     2.3029    355.1722
+primary  0,1  1.0   mean                SJF-ref - SPJF-M4  0.0723  0.0609  0.0965      True                SJF-ref better   1.6675     2.3029    -27.5895
+primary  0,1  1.0   mean           SPJF-tweedie - SPJF-M4  0.0057  0.0043  0.0081      True           SPJF-tweedie better   2.2532     2.3029     -2.1579
+primary  0,1  1.0   mean   ORACLE-on-true-heavy - SPJF-M4  0.0608  0.0509  0.0801      True   ORACLE-on-true-heavy better   1.7681     2.3029    -23.2221
+primary  0,1  1.0   mean   ORACLE-on-true-light - SPJF-M4  0.0331  0.0286  0.0443      True   ORACLE-on-true-light better   2.0113     2.3029    -12.6619
+primary  0,1  1.0   mean ORACLE-top0.1pct-under - SPJF-M4  0.0261  0.0216  0.0309      True ORACLE-top0.1pct-under better   2.0739     2.3029     -9.9403
+primary  0,1  1.0   mean  ORACLE-top0.1pct-over - SPJF-M4  0.0032  0.0026  0.0038      True  ORACLE-top0.1pct-over better   2.2746     2.3029     -1.2277
+primary  0,1  1.0   mean ORACLE-top1.0pct-under - SPJF-M4  0.0614  0.0517  0.0800      True ORACLE-top1.0pct-under better   1.7632     2.3029    -23.4336
+primary  0,1  1.0   mean  ORACLE-top1.0pct-over - SPJF-M4  0.0169  0.0133  0.0243      True  ORACLE-top1.0pct-over better   2.1540     2.3029     -6.4628
+primary  0,1  1.0   mean           SPJF-M4refit - SPJF-M4 -0.0005 -0.0011 -0.0001      True                SPJF-M4 better   2.3074     2.3029      0.1955
+primary  0,1  1.0   mean             SPJF-l2raw - SPJF-M4 -0.0090 -0.0126 -0.0066      True                SPJF-M4 better   2.3827     2.3029      3.4679
+primary  0,1  1.0   mean             SPJF-gamma - SPJF-M4  0.0029  0.0019  0.0049      True             SPJF-gamma better   2.2774     2.3029     -1.1070
+primary  0,1  1.0   mean            SPJF-hurdle - SPJF-M4  0.0042  0.0028  0.0058      True            SPJF-hurdle better   2.2666     2.3029     -1.5744
+primary  0,1  1.0   mean               SPJF-q50 - SPJF-M4 -0.0257 -0.0312 -0.0219      True                SPJF-M4 better   2.5295     2.3029      9.8417
+primary  0,1  1.0   mean               SPJF-q90 - SPJF-M4 -0.0127 -0.0187 -0.0098      True                SPJF-M4 better   2.4149     2.3029      4.8650
+primary  0,1  1.0   mean               SPJF-q99 - SPJF-M4 -0.0190 -0.0259 -0.0139      True                SPJF-M4 better   2.4704     2.3029      7.2767
+primary  0,1  1.0   mean               SPJF-phv - SPJF-M4  0.0015  0.0001  0.0033      True               SPJF-phv better   2.2902     2.3029     -0.5487
+primary  0,1  1.0   mean            SPJF-logvar - SPJF-M4  0.0030  0.0020  0.0044      True            SPJF-logvar better   2.2773     2.3029     -1.1115
+primary  0,1  1.0   mean    2CLASS-FCFS-tau0.02 - SPJF-M4 -0.2083 -0.2295 -0.1890      True                SPJF-M4 better   4.1376     2.3029     79.6724
+primary  0,1  1.0   mean    2CLASS-SPJF-tau0.02 - SPJF-M4  0.0040  0.0031  0.0052      True    2CLASS-SPJF-tau0.02 better   2.2677     2.3029     -1.5260
+primary  0,1  1.0   mean 2CLASS-TWEEDIE-tau0.02 - SPJF-M4  0.0068  0.0053  0.0097      True 2CLASS-TWEEDIE-tau0.02 better   2.2429     2.3029     -2.6035
+primary  0,1  1.0   mean    2CLASS-FCFS-tau0.05 - SPJF-M4 -0.1139 -0.1263 -0.1067      True                SPJF-M4 better   3.3048     2.3029     43.5096
+primary  0,1  1.0   mean    2CLASS-SPJF-tau0.05 - SPJF-M4  0.0015  0.0009  0.0024      True    2CLASS-SPJF-tau0.05 better   2.2899     2.3029     -0.5623
+primary  0,1  1.0   mean 2CLASS-TWEEDIE-tau0.05 - SPJF-M4  0.0064  0.0051  0.0093      True 2CLASS-TWEEDIE-tau0.05 better   2.2470     2.3029     -2.4265
+primary  0,1  1.0   mean     2CLASS-FCFS-tau0.1 - SPJF-M4 -0.1000 -0.1159 -0.0922      True                SPJF-M4 better   3.1826     2.3029     38.2008
+primary  0,1  1.0   mean     2CLASS-SPJF-tau0.1 - SPJF-M4  0.0009  0.0003  0.0017      True     2CLASS-SPJF-tau0.1 better   2.2950     2.3029     -0.3409
+primary  0,1  1.0   mean  2CLASS-TWEEDIE-tau0.1 - SPJF-M4  0.0056  0.0043  0.0082      True  2CLASS-TWEEDIE-tau0.1 better   2.2538     2.3029     -2.1316
+primary  0,1  1.0   mean     2CLASS-FCFS-tau0.2 - SPJF-M4 -0.0943 -0.1110 -0.0864      True                SPJF-M4 better   3.1325     2.3029     36.0251
+primary  0,1  1.0   mean     2CLASS-SPJF-tau0.2 - SPJF-M4  0.0005  0.0001  0.0011      True     2CLASS-SPJF-tau0.2 better   2.2981     2.3029     -0.2054
+primary  0,1  1.0   mean  2CLASS-TWEEDIE-tau0.2 - SPJF-M4  0.0058  0.0045  0.0081      True  2CLASS-TWEEDIE-tau0.2 better   2.2520     2.3029     -2.2075
+primary  0,1  1.0   mean     2CLASS-FCFS-tau0.4 - SPJF-M4 -0.1215 -0.1439 -0.1104      True                SPJF-M4 better   3.3714     2.3029     46.3990
+primary  0,1  1.0   mean     2CLASS-SPJF-tau0.4 - SPJF-M4 -0.0000 -0.0003  0.0003     False                    unresolved   2.3029     2.3029      0.0035
+primary  0,1  1.0   mean  2CLASS-TWEEDIE-tau0.4 - SPJF-M4  0.0059  0.0047  0.0078      True  2CLASS-TWEEDIE-tau0.4 better   2.2512     2.3029     -2.2423

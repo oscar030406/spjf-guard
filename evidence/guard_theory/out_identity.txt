@@ -1,0 +1,33 @@
+=== SELF-TEST OF THE SIMULATOR (verify the tool before trusting it) ===
+k=1 FCFS vs Lindley recursion, 20000 instances, mismatches = 0
+dispatch completeness failures = 0 ; start>=arrival / busy-server identity failures = 0
+
+=== G1 EXHAUSTIVE: every work-conserving schedule of every small instance ===
+slack D = k*(W_P[i]-W_FCFS[i]) - (In_i-Out_i);  claim |D| <= 2(k-1)L
+k=1  instances=4000 schedules=97554   max D/L = 0   min D/L = 0   [bound +-2(k-1) = +-0]
+k=2  instances=4000 schedules=26549   max D/L = 1   min D/L = -1   [bound +-2(k-1) = +-2]
+   argmax witness: k=2 jobs=[(0, 2), (3, 0), (3, 4), (3, 2), (5, 1), (5, 0)] order=[0, 1, 3, 2, 4, 5] job=3 D=4 L=4
+   argmin witness: k=2 jobs=[(0, 0), (0, 1), (1, 2), (1, 0), (1, 4), (2, 4)] order=[0, 1, 3, 4, 2, 5] job=2 D=-4 L=4
+k=3  instances=4000 schedules=14416   max D/L = 2   min D/L = -2   [bound +-2(k-1) = +-4]
+   argmax witness: k=3 jobs=[(1, 3), (1, 3), (1, 0)] order=[2, 0, 1] job=2 D=6 L=3
+   argmin witness: k=3 jobs=[(0, 2), (0, 2), (2, 0), (2, 4), (2, 4), (4, 4)] order=[0, 1, 3, 4, 2, 5] job=2 D=-8 L=4
+k=4  instances=2000 schedules=6108   max D/L = 11/4   min D/L = -5/2   [bound +-2(k-1) = +-6]
+   argmax witness: k=4 jobs=[(0, 3), (0, 4), (0, 4), (0, 0), (1, 0), (2, 1)] order=[3, 0, 1, 2, 4, 5] job=3 D=11 L=4
+   argmin witness: k=4 jobs=[(1, 1), (3, 3), (3, 3), (3, 3), (3, 4)] order=[0, 2, 3, 4, 1] job=1 D=-10 L=4
+
+=== G1 RANDOM ATTACK: 1000000 instances, random/adversarial policies ===
+   ... 200000
+   ... 400000
+   ... 600000
+   ... 800000
+k=1  max D/L = 0   min D/L = 0   [bound +-2(k-1) = +-0]
+k=2  max D/L = 3/2   min D/L = -4/3   [bound +-2(k-1) = +-2]
+   argmax: jobs=[(0, 1), (2, 0), (2, 2), (2, 0), (3, 2), (4, 2), (4, 1), (6, 2), (6, 2), (7, 1)] order=[0, 1, 3, 2, 4, 6, 5, 7, 9, 8] job=8 D=3 L=2 pol=sjf
+   argmin: jobs=[(1, 0), (2, 2), (2, 1), (3, 1), (3, 2), (5, 3), (5, 2), (5, 1), (5, 3), (6, 0), (6, 3)] order=[0, 2, 1, 4, 3, 8, 7, 10, 9, 6, 5] job=7 D=-4 L=3 pol=lifo
+k=3  max D/L = 2   min D/L = -2   [bound +-2(k-1) = +-4]
+   argmax: jobs=[(0, 2), (0, 2), (0, 0)] order=[2, 1, 0] job=2 D=4 L=2 pol=lifo
+   argmin: jobs=[(0, 2), (0, 0), (0, 2), (0, 2), (1, 1), (1, 2), (2, 0), (2, 2), (2, 0)] order=[0, 2, 3, 5, 7, 4, 1, 6, 8] job=4 D=-4 L=2 pol=ljf
+k=4  max D/L = 3   min D/L = -3   [bound +-2(k-1) = +-6]
+   argmax: jobs=[(1, 1), (2, 2), (2, 2), (2, 2), (2, 1)] order=[0, 4, 3, 2, 1] job=4 D=6 L=2 pol=lifo
+   argmin: jobs=[(0, 8), (0, 3), (0, 10), (0, 6), (0, 6), (0, 6), (0, 5), (0, 10), (0, 8), (0, 10), (0, 5), (0, 0)] order=[2, 7, 9, 0, 8, 3, 4, 5, 6, 10, 1, 11] job=0 D=-30 L=10 pol=ljf
+

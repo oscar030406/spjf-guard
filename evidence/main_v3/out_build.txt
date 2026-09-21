@@ -1,0 +1,62 @@
+## 2026-09-19 20:40:26 manifest=7d6ed04de3219c6982328c8d3b82ace5dec84547405fdeeea0aeb1cd4eba5687 argv=--traces primary --reps 0,1,2
+[     6s] cache loaded
+[     6s] p2_inputs ires0: {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}; 40 class-semesters; key=arr; heavy_thr=1.5590 s
+[     6s] primary: 40 class-semesters, 44 copies (cache copies.csv), 30 weeks (cache p2weeks.csv)
+[    10s] primary rep0: n=17,634,760 W=15,247.5s k=[8, 5, 4] rho=[0.5294, 0.8471, 1.0589] weeks=30 dl=4,219,556 heavy=181,720 scores=['M4', 'M4refit', 'r1s', 'tweedie', 'tweedie_itr']
+[    13s] primary rep1: n=17,634,760 W=14,233.0s k=[8, 5, 4] rho=[0.4942, 0.7907, 0.9884] weeks=30 dl=4,219,556 heavy=181,720 scores=['M4', 'M4refit', 'r1s', 'tweedie', 'tweedie_itr']
+[    17s] primary rep2: n=17,634,760 W=14,115.0s k=[8, 5, 4] rho=[0.4901, 0.7842, 0.9802] weeks=30 dl=4,219,556 heavy=181,720 scores=['M4', 'M4refit', 'r1s', 'tweedie', 'tweedie_itr']
+
+  trace  rep  copies  class_semesters   n_jobs  n_weeks  busy_hour_work_s k_per_rho             rho_busy  n_deadline_window  n_heavy  span_days                             scores           busy_hour  busy_share_cap60
+primary    0      44               40 17634760       30         15247.543     8/5/4 0.5294/0.8471/1.0589            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+primary    1      44               40 17634760       30         14232.983     8/5/4 0.4942/0.7907/0.9884            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-30 14:00:00               0.0
+primary    2      44               40 17634760       30         14114.958     8/5/4 0.4901/0.7842/0.9802            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+## done in 17 s
+## 2026-09-19 20:40:45 manifest=7d6ed04de3219c6982328c8d3b82ace5dec84547405fdeeea0aeb1cd4eba5687 argv=--traces primary --reps 3,4
+[     6s] cache loaded
+[     6s] p2_inputs ires0: {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}; 40 class-semesters; key=arr; heavy_thr=1.5590 s
+[     6s] primary: 40 class-semesters, 44 copies (cache copies.csv), 30 weeks (cache p2weeks.csv)
+[    10s] primary rep3: n=17,634,760 W=13,860.3s k=[8, 5, 4] rho=[0.4813, 0.77, 0.9625] weeks=30 dl=4,219,556 heavy=181,720 scores=['M4', 'M4refit', 'r1s', 'tweedie', 'tweedie_itr']
+[    14s] primary rep4: n=17,634,760 W=13,026.1s k=[7, 5, 4] rho=[0.5169, 0.7237, 0.9046] weeks=30 dl=4,219,556 heavy=181,720 scores=['M4', 'M4refit', 'r1s', 'tweedie', 'tweedie_itr']
+
+  trace  rep  copies  class_semesters   n_jobs  n_weeks  busy_hour_work_s k_per_rho             rho_busy  n_deadline_window  n_heavy  span_days                             scores           busy_hour  busy_share_cap60
+primary    0      44               40 17634760       30         15247.543     8/5/4 0.5294/0.8471/1.0589            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+primary    1      44               40 17634760       30         14232.983     8/5/4 0.4942/0.7907/0.9884            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-30 14:00:00               0.0
+primary    2      44               40 17634760       30         14114.958     8/5/4 0.4901/0.7842/0.9802            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+primary    3      44               40 17634760       30         13860.254     8/5/4 0.4813/0.7700/0.9625            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-06 14:00:00               0.0
+primary    4      44               40 17634760       30         13026.087     7/5/4 0.5169/0.7237/0.9046            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-30 14:00:00               0.0
+## done in 14 s
+## 2026-09-19 20:41:01 manifest=7d6ed04de3219c6982328c8d3b82ace5dec84547405fdeeea0aeb1cd4eba5687 argv=--traces valid --reps 0,1
+[     6s] cache loaded
+[     6s] p2_inputs ires0: {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}; 40 class-semesters; key=arr; heavy_thr=1.5590 s
+[     6s] valid: 32 class-semesters; probe stops at 49 copies (k >= 4 at rho 1.0 and three distinct k in every probe rep); k at the probe's last count {0: [8, 5, 4], 1: [9, 5, 4], 2: [9, 5, 4], 3: [8, 5, 4], 4: [9, 6, 5]}
+[    13s] valid rep0: n=17,646,125 W=13,221.5s k=[7, 5, 4] rho=[0.5247, 0.7345, 0.9182] weeks=30 dl=3,993,059 heavy=176,106 scores=['M4', 'M4refit', 'r1s', 'tweedie', 'tweedie_itr']
+[    16s] valid rep1: n=17,646,125 W=13,819.9s k=[8, 5, 4] rho=[0.4799, 0.7678, 0.9597] weeks=30 dl=3,993,059 heavy=176,106 scores=['M4', 'M4refit', 'r1s', 'tweedie', 'tweedie_itr']
+
+  trace  rep  copies  class_semesters   n_jobs  n_weeks  busy_hour_work_s k_per_rho             rho_busy  n_deadline_window  n_heavy  span_days                             scores           busy_hour  busy_share_cap60
+primary    0      44               40 17634760       30         15247.543     8/5/4 0.5294/0.8471/1.0589            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+primary    1      44               40 17634760       30         14232.983     8/5/4 0.4942/0.7907/0.9884            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-30 14:00:00               0.0
+primary    2      44               40 17634760       30         14114.958     8/5/4 0.4901/0.7842/0.9802            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+primary    3      44               40 17634760       30         13860.254     8/5/4 0.4813/0.7700/0.9625            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-06 14:00:00               0.0
+primary    4      44               40 17634760       30         13026.087     7/5/4 0.5169/0.7237/0.9046            4219556   181720      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-30 14:00:00               0.0
+  valid    0      49               32 17646125       30         13221.474     7/5/4 0.5247/0.7345/0.9182            3993059   176106      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-27 14:00:00               0.0
+  valid    1      49               32 17646125       30         13819.949     8/5/4 0.4799/0.7678/0.9597            3993059   176106      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-31 21:00:00               0.0
+## done in 16 s
+## 2026-09-19 20:41:20 manifest=7d6ed04de3219c6982328c8d3b82ace5dec84547405fdeeea0aeb1cd4eba5687 argv=--traces t222,k1 --reps 0
+[     6s] cache loaded
+[     6s] p2_inputs ires0: {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}; 40 class-semesters; key=arr; heavy_thr=1.5590 s
+[     6s] t222: 8 class-semesters; probe stops at 190 copies (k >= 4 at rho 1.0 and three distinct k in every probe rep); k at the probe's last count {0: [8, 5, 4], 1: [8, 5, 4], 2: [8, 5, 4], 3: [7, 5, 4], 4: [8, 5, 4]}
+[     6s] t222: NOT USABLE -- 190 copies of the same 8 course calendars are needed to load the pool (> 100); stacking one semester that many times makes deadline spikes unlike the primary trace's, so it is not a held-out stand-in for it.
+[     6s] k1: 321 class-semester copies, busy-hour rho at k=1 = 0.8000
+[     7s] k1 rep0: n=3,209,347 W=2,880.0s k=[1] rho=[0.8] weeks=30 dl=768,149 heavy=33,097 scores=['M4', 'M4refit', 'r1s', 'tweedie', 'tweedie_itr']
+
+  trace  rep  copies  class_semesters   n_jobs  n_weeks  busy_hour_work_s k_per_rho             rho_busy  n_deadline_window  n_heavy  span_days                             scores           busy_hour  busy_share_cap60
+primary    0      44               40 17634760     30.0         15247.543     8/5/4 0.5294/0.8471/1.0589          4219556.0 181720.0      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+primary    1      44               40 17634760     30.0         14232.983     8/5/4 0.4942/0.7907/0.9884          4219556.0 181720.0      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-30 14:00:00               0.0
+primary    2      44               40 17634760     30.0         14114.958     8/5/4 0.4901/0.7842/0.9802          4219556.0 181720.0      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+primary    3      44               40 17634760     30.0         13860.254     8/5/4 0.4813/0.7700/0.9625          4219556.0 181720.0      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-06 14:00:00               0.0
+primary    4      44               40 17634760     30.0         13026.087     7/5/4 0.5169/0.7237/0.9046          4219556.0 181720.0      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-30 14:00:00               0.0
+  valid    0      49               32 17646125     30.0         13221.474     7/5/4 0.5247/0.7345/0.9182          3993059.0 176106.0      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-27 14:00:00               0.0
+  valid    1      49               32 17646125     30.0         13819.949     8/5/4 0.4799/0.7678/0.9597          3993059.0 176106.0      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-03-31 21:00:00               0.0
+   t222   -1     190                8        0      NaN               NaN       n/a                  NaN                NaN      NaN        NaN       not usable: needs 190 copies                 NaN               NaN
+     k1    0     321               40  3209347     30.0          2880.047         1               0.8000           768149.0  33097.0      208.8 M4,M4refit,r1s,tweedie,tweedie_itr 2020-04-13 14:00:00               0.0
+## done in 7 s

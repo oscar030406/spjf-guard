@@ -1,0 +1,26 @@
+## 2026-09-19 23:37:18 manifest=c3df766f7a55015237b173c58a55b5de186849b2db25239ce59dc1b7866556c7 argv=--instances 3000 --slice 5000
+    ext guard_variants/guardkern.py                  e8b8578d5b53874440d2f37f285bc422c127512595b544fe5427b5a3acdd1c58
+    ext guard_variants_referee/refsim.py             1195a8983303e8100cd852b2b0e42774bf4ea458d3c3f15a938b82f07ffec656
+    ext main_v3/v31/selected_params.csv              f797c5da565aae946cfc30382a7e9111fb17d99505442b252118719e2555ea74
+    ext main_v3/v31/v31_common.py                    10fd6978afd5b31ca349e149877117a4e7f303a404b9de9d675a394266702104
+--- random small instances (exact arithmetic on a 1/64 s grid) ---
+  random instances          3,000 (n <= 40, k <= 6, ties and equal predictions included); 66,350 jobs, 199,050 job-checks
+  A waits == guardkern      exact, every job of every instance
+  B sequence == refsim      exact, every job of every instance
+  C sweep == O(n^2)         exact, In, Out and the same-phase part
+  D Theorem 1               0 violations; worst |D| / ((k-1)L) = 0.8789
+  E FCFS In = Out = 0       holds on every job
+[     8s] random block done
+--- real slice ---
+  real slice: the densest 5,000 consecutive jobs of primary rep0 (ranks 6,690,498..6,695,497, span 511.2 s, work 1477.3 s)
+    k=8 spjf     sweep == O(n^2): True   max|D| = 0.276092 L   bound 2(k-1)L = 14 L   In>0 on 282 jobs, same-phase share of sum In = 5.258%
+    k=8 cap600   sweep == O(n^2): True   max|D| = 0.276092 L   bound 2(k-1)L = 14 L   In>0 on 282 jobs, same-phase share of sum In = 5.258%
+    k=8 adv      sweep == O(n^2): True   max|D| = 0.233337 L   bound 2(k-1)L = 14 L   In>0 on 330 jobs, same-phase share of sum In = 3.596%
+    k=5 spjf     sweep == O(n^2): True   max|D| = 0.840389 L   bound 2(k-1)L = 8 L   In>0 on 1,044 jobs, same-phase share of sum In = 0.385%
+    k=5 cap600   sweep == O(n^2): True   max|D| = 0.840389 L   bound 2(k-1)L = 8 L   In>0 on 1,044 jobs, same-phase share of sum In = 0.385%
+    k=5 adv      sweep == O(n^2): True   max|D| = 0.977430 L   bound 2(k-1)L = 8 L   In>0 on 1,151 jobs, same-phase share of sum In = 0.411%
+    k=4 spjf     sweep == O(n^2): True   max|D| = 0.899638 L   bound 2(k-1)L = 6 L   In>0 on 1,565 jobs, same-phase share of sum In = 0.100%
+    k=4 cap600   sweep == O(n^2): True   max|D| = 0.899638 L   bound 2(k-1)L = 6 L   In>0 on 1,565 jobs, same-phase share of sum In = 0.100%
+    k=4 adv      sweep == O(n^2): True   max|D| = 1.173797 L   bound 2(k-1)L = 6 L   In>0 on 1,808 jobs, same-phase share of sum In = 0.170%
+[     8s] slice block done
+## done in 8 s

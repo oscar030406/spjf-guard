@@ -1,0 +1,36 @@
+[     1s] rep0 level2: k=4 rho_busy=1.0589 n=17,634,760 predictor=reversed groups=base,sel
+[     1s]   FCFS p99_dl 263.1202s mean 10.0987s | SJF-ref p99_dl 42.8808s mean 1.6498s | gap 220.2394s / 8.4488s
+[     1s]   jobs with FCFS wait <= 1 s: 15,184,765 (86.1%); <= 10 s: 15,917,167 (90.3%)
+[     3s]   FCFS                     1.2s p99_dl   263.120 gap  0.000 | max_excess       0.0 guar@0      inf guar@p99       inf guarmax       inf used nan | exc|wf<1s      0.0 | maxheavy   1542.8 | forced 100.000% qw 100.00%
+[     4s]   SJF-ref                  1.4s p99_dl    42.881 gap  1.000 | max_excess    4755.5 guar@0      inf guar@p99       inf guarmax       inf used nan | exc|wf<1s   1101.5 | maxheavy   5299.5 | forced  0.000% qw   0.00%
+[     5s]   SPJF                     1.4s p99_dl   521.055 gap -1.171 | max_excess    6295.7 guar@0      inf guar@p99       inf guarmax       inf used nan | exc|wf<1s   5248.8 | maxheavy   2654.8 | forced  0.000% qw   0.00%
+[    12s]   FIX-B600                 6.6s p99_dl   386.496 gap -0.560 | max_excess     232.6 guar@0    300.0 guar@p99     300.0 guarmax     300.0 used 0.775 | exc|wf<1s    209.1 | maxheavy   1716.2 | forced  1.853% qw  60.24%
+[    19s]   FIX-B1200                6.4s p99_dl   464.518 gap -0.914 | max_excess     381.6 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.848 | exc|wf<1s    342.2 | maxheavy   1859.8 | forced  1.079% qw  49.45%
+[    26s]   FIX-B3600                6.9s p99_dl   554.491 gap -1.323 | max_excess     971.1 guar@0   1050.0 guar@p99    1050.0 guarmax    1050.0 used 0.925 | exc|wf<1s    937.4 | maxheavy   2205.9 | forced  0.350% qw  25.58%
+[    32s]   REL-B30-e0.75            6.6s p99_dl   430.177 gap -0.759 | max_excess    4238.9 guar@0    630.0 guar@p99    1419.4 guarmax    5263.8 used 0.899 | exc|wf<1s    225.0 | maxheavy   2534.2 | forced  0.876% qw  14.01%
+[    39s]   REL-B120-e0.5            7.1s p99_dl   385.734 gap -0.557 | max_excess    1638.7 guar@0    360.0 guar@p99     623.1 guarmax    1904.6 used 0.874 | exc|wf<1s    162.5 | maxheavy   2532.2 | forced  1.734% qw  42.94%
+[    46s]   CAP-B30-e0.5-M600        6.8s p99_dl   383.675 gap -0.547 | max_excess     234.3 guar@0    300.0 guar@p99     300.0 guarmax     300.0 used 0.781 | exc|wf<1s    116.1 | maxheavy   1716.2 | forced  2.971% qw  65.99%
+[    53s]   CAP-B30-e0.9-M1200       7.0s p99_dl   464.538 gap -0.915 | max_excess     381.6 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.848 | exc|wf<1s    335.8 | maxheavy   1859.8 | forced  1.125% qw  49.87%
+[    60s]   CAP-B120-e0.75-M1200     7.2s p99_dl   463.283 gap -0.909 | max_excess     381.6 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.848 | exc|wf<1s    278.3 | maxheavy   1859.8 | forced  1.178% qw  50.37%
+[    67s]   CAP-B30-e0.9-M3600       6.2s p99_dl   521.280 gap -1.172 | max_excess     971.1 guar@0   1050.0 guar@p99    1050.0 guarmax    1050.0 used 0.925 | exc|wf<1s    397.6 | maxheavy   2205.9 | forced  0.490% qw  27.22%
+[    77s]   SKIP-N10                10.2s p99_dl   335.064 gap -0.327 | max_excess     185.8 guar@0    300.0 guar@p99     300.0 guarmax     300.0 used 0.619 | exc|wf<1s    147.3 | maxheavy   1673.3 | forced 10.322% qw  92.12%
+[    86s]   SKIP-N20                 8.9s p99_dl   373.984 gap -0.503 | max_excess     333.0 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.740 | exc|wf<1s    239.5 | maxheavy   1752.8 | forced  8.994% qw  90.45%
+[    86s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L2_reversed.csv
+[     1s] rep0 level2: k=4 rho_busy=1.0589 n=17,634,760 predictor=random groups=base,sel
+[     2s]   FCFS p99_dl 263.1202s mean 10.0987s | SJF-ref p99_dl 42.8808s mean 1.6498s | gap 220.2394s / 8.4488s
+[     2s]   jobs with FCFS wait <= 1 s: 15,184,765 (86.1%); <= 10 s: 15,917,167 (90.3%)
+[     3s]   FCFS                     1.2s p99_dl   263.120 gap  0.000 | max_excess       0.0 guar@0      inf guar@p99       inf guarmax       inf used nan | exc|wf<1s      0.0 | maxheavy   1542.8 | forced 100.000% qw 100.00%
+[     5s]   SJF-ref                  1.3s p99_dl    42.881 gap  1.000 | max_excess    4755.5 guar@0      inf guar@p99       inf guarmax       inf used nan | exc|wf<1s   1101.5 | maxheavy   5299.5 | forced  0.000% qw   0.00%
+[     6s]   SPJF                     1.5s p99_dl   183.804 gap  0.360 | max_excess    6235.5 guar@0      inf guar@p99       inf guarmax       inf used nan | exc|wf<1s   6173.6 | maxheavy   6199.6 | forced  0.000% qw   0.00%
+[    12s]   FIX-B600                 6.3s p99_dl   287.051 gap -0.109 | max_excess     230.5 guar@0    300.0 guar@p99     300.0 guarmax     300.0 used 0.768 | exc|wf<1s    221.9 | maxheavy   1697.5 | forced  0.916% qw  45.16%
+[    19s]   FIX-B1200                6.2s p99_dl   290.559 gap -0.125 | max_excess     363.0 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.807 | exc|wf<1s    351.2 | maxheavy   1846.3 | forced  0.505% qw  32.29%
+[    25s]   FIX-B3600                6.4s p99_dl   202.931 gap  0.273 | max_excess     971.2 guar@0   1050.0 guar@p99    1050.0 guarmax    1050.0 used 0.925 | exc|wf<1s    935.0 | maxheavy   2451.7 | forced  0.145% qw  12.41%
+[    32s]   REL-B30-e0.75            7.2s p99_dl   207.906 gap  0.251 | max_excess    4248.5 guar@0    630.0 guar@p99    1419.4 guarmax    5263.8 used 0.909 | exc|wf<1s    261.5 | maxheavy   5502.6 | forced  0.283% qw   4.99%
+[    39s]   REL-B120-e0.5            6.4s p99_dl   234.121 gap  0.132 | max_excess    1676.7 guar@0    360.0 guar@p99     623.1 guarmax    1904.6 used 0.884 | exc|wf<1s    175.6 | maxheavy   3197.3 | forced  0.624% qw  17.43%
+[    45s]   CAP-B30-e0.5-M600        6.9s p99_dl   287.551 gap -0.111 | max_excess     230.5 guar@0    300.0 guar@p99     300.0 guarmax     300.0 used 0.768 | exc|wf<1s    142.7 | maxheavy   1695.3 | forced  1.431% qw  46.81%
+[    53s]   CAP-B30-e0.9-M1200       7.5s p99_dl   286.601 gap -0.107 | max_excess     361.3 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.803 | exc|wf<1s    351.2 | maxheavy   1846.3 | forced  0.521% qw  32.35%
+[    60s]   CAP-B120-e0.75-M1200     6.5s p99_dl   280.017 gap -0.077 | max_excess     362.2 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.805 | exc|wf<1s    328.1 | maxheavy   1846.3 | forced  0.535% qw  32.45%
+[    67s]   CAP-B30-e0.9-M3600       7.2s p99_dl   209.861 gap  0.242 | max_excess     971.2 guar@0   1050.0 guar@p99    1050.0 guarmax    1050.0 used 0.925 | exc|wf<1s    434.3 | maxheavy   2451.7 | forced  0.182% qw  12.70%
+[    76s]   SKIP-N10                 9.5s p99_dl   263.604 gap -0.002 | max_excess      86.8 guar@0    300.0 guar@p99     300.0 guarmax     300.0 used 0.289 | exc|wf<1s     76.0 | maxheavy   1545.7 | forced 10.424% qw  91.49%
+[    85s]   SKIP-N20                 9.0s p99_dl   264.196 gap -0.005 | max_excess      98.3 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.219 | exc|wf<1s     98.3 | maxheavy   1553.0 | forced  8.704% qw  89.10%
+[    85s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L2_random.csv

@@ -1,0 +1,2 @@
+pool_tag,n,L,heavy_thr,train_day,valid_day,end_day,mrt_max,serv_max
+releng-hardware__gecko-t-linux-talos-2404,30702,4139.611001956463,1823.1849999189376,4,5,7,7200.0,4181.15399980545

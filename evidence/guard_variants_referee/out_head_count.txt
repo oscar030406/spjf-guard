@@ -1,0 +1,2 @@
+constant budget (eps=0, incl. count channel): 199763 cases, head-rule differs in 0
+eps>0 (equivalence NOT claimed):              200237 cases, head-rule differs in 958

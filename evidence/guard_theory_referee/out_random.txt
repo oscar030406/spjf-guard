@@ -1,0 +1,32 @@
+random sweep: instances=30000000 job-checks=225022344  10.6s
+  violations T1 |D|>2(k-1)L         = 0
+  violations C1.1 k=1 D!=0          = 0
+  violations L2 Out>k(G-e+L)        = 0
+  violations T2 In>kG+(3k-2)L       = 0
+  violations C1.2                   = 0
+  violations T4(3) In>=B+kL         = 0
+  violations T4(4) ke>B+(3k-2)L     = 0
+  min slack of Lemma 2  (k(G-e+L)-Out) = 1
+  min slack of Theorem 2 (kG+(3k-2)L-In) = 1
+  k=1 worst |D|/L = 0        (bound 2(k-1)=0) | worst (k*excess-B)/L for the guard = 8/9      (bound 3k-2=1)
+  k=2 worst |D|/L = 3/2      (bound 2(k-1)=2) | worst (k*excess-B)/L for the guard = 3        (bound 3k-2=4)
+  k=3 worst |D|/L = 5/2      (bound 2(k-1)=4) | worst (k*excess-B)/L for the guard = 44/9     (bound 3k-2=7)
+  k=4 worst |D|/L = 7/2      (bound 2(k-1)=6) | worst (k*excess-B)/L for the guard = 62/9     (bound 3k-2=10)
+  k=5 worst |D|/L = 4        (bound 2(k-1)=8) | worst (k*excess-B)/L for the guard = 80/9     (bound 3k-2=13)
+  k=6 worst |D|/L = 5        (bound 2(k-1)=10) | worst (k*excess-B)/L for the guard = 87/8     (bound 3k-2=16)
+random sweep: instances=270000000 job-checks=2024961012  109.1s
+  violations T1 |D|>2(k-1)L         = 0
+  violations C1.1 k=1 D!=0          = 0
+  violations L2 Out>k(G-e+L)        = 0
+  violations T2 In>kG+(3k-2)L       = 0
+  violations C1.2                   = 0
+  violations T4(3) In>=B+kL         = 0
+  violations T4(4) ke>B+(3k-2)L     = 0
+  min slack of Lemma 2  (k(G-e+L)-Out) = 1
+  min slack of Theorem 2 (kG+(3k-2)L-In) = 1
+  k=1 worst |D|/L = 0        (bound 2(k-1)=0) | worst (k*excess-B)/L for the guard = 8/9      (bound 3k-2=1)
+  k=2 worst |D|/L = 3/2      (bound 2(k-1)=2) | worst (k*excess-B)/L for the guard = 3        (bound 3k-2=4)
+  k=3 worst |D|/L = 5/2      (bound 2(k-1)=4) | worst (k*excess-B)/L for the guard = 44/9     (bound 3k-2=7)
+  k=4 worst |D|/L = 7/2      (bound 2(k-1)=6) | worst (k*excess-B)/L for the guard = 62/9     (bound 3k-2=10)
+  k=5 worst |D|/L = 4        (bound 2(k-1)=8) | worst (k*excess-B)/L for the guard = 80/9     (bound 3k-2=13)
+  k=6 worst |D|/L = 5        (bound 2(k-1)=10) | worst (k*excess-B)/L for the guard = 98/9     (bound 3k-2=16)

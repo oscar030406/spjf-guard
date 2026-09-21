@@ -1,0 +1,74 @@
+====================================================================================================
+RELATION-FEATURE TEST  (OULAD 2013J only)
+====================================================================================================
+rows: train(14-140)=197546  val(141-160)=39358  test(161-200)=82702
+LightGBM seeds [0, 1, 2]; feature_fraction=bagging_fraction=0.8; all other hyperparameters as in precheck_lgbm.py
+best_iter per model/seed: M0:[126, 96, 92], M1:[135, 140, 139], M2:[153, 96, 159], M3:[140, 144, 168], M4:[133, 132, 139]
+
+=== T1  prediction accuracy, log1p space, test 161-200 (mean +- std over 3 seeds) ===
+ model  nfeat |         RMSE all |     RMSE d>0 or dhat>0    ncoord /      ntot
+    M0     23 |   0.4567 +-0.0009 |        0.4567 +-0.0009     82676 /     82702
+    M1     31 |   0.4532 +-0.0005 |        0.4532 +-0.0005     82671 /     82702
+    M2     31 |   0.4563 +-0.0006 |        0.4565 +-0.0005     82552 /     82702
+    M3     28 |   0.4556 +-0.0003 |        0.4557 +-0.0003     82688 /     82702
+    M4     36 |   0.4526 +-0.0002 |        0.4527 +-0.0002     82696 /     82702
+
+=== T1  prediction accuracy, log1p space, val 141-160 (mean +- std over 3 seeds) ===
+ model  nfeat |         RMSE all |     RMSE d>0 or dhat>0    ncoord /      ntot
+    M0     23 |   0.4329 +-0.0007 |        0.4329 +-0.0007     39349 /     39358
+    M1     31 |   0.4308 +-0.0001 |        0.4308 +-0.0001     39351 /     39358
+    M2     31 |   0.4321 +-0.0006 |        0.4324 +-0.0008     39189 /     39358
+    M3     28 |   0.4312 +-0.0003 |        0.4313 +-0.0003     39345 /     39358
+    M4     36 |   0.4298 +-0.0003 |        0.4299 +-0.0003     39354 /     39358
+
+=== T2  top-k protection decision, test 161-200 (mean +- std over 3 seeds) ===
+  vectors=480  zero-demand vectors skipped in m1=0
+ model |            m1 (k)         m3q95 (k) |           m1 (2k)        m3q95 (2k)
+    M0 |    0.2901 +-0.0001    0.5144 +-0.0082 |    0.1505 +-0.0003    0.2988 +-0.0048
+    M1 |    0.2871 +-0.0002    0.5132 +-0.0092 |    0.1495 +-0.0002    0.2890 +-0.0100
+    M2 |    0.2899 +-0.0008    0.5201 +-0.0114 |    0.1500 +-0.0006    0.2967 +-0.0029
+    M3 |    0.2894 +-0.0002    0.5287 +-0.0020 |    0.1496 +-0.0001    0.2908 +-0.0015
+    M4 |    0.2884 +-0.0002    0.5280 +-0.0030 |    0.1500 +-0.0003    0.2937 +-0.0039
+     O |    0.2160             0.3520          |    0.0822             0.1384            (oracle, seed-free)
+
+=== T2  top-k protection decision, val 141-160 (mean +- std over 3 seeds) ===
+  vectors=240  zero-demand vectors skipped in m1=0
+ model |            m1 (k)         m3q95 (k) |           m1 (2k)        m3q95 (2k)
+    M0 |    0.1941 +-0.0004    0.4349 +-0.0000 |    0.0838 +-0.0005    0.2025 +-0.0000
+    M1 |    0.1931 +-0.0002    0.4349 +-0.0000 |    0.0832 +-0.0003    0.2011 +-0.0003
+    M2 |    0.1937 +-0.0004    0.4376 +-0.0040 |    0.0832 +-0.0004    0.2022 +-0.0004
+    M3 |    0.1940 +-0.0004    0.4349 +-0.0000 |    0.0837 +-0.0003    0.2025 +-0.0000
+    M4 |    0.1935 +-0.0005    0.4349 +-0.0000 |    0.0834 +-0.0005    0.2017 +-0.0007
+     O |    0.1506             0.3444          |    0.0473             0.1130            (oracle, seed-free)
+
+=== T3  paired block bootstrap on m1, test 161-200, 2000 resamples over (course,day) blocks, seed-averaged costs ===
+  k   comparison |      d m1    95% lo    95% hi  sign
+x 1        M1-M0 |  -0.00305  -0.00522  -0.00105  CI excludes 0
+x 1        M1-M2 |  -0.00286  -0.00505  -0.00084  CI excludes 0
+x 1        M1-M3 |  -0.00232  -0.00452  -0.00029  CI excludes 0
+x 1        M4-M3 |  -0.00100  -0.00289   0.00097  CI covers 0
+x 2        M1-M0 |  -0.00097  -0.00254   0.00055  CI covers 0
+x 2        M1-M2 |  -0.00051  -0.00199   0.00088  CI covers 0
+x 2        M1-M3 |  -0.00007  -0.00153   0.00130  CI covers 0
+x 2        M4-M3 |   0.00045  -0.00138   0.00206  CI covers 0
+
+=== T3  paired block bootstrap on m1, val 141-160, 2000 resamples over (course,day) blocks, seed-averaged costs ===
+  k   comparison |      d m1    95% lo    95% hi  sign
+x 1        M1-M0 |  -0.00093  -0.00292   0.00088  CI covers 0
+x 1        M1-M2 |  -0.00052  -0.00229   0.00126  CI covers 0
+x 1        M1-M3 |  -0.00082  -0.00294   0.00118  CI covers 0
+x 1        M4-M3 |  -0.00050  -0.00266   0.00166  CI covers 0
+x 2        M1-M0 |  -0.00067  -0.00174   0.00031  CI covers 0
+x 2        M1-M2 |  -0.00002  -0.00105   0.00099  CI covers 0
+x 2        M1-M3 |  -0.00057  -0.00174   0.00059  CI covers 0
+x 2        M4-M3 |  -0.00037  -0.00144   0.00071  CI covers 0
+
+=== T4  residual co-movement on edges, z = r/sqrt(1+dhat), test days 161-200, seed-averaged dhat ===
+ model   edge set |   n pairs   pearson  spearman
+    M0        jac |     45360    0.1305    0.2505
+    M0       swap |     45360    0.0282    0.0465
+    M1        jac |     45360    0.1347    0.2506
+    M1       swap |     45360    0.0305    0.0457
+
+runtime: graphs 7.2s, training 12.9s, total 24.3s
+[done]

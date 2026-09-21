@@ -1,0 +1,16 @@
+[ 1000] brute-vs-mine 3.41061e-13  kernel-vs-mine 0  bound violations 0  worst used/allowed 0.9312
+[ 2000] brute-vs-mine 3.41061e-13  kernel-vs-mine 0  bound violations 0  worst used/allowed 0.9757
+[ 3000] brute-vs-mine 3.41061e-13  kernel-vs-mine 0  bound violations 0  worst used/allowed 0.9757
+[ 4000] brute-vs-mine 3.41061e-13  kernel-vs-mine 0  bound violations 0  worst used/allowed 0.9890
+MISMATCH it=4941 kind=pri n=24 k=3 kw={'policy': 'pri'}
+  a  = [np.int64(3), np.int64(3), np.int64(4), np.int64(8), np.int64(9), np.int64(10), np.int64(10), np.int64(11), np.int64(12), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(17), np.int64(18), np.int64(18), np.int64(19), np.int64(20), np.int64(20), np.int64(22), np.int64(22), np.int64(22), np.int64(23), np.int64(23)]
+  svc= [np.int64(5000), np.int64(2), np.int64(5000), np.int64(2), np.int64(1), np.int64(1), np.int64(1), np.int64(2), np.int64(1000), np.int64(17345), np.int64(5000), np.int64(1000), np.int64(5000), np.int64(1), np.int64(17345), np.int64(17345), np.int64(1), np.int64(1), np.int64(17345), np.int64(2), np.int64(5000), np.int64(1), np.int64(5000), np.int64(5000)]
+  pred= [np.float64(1.0), np.float64(3.0), np.float64(3.0), np.float64(0.0), np.float64(0.0), np.float64(2.0), np.float64(1.0), np.float64(0.0), np.float64(2.0), np.float64(0.0), np.float64(2.0), np.float64(0.0), np.float64(3.0), np.float64(1.0), np.float64(0.0), np.float64(0.0), np.float64(3.0), np.float64(0.0), np.float64(2.0), np.float64(0.0), np.float64(3.0), np.float64(0.0), np.float64(3.0), np.float64(1.0)]
+  brute= [np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.001), np.float64(22.339), np.float64(0.003), np.float64(0.0), np.float64(22.338), np.float64(0.0), np.float64(22.349), np.float64(4.987), np.float64(23.333), np.float64(17.346), np.float64(4.986), np.float64(5.985), np.float64(27.345), np.float64(17.339), np.float64(23.328), np.float64(17.338), np.float64(27.343), np.float64(17.34), np.float64(28.327), np.float64(17.341)]
+  mine = [np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.0), np.float64(0.001), np.float64(0.004), np.float64(0.003), np.float64(0.0), np.float64(22.337), np.float64(0.001), np.float64(22.35), np.float64(4.987), np.float64(23.332), np.float64(17.347), np.float64(4.986), np.float64(5.985), np.float64(27.346), np.float64(17.34), np.float64(23.328), np.float64(17.339), np.float64(27.344), np.float64(17.341), np.float64(28.326), np.float64(17.342)]
+[ 5000] brute-vs-mine 22.335  kernel-vs-mine 0  bound violations 0  worst used/allowed 0.9890
+[ 6000] brute-vs-mine 22.335  kernel-vs-mine 0  bound violations 0  worst used/allowed 0.9890
+instances 6000 {'fcfs': 1200, 'pri': 1200, 'cap': 1200, 'fix': 1200, 'skip': 1200}
+max |brute - mine|          22.335
+max |builder kernel - mine| 0
+per-job bound violations on MY waits: 0; worst used/allowed 0.9890

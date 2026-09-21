@@ -1,0 +1,2 @@
+pool,pool_tag,k_eff,k_max_busy,n_workers,setup_s,rec_mean,rec_p90,rec_p99
+releng-hardware/gecko-t-linux-talos-2404,releng-hardware__gecko-t-linux-talos-2404,96,100,105,126.82299995422363,1074.7912592659104,2536.5572000741977,9881.563929967871

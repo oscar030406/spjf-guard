@@ -1,0 +1,78 @@
+adversarial search over small instances; tau = 1.0, sizes in [np.float64(0.25), np.float64(0.5), np.float64(1.0), np.float64(1.5), np.float64(3.0), np.float64(8.0)], arrivals in [np.float64(0.0), np.float64(0.5), np.float64(1.0), np.float64(2.0), np.float64(4.0), np.float64(8.0)], B in [np.float64(0.0), np.float64(2.0), np.float64(8.0), np.float64(32.0)], n <= 7, k <= 3
+random instances: 3,000,000
+
+hypothesis                                            violations  worst excess over the bound
+H0 control: plain guard vs FCFS, Theorem A                     0                      -0.2500
+H1 tiered+guard vs plain FCFS, Theorem A slack            25,768                       5.0000   (n=7 k=1 B=2 mode=1)
+H2 tiered+guard vs TIERED FCFS, Theorem A slack                0                      -0.2500
+H3 tiered+guard vs plain FCFS, slack (B+waste)/k + (3-2/k)L           0                      -0.2500
+H4 LIGHT jobs vs plain FCFS, slack (B+waste)/k + 3*tau       8,606                       5.5000   (n=7 k=2 B=8 mode=1)
+H5 LIGHT jobs vs TIERED FCFS, slack B/k + 3*tau           11,793                       7.0000   (n=7 k=2 B=8 mode=1)
+
+worst instance for H1 tiered+guard vs plain FCFS, Theorem A slack
+    n=7 k=1 B=2 base=pred tau=1 L=8 wasted=7 (7 kills)
+    rank  arrival  service   pred      W_P   W_FCFS  W_TFCFS   excess
+       0     0.00     3.00  0.797     1.00     0.00     1.00     1.00
+       1     0.50     3.00  0.956     8.50     2.50     4.50     6.00
+       2     1.00     3.00  0.990    12.00     5.00     8.00     7.00
+       3     2.00     1.50  0.754    15.00     7.00    11.00     8.00
+       4     2.00     3.00  0.636     3.00     8.50    13.50    -5.50
+       5     4.00     3.00  0.992    24.50     9.50    15.50    15.00
+       6     8.00     8.00  0.394    11.50     8.50    15.50     3.00
+    Theorem A slack B/k+(3-2/k)L = 10.00; max excess over plain FCFS = 15.00; over tiered FCFS = 9.00
+
+worst instance for H4 LIGHT jobs vs plain FCFS, slack (B+waste)/k + 3*tau
+    n=7 k=2 B=8 base=pred tau=1 L=8 wasted=5 (5 kills)
+    rank  arrival  service   pred      W_P   W_FCFS  W_TFCFS   excess
+       0     0.00     8.00  0.205     1.00     0.00     1.00     1.00
+       1     0.50     1.50  0.639     1.00     0.00     1.00     1.00
+       2     1.00     0.25  0.830    16.00     1.00     2.00    15.00
+       3     1.00     0.25  0.935    16.00     1.25     2.25    14.75
+       4     2.00     3.00  0.168     2.00     0.50     2.50     1.50
+       5     4.00     8.00  0.767     5.00     1.50     4.50     3.50
+       6     8.00     8.00  0.724     1.00     0.00     2.00     1.00
+    Theorem A slack B/k+(3-2/k)L = 20.00; max excess over plain FCFS = 15.00; over tiered FCFS = 14.00
+
+worst instance for H5 LIGHT jobs vs TIERED FCFS, slack B/k + 3*tau
+    n=7 k=2 B=8 base=pred tau=1 L=8 wasted=5 (5 kills)
+    rank  arrival  service   pred      W_P   W_FCFS  W_TFCFS   excess
+       0     0.00     8.00  0.280     1.00     0.00     1.00     1.00
+       1     0.50     0.50  0.890    14.00     0.00     0.00    14.00
+       2     0.50     8.00  0.436    14.50     0.50     1.50    14.00
+       3     1.00     0.25  0.759    17.00     7.00     8.00    10.00
+       4     1.00     3.00  0.351     1.50     7.25     9.25    -5.75
+       5     4.00     8.00  0.386     2.50     5.00     7.00    -2.50
+       6     4.00     8.00  0.394     6.00     7.25    10.25    -1.25
+    Theorem A slack B/k+(3-2/k)L = 20.00; max excess over plain FCFS = 14.00; over tiered FCFS = 14.00
+
+--- family A: n identical heavy jobs (work L) arriving together, no other job
+    every tiered schedule must execute n*(L+tau); the worst job's excess over
+    plain FCFS therefore grows linearly in n.  (theory: >= n*tau/k - L)
+     k   n   tau  maxexc_TIER   n*tau/k  maxexc_SPJFguard
+     1   2   1.0        2.000     2.000             0.000
+     1   4   1.0        4.000     4.000             0.000
+     1   8   1.0        8.000     8.000             0.000
+     1  16   1.0       16.000    16.000             0.000
+     1  32   1.0       32.000    32.000             0.000
+     2   2   1.0        1.000     1.000             0.000
+     2   4   1.0        2.000     2.000             0.000
+     2   8   1.0        4.000     4.000             0.000
+     2  16   1.0        8.000     8.000             0.000
+     2  32   1.0       16.000    16.000             0.000
+     3   2   1.0        1.000     0.667             0.000
+     3   4   1.0        2.000     1.333             0.000
+     3   8   1.0        3.000     2.667             0.000
+     3  16   1.0        6.000     5.333             0.000
+     3  32   1.0       11.000    10.667             0.000
+
+--- family B: does the additive constant for a LIGHT job scale with tau or L?
+    tau is held at 1.0 and the largest service L is varied; for each L the same
+    random search reports  max over LIGHT jobs of (W_P - W_TFCFS) - B/k  and
+    (W_P - W_FCFS - wasted/k).  If tiering moved the barrier from L to tau these
+    would stay flat in L.
+     L/tau  light excess vs TFCFS - B/k  light excess vs FCFS - (B+waste)/k
+         2                        2.500                               1.000
+         4                        4.500                               3.000
+         8                       10.000                               8.000
+        16                       18.000                              15.500
+        32                       35.000                              33.000

@@ -1,0 +1,9 @@
+flurry filter: kept apps active on >= 2 distinct days -> 99/119 apps, 1918180/1980951 jobs (96.83%), work 62.08% of the raw total
+split (by arrival day): train < 8 d (1121378 rows), valid [8,10) (340403), test [10,14) (456399)
+heavy threshold = train p95 of the cost = 4.9261 s
+service cap L = train p99.9 = 286.7772 s (jobs capped in the whole trace: 1187, 0.0619%; work removed by the cap 3.18%)
+[leak test 1] brute-force recomputation of e_n/e_mean/e_max/e_min/e_last on 2500 sampled rows: mismatches = 0
+[prefix check] features on the first 1500000 rows reproduce the full-trace features exactly (max abs diff 0)
+[leak test 2] 600038 jobs with end>cutoff given random durations; 900000 rows arrive at or before the cutoff; feature columns that changed: 0
+leak tests: PASS
+wrote <cache-dir>\cross_domain\azure_feats.parquet  (1918180 rows, 34 columns)

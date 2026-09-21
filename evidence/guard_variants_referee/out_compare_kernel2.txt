@@ -1,0 +1,2 @@
+as-written (theta>0 allowed with Ncap=0)       mismatches=8  (of which theta>0 & Ncap=0: 8)
+his semantics: theta ignored when Ncap=0       mismatches=0  (of which theta>0 & Ncap=0: 0)

@@ -1,0 +1,28 @@
+=== cost prediction, azure ===
+rows train/valid/test = 1121378/340403/456399   heavy threshold = 4.9261s   heavy rate (test) = 0.0563
+fitting:
+   ENT/log: best_iter=68 n_feat=14
+   ENT/tweedie: best_iter=102 n_feat=14
+   STATIC/log: best_iter=106 n_feat=6
+   STATIC/tweedie: best_iter=12 n_feat=6
+   ALL/log: best_iter=135 n_feat=28
+   (validation, ALL/log): rmse_log=0.2336 spearman=0.8248 auroc=0.9948
+   ALL/tweedie: best_iter=92 n_feat=28
+   (validation, ALL/tweedie): rmse_log=0.2418 spearman=0.8236 auroc=0.9946
+
+test-window scores (entity-block bootstrap, 200 reps, blocks = prediction entity):
+model                                    rmse_log               spearman                  auroc                  auprc
+M0-entity-running-mean       0.3923[ 0.271, 0.555]   0.9346[ 0.834, 0.943]   0.9716[ 0.941, 0.986]   0.7016[ 0.557, 0.810]
+M0-global-running-mean       0.6965[ 0.560, 0.913]   0.5008[ 0.296, 0.565]   0.7849[ 0.688, 0.839]   0.2899[ 0.148, 0.429]
+ENT/log                      0.3401[ 0.244, 0.487]   0.9532[ 0.891, 0.963]   0.9828[ 0.962, 0.992]   0.8159[ 0.722, 0.890]
+ENT/tweedie                  0.3455[ 0.245, 0.489]   0.9384[ 0.826, 0.944]   0.9828[ 0.963, 0.991]   0.8063[ 0.718, 0.886]
+STATIC/log                   0.8088[ 0.687, 1.012]   0.0210[-0.113, 0.218]   0.6238[ 0.561, 0.681]   0.0835[ 0.039, 0.160]
+STATIC/tweedie               0.9956[ 0.887, 1.105]   0.1244[-0.027, 0.205]   0.4743[ 0.384, 0.566]   0.0532[ 0.027, 0.111]
+ALL/log                      0.3185[ 0.222, 0.461]   0.9322[ 0.811, 0.946]   0.9847[ 0.967, 0.993]   0.8298[ 0.749, 0.904]
+ALL/tweedie                  0.3462[ 0.238, 0.474]   0.9455[ 0.848, 0.949]   0.9838[ 0.968, 0.993]   0.8125[ 0.708, 0.896]
+
+by entity history at arrival (test window):
+   ALL/tweedie on cold entity (<5 past jobs): n=345 rmse_log=0.8469 spearman=0.8105 auroc=0.9468
+   ALL/tweedie on warm entity (>=5): n=456054 rmse_log=0.3456 spearman=0.9456 auroc=0.9838
+
+wrote <cache-dir>\cross_domain\azure_test_pred.parquet (456399 test rows)

@@ -1,0 +1,13 @@
+<repo-root>\prechecks\guard_variants\guardkern.py:37: SyntaxWarning: "\-" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\-"? A raw string is also an option.
+  \--------- Z(q), suffix range-add -/    \--- T(t), recomputed per decision ---/
+[     1s] rep0 level2: k=4 rho_busy=1.0589 n=17,634,760 predictor=M4 groups=base,fixed
+[     2s]   FCFS p99_dl 263.1202s mean 10.0987s | SJF-ref p99_dl 42.8808s mean 1.6498s | gap 220.2394s / 8.4488s
+[     4s]   FCFS                     1.4s p99_dl   263.120 gap  0.000 | max_excess       0.0 guar@0      inf guar@p99       inf used nan | maxheavy   1542.8 | forced 100.000% qw 100.00%
+[     6s]   SJF-ref                  1.8s p99_dl    42.881 gap  1.000 | max_excess    4755.5 guar@0      inf guar@p99       inf used nan | maxheavy   5299.5 | forced  0.000% qw   0.00%
+[     7s]   SPJF                     1.8s p99_dl    66.571 gap  0.892 | max_excess    5882.9 guar@0      inf guar@p99       inf used nan | maxheavy   6264.1 | forced  0.000% qw   0.00%
+[    18s]   FIX-B30                 10.7s p99_dl   262.055 gap  0.005 | max_excess      71.2 guar@0    157.5 guar@p99     157.5 used 0.452 | maxheavy   1550.3 | forced  3.548% qw  74.38%
+[    27s]   FIX-B120                 8.7s p99_dl   241.347 gap  0.099 | max_excess     101.6 guar@0    180.0 guar@p99     180.0 used 0.565 | maxheavy   1572.9 | forced  1.394% qw  58.04%
+[    36s]   FIX-B600                 9.2s p99_dl   168.669 gap  0.429 | max_excess     215.4 guar@0    300.0 guar@p99     300.0 used 0.718 | maxheavy   1692.9 | forced  0.383% qw  29.67%
+[    44s]   FIX-B1800                8.0s p99_dl    89.475 gap  0.788 | max_excess     514.0 guar@0    600.0 guar@p99     600.0 used 0.857 | maxheavy   1992.9 | forced  0.092% qw   9.78%
+[    51s]   FIX-B3600                7.2s p99_dl    77.502 gap  0.843 | max_excess     958.1 guar@0   1050.0 guar@p99    1050.0 used 0.913 | maxheavy   2457.9 | forced  0.019% qw   1.91%
+[    51s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L2_M4.csv

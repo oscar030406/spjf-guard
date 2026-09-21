@@ -1,0 +1,97 @@
+trace,reps,level,metric,quantity,pair,label,diff,lo,hi,resolved,verdict
+k1,0,0,p99dl,gain,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,0.0216785064363193,0.008313038023721454,0.03596500157407193,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,1.723798004083264,0.6513205628007512,2.8460256170637743,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit",0.00022896139871653176,-0.0009663447986970719,0.0016110963323461148,False,unresolved
+k1,0,0,p99dl,red_pct,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit",0.018206198996196576,-0.07981973302078416,0.12233497373432908,False,unresolved
+k1,0,0,p99dl,gain,SPJF-tweedie - SPJF-M4refit,Tweedie vs the refit log score,0.02144954503760277,0.008176111856575722,0.035333069530276574,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,SPJF-tweedie - SPJF-M4refit,Tweedie vs the refit log score,1.7055918050870673,0.6359743241087049,2.8196385783159506,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,SPJF-r1s - SPJF-tweedie,R1S-Tweedie (M4 cols + GRU state) vs Tweedie,0.0009707512539524066,-0.004965865301217296,0.018992072133331355,False,unresolved
+k1,0,0,p99dl,red_pct,SPJF-r1s - SPJF-tweedie,R1S-Tweedie (M4 cols + GRU state) vs Tweedie,0.0771906994118865,-0.3887176326421482,1.5615494521187196,False,unresolved
+k1,0,0,p99dl,gain,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control fitted on the same 90% of the rows,0.004036433471229617,-0.0039695728208692434,0.02271025446936862,False,unresolved
+k1,0,0,p99dl,red_pct,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control fitted on the same 90% of the rows,0.3209628846784085,-0.3057971427244567,1.8212419101067872,False,unresolved
+k1,0,0,p99dl,gain,SPJF-tweedie_itr - SPJF-tweedie,"cost of the GRU's inner-validation holdout: same score, 90% of rows",-0.0030656822172772102,-0.006831779087257328,0.0012546777612883271,False,unresolved
+k1,0,0,p99dl,red_pct,SPJF-tweedie_itr - SPJF-tweedie,"cost of the GRU's inner-validation holdout: same score, 90% of rows",-0.243772185266522,-0.5361927972389988,0.09871177578186999,False,unresolved
+k1,0,0,p99dl,gain,CAP-G300 - FIX-G300,capped relative vs fixed budget at G = 300 s,-0.041619647208193555,-0.06546676168937948,-0.021741603937590837,True,FIX-G300 better
+k1,0,0,p99dl,red_pct,CAP-G300 - FIX-G300,capped relative vs fixed budget at G = 300 s,-3.309446847682139,-5.131217640897937,-1.796423483587958,True,FIX-G300 better
+k1,0,0,p99dl,gain,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s",-0.168431205798385,-0.3116066772246517,-0.09920069934494492,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s",-13.393052571839888,-25.86954579748814,-7.330598735185307,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,FIX-G300 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 300 s",-0.12681155859019144,-0.281349487876151,-0.055036621496048814,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,FIX-G300 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 300 s",-10.08360572415775,-23.669678891660404,-4.03191780515927,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,SKIP-G300 - SPJF-tweedie,finite-skip vs unguarded at equal G = 300 s,-0.9070594135067324,-0.9293742990465947,-0.8519427304674312,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,SKIP-G300 - SPJF-tweedie,finite-skip vs unguarded at equal G = 300 s,-72.12614998089865,-76.40436643947456,-64.61184365569906,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,CAP-G300 - SKIP-G300,capped relative vs finite-skip at G = 300 s,0.7386282077083474,0.5556282830326685,0.8095169673151795,True,CAP-G300 better
+k1,0,0,p99dl,red_pct,CAP-G300 - SKIP-G300,capped relative vs finite-skip at G = 300 s,58.73309740905876,46.58571207615277,62.98904251705687,True,CAP-G300 better
+k1,0,0,p99dl,gain,CAP-G600 - FIX-G600,capped relative vs fixed budget at G = 600 s,-0.006971205102179745,-0.011870500133206688,-0.0010505127831774883,True,FIX-G600 better
+k1,0,0,p99dl,red_pct,CAP-G600 - FIX-G600,capped relative vs fixed budget at G = 600 s,-0.5543255240619089,-0.9505960205635464,-0.08578240111747547,True,FIX-G600 better
+k1,0,0,p99dl,gain,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s",-0.04894776208013596,-0.08456514477809196,-0.01947531318830061,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s",-3.892152571762068,-7.021843136231445,-1.4329761105121173,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,FIX-G600 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 600 s",-0.041976556977956214,-0.07995735414407724,-0.015565443441740792,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,FIX-G600 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 600 s",-3.3378270477001593,-6.689263407898724,-1.143805867240969,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,SKIP-G600 - SPJF-tweedie,finite-skip vs unguarded at equal G = 600 s,-0.903803364459164,-0.9277316958350976,-0.8480491190033171,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,SKIP-G600 - SPJF-tweedie,finite-skip vs unguarded at equal G = 600 s,-71.86724049993957,-76.51074499310184,-63.45024787089324,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,CAP-G600 - SKIP-G600,capped relative vs finite-skip at G = 600 s,0.854855602379028,0.7770895098845144,0.8928872843831988,True,CAP-G600 better
+k1,0,0,p99dl,red_pct,CAP-G600 - SKIP-G600,capped relative vs finite-skip at G = 600 s,67.9750879281775,60.94220402323335,71.8238693387728,True,CAP-G600 better
+k1,0,0,p99dl,gain,CAP-G1200 - FIX-G1200,capped relative vs fixed budget at G = 1200 s,-0.0005521702207852419,-0.002806559013495119,0.002989024435458639,False,unresolved
+k1,0,0,p99dl,red_pct,CAP-G1200 - FIX-G1200,capped relative vs fixed budget at G = 1200 s,-0.04390661908833238,-0.21944506287923424,0.250599851604067,False,unresolved
+k1,0,0,p99dl,gain,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s",-0.013243052856701798,-0.02825614253460497,-0.0032576372372067784,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s",-1.0530406303316937,-2.292890872992634,-0.2516016626850682,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,FIX-G1200 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 1200 s",-0.012690882635916556,-0.027538741660548517,-0.0029864401803448896,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,FIX-G1200 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 1200 s",-1.0091340112433613,-2.277463230671247,-0.22658356826108286,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,SKIP-G1200 - SPJF-tweedie,finite-skip vs unguarded at equal G = 1200 s,-0.8917451562543626,-0.9238558314583215,-0.8145209855453617,True,SPJF-tweedie better
+k1,0,0,p99dl,red_pct,SKIP-G1200 - SPJF-tweedie,finite-skip vs unguarded at equal G = 1200 s,-70.90841451728639,-76.50137009205879,-60.20783388459191,True,SPJF-tweedie better
+k1,0,0,p99dl,gain,CAP-G1200 - SKIP-G1200,capped relative vs finite-skip at G = 1200 s,0.8785021033976608,0.8045414307019303,0.9104793524063419,True,CAP-G1200 better
+k1,0,0,p99dl,red_pct,CAP-G1200 - SKIP-G1200,capped relative vs finite-skip at G = 1200 s,69.8553738869547,59.44607277116754,75.00968476826718,True,CAP-G1200 better
+k1,0,0,p99dl,gain,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,0.013180328532032437,-0.11453727068903544,0.10275977169958996,False,unresolved
+k1,0,0,p99dl,red_pct,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,1.0480530143264133,-9.586679584720597,7.864172263767576,False,unresolved
+k1,0,0,p99dl,gain,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,-0.11794373908336953,-0.15260525654195117,-0.07731992876469991,True,SPJF-random better
+k1,0,0,p99dl,red_pct,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,-9.378468144161928,-12.669677797032515,-5.785179714152252,True,SPJF-random better
+k1,0,0,p99dl,gain,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,-0.06791785032791053,-0.21138365361158473,0.02215238227095537,False,unresolved
+k1,0,0,p99dl,red_pct,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,-5.400586760014647,-17.671372146597744,1.6399537595901952,False,unresolved
+k1,0,0,mean,gain,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,0.0159942965754315,0.011039404327404126,0.022252242038658006,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,1.1454991836621815,0.8023490536350405,1.5327855035982632,True,SPJF-tweedie better
+k1,0,0,mean,gain,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit",-0.0004046471146836872,-0.0012625544018101454,0.00018760505061115863,False,unresolved
+k1,0,0,mean,red_pct,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit",-0.028980514232394228,-0.08862534792432353,0.013368743220840605,False,unresolved
+k1,0,0,mean,gain,SPJF-tweedie - SPJF-M4refit,Tweedie vs the refit log score,0.016398943690115186,0.011602387222128733,0.02271820110650323,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,SPJF-tweedie - SPJF-M4refit,Tweedie vs the refit log score,1.1744796978945757,0.8508159075314197,1.56133355780443,True,SPJF-tweedie better
+k1,0,0,mean,gain,SPJF-r1s - SPJF-tweedie,R1S-Tweedie (M4 cols + GRU state) vs Tweedie,0.004835353687545174,-0.0033973748638361583,0.01628481685944574,False,unresolved
+k1,0,0,mean,red_pct,SPJF-r1s - SPJF-tweedie,R1S-Tweedie (M4 cols + GRU state) vs Tweedie,0.34630430139134916,-0.250920452230239,1.10598453546821,False,unresolved
+k1,0,0,mean,gain,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control fitted on the same 90% of the rows,0.00584384022619866,-0.0034137831516566548,0.018671438324546052,False,unresolved
+k1,0,0,mean,red_pct,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control fitted on the same 90% of the rows,0.41853132940185134,-0.25206482646512607,1.2810428369667648,False,unresolved
+k1,0,0,mean,gain,SPJF-tweedie_itr - SPJF-tweedie,"cost of the GRU's inner-validation holdout: same score, 90% of rows",-0.0010084865386534858,-0.003081033891725757,0.0007576413884618572,False,unresolved
+k1,0,0,mean,red_pct,SPJF-tweedie_itr - SPJF-tweedie,"cost of the GRU's inner-validation holdout: same score, 90% of rows",-0.07222702801050218,-0.21285412826367694,0.05539279470623532,False,unresolved
+k1,0,0,mean,gain,CAP-G300 - FIX-G300,capped relative vs fixed budget at G = 300 s,-0.02765704420975723,-0.03499114485886662,-0.021365684822982168,True,FIX-G300 better
+k1,0,0,mean,red_pct,CAP-G300 - FIX-G300,capped relative vs fixed budget at G = 300 s,-1.9807761732673086,-2.4422456606385636,-1.5143500544251536,True,FIX-G300 better
+k1,0,0,mean,gain,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s",-0.16026277586624804,-0.20246982725841475,-0.10188742684769497,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s",-11.477896390155486,-15.047653098965572,-6.960941318979738,True,SPJF-tweedie better
+k1,0,0,mean,gain,FIX-G300 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 300 s",-0.1326057316564908,-0.17338229426862464,-0.07475834398196785,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,FIX-G300 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 300 s",-9.497120216888177,-12.952223889499177,-5.029002535703279,True,SPJF-tweedie better
+k1,0,0,mean,gain,SKIP-G300 - SPJF-tweedie,finite-skip vs unguarded at equal G = 300 s,-0.8244939634703449,-0.8673083734902721,-0.7629020977039566,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,SKIP-G300 - SPJF-tweedie,finite-skip vs unguarded at equal G = 300 s,-59.04962169705123,-64.92340512286079,-51.7784309216861,True,SPJF-tweedie better
+k1,0,0,mean,gain,CAP-G300 - SKIP-G300,capped relative vs finite-skip at G = 300 s,0.6642311876040968,0.6087025444040125,0.7201729729881907,True,CAP-G300 better
+k1,0,0,mean,red_pct,CAP-G300 - SKIP-G300,capped relative vs finite-skip at G = 300 s,47.57172530689574,42.407006678844986,51.698185289084265,True,CAP-G300 better
+k1,0,0,mean,gain,CAP-G600 - FIX-G600,capped relative vs fixed budget at G = 600 s,-0.0023631639997065967,-0.004588001660125479,-0.00042028177857024804,True,FIX-G600 better
+k1,0,0,mean,red_pct,CAP-G600 - FIX-G600,capped relative vs fixed budget at G = 600 s,-0.16924798285171505,-0.3373088547892328,-0.02895030453831366,True,FIX-G600 better
+k1,0,0,mean,gain,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s",-0.05469115882023279,-0.07784909389554681,-0.023997927467512177,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s",-3.9169386091257365,-5.80957139557821,-1.5741314448148156,True,SPJF-tweedie better
+k1,0,0,mean,gain,FIX-G600 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 600 s",-0.05232799482052619,-0.07490650275498313,-0.02314359619335098,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,FIX-G600 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 600 s",-3.7476906262740215,-5.56069057464365,-1.5223468913308182,True,SPJF-tweedie better
+k1,0,0,mean,gain,SKIP-G600 - SPJF-tweedie,finite-skip vs unguarded at equal G = 600 s,-0.7716185115043557,-0.8189153079957113,-0.7080591096635407,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,SKIP-G600 - SPJF-tweedie,finite-skip vs unguarded at equal G = 600 s,-55.262722612295754,-61.40384383114062,-47.900276809325256,True,SPJF-tweedie better
+k1,0,0,mean,gain,CAP-G600 - SKIP-G600,capped relative vs finite-skip at G = 600 s,0.7169273526841229,0.6708551691777511,0.749339292450084,True,CAP-G600 better
+k1,0,0,mean,red_pct,CAP-G600 - SKIP-G600,capped relative vs finite-skip at G = 600 s,51.34578400317002,45.7249392573976,55.91511590326224,True,CAP-G600 better
+k1,0,0,mean,gain,CAP-G1200 - FIX-G1200,capped relative vs fixed budget at G = 1200 s,0.0012968967488174998,-0.0037186634969577663,0.006711880994881904,False,unresolved
+k1,0,0,mean,red_pct,CAP-G1200 - FIX-G1200,capped relative vs fixed budget at G = 1200 s,0.09288274479958147,-0.26259067878799824,0.4919309824140645,False,unresolved
+k1,0,0,mean,gain,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s",-0.021593449364687767,-0.036488936127568955,-0.0045696880842240025,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s",-1.5465061875678714,-2.7056441367970407,-0.3083072132117451,True,SPJF-tweedie better
+k1,0,0,mean,gain,FIX-G1200 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 1200 s",-0.022890346113505267,-0.038552276977487296,-0.004455068313563455,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,FIX-G1200 - SPJF-tweedie,"fixed-budget guard vs unguarded, G = 1200 s",-1.6393889323674529,-2.873109588789747,-0.3051636373308926,True,SPJF-tweedie better
+k1,0,0,mean,gain,SKIP-G1200 - SPJF-tweedie,finite-skip vs unguarded at equal G = 1200 s,-0.6912240382098185,-0.7454435956797749,-0.6177683155679073,True,SPJF-tweedie better
+k1,0,0,mean,red_pct,SKIP-G1200 - SPJF-tweedie,finite-skip vs unguarded at equal G = 1200 s,-49.50493244656235,-55.94802325701637,-41.50161555959107,True,SPJF-tweedie better
+k1,0,0,mean,gain,CAP-G1200 - SKIP-G1200,capped relative vs finite-skip at G = 1200 s,0.6696305888451306,0.6121249976545574,0.7118059605127494,True,CAP-G1200 better
+k1,0,0,mean,red_pct,CAP-G1200 - SKIP-G1200,capped relative vs finite-skip at G = 1200 s,47.95842625899448,41.12735901319438,53.415143731583576,True,CAP-G1200 better
+k1,0,0,mean,gain,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,0.1786730033483952,0.0847541406787429,0.25247728659693847,True,CAP-G600-reversed better
+k1,0,0,mean,red_pct,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,12.796422681848036,5.892240137181709,18.08670759578055,True,CAP-G600-reversed better
+k1,0,0,mean,gain,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,-0.0847613204466206,-0.13001960690962525,-0.03391082034442885,True,SPJF-random better
+k1,0,0,mean,red_pct,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,-6.070540390433679,-9.678015075800648,-2.310477103532543,True,SPJF-random better
+k1,0,0,mean,gain,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,0.04853634187613476,0.025344672652826482,0.06855783506614045,True,CAP-G600-top1short better
+k1,0,0,mean,red_pct,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,3.4761353670572888,1.6927558542424583,5.08117253068077,True,CAP-G600-top1short better

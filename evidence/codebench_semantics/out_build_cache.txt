@@ -1,0 +1,11 @@
+2018_1    blocks= 455,353 submit=148,710 cm_rows= 146,298 classes=  9  23.3s
+2018_2    blocks= 163,785 submit= 46,756 cm_rows=  44,594 classes=  5   6.7s
+2019_1    blocks= 539,846 submit=162,121 cm_rows= 575,447 classes=  9  23.5s
+2019_2    blocks= 128,729 submit= 46,991 cm_rows= 127,528 classes=  7   9.4s
+2020_ERE  blocks= 457,064 submit=147,380 cm_rows= 416,014 classes=  3  47.6s
+2020_1    blocks= 207,769 submit= 56,213 cm_rows= 182,421 classes=  7  20.5s
+2020_2    blocks= 177,134 submit= 49,550 cm_rows= 146,872 classes=  6  22.2s
+2021_1    blocks= 188,967 submit= 57,080 cm_rows= 161,542 classes=  7  25.4s
+2021_2    blocks= 226,602 submit= 55,957 cm_rows= 178,056 classes=  8  23.9s
+2022_1    blocks= 210,346 submit= 51,547 cm_rows= 167,528 classes=  8  18.8s
+2022_2    blocks= 163,204 submit= 40,844 cm_rows= 106,374 classes=  8  15.3s

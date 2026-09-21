@@ -1,0 +1,8 @@
+per-step audit of Theorem 1: job-checks=268188
+  step (1) k W_P = R^P + In - Out - rho^P   : 0 failures
+  step (2) k W_F = R^F - rho^F              : 0 failures
+  step (3) In^F = Out^F = 0                 : 0 failures
+  step (2) 0 <= rho <= (k-1)L               : 0 failures
+  step (4) U_P(a_i)-U_F(a_i) = R^P-R^F      : 0 failures
+  step (4) |R^P-R^F| <= (k-1)L              : 0 failures
+  Lemma 1 |U_P-U_F| <= (k-1)L at all events : 0 failures

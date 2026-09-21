@@ -1,0 +1,55 @@
+validpre: 32 class-semesters, 49 copies, 30 weeks; refit log score vs cached forward M4: max |diff| = 4.977e-01 on 83,710 of 400,790 rows (refit noise, see CAND note)
+rep 0: 17,646,125 jobs, busiest-hour work 13,221.5 s, k per rho {0.5: 7, 0.8: 5, 1.0: 4}, heavy 176,106 (0.9980%), deadline-window jobs 3,993,059
+
+[validpre_rep0_r0.5_twoclass] k=7, busy-hour rho 0.525  (55 s)
+                     w_p99_dl  w_mean    w_p99  max_heavy  sim_sec
+policy                                                            
+FCFS                  46.8103  1.1117  27.4513   492.2358      5.3
+SJF-ref               20.5381  0.4140  11.8702   836.5065      7.5
+SPJF-M4               27.1719  0.5337  14.3244  1249.7518      7.4
+2CLASS-FCFS-tau0.02   34.0350  0.6814  16.5627   626.9027      7.5
+2CLASS-SPJF-tau0.02   26.8568  0.5302  14.1913  1235.8788      7.8
+2CLASS-FCFS-tau0.05   31.6069  0.6596  16.4191   715.9558      7.7
+2CLASS-SPJF-tau0.05   27.0513  0.5341  14.3522  1236.8047      7.8
+2CLASS-FCFS-tau0.1    30.9581  0.6552  16.6471   736.3496      7.7
+2CLASS-SPJF-tau0.1    27.0405  0.5327  14.3358  1249.7516      7.4
+2CLASS-FCFS-tau0.2    29.5195  0.6431  16.8448   736.3125      7.3
+2CLASS-SPJF-tau0.2    27.1339  0.5338  14.3505  1236.2696      7.4
+2CLASS-FCFS-tau0.4    29.9677  0.6522  17.5613   783.1509      7.3
+2CLASS-SPJF-tau0.4    27.1881  0.5350  14.3281  1236.2700      6.9
+
+[validpre_rep0_r0.8_twoclass] k=5, busy-hour rho 0.735  (99 s)
+                     w_p99_dl  w_mean    w_p99  max_heavy  sim_sec
+policy                                                            
+FCFS                 130.6271  3.7579  77.2546   840.7671      5.3
+SJF-ref               37.5760  1.1071  27.8736  1565.2794      7.5
+SPJF-M4               51.4482  1.4530  32.9345  2053.4205      7.5
+2CLASS-FCFS-tau0.02   87.3964  2.0134  38.3462  1223.6038      7.5
+2CLASS-SPJF-tau0.02   50.6357  1.4409  32.5955  2053.4597      8.0
+2CLASS-FCFS-tau0.05   67.9995  1.8683  36.5540  1377.7881      8.0
+2CLASS-SPJF-tau0.05   50.8001  1.4523  32.8695  2053.4474      7.9
+2CLASS-FCFS-tau0.1    62.3400  1.8609  36.9787  1411.9290      7.9
+2CLASS-SPJF-tau0.1    50.5590  1.4469  32.7440  2053.4522      8.4
+2CLASS-FCFS-tau0.2    57.8882  1.8391  37.3570  1422.1936      8.3
+2CLASS-SPJF-tau0.2    51.2097  1.4530  32.9035  2053.4675      8.2
+2CLASS-FCFS-tau0.4    60.0513  1.9016  39.6712  1442.9837      8.3
+2CLASS-SPJF-tau0.4    51.5788  1.4539  32.9391  2053.4206      7.7
+
+[validpre_rep0_r1_twoclass] k=4, busy-hour rho 0.918  (144 s)
+                     w_p99_dl  w_mean     w_p99  max_heavy  sim_sec
+policy                                                             
+FCFS                 248.5769  8.4074  174.8241  1137.1265      5.8
+SJF-ref               46.2252  1.7928   35.9044  2489.8979      8.2
+SPJF-M4               82.3219  2.5176   45.5887  3113.5236      8.2
+2CLASS-FCFS-tau0.02  186.2156  3.9608   65.6725  1941.3826      8.3
+2CLASS-SPJF-tau0.02   77.8373  2.4645   44.1793  3113.5785      8.2
+2CLASS-FCFS-tau0.05  134.2600  3.4742   54.5092  2326.6963      8.5
+2CLASS-SPJF-tau0.05   78.5182  2.4907   44.7971  3113.5330      8.5
+2CLASS-FCFS-tau0.1   106.9635  3.4327   55.3719  2383.1929      8.4
+2CLASS-SPJF-tau0.1    78.9389  2.4941   44.9791  3113.5230      8.2
+2CLASS-FCFS-tau0.2    99.2545  3.3867   56.0942  2396.3266      8.3
+2CLASS-SPJF-tau0.2    80.6578  2.5025   45.2047  3113.5245      8.3
+2CLASS-FCFS-tau0.4   100.8783  3.5924   62.0950  2432.6872      8.3
+2CLASS-SPJF-tau0.4    82.2644  2.5145   45.4838  3113.5242      8.1
+
+total 144 s

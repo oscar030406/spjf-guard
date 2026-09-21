@@ -1,0 +1,59 @@
+==========================================================================================
+1. IS THE VALIDATION TRACE THE PRIMARY POOL MINUS ONE SEMESTER?
+  primary rep0: 17,634,760 jobs = 44 copies x 400,790 jobs, 160,117 distinct service times
+  valid rep0: 17,646,125 jobs = 49 copies x 360,125 jobs, 153,316 distinct service times
+  per copy: primary 400,790 jobs, validation 360,125; difference 40,665 jobs, negative entries 0
+  -> the validation per-copy pool is a strict sub-multiset of the primary one
+  trace  rep  copies  class_semesters   n_jobs
+primary    0      44               40 17634760
+primary    1      44               40 17634760
+primary    2      44               40 17634760
+primary    3      44               40 17634760
+primary    4      44               40 17634760
+  valid    0      49               32 17646125
+  valid    1      49               32 17646125
+   t222   -1     190                8        0
+     k1    0     321               40  3209347
+  class-semesters: primary 40, validation 32, 2022-2 alone 8
+==========================================================================================
+2. THE SELECTION RULE, RE-APPLIED TO THE GRID
+  select_grid.csv rows re-derived from the raw validation cells: 144, mismatches 0
+  grid points per G: 15 capped + 1 fixed, on 3 levels
+  G=   300: my pick B0=30*k/4 eta=0.5 (worst gap 0.4102, worst harm 102.8); reported B0=30 eta=0.5 -> OK
+        top three feasible: B0=30,eta=0.5: gap 0.4102, harm 103; B0=120,eta=0.5: gap 0.4040, harm 146; B0=120,eta=0.25: gap 0.3404, harm 103
+        feasible 6 of 15; the fixed-budget guard at the same G: worst harm 186.1 (limit 150) -> infeasible
+  G=   600: my pick B0=30*k/4 eta=0.9 (worst gap 0.7434, worst harm 223.6); reported B0=30 eta=0.9 -> OK
+        top three feasible: B0=30,eta=0.9: gap 0.7434, harm 224; B0=120,eta=0.75: gap 0.7379, harm 220; B0=30,eta=0.75: gap 0.7214, harm 153
+        feasible 11 of 15; the fixed-budget guard at the same G: worst harm 490.5 (limit 300) -> infeasible
+  G=  1200: my pick B0=120*k/4 eta=0.9 (worst gap 0.7645, worst harm 360.9); reported B0=120 eta=0.9 -> OK
+        top three feasible: B0=120,eta=0.9: gap 0.7645, harm 361; B0=30,eta=0.9: gap 0.7640, harm 224; B0=600,eta=0.5: gap 0.7593, harm 333
+        feasible 13 of 15; the fixed-budget guard at the same G: worst harm 678.5 (limit 600) -> infeasible
+==========================================================================================
+3. CAPPED VS FIXED AT EQUAL G, PER OVERLAY (what section 9 admits)
+  L0 G=   300  harm FIX [181.8  89.8 187.9  89.3 126. ]  max   187.9
+              harm CAP [96.6 76.9 97.2 87.  68.3]  max    97.2  ratio of maxima 1.93  per-overlay ratios [1.88 1.17 1.93 1.03 1.85]
+              p99dl FIX 15.31 vs CAP 16.01
+  L0 G=   600  harm FIX [238.1  89.8 229.   89.3 126. ]  max   238.1
+              harm CAP [238.1  89.8 229.   89.3  95.3]  max   238.1  ratio of maxima 1.00  per-overlay ratios [1.   1.   1.   1.   1.32]
+              p99dl FIX 14.96 vs CAP 14.98
+  L0 G=  1200  harm FIX [238.1  89.8 229.   89.3 126. ]  max   238.1
+              harm CAP [238.1  89.8 229.   89.3 126. ]  max   238.1  ratio of maxima 1.00  per-overlay ratios [1. 1. 1. 1. 1.]
+              p99dl FIX 14.75 vs CAP 14.75
+  L1 G=   300  harm FIX [177.1 174.  175.3 165.5 186.3]  max   186.3
+              harm CAP [ 86.6 109.6 107.1  91.  109.5]  max   109.6  ratio of maxima 1.70  per-overlay ratios [2.04 1.59 1.64 1.82 1.7 ]
+              p99dl FIX 53.97 vs CAP 56.76
+  L1 G=   600  harm FIX [249.2 264.5 446.7 342.3 292.8]  max   446.7
+              harm CAP [188.9 206.9 143.7 138.3 276.9]  max   276.9  ratio of maxima 1.61  per-overlay ratios [1.32 1.28 3.11 2.48 1.06]
+              p99dl FIX 47.05 vs CAP 47.14
+  L1 G=  1200  harm FIX [249.2 264.5 469.3 342.3 292.8]  max   469.3
+              harm CAP [249.2 264.5 309.8 320.2 292.8]  max   320.2  ratio of maxima 1.47  per-overlay ratios [1.   1.   1.51 1.07 1.  ]
+              p99dl FIX 45.39 vs CAP 45.36
+  L2 G=   300  harm FIX [198.8 208.2 202.3 201.9 175.9]  max   208.2
+              harm CAP [103.3  98.2 113.  109.1 113.8]  max   113.8  ratio of maxima 1.83  per-overlay ratios [1.92 2.12 1.79 1.85 1.55]
+              p99dl FIX 170.14 vs CAP 166.02
+  L2 G=   600  harm FIX [450.3 450.9 460.8 520.5 387. ]  max   520.5
+              harm CAP [262.2 298.1 307.3 520.5 153.3]  max   520.5  ratio of maxima 1.00  per-overlay ratios [1.72 1.51 1.5  1.   2.52]
+              p99dl FIX 86.64 vs CAP 87.74
+  L2 G=  1200  harm FIX [462.7 646.9 708.8 611.5 387. ]  max   708.8
+              harm CAP [318.5 450.9 423.8 576.  322.7]  max   576.0  ratio of maxima 1.23  per-overlay ratios [1.45 1.43 1.67 1.06 1.2 ]
+              p99dl FIX 73.06 vs CAP 73.08

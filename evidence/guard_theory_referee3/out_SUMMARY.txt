@@ -1,0 +1,351 @@
+REFEREE 3 ON prechecks/guard_theory/theory.md  (revision 2, 1264 lines)
+=======================================================================
+Every number below was produced by this directory's own simulator
+(ref3_sim.py), written from the definitions in section 1.1 before any script in
+prechecks/guard_theory/ was read.  Exact integer / Fraction arithmetic; no
+floating point enters a verdict.  The note's sim_core.py and family_tight.py
+are imported in exactly one place (ref3_validate.py) and only to DIFF against
+this directory's independent reconstruction.
+
+SIMULATOR VALIDATION (out_validate.txt)
+  k=1 FCFS vs the Lindley recursion            20,000 instances, 0 mismatches
+  schedule auditor (work conservation and
+    non-preemption re-derived from the
+    schedule, not from the sim loop)           12,000 schedules, 0 failures
+  busy-period identity (1), the decomposition
+    D = (R^P-R^F)-rho^P+rho^F, and Theorem 1   39,131 job-checks, 0 failures
+  ref3_sim.py vs the note's sim_core.py        4,000 instances, 0 mismatches
+  my reconstruction of both Theorem 3 families
+    vs family_tight.py's build_upper/build_lower  instance-identical in all
+    (k,L,m) = (2,64,3) (2,64,6) (3,81,4) (4,64,3)  8 cases
+
+COVERAGE
+  exhaustive, Theorem 4B, EVERY base choice   2,093,576 complete schedules over
+                                              263,925 (instance,parameter) pairs
+  exhaustive, every work-conserving schedule  3,362,238 schedules (Theorem 1)
+                                              4,609,908 ordered schedule PAIRS
+                                              (Lemma 1, two free policies)
+  exhaustive, Lemma 2 / Cor 2.1               1,440,990 hypothesis-checks
+  random, Theorem 4B                          59,753 instances, k<=5, per-job
+                                              B0, eta up to 99/100, random caps
+  random, Prop 8 with heavy tails             21,870 job-checks, unbounded sizes
+  Theorem 3 families                          k = 2..6, both directions, exact
+
+
+VERDICTS
+========
+
+ITEM 1 -- THEOREM 3 and LEMMA 1''         HOLDS WITH PROOF GAP  (R3-2, R3-3)
+
+  The mathematics is right and the families are genuine.  Rebuilt from the
+  PROSE of section 6.1 (not from family_tight.py) the instances come out
+  byte-identical to the note's own, and every published number reproduces:
+
+    k   L   m   n(up)/n(lo)    D_up/L          D_lo/L         2(k-1)
+    2  64   3     454 / 198    119/64 = 1.8594  -15/8  = -1.8750   2
+    2  64   6     649 / 393    127/64 = 1.9844  -127/64= -1.9844   2
+    3  81   4     822 / 336    290/81 = 3.5802  -292/81= -3.6049   4
+    4  64   3     718 / 206    303/64 = 4.7344  -303/64= -4.7344   6
+
+  (a) IS THE POLICY LEGAL?  YES -- and this was the thing most worth checking.
+      ref3_sim.py's auditor takes the produced schedule and independently
+      verifies, for every job j that waits, that EVERY server is busy over the
+      whole of [a_j, s_j), and that no two jobs overlap on a server.  0
+      failures on both families at every (k,L,m) tested.  No idling cheat, no
+      preemption cheat.
+  (b) EVERY SERVICE <= L: verified (bigs L, units 1, filler f = L - L((k-1)/k)^m
+      < L, victim L or L-1).
+  (c) THE D VALUES REPRODUCE EXACTLY: 127/64 L at k=2,m=6; -292/81 L at
+      k=3,m=4; +-303/64 L at k=4,m=3.  The Lemma 1'' gap U_P - U_FCFS at T_m
+      equals (k-1)L(1-((k-1)/k)^m) to the last digit in every row.
+  (d) THE LIMIT IS VALID FOR ALL k AND BOTH DIRECTIONS.  Checked k = 2,3,4,5,6
+      (out_thm3.txt, part C).  The relative error terms are
+      (k-1)((k-1)/k)^m and (k-1)/L, both -> 0 with L = k^m, so "o(L)" is
+      correct.  Upward D/L reaches 1.9922 (k=2,m=7), 3.5802 (k=3,m=4), 4.7344
+      (k=4,m=3), 5.36 (k=5,m=2), 6.47 (k=6,m=2); downward the closed form
+      D = -rho_m - (k-1)L is exact in every row.
+  (e) HOW MUCH IS BOOKKEEPING?  The two directions are NOT alike, and the note
+      does not say so outside Remark 1.3.  See R3-4.
+      UPWARD the extremal value is real: the same-phase share of |D| is
+      0.0-0.8%, the victim's true excess is +3.00 L (k=2,m=6), and the victim
+      really does wait (2-2/k)L longer than the (In-Out)/k prediction.
+      DOWNWARD half of it is convention: In_i = (k-1)L is 100% same-phase work
+      that executes nothing while i waits, the executed-work convention only
+      reaches (k-1)L, and the victim's true excess is NEGATIVE -- the victim is
+      BETTER off under P than under FCFS (-0.984 L at k=2,m=6).
+        same-phase share of |D|:  k=2 m=6: 50.4%   k=3 m=4: 55.5%   k=4 m=3: 63.4%
+  IS "NEVER ATTAINED / STRICT" PROVED?  NO.  See R3-2.  The claim is TRUE and
+  I give the missing three-line proof there.
+
+ITEM 2 -- THEOREM 4B                                              HOLDS
+
+  Proof read line by line; no gap found in the mathematics.  In particular:
+    - t = s_i (the last overtaker dispatched in i's own phase) is covered:
+      budget_i(t) <= B0_i + eta k (t-a_i) <= B0_i + eta k W needs only
+      t <= s^P_i, which holds with equality in that case;
+    - simultaneous firing of several jobs with fewer free servers than fired
+      jobs is harmless, and the proof does NOT need a separate argument for it:
+      the fact that the LAST overtaker j is dispatched already certifies
+      i not in E(t), because i in E(t) would give min E(t) <= i < j;
+    - the guard charging only COMPLETED work is what the "at most k-1 in
+      service, plus j itself" count pays for, and the count is correct;
+    - B0_q depending on anything known at a_q is used only as "constant in t",
+      which is what the proof needs; verified numerically with per-job B0;
+    - eta -> 1 degrades (6) correctly and (7) is unaffected;
+    - Bmax enters only through budget_i(t) <= Bmax, which is unconditional.
+  EXHAUSTIVELY, with an adversarial base (every work-conserving choice at every
+  dispatch at which E(t) is empty, i.e. all base policies at once, clairvoyant
+  ones included): 2,093,576 complete schedules over 263,925 (instance,
+  parameter) pairs, k in 1..3, n <= 5, sizes and arrivals tied and zero-length
+  included, eta in {0,1/2,3/4,9/10}, Bmax in {inf,0,1,2,3,6}, B0 constant and
+  per-job.  0 violations of (5), (6) or (7), and 0 of Theorem 1.
+  RANDOMLY: 59,753 instances, k <= 5, n <= 9, eta an arbitrary rational up to
+  99/100, per-job B0, random caps.  0 violations.
+  Worst observed (k*excess - Bmax)/L under a cap: 2.6667 at k=3, against the
+  proved 3k-2 = 7.  Only cosmetic defect: R3-11.
+
+ITEM 3 -- THE STATEMENTS REVISED FOR REFEREE 2
+
+  Lemma 1 (left limit)      HOLDS; the "If S is empty" branch is dead and
+                            self-contradictory (R3-9).  Non-attainment, which
+                            Lemma 1'' and Theorem 3 both rely on, is NOT proved
+                            (R3-2).
+  Lemma 1' (local form)     FAILS as literally stated (R3-3).  Its fallback
+                            clause is refuted by the note's own cascade.
+                            Repairable; Prop 8 survives the repair.
+  Lemma 2 (strengthened)    HOLDS.  1,440,990 checks with G >= 0, 0 violations.
+                            Both halves of the hypothesis really are needed,
+                            and I give a better witness than the note's (R3-12).
+  Theorem 5(a)              HOLDS in the stated direction: in 4,886 runs where
+                            the hypothesis held, the wrapped run differed from
+                            the base run 0 times.  The converse is indeed false
+                            -- 482 of 6,000 random runs were identical although
+                            E(t) was non-empty somewhere, and the note's CE3
+                            reproduces exactly.
+  Prop 8 (three placements) HOLDS, and the three placements are exactly right.
+                            The CE1/CE2 table reproduces (D_0 = -3,-5,-10,-100,
+                            -1000 and In_0 = 5,7,12,102,1002).  On 21,870
+                            heavy-tailed job-checks with unbounded sizes:
+                              D <= 2(k-1)Lpref(a_i)              0 failures
+                              D >= -2(k-1)Lpref(a_i)           160 failures
+                              D >= -2(k-1)Lpref(max(s^P,s^F))    0 failures
+                              In <= kG+(3k-2)Lpref(a_i)         92 failures
+                              In <= kG+(3k-2)Lpref(s^F_i+G)      0 failures
+  Prop 14 (a supremum)      HOLDS.  The upper half (strictness) is proved.  The
+                            lower half ("for every epsilon there are
+                            instances") is asserted with no family; I supply
+                            one (R3-7).
+  Cor 2.1 (two containments) HOLDS.  29,352 schedules, 0 failures either way.
+                            The withdrawal of "only"/"least restrictive" is
+                            correct and complete.
+
+ITEM 4 -- INTERNAL CONSISTENCY            findings R3-5, R3-6, R3-8 … R3-14
+  The section 0 table matches the body everywhere I checked EXCEPT for the two
+  rows that R3-1 and R3-2 force to change.  Notation is used consistently
+  (C_j declared as the draft's name for x_j; B0, eta, Bmax, G, In_i, Out_i,
+  over_q(t), E(t) all agree between section 4.1 and the theorems).  Every
+  "proved" label has a proof in the body except the four noted in R3-14.
+
+ITEM 5 -- THE WRAPPER FRONTIER                              FRONTIER BEATEN
+  See R3-1.  The note's best-found c(k) is beaten at every k >= 2 by an
+  explicit family, and the true value is the proved ceiling 3k-2.
+
+
+FINDINGS
+========
+
+R3-1  CRITICAL.  Section 6.4's conjecture is FALSE, and open problem 8.1 is
+      settled.  The conjecture says the wrapper's additive constant on the wait
+      is "roughly flat in k at about 1.75 L" and that "c(k) = Theta(k) with a
+      slope of 2 rather than the proved 3"; open problem 8.1 asks whether In_i
+      can be pushed to B + kL on the same instance that saturates Theorem 1.
+      It can.  Build the note's OWN Lemma-1'' cascade for m rounds, then at
+      T_m inject, in index order, all arriving at T_m:
+          k-1 "new bigs" of work L      (ranks below the victim)
+          the victim i,   of work L
+          one "sync" overtaker of work f = rho_m/(k-1) = L(1-((k-1)/k)^m)
+          one "pre"  overtaker of work L
+          k "final" overtakers of work L
+      with budget B = f + L + 1 and a base policy that dispatches the sync
+      overtaker, then the new bigs and the pre overtaker, then the finals, and
+      never the victim.  Then: FCFS starts i at T_m with rho^F = (k-1)L; the
+      sync overtaker frees all k servers simultaneously at T_m + f; the pre
+      overtaker and the new bigs free them all again at T_m + f + L, at which
+      instant over_i = f + L = B - 1 < B, so the guard does not fire and the
+      base fills all k servers with the finals; they all complete at
+      T_m + f + 2L, over_i jumps to B - 1 + kL >= B, the guard fires, and i
+      starts with rho^P = 0.  Exactly:
+          In_i = B - 1 + kL ,  Out_i = 0 ,  D_i = rho_m + (k-1)L ,
+          c = (k*excess - B)/L = ((k-1) f + (2k-1) L - 1)/L  ->  3k - 2.
+      Measured with my own simulator, clean audits, exact integers
+      (out_wrapc.txt):
+          k  L    m   n      c(k) found         note's best   3k-2
+          2   64  6    396   127/32   = 3.9688   3.4444        4
+          2  128  7    909   255/64   = 3.9844   3.4444        4
+          3   81  4    340   178/27   = 6.5926   5.3125        7
+          3  243  5   1233   1636/243 = 6.7325   5.3125        7
+          4   64  3    211   279/32   = 8.7188   6.9375       10
+          4  256  4   1046   579/64   = 9.0469   6.9375       10
+          5  125  3    399   1368/125 = 10.9440  8.6875       13
+          6  216  3    677   1415/108 = 13.1019 10.5000       16
+      At k=3, L=81, m=4 the victim has In_i = 389 against the bound B + kL =
+      390 AND D_i = 292 = 3.6049 L: both sources of slack are saturated on the
+      same instance, which is precisely what the note conjectured was
+      impossible.  Since In_i < B + kL strictly (Theorem 4) and |D_i| <
+      2(k-1)L strictly (R3-2), the correct statement is
+          c(k) = 3k - 2 EXACTLY, as a supremum that is never attained,
+          i.e. W_guard[i] < W_FCFS[i] + B/k + (3 - 2/k) L is optimal,
+      so Theorem 4's constant is tight and the wait-additive is (3-2/k)L,
+      which GROWS in k (1L, 2L, 2.33L, 2.5L, 2.6L, 2.67L, -> 3L) and is not
+      "flat at 1.75 L".  Does this change the "flat in k" reading?  Yes,
+      completely: 1.75 L was an artifact of a search that, exactly as section
+      6.3 says about Theorem 1, cannot reach a geometric cascade.  My own
+      cascade-blind hill-climb, run as a control, tops out at 2.89 (k=2), 3.56
+      (k=3), 3.89 (k=4) -- below both the note's search and the truth.
+      FIX: replace the conjecture with the theorem above; change the section 0
+      row "the additive constant of Theorem 4 for k >= 2 | conjecture" to
+      "proved optimal (supremum, not attained)"; delete open problem 8.1 and
+      the sentence "the conjecture is that the two cannot be saturated on the
+      same instance"; withdraw the "roughly 1.75 L, flat in k" reading.
+
+R3-2  CRITICAL (proof gap; the claim is true).  "Approached, never attained"
+      (Lemma 1'') and "the inequality of Theorem 1 is strict" (Theorem 3) are
+      NOT proved.  Lemma 1'''s proof ends "Since rho_j < (k-1)L for every
+      finite j, and Lemma 1 gives <= (k-1)L, the bound is a supremum that is
+      never attained" -- which shows only that THIS FAMILY does not attain it.
+      Nothing rules out some other instance attaining (k-1)L, and Theorem 3's
+      strictness is derived from that non-attainment.  Exhaustive search does
+      not settle it either (max (U_A-U_B)/L found over 4,609,908 ordered
+      schedule pairs: 2/3 at k=2,3; max |D|/L over 3,362,238 schedules: 1.5).
+      FIX (three lines, please insert):  D = U_A - U_B is continuous (arrivals
+      add equally to both) and piecewise linear.  Suppose D(t) = (k-1)L for
+      some t and let t1 be the first such time; since D(0) = 0 < (k-1)L, the
+      last linear piece before t1 has strictly positive slope, so on it
+      min(N_A,k) < min(N_B,k), hence N_A <= k-1 and N_A >= 1, hence all of A's
+      jobs are in service and U_A strictly decreases on that piece.  Letting
+      u -> t1 from the left, U_A(t1^-) <= (k-1)L and D(t1^-) = (k-1)L force
+      U_B(t1^-) = 0 and U_A(t1^-) = (k-1)L; but U_A is strictly decreasing on
+      the piece and bounded by (k-1)L on it, so U_A(t1^-) < (k-1)L.
+      Contradiction.  Hence |U_A - U_B| < (k-1)L always, so in step (4) of
+      Theorem 1, |R^P_i - R^F_i| < (k-1)L strictly, so |D_i| < 2(k-1)L
+      strictly, which is exactly what Theorem 3 needs.
+
+R3-3  WARNING.  Lemma 1' is FALSE as literally stated, and its own cascade is
+      the counterexample.  The lemma reads "Let u <= t be any time with
+      N_A(u) <= k-1 and N_A >= k throughout (u,t] ... If no such u exists,
+      U_A(t) <= U_B(t)."  In the cascade, N_P equals k-1 on [T_{m-1}+tau, T_m)
+      and jumps to >= k at T_m (arrivals are read after the count drops), so
+      for t just after T_m NO admissible u exists -- yet U_P(t) - U_FCFS(t) =
+      rho_m > 0.  Verified at (k,L,m) = (2,64,3): gap 56; (3,81,2): gap 90;
+      (4,64,2): gap 84; admissible u: NONE in all three (out_attain.txt part C).
+      SMALLEST COUNTEREXAMPLE (out_items.txt): k = 2,
+          a = (0,0,0,0,0,4,4),  x = (4,1,1,1,1,10,10),  P = "units before the
+          big job" (a legal static-priority work-conserving policy).
+      At t = 5: no admissible u, and U_P - U_FCFS = 2 > 0.
+      FIX: read the count and the workload at u^- -- "let u be such that
+      N_A(u^-) <= k-1 and N_A >= k on (u,t]" -- exactly the left-limit repair
+      that revision 2 already applied to Lemma 1, and drop the fallback clause
+      (with u = u^- the reference time always exists, since N_A = 0 before the
+      first arrival).  Proposition 8 is unaffected: the jobs present at u^-
+      have arrived by u <= a_i, so Lpref(a_i) still bounds their sizes.
+
+R3-4  WARNING.  Section 6.2 and the section 0 table claim the refutation of the
+      (k-1)L conjecture symmetrically, in both directions.  Downward that is
+      half a convention.  In the lower family In_i = (k-1)L consists ENTIRELY
+      of same-phase overtakers (dispatched in the victim's own phase, executing
+      nothing while it waits): measured same-phase share of |D| is 50.4%
+      (k=2,m=6), 55.5% (k=3,m=4), 63.4% (k=4,m=3), and the executed-work
+      convention reaches only -(k-1)L (-63/64 L, -130/81 L, -111/64 L).  The
+      victim's real excess there is NEGATIVE (-0.984 L, -0.802 L, -0.578 L):
+      under P it waits LESS than under FCFS.  A reader would call the upward
+      direction meaningful (same-phase share 0-0.8%, real excess +3.00 L, and
+      the victim genuinely waits (2-2/k)L longer than (In-Out)/k predicts) and
+      the downward direction half-conventional.  Remark 1.3 concedes this in
+      passing; section 6.2 and section 0 do not.  FIX: state in section 6.2
+      that the downward constant is 2(k-1)L in the sequence convention and
+      (k-1)L in the executed convention, and that the downward witness has
+      excess < 0.
+
+R3-5  NOTE.  Remark 1.3 says "the family of Theorem 3 has rho_new = 0 at the
+      victim".  Measured rho_new = 1 at (k=2,m=3) and 2 at (k=3,m=4); it is 0
+      only when the last units happen to complete exactly at s^P_i.  The true
+      statement is rho_old = 0 and rho_new <= k-1 = o(L).  The conclusion
+      (De -> 2(k-1)L upward) is unaffected, since De = D + rho_new >= D.
+
+R3-6  NOTE.  Section 1 says "Only the lower bounds of section 6 use the
+      (realistic) restriction that P does not observe x_j before j completes."
+      Theorem 3 is a lower bound in section 6 and its P is defined BY SIZE
+      ("dispatches a waiting unit job if one exists, and a big job otherwise").
+      The restriction is used only in Proposition 14.  Rewrite the sentence.
+      (Theorem 3 itself is unharmed, and could even be strengthened: inside a
+      cascade round the units always have the higher ranks, so "units before
+      bigs" is just LIFO-by-rank and needs no size information.)
+
+R3-7  NOTE.  Proposition 14 asserts "for every epsilon > 0 there are instances
+      with excess > B + L - epsilon" and offers only measurements.  Supply the
+      family: k = 1, victim of rank 0 at t = 0; overtakers of size g until
+      over_i = B - g; then ONE overtaker of size L.  The guard does not fire at
+      the last base choice (over = B-g < B), so excess = B - g + L and
+      excess - B = L - g.  Verified (out_items.txt): (L,B,g) = (100,40,1) gives
+      excess - B = 99; (64,32,1) gives 63; (16,8,1) gives 15.  Strict in every
+      row.
+
+R3-8  NOTE.  theory.md cites `out_ce.txt` twice (Prop 8's CE1/CE2 and Theorem
+      5(a')'s CE3) and `out_probes.txt` once (Prop 13).  Neither file exists in
+      prechecks/guard_theory/; both live in prechecks/guard_theory_referee/.
+      Every other bare `out_*.txt` in the note refers to its own directory, and
+      section 9's reproduction table lists neither.  Qualify the paths.
+
+R3-9  NOTE.  Lemma 1's proof: "If S is empty then D(t) <= U_A(t) <= (k-1)L
+      directly (U_B >= 0)."  S is never empty (U_A = 0 before the first
+      arrival), and if it were, S empty means U_A(t) > (k-1)L, contradicting
+      the displayed U_A(t) <= (k-1)L.  Delete the branch.
+
+R3-10 NOTE.  Section 6.4 says "the wait-additive is flat in k at roughly
+      1.75 L" and, five lines later, the boxed conjecture says "approximately
+      2L".  Both are superseded by R3-1, but they were inconsistent already.
+      Also, the paragraph that dismisses referee 2's 2k-10/9 frontier ("beats
+      it at k = 2,3,4") is selective: at k = 5 and 6 the note's own numbers
+      (8.69, 10.50) fall BELOW 2k-10/9 (8.89, 10.89).
+
+R3-11 NOTE.  Theorem 4B's (5) is stated without the guard that Theorem 4's (3)
+      carries ("whenever i has at least one overtaker").  With In_i = 0,
+      B0_i = 0, eta = 0 and L = 0 the strict inequality In_i < B0_i + eta k W
+      + kL reads 0 < 0 and fails.  Degenerate, but free to fix: add the same
+      parenthesis.
+
+R3-12 NOTE.  Lemma 2's "Both halves of the hypothesis are needed (referee probe
+      P1)" is correct, but the cited evidence is weaker than the note implies:
+      referee 2's P1(c) sets G to the maximum excess over the jobs OUTSIDE
+      Out_i, which can be NEGATIVE, and a negative "guarantee" is not a
+      guarantee.  With G >= 0 my exhaustive sweep needed a wider schedule cap
+      before the half showed up at all.  Quote this witness instead: k = 1,
+      five unit jobs all at t = 0, dispatch sequence 3,4,2,0,1, victim i = 2.
+      Then excess_2 = 0 <= G = 0, but Out_2 = 2 > k(G - excess_2 + L) = 1, and
+      the jobs of Out_2 have excess 3 > G.  (1,440,990 checks of the
+      strengthened form itself: 0 violations; dropping the hypothesis on i:
+      86,103 violations; keeping it on i but not on Out_i: 364 violations.)
+
+R3-13 NOTE.  Theorem 16's proof charges the Theorem-1 summation error
+      2(1-1/k)L(m+n) to the numerator only, then divides by "the maximum
+      possible saving is SJF's, (1/k) m n (L-s)" as if that were exact.  At
+      k > 1 the denominator carries the same error.  The conclusion survives
+      (both corrections are O((m+n)/(mn)) and vanish into eps), but the
+      derivation should say so rather than treat the SJF total as exact.
+
+R3-14 NOTE.  Four statements carry a "proved" label in section 0 whose body
+      argument is a described family plus measurements, with no proof:
+      Prop 3(a) and 3(c) (one informal sentence each), Prop 6's unboundedness
+      claim, and Prop 13's "excess == B/k exactly" (24 measured configurations,
+      no argument).  Prop 13 in particular is three lines from a real proof;
+      either write them or relabel.
+
+
+WHAT SURVIVES, IN ONE LINE EACH
+  Theorem 1, Cor 1.1, Cor 1.2, Lemma 2, Theorem 2, Cor 2.1, Theorem 4,
+  Theorem 4B, Theorem 5(a,b,c), Prop 8, Prop 12, Prop 14, Lemma 15 and
+  Theorem 16 all survive this pass unbroken.
+  Theorem 3 and Lemma 1'' survive as true statements with a missing strictness
+  proof (R3-2) and an overstated section 6.2 (R3-4).
+  Lemma 1' fails as written (R3-3) and is repairable.
+  Section 6.4's conjecture is refuted (R3-1) and its open problem 8.1 is closed.

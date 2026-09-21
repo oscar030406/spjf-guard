@@ -1,0 +1,24 @@
+  P8 PREFIX-MAX READING VIOLATED a=[1, 2, 4, 4, 5, 7, 8] x=[1, 12, 1, 1, 30, 1, 625] k=2 od=[0, 1, 2, 4, 6, 3, 5] i=3 D=-595 Lpref=12
+  P8 PREFIX-MAX READING VIOLATED a=[1, 2, 4, 4, 5, 7, 8] x=[1, 12, 1, 1, 30, 1, 625] k=2 od=[0, 1, 2, 4, 6, 3, 5] i=5 D=-581 Lpref=30
+  P8 PREFIX-MAX READING VIOLATED a=[1, 2, 2, 3, 3, 3, 4, 7, 8] x=[5, 5, 10, 20, 4, 1, 75, 2, 1] k=2 od=[0, 1, 2, 7, 6, 8, 5, 4, 3] i=3 D=-53 Lpref=20
+G3(i) Pareto unbounded sizes: job-checks=599400  largest size seen=2231113278
+  violations of the exact Prop 8 two-sided form : 0
+  violations of |D| <= 2(k-1)Lpref(i)           : 1345   <-- the
+      sentence 'Theorem 1 ... holds with L replaced by the running
+      prefix maximum' is FALSE when Lpref is read at a_i
+  violations of |D| <= 2(k-1)Lpref(max(s^P_i,s^F_i)) : 0   <-- the
+      repaired reading (prefix max at the START time) survives
+  violations of Cor 1.2 with L -> Lpref(i)     : 0
+  violations of Thm 2   with L -> Lpref(i)     : 922   <-- also FALSE
+  violations of Thm 2   with L -> Lpref(s^F_i+G) : 0   <-- repaired
+  worst |D|/Lpref (k>=2) = 13343935/13
+
+G3(ii) heterogeneous speeds: job-checks=532396
+  P(fastest)/FCFS(fastest): identity violations=0 guard violations=0 worst |D|/(L*lcm) = 3
+  P(fastest)/FCFS(slowest): identity violations=0 guard violations=0 worst |D|/(L*lcm) = 3
+  P(slowest)/FCFS(fastest): identity violations=0 guard violations=0 worst |D|/(L*lcm) = 3
+  P(slowest)/FCFS(slowest): identity violations=0 guard violations=0 worst |D|/(L*lcm) = 3
+
+G3(iv) timeout kill at elapsed L, raw sizes Pareto(0.6) unbounded: job-checks=180085 violations=0 (max executed work > L in 0 instances)
+  note: the kill makes the executed work min(x,L) in both runs, so the relabelled instance IS the original model; the claim is true but tautological, and In/Out must then be read in EXECUTED work, not raw work.
+  if In/Out are computed on RAW sizes instead: 15453 violations in 89512 job-checks

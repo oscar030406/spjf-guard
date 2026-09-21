@@ -1,0 +1,7 @@
+n=6 L=3 amax=4  |arr|=210 |srv|=729 |pred|=720  B in 0..19
+k=2  sims=4409145090  169.8s
+   ThmA violations=0   supB-form violations=0   Lemma violations=0   head-equiv mismatches=0
+   max (k*Wg-k*Wf-B)/L = 2.6667  (claim <= 4)   -> c = 1.3333 (claim <= 2.0000)
+   sup-B form: max = 3.0000 L  -> c = 1.5000
+   worst used/allowed ratio = 0.7500
+   argmax: arrivals=[0, 0, 0, 0, 0, 0] services=[3, 1, 1, 2, 3, 3] pred=[0, 5, 1, 2, 3, 4] B=4 job=1

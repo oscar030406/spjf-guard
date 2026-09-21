@@ -1,0 +1,60 @@
+[   8.8s] built <cache-dir>\consol_inputs\rep0.npz: n=17,634,760 busy-hour work W=15247.543s paper k=[8, 5, 4] deadline-window jobs 4,219,556
+[   9.2s] trace: n=17,634,760  deadline-window jobs=4,219,556  arrival span=208.32 d  C_cap work=7,048,760.5 s  paper k at rho 0.5/0.8/1.0 = [np.int64(8), np.int64(5), np.int64(4)]  busy-hour work=15247.5 s
+[   9.2s] p99 of the deadline-window wait at the three pool sizes the paper uses
+[   9.9s]   FCFS       k=    8  p99_dl=   22.170  p95_dl=   0.662  mean_dl=  0.891  p99_all=  11.832  (0.7s)
+[  10.5s]   FCFS       k=    5  p99_dl=  109.708  p95_dl=  26.723  mean_dl=  5.762  p99_all=  79.826  (0.5s)
+[  11.0s]   FCFS       k=    4  p99_dl=  263.120  p95_dl=  62.160  mean_dl= 13.635  p99_all= 210.527  (0.5s)
+[  11.5s]   SPJF-M4    k=    8  p99_dl=   11.979  p95_dl=   0.409  mean_dl=  0.453  p99_all=   5.048  (0.5s)
+[  12.1s]   SPJF-M4    k=    5  p99_dl=   44.693  p95_dl=  10.390  mean_dl=  2.256  p99_all=  30.720  (0.6s)
+[  12.7s]   SPJF-M4    k=    4  p99_dl=   66.571  p95_dl=  20.510  mean_dl=  4.189  p99_all=  43.134  (0.6s)
+[  17.6s]   SPJF+G300  k=    8  p99_dl=   13.312  p95_dl=   0.412  mean_dl=  0.601  p99_all=   5.586  (4.8s)
+[  22.7s]   SPJF+G300  k=    5  p99_dl=   69.926  p95_dl=  12.255  mean_dl=  3.946  p99_all=  40.995  (5.1s)
+[  29.1s]   SPJF+G300  k=    4  p99_dl=  217.561  p95_dl=  27.996  mean_dl=  9.447  p99_all= 115.298  (6.4s)
+[  29.6s]   SJF-ref    k=    8  p99_dl=    8.310  p95_dl=   0.380  mean_dl=  0.325  p99_all=   3.744  (0.5s)
+[  30.2s]   SJF-ref    k=    5  p99_dl=   34.186  p95_dl=   7.963  mean_dl=  1.602  p99_all=  26.177  (0.6s)
+[  30.9s]   SJF-ref    k=    4  p99_dl=   42.881  p95_dl=  16.008  mean_dl=  2.714  p99_all=  34.628  (0.7s)
+[  30.9s] smallest k reaching each deadline-window p99 target
+[  31.4s]   FCFS       k=    6  p99_dl=   58.731  p95_dl=   9.833  mean_dl=  2.806  p99_all=  41.433  (0.5s)
+[  31.8s]   FCFS       k=    7  p99_dl=   35.632  p95_dl=   2.620  mean_dl=  1.523  p99_all=  23.867  (0.5s)
+[  31.8s]   FCFS       target p99_dl <=    30 s : k =    8  (p99_dl=22.170 s, busy-hour rho=0.5294); k-1 = 7 gives 35.632 s
+[  32.3s]   FCFS       k=   16  p99_dl=    0.223  p95_dl=   0.000  mean_dl=  0.042  p99_all=   0.000  (0.4s)
+[  32.7s]   FCFS       k=   12  p99_dl=    2.270  p95_dl=   0.000  mean_dl=  0.158  p99_all=   0.404  (0.5s)
+[  33.2s]   FCFS       k=   10  p99_dl=    7.816  p95_dl=   0.157  mean_dl=  0.353  p99_all=   2.147  (0.5s)
+[  33.7s]   FCFS       k=   11  p99_dl=    4.121  p95_dl=   0.023  mean_dl=  0.230  p99_all=   0.829  (0.5s)
+[  33.7s]   FCFS       target p99_dl <=     5 s : k =   11  (p99_dl=4.121 s, busy-hour rho=0.3850); k-1 = 10 gives 7.816 s
+[  34.1s]   FCFS       k=   14  p99_dl=    0.674  p95_dl=   0.000  mean_dl=  0.076  p99_all=   0.137  (0.4s)
+[  34.6s]   FCFS       k=   13  p99_dl=    1.243  p95_dl=   0.000  mean_dl=  0.106  p99_all=   0.226  (0.5s)
+[  34.6s]   FCFS       target p99_dl <=     1 s : k =   14  (p99_dl=0.674 s, busy-hour rho=0.3025); k-1 = 13 gives 1.243 s
+[  35.1s]   SPJF-M4    k=    6  p99_dl=   30.150  p95_dl=   3.058  mean_dl=  1.242  p99_all=  19.163  (0.5s)
+[  35.7s]   SPJF-M4    k=    7  p99_dl=   20.495  p95_dl=   0.900  mean_dl=  0.741  p99_all=  11.731  (0.5s)
+[  35.7s]   SPJF-M4    target p99_dl <=    30 s : k =    7  (p99_dl=20.495 s, busy-hour rho=0.6051); k-1 = 6 gives 30.150 s
+[  36.1s]   SPJF-M4    k=   16  p99_dl=    0.168  p95_dl=   0.000  mean_dl=  0.025  p99_all=   0.000  (0.5s)
+[  36.6s]   SPJF-M4    k=   12  p99_dl=    1.063  p95_dl=   0.000  mean_dl=  0.091  p99_all=   0.279  (0.5s)
+[  37.1s]   SPJF-M4    k=   10  p99_dl=    3.568  p95_dl=   0.127  mean_dl=  0.196  p99_all=   0.841  (0.5s)
+[  37.6s]   SPJF-M4    k=    9  p99_dl=    6.269  p95_dl=   0.223  mean_dl=  0.287  p99_all=   1.831  (0.5s)
+[  37.6s]   SPJF-M4    target p99_dl <=     5 s : k =   10  (p99_dl=3.568 s, busy-hour rho=0.4235); k-1 = 9 gives 6.269 s
+[  38.1s]   SPJF-M4    k=   14  p99_dl=    0.401  p95_dl=   0.000  mean_dl=  0.046  p99_all=   0.110  (0.5s)
+[  38.6s]   SPJF-M4    k=   13  p99_dl=    0.615  p95_dl=   0.000  mean_dl=  0.061  p99_all=   0.187  (0.5s)
+[  38.6s]   SPJF-M4    target p99_dl <=     1 s : k =   13  (p99_dl=0.615 s, busy-hour rho=0.3258); k-1 = 12 gives 1.063 s
+[  43.3s]   SPJF+G300  k=    6  p99_dl=   38.130  p95_dl=   3.418  mean_dl=  1.909  p99_all=  23.171  (4.8s)
+[  49.0s]   SPJF+G300  k=    7  p99_dl=   23.576  p95_dl=   0.933  mean_dl=  1.037  p99_all=  13.293  (5.6s)
+[  49.0s]   SPJF+G300  target p99_dl <=    30 s : k =    7  (p99_dl=23.576 s, busy-hour rho=0.6051); k-1 = 6 gives 38.130 s
+[  53.9s]   SPJF+G300  k=   16  p99_dl=    0.169  p95_dl=   0.000  mean_dl=  0.027  p99_all=   0.000  (4.9s)
+[  59.1s]   SPJF+G300  k=   12  p99_dl=    1.099  p95_dl=   0.000  mean_dl=  0.103  p99_all=   0.281  (5.2s)
+[  64.7s]   SPJF+G300  k=   10  p99_dl=    3.868  p95_dl=   0.128  mean_dl=  0.242  p99_all=   0.873  (5.5s)
+[  69.4s]   SPJF+G300  k=    9  p99_dl=    6.934  p95_dl=   0.224  mean_dl=  0.369  p99_all=   1.978  (4.8s)
+[  69.4s]   SPJF+G300  target p99_dl <=     5 s : k =   10  (p99_dl=3.868 s, busy-hour rho=0.4235); k-1 = 9 gives 6.934 s
+[  74.6s]   SPJF+G300  k=   14  p99_dl=    0.403  p95_dl=   0.000  mean_dl=  0.049  p99_all=   0.111  (5.2s)
+[  79.2s]   SPJF+G300  k=   13  p99_dl=    0.621  p95_dl=   0.000  mean_dl=  0.068  p99_all=   0.187  (4.6s)
+[  79.2s]   SPJF+G300  target p99_dl <=     1 s : k =   13  (p99_dl=0.621 s, busy-hour rho=0.3258); k-1 = 12 gives 1.099 s
+[  79.8s]   SJF-ref    k=    6  p99_dl=   23.163  p95_dl=   2.097  mean_dl=  0.885  p99_all=  16.015  (0.5s)
+[  79.8s]   SJF-ref    target p99_dl <=    30 s : k =    6  (p99_dl=23.163 s, busy-hour rho=0.7059); k-1 = 5 gives 34.186 s
+[  80.2s]   SJF-ref    k=   16  p99_dl=    0.154  p95_dl=   0.000  mean_dl=  0.020  p99_all=   0.000  (0.5s)
+[  80.7s]   SJF-ref    k=   12  p99_dl=    0.793  p95_dl=   0.000  mean_dl=  0.068  p99_all=   0.255  (0.5s)
+[  81.2s]   SJF-ref    k=   10  p99_dl=    2.357  p95_dl=   0.121  mean_dl=  0.141  p99_all=   0.694  (0.5s)
+[  81.7s]   SJF-ref    k=    9  p99_dl=    4.141  p95_dl=   0.213  mean_dl=  0.203  p99_all=   1.380  (0.5s)
+[  81.7s]   SJF-ref    target p99_dl <=     5 s : k =    9  (p99_dl=4.141 s, busy-hour rho=0.4706); k-1 = 8 gives 8.310 s
+[  82.2s]   SJF-ref    k=   11  p99_dl=    1.283  p95_dl=   0.014  mean_dl=  0.094  p99_all=   0.407  (0.5s)
+[  82.2s]   SJF-ref    target p99_dl <=     1 s : k =   12  (p99_dl=0.793 s, busy-hour rho=0.3530); k-1 = 11 gives 1.283 s
+[  82.2s] non-monotone (k, k') pairs among the evaluated points: none
+[  82.2s] wrote pool_k.json

@@ -1,0 +1,222 @@
+
+==============================================================================
+0. LOAD AND VALIDATION
+==============================================================================
+events=4,611,325  assessments=2,398  users=5,455  logins=673,783
+holdout rows only: events=699,668 assessments=477 users=751
+          n_events  matched_assessment  inside_window  after_deadline              ts_min              ts_max  dup_share  holdout  remote
+semester                                                                                                                                 
+2016-1      321722               1.000          0.956           0.003 2016-05-25 16:53:47 2017-10-02 15:03:10      0.068    False   False
+2016-2      126180               1.000          0.751           0.015 2016-10-17 09:12:21 2017-02-25 14:23:12      0.040    False   False
+2017-1      419165               1.000          0.919           0.001 2017-03-13 16:06:17 2017-07-19 10:17:04      0.032    False   False
+2017-2      125791               1.000          0.965           0.001 2017-07-31 10:00:01 2018-02-26 09:19:42      0.037    False   False
+2018-1      455353               1.000          0.941           0.002 2018-03-06 08:04:31 2018-08-18 21:36:57      0.031    False   False
+2018-2      163785               1.000          0.921           0.002 2018-08-03 15:04:47 2018-12-17 18:19:51      0.038    False   False
+2019-1      539846               1.000          0.938           0.002 2019-03-11 11:02:13 2019-08-14 20:00:00      0.055    False   False
+2019-2      128729               1.000          0.974           0.001 2019-08-07 13:39:02 2019-09-19 02:18:50      0.062    False   False
+2020-1      207769               1.000          0.998           0.001 2021-03-24 08:30:27 2021-07-15 18:43:26      0.008    False    True
+2020-2      177134               1.000          0.999           0.001 2021-08-10 08:48:40 2021-12-09 21:47:07      0.039    False    True
+2020-ERE    457064               1.000          1.000           0.000 2020-09-08 19:38:34 2021-02-08 14:36:34      0.015    False    True
+2021-1      188967               1.000          0.813           0.020 2022-01-10 15:25:19 2022-05-06 20:06:26      0.010    False    True
+2021-2      226602               1.000          0.985           0.001 2022-05-27 08:11:56 2022-09-23 19:59:27      0.083    False    True
+2022-1      210346               1.000          0.931           0.003 2022-10-25 09:29:18 2023-06-20 09:08:55      0.014    False   False
+2022-2      163204               1.000          0.987           0.001 2023-03-20 11:07:43 2023-07-06 15:59:57      0.033    False   False
+2023-1      244481               1.000          0.999           0.001 2023-07-24 12:29:54 2023-11-21 02:47:16      0.016     True   False
+2023-2      212559               1.000          0.977           0.001 2023-12-04 10:46:27 2024-04-02 19:36:41      0.034     True   False
+2024-1      242628               1.000          0.979           0.001 2024-04-22 15:16:46 2024-09-24 12:55:10      0.029     True   False
+
+assessment window duration (hours), DEV:
+             count     25%     50%     75%       max
+type                                                
+exam       658.000   1.000   1.833   1.917 2,449.833
+homework 1,263.000 286.000 335.483 660.958 5,846.000
+
+DEV classes: 106  DEV events: 3,911,657  remote-flagged DEV events: 1,257,536
+
+==============================================================================
+P1. EVENT STUDY: executions per enrolled student per hour vs hours-to-deadline u
+==============================================================================
+assessments open at each u (denominator support):
+type    exam  homework
+ub                    
+ 335   6.000   651.000
+ 240   7.000   980.000
+ 168   8.000 1,206.000
+ 72   14.000 1,238.000
+ 24   18.000 1,245.000
+ 6    20.000 1,246.000
+ 2   144.000 1,253.000
+ 1   510.000 1,258.000
+ 0   658.000 1,259.000
+-1   658.000 1,259.000
+-24  658.000 1,259.000
+    type baseline_u  baseline_rate  n_ass_at_baseline  deadline_peak_u  deadline_peak_rate  peak_over_baseline  ramp_start_u_h  global_peak_u  global_peak_rate  mass_0_24h  mass_0_336h  share_last24h
+    exam     [3,24]          0.254                 18                1               9.679              38.061              14              1             9.679      25.342       48.067          0.527
+homework   [72,168]          0.147               1206                0               0.825               5.607               0            167             2.042       8.218       45.142          0.182
+
+ramp fit on the 24h-smoothed curve, u in [1,168] h, R2 of log(rate):
+    type  n_bins  hyperbolic_a  hyperbolic_c  R2_log_hyperbolic  exp_a  exp_tau_h  R2_log_exponential     better
+    exam     157         8.594         8.043              0.209  0.327     78.901               0.162 hyperbolic
+homework     168        30.483       129.406              0.214  0.200    270.091               0.160 hyperbolic
+
+homework: mean rate per band, measured from the DEADLINE (u) vs from the OPENING (v):
+  band_h  from_deadline_u  from_opening_v
+   [0,3]            0.647           0.581
+  [3,12]            0.340           0.133
+ [12,24]            0.243           0.119
+ [24,72]            0.168           0.173
+[72,168]            0.147           0.167
+
+curve shape, homework, rate per enrolled student per hour:
+ u_h  rate
+ 335 0.288
+ 240 0.065
+ 168 0.353
+ 120 0.202
+  72 0.125
+  48 0.299
+  24 0.236
+  12 0.232
+   6 0.365
+   3 0.466
+   1 0.714
+   0 0.825
+  -1 0.013
+  -6 0.002
+ -24 0.001
+exam (windows are ~2 h, so u>2 has almost no open assessment): 6:0.4235 3:1.1243 2:1.1369 1:9.6793 0:9.1095 -1:0.0171 -6:0.0002
+share of exam executions inside the exam window: 0.757
+normalised-curve median pairwise Pearson, between classes    homework : 0.394  (n=106)
+normalised-curve median pairwise Pearson, between classes    exam     : 0.906  (n=99)
+normalised-curve median pairwise Pearson, between semesters  homework : 0.568  (n=15)
+normalised-curve median pairwise Pearson, between semesters  exam     : 0.952  (n=15)
+on-campus  homework: baseline=0.0788 peak(<24h)=0.7260 ratio=9.2
+remote     homework: baseline=0.1116 peak(<24h)=1.0905 ratio=9.8
+
+amplitude = executions per enrolled student per assessment (u in [0,336h]):
+             n   mean     sd    cv   p10     p90
+type                                            
+exam       658 17.883 13.472 0.753 1.822  37.619
+homework  1259 43.199 52.963 1.226 0.000 104.615
+between-class CV of homework amplitude: 0.549 (n_classes=106)
+Spearman of amplitude vs: weight r=0.555 p=1.7e-102 | n_exercises r=0.284 p=9.5e-25
+mean amplitude by type: {'exam': 17.883, 'homework': 43.199}
+
+==============================================================================
+HOURLY PANEL
+==============================================================================
+panel rows=312,316 classes=106 median hours/class=2791
+
+==============================================================================
+P2. SUPERPOSITION: is load additive when deadlines overlap?
+==============================================================================
+class level, k = number of assessments with u in [0,72h] in that hour:
+   hours      obs          pred  ratio_obs_pred  hours_pred_ge10  y0_share_pred_ge10  median_ratio_pred_ge10
+k                                                                                                           
+1  42929  1122668 1,090,021.860           1.030            23476               0.431                   0.199
+2  13967   432422   634,959.238           0.681             9782               0.467                   0.083
+3   1473    62054   122,484.079           0.507             1207               0.501                   0.000
+4   1626    26940   261,244.643           0.103             1510               0.770                   0.000
+
+platform level, kc = number of classes with a deadline within 72h at that hour:
+    hours     obs          pred  ratio_obs_pred
+kc                                             
+1    7787  167878   322,063.313           0.521
+2    3633  175175   283,170.322           0.619
+3    3069  391535   473,302.627           0.827
+4    6809  909496 1,030,173.557           0.883
+
+==============================================================================
+P3. INDIVIDUAL TIMING
+==============================================================================
+lead time of first / last submission before deadline (hours), DEV:
+         first_lead last_lead first_lead last_lead first_lead last_lead
+                50%       50%        25%       25%        75%       75%
+type                                                                   
+exam          1.503     0.883      0.840     0.273      1.747     1.351
+homework    167.901    46.206     68.751     5.302    287.410   161.722
+share of students whose LAST submission is within 24h of the deadline: 0.596; within 3h: 0.445
+
+ICC(1) of last-submission lead time by student within class (homework): median=0.084 IQR=[-0.002,0.143] n_classes=106
+Spearman of last-submission lead between CONSECUTIVE assessments: median=0.313 IQR=[0.117,0.491] n_pairs=526
+
+share of the last-24h execution load from the most last-minute third (classified only on earlier assessments): mean=0.432 median=0.422 vs expected 0.344 (n_assessments=546)
+
+==============================================================================
+P4. FORECASTING hourly executions per class, horizons 24h and 168h
+==============================================================================
+supervised rows=568,664 classes=106
+                                          rmse_log1p    mae  peak_precision  peak_recall  peak_f1
+split            horizon model                                                                   
+forward 2019     24      kernel_superpos       2.114 28.115           0.406        0.405    0.406
+                         lgbm_cal_only         1.372 18.135           0.501        0.497    0.499
+                         lgbm_lags             1.499 19.840           0.200        0.199    0.200
+                         lgbm_lags_cal         1.302 17.591           0.520        0.516    0.518
+                         seasonal_naive        2.015 26.740           0.294        0.295    0.295
+                 168     kernel_superpos       2.088 27.467           0.413        0.414    0.413
+                         lgbm_cal_only         1.360 17.934           0.526        0.522    0.524
+                         lgbm_lags             1.419 18.114           0.439        0.435    0.437
+                         lgbm_lags_cal         1.271 15.907           0.563        0.558    0.561
+                         seasonal_naive        2.024 26.727           0.296        0.296    0.296
+grouped-class-CV 24      kernel_superpos       1.880 20.311           0.352        0.351    0.351
+                         lgbm_cal_only         1.173 11.040           0.435        0.429    0.432
+                         lgbm_lags             1.288 12.209           0.202        0.200    0.201
+                         lgbm_lags_cal         1.127 10.681           0.443        0.437    0.440
+                         seasonal_naive        1.724 16.991           0.236        0.235    0.236
+                 168     kernel_superpos       1.864 19.915           0.368        0.316    0.331
+                         lgbm_cal_only         1.159 10.844           0.450        0.383    0.403
+                         lgbm_lags             1.243 11.332           0.367        0.314    0.330
+                         lgbm_lags_cal         1.112  9.979           0.483        0.412    0.433
+                         seasonal_naive        1.718 16.925           0.248        0.212    0.222
+
+paired bootstrap over (class, week) blocks, delta log1p-RMSE (negative = first better):
+  CV h=24    lgbm_lags_cal    - lgbm_lags      : -0.1612  95% CI [-0.1703, -0.1536]
+  CV h=24    kernel_superpos  - lgbm_cal_only  : +0.7061  95% CI [+0.6790, +0.7388]
+  CV h=168   lgbm_lags_cal    - lgbm_lags      : -0.1307  95% CI [-0.1395, -0.1213]
+  CV h=168   kernel_superpos  - lgbm_cal_only  : +0.7042  95% CI [+0.6773, +0.7307]
+  fwd h=24   lgbm_lags_cal    - lgbm_lags      : -0.1965  95% CI [-0.2230, -0.1730]
+  fwd h=24   kernel_superpos  - lgbm_cal_only  : +0.7410  95% CI [+0.6522, +0.8198]
+  fwd h=168  lgbm_lags_cal    - lgbm_lags      : -0.1476  95% CI [-0.1752, -0.1198]
+  fwd h=168  kernel_superpos  - lgbm_cal_only  : +0.7270  95% CI [+0.6351, +0.8355]
+
+==============================================================================
+P5. SERVICE SIDE: execution cost
+==============================================================================
+               n  error_share  n_submit  exec_time_recorded_submit  exec_time_recorded_all  timeout_share
+semester                                                                                                 
+2016-1    321722        0.397    153931                      0.000                   0.000          0.001
+2016-2    126180        0.377     38881                      0.000                   0.000          0.001
+2017-1    419165        0.400    119802                      0.000                   0.000          0.000
+2017-2    125791        0.356     27594                      0.736                   0.161          0.000
+2018-1    455353        0.373    148710                      1.000                   0.327          0.000
+2018-2    163785        0.357     46756                      1.000                   0.285          0.000
+2019-1    539846        0.489    162121                      1.000                   0.300          0.002
+2019-2    128729        0.379     46991                      1.000                   0.365          0.000
+2020-1    207769        0.329     56213                      1.000                   0.271          0.000
+2020-2    177134        0.381     49550                      1.000                   0.280          0.000
+2020-ERE  457064        0.336    147380                      1.000                   0.322          0.000
+2021-1    188967        0.396     57080                      1.000                   0.302          0.000
+2021-2    226602        0.405     55957                      1.000                   0.247          0.000
+2022-1    210346        0.363     51547                      1.000                   0.245          0.000
+2022-2    163204        0.374     40844                      1.000                   0.250          0.000
+
+execution time (s), n=883,462: mean=3.548 p50=0.203 p90=0.577 p99=5.543 p99.9=1083.612 max=8900.8
+top-5% share of total recorded execution time: 0.933
+n_testcases: median=3 p95=3 top-5% share of total=0.816
+code_len: median=235 p95=705 top-5% share of total=0.172
+Spearman exec_time vs n_testcases r=0.150; vs code_len r=0.021
+
+error types (DEV, share of all executions):
+error_type
+SyntaxError           35.740
+NameError             17.910
+TypeError             10.480
+IndentationError       8.370
+ValueError             6.870
+ModuleNotFoundError    5.660
+EOFError               3.990
+IndexError             3.820
+ZeroDivisionError      2.220
+TabError               1.980
+
+done.

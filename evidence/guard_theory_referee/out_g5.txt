@@ -1,0 +1,76 @@
+Lemma 15: instances=147262
+  sum In / sum Out vs the inverted-pair sums: 0 mismatches
+  k=1 exact identity                        : 0 mismatches
+  |saving - (1/k)sum_S(x_u-x_v)| > 2(1-1/k)L (total)  : 38
+  |saving - (1/k)sum_S(x_u-x_v)| > 2(1-1/k)L*N        : 0
+  worst observed |error|/L at k>1                     : 13/6
+  => the k>1 clause is only true in the PER-JOB-SUMMED reading;
+     it is NOT an identity with an O(L) error, and for a sum over
+     N jobs the error term 2(1-1/k)L*N is of the same order as
+     the quantity itself, so at k>1 Lemma 15 carries no content
+     beyond an O(NL) bound.
+
+Theorem 16: exhaustive optimum over all G-feasible schedules
+  columns: realised closable fraction | min(1,G/(n s)) | Theorem 16 bound (kG+(3k-2)L)/(n s) + eps
+  m=2 n=3 L=4 s=1 k=1  (FCFS total wait 31, best total wait 13, gap 18, #schedules 120)
+    G=0   realised 0      | min(1,G/(ns)) = 0      | Thm16 bound 4/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=1   realised 1/3    | min(1,G/(ns)) = 1/3    | Thm16 bound 5/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=2   realised 2/3    | min(1,G/(ns)) = 2/3    | Thm16 bound 2        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=3   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 7/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=4   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 8/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=5   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 3        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=6   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 10/3     (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=7   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 11/3     (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+  m=2 n=4 L=4 s=1 k=1  (FCFS total wait 42, best total wait 18, gap 24, #schedules 720)
+    G=0   realised 0      | min(1,G/(ns)) = 0      | Thm16 bound 1        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=1   realised 1/4    | min(1,G/(ns)) = 1/4    | Thm16 bound 5/4      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=2   realised 1/2    | min(1,G/(ns)) = 1/2    | Thm16 bound 3/2      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=3   realised 3/4    | min(1,G/(ns)) = 3/4    | Thm16 bound 7/4      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=4   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 2        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=5   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 9/4      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=6   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 5/2      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=7   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 11/4     (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=8   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 3        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+  m=3 n=3 L=4 s=1 k=1  (FCFS total wait 51, best total wait 24, gap 27, #schedules 720)
+    G=0   realised 0      | min(1,G/(ns)) = 0      | Thm16 bound 4/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=1   realised 1/3    | min(1,G/(ns)) = 1/3    | Thm16 bound 5/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=2   realised 2/3    | min(1,G/(ns)) = 2/3    | Thm16 bound 2        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=3   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 7/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=4   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 8/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=5   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 3        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=6   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 10/3     (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=7   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 11/3     (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=8   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 4        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=9   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 13/3     (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=10  realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 14/3     (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=11  realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 5        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+  m=2 n=3 L=6 s=2 k=1  (FCFS total wait 48, best total wait 24, gap 24, #schedules 120)
+    G=0   realised 0      | min(1,G/(ns)) = 0      | Thm16 bound 1        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=2   realised 1/3    | min(1,G/(ns)) = 1/3    | Thm16 bound 4/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=4   realised 2/3    | min(1,G/(ns)) = 2/3    | Thm16 bound 5/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=6   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 2        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=8   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 7/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=10  realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 8/3      (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=12  realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 3        (+eps 0     ) | bound respected: True | realised == min(1,G/(ns)): True
+  m=2 n=3 L=4 s=1 k=2  (FCFS total wait 13, best total wait 4, gap 9, #schedules 120)
+    G=0   realised 0      | min(1,G/(ns)) = 0      | Thm16 bound 16/3     (+eps 20/9  ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=1   realised 2/3    | min(1,G/(ns)) = 1/3    | Thm16 bound 6        (+eps 20/9  ) | bound respected: True | realised == min(1,G/(ns)): False
+    G=2   realised 1      | min(1,G/(ns)) = 2/3    | Thm16 bound 20/3     (+eps 20/9  ) | bound respected: True | realised == min(1,G/(ns)): False
+    G=3   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 22/3     (+eps 20/9  ) | bound respected: True | realised == min(1,G/(ns)): True
+  m=3 n=3 L=4 s=1 k=2  (FCFS total wait 19, best total wait 9, gap 10, #schedules 720)
+    G=0   realised 0      | min(1,G/(ns)) = 0      | Thm16 bound 16/3     (+eps 16/9  ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=1   realised 7/10   | min(1,G/(ns)) = 1/3    | Thm16 bound 6        (+eps 16/9  ) | bound respected: True | realised == min(1,G/(ns)): False
+    G=2   realised 1      | min(1,G/(ns)) = 2/3    | Thm16 bound 20/3     (+eps 16/9  ) | bound respected: True | realised == min(1,G/(ns)): False
+    G=3   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 22/3     (+eps 16/9  ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=4   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 8        (+eps 16/9  ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=5   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 26/3     (+eps 16/9  ) | bound respected: True | realised == min(1,G/(ns)): True
+  m=2 n=4 L=4 s=1 k=2  (FCFS total wait 18, best total wait 6, gap 12, #schedules 720)
+    G=0   realised 0      | min(1,G/(ns)) = 0      | Thm16 bound 4        (+eps 2     ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=1   realised 1/2    | min(1,G/(ns)) = 1/4    | Thm16 bound 9/2      (+eps 2     ) | bound respected: True | realised == min(1,G/(ns)): False
+    G=2   realised 1      | min(1,G/(ns)) = 1/2    | Thm16 bound 5        (+eps 2     ) | bound respected: True | realised == min(1,G/(ns)): False
+    G=3   realised 1      | min(1,G/(ns)) = 3/4    | Thm16 bound 11/2     (+eps 2     ) | bound respected: True | realised == min(1,G/(ns)): False
+    G=4   realised 1      | min(1,G/(ns)) = 1      | Thm16 bound 6        (+eps 2     ) | bound respected: True | realised == min(1,G/(ns)): True
+  m=2 n=3 L=4 s=1 k=3  (FCFS total wait 3, best total wait 2, gap 1, #schedules 120)
+    G=0   realised 0      | min(1,G/(ns)) = 0      | Thm16 bound 28/3     (+eps 40/9  ) | bound respected: True | realised == min(1,G/(ns)): True
+    G=1   realised 1      | min(1,G/(ns)) = 1/3    | Thm16 bound 31/3     (+eps 40/9  ) | bound respected: True | realised == min(1,G/(ns)): False
+    G=2   realised 1      | min(1,G/(ns)) = 2/3    | Thm16 bound 34/3     (+eps 40/9  ) | bound respected: True | realised == min(1,G/(ns)): False

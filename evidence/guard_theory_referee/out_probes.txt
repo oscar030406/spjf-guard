@@ -1,0 +1,46 @@
+P1 Lemma 2 under weakened hypotheses (997038 job-checks)
+   (a) G = max over j != i          : 9001 violations  (the proof needs excess_i <= G too)
+   (b) G = max over j in Out_i only, with max(0,.) : 0 violations  (the sharpened form the proof actually gives)
+   (c) G = max over j NOT in Out_i  : 415 violations  (so the guarantee IS needed for the overtaken jobs themselves)
+
+P2 Theorem 4 at k=1: is 'B + L on the nose' attainable?
+   L= 2 : sup (excess - B) observed = 1  (theory.md's claim would need L=2; Theorem 4's own proof gives the STRICT bound In < B+L, hence excess < B+L)
+          sup (In - B) observed = 1  (strict bound: <= L-1 in integer units)
+   L= 3 : sup (excess - B) observed = 2  (theory.md's claim would need L=3; Theorem 4's own proof gives the STRICT bound In < B+L, hence excess < B+L)
+          sup (In - B) observed = 2  (strict bound: <= L-1 in integer units)
+   L= 5 : sup (excess - B) observed = 4  (theory.md's claim would need L=5; Theorem 4's own proof gives the STRICT bound In < B+L, hence excess < B+L)
+          sup (In - B) observed = 4  (strict bound: <= L-1 in integer units)
+   L= 9 : sup (excess - B) observed = 8  (theory.md's claim would need L=9; Theorem 4's own proof gives the STRICT bound In < B+L, hence excess < B+L)
+          sup (In - B) observed = 8  (strict bound: <= L-1 in integer units)
+   L=20 : sup (excess - B) observed = 19  (theory.md's claim would need L=20; Theorem 4's own proof gives the STRICT bound In < B+L, hence excess < B+L)
+          sup (In - B) observed = 19  (strict bound: <= L-1 in integer units)
+
+P3 Proposition 13 (B/k tight): k jobs of work L at t=0, victim of rank k at t=0, then unit overtakers; base never picks the victim.
+   k=1 L= 4 B=  0 : W_F=4 W_guard=4 excess=0 B/k=0  excess-B/k=0
+   k=1 L= 4 B=  8 : W_F=4 W_guard=12 excess=8 B/k=8  excess-B/k=0
+   k=1 L= 4 B= 32 : W_F=4 W_guard=36 excess=32 B/k=32  excess-B/k=0
+   k=1 L=16 B=  0 : W_F=16 W_guard=16 excess=0 B/k=0  excess-B/k=0
+   k=1 L=16 B= 32 : W_F=16 W_guard=48 excess=32 B/k=32  excess-B/k=0
+   k=1 L=16 B=128 : W_F=16 W_guard=144 excess=128 B/k=128  excess-B/k=0
+   k=2 L= 4 B=  0 : W_F=4 W_guard=4 excess=0 B/k=0  excess-B/k=0
+   k=2 L= 4 B= 16 : W_F=4 W_guard=12 excess=8 B/k=8  excess-B/k=0
+   k=2 L= 4 B= 64 : W_F=4 W_guard=36 excess=32 B/k=32  excess-B/k=0
+   k=2 L=16 B=  0 : W_F=16 W_guard=16 excess=0 B/k=0  excess-B/k=0
+   k=2 L=16 B= 64 : W_F=16 W_guard=48 excess=32 B/k=32  excess-B/k=0
+   k=2 L=16 B=256 : W_F=16 W_guard=144 excess=128 B/k=128  excess-B/k=0
+   k=3 L= 4 B=  0 : W_F=4 W_guard=4 excess=0 B/k=0  excess-B/k=0
+   k=3 L= 4 B= 24 : W_F=4 W_guard=12 excess=8 B/k=8  excess-B/k=0
+   k=3 L= 4 B= 96 : W_F=4 W_guard=36 excess=32 B/k=32  excess-B/k=0
+   k=3 L=16 B=  0 : W_F=16 W_guard=16 excess=0 B/k=0  excess-B/k=0
+   k=3 L=16 B= 96 : W_F=16 W_guard=48 excess=32 B/k=32  excess-B/k=0
+   k=3 L=16 B=384 : W_F=16 W_guard=144 excess=128 B/k=128  excess-B/k=0
+   k=4 L= 4 B=  0 : W_F=4 W_guard=4 excess=0 B/k=0  excess-B/k=0
+   k=4 L= 4 B= 32 : W_F=4 W_guard=12 excess=8 B/k=8  excess-B/k=0
+   k=4 L= 4 B=128 : W_F=4 W_guard=36 excess=32 B/k=32  excess-B/k=0
+   k=4 L=16 B=  0 : W_F=16 W_guard=16 excess=0 B/k=0  excess-B/k=0
+   k=4 L=16 B=128 : W_F=16 W_guard=48 excess=32 B/k=32  excess-B/k=0
+   k=4 L=16 B=512 : W_F=16 W_guard=144 excess=128 B/k=128  excess-B/k=0
+
+P4 Proposition 11(b) release-time counterexample, re-run:
+   theory.md's instance: job0 a=0 r=10 x=1, job1 a=1 r=1 x=1, k=1.  Every work-conserving policy runs job1 at t=1 and job0 at t=10, excess=0 for both, but In_0 = 1 and Out_0 = 0, so k(W_P-W_F) - (In-Out) = -1 != 0 at k=1.  Confirmed by hand: the identity needs 'no server idles while i is eligible', which the forced idle on [0,1) breaks.
+   fix (rank by release) is a relabelling, so it holds by the same proof; nothing to test numerically.

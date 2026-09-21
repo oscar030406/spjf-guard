@@ -1,0 +1,11 @@
+M4 columns 67  train 770,758  test 40,844
+  M4 refit seed 3: max |y - cached| 0.000e+00   max |h - cached| 0.000e+00
+  M4 refit seed 4: max |y - cached| 0.000e+00   max |h - cached| 0.000e+00
+  M4 refit seed 5: max |y - cached| 0.000e+00   max |h - cached| 0.000e+00
+  G3 seed 3: fitted on 195 columns (128 from the network)
+  G3 seed 4: fitted on 195 columns (128 from the network)
+  G3 seed 5: fitted on 195 columns (128 from the network)
+  R1S seed 3: fitted on 131 columns (64 from the network)
+  R1S seed 4: fitted on 131 columns (64 from the network)
+  R1S seed 5: fitted on 131 columns (64 from the network)
+wrote stack_pred_remote.parquet  keys 18

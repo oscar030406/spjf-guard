@@ -1,0 +1,38 @@
+==============================================================================
+ITEM 2 -- Theorem 4B, exhaustive over EVERY base choice
+==============================================================================
+
+parameters (B0mode, eta=en/ed, Bmax):
+    ('c0', 0, 1, None)
+    ('c1', 0, 1, None)
+    ('c3', 0, 1, None)
+    ('c0', 1, 2, None)
+    ('c1', 1, 2, None)
+    ('c3', 3, 4, None)
+    ('c0', 0, 1, 0)
+    ('c1', 1, 2, 2)
+    ('c3', 3, 4, 2)
+    ('c0', 1, 2, 6)
+    ('per', 1, 2, None)
+    ('per', 3, 4, 3)
+    ('per', 0, 1, 1)
+    ('c1', 9, 10, None)
+    ('c0', 9, 10, 2)
+
+exhaustive n<=4  k in (1, 2, 3) sizes<=3 arrivals<=2:
+   204525 (instance,parameter) pairs, 921706 complete schedules enumerated
+   0 violations of (5), (6), (7) -- and 0 of Theorem 1
+   worst (k*excess - Bmax)/L at k=1 : 0.6667  witness a=[0, 0, 0] x=[0, 0, 3] Bmax=1 job=1   (proved bound 3k-2 = 1)
+   worst (k*excess - Bmax)/L at k=2 : 1.6667  witness a=[0, 0, 0] x=[3, 0, 3] Bmax=1 job=1   (proved bound 3k-2 = 4)
+   worst (k*excess - Bmax)/L at k=3 : 2.6667  witness a=[0, 0, 0, 0] x=[3, 0, 3, 3] Bmax=1 job=1   (proved bound 3k-2 = 7)
+
+exhaustive n<=5  k in (2, 3) sizes<=2 arrivals<=1:
+   59400 (instance,parameter) pairs, 1171870 complete schedules enumerated
+   0 violations of (5), (6), (7) -- and 0 of Theorem 1
+   worst (k*excess - Bmax)/L at k=2 : 2.5000  witness a=[0, 0, 0, 0, 0] x=[2, 0, 2, 2, 2] Bmax=3 job=1   (proved bound 3k-2 = 4)
+   worst (k*excess - Bmax)/L at k=3 : 2.5000  witness a=[0, 0, 0, 0] x=[2, 0, 2, 2] Bmax=1 job=1   (proved bound 3k-2 = 7)
+
+random sweep (own simulator, random tape base, per-job B0, eta up to
+   99/100, random caps, k<=5, n<=9): 59753 instances
+   0 violations
+

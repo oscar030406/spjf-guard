@@ -1,0 +1,26 @@
+## 2026-09-19 20:39:04 manifest=7d6ed04de3219c6982328c8d3b82ace5dec84547405fdeeea0aeb1cd4eba5687 argv=--targets 2020-ERE,2020-2
+[     6s] design matrix (863149, 67), M4 columns verified against the neural study's
+resumed from <cache-dir>\mv3\r1s_forward.parquet
+[    14s] 2020-ERE: {'target': '2020-ERE', 'n_itr': 364120, 'n_forward_eligible': 404578, 'itr_share': 0.9, 'emb_dim': 64, 'n_target': 147380, 'train_sems': '2018-1..2019-2', 'sec': 7}
+[    24s] 2020-2: {'target': '2020-2', 'n_itr': 547353, 'n_forward_eligible': 608171, 'itr_share': 0.9, 'emb_dim': 64, 'n_target': 49550, 'train_sems': '2018-1..2020-ERE', 'sec': 10}
+
+  target  n_itr  n_forward_eligible  itr_share  emb_dim  n_target       train_sems  sec
+2020-ERE 364120              404578        0.9       64    147380   2018-1..2019-2    7
+  2020-2 547353              608171        0.9       64     49550 2018-1..2020-ERE   10
+## done in 24 s
+## 2026-09-19 20:39:30 manifest=7d6ed04de3219c6982328c8d3b82ace5dec84547405fdeeea0aeb1cd4eba5687 argv=--targets 2021-1,2021-2,2022-1,2022-2
+[     7s] design matrix (863149, 67), M4 columns verified against the neural study's
+resumed from <cache-dir>\mv3\r1s_forward.parquet
+[    17s] 2021-1: {'target': '2021-1', 'n_itr': 591948, 'n_forward_eligible': 657721, 'itr_share': 0.9, 'emb_dim': 64, 'n_target': 57080, 'train_sems': '2018-1..2020-ERE', 'sec': 10}
+[    28s] 2021-2: {'target': '2021-2', 'n_itr': 643320, 'n_forward_eligible': 714801, 'itr_share': 0.9, 'emb_dim': 64, 'n_target': 55957, 'train_sems': '2018-1..2021-1', 'sec': 11}
+[    40s] 2022-1: {'target': '2022-1', 'n_itr': 693682, 'n_forward_eligible': 770758, 'itr_share': 0.9, 'emb_dim': 64, 'n_target': 51547, 'train_sems': '2018-1..2021-2', 'sec': 12}
+[    53s] 2022-2: {'target': '2022-2', 'n_itr': 740074, 'n_forward_eligible': 822305, 'itr_share': 0.9, 'emb_dim': 64, 'n_target': 40844, 'train_sems': '2018-1..2022-1', 'sec': 13}
+
+  target  n_itr  n_forward_eligible  itr_share  emb_dim  n_target       train_sems  sec
+2020-ERE 364120              404578        0.9       64    147380   2018-1..2019-2    7
+  2020-2 547353              608171        0.9       64     49550 2018-1..2020-ERE   10
+  2021-1 591948              657721        0.9       64     57080 2018-1..2020-ERE   10
+  2021-2 643320              714801        0.9       64     55957   2018-1..2021-1   11
+  2022-1 693682              770758        0.9       64     51547   2018-1..2021-2   12
+  2022-2 740074              822305        0.9       64     40844   2018-1..2022-1   13
+## done in 53 s

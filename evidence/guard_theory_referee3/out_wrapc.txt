@@ -1,0 +1,36 @@
+==============================================================================
+ITEM 5 -- the wrapper constant c(k) = sup (k*excess - B)/L
+==============================================================================
+
+A. explicit family (cascade + saturating finale), own simulator:
+
+    k    L   m     n      B    excess   c(k) found      note's best   3k-2
+    2    64   6    396    128      191   127/32 = 3.9688 3.4444        4
+    2   128   7    909    256      383   255/64 = 3.9844 3.4444        4
+    3    81   4    340    147      227   178/27 = 6.5926 5.3125        7
+    3   243   5   1233    455      697   1636/243 = 6.7325 5.3125        7
+    4    64   3    211    102      165   279/32 = 8.7188 6.9375        10
+    4   256   4   1046    432      687   579/64 = 9.0469 6.9375        10
+    5   125   3    399    187      311   1368/125 = 10.9440 8.6875        13
+    6    36   2     96     48       83   25/2 = 12.5000  10.5000       16
+    6   216   3    677    308      523   1415/108 = 13.1019 10.5000       16
+
+    predicted by hand:  c = ((k-1) f + (2k-1) L - 1)/L  with
+    f = L(1-((k-1)/k)^m) -> L, so c -> (k-1)+(2k-1) = 3k-2.
+
+    *** the note's best-found frontier is beaten at k = 2, 2, 3, 3, 4, 4, 5, 6, 6 ***
+
+B. the same family's victim, in full (k=3, L=81, m=4):
+    W_P=227 W_F=0 excess=227 ; In=389 (bound B+kL=390) ; Out=0
+    D=292 = 3.6049 L  (ceiling 2(k-1)L = 324) ; rho^P=0 rho^F=162 R^P-R^F=130
+    => Theorem 1's constant and  In < B+kL  ARE saturated together,
+       which is exactly what open problem 8.1 asks.
+
+C. independent hill-climb (no knowledge of the construction), for
+   comparison with the note's own search:
+
+    k=1 : best c found by hill-climb = 8/9 = 0.8889   (note: 0.9375)
+    k=2 : best c found by hill-climb = 26/9 = 2.8889   (note: 3.4444)
+    k=3 : best c found by hill-climb = 32/9 = 3.5556   (note: 5.3125)
+    k=4 : best c found by hill-climb = 35/9 = 3.8889   (note: 6.9375)
+

@@ -1,0 +1,15 @@
+k=1 instances=2000000 (21 policy pairs each) 12.4s
+   Lemma violations over all 21 policy pairs = 0   (worst excess over (k-1)L = 0)
+   mixed count-channel violations = 0   worst c = 0.6000 (claim <= 1.0000)
+k=2 instances=2000000 (21 policy pairs each) 4.7s
+   Lemma violations over all 21 policy pairs = 0   (worst excess over (k-1)L = -2)
+   mixed count-channel violations = 0   worst c = 1.3000 (claim <= 2.0000)
+k=3 instances=2000000 (21 policy pairs each) 4.4s
+   Lemma violations over all 21 policy pairs = 0   (worst excess over (k-1)L = -2)
+   mixed count-channel violations = 0   worst c = 1.5333 (claim <= 2.3333)
+k=4 instances=2000000 (21 policy pairs each) 4.3s
+   Lemma violations over all 21 policy pairs = 0   (worst excess over (k-1)L = -3)
+   mixed count-channel violations = 0   worst c = 1.4375 (claim <= 2.5000)
+k=6 instances=2000000 (21 policy pairs each) 4.2s
+   Lemma violations over all 21 policy pairs = 0   (worst excess over (k-1)L = -10)
+   mixed count-channel violations = 0   worst c = 0.9333 (claim <= 2.6667)

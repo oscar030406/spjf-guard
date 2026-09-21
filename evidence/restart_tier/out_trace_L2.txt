@@ -1,0 +1,36 @@
+[     0s] rep0 level2: k=4 busy-hour rho=1.0589 n=17,634,760 total work=7,048,761s  G=300s -> B=600s
+[     0s]   jobs with C >  0.5s:   396,704 ( 2.250%), carrying 40.17% of the work; waste if all are killed at  0.5s:  2.81% of the work
+[     0s]   jobs with C >  1.0s:   237,292 ( 1.346%), carrying 38.68% of the work; waste if all are killed at  1.0s:  3.37% of the work
+[     1s]   jobs with C >  2.0s:   160,380 ( 0.909%), carrying 37.13% of the work; waste if all are killed at  2.0s:  4.55% of the work
+[     1s]   jobs with C >  5.0s:   114,708 ( 0.650%), carrying 35.07% of the work; waste if all are killed at  5.0s:  8.14% of the work
+[     1s]   jobs with C > 10.0s:    85,404 ( 0.484%), carrying 32.05% of the work; waste if all are killed at 10.0s: 12.12% of the work
+[     2s]   FCFS p99_dl 263.120s mean 10.0987s | true-SJF p99_dl 42.881s mean 1.6498s
+[     3s]   FCFS                        0.8s  p99_dl   263.120 gap  0.000 mean  10.0987 gapM  0.000 | maxExc       0.0 (light       0.0 heavy       nan) | waste  0.00% D_max       0.0 | forced  0.000%
+[     4s]   SJF-ref                     1.2s  p99_dl    42.881 gap  1.000 mean   1.6498 gapM  1.000 | maxExc    4755.5 (light    4755.5 heavy       nan) | waste  0.00% D_max       0.0 | forced  0.000%
+[     6s]   SPJF                        1.2s  p99_dl    66.571 gap  0.892 mean   2.2955 gapM  0.924 | maxExc    5882.9 (light    5882.9 heavy       nan) | waste  0.00% D_max       0.0 | forced  0.000%
+[     8s]   SPJF+guard                  2.0s  p99_dl   168.669 gap  0.429 mean   5.6211 gapM  0.530 | maxExc     215.4 (light     215.4 heavy       nan) | waste  0.00% D_max       0.0 | forced  0.383%
+[     9s]   TFCFS-t1                    1.1s  p99_dl   356.283 gap -0.423 mean  12.3759 gapM -0.270 | maxExc     367.1 (light     367.1 heavy     367.1) | waste  3.37% D_max    1605.0 | forced  0.000%
+[    10s]   TIER-blind-t1               1.0s  p99_dl    51.657 gap  0.960 mean   2.5372 gapM  0.895 | maxExc    1320.8 (light      56.6 heavy    1320.8) | waste  3.37% D_max    1605.0 | forced  0.000%
+[    11s]   TIER-blind-t1+guard         1.5s  p99_dl   220.640 gap  0.193 mean   6.4602 gapM  0.431 | maxExc     481.5 (light     243.2 heavy     481.5) | waste  3.37% D_max    1605.0 | forced  0.070%
+[    13s]   TIER-pred-t1                1.3s  p99_dl    57.273 gap  0.935 mean   2.3634 gapM  0.916 | maxExc    1324.0 (light     471.9 heavy    1324.0) | waste  3.37% D_max    1605.0 | forced  0.000%
+[    15s]   TIER-pred-t1+guard          2.0s  p99_dl   139.874 gap  0.560 mean   5.5456 gapM  0.539 | maxExc     481.5 (light     478.9 heavy     481.5) | waste  3.37% D_max    1605.0 | forced  0.358%
+[    17s]   TIER-skip-t1+guard          2.0s  p99_dl   123.688 gap  0.633 mean   5.1374 gapM  0.587 | maxExc     378.6 (light     378.6 heavy     378.3) | waste  2.34% D_max    1091.0 | forced  0.295%
+[    17s]   TFCFS-t2                    0.8s  p99_dl   377.577 gap -0.520 mean  13.6076 gapM -0.415 | maxExc     387.0 (light     385.6 heavy     387.0) | waste  4.55% D_max    1576.0 | forced  0.000%
+[    19s]   TIER-blind-t2               1.1s  p99_dl    52.334 gap  0.957 mean   2.5044 gapM  0.899 | maxExc    1542.2 (light      56.9 heavy    1542.2) | waste  4.55% D_max    1576.0 | forced  0.000%
+[    20s]   TIER-blind-t2+guard         1.5s  p99_dl   249.252 gap  0.063 mean   7.4707 gapM  0.311 | maxExc     536.9 (light     322.2 heavy     536.9) | waste  4.55% D_max    1576.0 | forced  0.046%
+[    21s]   TIER-pred-t2                1.2s  p99_dl    53.191 gap  0.953 mean   2.1900 gapM  0.936 | maxExc    1540.3 (light     771.2 heavy    1540.3) | waste  4.55% D_max    1576.0 | forced  0.000%
+[    23s]   TIER-pred-t2+guard          1.9s  p99_dl   131.325 gap  0.598 mean   6.0512 gapM  0.479 | maxExc     537.2 (light     535.9 heavy     537.2) | waste  4.55% D_max    1576.0 | forced  0.403%
+[    25s]   TIER-skip-t2+guard          1.8s  p99_dl   128.455 gap  0.611 mean   5.9331 gapM  0.493 | maxExc     506.7 (light     505.4 heavy     506.7) | waste  4.38% D_max    1454.0 | forced  0.393%
+[    26s]   TFCFS-t5                    0.8s  p99_dl   432.231 gap -0.768 mean  16.9319 gapM -0.809 | maxExc     741.3 (light     737.5 heavy     741.3) | waste  8.14% D_max    3325.0 | forced  0.000%
+[    27s]   TIER-blind-t5               0.9s  p99_dl    55.799 gap  0.941 mean   2.7888 gapM  0.865 | maxExc    2098.7 (light      58.1 heavy    2098.7) | waste  8.14% D_max    3325.0 | forced  0.000%
+[    28s]   TIER-blind-t5+guard         1.4s  p99_dl   334.251 gap -0.323 mean   9.8858 gapM  0.025 | maxExc     891.3 (light     691.5 heavy     891.3) | waste  8.14% D_max    3325.0 | forced  0.030%
+[    29s]   TIER-pred-t5                1.2s  p99_dl    52.567 gap  0.956 mean   2.1988 gapM  0.935 | maxExc    2103.0 (light     925.1 heavy    2103.0) | waste  8.14% D_max    3325.0 | forced  0.000%
+[    31s]   TIER-pred-t5+guard          1.8s  p99_dl   205.842 gap  0.260 mean   7.5128 gapM  0.306 | maxExc     895.5 (light     894.9 heavy     895.5) | waste  8.14% D_max    3325.0 | forced  0.492%
+[    33s]   TIER-skip-t5+guard          2.0s  p99_dl   205.842 gap  0.260 mean   7.5128 gapM  0.306 | maxExc     895.5 (light     894.9 heavy     895.5) | waste  8.14% D_max    3325.0 | forced  0.492%
+[    34s]   TFCFS-t10                   0.9s  p99_dl   576.097 gap -1.421 mean  22.8936 gapM -1.514 | maxExc    1234.1 (light    1226.8 heavy    1234.1) | waste 12.12% D_max    5990.0 | forced  0.000%
+[    35s]   TIER-blind-t10              1.0s  p99_dl    69.003 gap  0.881 mean   3.5063 gapM  0.780 | maxExc    3069.0 (light      57.6 heavy    3069.0) | waste 12.12% D_max    5870.0 | forced  0.000%
+[    37s]   TIER-blind-t10+guard        1.7s  p99_dl   484.855 gap -1.007 mean  14.7784 gapM -0.554 | maxExc    1385.1 (light    1187.7 heavy    1385.1) | waste 12.12% D_max    5870.0 | forced  0.042%
+[    38s]   TIER-pred-t10               1.3s  p99_dl    54.854 gap  0.946 mean   2.4720 gapM  0.903 | maxExc    3070.4 (light     941.3 heavy    3070.4) | waste 12.12% D_max    5910.0 | forced  0.000%
+[    40s]   TIER-pred-t10+guard         1.9s  p99_dl   362.861 gap -0.453 mean  10.5851 gapM -0.058 | maxExc    1384.3 (light    1376.9 heavy    1384.3) | waste 12.12% D_max    5910.0 | forced  0.698%
+[    42s]   TIER-skip-t10+guard         1.9s  p99_dl   362.861 gap -0.453 mean  10.5851 gapM -0.058 | maxExc    1384.3 (light    1376.9 heavy    1384.3) | waste 12.12% D_max    5910.0 | forced  0.698%
+[    42s] wrote <repo-root>\prechecks\restart_tier\results_L2.csv

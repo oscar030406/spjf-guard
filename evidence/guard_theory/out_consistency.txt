@@ -1,0 +1,10 @@
+=== G2 CONSISTENCY (deterministic bases) ===
+   ... 100000
+   ... 200000
+   ... 300000
+necessity  In_i <= kG+(3k-2)L      : tested 2400760, failures 0
+Out lemma  Out_i <= k(G-excess_i+L): tested 2400760, failures 0
+(C1) B = max_i In_i^base + 1  =>  wrapped == base : tested 400000, failures 0
+(C2) B = kG + (3k-2)L + 1     =>  wrapped == base : tested 400000, failures 0
+(C3) B = max_i In_i^base (one unit lower) changes the run in 8402 of 194386 cases -- the threshold in (C1) is exactly at the boundary, not slack
+

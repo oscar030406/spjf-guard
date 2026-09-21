@@ -1,0 +1,17 @@
+<repo-root>\prechecks\guard_variants\guardkern.py:37: SyntaxWarning: "\-" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\-"? A raw string is also an option.
+  \--------- Z(q), suffix range-add -/    \--- T(t), recomputed per decision ---/
+[     1s] rep0 level2: k=4 rho_busy=1.0589 n=17,634,760 predictor=M4 groups=rel,relblend
+[     2s]   FCFS p99_dl 263.1202s mean 10.0987s | SJF-ref p99_dl 42.8808s mean 1.6498s | gap 220.2394s / 8.4488s
+[     9s]   REL-B30-e0.25            7.3s p99_dl   180.557 gap  0.375 | max_excess     550.0 guar@0    210.0 guar@p99     297.7 used 0.801 | maxheavy   2065.3 | forced  0.989% qw  25.38%
+[    17s]   REL-B30-e0.5             7.7s p99_dl   110.540 gap  0.693 | max_excess    1606.0 guar@0    315.0 guar@p99     578.1 used 0.865 | maxheavy   3103.4 | forced  0.311% qw   6.61%
+[    25s]   REL-B30-e0.75            8.2s p99_dl    77.319 gap  0.844 | max_excess    4029.7 guar@0    630.0 guar@p99    1419.4 used 0.885 | maxheavy   5339.8 | forced  0.068% qw   1.38%
+[    34s]   REL-B120-e0.25           9.2s p99_dl   161.047 gap  0.463 | max_excess     580.0 guar@0    240.0 guar@p99     327.7 used 0.809 | maxheavy   2095.7 | forced  0.497% qw  19.06%
+[    43s]   REL-B120-e0.5            8.8s p99_dl   101.160 gap  0.735 | max_excess    1654.8 guar@0    360.0 guar@p99     623.1 used 0.870 | maxheavy   3166.4 | forced  0.121% qw   3.24%
+[    51s]   REL-B120-e0.75           8.2s p99_dl    73.005 gap  0.863 | max_excess    4125.5 guar@0    720.0 guar@p99    1509.4 used 0.887 | maxheavy   5435.9 | forced  0.022% qw   0.55%
+[    60s]   REL-B600-e0.25           8.9s p99_dl    97.993 gap  0.750 | max_excess     743.7 guar@0    400.0 guar@p99     487.7 used 0.853 | maxheavy   2264.2 | forced  0.131% qw   8.73%
+[    68s]   REL-B600-e0.5            8.1s p99_dl    77.720 gap  0.842 | max_excess    1875.1 guar@0    600.0 guar@p99     863.1 used 0.879 | maxheavy   3406.3 | forced  0.026% qw   0.88%
+[    77s]   REL-B600-e0.75           8.7s p99_dl    68.784 gap  0.882 | max_excess    4288.3 guar@0   1200.0 guar@p99    1989.4 used 0.888 | maxheavy   5598.6 | forced  0.004% qw   0.09%
+[    86s]   RELBL-B120-e0.5-a0.01    8.4s p99_dl   224.834 gap  0.174 | max_excess     518.9 guar@0    360.0 guar@p99     623.1 used 0.541 | maxheavy   1657.1 | forced  0.015% qw   0.11%
+[    94s]   RELBL-B600-e0.5-a0.01    8.7s p99_dl   224.529 gap  0.175 | max_excess     518.9 guar@0    600.0 guar@p99     863.1 used 0.600 | maxheavy   1657.1 | forced  0.000% qw   0.00%
+[   103s]   RELBL-B120-e0.5-a0.1     8.4s p99_dl   259.218 gap  0.018 | max_excess     224.5 guar@0    360.0 guar@p99     623.1 used 0.437 | maxheavy   1543.1 | forced  0.001% qw   0.01%
+[   103s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L2_M4.csv

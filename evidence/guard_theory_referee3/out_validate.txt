@@ -1,0 +1,15 @@
+==============================================================================
+REFEREE-3 SIMULATOR VALIDATION
+==============================================================================
+
+  k=1 FCFS vs the Lindley recursion : 20000 instances, 0 mismatches
+  work-conservation / non-preemption audit, k<=5 : 6000 instances x 2 policies, 0 failures
+  busy-period identity + decomposition + Theorem 1 : 39131 job-checks, 0 failures
+  ref3_sim.py vs the note's sim_core.py (start times, FCFS and a random static priority) : 4000 instances, 0 mismatches
+
+  diff of MY family reconstruction against family_tight.py:
+    k=2 L=64 m=3 : upper instance identical = True ; lower instance identical = True
+    k=2 L=64 m=6 : upper instance identical = True ; lower instance identical = True
+    k=3 L=81 m=4 : upper instance identical = True ; lower instance identical = True
+    k=4 L=64 m=3 : upper instance identical = True ; lower instance identical = True
+

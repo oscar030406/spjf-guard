@@ -1,0 +1,20 @@
+k=1  instances=100000000  68.7s
+   violations: ThmB=0 ThmA(cap)=0 Lemma=0 head-equiv(eps=0)=0 count-channel=0
+   max c: ThmA=0.8333 ThmA(capped)=0.8333 ThmB=0.8333 count-ch=0.0000 (claim <= 1.0000)
+   ThmA argmax n=3 L=6 B=1 job=0 a=[0, 0, 0] s=[6, 6, 6] p=[3, 1, 1]
+k=2  instances=100000000  70.6s
+   violations: ThmB=0 ThmA(cap)=0 Lemma=0 head-equiv(eps=0)=0 count-channel=0
+   max c: ThmA=1.5000 ThmA(capped)=1.5000 ThmB=1.5000 count-ch=1.1667 (claim <= 2.0000)
+   ThmA argmax n=14 L=2 B=4 job=6 a=[0, 0, 0, 2, 2, 2, 2, 2, 2, 3, 3, 5, 7, 8] s=[2, 1, 1, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 1] p=[12, 0, 1, 8, 0, 2, 13, 10, 14, 8, 7, 5, 8, 6]
+k=3  instances=100000000  75.1s
+   violations: ThmB=0 ThmA(cap)=0 Lemma=0 head-equiv(eps=0)=0 count-channel=0
+   max c: ThmA=1.6111 ThmA(capped)=1.6111 ThmB=1.6111 count-ch=1.3333 (claim <= 2.3333)
+   ThmA argmax n=14 L=6 B=7 job=2 a=[0, 0, 0, 0, 0, 1, 2, 6, 6, 7, 7, 8, 10, 10] s=[6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6] p=[5, 4, 10, 3, 12, 9, 4, 11, 2, 6, 5, 14, 8, 11]
+k=4  instances=100000000  79.0s
+   violations: ThmB=0 ThmA(cap)=0 Lemma=0 head-equiv(eps=0)=0 count-channel=0
+   max c: ThmA=1.7083 ThmA(capped)=1.7083 ThmB=1.7083 count-ch=1.5000 (claim <= 2.5000)
+   ThmA argmax n=12 L=6 B=7 job=3 a=[0, 0, 0, 0, 0, 1, 2, 3, 4, 7, 7, 10] s=[6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6] p=[1, 2, 3, 12, 4, 6, 1, 4, 0, 9, 0, 3]
+k=6  instances=100000000  91.2s
+   violations: ThmB=0 ThmA(cap)=0 Lemma=0 head-equiv(eps=0)=0 count-channel=0
+   max c: ThmA=1.8056 ThmA(capped)=1.8056 ThmB=1.8056 count-ch=1.6667 (claim <= 2.6667)
+   ThmA argmax n=16 L=6 B=7 job=5 a=[0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 4, 4, 4, 6, 6] s=[6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6] p=[10, 4, 14, 9, 1, 15, 8, 11, 5, 16, 11, 11, 7, 6, 4, 4]

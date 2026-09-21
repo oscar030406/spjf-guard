@@ -1,0 +1,5 @@
+graph lookup (4 relations, K=16, W=96), pure python+numpy: median 0.121 ms  mean 0.127 ms  p99 0.223 ms
+sequence lookup (last 32 available results of the user):  median 0.005 ms  mean 0.006 ms  p99 0.011 ms
+forward batch 1, G1/G2/G0 (relational net): median 0.434 ms  mean 0.470 ms  p99 0.844 ms
+forward batch 1, N0 (MLP on M4 columns): median 0.034 ms  mean 0.039 ms  p99 0.143 ms
+forward batch 1, R1 (GRU + MLP): median 0.576 ms  mean 0.624 ms  p99 1.104 ms

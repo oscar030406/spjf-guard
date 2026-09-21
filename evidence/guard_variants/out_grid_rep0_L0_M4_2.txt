@@ -1,0 +1,18 @@
+<repo-root>\prechecks\guard_variants\guardkern.py:37: SyntaxWarning: "\-" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\-"? A raw string is also an option.
+  \--------- Z(q), suffix range-add -/    \--- T(t), recomputed per decision ---/
+[     1s] rep0 level0: k=8 rho_busy=0.5294 n=17,634,760 predictor=M4 groups=cap
+[     1s]   FCFS p99_dl 22.1704s mean 0.6024s | SJF-ref p99_dl 8.3100s mean 0.1884s | gap 13.8604s / 0.4140s
+[     2s]   jobs with FCFS wait <= 1 s: 17,156,990 (97.3%); <= 10 s: 17,437,587 (98.9%)
+[     9s]   CAP-B30-e0.5-M600        7.5s p99_dl    13.255 gap  0.643 | max_excess     130.9 guar@0    240.0 guar@p99     240.0 guarmax     240.0 used 0.546 | exc|wf<1s     70.9 | maxheavy    537.3 | forced  0.049% qw   2.74%
+[    16s]   CAP-B30-e0.5-M1200       7.2s p99_dl    13.087 gap  0.655 | max_excess     200.6 guar@0    315.0 guar@p99     315.0 guarmax     315.0 used 0.637 | exc|wf<1s     70.9 | maxheavy    598.4 | forced  0.043% qw   1.66%
+[    23s]   CAP-B120-e0.5-M600       6.7s p99_dl    12.682 gap  0.685 | max_excess     125.0 guar@0    240.0 guar@p99     240.0 guarmax     240.0 used 0.521 | exc|wf<1s    112.1 | maxheavy    537.3 | forced  0.021% qw   2.03%
+[    30s]   CAP-B120-e0.5-M1200      7.5s p99_dl    12.476 gap  0.699 | max_excess     195.5 guar@0    315.0 guar@p99     315.0 guarmax     315.0 used 0.621 | exc|wf<1s    112.1 | maxheavy    600.9 | forced  0.015% qw   0.87%
+[    37s]   CAP-B120-e0.5-M3600      7.0s p99_dl    12.359 gap  0.708 | max_excess     491.2 guar@0    360.0 guar@p99     382.2 guarmax     615.0 used 0.799 | exc|wf<1s    112.1 | maxheavy    892.4 | forced  0.013% qw   0.64%
+[    44s]   CAP-B30-e0.75-M1200      6.9s p99_dl    12.458 gap  0.701 | max_excess     197.9 guar@0    315.0 guar@p99     315.0 guarmax     315.0 used 0.628 | exc|wf<1s    119.3 | maxheavy    598.1 | forced  0.013% qw   0.74%
+[    51s]   CAP-B30-e0.75-M3600      6.9s p99_dl    12.212 gap  0.718 | max_excess     486.6 guar@0    615.0 guar@p99     615.0 guarmax     615.0 used 0.791 | exc|wf<1s    119.3 | maxheavy    882.4 | forced  0.010% qw   0.45%
+[    58s]   CAP-B120-e0.75-M1200     6.9s p99_dl    12.326 gap  0.710 | max_excess     195.1 guar@0    315.0 guar@p99     315.0 guarmax     315.0 used 0.619 | exc|wf<1s    119.3 | maxheavy    598.1 | forced  0.006% qw   0.49%
+[    65s]   CAP-B120-e0.75-M3600     6.6s p99_dl    12.046 gap  0.730 | max_excess     494.5 guar@0    615.0 guar@p99     615.0 guarmax     615.0 used 0.804 | exc|wf<1s    119.3 | maxheavy    881.2 | forced  0.003% qw   0.15%
+[    72s]   CAP-B30-e0.9-M1200       7.1s p99_dl    12.320 gap  0.711 | max_excess     194.5 guar@0    315.0 guar@p99     315.0 guarmax     315.0 used 0.617 | exc|wf<1s    119.3 | maxheavy    598.1 | forced  0.005% qw   0.47%
+[    79s]   CAP-B30-e0.9-M3600       7.2s p99_dl    12.058 gap  0.730 | max_excess     498.1 guar@0    615.0 guar@p99     615.0 guarmax     615.0 used 0.810 | exc|wf<1s    119.3 | maxheavy    881.2 | forced  0.002% qw   0.14%
+[    87s]   CAP-B600-e0.5-M3600      7.9s p99_dl    12.100 gap  0.727 | max_excess     486.7 guar@0    480.0 guar@p99     502.2 guarmax     615.0 used 0.791 | exc|wf<1s    140.8 | maxheavy    878.9 | forced  0.001% qw   0.05%
+[    87s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L0_M4.csv

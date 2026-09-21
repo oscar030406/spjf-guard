@@ -1,0 +1,106 @@
+=== CE1/CE2: Prop 8's 'L -> running prefix maximum' sentence ===
+Family: k=2, jobs (rank order)  0:(a=0,x=1) 1:(a=0,x=1) 2:(a=0,x=1) 3:(a=1,x=M).
+P dispatches 1,2 at t=0 (so the victim 0 waits) and at t=1 dispatches the huge job 3 before 0.
+FCFS dispatches 0,1 at t=0.  Lpref(a_0)=1 for every M.
+
+M = 3
+  k=2  a=[0, 0, 0, 1]  x=[1, 1, 1, 3]  L=3
+  FCFS  order=[0, 1, 2, 3] starts=[0, 0, 1, 1] W=[0, 0, 1, 0]
+  P     order=[1, 2, 3, 0] starts=[1, 0, 0, 1] W=[1, 0, 0, 0]
+  excess=[1, 0, -1, 0]   G=max excess=1
+  In =[5, 0, 0, 0]
+  Out=[0, 1, 1, 1]
+   i=0  D=-3   2(k-1)L=6   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=False]  In=5  kG+(3k-2)L=14  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=1  D=1   2(k-1)L=6   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=14  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=2  D=-1   2(k-1)L=6   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=14  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=3  D=1   2(k-1)L=6   Lpref(a_i)=3  2(k-1)Lpref=6  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=14  kG+(3k-2)Lpref=14 [T2 ok=True, prefix-form ok=True]
+
+M = 5
+  k=2  a=[0, 0, 0, 1]  x=[1, 1, 1, 5]  L=5
+  FCFS  order=[0, 1, 2, 3] starts=[0, 0, 1, 1] W=[0, 0, 1, 0]
+  P     order=[1, 2, 3, 0] starts=[1, 0, 0, 1] W=[1, 0, 0, 0]
+  excess=[1, 0, -1, 0]   G=max excess=1
+  In =[7, 0, 0, 0]
+  Out=[0, 1, 1, 1]
+   i=0  D=-5   2(k-1)L=10   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=False]  In=7  kG+(3k-2)L=22  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=False]
+   i=1  D=1   2(k-1)L=10   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=22  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=2  D=-1   2(k-1)L=10   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=22  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=3  D=1   2(k-1)L=10   Lpref(a_i)=5  2(k-1)Lpref=10  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=22  kG+(3k-2)Lpref=22 [T2 ok=True, prefix-form ok=True]
+
+M = 10
+  k=2  a=[0, 0, 0, 1]  x=[1, 1, 1, 10]  L=10
+  FCFS  order=[0, 1, 2, 3] starts=[0, 0, 1, 1] W=[0, 0, 1, 0]
+  P     order=[1, 2, 3, 0] starts=[1, 0, 0, 1] W=[1, 0, 0, 0]
+  excess=[1, 0, -1, 0]   G=max excess=1
+  In =[12, 0, 0, 0]
+  Out=[0, 1, 1, 1]
+   i=0  D=-10   2(k-1)L=20   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=False]  In=12  kG+(3k-2)L=42  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=False]
+   i=1  D=1   2(k-1)L=20   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=42  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=2  D=-1   2(k-1)L=20   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=42  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=3  D=1   2(k-1)L=20   Lpref(a_i)=10  2(k-1)Lpref=20  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=42  kG+(3k-2)Lpref=42 [T2 ok=True, prefix-form ok=True]
+
+M = 100
+  k=2  a=[0, 0, 0, 1]  x=[1, 1, 1, 100]  L=100
+  FCFS  order=[0, 1, 2, 3] starts=[0, 0, 1, 1] W=[0, 0, 1, 0]
+  P     order=[1, 2, 3, 0] starts=[1, 0, 0, 1] W=[1, 0, 0, 0]
+  excess=[1, 0, -1, 0]   G=max excess=1
+  In =[102, 0, 0, 0]
+  Out=[0, 1, 1, 1]
+   i=0  D=-100   2(k-1)L=200   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=False]  In=102  kG+(3k-2)L=402  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=False]
+   i=1  D=1   2(k-1)L=200   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=402  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=2  D=-1   2(k-1)L=200   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=402  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=3  D=1   2(k-1)L=200   Lpref(a_i)=100  2(k-1)Lpref=200  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=402  kG+(3k-2)Lpref=402 [T2 ok=True, prefix-form ok=True]
+
+M = 1000
+  k=2  a=[0, 0, 0, 1]  x=[1, 1, 1, 1000]  L=1000
+  FCFS  order=[0, 1, 2, 3] starts=[0, 0, 1, 1] W=[0, 0, 1, 0]
+  P     order=[1, 2, 3, 0] starts=[1, 0, 0, 1] W=[1, 0, 0, 0]
+  excess=[1, 0, -1, 0]   G=max excess=1
+  In =[1002, 0, 0, 0]
+  Out=[0, 1, 1, 1]
+   i=0  D=-1000   2(k-1)L=2000   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=False]  In=1002  kG+(3k-2)L=4002  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=False]
+   i=1  D=1   2(k-1)L=2000   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=4002  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=2  D=-1   2(k-1)L=2000   Lpref(a_i)=1  2(k-1)Lpref=2  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=4002  kG+(3k-2)Lpref=6 [T2 ok=True, prefix-form ok=True]
+   i=3  D=1   2(k-1)L=2000   Lpref(a_i)=1000  2(k-1)Lpref=2000  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=4002  kG+(3k-2)Lpref=4002 [T2 ok=True, prefix-form ok=True]
+
+=== CE3: Theorem 5(a) is not an 'iff' ===
+  k=1, a=[0,0], x=[1,1], base A = 'dispatch the higher rank first', B=1.
+  base  : order=[1, 0] starts=[1, 0]
+  guard : order=[1, 0] starts=[1, 0]
+  runs identical                        : True
+  guard's fired set E(t) was non-empty  : True
+  5(a)'s condition 'over_q(t) < B for every waiting q at every
+  dispatch instant of the BASE run' holds: False
+  => the 'only if' half of Theorem 5(a) is false: the run can be
+     identical while the condition fails (the guard fires and
+     happens to choose exactly what the base would have chosen).
+     The half that Theorem 5(b),(c) actually use is the other one
+     and it survives.
+
+=== CE4: witnesses for the worst constant of Theorem 1 ===
+  (these are NOT violations; they are the largest |D|/L found)
+k=4, four jobs of size L at t=0, victim = rank 0 dispatched last: |D| = (k-1)L
+  k=4  a=[0, 0, 0, 0]  x=[3, 3, 3, 3]  L=3
+  FCFS  order=[0, 1, 2, 3] starts=[0, 0, 0, 0] W=[0, 0, 0, 0]
+  P     order=[1, 2, 3, 0] starts=[0, 0, 0, 0] W=[0, 0, 0, 0]
+  excess=[0, 0, 0, 0]   G=max excess=0
+  In =[9, 0, 0, 0]
+  Out=[0, 3, 3, 3]
+   i=0  D=-9   2(k-1)L=18   Lpref(a_i)=3  2(k-1)Lpref=18  [T1 ok=True, prefix-form ok=True]  In=9  kG+(3k-2)L=30  kG+(3k-2)Lpref=30 [T2 ok=True, prefix-form ok=True]
+   i=1  D=3   2(k-1)L=18   Lpref(a_i)=3  2(k-1)Lpref=18  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=30  kG+(3k-2)Lpref=30 [T2 ok=True, prefix-form ok=True]
+   i=2  D=3   2(k-1)L=18   Lpref(a_i)=3  2(k-1)Lpref=18  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=30  kG+(3k-2)Lpref=30 [T2 ok=True, prefix-form ok=True]
+   i=3  D=3   2(k-1)L=18   Lpref(a_i)=3  2(k-1)Lpref=18  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=30  kG+(3k-2)Lpref=30 [T2 ok=True, prefix-form ok=True]
+
+k=4, L=2 probe
+  k=4  a=[0, 0, 0, 0, 0]  x=[2, 2, 2, 1, 2]  L=2
+  FCFS  order=[0, 1, 2, 3, 4] starts=[0, 0, 0, 0, 1] W=[0, 0, 0, 0, 1]
+  P     order=[1, 2, 3, 4, 0] starts=[1, 0, 0, 0, 0] W=[1, 0, 0, 0, 0]
+  excess=[1, 0, 0, 0, -1]   G=max excess=1
+  In =[7, 0, 0, 0, 0]
+  Out=[0, 2, 2, 2, 2]
+   i=0  D=-3   2(k-1)L=12   Lpref(a_i)=2  2(k-1)Lpref=12  [T1 ok=True, prefix-form ok=True]  In=7  kG+(3k-2)L=24  kG+(3k-2)Lpref=24 [T2 ok=True, prefix-form ok=True]
+   i=1  D=2   2(k-1)L=12   Lpref(a_i)=2  2(k-1)Lpref=12  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=24  kG+(3k-2)Lpref=24 [T2 ok=True, prefix-form ok=True]
+   i=2  D=2   2(k-1)L=12   Lpref(a_i)=2  2(k-1)Lpref=12  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=24  kG+(3k-2)Lpref=24 [T2 ok=True, prefix-form ok=True]
+   i=3  D=2   2(k-1)L=12   Lpref(a_i)=2  2(k-1)Lpref=12  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=24  kG+(3k-2)Lpref=24 [T2 ok=True, prefix-form ok=True]
+   i=4  D=-2   2(k-1)L=12   Lpref(a_i)=2  2(k-1)Lpref=12  [T1 ok=True, prefix-form ok=True]  In=0  kG+(3k-2)L=24  kG+(3k-2)Lpref=24 [T2 ok=True, prefix-form ok=True]
+

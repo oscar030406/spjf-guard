@@ -1,0 +1,2 @@
+kernel cross-check vs guardkern_snapshot.py on 30 random instances (FCFS and pure predicted order, constant capacity): PASS
+zero-capacity first hour -> starts [np.float64(3600.0), np.float64(3600.0), np.float64(3601.0)] (every start must be >= 3600): PASS

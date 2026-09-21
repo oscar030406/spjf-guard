@@ -1,0 +1,35 @@
+columns: ['semester', 'class', 'user', 'assessment', 'exercise', 'ts', 'kind', 'grade', 'exec_time', 'code_len', 'code_lines', 'n_testcases', 'has_error', 'error_type']
+all events: 4611325 | submit: 1398801 | test: 3212524
+distinct user ids with events: 3874 | distinct (semester,user): 5153
+rows sharing (semester,class,user,assessment,exercise,ts,kind) with another row: 237710 | extra rows beyond the first of each group: 165896 (diagnostic only; not removed)
+
+exec_time availability on submits, per DEV semester:
+               n  with_exec     share
+semester                             
+2016-1    153931          5  0.000032
+2016-2     38881          0  0.000000
+2017-1    119802          0  0.000000
+2017-2     27594      20308  0.735957
+2018-1    148710     148710  1.000000
+2018-2     46756      46756  1.000000
+2019-1    162121     162121  1.000000
+2019-2     46991      46991  1.000000
+2020-1     56213      56213  1.000000
+2020-2     49550      49550  1.000000
+2020-ERE  147380     147380  1.000000
+2021-1     57080      57080  1.000000
+2021-2     55957      55957  1.000000
+2022-1     51547      51547  1.000000
+2022-2     40844      40844  1.000000
+
+2018-1..2019-2: n per semester {'2018-1': 148710, '2018-2': 46756, '2019-1': 162121, '2019-2': 46991}
+
+2020-ERE..2022-2: n per semester {'2020-1': 56213, '2020-2': 49550, '2020-ERE': 147380, '2021-1': 57080, '2021-2': 55957, '2022-1': 51547, '2022-2': 40844}
+
+             era             var      n   mean        m2    p50    p95   p99   max  top1_share  top5_share
+  2018-1..2019-2           C raw 404578  7.275 1.702e+04 0.1846  1.559 7.501  8901      0.9414      0.9604
+  2018-1..2019-2 C_cap=min(C,60) 404578 0.8434     23.24 0.1846  1.559 7.501    60      0.4944      0.6583
+2020-ERE..2022-2           C raw 458571 0.3959     4.412 0.2128 0.4452 1.523 59.97      0.3753      0.4317
+2020-ERE..2022-2 C_cap=min(C,60) 458571 0.3959     4.412 0.2128 0.4452 1.523 59.97      0.3753      0.4317
+
+DEV semesters with exec_time outside both eras (reported, not pooled): ['2016-1', '2017-2'] {'2016-1': 5, '2017-2': 20308}

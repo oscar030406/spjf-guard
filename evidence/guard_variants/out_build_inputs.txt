@@ -1,0 +1,6 @@
+[     1s] module loaded; reading the cache
+[     9s] p2_inputs ires0: {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}, pool 40 class-semesters, key=arr
+[    11s] rep0: n=17,634,760  busy-hour work W=15247.543s  k=[8, 5, 4]  rho=[0.5294, 0.8471, 1.0589]  deadline-window jobs 4,219,556  heavy 181,720  span=208.8 d
+[    14s] rep1: n=17,634,760  busy-hour work W=14232.983s  k=[8, 5, 4]  rho=[0.4942, 0.7907, 0.9884]  deadline-window jobs 4,219,556  heavy 181,720  span=208.8 d
+[    15s] k1 rep0: 321 class-semester copies, n=3,209,347, busy-hour rho at k=1 = 0.8000, deadline-window jobs 768,149
+[    15s] done

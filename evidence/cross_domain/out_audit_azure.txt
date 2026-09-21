@@ -1,0 +1,53 @@
+=== Azure Functions invocation trace, two weeks from 2021-01-31 (pool: all) ===
+file: <repo-root>\data\azure_functions_2021\AzureFunctionsInvocationTraceForTwoWeeksJan2021.txt
+rows=1980951  columns of raw file: app, func, end_timestamp (s), duration (s)
+arrival = end_timestamp - duration  (the record carries the END time)
+span: arrival min=0.001  max=1209599.693  end max=1209599.694  -> 14.000 days
+rows with arrival<0 (job started before trace start): 0 (0.0000%)  min arrival=0.001
+zero-duration rows: 171333  (8.6490%)
+duration granularity: unique values=60802; values*1000 integral for 100.00% of rows -> recorded in milliseconds
+max duration=578.620s; rows at >= 600s: 0; >=300s: 1110; >=60s: 27787
+most frequent duration values (s -> count):
+0.001    491435
+0.000    171333
+0.015     85054
+0.002     46633
+0.062     36709
+0.046     36549
+0.093     35253
+0.031     34774
+0.078     32795
+0.109     28013
+0.003     14856
+0.005     13381
+
+-- duration (s), all rows: n=1980951  mean=3.3479  sum=6632112.3
+   percentiles: p0=0.0000  p1=0.0000  p5=0.0000  p10=0.0010  p25=0.0010  p50=0.0310  p75=0.3720  p90=1.6200  p95=14.4160  p99=72.1995  p99.9=253.6553  p99.99=466.0092  p100=578.6200
+   work share of largest: top0.1%=0.1036  top1%=0.4429  top5%=0.8787  top10%=0.9577
+   mean/median=108.00  cv=5.53  gini=0.9464
+
+-- entities: apps=119  functions (app/func)=424
+invocations per function: p50=29  p90=5049  p99=106921  p100=535667  mean=4672.1
+work share of top 1% of functions: 0.3749; top 10: 0.6186
+variance of log1p(duration) explained by identity: function eta^2=0.8670 (coverage 1.0000), app eta^2=0.7040
+within-function CV of duration (functions with >=10 calls, n=258): median=1.241  p90=4.452
+
+-- burstiness per hour (336 bins of 3600s)
+   count/bin: mean=5895.7 max=46053 peak/mean=7.81 IoD(var/mean)=6476.4
+   work/bin (server-equivalents a[h]=work/3600): mean=5.483 max=649.601 peak/mean=118.48 p99=25.532
+
+-- burstiness per minute (20160 bins of 60s)
+   count/bin: mean=98.3 max=3358 peak/mean=34.17 IoD(var/mean)=227.1
+   work/bin (server-equivalents a[h]=work/60): mean=5.483 max=3235.690 peak/mean=590.14 p99=62.555
+
+-- burstiness per second (1209600 bins of 1s)
+   count/bin: mean=1.6 max=190 peak/mean=116.02 IoD(var/mean)=6.7
+   work/bin (server-equivalents a[h]=work/1): mean=5.483 max=15292.596 peak/mean=2789.15 p99=83.759
+
+-- profile within a 24 h period (bin = 1 h of the period, origin = trace start)
+   counts: 5.6 3.7 2.9 3.1 2.5 3.1 2.4 2.2 2.5 2.4 2.2 2.7 2.9 3.5 5.2 6.1 5.3 5.1 6.7 6.9 4.7 4.8 7.1 6.4   (% of jobs)
+   work  : 2.5 2.0 3.8 1.8 1.7 3.5 2.6 2.0 4.6 4.4 1.9 3.1 1.9 2.3 2.1 2.6 4.1 2.7 2.5 2.7 2.8 2.7 37.5 2.3   (% of work)
+   peak/mean count = 1.70, peak/mean work = 9.00
+
+busiest hour: index=310 work=2338563.1s -> 649.601 server-equivalents; whole-trace mean 5.483
+L (service cap) candidates: p99.9=253.66  p99.99=466.01  max=578.62

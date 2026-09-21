@@ -1,0 +1,21 @@
+semester order by first arrival: 2018-1, 2018-2, 2019-1, 2019-2, 2020-ERE, 2020-1, 2020-2, 2021-1, 2021-2, 2022-1, 2022-2
+
+target 2020-ERE: prior 2018-1..2019-2  rows 404,578 -> usable 404,578 (dropped 0 not yet available)  inner train 364,120 / valid 40,458  target 147,380
+  G1: epochs 13  rmse 0.2042  spearman 0.4053  11s
+  R1: epochs 20  rmse 0.2033  spearman 0.4540  16s
+
+target 2020-2: prior 2018-1..2020-1  rows 608,171 -> usable 608,171 (dropped 0 not yet available)  inner train 547,353 / valid 60,818  target 49,550
+  G1: epochs 7  rmse 0.2267  spearman 0.5110  8s
+  R1: epochs 14  rmse 0.2234  spearman 0.5112  19s
+
+target 2021-1: prior 2018-1..2020-2  rows 657,721 -> usable 657,721 (dropped 0 not yet available)  inner train 591,948 / valid 65,773  target 57,080
+  G1: epochs 9  rmse 0.2056  spearman 0.4680  16s
+  R1: epochs 26  rmse 0.2048  spearman 0.4775  39s
+
+  target model  n_train  n_target  epochs    valid   rmse  spearman  sec
+2020-ERE    G1   364120    147380      13 0.136740 0.2042    0.4053   11
+2020-ERE    R1   364120    147380      20 0.136358 0.2033    0.4540   16
+  2020-2    G1   547353     49550       7 0.052224 0.2267    0.5110    8
+  2020-2    R1   547353     49550      14 0.050622 0.2234    0.5112   19
+  2021-1    G1   591948     57080       9 0.076439 0.2056    0.4680   16
+  2021-1    R1   591948     57080      26 0.075252 0.2048    0.4775   39

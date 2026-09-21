@@ -1,0 +1,15 @@
+R1_core_lr0.0003_mean_wd0.0_dr0.1_s5_final  params {'model': 'R1', 'seed': 5, 'lr': 0.0003, 'agg': 'mean', 'variant': 'core', 'epochs': 30, 'batch': 4096, 'patience': 5, 'p_mask': 0.15, 'p_drop': 0.1, 'w_cls': 0.5, 'wd': 0.0, 'drop': 0.1, 'tag': '_final', 'save_emb': True}
+tabular block (863149, 86), submission-level block (863149, 102)
+rows train 404,578 valid 51,547 test 40,844
+sequence steps available: mean 30.45 of 32
+parameters 86,210
+  epoch  0 train 0.27750 valid 0.08656 (rmse 0.2356) 2s
+  epoch  1 train 0.15526 valid 0.07812 (rmse 0.2261) 3s
+  epoch  2 train 0.14287 valid 0.07722 (rmse 0.2257) 4s
+  epoch  3 train 0.13512 valid 0.07735 (rmse 0.2265) 5s
+  epoch  4 train 0.12946 valid 0.07767 (rmse 0.2275) 6s
+  epoch  5 train 0.12468 valid 0.07792 (rmse 0.2281) 7s
+  epoch  6 train 0.12092 valid 0.07972 (rmse 0.2319) 8s
+  epoch  7 train 0.11802 valid 0.07879 (rmse 0.2300) 9s
+  early stop at epoch 7
+{"name": "R1_core_lr0.0003_mean_wd0.0_dr0.1_s5_final", "model": "R1", "variant": "core", "seed": 5, "lr": 0.0003, "agg": "mean", "wd": 0.0, "drop": 0.1, "valid_loss": 0.07721979916095734, "valid_rmse": 0.2257072627544403}

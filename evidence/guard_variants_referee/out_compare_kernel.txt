@@ -1,0 +1,9 @@
+instances compared: 1000
+job-by-job wait mismatches: 0
+pass 2 (cap + count channel): instances=1000 mismatches=8
+  a=[0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 5]
+  s=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  pred=[9.0, 3.0, 3.0, 2.0, 1.0, 2.0, 10.0, 9.0, 5.0, 0.0, 10.0]
+  k=3 B=2 Bmax=10 theta=2 Ncap=0 eps=0 err=0
+  mine=[2, 0, 0, 0, 0, 0, 2, 1, 1, 0, 0]
+  his =[1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0, 1.0, 0.0, 0.0]

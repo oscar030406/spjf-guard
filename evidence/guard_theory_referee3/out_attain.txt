@@ -1,0 +1,51 @@
+==============================================================================
+ITEMS 1(d)/3 -- is the bound ATTAINED?  (the note asserts 'never')
+==============================================================================
+
+--- A. max over every PAIR of work-conserving schedules of
+       U_A(t) - U_B(t) , against Lemma 1's ceiling (k-1)L ---
+
+   k  L   max (U_A-U_B)/L found   ceiling (k-1)   attained?
+   2  1   0 = 0.0000             1            no (strict)
+   2  2   1/2 = 0.5000           1            no (strict)
+   2  3   2/3 = 0.6667           1            no (strict)
+   3  1   0 = 0.0000             2            no (strict)
+   3  2   1/2 = 0.5000           2            no (strict)
+   3  3   2/3 = 0.6667           2            no (strict)
+   (4609908 ordered schedule pairs examined)
+
+--- B. max |D_i| over every work-conserving schedule vs FCFS ---
+
+   k  L   max |D|/L found   ceiling 2(k-1)   attained?
+   2  1   -1 = -1.0000       2              no (strict)
+   2  2   -3/2 = -1.5000     2              no (strict)
+   2  3   -4/3 = -1.3333     2              no (strict)
+   3  1   -2 = -2.0000       4              no (strict)
+   3  2   -2 = -2.0000       4              no (strict)
+   3  3   -2 = -2.0000       4              no (strict)
+   4  1   -3 = -3.0000       6              no (strict)
+   4  2   -3 = -3.0000       6              no (strict)
+   4  3   -3 = -3.0000       6              no (strict)
+   (3362238 schedules examined)
+
+--- C. Lemma 1' as literally stated, on the note's OWN cascade ---
+
+  Lemma 1': 'Let u <= t be any time with N_A(u) <= k-1 and N_A >= k
+  throughout (u,t].  Then U_A(t) - U_B(t) <= (k-1) max{x_j : j at u}.
+  If no such u exists, U_A(t) <= U_B(t).'
+
+  k=2 L=64 m=3  at t=T_m=192 :  U_P-U_FCFS = 56   (> 0)
+      N_P just before T_m = 1  (<= k-1 = 1)
+      reference times u satisfying Lemma 1''s hypothesis: NONE
+      => Lemma 1' then asserts U_P(t) <= U_FCFS(t); measured 56 > 0.   *** CLAUSE FALSE ***
+
+  k=3 L=81 m=2  at t=T_m=162 :  U_P-U_FCFS = 90   (> 0)
+      N_P just before T_m = 2  (<= k-1 = 2)
+      reference times u satisfying Lemma 1''s hypothesis: NONE
+      => Lemma 1' then asserts U_P(t) <= U_FCFS(t); measured 90 > 0.   *** CLAUSE FALSE ***
+
+  k=4 L=64 m=2  at t=T_m=128 :  U_P-U_FCFS = 84   (> 0)
+      N_P just before T_m = 3  (<= k-1 = 3)
+      reference times u satisfying Lemma 1''s hypothesis: NONE
+      => Lemma 1' then asserts U_P(t) <= U_FCFS(t); measured 84 > 0.   *** CLAUSE FALSE ***
+
