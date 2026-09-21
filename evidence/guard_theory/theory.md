@@ -1581,6 +1581,26 @@ of `E(t)`, hence the one dispatched. So no job is ever overtaken. Checked on 600
 random instances at `k = 1..4`: 0 disagreements with the FCFS dispatch order
 (`out_rev5_items.txt`, RR-2(d)).
 
+**The base policy is existentially quantified** (second referee round, R2-1; added
+2026-09-21). "Every wrapper … admits instances" above means: for every such budget
+rule there are a base policy `A` and an input. It is false for every `A`: the guard
+run around FCFS is FCFS whatever the budget. For a prediction-ranked base policy
+(SPJF-E) the adversary needs only the predictions — give the victim the largest one.
+So what is excluded is a promise `G < L` that holds around every base policy, or
+around one prediction-ranked policy under arbitrary predictions, which is the
+generality in which Theorem 4 is stated.
+
+*The three shapes are exhausted.* With `budget = min(B0 + gamma*n_q + eta*k*(t-a_q), Bmax)`:
+`Bmax = 0` or `B0 = gamma = eta = 0` gives budget `0` and FCFS; `B0 > 0` is the
+proposition; `B0 = 0 < eta` is the saturating prefix; and `B0 = eta = 0 < gamma` falls
+to `k+2` jobs of work `L` arriving together at `t = 0`: the first has `n_q = 0`, budget
+`0`, and is released at once; every other job has positive budget and `over = 0`, so a
+base that prefers the highest ranks passes over the rank-1 job at `t = 0` when `k >= 2`
+(FCFS starts it at `0`) and at `t = L` when `k = 1` (FCFS starts it at `L`, the wrapper
+at `2L`); its excess is `L`. Checked by `r2_floor_queue_shape.py` at `k = 1,2,3,4,8`,
+`L in {10,60}` and three `(gamma, Bmax)` pairs: rank-1 excess `= L` in 30 of 30
+configurations (`out_r2_floor_queue_shape.txt`).
+
 So the correct reading is: a wrapper of this family either never overtakes
 anything, or admits instances with excess `>= L`; and the clean sufficient
 condition, the one the proof above uses and the one every rule in the paper
