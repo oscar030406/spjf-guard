@@ -21,7 +21,10 @@ instants are recorded rather than drawn; ``Waits'' whether the queue wait of eac
 itself recorded.}
 \label{tab:traces}
 \small
-\begin{tabular}{p{0.13\fulllength}p{0.15\fulllength}p{0.20\fulllength}p{0.16\fulllength}cc}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.13\fulllength}%
+                >{\raggedright\arraybackslash}p{0.17\fulllength}%
+                >{\raggedright\arraybackslash}p{0.20\fulllength}%
+                >{\raggedright\arraybackslash}p{0.16\fulllength}cc}
 \hline
 Trace & Role & Size & Time fields & Arrivals & Waits \\
 \hline
@@ -86,54 +89,28 @@ seconds.
 
 \subsection{What the Fields of the Main Trace Mean}
 
-Several fields of that trace needed a reading before they could carry a queueing model.
+Several fields of that trace had to be interpreted before a queueing model could use
+them. Four readings carry the rest of the paper; Supplementary Section~S2 gives the
+audit that establishes them, together with the release-statistics reconciliation and the
+two truncated archives.
 
 The timestamp on an execution block is the moment the result was written, not the moment
-the code was received. Among later-period runs the gap to the same user's previous event
-grows one for one with the cost (slope \devnum{0.99} of the median gap on $C$) while the
-gap to the next event barely moves (slope \devnum{0.16}), and the feedback after a user
-kills a run arrives within about \devnum{0.1} s whatever its length. A result stamp
-predicts both readings; a receipt stamp neither. We take $\mathrm{done}_j$ to
-be the recorded stamp and reconstruct the arrival as $a_i = t_i - C_i$, carrying the
-opposite reading through the pipeline as a sensitivity with its own features and models.
-
-Stamps are recorded to the whole second while costs are recorded to the microsecond, which
-opens a leak: the fractional part of a job's cost appears in the gap between its own stamp
-and the next event, so a feature like ``seconds since the user's previous record'' reads
-the label off the clock. We close it by replacing $t$ with $t + u$,
-where $u \in [0,1)$ is drawn deterministically from a fixed key and the record's
-identifier. A classifier given only the fractional part of that gap separates heavy from
-light jobs with AUROC \devnum{0.8091} on the whole-second clock and \devnum{0.4499} after
-the jitter, while the forward models of the two clocks stay within \devnum{0.008} of AUROC
-of each other, so closing the channel costs almost nothing.
-
-The cost field is wall-clock occupancy of one evaluation including interpreter start-up,
-read from the 10th percentile of correct submissions (\devnum{0.12}--%
-\devnum{0.18} s across the two periods) and from its weak dependence on the number of test
-cases (median \devnum{$0.196 + 0.007 n$} s in the later period). The platform limit is
-\devnum{60} s: the last run to reach it ends at \devnum{2019-08-28} \devnum{10{:}32},
-after which the largest observed cost is \devnum{59.97} s, with \devnum{13} runs in
-$[59,60)$ s and none above. Before that date there was no fixed limit, the longest run is
-\devnum{8{,}901} s, and the \devnum{1{,}189} runs that end with a kill are almost all
-above \devnum{360.8} s, pointing at a container watchdog rather than judging demand. Those
-periods stay out of the primary pool, and where used at all they carry the later limit,
-$C^{\mathrm{cap}} = \min(C, 60)$ (Table~\ref{tab:tails}).
-
-Groups of runs by the same user that end in the same second are \devnum{7.53\%} of blocks
-and \devnum{26.28\%} of capped work; they overlapped and stretched each other, so we
-neither delete them silently nor treat each as an independent arrival. Every prediction
-table is repeated on rows outside such groups, and the scheduling trace is rebuilt twice,
-once with each group collapsed into one job and once with the groups removed
-(Table~\ref{tab:sens}). A further \devnum{1{,}671} blocks record a cost of exactly zero
-with empty outputs; they leave the simulated trace and stay in the features, the labels
-and every total. The \devnum{2019-2} archive stops at \devnum{2019-09-19}, months before
-that term's assessments end, and \devnum{2020-1} is short by about \devnum{3\%} of its
-blocks; both serve per-submission modelling and are excluded from anything that treats a
-term as a whole. Against the published release statistics we match the class count in
-\devnum{18} of \devnum{18} terms and the student and exercise counts in \devnum{16} of
-\devnum{18}, and parse \devnum{4.08\%} fewer execution blocks than the official column
-sums, whose printed totals disagree with those same columns by \devnum{$-248$} exercises
-and \devnum{$+246{,}246$} blocks. We quote the columns.
+the code was received, so we take $\mathrm{done}_j$ to be the recorded stamp and
+reconstruct the arrival as $a_i = t_i - C_i$, carrying the opposite reading through the
+pipeline as a sensitivity with its own features and models. Stamps are recorded to the
+whole second while costs are recorded to the microsecond, which opens a leak that we
+close by jittering each stamp deterministically: a classifier given only the fractional
+part of the gap to the previous record separates heavy from light jobs with AUROC
+\devnum{0.8091} on the whole-second clock and \devnum{0.4499} after the jitter, while
+the forward models of the two clocks stay within \devnum{0.008} of AUROC of each other.
+The platform limit is \devnum{60} s and the last run to reach a longer time ends at
+\devnum{2019-08-28}; the periods before that date stay out of the primary pool, and
+where used at all they carry the later limit, $C^{\mathrm{cap}} = \min(C, 60)$
+(Table~\ref{tab:tails}). Groups of runs by the same user that end in the same second are
+\devnum{7.53\%} of blocks and \devnum{26.28\%} of capped work; they overlapped and
+stretched each other, so we neither delete them silently nor treat each as an
+independent arrival, and the scheduling trace is rebuilt twice, once with each group
+collapsed into one job and once with the groups removed (Table~\ref{tab:sens}).
 
 \subsection{The Original Platform Has No Shared Queue}
 
@@ -148,7 +125,10 @@ queue is a standard deployment. A widely used contest judging
 system recommends ``one judgehost per 20 teams''~\cite{domjudge_manual} on dedicated
 machines, and the autograder study of Section~\ref{sec:intro} runs a configurable number
 of concurrent graders, replays the busiest hours before a shared deadline and measures the
-queue wait~\cite{peveler2019sandbox}. Dedicated per-entity capacity is also known to sit
+queue wait~\cite{peveler2019sandbox}. That replay compresses its window fourfold and
+sixteenfold; we raise load by overlaying whole class-terms instead
+(Section~\ref{sec:overlay}), for the reason Section~\ref{sec:limits} gives. Dedicated
+per-entity capacity is also known to sit
 idle in the workloads this one resembles. In the serverless characterisation behind our
 invocation trace, \devnum{45\%} of applications are invoked once an hour or less and
 \devnum{81\%} once a minute or less, so the authors report that the cost of keeping them
@@ -180,7 +160,7 @@ own $k$-server non-preemptive kernel. Two quantities are fitted: the effective c
 $k_{\mathrm{eff}}$, the shortfall against the listed machine count being machines that are
 up but not claiming work, and a setup term, the median short gap between consecutive runs
 on the same machine, added to every service because a machine is not reusable the instant
-a task resolves. Fitting both on the window and then reporting agreement on that same
+a run resolves. Fitting both on the window and then reporting agreement on that same
 window would be circular, so we refit both on one chronological part of each window and
 test on the other, five splits over the two pools.
 
@@ -188,27 +168,25 @@ The capacity is stable across splits. On pool~A the three splits choose \devnum{
 \devnum{155} and \devnum{157} of \devnum{173} listed machines, and on pool~B the two
 splits choose \devnum{96} and \devnum{92} of \devnum{105}; the setup term moves between
 \devnum{54.2} and \devnum{55.3} s on the first and between \devnum{126.2} and
-\devnum{128.6} s on the second. The fit is sharp rather than flat: on a step-of-one grid
-only \devnum{5} to \devnum{8} values of $k$ put the simulated mean wait within
-\devnum{10\%} of the recorded one. With those parameters frozen, the held-out part comes
+\devnum{128.6} s on the second. The objective is sharp in $k$. With those parameters
+frozen, the held-out part comes
 back at \devnum{0.90} to \devnum{1.14} times the recorded mean wait, \devnum{0.86} to
 \devnum{1.16} at the 99th percentile and \devnum{0.89} to \devnum{1.28} at the 99.9th,
 with a per-hour mean-wait correlation of \devnum{0.936} to \devnum{0.981}, a per-job rank
 correlation of \devnum{0.940} to \devnum{0.963}, and a median per-job absolute error of
 \devnum{16} to \devnum{84} s.
 
-One quantile does not survive. The 90th percentile lands at \devnum{0.81} to \devnum{1.21}
+The 90th percentile does not survive the held-out test. It lands at \devnum{0.81} to
+\devnum{1.21}
 of the recorded one, and on the larger pool it is below the recorded value on all three
 splits while the 99th is above it, so the simulated distribution is too steep in its upper
 middle; the two-term objective hides this in sample by trading the mean against the p90,
-which is why we fit out of sample and say so. What the fit absorbs is nonetheless a
-property of the pool rather than an artefact of fitting: told instead that every listed
+so we fit out of sample and say so. What the fit absorbs is nonetheless a
+property of the pool and no artefact of fitting: told instead that every listed
 machine is available, the same simulator underestimates the held-out mean wait by a factor
-of \devnum{1.3} to \devnum{2.6} and its per-hour correlation falls to \devnum{0.75}. The
-circularity of the original whole-window fit can be read off directly: on pool~A the
-whole-window and held-out rows are almost identical because every split picks nearly the
-same capacity, while on pool~B the reverse split's held-out capacity gives a mean ratio of
-\devnum{1.14} on its test part where the whole-window capacity gives \devnum{0.99}.
+of \devnum{1.3} to \devnum{2.6} and its per-hour correlation falls to \devnum{0.75}.
+Supplementary Section~S2 gives the step-of-one sharpness check and reads the circularity
+of the original whole-window fit off the two pools directly.
 % Sources of the three paragraphs above:
 %   prechecks/firefox_ci_holdout/out_SUMMARY.txt, section A (k_eff step-1 per split and the
 %   setup term on the fit part: osx 155/155/157 of 173, talos 96/92 of 105; setup 54.2-55.3 s
@@ -218,12 +196,13 @@ same capacity, while on pool~B the reverse split's held-out capacity gives a mea
 %   range 0.81-1.21 and the circularity comparison 1.14 vs 0.99 on the talos reverse split).
 %   The same rows are in holdout.csv.  Pool A = releng-hardware/gecko-t-osx-1500-m4
 %   (173 machines, 21 d), pool B = releng-hardware/gecko-t-linux-talos-2404 (105, 7 d),
-%   matching Table~\ref{tab:traces} and the note under Table~\ref{tab:pred_cross}.
+%   matching Table~\ref{tab:traces}.  The sharpness check and the circularity read-off
+%   moved to supplementary.tex, Supplementary Section~S2 (referee item G9).
 
 \subsection{Building the Shared Pool}
 \label{sec:overlay}
 
-One course does not fill one server, so we overlay. The pool takes only the development
+A single class-term does not load one server, so we overlay several. The pool takes only the development
 terms that ran under the \devnum{60} s limit, \devnum{40} class-terms in all, and
 replicates them \devnum{44} times, each copy aligned by weekday and hour and shifted by a
 whole number of weeks drawn per copy. Overlaying whole terms rather than compressing
@@ -237,8 +216,9 @@ being the lowest of the five; on the first overlay that gives busy-hour utilisat
 \devnum{0.979} averaged over the five. A
 deadline window is the \devnum{24} hours before an assessment's own end, and
 \devnum{4{,}219{,}556} jobs arrive inside one. Five overlays are week-shifts of the same
-terms rather than five platforms, and our intervals resample whole weeks, so they cover
-time and not the choice of terms. A trace built from the last development term alone is
+terms, so they are one construction and not five platforms, and our intervals resample
+whole weeks, which covers time and leaves the choice of terms uncovered. A trace built
+from the last development term alone is
 not available this way, since it would need \devnum{190} copies of its \devnum{8}
 class-terms to load a pool of four.
 

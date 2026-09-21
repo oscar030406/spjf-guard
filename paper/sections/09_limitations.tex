@@ -14,7 +14,7 @@ deployment \cite{domjudge_manual,peveler2019sandbox} and that pooling replaces
 \devnum{1{,}636} concurrent containers with \devnum{14} servers on the same
 demand \cite{smith1981pooling}. What it cannot support is any statement about
 waiting on the real platform, the pooled side being simulated throughout. The
-container counts belong to the 44-fold overlay rather than to a deployment, and
+container counts belong to the 44-fold overlay and to no deployment, and
 a container also serves the student's editing session, so the ratio is not a
 cost saving.
 
@@ -34,18 +34,20 @@ differently sized pool is established practice
 \cite{harcholbalter2003sizebased}, and the width coupling that distorts
 parallel-job replays does not arise here, a job occupying one server whatever
 $k$ is. One choice is deliberate. We raise load by superposing whole
-class-semesters aligned on weekday and clock time rather than by compressing
-inter-arrival times, which Feitelson notes shrinks the daily load cycle along
+class-semesters aligned on weekday and clock time; compressing inter-arrival
+times, Feitelson notes, shrinks the daily load cycle along
 with the gaps \cite{feitelson2021resampling}.
 
 \paragraph{The guarantee is denominated in $L$.}
 Every constant in Section~\ref{sec:theory} is a multiple of the per-job time
-limit. The additive constant $(3-2/k)L$ is an exact supremum rather than an
+limit. The additive constant $(3-2/k)L$ is an exact supremum and no
 artefact of the proof, it grows with $k$ from $L$ at a single server towards
-$3L$, and an excess of at least $L$ is forced on some job for
-any non-preemptive work-conserving policy that reads a service time only at
-completion, so no mechanism of this family can promise less than $\Omega(L)$.
-We tested the obvious escape and it fails. Kill-and-restart tiering runs every
+$3L$, and a wrapper of this family cannot promise less than $L$, whatever base policy
+it is given: an excess of at least $L$ is forced on some job whenever the base policy
+reads a service time only at completion, so no mechanism of this family can promise
+less than $\Omega(L)$.
+The obvious escape from the $\Omega(L)$ floor is kill-and-restart tiering, and it
+fails. Kill-and-restart tiering runs every
 job for a short first quantum $\tau$ and restarts the survivors, discarding the
 killed attempt; on $n$ jobs of length $L$ arriving together it leaves some job
 with an excess of $n\tau/k - L$ over first-come first-served, and that excess
@@ -54,16 +56,24 @@ constant does not improve either, a second-tier piece being still a
 non-preemptive block of length $L$: holding $\tau$ fixed and varying $L$, the
 worst light-job additive constant we measure grows as about \devnum{1.1}$L$ and
 is flat in $\tau$. The mechanism is TAGS \cite{harcholbalter2002tags} with the
-dedicated hosts removed.
+dedicated hosts removed, and removing them is what breaks it: in TAGS the kill is a
+routing device and the work is redone on the next host, whereas in a judging queue the
+kill is terminal.
 
-\paragraph{Two applicability conditions, each with a trace that fails it.}
-The first is that $L$ be comparable to the waits that matter. On the Intel
+\paragraph{Two applicability conditions, each with traces that fail it.}
+The first is that $L$ be comparable to the waits that matter, and four of the six
+workloads fail it: the first-come first-served p99 wait is \devnum{0.021},
+\devnum{0.136}, \devnum{0.373} and \devnum{1.78} times $L$ on ACcoding, the compute
+farm and the two continuous-integration pools, against the floor of about
+\devnum{3}$L$ below which no promise can be stated. On the Intel
 Netbatch compute farm \cite{netbatch2012trace,shai2014netbatch} the service cap
 is \devnum{5.7} days while the first-come first-served p99 wait in the worst
 window we build is \devnum{18.7} hours, so the smallest expressible promise is
 about \devnum{17} days and the guard never fires at any admissible budget;
 predicted-cost ordering also makes the p99 wait worse than first-come
-first-served there under sustained overload. The second is that the cost
+first-served there under sustained overload. The guard results we report on the
+four say what the ordering mechanism does there; none of them reports a promise.
+The second condition is that the cost
 distribution be heavy-tailed. On the two Firefox CI hardware pools
 \cite{taskcluster_docs,treeherder_docs} the longest \devnum{1\%} of jobs carry
 \devnum{3.4\%} and \devnum{5.2\%} of the work, at coefficients of variation
@@ -76,8 +86,7 @@ The bound holds for each job separately and says nothing about a percentile. A
 guarded run can have a worse deadline-window p99 than the baseline its guarantee
 is stated against, by as much as the promise itself, and Table~\ref{tab:adv}
 shows it doing so under two of the three corrupted scores at the busiest load
-while the worst single job stays inside the promise. An operator who needs a
-percentile has to ask for one.
+while the worst single job stays inside the promise.
 
 \paragraph{Development data, and what is still sealed.}
 Every CodeBench number in this paper is development data. The guard family and
@@ -87,8 +96,8 @@ exclude the evaluation semester, so the selection is validation-only inside a
 family that is not, and no number here is out of sample. The rule is a
 worst-cell rule, so it is sensitive to which validation cells it sees: at the
 middle promise, dropping the one cell that decides the choice moves it to a
-different point of the same grid, and five overlays are five week-shifts of the
-same class-terms rather than five independent tests. We do not describe any of
+different point of the same grid, and five overlays are week-shifts of the
+same class-terms, so they are not five independent tests. We do not describe any of
 these parameters as validated. The guarantee does not depend
 on the parameters being well chosen; only the benefit does. The sealed semesters
 are opened once, after the method, the parameters and the primary metric have
@@ -98,15 +107,15 @@ been frozen, and their numbers are reported separately.
 transfer.} The promise holds for any budget under the cap, so nothing about the
 guarantee depends on the shape. What the shape decides is how much of the base
 policy's benefit survives, and that we select on \devnum{15} multi-server
-validation cells, which is the whole evidence we have for it. The single-server
-configuration shows the limit of that evidence. At $G = \devnum{1200}$ s the
+validation cells; those cells are the whole evidence we have for it. The
+single-server configuration shows the limit of that evidence. At $G = \devnum{1200}$ s the
 queue-length shape wins the joint comparison on those cells and closes
 \devnum{0.701} of the gap at $k = 1$, where the age-relative shape closes
 \devnum{0.895}; at the two tighter promises the same choice does transfer.
-We report the number the pre-stated rule produces rather than re-tuning on the
+We report the number the pre-stated rule produces and do not re-tune on the
 configuration that exposes it, and an operator whose pool is much smaller than
 the validation pool should re-run the selection rather than take our shape. The
-three shapes also differ in where the harm falls rather than only in how much
+three shapes also differ in where the harm falls, not only in how much
 gap they keep, so which of them is preferable depends on a judgement about jobs
 first-come first-served would have started at once, and that judgement is the
 operator's.
@@ -137,21 +146,45 @@ Preemption is outside the model, so nothing here applies to a system that can
 checkpoint or suspend. The wrapper applies unchanged to a learned or
 reinforcement-learned base policy, its bound assuming nothing about the base,
 but we did not test one. Capacity is fixed throughout, so this is not a
-capacity-planning study. The cost of computing features and running the
-predictor is not charged in the reported runs, which compare policies at a
-common set of enqueue instants, and at a median service time of a fraction of a
-second it is not negligible. Nothing here was deployed.
+capacity-planning study. The reported runs compare policies at a common set of
+enqueue instants and do not charge the cost of computing features and running the
+predictor. Section~\ref{sec:prediction} measures that cost and charges it in a
+sensitivity, where it moves the closed gap by less than \devnum{0.001} at every
+load; what is missing is not the latency but the rest of an end-to-end system.
+Nothing here was deployed. A deployed serverless scheduler of the kind this
+wrapper is meant for already exists: ALPS learns a per-function rank and a
+time-slice cap from an offline shortest-remaining-processing-time replay and
+leans on the Linux completely fair scheduler to keep any one invocation from
+starving \cite{fu2024alps}, which is a mechanism without a proved per-job bound.
 
-\paragraph{Conclusion.}
+% The Conclusions section that follows was the closing \paragraph{Conclusion.} of this
+% section until the sixth revision pass; MDPI's structure expects a numbered Conclusions
+% section and the referee asked for one (RR-18).  It is kept in this file rather than
+% given its own sections/ file so that main.tex's list of \papersection calls is untouched.
+\section{Conclusions}
+\label{sec:conclusions}
+
 We asked whether a non-preemptive shared execution service can be reordered by
 predicted cost without exposing any single job to an unbounded wait. What the
-evidence supports is that the currency has to be work rather than positions. A
+evidence supports is that work is the currency the excess is written in. A
 job's delay relative to first-come first-served equals its net
 overtaken work divided by the number of servers, up to a constant multiple of
 the time limit, and a budget on that quantity is sufficient and necessary for a
-per-job guarantee. The wrapper built on it holds every job to a promise the
+per-job guarantee. Counting overtakes is not necessary for such a guarantee, and
+buys one only at the worst-case charge of the time limit per pass, which on our
+traces overstates the work that actually passes by one to two orders of
+magnitude. The wrapper built on it holds every job to a promise the
 operator states in seconds, whatever the predictor does, at a cost of about an
 eighth of the gap predicted-cost ordering closes at the busiest load we simulate
 and at a promise of ten time limits. The method needs a time limit comparable to
-the waits at issue and a heavy-tailed cost distribution, and we give a workload
-on which each fails.
+the waits at issue and a heavy-tailed cost distribution, and four of our six
+workloads fail the first of those.
+
+Two questions are left open. The identity is stated in the dispatch-sequence
+currency, where the constant is exactly determined in both directions; under the
+executed-work convention the upward constant is unchanged and the downward one is
+known only to lie in $((k-1)L, 2(k-1)L]$, and closing it would make the two
+conventions interchangeable. And Algorithm~\ref{alg:guard} is not claimed to be the
+least restrictive rule carrying its guarantee: whether some wrapper overrides the
+base policy strictly less often and still promises $G$ is a question we have not
+settled in either direction.

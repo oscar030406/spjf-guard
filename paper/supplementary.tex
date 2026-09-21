@@ -1,0 +1,540 @@
+% Supplementary Materials, built on its own:
+%
+%   "D:/environment/tools/tectonic/tectonic.exe" supplementary.tex   (run from paper/)
+%
+% Same class and same bibliography as main.tex; the only difference is the `supfile'
+% article type, which mdpi.cls uses to prefix every table and figure number with S and to
+% set the S-page header.  Every item here was in the main manuscript until the sixth
+% revision pass and moved out under the referee's length table (report section G); each
+% carries the source comment it had there, and nothing here was recomputed.
+\documentclass[mathematics,supfile,submit,moreauthors]{Definitions/mdpi}
+
+% EPS logo under XeTeX: same substitution as main.tex; see the comment there.
+\makeatletter
+\let\mdpi@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \IfEndWith{#2}{.eps}%
+    {\StrGobbleRight{#2}{4}[\mdpi@gfile]%
+     \mdpi@includegraphics[#1]{\mdpi@gfile.pdf}}%
+    {\mdpi@includegraphics[#1]{#2}}%
+}
+\makeatother
+
+% The same marker the manuscript uses for a development figure.
+\newcommand{\devnum}[1]{#1}
+
+% mdpi.cls prefixes tables and figures with S under the `supfile' article type but leaves
+% sections plain; the manuscript's back matter and its cross-references call them S1--S3.
+\renewcommand{\thesection}{S\arabic{section}}
+
+%=================================================================
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+
+\Title{Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for
+Shared Execution Services under Deadline-Driven Bursty Load}
+
+% The author block is the manuscript's and is filled in there; it is repeated here
+% unchanged so that the two files stay in step.
+\Author{[First Author Name] $^{1}$ and [Second Author Name] $^{2,}$*}
+\AuthorNames{[First Author Name] and [Second Author Name]}
+
+\address{%
+$^{1}$ \quad [First author: department, institution, city and postcode, country]; [first author e-mail]\\
+$^{2}$ \quad [Second author: department, institution, city and postcode, country]; [second author e-mail]}
+
+\corres{Correspondence: [corresponding author e-mail]}
+
+%=================================================================
+\begin{document}
+
+\maketitle
+
+This file holds four kinds of supporting material for the manuscript, in the order the
+manuscript needs them: the visibility audit of the feature pipeline and the predictor
+scores on the four non-judging traces (Section~S1); the field audit of the main judging
+trace and two checks on the continuous-integration refit (Section~S2); five tables of
+experimental detail, the selected budget points, the two budget shapes the main guard
+table no longer prints, the identity residual on all nine cells and the single-server
+configuration (Section~S3); and two deferred proofs, of the workload comparison and of
+the consistency proposition (Section~S4). Section numbers here are S1--S4 and every
+table is numbered S. A cross-reference without an S --- ``Section~8.2'', ``Table~8'',
+``Theorem~1'' --- points into the main manuscript, since a \verb|\ref| across the two
+files does not resolve. The traces are the ones the manuscript's Table~3 names: the
+CodeBench judging logs \cite{codebench_dataset}, the Azure Functions invocation trace
+\cite{azure2021trace}, the Intel Netbatch logs \cite{netbatch2012trace} and the two
+Firefox continuous-integration pools collected from Mozilla's public APIs
+\cite{taskcluster_docs,treeherder_docs}. Every figure quoted here is a development
+figure in the sense of Section~8.2 of the manuscript: nothing in this file comes from a
+sealed part of any trace, and nothing here was recomputed for it.
+
+%=================================================================
+\section{Cost Prediction}
+\label{sec:supp_pred}
+
+\subsection{The Visibility Audit in Full}
+
+Section~4.2 of the manuscript states that every historical feature is recomputed by
+streaming the log in availability order and reading each entity's state as of the query
+instant, and that \devnum{0} rows disagree in any of the eight configurations. This is
+what that test is.
+
+On \devnum{3{,}000} randomly drawn development jobs all \devnum{34} history and
+relational features are recomputed from scratch under each configuration's own
+visibility rule and compared against the pipeline's values. The same test applied to the
+natural but wrong construction, in which a feature may use any record with a smaller
+index, fails on \devnum{97.67\%} of rows under the primary rule, so the test does
+discriminate. The graph pipeline is checked separately: an index assertion over
+\devnum{863{,}149} rows finds \devnum{0} timeline entries pointing at or after the read,
+brute-force recomputation on \devnum{600} rows matches on all \devnum{2{,}400} root
+states and all \devnum{2{,}400} neighbour sets, and perturbing or deleting every record
+after a cut time leaves all earlier predictions unchanged while a positive control moves
+the later ones.
+
+\subsection{Predictors on the Non-Judging Traces}
+
+Table~\ref{tab:s_pred_cross} is the cross-trace counterpart of Table~1 of the
+manuscript. The three figures Section~4.4 quotes from it are the serverless STATIC
+Spearman correlation and the two CI pools' ENT AUROC; the AUROC column of Table~11 of
+the manuscript carries the figure the scheduling results there are read against, which
+is the ALL row of each trace.
+
+\begin{table}[H]
+\centering
+\caption{The same protocol on the non-judging traces, by feature group. ENT uses the
+entity's own visible history, STATIC uses only what is declared before the job runs, ALL
+is both. RMSE and Spearman are on $\log(1+C)$.}
+\label{tab:s_pred_cross}
+\small
+\begin{tabular}{llcccc}
+\hline
+Trace & Features & AUROC & AUPRC & RMSE & Spearman \\
+\hline
+Serverless invocations & ENT    & \devnum{0.9828} & \devnum{0.816} & \devnum{0.3401} & \devnum{0.953} \\
+                       & STATIC & \devnum{0.6238} & \devnum{0.084} & \devnum{0.8088} & \devnum{0.021} \\
+                       & ALL    & \devnum{0.9847} & \devnum{0.830} & \devnum{0.3185} & \devnum{0.932} \\
+CI pool, hardware A    & ENT    & \devnum{0.6334} & \devnum{0.157} & \devnum{0.3964} & \devnum{0.833} \\
+                       & STATIC & \devnum{0.4990} & \devnum{0.045} & \devnum{0.7659} & \devnum{0.277} \\
+                       & ALL    & \devnum{0.6512} & \devnum{0.177} & \devnum{0.3956} & \devnum{0.837} \\
+CI pool, hardware B    & ENT    & \devnum{0.9968} & \devnum{0.984} & \devnum{0.0887} & \devnum{0.985} \\
+                       & STATIC & \devnum{0.6915} & \devnum{0.077} & \devnum{0.6411} & \devnum{0.500} \\
+                       & ALL    & \devnum{0.9970} & \devnum{0.985} & \devnum{0.0860} & \devnum{0.988} \\
+Compute farm           & ENT    & \devnum{0.8903} & \devnum{0.265} & \devnum{1.4214} & \devnum{0.883} \\
+                       & STATIC & \devnum{0.8704} & \devnum{0.242} & \devnum{2.2559} & \devnum{0.750} \\
+                       & ALL    & \devnum{0.8902} & \devnum{0.260} & \devnum{1.3485} & \devnum{0.892} \\
+\hline
+\end{tabular}
+\end{table}
+% Sources of Table~\ref{tab:s_pred_cross} (carried over from 04_prediction.tex, where this
+%   table was Table 2 until the sixth revision pass):
+%   Serverless invocations and compute farm: prechecks/cross_domain/out_cross_domain_table.txt,
+%     section B ("predictability of the cost from information at arrival"), rows azure */netbatch *.
+%   CI pools A and B: prechecks/firefox_ci/out_SUMMARY.txt, section C; A =
+%     releng-hardware/gecko-t-osx-1500-m4, B = releng-hardware/gecko-t-linux-talos-2404.
+%   The identity variance shares (0.867 serverless, 0.638 compute farm) quoted in Section 4.4
+%     are the eta^2 column of the same table in out_cross_domain_table.txt.
+
+%=================================================================
+\section{Traces and Workload Characterisation}
+\label{sec:supp_data}
+
+\subsection{The Field Audit of the Main Judging Trace}
+
+Section~7.2 of the manuscript states four readings of the main trace. This is the
+evidence for them, and the two archive defects that follow from reading the trace this
+way.
+
+\paragraph{The timestamp is a result stamp.}
+Among later-period runs the gap to the same user's previous event grows one for one with
+the cost (slope \devnum{0.99} of the median gap on $C$) while the gap to the next event
+barely moves (slope \devnum{0.16}), and the feedback after a user kills a run arrives
+within about \devnum{0.1} s whatever its length. A result stamp predicts both readings; a
+receipt stamp neither.
+
+\paragraph{The whole-second leak.}
+Stamps are recorded to the whole second while costs are recorded to the microsecond, so
+the fractional part of a job's cost appears in the gap between its own stamp and the next
+event, and a feature like ``seconds since the user's previous record'' reads the label off
+the clock. We close it by replacing $t$ with $t + u$, where $u \in [0,1)$ is drawn
+deterministically from a fixed key and the record's identifier.
+
+\paragraph{The cost field and the limit.}
+The cost field is wall-clock occupancy of one evaluation including interpreter start-up,
+read from the 10th percentile of correct submissions (\devnum{0.12}--\devnum{0.18} s
+across the two periods) and from its weak dependence on the number of test cases (median
+\devnum{$0.196 + 0.007 n$} s in the later period). The platform limit is \devnum{60} s:
+the last run to reach it ends at \devnum{2019-08-28} \devnum{10{:}32}, after which the
+largest observed cost is \devnum{59.97} s, with \devnum{13} runs in $[59,60)$ s and none
+above. Before that date there was no fixed limit, the longest run is \devnum{8{,}901} s,
+and the \devnum{1{,}189} runs that end with a kill are almost all above \devnum{360.8} s,
+pointing at a container watchdog rather than judging demand.
+
+\paragraph{Co-ending groups, zero-cost blocks and two short archives.}
+Groups of runs by the same user that end in the same second are \devnum{7.53\%} of blocks
+and \devnum{26.28\%} of capped work; every prediction table in the manuscript is repeated
+on rows outside such groups. A further \devnum{1{,}671} blocks record a cost of exactly
+zero with empty outputs; they leave the simulated trace and stay in the features, the
+labels and every total. The \devnum{2019-2} archive stops at \devnum{2019-09-19}, months
+before that term's assessments end, and \devnum{2020-1} is short by about \devnum{3\%} of
+its blocks; both serve per-submission modelling and are excluded from anything that treats
+a term as a whole.
+
+\paragraph{Against the published release statistics.}
+We match the class count in \devnum{18} of \devnum{18} terms and the student and exercise
+counts in \devnum{16} of \devnum{18}, and parse \devnum{4.08\%} fewer execution blocks
+than the official column sums, whose printed totals disagree with those same columns by
+\devnum{$-248$} exercises and \devnum{$+246{,}246$} blocks. We quote the columns.
+
+\subsection{The Continuous-Integration Refit: Sharpness and Circularity}
+
+Section~7.3 of the manuscript reports the held-out refit of the effective capacity
+$k_{\mathrm{eff}}$ and the setup term on the two Firefox CI pools. Two checks on that fit
+sit here.
+
+The objective is sharp in $k$ rather than flat: on a step-of-one grid only \devnum{5} to
+\devnum{8} values of $k$ put the simulated mean wait within \devnum{10\%} of the recorded
+one, so the capacity the fit chooses is not one of many equally good answers.
+
+The circularity of the original whole-window fit can be read off the two pools directly.
+On pool~A the whole-window and held-out rows are almost identical, because every split
+picks nearly the same capacity; on pool~B the reverse split's held-out capacity gives a
+mean ratio of \devnum{1.14} on its test part where the whole-window capacity gives
+\devnum{0.99}. The difference between those two numbers is the size of the circularity
+that fitting on the reported window would have hidden.
+% Sources of Section~\ref{sec:supp_data} (carried over from 07_data.tex):
+%   Field audit: prechecks/codebench_audit/out_tail_and_counts.txt and
+%     prechecks/codebench_service_v2/out_service_v2.txt (slopes, kill feedback, the 60 s
+%     limit and its last over-limit run, the zero-cost blocks, the two short archives and
+%     the release-statistics comparison).
+%   Sharpness and circularity: prechecks/firefox_ci_holdout/out_SUMMARY.txt, section E
+%     (5-8 values of k inside 10% of the recorded mean) and section F (the circularity
+%     comparison 1.14 vs 0.99 on the talos reverse split); the same rows are in holdout.csv.
+
+%=================================================================
+\section{Experiments}
+\label{sec:supp_exp}
+
+\subsection{What the Selection Rule Chose}
+
+Table~5 of the manuscript gives the three pre-stated grids, the feasibility rule, the
+objective and the tie-break, and names the shape the rule selected at each promise.
+Table~\ref{tab:s_setup} gives the selected points in full and the nine per-shape winners.
+The same values are in \texttt{protocol\_lock.draft.json}, which is the artefact the
+selection was frozen into.
+
+\begin{table}[H]
+\centering
+\caption{The three selected budget points and the nine per-shape grid winners. Budgets in
+work scale as $k/4$; the harm limit is $G/2$, the feasibility threshold of the selection
+rule. ``Feasible'' counts the grid points that met it in all \devnum{15} validation cells.}
+\label{tab:s_setup}
+\small
+\begin{tabular}{p{0.20\textwidth}p{0.72\textwidth}}
+\toprule
+Item & Value \\
+\midrule
+Selected, $G = \devnum{300}$ s & age-relative: $B_0 = \devnum{60}k/4$ s, $\eta = \devnum{0.50}$, $\gamma = \devnum{0}$; worst-cell gap \devnum{0.4251}, worst-cell harm \devnum{122.8} s against a \devnum{150} s limit, \devnum{44} of \devnum{99} candidate points feasible \\
+Selected, $G = \devnum{600}$ s & age-relative: $B_0 = \devnum{120}k/4$ s, $\eta = \devnum{0.75}$, $\gamma = \devnum{0}$; worst-cell gap \devnum{0.7216}, worst-cell harm \devnum{293.3} s against \devnum{300} s, \devnum{70} of \devnum{107} feasible \\
+Selected, $G = \devnum{1200}$ s & queue-length: $B_0 = \devnum{0}$, $\eta = \devnum{0}$, $\gamma = \devnum{16}k/4$ s; worst-cell gap \devnum{0.7283}, worst-cell harm \devnum{145.3} s against \devnum{600} s, \devnum{95} of \devnum{111} feasible \\
+Per-shape winners & constant: $B_0 = \devnum{329.671}$, \devnum{981.126}, \devnum{2{,}029.958}\,$k/4$ s at the three promises; age-relative: $(\devnum{60}, \devnum{0.50})$, $(\devnum{120}, \devnum{0.75})$, $(\devnum{360}, \devnum{0.75})$; queue-length: $\gamma = \devnum{16}k/4$ s with $B_0 = \devnum{0}$, \devnum{120}$k/4$ s, \devnum{0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source of Table~\ref{tab:s_setup}: these are the four rows the manuscript's experimental
+%   configuration table (tab:setup, Table 5) carried until the sixth revision pass (referee
+%   item G7).  They come from
+%   protocol_lock.draft.json (selection_rule, selected_parameters, family_best) and
+%   docs/repo_build_status.md third pass, section 3.  Produced by
+%   `python scripts/emit_paper_tables.py` into outputs/paper_tables/tab_setup.tex.
+
+\subsection{The Two Budget Shapes the Main Table No Longer Prints}
+
+Section~8.4 of the manuscript compares the three budget shapes at a fixed promise through
+the paired differences, which is how the comparison is read. Table~\ref{tab:s_guard_abl}
+gives the age-relative and queue-length rows themselves, in the format of Table~8 and in
+the same cells; the Guard($G$), Guard-fixed($G$), Fixed($G$) and Skip($G$) rows stay
+there. One of the three shape winners coincides with Guard($G$) at each promise, which is
+why some rows below repeat a row of Table~8.
+
+\begin{table}[H]
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\caption{The age-relative and queue-length winners at three promises and three loads, in
+the format of Table~8 of the manuscript. Excess and harm are the worst over the five
+overlays, the rest are means; budgets scale as $k/4$.}
+\label{tab:s_guard_abl}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrlrrrr}
+\toprule
+Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max exc. & Harm & Fired (\%) \\
+\midrule
+\multicolumn{9}{l}{$\rho = 0.5$, $k = 7.8$} \\
+ & Guard-age($\devnum{300}$)  & \devnum{300} & \devnum{15.58} & \devnum{0.705 [0.678, 0.724]} & \devnum{43.7} & \devnum{192.5} & \devnum{132.1} & \devnum{1.35} \\
+ & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{15.27} & \devnum{0.723 [0.697, 0.742]} & \devnum{44.8} & \devnum{193.4} & \devnum{94.3} & \devnum{21.60} \\
+ & Guard-age($\devnum{600}$)  & \devnum{600} & \devnum{14.97} & \devnum{0.740 [0.713, 0.760]} & \devnum{45.8} & \devnum{492.2} & \devnum{237.0} & \devnum{0.17} \\
+ & Guard-queue($\devnum{600}$) & \devnum{600} & \devnum{14.88} & \devnum{0.744 [0.718, 0.765]} & \devnum{46.1} & \devnum{504.5} & \devnum{106.0} & \devnum{0.16} \\
+ & Guard-age($\devnum{1200}$) & \devnum{1200} & \devnum{14.73} & \devnum{0.751 [0.723, 0.773]} & \devnum{46.5} & \devnum{1{,}049.1} & \devnum{237.0} & \devnum{0.01} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{14.84} & \devnum{0.746 [0.719, 0.768]} & \devnum{46.2} & \devnum{907.8} & \devnum{94.3} & \devnum{22.01} \\
+\midrule
+\multicolumn{9}{l}{$\rho = 0.8$, $k = 5$} \\
+ & Guard-age($\devnum{300}$)  & \devnum{300} & \devnum{55.94} & \devnum{0.738 [0.697, 0.761]} & \devnum{53.0} & \devnum{209.7} & \devnum{114.1} & \devnum{11.57} \\
+ & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{54.69} & \devnum{0.753 [0.713, 0.777]} & \devnum{54.0} & \devnum{210.7} & \devnum{117.6} & \devnum{17.53} \\
+ & Guard-age($\devnum{600}$)  & \devnum{600} & \devnum{47.47} & \devnum{0.837 [0.815, 0.851]} & \devnum{60.1} & \devnum{507.8} & \devnum{319.6} & \devnum{1.31} \\
+ & Guard-queue($\devnum{600}$) & \devnum{600} & \devnum{47.69} & \devnum{0.834 [0.814, 0.847]} & \devnum{59.9} & \devnum{508.5} & \devnum{117.7} & \devnum{1.35} \\
+ & Guard-age($\devnum{1200}$) & \devnum{1200} & \devnum{45.16} & \devnum{0.864 [0.844, 0.876]} & \devnum{62.0} & \devnum{1{,}102.9} & \devnum{370.5} & \devnum{0.29} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{46.85} & \devnum{0.844 [0.823, 0.857]} & \devnum{60.6} & \devnum{1{,}104.9} & \devnum{117.6} & \devnum{9.93} \\
+\midrule
+\multicolumn{9}{l}{$\rho = 1.0$, $k = 4$} \\
+ & Guard-age($\devnum{300}$)  & \devnum{300} & \devnum{163.40} & \devnum{0.478 [0.387, 0.602]} & \devnum{40.2} & \devnum{229.1} & \devnum{134.8} & \devnum{28.64} \\
+ & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{169.22} & \devnum{0.453 [0.368, 0.607]} & \devnum{38.1} & \devnum{231.4} & \devnum{144.8} & \devnum{30.99} \\
+ & Guard-age($\devnum{600}$)  & \devnum{600} & \devnum{89.24} & \devnum{0.801 [0.764, 0.842]} & \devnum{67.3} & \devnum{523.7} & \devnum{339.9} & \devnum{7.15} \\
+ & Guard-queue($\devnum{600}$) & \devnum{600} & \devnum{91.09} & \devnum{0.793 [0.758, 0.833]} & \devnum{66.6} & \devnum{515.8} & \devnum{123.4} & \devnum{7.08} \\
+ & Guard-age($\devnum{1200}$) & \devnum{1200} & \devnum{72.52} & \devnum{0.874 [0.851, 0.893]} & \devnum{73.4} & \devnum{1{,}117.3} & \devnum{453.3} & \devnum{0.81} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{82.67} & \devnum{0.830 [0.801, 0.857]} & \devnum{69.7} & \devnum{1{,}110.4} & \devnum{144.8} & \devnum{6.21} \\
+\bottomrule
+\end{tabular}
+\end{adjustwidth}
+\end{table}
+% Source of Table~\ref{tab:s_guard_abl}: the eighteen rows the manuscript's guard table
+%   (tab:guard, Table 8) carried until the sixth revision pass (referee item G1).
+%   outputs/paper_tables/tab_guard.tex,
+%   produced by `python scripts/emit_paper_tables.py` (see GENERATED.md), from
+%   outputs/dev_tables/main_table.csv, rows Guard-age / Guard-queue at each promise and
+%   levels 0, 1, 2; columns p99_dl_s, gap_closed with gap_closed_lo/hi, reduction_pct,
+%   max_excess_s, harm_s, fired_pct.  Nothing was recomputed for this file.
+
+\subsection{The Residual on All Nine Cells}
+
+Table~10 of the manuscript prints the three Guard($\devnum{600}$) cells and one reversed
+score. Table~\ref{tab:s_resid} gives all nine. The reading Section~8.5 takes from them is
+that the residual is a property of the schedule and barely moves with the policy: inside
+each load the three policies agree to the third decimal of the ratio.
+
+\begin{table}[H]
+\centering
+\caption{The residual $D_i = k(W_P[i] - W_{\mathrm{FCFS}}[i]) - (\mathrm{In}_i -
+\mathrm{Out}_i)$ of Theorem~1 of the manuscript on overlay~0,
+\devnum{17{,}634{,}760} jobs per cell. Ratio is $\max|D_i|$ over the bound $2(k-1)L$,
+which is \devnum{14}$L$, \devnum{8}$L$ and \devnum{6}$L$ at the three loads;
+$R^2$ and the worst error are for $(\mathrm{In}_i - \mathrm{Out}_i)/k$
+against the realised excess over first-come first-served.}
+\label{tab:s_resid}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrr}
+\toprule
+Load & Policy & $\max|D_i|/L$ & Ratio & $D_i = 0$ & $R^2$ & worst err.\ (s) \\
+\midrule
+$\rho = \devnum{0.5}$, $k = \devnum{8}$
+ & SPJF-E              & \devnum{6.788} & \devnum{0.485} & \devnum{95.6\%} & \devnum{0.985} & \devnum{50.9} \\
+ & Guard($\devnum{600}$) & \devnum{6.788} & \devnum{0.485} & \devnum{95.6\%} & \devnum{0.983} & \devnum{50.9} \\
+ & Reversed score      & \devnum{6.788} & \devnum{0.485} & \devnum{95.6\%} & \devnum{0.996} & \devnum{50.9} \\
+\midrule
+$\rho = \devnum{0.8}$, $k = \devnum{5}$
+ & SPJF-E              & \devnum{3.922} & \devnum{0.490} & \devnum{87.2\%} & \devnum{0.996} & \devnum{47.1} \\
+ & Guard($\devnum{600}$) & \devnum{3.922} & \devnum{0.490} & \devnum{87.2\%} & \devnum{0.995} & \devnum{47.1} \\
+ & Reversed score      & \devnum{3.881} & \devnum{0.485} & \devnum{87.5\%} & \devnum{0.999} & \devnum{46.6} \\
+\midrule
+$\rho = \devnum{1.0}$, $k = \devnum{4}$
+ & SPJF-E              & \devnum{3.082} & \devnum{0.514} & \devnum{81.1\%} & \devnum{0.998} & \devnum{46.2} \\
+ & Guard($\devnum{600}$) & \devnum{3.082} & \devnum{0.514} & \devnum{81.1\%} & \devnum{0.998} & \devnum{46.2} \\
+ & Reversed score      & \devnum{2.994} & \devnum{0.499} & \devnum{81.7\%} & \devnum{1.000} & \devnum{44.9} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source of Table~\ref{tab:s_resid}: outputs/paper_tables/tab_resid.tex, produced by
+%   `python scripts/emit_paper_tables.py` (see GENERATED.md), from
+%   outputs/dev_tables/identity_residuals.csv, rows overlay = 0, levels 0/1/2, policies
+%   SPJF-E / Guard(600) / SPJF-reversed; columns max_abs_residual_L, ratio_to_bound,
+%   share_residual_zero, r2_net_over_k, max_abs_error_s.  The load labels are the paper's
+%   (rho = 0.5 / 0.8 / 1.0); the package prints the level index there.  This is the table
+%   the manuscript's residual table (tab:resid, Table 10) printed in full until the sixth
+%   revision pass (referee item G10); it now keeps four of these nine rows.
+
+\subsection{A Single Server}
+
+Section~8.6 of the manuscript reports the single-server configuration through five gap
+figures, three harm ratios and two realised excesses. Table~\ref{tab:s_k1} is the
+configuration in full. The parameters are the ones the selection rule chose on the
+\devnum{15} multi-server validation cells; $k = 1$ is not among them, and we do not
+re-tune on it.
+
+The firing rate of the three unguarded policies is printed \verb|---|: the column counts
+dispatch epochs at which the guard overrides the base policy, and these three runs have no
+guard. Scoring first-come first-served at \devnum{100\%} by the convention that every
+first-come first-served dispatch serves the queue head, as an earlier version of this
+table did, compares it with the guarded runs on a quantity it does not have.
+
+\begin{table}[H]
+\centering
+\caption{Single server, busy-hour $\rho = \devnum{0.80}$, \devnum{3{,}209{,}347} jobs. Waits and
+excesses in seconds. The parameters are the ones the rule selected on the multi-server
+validation cells; this configuration is not among them. The skip count is
+$\kappa = \lfloor Gk/L \rfloor - (2k-2)$.}
+\label{tab:s_k1}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrlrrr}
+\toprule
+Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm & Fired (\%) \\
+\midrule
+FCFS                         & ---           & \devnum{221.27} & \devnum{0.000} & \devnum{0.0} & \devnum{0.0} & --- \\
+SJF on true sizes            & ---           & \devnum{45.32} & \devnum{1.000} & \devnum{2{,}054.5} & \devnum{777.9} & --- \\
+SPJF-E                       & ---           & \devnum{60.91} & \devnum{0.911 [0.854, 0.933]} & \devnum{2{,}520.3} & \devnum{656.4} & --- \\
+Guard($\devnum{300}$)        & \devnum{300} & \devnum{89.96} & \devnum{0.746 [0.571, 0.829]} & \devnum{297.9} & \devnum{81.8} & \devnum{8.17} \\
+Guard-fixed($\devnum{300}$)  & \devnum{300} & \devnum{125.68} & \devnum{0.543 [0.207, 0.718]} & \devnum{140.3} & \devnum{119.5} & \devnum{17.09} \\
+Guard-age($\devnum{300}$)    & \devnum{300} & \devnum{89.96} & \devnum{0.746 [0.571, 0.829]} & \devnum{297.9} & \devnum{81.8} & \devnum{8.17} \\
+Guard-queue($\devnum{300}$)  & \devnum{300} & \devnum{105.15} & \devnum{0.660 [0.532, 0.715]} & \devnum{297.9} & \devnum{53.9} & \devnum{29.15} \\
+Fixed($\devnum{300}$)        & \devnum{300} & \devnum{83.18} & \devnum{0.785 [0.584, 0.865]} & \devnum{297.9} & \devnum{246.3} & \devnum{6.33} \\
+Skip($\devnum{300}$), $\kappa=5$  & \devnum{300} & \devnum{220.39} & \devnum{0.005 [-0.002, 0.019]} & \devnum{95.1} & \devnum{81.8} & \devnum{73.17} \\
+Guard($\devnum{600}$)        & \devnum{600} & \devnum{71.07} & \devnum{0.854 [0.780, 0.895]} & \devnum{595.5} & \devnum{165.5} & \devnum{2.53} \\
+Guard-fixed($\devnum{600}$)  & \devnum{600} & \devnum{82.10} & \devnum{0.791 [0.602, 0.868]} & \devnum{303.0} & \devnum{246.3} & \devnum{6.16} \\
+Guard-age($\devnum{600}$)    & \devnum{600} & \devnum{71.07} & \devnum{0.854 [0.780, 0.895]} & \devnum{595.5} & \devnum{165.5} & \devnum{2.53} \\
+Guard-queue($\devnum{600}$)  & \devnum{600} & \devnum{91.52} & \devnum{0.737 [0.640, 0.812]} & \devnum{582.0} & \devnum{81.8} & \devnum{3.43} \\
+Fixed($\devnum{600}$)        & \devnum{600} & \devnum{68.48} & \devnum{0.868 [0.783, 0.906]} & \devnum{593.4} & \devnum{563.6} & \devnum{2.29} \\
+Skip($\devnum{600}$), $\kappa=10$ & \devnum{600} & \devnum{219.89} & \devnum{0.008 [-0.004, 0.037]} & \devnum{100.9} & \devnum{83.2} & \devnum{66.98} \\
+Guard($\devnum{1200}$)       & \devnum{1200} & \devnum{98.00} & \devnum{0.701 [0.640, 0.742]} & \devnum{1{,}157.4} & \devnum{53.9} & \devnum{26.15} \\
+Guard-fixed($\devnum{1200}$) & \devnum{1200} & \devnum{69.03} & \devnum{0.865 [0.789, 0.905]} & \devnum{564.2} & \devnum{509.3} & \devnum{2.57} \\
+Guard-age($\devnum{1200}$)   & \devnum{1200} & \devnum{63.80} & \devnum{0.895 [0.835, 0.920]} & \devnum{1{,}182.3} & \devnum{366.4} & \devnum{0.68} \\
+Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{98.00} & \devnum{0.701 [0.640, 0.742]} & \devnum{1{,}157.4} & \devnum{53.9} & \devnum{26.15} \\
+Fixed($\devnum{1200}$)       & \devnum{1200} & \devnum{63.19} & \devnum{0.898 [0.837, 0.923]} & \devnum{1{,}180.4} & \devnum{656.4} & \devnum{0.45} \\
+Skip($\devnum{1200}$), $\kappa=20$ & \devnum{1200} & \devnum{217.64} & \devnum{0.021 [-0.008, 0.084]} & \devnum{168.0} & \devnum{97.7} & \devnum{58.67} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source of Table~\ref{tab:s_k1}: outputs/paper_tables/tab_k1.tex, produced by
+%   `python scripts/emit_paper_tables.py` (see GENERATED.md), from
+%   outputs/dev_tables/k1/main_table.csv; columns p99_dl_s, gap_closed with gap_closed_lo/hi,
+%   max_excess_s, harm_s, fired_pct, and the promise G.  The harm ratios 3.01 / 3.41 / 12.18 in
+%   Section 8.6 are Fixed(G) harm over Guard(G) harm from the same rows.  The adversarial excess
+%   597.0 s is the Guard(600)-top1short row of the same file, column max_excess_s.  The two
+%   third-decimal double-rounding errors the verifier found in an earlier version of this
+%   table (item G2) are gone with the rows and the rounding: every figure here is printed once
+%   from the package's own full-precision column.  This was the manuscript's single-server
+%   table until the sixth revision pass (referee item G2); the three unguarded firing rates that the
+%   package prints as 100.00 / 0.00 / 0.00 are printed --- here (referee item RR-24), which is
+%   the one cell where this table differs from the package's own.
+
+%=================================================================
+\section{Deferred Proofs}
+\label{sec:supp_proofs}
+
+Appendices~A.1 and~A.5 of the manuscript give the idea of each argument below and
+point here for the argument itself. Both are continuity-and-left-limit arguments a
+reader will not return to, which is why they sit outside the manuscript; the
+constructions the contribution rests on stay there, in Appendices~A.2--A.4, A.6
+and~A.7. Nothing here was restated or re-derived for this file: the text is the text
+the manuscript carried until the seventh revision pass. The notation is the
+manuscript's, $U_Q(t)$ being the unfinished work at time $t$ under policy $Q$ and
+$N_Q(t)$ the number of jobs present.
+
+\subsection{The Workload Comparison}
+\label{sec:supp_gap}
+
+\begin{proof}[Proof of Lemma~1 of the manuscript]
+Put $D = U_{Q_1} - U_{Q_2}$. Arrivals add the same jump to both terms, so $D$ is
+continuous, and between arrivals it changes at rate
+$-(\min(N_{Q_1},k) - \min(N_{Q_2},k))$; it is therefore piecewise linear with
+breakpoints among the finitely many arrival and completion instants of the two
+runs.
+
+If $U_{Q_1}(u) > (k-1)L$ then more than $k-1$ jobs are present under $Q_1$, each
+carrying at most $L$, so every server of $Q_1$ is busy and
+$\min(N_{Q_1},k) = k \ge \min(N_{Q_2},k)$: $D$ does not increase at $u$. Fix $t$
+and let
+$S = \{u \le t : U_{Q_1}(u) \le (k-1)L\}$, which is non-empty because $U_{Q_1}$
+vanishes
+before the first arrival, and put $t_0 = \sup S$. The supremum need not be
+attained, since $U_{Q_1}$ jumps upwards at arrivals, so we use the left limit:
+there are $u_n \uparrow t_0$ with $U_{Q_1}(u_n) \le (k-1)L$, hence
+$U_{Q_1}(t_0^-) \le (k-1)L$ and, $D$ being continuous,
+$D(t_0^-) \le U_{Q_1}(t_0^-) \le (k-1)L$ because $U_{Q_2} \ge 0$. On $(t_0, t]$
+we have
+$U_{Q_1} > (k-1)L$, so $D$ does not increase there, and $D(t) \le (k-1)L$.
+Exchanging $Q_1$ and $Q_2$ gives the other direction. That the constant cannot be
+lowered is the cascade of Appendix~A.2 of the manuscript, which reaches
+$(k-1)L\,(1 - ((k-1)/k)^m)$ after $m$ rounds. At $k = 1$ the bound reads
+$|D| \le 0$ and is attained everywhere: one server executes work at rate $1$
+whenever any job is present, so $U_{Q_1} \equiv U_{Q_2}$.
+\end{proof}
+
+\begin{proof}[Proof of the strict inequality in Lemma~1, for $k \ge 2$]
+Keep the notation above, so $D = U_{Q_1} - U_{Q_2}$ is continuous and piecewise
+linear with finitely many pieces. Suppose $D(t) = (k-1)L$ for some $t$ and let
+$t_1$ be the smallest such $t$; it exists because $\{D = (k-1)L\}$ is closed and
+$D(0) = 0 < (k-1)L$, which uses $L > 0$ and $k \ge 2$.
+
+Let $I$ be the linear piece immediately to the left of $t_1$, which has positive
+length. Its slope is strictly positive: a negative slope would put
+$D > (k-1)L$ somewhere on $I$ and a zero slope would put $D = (k-1)L$ on all of
+$I$, and either contradicts the minimality of $t_1$. The slope of $D$ is
+$-(\min(N_{Q_1},k) - \min(N_{Q_2},k))$, so $\min(N_{Q_1},k) < \min(N_{Q_2},k)$
+on $I$ and
+therefore $N_{Q_1} \le k-1$ there.
+
+With at most $k-1$ jobs present and $Q_1$ work-conserving, none of $Q_1$'s jobs
+waits, so all of them are in service; hence $U_{Q_1}$ falls at rate $N_{Q_1}$ on
+$I$,
+and $U_{Q_1} \le (k-1)L$ on $I$ because each of the at most $k-1$ present jobs
+carries at most $L$. Taking left limits at $t_1$ and using the continuity of
+$D$,
+\[
+  U_{Q_1}(t_1^-) - U_{Q_2}(t_1^-) = (k-1)L , \qquad U_{Q_1}(t_1^-) \le (k-1)L ,
+  \qquad U_{Q_2} \ge 0 ,
+\]
+which forces $U_{Q_2}(t_1^-) = 0$ and $U_{Q_1}(t_1^-) = (k-1)L$. Since $L > 0$
+and $k \ge 2$, this
+gives $N_{Q_1} \ge 1$ on $I$ --- with $N_{Q_1} = 0$ we would have
+$U_{Q_1}(t_1^-) = 0 = (k-1)L$ ---
+so $U_{Q_1}$ is strictly decreasing on $I$ and
+$U_{Q_1}(t_1^-) < \sup_I U_{Q_1} \le (k-1)L$, a contradiction. Exchanging $Q_1$
+and $Q_2$ gives the other direction. Both steps that invoke $(k-1)L > 0$ fail at
+$k = 1$, where the statement is false: there $U_{Q_1} \equiv U_{Q_2}$ and the
+bound $0$ is attained at every instant.
+\end{proof}
+
+\subsection{Consistency, and Why the Converse Fails}
+\label{sec:supp_consistency}
+
+\begin{proof}[Proof of Proposition~1 of the manuscript]
+Induct on dispatch epochs: up to the first epoch at which the two runs could
+differ their completion histories agree, hence so does $\mathrm{over}[\cdot]$,
+so $E(t)$ is empty in the wrapped run and it copies $A$. The first consequence
+uses $\mathrm{over}[q](t) \le \mathrm{In}^A_q$, a completed overtaker of $q$
+having been dispatched while $q$ waited; the second uses Corollary~2 of the
+manuscript.
+\end{proof}
+
+The converse fails, so this is not an equivalence. Take $k = 1$, two jobs of
+service $1$ at $t = 0$, the base policy ``higher rank first'', and $B = 1$. Both
+runs dispatch in the order $(1,0)$, yet at the second dispatch the waiting job
+has $\mathrm{over} = 1 \ge B$, so the guard fires and happens to choose what the
+base would have chosen. Nor is there multiplicative consistency: with $k = 1$,
+one job of service $L$ followed by $m$ jobs of service $1$ all at $t = 0$, the
+wrapper with $B = 0$ is first-come first-served while the base ordering by
+service time is not, and the ratio of mean waits is $(2L + m - 1)/(m+1)$,
+unbounded in $L$.
+% Source of Section~\ref{sec:supp_proofs}: sections/A_proofs.tex, Appendices A.1 and A.5
+%   of the manuscript, moved here in the seventh revision pass under referee item G3.
+%   The two arguments are verbatim; only the cross-references were rewritten, since a
+%   \ref into the manuscript does not resolve from this file: Lemma~\ref{lem:gap} is
+%   Lemma 1, Proposition~\ref{prop:consistency} is Proposition 1,
+%   Corollary~\ref{cor:necessary} is Corollary 2 and Appendix~\ref{app:cascade} is
+%   Appendix A.2.  Simulated and checked in prechecks/guard_theory; nothing was
+%   recomputed for this file.
+
+%=================================================================
+\begin{adjustwidth}{-\extralength}{0cm}
+\reftitle{References}
+% The same bibliography file as the manuscript; the class sets the style itself.
+\bibliography{../docs/related_work/refs}
+\end{adjustwidth}
+\end{document}

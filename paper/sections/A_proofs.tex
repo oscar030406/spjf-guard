@@ -2,68 +2,33 @@
 
 \appendix
 
-\section{Proofs of the tightness results}
+\section{Deferred proofs and the extremal constructions}
 \label{app:proofs}
 
 This appendix gives in full the constructions sketched in
 Section~\ref{sec:theory}. All of them are exact in integer arithmetic; we
 simulated every one of them and checked every intermediate quantity of every
 proof job by job, including an independent audit of work conservation and server
-capacity re-derived from the produced schedule.
+capacity re-derived from the produced schedule. Two arguments that the rest does
+not use, the workload comparison and the consistency proposition, are given here
+as proof ideas and in full in Supplementary Section~S4.
 
 \subsection{The workload comparison}
 \label{app:strict}
 
-\begin{proof}[Proof of Lemma~\ref{lem:gap}]
-Put $D = U_A - U_B$. Arrivals add the same jump to both terms, so $D$ is
-continuous, and between arrivals it changes at rate
-$-(\min(N_A,k) - \min(N_B,k))$; it is therefore piecewise linear with
-breakpoints among the finitely many arrival and completion instants of the two
-runs.
-
-If $U_A(u) > (k-1)L$ then more than $k-1$ jobs are present under $A$, each
-carrying at most $L$, so every server of $A$ is busy and
-$\min(N_A,k) = k \ge \min(N_B,k)$: $D$ does not increase at $u$. Fix $t$ and let
-$S = \{u \le t : U_A(u) \le (k-1)L\}$, which is non-empty because $U_A$ vanishes
-before the first arrival, and put $t_0 = \sup S$. The supremum need not be
-attained, since $U_A$ jumps upwards at arrivals, so we use the left limit:
-there are $u_n \uparrow t_0$ with $U_A(u_n) \le (k-1)L$, hence
-$U_A(t_0^-) \le (k-1)L$ and, $D$ being continuous,
-$D(t_0^-) \le U_A(t_0^-) \le (k-1)L$ because $U_B \ge 0$. On $(t_0, t]$ we have
-$U_A > (k-1)L$, so $D$ does not increase there, and $D(t) \le (k-1)L$.
-Exchanging $A$ and $B$ gives the other direction. That the constant cannot be
-lowered is the cascade of Appendix~\ref{app:cascade}, which reaches
-$(k-1)L\,(1 - ((k-1)/k)^m)$ after $m$ rounds.
-\end{proof}
-
-\begin{proof}[Proof of the strict inequality in Lemma~\ref{lem:gap}]
-Keep the notation above, so $D = U_A - U_B$ is continuous and piecewise
-linear with finitely many pieces. Suppose $D(t) = (k-1)L$ for some $t$ and let
-$t_1$ be the smallest such $t$; it exists because $\{D = (k-1)L\}$ is closed and
-$D(0) = 0 < (k-1)L$, using $L > 0$.
-
-Let $I$ be the linear piece immediately to the left of $t_1$, which has positive
-length. Its slope is strictly positive: a negative slope would put
-$D > (k-1)L$ somewhere on $I$ and a zero slope would put $D = (k-1)L$ on all of
-$I$, and either contradicts the minimality of $t_1$. The slope of $D$ is
-$-(\min(N_A,k) - \min(N_B,k))$, so $\min(N_A,k) < \min(N_B,k)$ on $I$ and
-therefore $N_A \le k-1$ there.
-
-With at most $k-1$ jobs present and $A$ work-conserving, none of $A$'s jobs
-waits, so all of them are in service; hence $U_A$ falls at rate $N_A$ on $I$,
-and $U_A \le (k-1)L$ on $I$ because each of the at most $k-1$ present jobs
-carries at most $L$. Taking left limits at $t_1$ and using the continuity of
-$D$,
-\[
-  U_A(t_1^-) - U_B(t_1^-) = (k-1)L , \qquad U_A(t_1^-) \le (k-1)L ,
-  \qquad U_B \ge 0 ,
-\]
-which forces $U_B(t_1^-) = 0$ and $U_A(t_1^-) = (k-1)L$. Since $L > 0$, this
-gives $N_A \ge 1$ on $I$ --- with $N_A = 0$ we would have $U_A(t_1^-) = 0$ ---
-so $U_A$ is strictly decreasing on $I$ and
-$U_A(t_1^-) < \sup_I U_A \le (k-1)L$, a contradiction. Exchanging $A$ and $B$
-gives the other direction.
-\end{proof}
+% Sixth/seventh pass, referee item G3: the two proofs that stood here in full are now
+% Supplementary Section S4.1.  What is left is the proof idea and the pointer; nothing
+% in either argument changed.
+Section~\ref{sec:theory} gives the idea of the bound. The strictness at $k \ge 2$
+runs the same way: at the first instant $t_1$ at which $D = U_{Q_1} - U_{Q_2}$
+touches $(k-1)L$, the linear piece to its left must have positive slope, which
+forces at most $k-1$ jobs present under $Q_1$ there, so none of them waits and
+$U_{Q_1} \le (k-1)L$ on that piece; left limits then force $U_{Q_2}(t_1^-) = 0$ and
+$U_{Q_1}(t_1^-) = (k-1)L$, and $U_{Q_1}$ is strictly decreasing on the piece, so it
+cannot equal its own supremum at $t_1$. Both steps invoke $(k-1)L > 0$ and both fail
+at $k = 1$, where $U_{Q_1} \equiv U_{Q_2}$ and the bound $0$ is attained everywhere.
+Supplementary Section~S4.1 gives both proofs in full; that the constant cannot be
+lowered is the cascade of Appendix~\ref{app:cascade}.
 
 \subsection{The cascade}
 \label{app:cascade}
@@ -130,7 +95,7 @@ for $j \le m$ is an integer.
 \begin{proof}[Proof of Theorem~\ref{thm:tight1}]
 \emph{Upward.} Run the cascade of Lemma~\ref{lem:cascade} for $m$ rounds and, at
 $T_m$, inject in rank order $k-1$ jobs of service $L$, then the victim $i$ of
-service $L$, then $N > 2kL$ jobs of service $1$. Let $P$ continue as the static
+service $L$, then $n_{\mathrm{sh}} > 2kL$ jobs of service $1$. Let $P$ continue as the static
 priority ``the $k-1$ new long jobs first, then the short jobs, then $i$''.
 
 At $T_m$ all $k$ servers of the reference policy are free and its waiting set in
@@ -145,7 +110,8 @@ Under $P$, one server is free at $T_m$ and takes a new long job; when the $k-1$
 carried-over jobs finish, all at $T_m + f$ with $f < L$, their servers take the
 remaining new long jobs and then short jobs. The victim waits while any short
 job waits. Short jobs are executed at rate at most $k$, so they are not exhausted
-before $T_m + N/k$, and $N > 2kL > k(f+L)$ makes that later than $T_m + f + L$,
+before $T_m + n_{\mathrm{sh}}/k$, and $n_{\mathrm{sh}} > 2kL > k(f+L)$ makes
+that later than $T_m + f + L$,
 by which time every new long job has completed. So $i$ is dispatched after all
 $k-1$ new long jobs have finished, and at $s^P_i$ the other $k-1$ servers hold
 short jobs, giving $0 \le \rho^P_i \le k-1$. Also
@@ -186,8 +152,9 @@ $i$, is dispatched after $i$, so $\mathrm{Out}_i = f$. Therefore
            \;&=\; -\rho_m - (k-1)L \;\longrightarrow\; -2(k-1)L .
 \end{align*}
 
-\emph{Non-attainment.} Lemma~\ref{lem:gap} gives
-$|R^P_i - R^{\mathrm{FCFS}}_i| < (k-1)L$ strictly, and step (ii) of
+\emph{Non-attainment.} For $k \ge 2$, Lemma~\ref{lem:gap} gives
+$|R^P_i - R^{\mathrm{FCFS}}_i| < (k-1)L$ strictly, and the \emph{Bounding
+$\rho$} step of the proof of
 Theorem~\ref{thm:identity} gives $0 \le \rho^P_i, \rho^{\mathrm{FCFS}}_i \le
 (k-1)L$; combining them in each direction gives $|\Delta_i| < 2(k-1)L$.
 \end{proof}
@@ -222,7 +189,8 @@ The same-phase share of $|\Delta_i|$ is \devnum{0.00\%}, \devnum{0.69\%} and
 \begin{proof}[Proof of Theorem~\ref{thm:tight2}(i)]
 At $t = 0$ let there arrive, in rank order, $k$ jobs of service $L$, the victim
 $i$, and at least $B + k$ jobs of service $1$; let the base policy be the static
-priority ``the $k$ long jobs, then the short ones, then $i$'', and take the
+priority ``the $k$ long jobs, then the short ones in rank order, then $i$'', and
+take the
 constant budget $B$. First-come first-served dispatches the $k$ long jobs in the
 phase at $t = 0$, filling every server, so $W_{\mathrm{FCFS}}[i] = L$.
 
@@ -329,24 +297,13 @@ $k$ & $L$ & $m$ & jobs & $B$ & excess & $(k\,\mathrm{excess}-B)/L$ \\
 \subsection{Consistency, and why the converse fails}
 \label{app:consistency}
 
-\begin{proof}[Proof of Proposition~\ref{prop:consistency}]
-Induct on dispatch epochs: up to the first epoch at which the two runs could
-differ their completion histories agree, hence so does $\mathrm{over}[\cdot]$,
-so $E(t)$ is empty in the wrapped run and it copies $A$. The first consequence
-uses $\mathrm{over}[q](t) \le \mathrm{In}^A_q$, a completed overtaker of $q$
-having been dispatched while $q$ waited; the second uses
-Corollary~\ref{cor:necessary}.
-\end{proof}
-
-The converse fails, so this is not an equivalence. Take $k = 1$, two jobs of
-service $1$ at $t = 0$, the base policy ``higher rank first'', and $B = 1$. Both
-runs dispatch in the order $(1,0)$, yet at the second dispatch the waiting job
-has $\mathrm{over} = 1 \ge B$, so the guard fires and happens to choose what the
-base would have chosen. Nor is there multiplicative consistency: with $k = 1$,
-one job of service $L$ followed by $m$ jobs of service $1$ all at $t = 0$, the
-wrapper with $B = 0$ is first-come first-served while the base ordering by
-service time is not, and the ratio of mean waits is $(2L + m - 1)/(m+1)$,
-unbounded in $L$.
+% Sixth/seventh pass, referee item G3: the proof and the two counterexamples that stood
+% here are now Supplementary Section S4.2.  Nothing in them changed.
+The induction sketched in Section~\ref{sec:theory} needs two further readings, both
+of them one line: the first consequence of Proposition~\ref{prop:consistency} uses
+$\mathrm{over}[q](t) \le \mathrm{In}^A_q$, a completed overtaker of $q$ having been
+dispatched while $q$ waited, and the second uses Corollary~\ref{cor:necessary}.
+Supplementary Section~S4.2 gives the induction and the two counterexamples in full.
 
 \subsection{Approaching the single-server bound}
 \label{app:floor}
@@ -373,54 +330,122 @@ $(64, 32, 1)$ gives $63$.
 \label{app:price}
 
 \begin{proof}[Proof of Theorem~\ref{thm:price}]
-Let $S(Q)$ be the set of inverted pairs of a policy $Q$, that is the pairs
+Let $\mathcal{I}(Q)$ be the set of inverted pairs of a policy $Q$, that is the pairs
 $(u,v)$ with $u < v$ in rank and $v \prec u$. Counting the same pairs in two ways,
 \[
-  \sum_i \mathrm{In}_i \;=\; \sum_{(u,v) \in S(Q)} C_v ,
+  \sum_i \mathrm{In}_i \;=\; \sum_{(u,v) \in \mathcal{I}(Q)} C_v ,
   \qquad
-  \sum_i \mathrm{Out}_i \;=\; \sum_{(u,v) \in S(Q)} C_u ,
+  \sum_i \mathrm{Out}_i \;=\; \sum_{(u,v) \in \mathcal{I}(Q)} C_u ,
 \]
-exactly, for every $k$. Write $\Delta(Q) = \sum_i (W_{\mathrm{FCFS}}[i] -
-W_Q[i])$ for the total saving against the reference and $E = 2(1 - 1/k)L(m+n)$.
+exactly, for every $k$. This is the standard exchange argument: at $k = 1$,
+where Theorem~\ref{thm:identity} is an equality, it says that the only way to
+beat first-come first-served in mean wait is to invert pairs whose later-ranked
+job is the shorter one, and that the saving is exactly the sum of the service
+differences over the inversions. That is the classical pairwise-interchange
+argument behind Smith's rule~\cite{smith1956}, stated here on an arbitrary
+arrival sequence rather than on a single batch; we use it as an observation and
+claim nothing new in it.
+Write $S(Q) = \sum_i (W_{\mathrm{FCFS}}[i] -
+W_Q[i])$ for the total saving against the reference and
+$\mathcal{E} = 2(1 - 1/k)L(m+n)$.
 Summing Theorem~\ref{thm:identity} over the $m+n$ jobs gives
 \begin{equation}
-  \Bigl| \Delta(Q) - \tfrac{1}{k} \sum_{(u,v) \in S(Q)} (C_u - C_v) \Bigr|
-  \;\le\; E
+  \Bigl| S(Q) - \tfrac{1}{k} \sum_{(u,v) \in \mathcal{I}(Q)} (C_u - C_v) \Bigr|
+  \;\le\; \mathcal{E}
   \qquad \text{for every } Q .
   \label{eq:sumbound}
 \end{equation}
 
 \emph{Numerator.} A pair contributes positively only when $u$ is a long job and
-$v$ a short one, contributing $L - s$. For a fixed long job $u$, the number of
-short jobs dispatched before it is at most $\mathrm{In}_u / s$, and
+$v$ a short one, contributing $L - \sigma$. For a fixed long job $u$, the number of
+short jobs dispatched before it is at most $\mathrm{In}_u / \sigma$, and
 Corollary~\ref{cor:necessary} gives $\mathrm{In}_u \le kG + (3k-2)L$. Summing
 over the $m$ long jobs and applying \eqref{eq:sumbound},
 \[
-  \Delta(P) \;\le\; \tfrac{1}{k}\, m\,(L-s)\,\frac{kG + (3k-2)L}{s} \;+\; E .
+  S(P) \;\le\; \tfrac{1}{k}\, m\,(L-\sigma)\,\frac{kG + (3k-2)L}{\sigma}
+        \;+\; \mathcal{E} .
 \]
 
 \emph{Denominator.} Sorting by service time inverts every one of the $mn$
-long--short pairs, so its pair sum is exactly $mn(L-s)$, and
+long--short pairs, so its pair sum is exactly $mn(L-\sigma)$, and
 \eqref{eq:sumbound} applied to it gives
-$\Delta(\mathrm{SJF}) \ge \tfrac{1}{k} m n (L-s) - E$. At $k > 1$ the
+$S(\mathrm{SJF}) \ge \tfrac{1}{k} m n (L-\sigma) - \mathcal{E}$. At $k > 1$ the
 denominator carries the same error as the numerator, so treating the reference
 saving as exact would understate $\varepsilon$.
 
-\emph{Division.} Both bounds are positive once $mn(L-s)/k > E$, and then
+\emph{Division.} Writing $\mathcal{N}$ and $\mathcal{D}$ for the two leading
+terms $\tfrac{1}{k} m (L-\sigma)(kG + (3k-2)L)/\sigma$ and
+$\tfrac{1}{k} m n (L-\sigma)$, both bounds are positive once
+$\mathcal{D} > \mathcal{E}$, and then
 \[
-  \frac{\Delta(P)}{\Delta(\mathrm{SJF})}
-  \;\le\; \frac{\tfrac{1}{k} m (L-s)\,(kG + (3k-2)L)/s + E}
-               {\tfrac{1}{k} m n (L-s) - E}
-  \;=\; \frac{kG + (3k-2)L}{n s} \;+\; \varepsilon ,
+  \frac{S(P)}{S(\mathrm{SJF})}
+  \;\le\; \frac{\mathcal{N} + \mathcal{E}}{\mathcal{D} - \mathcal{E}}
+  \;=\; \frac{kG + (3k-2)L}{n \sigma} \;+\; \varepsilon ,
+  \qquad
+  \varepsilon \;=\; \frac{\mathcal{E}\,(\mathcal{N} + \mathcal{D})}
+                         {\mathcal{D}\,(\mathcal{D} - \mathcal{E})} .
 \]
-where $\varepsilon$ collects both corrections. The leading terms are
-$\Theta(mn)$ and $E = \Theta(m+n)$, so $\varepsilon = O((m+n)/(mn)) \to 0$.
+The leading terms are
+$\Theta(mn)$ and $\mathcal{E} = \Theta(m+n)$, so
+$\varepsilon = O((m+n)/(mn)) \to 0$; since
+$\mathcal{E}/\mathcal{D} = 2(k-1)L(m+n)/(mn(L-\sigma))$ and
+$\mathcal{N}/\mathcal{D} = (kG+(3k-2)L)/(n\sigma)$, the implied constant is
+\[
+  \frac{2(k-1)L}{L-\sigma}
+  \Bigl(1 + \frac{kG + (3k-2)L}{n\sigma}\Bigr) ,
+\]
+which $\varepsilon\,mn/(m+n)$ approaches from above as $m, n$ grow, and which
+vanishes at $k = 1$.
 Dividing numerator and denominator by $m+n$ turns the two total savings into the
 two mean savings and leaves the ratio unchanged.
 \end{proof}
 
-At $k = 1$ the error term vanishes identically, the sum identity is exact, and
-the achievable fraction is $\min(1, G/(ns))$: the only way to beat first-come
-first-served in mean wait is to invert pairs in which the later-ranked job is
-the shorter one, and the saving is exactly the sum of the service-time
-differences over the inversions.
+At $k = 1$ the error term vanishes identically and the sum identity is exact, so
+the achievable fraction can be computed rather than bounded.
+
+\begin{proposition}[The achievable fraction at one server]
+\label{prop:k1frac}
+In the family of Theorem~\ref{thm:price} with $k = 1$, the largest value of
+$(\overline{W}_{\mathrm{FCFS}} - \overline{W}_{P})
+ /(\overline{W}_{\mathrm{FCFS}} - \overline{W}_{\mathrm{SJF}})$
+over all non-preemptive work-conserving $P$ with
+$\mathrm{excess}_P[j] \le G$ for every job is exactly
+$\min\bigl(1, \lfloor G/\sigma \rfloor / n\bigr)$.
+\end{proposition}
+
+\begin{proof}
+Write $r_u$ for the number of short jobs dispatched before a long job $u$. Every
+short job ranks above every long one, so $\mathrm{Out}_u$ contains only long
+jobs, and a long--long inversion $(p,q)$ puts $L$ into $\mathrm{In}_p$ and the
+same $L$ into $\mathrm{Out}_q$; summing over the long jobs those terms cancel,
+and since $k = 1$ makes Theorem~\ref{thm:identity} an equality,
+\[
+  \sum_{u \text{ long}} \mathrm{excess}_P[u]
+  \;=\; \sum_{u \text{ long}} (\mathrm{In}_u - \mathrm{Out}_u)
+  \;=\; \sigma \sum_{u \text{ long}} r_u .
+\]
+Let $u^{*}$ be the long job dispatched last among the long ones. It has no
+lower-ranked long job after it, so $\mathrm{Out}_{u^{*}} = 0$ and
+$\mathrm{excess}_P[u^{*}] \ge \sigma r_{u^{*}}$; and $r$ is non-decreasing along
+the dispatch order, so $r_{u^{*}} = \max_u r_u$. The guarantee therefore forces
+$\max_u r_u \le \lfloor G/\sigma \rfloor$ and
+$\sum_u r_u \le m \lfloor G/\sigma \rfloor$. Only long--short inversions
+contribute to the saving, each contributing $L - \sigma$, so
+$S(P) = (L-\sigma)\sum_u r_u$ against $S(\mathrm{SJF}) = (L-\sigma)mn$ and the
+fraction is at most $\min(1, \lfloor G/\sigma \rfloor / n)$.
+
+For achievability, put $r = \min(n, \lfloor G/\sigma \rfloor)$ and dispatch the
+$r$ lowest-ranked short jobs, then the $m$ long jobs in rank order, then the
+remaining short jobs in rank order. Every long job then has excess exactly
+$r\sigma \le G$, every short job has excess at most $0$, and the fraction is
+$r/n$.
+\end{proof}
+
+So the shape of Theorem~\ref{thm:price} is right at $k = 1$ and its additive
+$(3k-2)L$ is slack: the guarantee is spent on the long jobs together, not one at
+a time. Exhaustive enumeration of every work-conserving schedule of the family,
+over all $1{,}161$ parameter settings with $m \le 3$, $n \le 4$ and
+$G \le 3L$, agrees with Proposition~\ref{prop:k1frac} in every case.
+% PROVENANCE: prechecks/guard_theory/rev5_items.py, section RR-4, logged in
+% prechecks/guard_theory/out_rev5_items.txt.  Not an outputs/ table: this is a
+% theory precheck, and the count is of enumerated (m,n,L,sigma,G) settings.

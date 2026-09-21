@@ -45,23 +45,31 @@ exactly $a_i$ counts with its full service time.
 
 Write $U_Q(t)$ for the unfinished work at time $t$ under policy $Q$, counting
 every job with $a_j \le t$, and $N_Q(t)$ for the number of jobs present. The
-extremal properties of first-come first-served for the unfinished-work vector
-are classical~\cite{daley1987fcfs,kiefer1955queues}; what carries the
-single-server argument to $k > 1$ is a two-sided bound between two arbitrary
+unfinished-work vector of a $k$-server queue obeys the Kiefer--Wolfowitz
+recursion~\cite{kiefer1955queues}, and first-come first-served minimises that
+vector in the weak-majorization order for systems in which arrivals are
+allocated to servers in a manner that does not depend on their service
+times~\cite{daley1987fcfs}. The policies compared below are not restricted that
+way, so what carries the
+single-server argument to $k > 1$ here is a two-sided bound between two arbitrary
 policies rather than an ordering.
 
 \begin{lemma}[Workload comparison]
 \label{lem:gap}
-Let $A$ and $B$ be non-preemptive work-conserving $k$-server policies run on the
-same input. Then $|U_A(t) - U_B(t)| \le (k-1)L$ for every $t$, and the
-inequality is strict: $|U_A(t) - U_B(t)| < (k-1)L$. The constant is the exact
-supremum, approached but never attained.
+Let $Q_1$ and $Q_2$ be non-preemptive work-conserving $k$-server policies run on
+the same input. Then $|U_{Q_1}(t) - U_{Q_2}(t)| \le (k-1)L$ for every $t$. For
+$k \ge 2$ the inequality is strict, $|U_{Q_1}(t) - U_{Q_2}(t)| < (k-1)L$, and
+the constant is the exact supremum, approached but never attained. At $k = 1$
+both sides vanish: one server executes work at rate $1$ whenever any job is
+present, so every work-conserving policy has the same unfinished work at every
+instant.
 \end{lemma}
 
-The difference $D = U_A - U_B$ is continuous and piecewise linear, and it cannot
-increase at any instant at which $U_A$ exceeds $(k-1)L$, since more than $k-1$
-jobs are then present under $A$ and every server of $A$ is busy; tracking $D$
-back to the last instant at which $U_A$ was below the threshold gives the bound.
+The difference $D = U_{Q_1} - U_{Q_2}$ is continuous and piecewise linear, and
+it cannot increase at any instant at which $U_{Q_1}$ exceeds $(k-1)L$, since
+more than $k-1$ jobs are then present under $Q_1$ and every server of $Q_1$ is
+busy; tracking $D$ back to the last instant at which $U_{Q_1}$ was below the
+threshold gives the bound.
 The proof, the strictness, and the cascade that shows the constant cannot be
 lowered are in Appendices~\ref{app:strict} and~\ref{app:cascade}.
 
@@ -86,7 +94,7 @@ every job $i$,
   \qquad
   \bigl|\Delta_i\bigr| \;\le\; 2(k-1)L ,
 \]
-equivalently
+with strict inequality for $k \ge 2$; equivalently
 $\bigl|\,W_P[i] - W_{\mathrm{FCFS}}[i] - (\mathrm{In}_i - \mathrm{Out}_i)/k\,\bigr|
  \le (2 - 2/k)L$. At $k = 1$ the error term vanishes and
 $W_P[i] - W_{\mathrm{FCFS}}[i] = \mathrm{In}_i - \mathrm{Out}_i$ exactly.
@@ -133,7 +141,8 @@ $0 \le \rho^{\mathrm{FCFS}}_i \le (k-1)L$.
 \emph{Comparison.} At $a_i$, after the arrivals there are processed, the two
 systems contain the same jobs, and those of rank $i$ or above are untouched in
 both, so $U_P(a_i) - U_{\mathrm{FCFS}}(a_i) = R^P_i - R^{\mathrm{FCFS}}_i$ and
-Lemma~\ref{lem:gap} gives $|R^P_i - R^{\mathrm{FCFS}}_i| < (k-1)L$. Subtracting
+Lemma~\ref{lem:gap} gives $|R^P_i - R^{\mathrm{FCFS}}_i| \le (k-1)L$, strictly
+for $k \ge 2$. Subtracting
 the two instances of \eqref{eq:busy} gives the identity. Each direction uses
 only two of the three ranges: upward
 $R^P_i - R^{\mathrm{FCFS}}_i \le (k-1)L$ and $\rho^{\mathrm{FCFS}}_i \le (k-1)L$
@@ -150,13 +159,21 @@ $\mathrm{excess}_P[i] \le Z/k + (2 - 2/k)L$ for every job.
 
 \subsection{The constant \texorpdfstring{$2(k-1)L$}{2(k-1)L} is exact}
 
-The error term of Theorem~\ref{thm:identity} looks like an artefact of the
-proof, and it is not, although neither search nor real input shows it. Exhaustive
+The error term of Theorem~\ref{thm:identity} is not an artefact of the proof,
+although neither search nor real input reaches it. Exhaustive
 and random search over millions of small instances never exceeds $(k-1)L$ by more
 than one time unit, and on the \devnum{17.6}-million-job trace of
-Section~\ref{sec:experiments} the largest residual reaches \devnum{0.485} to
-\devnum{0.521} of $2(k-1)L$, again about $(k-1)L$ (Table~\ref{tab:resid}). The
+Section~\ref{sec:experiments} the largest residual reaches \devnum{0.470} to
+\devnum{0.518} of $2(k-1)L$, again about $(k-1)L$
+(Section~\ref{sec:exp_bound}, Table~\ref{tab:resid}). The
 extremal instances are geometric cascades needing hundreds of jobs.
+% PROVENANCE (line above).  The range 0.470-0.518 is the minimum and the maximum
+% of column ratio_to_bound over all 81 rows of
+% outputs/dev_tables/identity_residuals.csv: min 0.46982235 (overlay 0, level 0,
+% k = 8, Skip(300)), max 0.51727123 (overlay 0, level 1, k = 5, Guard(300)).
+% Printed rounded outwards, so that the same 0.518 serves the "never exceeds"
+% reading in Section~\ref{sec:experiments}; the stale 0.485/0.521 pair came from
+% an earlier run and is not reproducible from the released package.
 
 \begin{theorem}[Tightness of Theorem~\ref{thm:identity}]
 \label{thm:tight1}
@@ -176,7 +193,7 @@ $k-1$ jobs of service $L$ in the victim's own phase. Appendix~\ref{app:tight1}
 gives both in full, with the exact values they attain. Non-attainment follows
 from Lemma~\ref{lem:gap}.
 
-\begin{remark}[The two directions are not alike]
+\begin{remark}[The upward and downward extremes have different content]
 \label{rem:directions}
 Upward, the extremal value is a statement about delay: on the witnesses we have
 computed exactly, none of $\mathrm{In}_i$ is same-phase work and the victim's own
@@ -190,14 +207,19 @@ If $\mathrm{In}_i$ is redefined as the work of higher-ranked jobs actually
 \emph{executed} during $[a_i, s^P_i)$, Theorem~\ref{thm:identity} holds with the
 same constant and the same proof, the upward supremum is still $2(k-1)L$, and
 the best downward witness we have falls to $(k-1)L$. We keep the
-dispatch-sequence convention because $\mathrm{In}_i$ is the quantity a scheduler
-can meter: the guard charges completed work, which lower-bounds
-$\mathrm{In}_i$ but not its executed-work variant.
+dispatch-sequence convention for two reasons. Its constant is exactly determined
+in both directions, whereas the downward constant for the executed-work variant
+is open, somewhere in $((k-1)L, 2(k-1)L]$; and its two sides are symmetric.
+Completed work lower-bounds both currencies, so the guard is implementable
+either way: a job $j$ of rank above $i$ that completes while $i$ waits has
+$a_j \ge a_i$ and is dispatched at or after $a_i$, so all of $C_j$ is executed
+inside $[a_i, s^P_i)$ and is counted in full by the executed-work variant as
+well.
 \end{remark}
 
-\subsection{Necessity, and why positions are the wrong currency}
+\subsection{Necessity, and What a Count of Overtakes Costs}
 
-Theorem~\ref{thm:identity} also runs backwards. A policy that promises anything
+Theorem~\ref{thm:identity} has a converse. A policy that promises anything
 about individual jobs is forced to bound overtaken work.
 
 \begin{lemma}
@@ -212,9 +234,9 @@ Every job $j$ counted in $\mathrm{Out}_i$ has rank below $i$, so first-come
 first-served dispatches it before $i$ and $s^P_j \le s^{\mathrm{FCFS}}_j + G \le
 s^{\mathrm{FCFS}}_i + G$; it is also dispatched at or after $s^P_i$. All of them
 therefore start inside a window of length
-$\delta = G - \mathrm{excess}_P[i] \ge 0$. Of the jobs one server starts inside
+$w = G - \mathrm{excess}_P[i] \ge 0$. Of the jobs one server starts inside
 such a window, all but the last complete inside it, so their total service is at
-most $\delta$ and the last adds at most $L$.
+most $w$ and the last adds at most $L$.
 \end{proof}
 
 \begin{corollary}[A work budget is necessary]
@@ -235,32 +257,41 @@ per-job guarantee are the same requirement, up to an additive $O(kL)$ in the
 budget. Neither says that Algorithm~\ref{alg:guard} is the least restrictive
 rule with its guarantee, and we do not claim it.
 
-\begin{remark}[Counting overtakes is neither sufficient nor necessary]
+\begin{remark}[Counting overtakes is not necessary, and is sufficient only at
+the worst-case charge]
 \label{rem:counts}
 Bounded-overtaking mechanisms in the literature limit how many times a job may
-be passed~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Without a
-bound on service times one overtake makes the excess arbitrarily large: at
+be passed~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Inside the
+model of Section~\ref{sec:model}, where $0 < C_i \le L$, a count bound does give
+a per-job guarantee; it is not necessary for one, and it buys the guarantee at a
+factor $L/\bar{C}$. Both halves are below. The sufficiency uses the bound on
+service times, and without that bound a single
+overtake makes the excess arbitrarily large: at
 $t = 0$ let $k-1$ jobs of service $X$, then a job of service $\epsilon$, then one
 more job of service $X$ arrive together; first-come first-served starts the
 victim immediately, a policy that takes the last job instead fills every server,
-and the victim waits $X$ with an overtake count of $1$. Conversely a count bound
-is not necessary: with $k = 1$, $L = 2M$, a victim of service $L$ arriving first
+and the victim waits $X$ with an overtake count of $1$. That instance steps
+outside Section~\ref{sec:model}, which fixes $C_i \le L$; inside the model the
+same accounting is what makes a count bound work, with $L$ charged per pass.
+Necessity fails with no such caveat: with $k = 1$, $L = 2M$, a victim of service $L$ arriving first
 and $M$ jobs of service $1$ arriving with it, running the short jobs first gives
 every job an excess of at most $M = L/2$, using $\mathrm{In}_i = kG$ exactly at
 the guarantee $G = L/2$, while the overtake count $M$ exceeds any fixed limit.
-With services bounded by $L$ a count wrapper does give a guarantee, and how the
-count is charged decides which one. Charge it when an overtaker is
+How the count is charged decides which guarantee. Charge it when an overtaker is
 \emph{dispatched}, the reading a position counter in the prior art implements.
 Every overtaker of $i$ is dispatched at an instant at which no job fires, since a
 firing dispatch serves the queue head and the head is not an overtaker of $i$; so
-at most $N$ overtakers are dispatched while $i$ waits, $\mathrm{In}_i \le NL$, and
+at most $\kappa$ overtakers are dispatched while $i$ waits,
+$\mathrm{In}_i \le \kappa L$, and
 Corollary~\ref{cor:sufficient} gives
 \begin{equation}
-  W_P[i] \;\le\; W_{\mathrm{FCFS}}[i] + (N + 2k - 2)\,L/k ,
+  W_P[i] \;\le\; W_{\mathrm{FCFS}}[i] + (\kappa + 2k - 2)\,L/k ,
   \label{eq:skip}
 \end{equation}
 which is the accounting and the formula used wherever this baseline appears
-below. Inverting it, a promise $G$ admits $N = Gk/L - (2k-2)$ passes. Charging
+below. Inverting it, a promise $G$ admits
+$\kappa = \lfloor Gk/L \rfloor - (2k-2)$ passes, the largest integer with
+$(\kappa + 2k-2)L/k \le G$. Charging
 the count at completion instead leaves up to $k-1$ overtakers in service and the
 one being dispatched uncounted, which costs a further $L$ on the right and gives
 the baseline fewer passes at the same promise. Either accounting charges every
@@ -329,7 +360,7 @@ input and every job $i$,
 \begin{align}
   \mathrm{In}_i &\;<\; B_0 + \eta k W + kL ,
   \label{eq:guardinmult}\\
-  (1 - \eta)\,W &\;\le\; W_{\mathrm{FCFS}}[i] + B_0/k + (3 - 2/k)L ,
+  (1 - \eta)\,W &\;<\; W_{\mathrm{FCFS}}[i] + B_0/k + (3 - 2/k)L ,
   \label{eq:guardmult}
 \end{align}
 with \eqref{eq:guardinmult} asserted whenever $i$ has at least one overtaker.
@@ -341,7 +372,10 @@ $\mathrm{In}_i < \mathrm{budget}(i,t) + kL$ at the instant $t$ of $i$'s last
 overtaker, and $t \le s^P_i = a_i + W$ gives
 $\mathrm{budget}(i,t) \le B_0 + \eta k W$, which is \eqref{eq:guardinmult}.
 Theorem~\ref{thm:identity} with $\mathrm{Out}_i \ge 0$ then yields
-$kW - \eta k W \le k W_{\mathrm{FCFS}}[i] + B_0 + (3k-2)L$; divide by $k$.
+$kW - \eta k W < k W_{\mathrm{FCFS}}[i] + B_0 + (3k-2)L$; divide by $k$. Both
+inequalities are strict, by the same argument as Theorem~\ref{thm:guard}: when
+$i$ has an overtaker the strictness comes from \eqref{eq:guardin}, and when it
+has none $\mathrm{In}_i = 0$ and the excess is at most $(2-2/k)L < (3-2/k)L$.
 \end{proof}
 
 \begin{remark}[Why the multiplicative bound is claimed for one shape only]
@@ -351,11 +385,22 @@ $B_{0,i}$ fixed at $i$'s own arrival, and then bounds $W$ in terms of
 $B_{0,i}$. The queue-length shape of Section~\ref{sec:scheduling} sets
 $B_{0,q} = B_0 + \gamma n_q$ with $n_q$ the number of jobs waiting when $q$
 arrives, so $B_{0,i}$ varies from job to job. Stated with the common $B_0$ the
-multiplicative bound is then false, by a margin that grows with $\gamma$: take
-$k = 1$, $L = 1$, $B_0 = 0$ and $B_{\max} = \gamma$; a job that arrives behind a
-single waiting job has budget $\gamma$ and can be made to wait exactly $\gamma$
-longer than under first-come first-served, while the right-hand side of
-\eqref{eq:guardmult} is $2/(1-\eta)$ whatever $\gamma$ is. The same happens for
+multiplicative bound is then false, by a margin that grows with $\gamma$. Take
+$k = 1$, $B_0 = 0$, $B_{\max} = \gamma$, any $\eta \in [0,1)$, and the input: a
+job of service $L$ at $t = 0$, which is dispatched at once; a second job of
+service $L$ at $t = 1$, which waits with $n_q = 0$; the victim $i$, also of
+service $L$, at $t = 1$ and ranked after it, so that $i$ arrives behind a single
+waiting job, has $n_i = 1$ and hence budget $\gamma$; and $\gamma$ jobs of
+service $1$ at $t = 2L$, all ranked above $i$. First-come first-served runs the
+first two jobs on $[0,L]$ and $[L,2L]$ and starts $i$ at $2L$, so
+$W_{\mathrm{FCFS}}[i] = 2L-1$. Under the wrapper the second job is taken at
+$t = L$ as well, by the guard if $\eta = 0$ and by the base otherwise; at
+$t = 2L$ the victim has
+$\mathrm{over}[i] = 0 < \gamma$, so the guard does not fire and the base spends
+the whole budget on the stream, giving $W_P[i] = 2L - 1 + \gamma$ against a
+right-hand side of $(3L-1)/(1-\eta)$. The bound is violated for every
+$\gamma > (3L-1)/(1-\eta) - (2L-1)$, that is for $\gamma > L$ at $\eta = 0$, and
+the margin grows without bound in $\gamma$. The same happens for
 any per-job constant. For $\gamma > 0$ we therefore claim
 Theorem~\ref{thm:guard} and not Theorem~\ref{thm:guardmult}. The cap, and with
 it the promise, is unaffected either way.
@@ -393,15 +438,16 @@ attained. Equivalently, the additive constant $(3 - 2/k)L$ of
 Part (i) is a queue of $k$ jobs of service $L$, the victim, and a stream of unit
 jobs: the guard fires at $L + \lceil B/k \rceil$. For part (ii) the upper bound
 is Theorem~\ref{thm:guard}, strictly; the lower bound runs the cascade for $m$
-rounds and then injects a sequence timed so that $\mathrm{over}[i]$ stops one
-unit short of the budget twice in succession, letting the base policy fill every
-server a third time before the guard fires. Appendix~\ref{app:tight2} gives both
+rounds and then injects a sequence timed so that $\mathrm{over}[i]$ stays below
+the budget $B = f + L + 1$ at three successive dispatch epochs --- at $0$, at
+$f$, and at $f + L = B - 1$, the last of them by a single unit --- letting the
+base policy take every free server three times before the guard fires.
+Appendix~\ref{app:tight2} gives both
 constructions and the values they reach.
 
 Both sources of slack in Theorem~\ref{thm:guard}, the constant of
 Theorem~\ref{thm:identity} and the $kL$ of \eqref{eq:guardin}, are saturated
-on the same instance, which is what makes the composition tight rather than each
-part separately, and the excess is real waiting time rather than bookkeeping:
+on the same instance, and the excess is real waiting time rather than bookkeeping:
 every overtaker completes before the victim starts, so the same-phase share of
 $\mathrm{In}_i$ is zero and the executed-work convention of
 Remark~\ref{rem:directions} gives the same number. The additive constant
@@ -410,7 +456,7 @@ see this: a hill-climb over instances of at most \devnum{20} jobs suggests a fla
 value near \devnum{$1.75L$}, while the witness above needs \devnum{396} jobs at
 $k = 2$.
 
-\subsection{When the guard is invisible}
+\subsection{When the Wrapper Changes Nothing}
 
 \begin{proposition}[Consistency, one direction]
 \label{prop:consistency}
@@ -435,14 +481,34 @@ a base ordering by service time is unbounded in $L$.
 In the setting of Theorem~\ref{thm:identity} and Theorem~\ref{thm:guard}:
 \begin{enumerate}
 \item \emph{No global bound on service times is needed}, provided the prefix
-maximum $\Lambda(t) = \max\{C_j : a_j \le t\}$ is placed correctly. The upward
+maximum $\Lambda(t) = \max\{C_j : a_j \le t\}$ is placed correctly, and the
+right place is not the same for every statement. The upward
 direction of Theorem~\ref{thm:identity}, and hence
-Corollary~\ref{cor:sufficient} and \eqref{eq:guardadd}, hold with $L$ replaced
-by $\Lambda(a_i)$; the downward direction needs
+Corollary~\ref{cor:sufficient}, hold with $L$ replaced
+by $\Lambda(a_i)$, since every job counted in $R^P_i$, $R^{\mathrm{FCFS}}_i$ or
+$\rho^{\mathrm{FCFS}}_i$ has rank below $i$ and so arrived by $a_i$. The
+wrapper bounds \eqref{eq:guardin} and \eqref{eq:guardadd}, and likewise
+\eqref{eq:guardinmult} and \eqref{eq:guardmult}, need $\Lambda(s^P_i)$: the
+$kL$ term of \eqref{eq:guardin} charges the last overtaker and the at most
+$k-1$ overtakers still in service beside it, all of them jobs of rank above $i$,
+which arrive after $a_i$ and are only bounded by the prefix maximum at the
+instant $i$ starts. With $\Lambda(a_i)$ both are false, and by an unbounded
+margin: at $k = 1$ with budget $B = 2$, let $i$ and one job of service $1$
+arrive at $t = 0$ and a job of service $M$ at $t = 1$, with a base policy that
+takes the two others first. Then $\Lambda(a_i) = 1$ for every $M$, the guard
+never fires because $\mathrm{over}[i]$ stops at $1 < 2$, and
+$\mathrm{In}_i = M + 1$ against a claimed $B + k\Lambda(a_i) = 3$. Written out,
+the sharp forms are
+$\mathrm{In}_i < B_{\max} + k\,\Lambda(s^P_i)$ and
+$\mathrm{excess}_P[i] < B_{\max}/k + \Lambda(s^P_i)
+ + (2-2/k)\,\Lambda(a_i)$,
+and since $\Lambda(a_i) \le \Lambda(s^P_i)$ they give
+\eqref{eq:guardadd} with $\Lambda(s^P_i)$ throughout. The downward
+direction of Theorem~\ref{thm:identity} needs
 $\Lambda(\max(s^P_i, s^{\mathrm{FCFS}}_i))$ and Corollary~\ref{cor:necessary}
 needs $\Lambda(s^{\mathrm{FCFS}}_i + G)$, both being false with $\Lambda(a_i)$.
 \item \emph{Servers may have different speeds.} With speeds $v_1, \dots, v_k$
-and $V = \sum_m v_m$, Theorem~\ref{thm:identity} holds with $k$ replaced by $V$
+and $V = \sum_{\ell} v_{\ell}$, Theorem~\ref{thm:identity} holds with $k$ replaced by $V$
 on the left and the same $2(k-1)L$ on the right, and the guard satisfies
 $W_P[i] \le W_{\mathrm{FCFS}}[i] + B/V + (3k-2)L/V$: the budget is divided by
 total capacity, not by the server count.
@@ -452,10 +518,10 @@ currency above ($\mathrm{In}_i$, $\mathrm{Out}_i$, $\mathrm{over}[q](t)$ and
 $L$) is in executed work and no assumption on raw service demands is needed.
 Read in raw work the statements are false, a stopped job contributing more to
 $\mathrm{In}_i$ than is ever executed.
-\item \emph{Setup times survive.} If a setup of length $\sigma$ is paid before
+\item \emph{Setup times survive.} If a setup of length $\theta$ is paid before
 every service under both policies, absorb it into the job as
-$C'_j = C_j + \sigma$; the model is unchanged and every result holds with
-$L \mapsto L + \sigma$.
+$C'_j = C_j + \theta$; the model is unchanged and every result holds with
+$L \mapsto L + \theta$.
 \item \emph{Work conservation cannot be dropped.} If servers may idle while jobs
 wait, let $\Gamma^P_i$ be the server-idle time accumulated during
 $[a_i, s^P_i)$ while at least one job waited. Then \eqref{eq:busy} becomes
@@ -472,10 +538,11 @@ forced idle time, and ranking on release repairs it.
 
 \begin{proposition}[Impossibility]
 \label{prop:floor}
-Let $P$ be any non-preemptive work-conserving policy that observes a job's
-service time only at its completion. Then there are inputs on which some job has
-$\mathrm{excess}_P[i] \ge L$. In particular no wrapper with a positive budget
-can promise $G < L$, and at $k = 1$ the bound $B + L$ of
+Let $A$ be any base policy that observes a job's service time only at its
+completion, and run Algorithm~\ref{alg:guard} around it with any budget rule
+that is positive at the first dispatch epoch. Then there is an input on which
+some job has $\mathrm{excess} \ge L$. Consequently no such wrapper can promise
+$G < L$, and at $k = 1$ the bound $B + L$ of
 Theorem~\ref{thm:guard} is the exact supremum of the excess, approached and not
 attained.
 \end{proposition}
@@ -483,29 +550,55 @@ attained.
 \begin{proof}
 Into an empty system, at $t = 0$, let the victim $i$ of rank $0$ and $k$ further
 jobs arrive together, all of service $L$. First-come first-served starts $i$ at
-once. Work conservation permits $P$ to fill all $k$ servers with the
-higher-ranked jobs, and $P$ cannot be dissuaded from doing so, having observed no
-service time yet, so $i$ waits until the first completion and
-$\mathrm{excess}_P[i] = L$; any wrapper has $\mathrm{over}[i](0) = 0$ and does
-not fire at $t = 0$. At $k = 1$, \eqref{eq:guardin} gives
+once. Nothing has completed, so $\mathrm{over}[q](0) = 0$ for every waiting $q$
+and in particular $\mathrm{over}[i](0) = 0 < \mathrm{budget}(i,0)$ at each of
+the $k$ dispatches made there: the guard
+does not release $i$ at $t = 0$. The base policy is therefore free to fill all
+$k$ servers with the higher-ranked jobs --- work conservation permits it, and
+$A$ has observed no service time that would distinguish the $k+1$ jobs --- so
+$i$ waits until the first completion and $\mathrm{excess} = L$. (If instead the
+guard fires at $t = 0$ on some job other than $i$, that job has rank above $i$
+and the same $k$ dispatches follow.) At $k = 1$, \eqref{eq:guardin} gives
 $\mathrm{excess} < B + L$ strictly, and a family approaching it is in
 Appendix~\ref{app:floor}.
 \end{proof}
+
+Two remarks on the hypothesis, because the proposition is easy to state too
+widely and too narrowly. It cannot be dropped: as a claim about policies the
+statement is false, since first-come first-served is non-preemptive,
+work-conserving, reads no service time before completion, and has excess $0$ on
+every input, as does any rank-ordered policy. The force comes from the guard's
+not firing, which is a property of the budget rule and not of work conservation.
+It is also not necessary. A rule that is $0$ at the first dispatch epoch and
+positive later, such as the age-relative shape with $B_0 = 0$ and $\eta > 0$,
+falls to the same instance placed behind a saturating prefix: let $k$ jobs
+of service $L$ arrive at $t = 0$, the victim just after them, and $k$ further
+jobs just before $t = L$. The victim's wait up to $t = L$ is what first-come
+first-served gives it, its budget at $t = L$ is positive because it has aged,
+and the $k$ newcomers then take every server. The remaining case is degenerate:
+if the rule gives budget $0$ to a job whenever no completed work has overtaken
+it, then at every dispatch epoch the lowest-ranked waiting job $h$ has
+$\mathrm{over}[h] = 0$, so $h$ lies in $E(t)$ and is its minimum-rank member and
+is dispatched, and by induction the wrapper is first-come first-served itself.
+A wrapper of this family therefore either never overtakes anything, or admits an
+input with excess at least $L$.
 
 The guarantee also caps how much reordering can buy at all, and not only how much
 it may cost a single job.
 
 \begin{theorem}[Price of the guarantee]
 \label{thm:price}
-Take $m$ jobs of service $L$ and $n$ jobs of service $s < L$, the long ones
+Take $m$ jobs of service $L$ and $n$ jobs of service $\sigma < L$, the long ones
 ranked first, all arriving at $t = 0$, and let $P$ be any non-preemptive
 work-conserving policy with $\mathrm{excess}_P[j] \le G$ for every job. Then
 \[
   \frac{\overline{W}_{\mathrm{FCFS}} - \overline{W}_{P}}
        {\overline{W}_{\mathrm{FCFS}} - \overline{W}_{\mathrm{SJF}}}
-  \;\le\; \frac{kG + (3k-2)L}{n s} \;+\; \varepsilon ,
+  \;\le\; \frac{kG + (3k-2)L}{n \sigma} \;+\; \varepsilon ,
 \]
-with $\varepsilon = O\bigl((m+n)/(mn)\bigr) \to 0$ as $m, n$ grow.
+with $\varepsilon = O\bigl((m+n)/(mn)\bigr) \to 0$ as $m, n$ grow, the implied
+constant being
+$2(k-1)L\bigl(1 + (kG + (3k-2)L)/(n\sigma)\bigr)/(L-\sigma)$.
 \end{theorem}
 
 The proof is in Appendix~\ref{app:price}. The right-hand side is capacity times
@@ -513,11 +606,15 @@ guarantee, divided by the work that wants to overtake; it is linear in $G$ and
 saturates at $1$ when $kG$ reaches the total service of the impatient class.
 Because it applies to every policy with the guarantee and not only to
 Algorithm~\ref{alg:guard}, it describes the trade-off an operator faces rather
-than a weakness of this wrapper. At $k = 1$ the achievable fraction is exactly
-$\min(1, G/(ns))$.
+than a weakness of this wrapper. The additive $(3k-2)L$ in it is slack: it comes
+from applying Corollary~\ref{cor:necessary} to each long job separately, where
+the long jobs can be charged together, and at $k = 1$ the aggregate argument of
+Appendix~\ref{app:price} removes it. There the achievable fraction is known
+exactly: it is $\lfloor G/\sigma \rfloor / n$, capped at $1$
+(Proposition~\ref{prop:k1frac}).
 
 Every constant above is a multiple of $L$, and Proposition~\ref{prop:floor} says
 no mechanism of this kind can do better, so the guarantee is informative when $L$
-is small relative to the waits an operator cares about and empty when it is not.
+is small relative to the waits an operator cares about and says nothing when it is not.
 Section~\ref{sec:exp_cross} makes that boundary quantitative on six workloads,
-one of which falls outside it.
+four of which fall outside it.

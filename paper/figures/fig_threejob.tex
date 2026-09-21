@@ -22,20 +22,20 @@
   \node[jobbox,fill=black!25,minimum width=0.55cm,anchor=west] (c1) at (6.15,0.3) {$C$};
   \node[anchor=west] at (6.9,0.3) {mean wait 40.1 s};
 
-  % ---- row 2: shortest first
-  \node[lbl] at (-0.15,-1.5) {shortest first};
-  \draw[->,gray] (0,-1.95) -- (8.6,-1.95);
-  \node[jobbox,fill=black!25,minimum width=0.55cm,anchor=west] (b2) at (0,-1.5) {$B$};
-  \node[jobbox,fill=black!25,minimum width=0.55cm,anchor=west] (c2) at (0.55,-1.5) {$C$};
-  \node[jobbox,fill=black!8,minimum width=5.6cm,anchor=west] (a2) at (1.1,-1.5) {};
-  \node at (3.9,-1.5) {$A$: 60 s};
-  \draw[decorate,decoration={zigzag,segment length=3pt,amplitude=1.2pt}] (5.0,-1.8) -- (5.0,-1.2);
-  \node[anchor=west] at (6.9,-1.5) {mean wait 0.2 s};
+  % ---- row 2: shortest first  (vertical extent tightened, referee item G11)
+  \node[lbl] at (-0.15,-1.25) {shortest first};
+  \draw[->,gray] (0,-1.70) -- (8.6,-1.70);
+  \node[jobbox,fill=black!25,minimum width=0.55cm,anchor=west] (b2) at (0,-1.25) {$B$};
+  \node[jobbox,fill=black!25,minimum width=0.55cm,anchor=west] (c2) at (0.55,-1.25) {$C$};
+  \node[jobbox,fill=black!8,minimum width=5.6cm,anchor=west] (a2) at (1.1,-1.25) {};
+  \node at (3.9,-1.25) {$A$: 60 s};
+  \draw[decorate,decoration={zigzag,segment length=3pt,amplitude=1.2pt}] (5.0,-1.55) -- (5.0,-0.95);
+  \node[anchor=west] at (6.9,-1.25) {mean wait 0.2 s};
 
   % ---- waits
-  \draw[<->] (0,-0.55) -- node[below,inner sep=3pt] {$B$ waits 60.0 s} (5.6,-0.55);
-  \draw[<->] (0,-2.35) -- (1.1,-2.35);
-  \node[anchor=west,inner sep=2pt] at (1.25,-2.35) {$A$ waits 0.4 s};
+  \draw[<->] (0,-0.55) -- node[below,inner sep=2pt] {$B$ waits 60.0 s} (5.6,-0.55);
+  \draw[<->] (0,-2.02) -- (1.1,-2.02);
+  \node[anchor=west,inner sep=2pt] at (1.25,-2.02) {$A$ waits 0.4 s};
 \end{tikzpicture}
 \caption{The three-job example of Section~\ref{sec:intro} on one server: $A$ is
 stopped at the per-job limit $L = \devnum{60}$ s, $B$ and $C$ take

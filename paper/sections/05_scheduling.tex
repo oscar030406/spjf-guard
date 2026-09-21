@@ -43,8 +43,8 @@ what makes the estimand matter: treating a heavy job as light and putting it in 
 costs about an order of magnitude more than the reverse mistake, so a score fitted for
 symmetric accuracy optimises the wrong thing.
 
-Changing the score does not change the worst case. A job the score misjudges can still
-be passed indefinitely, and no choice of ranking function repairs that;
+No choice of ranking function bounds the worst case. A job the score misjudges can still
+be passed indefinitely, whatever the score is and however it was fitted;
 Section~\ref{sec:guard} is what bounds it.
 
 \subsection{The Overtake-Budget Guard}
@@ -67,13 +67,13 @@ is non-empty and otherwise serves whatever $A$ chooses (Figure~\ref{fig:guard}).
 Serving the minimum-rank member matters when budgets differ between jobs. It
 guarantees that whenever a job $j$ is dispatched ahead of a lower-ranked waiting job
 $i$, the job $i$ was not in $E(t)$, hence $\mathrm{over}[i](t) < \mathrm{budget}(i,t)$
-at that very instant, which is the step the per-job bound of Section~\ref{sec:theory}
-rests on. With a constant budget $\mathrm{budget}(q,t) \equiv B$ the quantity
+at that very instant. The per-job bound of Section~\ref{sec:theory} rests on that
+step. With a constant budget $\mathrm{budget}(q,t) \equiv B$ the quantity
 $\mathrm{over}[q](t)$ is non-increasing in rank, so $E(t)$ is non-empty exactly when
 the queue head belongs to it and the rule degenerates to a test on the head. Setting
 $B = 0$ recovers FCFS.
 
-\paragraph{One mechanism, one cap, and a free choice of shape.}
+\paragraph{The Cap Carries the Promise; the Shape Does Not.}
 The guarantee of Section~\ref{sec:theory} reads the budget only through an upper
 bound on it: if $0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job and
 every instant, then every job waits at most
@@ -99,8 +99,9 @@ $B_{\max}$ are measured in work and scale with $k$.
 Only the age-relative shape carries a second, multiplicative bound,
 $W \le (W_{\mathrm{FCFS}} + B_0/k + (3-2/k)L)/(1-\eta)$, and only when $\gamma = 0$:
 with $\gamma > 0$ the constant part of the budget differs from job to job, so the
-multiplicative form holds per job with that job's own constant rather than with a
-number the operator can state in advance (Remark~\ref{rem:mult_scope}). For
+multiplicative form holds per job with that job's own constant, and no single
+number is available for the operator to state in advance
+(Remark~\ref{rem:mult_scope}). For
 $\gamma > 0$ we claim the additive bound alone.
 
 \begin{algorithm}
@@ -136,15 +137,16 @@ $\gamma > 0$ we claim the additive bound alone.
 
 \paragraph{Parameters from a service promise.}
 The operator states $G$, the number of seconds by which any job may exceed its FCFS
-waiting time, and reads off $B_{\max} = k\bigl(G - (3 - 2/k)\,L\bigr)$,
-which is the inversion of the bound proved in Section~\ref{sec:theory}, and no data
-are needed for this step. The rule requires $G > (3 - 2/k)L$; below that threshold no
+waiting time, and reads off $B_{\max} = k\bigl(G - (3 - 2/k)\,L\bigr)$, the inversion
+of the bound proved in Section~\ref{sec:theory}. No data are needed for this step. The rule requires $G > (3 - 2/k)L$; below that threshold no
 positive budget is admissible, which is not an artefact of the wrapper but a floor of
 order $L$ that Section~\ref{sec:theory} shows to be unavoidable for any policy
 learning service times at completion. The promise $G$ follows from $B_{\max}$ alone.
 The shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of the base policy's
 benefit survives and which jobs pay for it, so we choose them on a validation trace
-that excludes the test period. The rule is fixed before the grids are run: three
+that excludes the test period; that pool is held out of the selection and not of the
+development process, and Section~\ref{sec:exp_prov} states what the selection therefore
+does and does not establish. The rule is fixed before the grids are run: three
 pre-stated grids, one per shape, \devnum{258} points in all; a point is feasible when
 its harm is at most $G/2$ in every one of the \devnum{15} validation cells; the
 objective is the deadline-window gap closed in the worst cell, with ties going to
@@ -172,28 +174,33 @@ enters the schedule. Each event costs $O(\log n)$.
 \paragraph{What is charged, and why no service time is needed at dispatch.}
 The budget is charged the true executed work of overtakers, and only when they
 complete. At the instant the guard decides, it has read $C_j$ only for jobs that have
-already finished, and a job still in service contributes nothing. This is what makes
+already finished, and a job still in service contributes nothing. That is what makes
 the wrapper implementable in a system that learns a job's cost at its completion, and
-it is also the reason the bound carries an additive term rather than an exact
+it is also why the bound carries an additive term in place of an exact
 accounting. When the last overtaker of $i$ is dispatched, up to $k-1$ further
 overtakers may be in service with their work not yet charged, and the overtaker being
 dispatched is not charged either, so the work that actually passes $i$ can exceed the
-budget by at most $kL$. Under the timeout at $L$, executed work means $\min(C_j, L)$,
-which is what the log records and what the guard charges, so no assumption on raw
+budget by at most $kL$. Under the timeout at $L$, executed work means $\min(C_j, L)$;
+the log records that quantity and the guard charges it, so no assumption on raw
 sizes enters.
 
 \paragraph{Why the budget is measured in work and not in positions.}
 Earlier bounded-overtaking mechanisms limit how many times a job may be passed, which
 is the currency of the finite-skip and Nudge-$K$
-rules~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Ten overtakers that
-each run for the full limit $L$ and ten that run for ten milliseconds carry the same
-count and delays that differ by three orders of magnitude, so a count limit bounds
-nothing unless a size bound is imposed as well, and with sizes bounded by $L$ it is
-loose by the ratio $L/\bar{C}$, one to two orders of magnitude on our traces.
-Remark~\ref{rem:counts} proves both directions and the one formula the count rule does
-yield, which Section~\ref{sec:experiments} runs as a baseline; the identity of
-Section~\ref{sec:theory} is what makes the choice forced rather than preferred, since
-the right-hand side it puts the excess equal to is measured in work.
+rules~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Counting is not
+necessary: a job can be passed any number of times and stay inside its promise, provided
+the work that passes it is small. Counting is sufficient in this model, but only through
+the worst-case charge of $L$ per overtake, since every overtaker is bounded by the time
+limit; a count of $\kappa$ therefore buys a promise of $(\kappa + 2k-2)L/k$
+(Remark~\ref{rem:counts}, \eqref{eq:skip}). That is the bound a count can give, and it
+is loose by the ratio $L/\bar{C}$, one to two orders of magnitude on our traces. Ten
+overtakers that each run for the full limit $L$ and ten that run for ten milliseconds
+carry the same count and delays that differ by three orders of magnitude, so the charge
+is paid on every dispatch whether or not the work is there.
+Section~\ref{sec:experiments} runs the count rule as a baseline and measures how much
+the looseness costs on a real load. That work is the currency the excess is actually
+written in is the content of the identity of Section~\ref{sec:theory}, not a claim of
+ours about what earlier mechanisms could not do.
 
 \subsection{Compared Policies}
 
@@ -218,7 +225,7 @@ SPJF-log & The same pipeline fitted on the log scale, and the other candidate sc
 Guard($G$) & SPJF-E wrapped in the overtake-budget guard at the promise $G$, with the budget shape the selection rule of Table~\ref{tab:setup} picks over all three grids together. This is the method \\
 Guard-fixed($G$), Guard-age($G$), Guard-queue($G$) & The same wrapper and the same promise, with the shape the rule picks inside the constant, age-relative and queue-length grid respectively. Ablation rows: they isolate what the shape is worth at a fixed cap, and one of them coincides with Guard($G$) at each promise \\
 Fixed($G$) & The same wrapper at the equal-promise budget $\mathrm{budget} \equiv B_{\max}$. It carries the promise $G$ but not the harm constraint, and the selection rule rejects it as infeasible; it is reported as the comparator that spends the whole cap \\
-Skip($G$) & Position-count guard, finite-skip family, counted at dispatch with $N = Gk/L - (2k-2)$ from \eqref{eq:skip}, the largest count that still promises $G$ under that accounting \\
+Skip($G$) & Position-count guard, finite-skip family, counted at dispatch with $\kappa = \lfloor Gk/L \rfloor - (2k-2)$ from \eqref{eq:skip}, the largest count that still promises $G$ under that accounting \\
 Corrupted scores & SPJF-E and Guard($G$) under a reversed order, a random order, and a score that calls the truly longest \devnum{1\%} the shortest; tests the guard where the base policy is worst \\
 Counterexamples & Retained traces from two audits and adversarial review; every job must satisfy the bounds of Section~\ref{sec:theory} \\
 \hline
@@ -226,5 +233,5 @@ Counterexamples & Retained traces from two audits and adversarial review; every 
 \end{table}
 
 Every simulation that includes the guard asserts the per-job bound of
-Section~\ref{sec:theory} for each job separately, inside the run rather than
-afterwards on summary statistics.
+Section~\ref{sec:theory} job by job inside the run
+(Section~\ref{sec:exp_bound}).

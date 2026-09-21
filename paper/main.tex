@@ -106,7 +106,7 @@ $^{2}$ \quad [Second author: department, institution, city and postcode, country
 
 \corres{Correspondence: [corresponding author e-mail]}
 
-\abstract{A shared execution service runs submitted jobs on a fixed pool of servers, without preemption, under a per-job time limit $L$. Reordering by predicted cost shortens most waits and can leave one job far behind. We prove a conservation law. For every non-preemptive work-conserving policy on $k$ servers, every arrival sequence and every job, the delay relative to first-come first-served equals the net overtaken work divided by $k$, to within $(2-2/k)L$, an exact supremum. Bounding overtaken work is therefore sufficient and necessary for a per-job guarantee; counting overtakes is neither. A wrapper on that budget bounds every job's wait against first-come first-served under arbitrary arrivals and predictions. The bound reads the budget only through a cap, so the shape below the cap is free; the additive constant $(3-2/k)L$ is likewise an exact supremum, and the operator sets the cap from a promise in seconds. The score underneath should estimate expected cost, not a log-scale point prediction. We evaluate on two judging platforms, a serverless trace, two continuous-integration pools whose recorded waits check the simulator, and a compute farm. The method needs a time limit comparable to the waits at issue and heavy-tailed costs; we include a workload failing~each.}
+\abstract{A shared execution service runs jobs on a fixed pool of servers, without preemption, under a per-job time limit $L$. Reordering by predicted cost shortens most waits and can leave one job far behind. We prove a pathwise identity: for any non-preemptive work-conserving $k$-server policy and input, a job's delay relative to first-come first-served equals its net overtaken work divided by $k$, to within $(2-2/k)L$, an exact supremum. Bounding overtaken work is therefore sufficient for a per-job guarantee, and necessary up to an additive $O(kL)$; a count of overtakes is not necessary, and suffices only by charging $L$ per pass. A wrapper enforcing that budget bounds every wait against first-come first-served under arbitrary arrivals and predictions. It reads the budget only through a cap, so the shape below is free; the additive constant $(3-2/k)L$ is likewise exact, and the cap follows from a promise in seconds. The score should estimate expected cost, not a log-scale point prediction. We evaluate on two judging platforms, a serverless trace, two continuous-integration pools that check the simulator, and a compute farm. The method needs a time limit comparable to the waits at issue and heavy-tailed costs; we report the workloads that fail~each.}
 
 \keyword{non-preemptive scheduling; scheduling with predictions; multiserver queues; bounded overtaking; per-job guarantee; first-come first-served; runtime prediction}
 
@@ -123,11 +123,33 @@ $^{2}$ \quad [Second author: department, institution, city and postcode, country
 \papersection{06_theory}{Theory}{sec:theory}
 \papersection{07_data}{Traces and Workload Characterisation}{sec:data}
 \papersection{08_experiments}{Experiments}{sec:experiments}
+% sections/09_limitations.tex ends with \section{Conclusions} (label sec:conclusions), so
+% the Conclusions section MDPI's structure expects is typeset from that file and needs no
+% \papersection call of its own.
 \papersection{09_limitations}{Limitations and Threats to Validity}{sec:limits}
 
 %=================================================================
 % Back matter. Anything only the authors can supply is marked
 % [to be completed by the authors] and is not invented.
+
+% The supplementary file is paper/supplementary.tex, built on its own with the same class
+% under the `supfile' article type and the same bibliography. Its S-items are listed here
+% in the order they appear there.
+\supplementary{The following supporting information can be downloaded at
+\linksupplementary{s1}. Section~S1, cost prediction: the visibility audit of the feature
+pipeline in full, and Table~S1, predictors on the four non-judging traces by feature
+group. Section~S2, traces: the field audit of the main judging trace with the
+release-statistics reconciliation and the two truncated archives, and the
+capacity-sharpness and circularity checks of the continuous-integration refit.
+Section~S3, experiments: Table~S2, the selected budget parameters at the three promises
+with the nine per-shape grid winners; Table~S3, the age-relative and queue-length
+ablation rows of Table~\ref{tab:guard}; Table~S4, the residual of
+Theorem~\ref{thm:identity} on all nine cells; Table~S5, the single-server
+configuration. Section~S4, the two deferred proofs that
+Appendices~\ref{app:strict} and~\ref{app:consistency} point to: Lemma~\ref{lem:gap}
+with its strictness, and Proposition~\ref{prop:consistency} with the two
+counterexamples to its converse.}
+
 \authorcontributions{[to be completed by the authors]. The template expects the
 CRediT roles (conceptualization, methodology, software, validation, formal
 analysis, investigation, data curation, writing---original draft preparation,
