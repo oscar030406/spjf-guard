@@ -15,16 +15,22 @@ from pathlib import Path
 import numpy as np
 
 DEVNUM = r"\devnum{%s}"
+DEVELOPMENT_MACRO = "devnum"
+SEALED_MACRO = "sealednum"
+"""The paper's two marks for a number: `\\devnum{}` says it came from development data,
+`\\sealednum{}` says it came from the sealed terms.  A table of sealed figures typeset
+with the development macro would say the opposite of what it is, and every check in this
+package reads the mark to decide which run a printed number belongs to."""
 
 
-def devnum(value, digits: int = 2, interval=None) -> str:
+def devnum(value, digits: int = 2, interval=None, macro: str = DEVELOPMENT_MACRO) -> str:
     """One number, optionally with its interval, wrapped for the paper's macro."""
     if value is None or (isinstance(value, float) and not np.isfinite(value)):
-        return r"\devnum{---}"
+        return f"\\{macro}{{---}}"
     body = f"{value:.{digits}f}"
     if interval is not None and all(np.isfinite(x) for x in interval):
         body += f" [{interval[0]:.{digits}f}, {interval[1]:.{digits}f}]"
-    return DEVNUM % body
+    return f"\\{macro}{{{body}}}"
 
 
 @dataclass(frozen=True)
@@ -59,7 +65,7 @@ def write_csv(rows: list[dict], path: Path) -> Path:
     return path
 
 
-def _body_rows(rows, columns, group_field, group_label, policy_field):
+def _body_rows(rows, columns, group_field, group_label, policy_field, macro):
     out = []
     for group in sorted({r[group_field] for r in rows}):
         block = [r for r in rows if r[group_field] == group]
@@ -75,7 +81,7 @@ def _body_rows(rows, columns, group_field, group_label, policy_field):
                         row.get(column.interval_fields[1], float("nan")),
                     )
                 )
-                cells.append(devnum(row.get(column.field), column.digits, interval))
+                cells.append(devnum(row.get(column.field), column.digits, interval, macro))
             out.append(f" & {row[policy_field]:<22s} & " + " & ".join(cells) + r" \\")
         out.append(r"\midrule")
     if out and out[-1] == r"\midrule":
@@ -90,17 +96,20 @@ def latex_table(
     columns=MAIN_COLUMNS,
     group_field: str = "level",
     policy_field: str = "policy",
+    macro: str = DEVELOPMENT_MACRO,
 ) -> str:
-    """A table body whose numbers are all wrapped in `\\devnum{}`.
+    """A table body whose numbers are all wrapped in one of the paper's two marks.
 
-    `paper/sections/08_experiments.tex` defines `\\devnum` and consumes rows of exactly
-    this shape; the file is written to outputs/ and copied in by hand.
+    `paper/main.tex` defines `\\devnum` and consumes rows of exactly this shape; the file
+    is written to outputs/ and copied in by hand.  A run over the sealed terms passes
+    `macro="sealednum"`, so that its table cannot be read as development data -- and the
+    paper has to define that macro before the table is copied in.
     """
 
     def group_label(row):
         return (
-            rf"$\rho = \devnum{{{row['rho_target']:g}}}$, "
-            rf"$k = \devnum{{{row['k']:g}}}$"
+            rf"$\rho = \{macro}{{{row['rho_target']:g}}}$, "
+            rf"$k = \{macro}{{{row['k']:g}}}$"
         )
 
     spec = "ll" + "".join(c.align for c in columns)
@@ -116,7 +125,7 @@ def latex_table(
         r"\toprule",
         head + r" \\",
         r"\midrule",
-        *_body_rows(rows, columns, group_field, group_label, policy_field),
+        *_body_rows(rows, columns, group_field, group_label, policy_field, macro),
         r"\bottomrule",
         r"\end{tabular}",
         r"\end{table}",
@@ -131,9 +140,10 @@ def write_latex(
     label: str,
     columns=MAIN_COLUMNS,
     source_note: str = "",
+    macro: str = DEVELOPMENT_MACRO,
 ) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
-    text = latex_table(rows, caption, label, columns)
+    text = latex_table(rows, caption, label, columns, macro=macro)
     if source_note:
         text += "% Source: " + source_note + "\n"
     path.write_text(text, encoding="utf-8")

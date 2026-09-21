@@ -39,7 +39,13 @@ from spjf_guard.experiment import (  # noqa: E402
 )
 from spjf_guard.experiment import bootstrap as bs  # noqa: E402
 from spjf_guard.experiment.metrics import gap_closed, reduction_percent, summarise  # noqa: E402
-from spjf_guard.experiment.report import MAIN_COLUMNS, write_csv, write_latex  # noqa: E402
+from spjf_guard.experiment.report import (  # noqa: E402
+    DEVELOPMENT_MACRO,
+    MAIN_COLUMNS,
+    SEALED_MACRO,
+    write_csv,
+    write_latex,
+)
 from spjf_guard.experiment.reproduce import load_overlay  # noqa: E402
 from spjf_guard.sim import simulate  # noqa: E402
 from spjf_guard.sim.policy import fcfs  # noqa: E402
@@ -58,8 +64,13 @@ MEAN_FIELDS = (
     "reduction_pct",
     "k",
     "fired_fraction_queue_weighted",
+    "rho_realised",
 )
 WORST_FIELDS = ("max_excess_s", "harm_s", "max_heavy_s")
+SEALED_SCORES_NAME = "sealed_scores.parquet"
+"""What the sealed run's own ranking scores are called, as `docs/sealed_run_procedure.md`
+names them in stage 3.  The plan prints that file rather than the development scores,
+which belong to another pool and are what this run must not be given."""
 
 
 def read_selection(path: Path) -> dict:
@@ -298,7 +309,14 @@ def level_utilisation(cfg, level: int, servers: int, work_s: float, n_levels: in
     return round(work_s / (3600.0 * servers), 2)
 
 
-def cell_rows(cfg, results, overlay, level, servers, rho_target):
+def cell_rows(cfg, results, overlay, level, servers, rho_target, work_s):
+    """One row per policy on this cell, carrying both utilisations.
+
+    `rho_target` is the load the cell was built for and the label the paper prints;
+    `rho_realised` is what the busy hour of this overlay actually reached at this k.  They
+    differ by the rounding in the integer server count, and only the second one says how
+    loaded the system a number came from really was.
+    """
     base = results[REFERENCE]["summary"].p99_dl_s
     target = results[TARGET]["summary"].p99_dl_s
     rows = []
@@ -310,6 +328,7 @@ def cell_rows(cfg, results, overlay, level, servers, rho_target):
                 "level": level,
                 "k": servers,
                 "rho_target": rho_target,
+                "rho_realised": round(work_s / (3600.0 * servers), 6),
                 **stats.as_row(),
                 "fired_pct": 100.0 * stats.fired_fraction_queue_weighted,
                 "gap_closed": gap_closed(stats.p99_dl_s, base, target),
@@ -444,7 +463,16 @@ def aggregate(rows, intervals):
     return out
 
 
-def check_sealed_tables(cfg, pool: str, written: list) -> None:
+def sealed_table_key(prefix: str | None) -> str:
+    """Which pinned list a sealed run is checked against.
+
+    The multi-server run and the single-server run write the same file names into two
+    directories, so they carry one list each: merging them would make both fail.
+    """
+    return "sealed_k1_tables" if (prefix or "").endswith("k1") else "sealed_tables"
+
+
+def check_sealed_tables(cfg, pool: str, prefix: str | None, written: list) -> None:
     """The sealed run writes the list the lock pins, one file more or fewer is an error.
 
     The dry run prints that list and the frozen lock carries it, so a run that quietly
@@ -453,47 +481,55 @@ def check_sealed_tables(cfg, pool: str, written: list) -> None:
     """
     if pool != "sealed":
         return
-    promised = set(cfg["run"]["sealed_tables"])
-    actual = {Path(p).name for p in written} | {provenance.MANIFEST_NAME}
-    if promised != actual:
-        raise SystemExit(
-            f"the sealed run wrote {sorted(actual)} but the protocol lock pins "
-            f"{sorted(promised)}; the two have to be the same list"
-        )
+    complaint = provenance.pinned_outputs_complaint(
+        cfg["run"][sealed_table_key(prefix)], written
+    )
+    if complaint:
+        raise SystemExit(complaint)
 
 
 def sealed_plan(cfg, args) -> int:
     """Print every stage of the sealed run, what each would read, and the lock state.
 
-    Four stages, in order, each needing `--unseal` of its own: the event cache, the
-    overlays, the ranking scores, and this run.  Nothing here opens a file.
+    Seven stages, in order, each needing `--unseal` of its own: the event cache, the
+    overlays, the ranking scores, this run, the single-server trace and its run, and the
+    predictor metrics.  Nothing here opens a file.
     """
     from spjf_guard.data.cache import files_for
 
     terms = list(cfg["overlay"]["pools"]["sealed"])
     cache = Path(cfg["data"]["cache_dir"])
     raw = Path(cfg["data"].get("raw_parquet_dir", ROOT / "data" / "codebench" / "parquet"))
+    events = [cache / cfg["data"]["events_file"], cache / cfg["data"]["sealed_events_file"]]
+    scores = [args.score_parquet or cfg.data_path("score_dir", SEALED_SCORES_NAME)]
     stages = [
         ("1 event cache  scripts/build_cache.py --pool sealed", files_for(raw, terms)),
-        (
-            "2 overlays     scripts/build_overlays.py --pool sealed",
-            [cache / cfg["data"]["events_file"]],
-        ),
-        (
-            "3 scores       scripts/fit_scores.py --pool sealed",
-            [cache / cfg["data"]["events_file"]],
-        ),
+        ("2 overlays     scripts/build_overlays.py --pool sealed --no-scores", events),
+        ("3 scores       scripts/fit_scores.py --pool sealed", events),
         (
             "4 main run     scripts/run_main.py --pool sealed",
             [args.overlay_dir / f"sealed_rep{o}.npz" for o in cfg["overlay"]["overlays"]]
-            + ([args.score_parquet] if args.score_parquet else []),
+            + scores,
         ),
+        (
+            "5 k = 1 trace  scripts/build_overlays.py --pool sealed --single-server",
+            events,
+        ),
+        (
+            "6 k = 1 run    scripts/run_main.py --pool sealed --prefix sealed_k1",
+            [args.overlay_dir / "sealed_k1_rep0.npz"] + scores,
+        ),
+        ("7 predictor    scripts/eval_scores.py --pool sealed", events + scores),
     ]
     decision = sealed.decide(ROOT, unseal=True)
     print("sealed run plan (nothing is opened by this command)")
     lock_state = f"frozen at {decision.lock_path}" if decision.lock_path else "NOT FROZEN"
     verdict = "would proceed" if decision.permitted else f"REFUSED: {decision.reason}"
     print(f"  terms          {terms}")
+    print(
+        f"  caches         {cfg['data']['events_file']} (development, training rows) + "
+        f"{cfg['data']['sealed_events_file']} (written by stage 1, read with it)"
+    )
     print(
         f"  overlays       {list(cfg['overlay']['overlays'])} x "
         f"{len(cfg['overlay']['target_busy_hour_utilisation'])} load levels"
@@ -506,15 +542,21 @@ def sealed_plan(cfg, args) -> int:
     print(f"  policies       {names}")
     print(f"  promise -> B0  {cfg['scheduling']['selected']}")
     print(f"  tables         {list(cfg['run']['sealed_tables'])}")
+    print(f"  k = 1 tables   {list(cfg['run']['sealed_k1_tables'])}")
+    print(f"  predictor      {list(cfg['run']['sealed_predictor_tables'])}")
+    print(
+        f"  k = 1 copies   {cfg['overlay']['single_server']['copies']} reused from pool "
+        f"{cfg['overlay']['single_server']['pool']}; the utilisation reached is reported"
+    )
     print("  would read, stage by stage (each stage needs --unseal and writes its own")
     print("  ledger row):")
     for label, files in stages:
         print(f"    [{label}]")
         for path in files[:4]:
-            print(f"      {path}")
+            print(f"      {provenance.relative_path(path)}")
         if len(files) > 4:
             print(f"      ... {len(files) - 4} more of the same shape")
-    print(f"  ledger         {ROOT / sealed.LOG_RELATIVE_PATH}")
+    print(f"  ledger         {provenance.relative_path(ROOT / sealed.LOG_RELATIVE_PATH)}")
     print(f"  protocol lock  {lock_state}")
     print(f"  verdict        {verdict}")
     return 0
@@ -543,9 +585,8 @@ def sweep_cells(cfg, args, selection, scratch):
             with np.load(path) as store:
                 labels["week"] = store["wk"].astype(np.int64)
                 n_weeks = len(store["weeks"])
-                rho_target = level_utilisation(
-                    cfg, level, servers, float(store["W"]), len(store["K"])
-                )
+                work_s = float(store["W"])
+                rho_target = level_utilisation(cfg, level, servers, work_s, len(store["K"]))
                 if external:
                     trace = attach_scores(trace, external, store["job_row"])
             if not args.no_adversarial:
@@ -573,7 +614,7 @@ def sweep_cells(cfg, args, selection, scratch):
                 include_log,
                 residuals=(overlay == first_overlay),
             )
-            rows += cell_rows(cfg, results, overlay, level, servers, rho_target)
+            rows += cell_rows(cfg, results, overlay, level, servers, rho_target, work_s)
             extras["bounds"] += [
                 {
                     "overlay": overlay,
@@ -617,6 +658,114 @@ def sweep_cells(cfg, args, selection, scratch):
     return rows, replicate_cells, multiplicities, extras
 
 
+def table_macro(pool: str) -> str:
+    """Which of the paper's two marks this run's printed numbers are wrapped in.
+
+    A sealed table typeset with `\\devnum{}` would say it came from development data, and
+    every check in the package reads the mark to decide which run a number belongs to.
+    """
+    return SEALED_MACRO if pool == "sealed" else DEVELOPMENT_MACRO
+
+
+def write_tables(args, out_dir: Path, rows, table, differences, extras) -> list[Path]:
+    """Every file the run writes, in the order the pinned list names them."""
+    written = [
+        write_csv(rows, out_dir / "main_cells.csv"),
+        write_csv(table, out_dir / "main_table.csv"),
+        write_latex(
+            table,
+            out_dir / "main_table.tex",
+            caption="Policies at three loads, five overlays. Waits in seconds; "
+            "intervals are paired week-block bootstrap.",
+            label="tab:main",
+            columns=MAIN_COLUMNS,
+            source_note="outputs/.../main_table.csv, regenerated by "
+            "scripts/run_main.py; see GENERATED.md",
+            macro=table_macro(args.pool),
+        ),
+    ]
+    for name, data in (
+        ("paired_differences.csv", differences),
+        ("bound_checks.csv", extras["bounds"]),
+        ("identity_residuals.csv", extras["residuals"]),
+        ("policy_parameters.csv", extras["parameters"]),
+    ):
+        if data:
+            written.append(write_csv(data, out_dir / name))
+    return written
+
+
+def produce(cfg, args, selection, out_dir: Path, terms, lock, outcome) -> int:
+    """Sweep the cells, write the tables and the manifest, then check the pinned list.
+
+    The check comes last on purpose.  It is the one step here that can fail after sealed
+    rows have been read, and it used to run before the manifest and the ledger row were
+    written, so a run that produced a slightly different set of files left no record of
+    what it had produced -- the state the ledger exists to make impossible.
+    """
+    scratch = args.scratch or Path(tempfile.mkdtemp(prefix="spjf_main_"))
+    outcome.at("逐格仿真")
+    rows, replicate_cells, multiplicities, extras = sweep_cells(cfg, args, selection, scratch)
+    if args.scratch is None:
+        shutil.rmtree(scratch, ignore_errors=True)
+
+    outcome.at("汇总与配对自助区间")
+    policies = list(dict.fromkeys(r["policy"] for r in rows))
+    levels = sorted({r["level"] for r in rows})
+    intervals = (
+        paired_intervals(replicate_cells, policies, levels)
+        if multiplicities is not None
+        else {}
+    )
+    table = aggregate(rows, intervals)
+    differences = (
+        paired_differences(replicate_cells, difference_pairs(cfg, policies), levels)
+        if multiplicities is not None
+        else []
+    )
+    written = write_tables(args, out_dir, rows, table, differences, extras)
+    provenance.write(
+        out_dir,
+        produced_by="scripts/run_main.py",
+        config_path=args.config,
+        outputs=written,
+        inputs=[
+            args.overlay_dir / f"{args.prefix or args.pool}_rep{o}.npz"
+            for o in (int(x) for x in args.reps.split(","))
+        ]
+        + ([args.score_parquet] if args.score_parquet else []),
+        arguments={
+            "pool": args.pool,
+            "prefix": args.prefix,
+            "reps": args.reps,
+            "levels": args.levels,
+            "score_array": args.score_array,
+            "score_parquet": (
+                provenance.relative_path(args.score_parquet) if args.score_parquet else None
+            ),
+            "selection": (provenance.relative_path(args.selection) if args.selection else None),
+            "bootstrap": not args.no_bootstrap,
+            "unseal": args.unseal,
+        },
+        notes={
+            "protocol_lock": lock or "not frozen (development run)",
+            "terms": terms,
+            "policies": policies,
+            "resamples": int(cfg["bootstrap"]["resamples"])
+            if multiplicities is not None
+            else 0,
+        },
+    )
+    outcome.done(
+        f"{len(rows)} 个策略—格的汇总写到 {provenance.relative_path(out_dir)}"
+        f"（{len(policies)} 条策略 × {len(levels)} 档负载 × "
+        f"{len(args.reps.split(','))} 条叠加）"
+    )
+    print(f"\nwrote {', '.join(str(p) for p in written)} and {out_dir / 'manifest.json'}")
+    check_sealed_tables(cfg, args.pool, args.prefix, written)
+    return 0
+
+
 def fill_in_paths(cfg, args) -> None:
     """Where the package keeps its own two products, when the run did not say.
 
@@ -629,7 +778,9 @@ def fill_in_paths(cfg, args) -> None:
     if args.overlay_dir is not None:
         return
     args.overlay_dir = cfg.data_path("overlay_dir")
-    if args.score_parquet is None:
+    if args.score_parquet is None and args.pool != "sealed":
+        # The sealed pool gets no default: those scores were fitted on another pool, and
+        # a sealed run that silently used them would report the wrong ranking.
         default_scores = cfg.data_path("score_dir", "forward_scores.parquet")
         if default_scores.is_file():
             args.score_parquet = default_scores
@@ -674,10 +825,14 @@ def main() -> int:
 
     cfg = cfgmod.load(args.config)
     if args.dry_run_sealed:
-        args.overlay_dir = args.overlay_dir or Path("<overlay dir>")
+        # The plan is checked against the disk by the person reading it, so it prints the
+        # paths the sealed run would really use.  It used to print the literal
+        # `<overlay dir>`, which no one can compare with anything.  The score file is left
+        # as it was given: the plan is about the sealed pool whatever `--pool` says, and
+        # the development default would name the wrong pool's scores.
+        args.overlay_dir = args.overlay_dir or cfg.data_path("overlay_dir")
         return sealed_plan(cfg, args)
     fill_in_paths(cfg, args)
-
     terms = list(cfg["overlay"]["pools"].get(args.pool, cfg["overlay"]["pools"]["primary"]))
     if args.unseal:
         decision = sealed.decide(ROOT, unseal=True)
@@ -688,6 +843,14 @@ def main() -> int:
                 "protocol_lock.json). No file was opened."
             )
     sealed.guard_semesters(terms, ROOT, unseal=args.unseal)
+    if args.pool == "sealed" and args.score_parquet is None:
+        raise SystemExit(
+            "--pool sealed needs --score-parquet: its overlays are built with no stored "
+            "scores, and the development scores belong to another pool, so the run would "
+            "quietly report the policies that need no ranking. Give it the file "
+            f"scripts/fit_scores.py --pool sealed wrote ({SEALED_SCORES_NAME} in "
+            "docs/sealed_run_procedure.md)."
+        )
     lock = sealed.lock_fingerprint(ROOT)
     print(
         f"pool {args.pool} {terms}; protocol lock "
@@ -714,101 +877,8 @@ def main() -> int:
         )
 
     out_dir = args.out_dir or (ROOT / cfg["run"]["output_dir"])
-    scratch = args.scratch or Path(tempfile.mkdtemp(prefix="spjf_main_"))
-    rows, replicate_cells, multiplicities, extras = sweep_cells(cfg, args, selection, scratch)
-    if args.scratch is None:
-        shutil.rmtree(scratch, ignore_errors=True)
-
-    policies = list(dict.fromkeys(r["policy"] for r in rows))
-    levels = sorted({r["level"] for r in rows})
-    intervals = (
-        paired_intervals(replicate_cells, policies, levels)
-        if multiplicities is not None
-        else {}
-    )
-    table = aggregate(rows, intervals)
-    differences = (
-        paired_differences(replicate_cells, difference_pairs(cfg, policies), levels)
-        if multiplicities is not None
-        else []
-    )
-    write_csv(rows, out_dir / "main_cells.csv")
-    write_csv(table, out_dir / "main_table.csv")
-    write_latex(
-        table,
-        out_dir / "main_table.tex",
-        caption="Policies at three loads, five overlays. Waits in seconds; "
-        "intervals are paired week-block bootstrap.",
-        label="tab:main",
-        columns=MAIN_COLUMNS,
-        source_note="outputs/.../main_table.csv, regenerated by "
-        "scripts/run_main.py; see GENERATED.md",
-    )
-    for name, data in (
-        ("paired_differences.csv", differences),
-        ("bound_checks.csv", extras["bounds"]),
-        ("identity_residuals.csv", extras["residuals"]),
-        ("policy_parameters.csv", extras["parameters"]),
-    ):
-        if data:
-            write_csv(data, out_dir / name)
-    written = [
-        out_dir / n
-        for n in ("main_cells.csv", "main_table.csv", "main_table.tex")
-        + tuple(
-            name
-            for name, data in (
-                ("paired_differences.csv", differences),
-                ("bound_checks.csv", extras["bounds"]),
-                ("identity_residuals.csv", extras["residuals"]),
-                ("policy_parameters.csv", extras["parameters"]),
-            )
-            if data
-        )
-    ]
-    check_sealed_tables(cfg, args.pool, written)
-    provenance.write(
-        out_dir,
-        produced_by="scripts/run_main.py",
-        config_path=args.config,
-        outputs=written,
-        inputs=[
-            args.overlay_dir / f"{args.prefix or args.pool}_rep{o}.npz"
-            for o in (int(x) for x in args.reps.split(","))
-        ]
-        + ([args.score_parquet] if args.score_parquet else []),
-        arguments={
-            "pool": args.pool,
-            "prefix": args.prefix,
-            "reps": args.reps,
-            "levels": args.levels,
-            "score_array": args.score_array,
-            "score_parquet": (
-                provenance.relative_path(args.score_parquet) if args.score_parquet else None
-            ),
-            "selection": (provenance.relative_path(args.selection) if args.selection else None),
-            "bootstrap": not args.no_bootstrap,
-            "unseal": args.unseal,
-        },
-        notes={
-            "protocol_lock": lock or "not frozen (development run)",
-            "terms": terms,
-            "policies": policies,
-            "resamples": int(cfg["bootstrap"]["resamples"])
-            if multiplicities is not None
-            else 0,
-        },
-    )
-    sealed.record_run(
-        ROOT,
-        "scripts/run_main.py",
-        terms,
-        f"{len(rows)} 个策略—格的汇总写到 {out_dir}（{len(policies)} 条策略 × "
-        f"{len(levels)} 档负载 × {len(args.reps.split(','))} 条叠加）",
-        unseal=args.unseal,
-    )
-    print(f"\nwrote {', '.join(str(p) for p in written)} and {out_dir / 'manifest.json'}")
-    return 0
+    with sealed.recording(ROOT, "scripts/run_main.py", terms, args.unseal) as outcome:
+        return produce(cfg, args, selection, out_dir, terms, lock, outcome)
 
 
 if __name__ == "__main__":

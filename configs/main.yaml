@@ -25,6 +25,10 @@ data:
   raw_parquet_dir: data/codebench/parquet
   cache_dir: data/derived/codebench_cache_r4
   events_file: ev.parquet
+  # The sealed terms' own cache, written by scripts/build_cache.py --pool sealed.  A file
+  # of its own, never a rewrite of events_file: the development cache is the training
+  # half of every forward fit, and the sealed run reads the two together.
+  sealed_events_file: ev_sealed.parquet
   features_file: feat_ires0.parquet
   forward_predictions_file: forward_ires0.parquet
   score_predictions_file: data/derived/ranking_score_predictions/rs_pred_ires0.parquet
@@ -180,9 +184,13 @@ overlay:
     sealed: ["2023-1", "2023-2", "2024-1"]
   # The single-server trace, where the identity of Theorem 1 is exact.  It has its own
   # selection: copies are added until the busiest hour at one server sits in the window,
-  # closest to the target.  The pool it draws from is `primary`.
+  # closest to the target.  The pool it draws from is `primary`, and `--pool` overrides
+  # it; `copies` is what that selection came to and is what another pool reuses, because
+  # re-running the selection on the sealed pool would choose a design value on sealed
+  # data.  The utilisation it then reaches is reported as it comes.  See ADR 0006.
   single_server:
     pool: primary
+    copies: 321                            # selected on `primary`, busy hour 0.8000
     seed_offset: 50                        # drawn with seed*100 + 50 + 0, as v3.1 did
     target_utilisation: 0.80
     utilisation_window: [0.78, 0.82]
@@ -208,7 +216,8 @@ run:
   output_dir: outputs
   segment_tree_window_ranks: 4194304
   # Exactly what the sealed run emits.  Pinned so that the set of tables cannot grow
-  # after the sealed terms are opened.
+  # after the sealed terms are opened.  One list per command, never merged: each is
+  # compared with the files that command wrote, and a merged list would fail every time.
   sealed_tables:
     - main_cells.csv
     - main_table.csv
@@ -217,4 +226,18 @@ run:
     - bound_checks.csv
     - identity_residuals.csv
     - policy_parameters.csv
+    - manifest.json
+  # The single-server run of the sealed pool, written under its own sub-directory.
+  sealed_k1_tables:
+    - main_cells.csv
+    - main_table.csv
+    - main_table.tex
+    - paired_differences.csv
+    - bound_checks.csv
+    - identity_residuals.csv
+    - policy_parameters.csv
+    - manifest.json
+  # The sealed terms' predictor metrics, from scripts/eval_scores.py.
+  sealed_predictor_tables:
+    - predictor_metrics.csv
     - manifest.json

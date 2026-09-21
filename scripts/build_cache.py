@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from spjf_guard import config as cfgmod  # noqa: E402
 from spjf_guard.data import sealed  # noqa: E402
 from spjf_guard.data.cache import build_events, compare_frames, write_events  # noqa: E402
+from spjf_guard.experiment import provenance  # noqa: E402
 
 
 def pool_terms(cfg, pool: str) -> list[str]:
@@ -43,21 +44,54 @@ def pool_terms(cfg, pool: str) -> list[str]:
     raise SystemExit(f"no pool {pool!r}: use development, sealed, or one of {sorted(pools)}")
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--config", type=Path, default=ROOT / "configs" / "main.yaml")
-    ap.add_argument("--raw-dir", type=Path, default=ROOT / "data" / "codebench" / "parquet")
-    ap.add_argument("--pool", default="development")
-    ap.add_argument("--out", type=Path, default=None)
-    ap.add_argument("--compare", type=Path, default=None)
-    ap.add_argument("--report", type=Path, default=None)
-    ap.add_argument("--unseal", action="store_true")
-    args = ap.parse_args()
+def cache_file_for(cfg, pool: str) -> str:
+    """Which file this pool's cache is written to.
 
-    cfg = cfgmod.load(args.config)
-    terms = pool_terms(cfg, args.pool)
-    sealed.guard_semesters(terms, ROOT, unseal=args.unseal)
+    The sealed pool writes its own, because the development cache is the training half of
+    every forward fit: a sealed build that overwrote it would leave the sealed run with
+    no training rows, and the failure would surface far from its cause -- an empty slice
+    in the heavy threshold, not a missing file.
+    """
+    if pool != "sealed":
+        return cfg["data"]["events_file"]
+    name = cfg["data"]["sealed_events_file"]
+    if name == cfg["data"]["events_file"]:
+        raise SystemExit(
+            "data.sealed_events_file is the development cache; give the sealed terms "
+            "their own file or the development cache is lost"
+        )
+    return name
+
+
+def compare(frame, args, terms) -> int:
+    """Column by column against an existing cache; writes no cache of its own."""
+    import pandas as pd
+
+    theirs = pd.read_parquet(args.compare)
+    rows = compare_frames(frame, theirs, terms)
+    bad = [r for r in rows if r["status"] != "equal"]
+    for row in rows:
+        print(f"  {row['column']:24s} {row['status']}")
+    if args.report is not None:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        with open(args.report, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=list(rows[0]))
+            writer.writeheader()
+            writer.writerows(rows)
+        print(f"wrote {args.report}")
+    print(f"{len(rows) - len(bad)} of {len(rows)} columns equal")
+    return 1 if bad else 0
+
+
+def build(cfg, args, terms: list[str], outcome) -> int:
+    """Read the terms and write the cache, telling the ledger what came out.
+
+    `outcome` carries the text of the ledger row.  It is set as late as it can be and as
+    early as it must be: the row is written whatever happens here, so a build that dies
+    half way still leaves the reading on the record.
+    """
     started = time.time()
+    outcome.at("读取每学期 parquet")
     frame, report = build_events(
         args.raw_dir,
         terms,
@@ -72,34 +106,31 @@ def main() -> int:
         flush=True,
     )
     if args.compare is not None:
-        import pandas as pd
-
-        theirs = pd.read_parquet(args.compare)
-        rows = compare_frames(frame, theirs, terms)
-        bad = [r for r in rows if r["status"] != "equal"]
-        for row in rows:
-            print(f"  {row['column']:24s} {row['status']}")
-        if args.report is not None:
-            args.report.parent.mkdir(parents=True, exist_ok=True)
-            with open(args.report, "w", newline="", encoding="utf-8") as fh:
-                writer = csv.DictWriter(fh, fieldnames=list(rows[0]))
-                writer.writeheader()
-                writer.writerows(rows)
-            print(f"wrote {args.report}")
-        print(f"{len(rows) - len(bad)} of {len(rows)} columns equal")
-        return 1 if bad else 0
-
+        outcome.done(f"{report['rows']:,} 行事件表只用于逐列比较，未写入缓存")
+        return compare(frame, args, terms)
     out = args.out or cfg.data_path("cache_dir")
-    path = write_events(frame, out, cfg["data"]["events_file"])
+    path = write_events(frame, out, cache_file_for(cfg, args.pool))
     print(f"wrote {path}")
-    sealed.record_run(
-        ROOT,
-        "scripts/build_cache.py",
-        terms,
-        f"{report['rows']:,} 行事件表写到 {path}",
-        unseal=args.unseal,
-    )
+    outcome.done(f"{report['rows']:,} 行事件表写到 {provenance.relative_path(path)}")
     return 0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", type=Path, default=ROOT / "configs" / "main.yaml")
+    ap.add_argument("--raw-dir", type=Path, default=ROOT / "data" / "codebench" / "parquet")
+    ap.add_argument("--pool", default="development")
+    ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--compare", type=Path, default=None)
+    ap.add_argument("--report", type=Path, default=None)
+    ap.add_argument("--unseal", action="store_true")
+    args = ap.parse_args()
+
+    cfg = cfgmod.load(args.config)
+    terms = pool_terms(cfg, args.pool)
+    sealed.guard_semesters(terms, ROOT, unseal=args.unseal)
+    with sealed.recording(ROOT, "scripts/build_cache.py", terms, args.unseal) as outcome:
+        return build(cfg, args, terms, outcome)
 
 
 if __name__ == "__main__":

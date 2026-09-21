@@ -97,6 +97,23 @@ def write(out_dir: Path, **kwargs) -> Path:
     return path
 
 
+def pinned_outputs_complaint(promised, written) -> str:
+    """Why the files a pinned run wrote are not the list the protocol lock carries.
+
+    A sealed run emits the list the lock pins, one file more or fewer being an error: the
+    dry run prints that list and the frozen lock carries it, so a run that quietly
+    produced a different set would make both of them wrong.  The manifest is always part
+    of the set, because every run writes one.  An empty string means the two agree.
+    """
+    actual = {Path(p).name for p in written} | {MANIFEST_NAME}
+    if set(promised) == actual:
+        return ""
+    return (
+        f"the sealed run wrote {sorted(actual)} but the protocol lock pins "
+        f"{sorted(promised)}; the two have to be the same list"
+    )
+
+
 def verify(manifest_path: Path) -> list[str]:
     """Complaints about the directory this manifest describes; empty means it is intact.
 

@@ -96,20 +96,35 @@ def check_paper_numbers() -> tuple[bool, str]:
     )
 
 
+SEALED_TABLES = Path("outputs") / "sealed_tables"
+SEALED_PREDICTOR = Path("outputs") / "sealed_predictor"
+"""Where the sealed run writes.  They are looked for rather than asked for: before the
+sealed run nothing is there and the check is the development one, after it the sealed
+tables are checked too, and neither state needs a flag to be remembered."""
+
+
 def check_paper_prints() -> tuple[bool, str]:
     """The paper prints what the package produced (scripts/check_paper_numbers.py).
 
     Skipped when `paper/` or the tables are not on disk, so a clone without the paper
-    still passes the other checks.
+    still passes the other checks.  The sealed directories join in as soon as they exist.
     """
     from check_paper_numbers import run
 
     paper = ROOT / "paper"
     dev = ROOT / "outputs" / "dev_tables"
     package = ROOT / "outputs" / "paper_tables"
+    sealed = ROOT / SEALED_TABLES
+    predictor = ROOT / SEALED_PREDICTOR
     if not (paper.is_dir() and (dev / "main_table.csv").is_file()):
         return True, "paper prints: paper/ or outputs/dev_tables/ not on disk, skipped"
-    complaints = run(paper, dev, package)
+    complaints = run(
+        paper,
+        dev,
+        package,
+        sealed=sealed if (sealed / "main_table.csv").is_file() else None,
+        sealed_predictor=predictor if (predictor / "predictor_metrics.csv").is_file() else None,
+    )
     if complaints:
         return False, "paper prints: " + "; ".join(complaints[:4]) + (
             f" (and {len(complaints) - 4} more)" if len(complaints) > 4 else ""

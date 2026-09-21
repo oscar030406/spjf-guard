@@ -2,7 +2,8 @@
 
     uv run python scripts/emit_paper_tables.py [--dev-dir outputs/dev_tables] \
         [--k1-dir outputs/dev_tables/k1] [--selection outputs/selection_v3] \
-        [--out-dir outputs/paper_tables] [--paper paper]
+        [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
+        [--sealed-predictor-dir <dir>] [--out-dir outputs/paper_tables] [--paper paper]
 
 Two products.  `outputs/paper_tables/*.tex` holds the six development tables with every
 number wrapped in `\\devnum{}`, in the structure the paper's tables already have.
@@ -10,6 +11,15 @@ number wrapped in `\\devnum{}`, in the structure the paper's tables already have
 the paper it sits, and whether this package produces it: a number this package cannot
 produce (the cross-domain traces, ACcoding, the CI pool, the predictor comparison) is
 marked as such rather than quietly dropped.
+
+Given a sealed directory, the same five result tables are emitted a second time from the
+sealed run's CSVs as `tab_*_sealed.tex`, with `_sealed` on the label and every figure in
+`\\sealednum{}` rather than `\\devnum{}` -- the development macro says "not a sealed
+term" (`paper/main.tex`), so a sealed figure cannot go through it.  `numbers.csv` then
+also carries the paper's `\\sealednum{}` figures, under keys prefixed `sealed.`, and the
+classifier stops excusing a number because its line says "sealed": from then on those
+numbers have a producing table and are checked like any other.  Without the option
+nothing changes, which is why it is an option.
 
 Nothing here writes into `paper/`.
 """
@@ -29,6 +39,14 @@ from spjf_guard import config as cfgmod  # noqa: E402
 from spjf_guard.experiment import paper_tables as pt  # noqa: E402
 
 DEVNUM = re.compile(r"\\devnum\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}")
+SEALED_MACRO = "sealednum"
+"""What the paper wraps a sealed-term figure in, as `\\devnum{}` wraps a development one.
+The paper defines it beside `\\devnum` and the two are what tell the reader, and every
+check in this package, which run a printed number came from."""
+SEALEDNUM = re.compile(r"\\sealednum\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}")
+SEALED_PREFIX = "sealed."
+"""What a `numbers.csv` key carries when the figure is a sealed-term one, so that the two
+namespaces cannot collide and a list that names a key says which run it belongs to."""
 LABEL = re.compile(r"\\label\{(tab:[A-Za-z0-9_]+)\}")
 SECTION_CMD = re.compile(r"\\(?:sub){0,2}section\*?\{([^{}]*)\}")
 NOT_WORD = re.compile(r"[^a-z0-9]+")
@@ -170,14 +188,25 @@ def setup_items(cfg, table, selection_rows, parameters) -> list[tuple[str, str]]
     return items
 
 
-def classify(context: str, section: str, table: str) -> str:
+def reasons(sealed: bool) -> tuple:
+    """The `NOT_PRODUCED` list a run classifies with.
+
+    Once a sealed directory is given, "sealed", "2023-1" and "held out" stop being
+    reasons for a number to have no source: the sealed tables produce those numbers, and
+    a sealed figure that matches none of them is a number with no source, which is the
+    failure this file exists to find.
+    """
+    return tuple(entry for entry in NOT_PRODUCED if not sealed or entry[0] != "sealed")
+
+
+def classify(context: str, section: str, table: str, not_produced=NOT_PRODUCED) -> str:
     """Why this package does not produce the number, in one word.
 
     Empty means there is no reason: the number matches nothing this package writes and
     belongs to no part of the paper that is outside the package.  That is a failure, and
     `check_generated.py` reports it as one.
     """
-    for label, needles in NOT_PRODUCED:
+    for label, needles in not_produced:
         if any(needle in context for needle in needles):
             return label
     if table in BY_TABLE:
@@ -195,8 +224,25 @@ def slug(title: str) -> str:
     return NOT_WORD.sub("-", text).strip("-")[:40] or "untitled"
 
 
-def paper_numbers(paper_dir: Path, produced: dict) -> list[dict]:
-    """Every `\\devnum{}` in the paper, with where it sits and who produces it.
+def _number_row(found: dict, produced: dict, not_produced: tuple) -> dict:
+    """One `numbers.csv` row: where the figure sits, and who produces it or why nobody."""
+    cleaned = found["value"].replace("{,}", "").replace(r"\%", "")
+    return {
+        "key": found["key"],
+        "section": found["section"],
+        "line": found["line"],
+        "table": found["table"] or "running text",
+        "value": found["value"],
+        "produced_by": produced.get(cleaned, ""),
+        "not_produced": ""
+        if cleaned in produced
+        else classify(found["context"], found["section"], found["table"], not_produced),
+        "context": found["context"].strip()[:160],
+    }
+
+
+def paper_numbers(paper_dir: Path, produced: dict, sealed: dict | None = None) -> list[dict]:
+    """Every marked figure in the paper, with where it sits and who produces it.
 
     The key is `<file>:<anchor>:<n>`, where the anchor is the table's label when the number
     sits in a table and the enclosing section otherwise, and `n` counts the numbers under
@@ -204,7 +250,14 @@ def paper_numbers(paper_dir: Path, produced: dict) -> list[dict]:
     passes -- floats move, appendices become supplementary sections -- and a key that moved
     with them would make every list that names one stale.  The line is kept as its own
     column, for a person looking the number up.
+
+    `\\devnum{}` is a development figure and `\\sealednum{}` a sealed-term one; the second
+    is read only when a sealed run's values are given, and its keys carry the `sealed.`
+    prefix, counted in their own sequence.
     """
+    macros = [(DEVNUM, produced, "")] + (
+        [(SEALEDNUM, sealed, SEALED_PREFIX)] if sealed is not None else []
+    )
     rows = []
     for path in sorted(paper_dir.rglob("*.tex")):
         table, anchor = "", "front-matter"
@@ -218,37 +271,37 @@ def paper_numbers(paper_dir: Path, produced: dict) -> list[dict]:
                 table = found.group(1)
             if r"\end{table}" in line:
                 table = ""
-            for value in DEVNUM.findall(line):
-                where = table or anchor
-                seen[where] = seen.get(where, 0) + 1
-                cleaned = value.replace("{,}", "").replace(r"\%", "")
-                rows.append(
-                    {
-                        "key": f"{path.stem}:{where}:{seen[where]}",
-                        "section": path.stem,
-                        "line": number,
-                        "table": table or "running text",
-                        "value": value,
-                        "produced_by": produced.get(cleaned, ""),
-                        "not_produced": ""
-                        if cleaned in produced
-                        else classify(line, path.stem, table),
-                        "context": line.strip()[:160],
-                    }
-                )
+            for pattern, values, prefix in macros:
+                for value in pattern.findall(line):
+                    where = f"{prefix}{table or anchor}"
+                    seen[where] = seen.get(where, 0) + 1
+                    rows.append(
+                        _number_row(
+                            {
+                                "key": f"{prefix}{path.stem}:{table or anchor}:{seen[where]}",
+                                "section": path.stem,
+                                "line": number,
+                                "table": table,
+                                "value": value,
+                                "context": line,
+                            },
+                            values or {},
+                            reasons(sealed is not None),
+                        )
+                    )
     return rows
 
 
-def difference_values(rows: list[dict], out: dict) -> None:
+def difference_values(rows: list[dict], out: dict, source: str = "dev_tables") -> None:
     """The paired differences, in the two shapes the paper prints them in.
 
-    The paper states a difference of two policies as one `\\devnum{}`: an estimate and its
+    The paper states a difference of two policies as one marked figure: an estimate and its
     interval together, sometimes inside math mode and sometimes bare.  Both spellings are
     indexed, so a claim like "Guard(600) gives up 0.116 [0.077, 0.143] of the gap" matches
     the row that produced it instead of counting as a number with no source.
     """
     for row in rows:
-        where = f"dev_tables/paired_differences.csv[{row['left']} - {row['right']}]"
+        where = f"{source}/paired_differences.csv[{row['left']} - {row['right']}]"
         for field, lo_field, hi_field in (
             ("difference_gap", "gap_lo", "gap_hi"),
             ("difference_s", "lo", "hi"),
@@ -263,9 +316,8 @@ def difference_values(rows: list[dict], out: dict) -> None:
             out.setdefault(f"{value:.3f}", where)
 
 
-def produced_values(table: list[dict], k1: list[dict], residuals: list[dict]) -> dict:
-    """{printed value: which table of ours carries it}, for the matching above."""
-    out: dict[str, str] = {}
+def _adder(out: dict):
+    """Index one printed spelling of a value, the first source for it winning."""
 
     def add(value, digits, where):
         if value in ("", None):
@@ -276,6 +328,15 @@ def produced_values(table: list[dict], k1: list[dict], residuals: list[dict]) ->
             return
         out.setdefault(text, where)
 
+    return add
+
+
+def produced_values(
+    table: list[dict], k1: list[dict], residuals: list[dict], source: str = "dev_tables"
+) -> dict:
+    """{printed value: which table of ours carries it}, for the matching above."""
+    out: dict[str, str] = {}
+    add = _adder(out)
     for row in table:
         for field, digits in (
             ("p99_dl_s", 2),
@@ -286,18 +347,104 @@ def produced_values(table: list[dict], k1: list[dict], residuals: list[dict]) ->
             ("harm_s", 1),
             ("fired_pct", 2),
         ):
-            add(row.get(field), digits, f"dev_tables/main_table.csv[{row['policy']}]")
+            add(row.get(field), digits, f"{source}/main_table.csv[{row['policy']}]")
     for row in k1:
         for field, digits in (("p99_dl_s", 2), ("gap_closed", 3), ("harm_s", 1)):
-            add(row.get(field), digits, f"dev_tables/k1/main_table.csv[{row['policy']}]")
+            add(row.get(field), digits, f"{source}/k1/main_table.csv[{row['policy']}]")
     for row in residuals:
         for field, digits in (
             ("max_abs_residual_L", 3),
             ("ratio_to_bound", 3),
             ("r2_net_over_k", 3),
         ):
-            add(row.get(field), digits, f"dev_tables/identity_residuals.csv[{row['policy']}]")
+            add(row.get(field), digits, f"{source}/identity_residuals.csv[{row['policy']}]")
     return out
+
+
+def predictor_values(rows: list[dict], out: dict, source: str = "sealed_predictor") -> None:
+    """The sealed terms' predictor metrics, in the spellings section 4 prints them in.
+
+    These have no table of their own in the paper: the section quotes them in running
+    text, so indexing them here is what gives a sealed AUROC a source instead of leaving
+    it as a number nobody produces.
+    """
+    add = _adder(out)
+    for row in rows:
+        where = f"{source}/predictor_metrics.csv[{row['target']} {row['score']}]"
+        for field, digits in (
+            ("auroc", 4),
+            ("auroc", 3),
+            ("average_precision", 3),
+            ("rmse_log1p", 4),
+            ("spearman", 3),
+        ):
+            add(row.get(field), digits, where)
+
+
+RESIDUAL_POLICIES = ("SPJF-E", "Guard(600)", "SPJF-reversed")
+"""The three policies `tab:resid` prints, on the first overlay."""
+
+
+def as_sealed(text: str) -> str:
+    """The same table, marked as sealed-term figures rather than development ones.
+
+    `\\devnum{}` means "this number is development data, not a sealed term"
+    (`paper/main.tex`), so the sealed copy cannot go through it: the macro becomes
+    `\\sealednum{}` and the label gains the `_sealed` suffix, which is what lets the two
+    tables sit in one document and be found by their own labels.
+    """
+    text = LABEL.sub(lambda m: rf"\label{{{m.group(1)}_sealed}}", text)
+    return text.replace(r"\devnum{", "\\" + SEALED_MACRO + "{")
+
+
+def read_run(cfg, tables: Path, k1_dir: Path | None) -> dict:
+    """One run's CSVs.  A directory that is not there reads as no rows, not as an error:
+    the sealed run has no single-server tables until its own k = 1 command is run."""
+    k1 = read_rows(k1_dir / "main_table.csv") if k1_dir else []
+    return {
+        "table": read_rows(tables / "main_table.csv"),
+        "residuals": read_rows(tables / "identity_residuals.csv"),
+        "parameters": parameter_map(
+            read_rows(tables / "policy_parameters.csv"), cfg.promises_s
+        ),
+        "k1": k1,
+        "k1_parameters": parameter_map(
+            read_rows(k1_dir / "policy_parameters.csv") if k1_dir else [], cfg.promises_s
+        ),
+        "differences": read_rows(tables / "paired_differences.csv"),
+        "k1_differences": read_rows(k1_dir / "paired_differences.csv") if k1_dir else [],
+    }
+
+
+def emit_tables(cfg, run: dict, out_dir: Path, sealed: bool = False) -> list[str]:
+    """The five result tables of one run.  `tab:setup` describes the protocol rather than
+    a result, so it has no sealed copy: the protocol is the same document either way."""
+    written: list[str] = []
+
+    def put(stem: str, text: str) -> None:
+        name = f"{stem}_sealed.tex" if sealed else f"{stem}.tex"
+        (out_dir / name).write_text(as_sealed(text) if sealed else text, encoding="utf-8")
+        written.append(name)
+
+    if run["table"]:
+        put("tab_rank", pt.rank_table(run["table"]))
+        put("tab_guard", pt.guard_table(run["table"], run["parameters"], guard_row_order(cfg)))
+        put("tab_adv", pt.adversarial_table(run["table"]))
+    if run["residuals"]:
+        put("tab_resid", pt.residual_table(run["residuals"], list(RESIDUAL_POLICIES)))
+    if run["k1"]:
+        order = ["FCFS", "SJF", "SPJF-E"] + guard_row_order(cfg)
+        put("tab_k1", pt.single_server_table(run["k1"], run["k1_parameters"], order))
+    return written
+
+
+def run_values(run: dict, source: str, predictor: list[dict]) -> dict:
+    """Every figure one run produces, indexed by the way the paper would print it."""
+    values = produced_values(run["table"], run["k1"], run["residuals"], source)
+    difference_values(run["differences"], values, source)
+    difference_values(run["k1_differences"], values, f"{source}/k1")
+    predictor_values(predictor, values)
+    return values
 
 
 def main() -> int:
@@ -306,52 +453,46 @@ def main() -> int:
     ap.add_argument("--dev-dir", type=Path, default=ROOT / "outputs" / "dev_tables")
     ap.add_argument("--k1-dir", type=Path, default=None)
     ap.add_argument("--selection", type=Path, default=ROOT / "outputs" / "selection_v3")
+    ap.add_argument(
+        "--sealed-dir",
+        type=Path,
+        default=None,
+        help="the sealed run's tables; without it nothing sealed is emitted or classified",
+    )
+    ap.add_argument("--sealed-k1-dir", type=Path, default=None, help="default: <sealed>/k1")
+    ap.add_argument("--sealed-predictor-dir", type=Path, default=None)
     ap.add_argument("--out-dir", type=Path, default=ROOT / "outputs" / "paper_tables")
     ap.add_argument("--paper", type=Path, default=ROOT / "paper")
     args = ap.parse_args()
 
     cfg = cfgmod.load(args.config, expand_environment=False)
     k1_dir = args.k1_dir or args.dev_dir / "k1"
-    table = read_rows(args.dev_dir / "main_table.csv")
-    k1 = read_rows(k1_dir / "main_table.csv")
-    residuals = read_rows(args.dev_dir / "identity_residuals.csv")
-    parameters = parameter_map(
-        read_rows(args.dev_dir / "policy_parameters.csv"), cfg.promises_s
-    )
-    k1_parameters = parameter_map(read_rows(k1_dir / "policy_parameters.csv"), cfg.promises_s)
+    development = read_run(cfg, args.dev_dir, k1_dir)
     selection_rows = read_rows(args.selection / "selected_parameters.csv")
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    written = []
-    if table:
-        order = guard_row_order(cfg)
-        (args.out_dir / "tab_rank.tex").write_text(pt.rank_table(table), encoding="utf-8")
-        (args.out_dir / "tab_guard.tex").write_text(
-            pt.guard_table(table, parameters, order), encoding="utf-8"
+    written = emit_tables(cfg, development, args.out_dir)
+    if development["table"]:
+        items = setup_items(
+            cfg, development["table"], selection_rows, development["parameters"]
         )
-        (args.out_dir / "tab_adv.tex").write_text(pt.adversarial_table(table), encoding="utf-8")
-        (args.out_dir / "tab_setup.tex").write_text(
-            pt.setup_table(setup_items(cfg, table, selection_rows, parameters)),
-            encoding="utf-8",
-        )
-        written += ["tab_rank.tex", "tab_guard.tex", "tab_adv.tex", "tab_setup.tex"]
-    if residuals:
-        names = ["SPJF-E", "Guard(600)", "SPJF-reversed"]
-        (args.out_dir / "tab_resid.tex").write_text(
-            pt.residual_table(residuals, names), encoding="utf-8"
-        )
-        written.append("tab_resid.tex")
-    if k1:
-        order = ["FCFS", "SJF", "SPJF-E"] + guard_row_order(cfg)
-        (args.out_dir / "tab_k1.tex").write_text(
-            pt.single_server_table(k1, k1_parameters, order), encoding="utf-8"
-        )
-        written.append("tab_k1.tex")
+        (args.out_dir / "tab_setup.tex").write_text(pt.setup_table(items), encoding="utf-8")
+        written.append("tab_setup.tex")
 
-    produced = produced_values(table, k1, residuals)
-    difference_values(read_rows(args.dev_dir / "paired_differences.csv"), produced)
-    difference_values(read_rows(k1_dir / "paired_differences.csv"), produced)
-    numbers = paper_numbers(args.paper, produced)
+    produced = run_values(development, "dev_tables", [])
+    sealed_values = None
+    if args.sealed_dir is not None:
+        sealed_k1 = args.sealed_k1_dir or args.sealed_dir / "k1"
+        sealed_run = read_run(cfg, args.sealed_dir, sealed_k1)
+        written += emit_tables(cfg, sealed_run, args.out_dir, sealed=True)
+        sealed_values = run_values(
+            sealed_run,
+            "sealed_tables",
+            read_rows(args.sealed_predictor_dir / "predictor_metrics.csv")
+            if args.sealed_predictor_dir
+            else [],
+        )
+    numbers = paper_numbers(args.paper, produced, sealed_values)
     with open(args.out_dir / "numbers.csv", "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=list(numbers[0]))
         writer.writeheader()

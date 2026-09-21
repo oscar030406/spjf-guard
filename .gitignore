@@ -12,5 +12,5 @@ outputs/
 *.npy
 
 
-# data stays out of the repository
-data/
+# data stays out of the repository (anchored: src/spjf_guard/data/ is code)
+/data/

@@ -1,7 +1,9 @@
 """Does the paper print what this package produced?
 
     uv run python scripts/check_paper_numbers.py [--paper paper] \
-        [--dev-dir outputs/dev_tables] [--package-dir outputs/paper_tables] [--only A]
+        [--dev-dir outputs/dev_tables] [--package-dir outputs/paper_tables] \
+        [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
+        [--sealed-predictor-dir <dir>] [--only A]
 
 `check_generated.py --only paper_numbers` asks a different question: whether every number
 in the paper has *some* stated source.  This script asks whether the numbers that claim
@@ -31,6 +33,13 @@ B. **Running text, captions and plot coordinates.**  Figures the paper quotes fr
 C. **The sourced rows of `numbers.csv`.**  Every row in the "has a source" state must
    still be printed in the section it was found in; one that is not is either a leftover
    or a coincidence match, and the coincidences are listed with their reasons.
+
+D. **The sealed tables**, only when `--sealed-dir` is given.  The package's
+   `tab_*_sealed.tex` against the paper's tables of the same label, on the `\\sealednum{}`
+   figures, and every sealed figure section 4 prints against the sealed terms' predictor
+   table.  A sealed table the paper does not carry yet is reported and skipped: the
+   sealed run comes first and the paper is written after it.  Without the option nothing
+   in A, B or C changes, which is the point of it being an option.
 
 Nothing here writes into `paper/`, and the paper is only ever read.
 """
@@ -245,8 +254,15 @@ def skip_counts(body: str) -> Counter:
     return Counter(re.findall(r"\$(?:\\kappa|N)\s*=\s*(\d+)\$", body))
 
 
-def read_rows(path: Path) -> list[dict]:
+def read_rows(path: Path, optional: bool = False) -> list[dict]:
+    """The CSV, or nothing when it is optional and absent.
+
+    Optional is for the sealed run's single-server tables: the sealed pool's k = 1 run is
+    a command of its own, so the directory may legitimately not be there.
+    """
     if not path.is_file():
+        if optional:
+            return []
         raise SystemExit(f"{path} is missing; run scripts/run_main.py first")
     with open(path, encoding="utf-8") as fh:
         return list(csv.DictReader(fh))
@@ -676,7 +692,89 @@ def check_sourced(paper: Path, package_dir: Path, cache: dict) -> list[str]:
     ]
 
 
-def run(paper: Path, dev: Path, package_dir: Path, only: str | None = None) -> list[str]:
+SEALEDNUM = re.compile(r"\\sealednum\{((?:[^{}]|\{[^{}]*\})*)\}")
+"""What the paper wraps a sealed-term figure in.  `\\devnum{}` says the opposite, so the
+two are never read from the same expression."""
+
+SEALED_SUFFIX = "_sealed"
+PREDICTOR_SECTION = "sections/04_prediction.tex"
+
+
+def _labelled_body(paper: Path, label: str) -> str | None:
+    """The tabular carrying `label`, wherever in the paper it sits, or None."""
+    for path in sorted(paper.rglob("*.tex")):
+        text = path.read_text(encoding="utf-8")
+        if "\\label{" + label + "}" in text:
+            return table_body(text, label)
+    return None
+
+
+def check_sealed_tables(paper: Path, package_dir: Path, labels) -> list[str]:
+    """D1: the package's sealed tables against the paper's, figure for figure."""
+    complaints = []
+    print("\nD. sealed tables, package against paper")
+    for label in labels:
+        name = PACKAGE_FILE[label].replace(".tex", f"{SEALED_SUFFIX}.tex")
+        path = package_dir / name
+        if not path.is_file():
+            complaints.append(f"{name} is missing; run emit_paper_tables.py --sealed-dir")
+            continue
+        sealed_label = label + SEALED_SUFFIX
+        ours = Counter(
+            normalise(v)
+            for v in SEALEDNUM.findall(table_body(path.read_text("utf-8"), sealed_label))
+        )
+        body = _labelled_body(paper, sealed_label)
+        if body is None:
+            print(f"   {label + SEALED_SUFFIX:18s} not in the paper yet, skipped")
+            continue
+        theirs = Counter(normalise(v) for v in SEALEDNUM.findall(body))
+        extra, missing = +(ours - theirs), +(theirs - ours)
+        print(
+            f"   {label + SEALED_SUFFIX:18s} package {sum(ours.values()):4d} values,"
+            f" paper {sum(theirs.values()):4d}"
+            f"  ->  {'ok' if not extra and not missing else 'MISMATCH'}"
+        )
+        if extra:
+            complaints.append(f"{label}{SEALED_SUFFIX}: the paper does not print {dict(extra)}")
+        if missing:
+            complaints.append(
+                f"{label}{SEALED_SUFFIX}: the package does not print {dict(missing)}"
+            )
+    return complaints
+
+
+def check_sealed_predictor(paper: Path, rows: list[dict]) -> list[str]:
+    """D2: every sealed figure the predictor section prints comes from that table."""
+    from emit_paper_tables import predictor_values
+
+    values: dict[str, str] = {}
+    predictor_values(rows, values)
+    known = {normalise(v) for v in values}
+    path = paper / PREDICTOR_SECTION
+    if not rows or not path.is_file():
+        return []
+    printed = [normalise(v) for v in SEALEDNUM.findall(path.read_text(encoding="utf-8"))]
+    stray = [v for v in printed if v not in known]
+    print(
+        f"   predictor section  {len(printed) - len(stray)} of {len(printed)} sealed figures"
+        f" come from predictor_metrics.csv"
+    )
+    return [
+        f"{PREDICTOR_SECTION}: sealed figure {v} is not in the sealed predictor table"
+        for v in stray
+    ]
+
+
+def run(
+    paper: Path,
+    dev: Path,
+    package_dir: Path,
+    only: str | None = None,
+    sealed: Path | None = None,
+    sealed_k1: Path | None = None,
+    sealed_predictor: Path | None = None,
+) -> list[str]:
     """Every check that `only` allows; returns the complaints, empty when the paper agrees."""
     cache: dict = {}
     complaints: list[str] = []
@@ -687,6 +785,16 @@ def run(paper: Path, dev: Path, package_dir: Path, only: str | None = None) -> l
         complaints += check_recomputed(paper, expectations(dev), cache)
     if only in (None, "C"):
         complaints += check_sourced(paper, package_dir, cache)
+    if only in (None, "D") and sealed is not None:
+        k1 = read_rows((sealed_k1 or sealed / "k1") / "main_table.csv", optional=True)
+        labels = [t for t in TABLES if t != "tab:k1" or k1]
+        complaints += check_sealed_tables(paper, package_dir, labels)
+        complaints += check_sealed_predictor(
+            paper,
+            read_rows(sealed_predictor / "predictor_metrics.csv", optional=True)
+            if sealed_predictor
+            else [],
+        )
     return complaints
 
 
@@ -695,10 +803,21 @@ def main() -> int:
     ap.add_argument("--paper", type=Path, default=ROOT / "paper")
     ap.add_argument("--dev-dir", type=Path, default=ROOT / "outputs" / "dev_tables")
     ap.add_argument("--package-dir", type=Path, default=ROOT / "outputs" / "paper_tables")
-    ap.add_argument("--only", choices=("A", "B", "C"))
+    ap.add_argument("--sealed-dir", type=Path, default=None, help="the sealed run's tables")
+    ap.add_argument("--sealed-k1-dir", type=Path, default=None, help="default: <sealed>/k1")
+    ap.add_argument("--sealed-predictor-dir", type=Path, default=None)
+    ap.add_argument("--only", choices=("A", "B", "C", "D"))
     args = ap.parse_args()
 
-    complaints = run(args.paper, args.dev_dir, args.package_dir, args.only)
+    complaints = run(
+        args.paper,
+        args.dev_dir,
+        args.package_dir,
+        args.only,
+        args.sealed_dir,
+        args.sealed_k1_dir,
+        args.sealed_predictor_dir,
+    )
     for complaint in complaints:
         print(f"   FAIL {complaint}")
     print(

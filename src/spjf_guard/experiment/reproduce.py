@@ -59,8 +59,11 @@ def load_overlay(
     The stored arrays are float64 seconds; the trace this package simulates is integer
     microseconds, so the two differ only by the quantisation the kernel would apply
     anyway.  `score_map` renames stored score arrays to the keys the policies ask for.
+    Leaving it out asks for the stored expected-cost score; an empty map asks for none,
+    which is what a trace built with `--no-scores` carries and what a run that attaches
+    its own scores by `job_row` wants.
     """
-    score_map = score_map or {SCORE_KEY: SCORE_KEY}
+    score_map = {SCORE_KEY: SCORE_KEY} if score_map is None else score_map
     with np.load(path) as z:
         servers = int(z["K"][level])
         trace = Trace.from_seconds(

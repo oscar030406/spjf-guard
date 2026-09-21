@@ -285,6 +285,31 @@ def single_server_pool(
     return state.selected[:count], rho
 
 
+def single_server_copies(
+    pool, per_term: dict, arrival_key: str, seed: int, copies: int, repeats: int = 8
+):
+    """The first `copies` drawn class-term copies, and the utilisation they reach.
+
+    How many copies the single-server trace superposes is a design value, selected once
+    on the pool named in the configuration by `single_server_pool` and pinned there.  On
+    any other pool that count is reused and nothing here looks at the utilisation before
+    it stops: selecting copies by the busy hour they produce would be choosing a design
+    value on that pool's data, which is exactly what must not happen on the sealed pool.
+    The utilisation that comes out is reported as it is.  See ADR 0006.
+
+    A pool with fewer class-terms is listed as many times as it takes to offer `copies`
+    candidates: the count is the frozen value, the number of listings follows from it.
+    """
+    state = _SingleServerState(per_term, arrival_key)
+    listings = max(repeats, -(-copies // max(len(pool), 1)))
+    drawn = _k1_candidates(pool, seed, listings)
+    if len(drawn) < copies:
+        raise RuntimeError(f"{len(pool)} class-terms cannot offer {copies} copies")
+    for term, weeks in drawn[:copies]:
+        state.add(term, weeks, state.peak_after(term, weeks))
+    return state.selected, state.utilisation
+
+
 @dataclass(frozen=True)
 class PoolInputs:
     """Per-row inputs of a simulated trace, and the class-terms it superposes."""

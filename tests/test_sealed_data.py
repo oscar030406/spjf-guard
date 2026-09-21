@@ -83,36 +83,149 @@ def test_the_projects_ledger_is_where_the_protection_expects_it():
     assert any(line.startswith("| 日期 |") for line in header)
 
 
-def test_no_frozen_lock_exists_yet():
-    """The development repository must not carry a frozen lock by accident."""
+def lock_complaints(root) -> list[str]:
+    """Why the protocol lock on disk does not describe this tree; empty means it does.
+
+    One rule, right on both sides of the freeze.  Before it there is no
+    `protocol_lock.json`, and what has to hold is that the draft carries the code and the
+    configuration as they stand: a draft that lags the tree would freeze a method nobody
+    ran.  After it the frozen lock's digests still have to be the tree's, which is the
+    freeze's own promise -- nothing under the locked paths moved once the sealed terms
+    could be opened -- and the ledger has to carry the row the freeze wrote for each
+    sealed input it hashed.
+
+    The input artefacts are left out: they live under `data/`, which is not in the
+    repository, so comparing them would make a clone fail a check about the method.  They
+    are `scripts/check_generated.py --only protocol_lock`'s business.
+    """
+    import sys
+
+    sys.path.insert(0, str(root / "scripts"))
+    from make_protocol_lock import _digest_of, code_manifest, sha256_file
+
+    lock = sealed.frozen_lock(root)
+    path = lock or root / "protocol_lock.draft.json"
+    if not path.is_file():
+        return [f"{path.name} is missing; write it with scripts/make_protocol_lock.py"]
+    document = json.loads(path.read_text(encoding="utf-8"))
+    out = []
+    if document["code"]["digest"] != _digest_of(code_manifest(root)):
+        out.append(
+            f"{path.name} does not describe the code in src/, scripts/ and tests/: "
+            + (
+                "regenerate it"
+                if lock is None
+                else "a locked file has changed since the freeze"
+            )
+        )
+    if document["config"]["sha256"] != sha256_file(root / "configs" / "main.yaml"):
+        out.append(f"{path.name} was written for another configs/main.yaml")
+    if lock is None:
+        return out + ([] if document["status"] == "draft" else ["the draft says frozen"])
+    if not document.get("commit"):
+        out.append("a frozen lock names the commit it froze")
+    ledger = (root / sealed.LOG_RELATIVE_PATH).read_text(encoding="utf-8")
+    rows = [r for r in ledger.splitlines() if "scripts/freeze_protocol.py" in r]
+    if len(rows) != len(document.get("sealed_input_hashes", [])):
+        out.append("the ledger has no row for every sealed input the freeze hashed")
+    return out
+
+
+def test_the_protocol_lock_describes_the_tree_it_belongs_to():
+    """The draft before the freeze, the frozen lock after it: one check, both states."""
     from pathlib import Path
 
-    root = Path(__file__).resolve().parents[1]
-    assert sealed.frozen_lock(root) is None, (
-        "protocol_lock.json exists: the protocol is frozen, which is a deliberate act"
+    assert lock_complaints(Path(__file__).resolve().parents[1]) == []
+
+
+def _frozen_tree(tmp_path, inputs: int = 2):
+    """A miniature repository that has been frozen: lock, configuration, ledger."""
+    import hashlib
+
+    (tmp_path / "configs").mkdir()
+    (tmp_path / "configs" / "main.yaml").write_text("name: tiny\n", encoding="utf-8")
+    empty = hashlib.sha256().hexdigest()
+    config = hashlib.sha256((tmp_path / "configs" / "main.yaml").read_bytes()).hexdigest()
+    (tmp_path / "protocol_lock.json").write_text(
+        json.dumps(
+            {
+                "status": "frozen",
+                "commit": "0" * 40,
+                "code": {"files": [], "digest": empty},
+                "config": {"path": "configs/main.yaml", "sha256": config},
+                "sealed_input_hashes": [{"path": f"data/{i}.parquet"} for i in range(inputs)],
+            }
+        ),
+        encoding="utf-8",
     )
+    ledger = _ledger(tmp_path)
+    for i in range(inputs):
+        sealed.record_access(
+            tmp_path, "scripts/freeze_protocol.py", "封存学期", f"sha256 of {i}", "冻结脚本"
+        )
+    return ledger
 
 
-def test_the_run_script_refuses_unseal_without_a_frozen_lock(tmp_path, monkeypatch):
+def test_a_frozen_lock_that_still_describes_its_tree_passes(tmp_path):
+    _frozen_tree(tmp_path)
+    assert lock_complaints(tmp_path) == []
+
+
+def test_a_locked_file_that_changed_after_the_freeze_is_caught(tmp_path):
+    _frozen_tree(tmp_path)
+    (tmp_path / "scripts").mkdir(exist_ok=True)
+    (tmp_path / "scripts" / "afterwards.py").write_text("x = 1\n", encoding="utf-8")
+    assert any("changed since the freeze" in c for c in lock_complaints(tmp_path))
+
+
+def test_a_freeze_the_ledger_does_not_record_is_caught(tmp_path):
+    _frozen_tree(tmp_path, inputs=0)
+    assert lock_complaints(tmp_path) == []
+    (tmp_path / "protocol_lock.json").write_text(
+        (tmp_path / "protocol_lock.json")
+        .read_text(encoding="utf-8")
+        .replace('"sealed_input_hashes": []', '"sealed_input_hashes": [{"path": "x"}]'),
+        encoding="utf-8",
+    )
+    assert any("ledger" in c for c in lock_complaints(tmp_path))
+
+
+def refusal_for(root) -> tuple[list[str], str]:
+    """The refusal a sealed pool must produce, in whichever state the repository is in.
+
+    Before the freeze the flag is not enough and `--unseal` is refused by the missing
+    lock.  After the freeze that refusal is gone, so the test withholds the flag instead
+    and the missing `--unseal` is what refuses -- the one refusal left that can be
+    exercised without opening a sealed term, which a test must never do.
+    """
+    if sealed.frozen_lock(root) is None:
+        return ["--unseal"], "no frozen protocol_lock.json"
+    return [], "the --unseal flag was not given"
+
+
+def test_the_run_script_refuses_a_sealed_pool_it_may_not_open(tmp_path, monkeypatch):
     """The protection is wired into the entry point, not only into the module."""
     import subprocess
     import sys
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
+    flags, message = refusal_for(root)
     monkeypatch.setenv("SPJF_CACHE_DIR", str(tmp_path / "cache"))
     monkeypatch.setenv("SPJF_SCORE_PRED", str(tmp_path / "pred.parquet"))
     result = subprocess.run(
         [
             sys.executable,
             str(root / "scripts" / "run_main.py"),
+            "--pool",
+            "sealed",
             "--overlay-dir",
             str(tmp_path),
             "--reps",
             "0",
             "--levels",
             "0",
-            "--unseal",
+            *flags,
         ],
         capture_output=True,
         text=True,
@@ -121,7 +234,7 @@ def test_the_run_script_refuses_unseal_without_a_frozen_lock(tmp_path, monkeypat
     )
     assert result.returncode != 0
     assert "SealedDataError" in result.stderr
-    assert "no frozen protocol_lock.json" in result.stderr
+    assert message in result.stderr
 
 
 def test_the_dry_run_prints_the_plan_and_opens_nothing(tmp_path, monkeypatch):
@@ -208,6 +321,57 @@ def test_a_sealed_run_writes_one_row_naming_the_terms(tmp_path):
     assert rows[0].rstrip().endswith("| 否 |")
 
 
+def _rows(ledger) -> list[str]:
+    return [r for r in ledger.read_text(encoding="utf-8").splitlines() if r.startswith("| 2")]
+
+
+def test_a_row_lands_in_the_table_not_under_the_closing_sentence(tmp_path):
+    """The ledger ends in prose, and a row appended to the file would land below it."""
+    ledger = _ledger(tmp_path)
+    closing = "没有对任何封存学期计算过调度结果。"
+    ledger.write_text(
+        ledger.read_text(encoding="utf-8") + "\n" + closing + "\n", encoding="utf-8"
+    )
+    sealed.record_access(tmp_path, "scripts/run_main.py", "封存学期 2023-1", "表", "运行者")
+    lines = [line for line in ledger.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert lines[-1] == closing
+    assert lines[-2].startswith("| 2")
+
+
+def test_an_interrupted_run_still_leaves_a_row_saying_where_it_stopped(tmp_path):
+    """A command that read a sealed term and then died has read it, row or no row."""
+    ledger = _ledger(tmp_path)
+    with pytest.raises(RuntimeError):
+        with sealed.recording(tmp_path, "scripts/run_main.py", ["2023-1"], True) as outcome:
+            outcome.at("第 3 格")
+            raise RuntimeError("out of memory")
+    rows = _rows(ledger)
+    assert len(rows) == 1
+    assert "中断于第 3 格" in rows[0]
+    assert "RuntimeError" in rows[0]
+
+
+def test_a_second_run_adds_a_row_and_rewrites_none(tmp_path):
+    ledger = _ledger(tmp_path)
+    for text in ("第一次的表", "第二次的表"):
+        with sealed.recording(tmp_path, "scripts/run_main.py", ["2023-1"], True) as outcome:
+            outcome.done(text)
+    rows = _rows(ledger)
+    assert len(rows) == 2
+    assert "第一次的表" in rows[0]
+    assert "第二次的表" in rows[1]
+
+
+def test_a_refused_read_writes_no_row(tmp_path):
+    """The guard raises before anything is opened; a row would say the opposite."""
+    ledger = _ledger(tmp_path)
+    before = ledger.read_text(encoding="utf-8")
+    with pytest.raises(sealed.SealedDataError):
+        with sealed.recording(tmp_path, "scripts/build_overlays.py", ["2023-1"], True):
+            sealed.guard_semesters(["2023-1"], tmp_path, unseal=True)
+    assert ledger.read_text(encoding="utf-8") == before
+
+
 @pytest.mark.parametrize(
     "script,extra",
     [
@@ -222,11 +386,12 @@ def test_the_sealed_pool_is_refused_in_every_entry_point(tmp_path, monkeypatch, 
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
+    flags, message = refusal_for(root)
     monkeypatch.setenv("SPJF_CACHE_DIR", str(tmp_path / "absent_cache"))
     monkeypatch.setenv("SPJF_SCORE_PRED", str(tmp_path / "absent_pred.parquet"))
     args = [str(tmp_path / a) if a.startswith("absent") else a for a in extra]
     result = subprocess.run(
-        [sys.executable, str(root / "scripts" / script), "--pool", "sealed", *args],
+        [sys.executable, str(root / "scripts" / script), "--pool", "sealed", *args, *flags],
         capture_output=True,
         text=True,
         check=False,
@@ -234,6 +399,6 @@ def test_the_sealed_pool_is_refused_in_every_entry_point(tmp_path, monkeypatch, 
     )
     assert result.returncode != 0
     assert "SealedDataError" in result.stderr
-    assert "no frozen protocol_lock.json" in result.stderr
+    assert message in result.stderr
     assert not (tmp_path / "absent_overlays").exists()
     assert not (tmp_path / "absent_scores.parquet").exists()

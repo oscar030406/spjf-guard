@@ -123,7 +123,7 @@ def cache_stage(root: Path, cfg) -> dict:
     The sealed files are named, not hashed: hashing one means reading it, and that is
     exactly what the protection exists to prevent before the freeze.
     """
-    from spjf_guard.data.cache import files_for
+    from spjf_guard.data.cache import sealed_inputs
 
     raw = Path(cfg["data"].get("raw_parquet_dir", "data/codebench/parquet"))
     code = [
@@ -139,9 +139,15 @@ def cache_stage(root: Path, cfg) -> dict:
         ],
         "sealed_inputs": [
             relative_to_root(p, root)
-            for p in files_for(cfg.resolve(raw), cfg["overlay"]["pools"]["sealed"])
+            for p in sealed_inputs(
+                cfg.data_path("archive_dir"),
+                cfg.resolve(raw),
+                cfg["overlay"]["pools"]["sealed"],
+            )
         ],
-        "note": "sealed inputs are named, never hashed: hashing one would read it",
+        "note": "sealed inputs are named, never hashed: hashing one would read it. "
+        "This is the same list the freeze hashes, so the draft a person reads describes "
+        "the set that is frozen.",
     }
 
 
@@ -184,6 +190,8 @@ def build(cfg_path: Path, root: Path) -> dict:
             "comparators": scheduling["comparators"],
             "event_cache_stage": cache_stage(root, cfg),
             "sealed_tables": list(cfg["run"]["sealed_tables"]),
+            "sealed_k1_tables": list(cfg["run"]["sealed_k1_tables"]),
+            "sealed_predictor_tables": list(cfg["run"]["sealed_predictor_tables"]),
             "load": {
                 "target_busy_hour_utilisation": cfg["overlay"]["target_busy_hour_utilisation"],
                 "server_count_rule": cfg["overlay"]["server_count_rule"],

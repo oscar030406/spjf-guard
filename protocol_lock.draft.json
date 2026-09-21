@@ -1,9 +1,9 @@
 {
-  "written_at": "2026-09-20T23:55:19-04:00",
+  "written_at": "2026-09-21T03:17:56-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
-    "sha256": "1e2701bedacaa6ee7e87f51e38a2d82476dcd91f8c3b84a5d6f5be6b907782a3",
+    "sha256": "a3c9f8da06c6868ff8c1a9c91d9dac6be73a2dff1aef9629d5f8afd49a7a3664",
     "document": {
       "name": "main",
       "description": "CodeBench shared judge pool, development terms, five overlays, three loads",
@@ -12,6 +12,7 @@
         "raw_parquet_dir": "data/codebench/parquet",
         "cache_dir": "data/derived/codebench_cache_r4",
         "events_file": "ev.parquet",
+        "sealed_events_file": "ev_sealed.parquet",
         "features_file": "feat_ires0.parquet",
         "forward_predictions_file": "forward_ires0.parquet",
         "score_predictions_file": "data/derived/ranking_score_predictions/rs_pred_ires0.parquet",
@@ -352,6 +353,7 @@
         },
         "single_server": {
           "pool": "primary",
+          "copies": 321,
           "seed_offset": 50,
           "target_utilisation": 0.8,
           "utilisation_window": [
@@ -397,6 +399,20 @@
           "identity_residuals.csv",
           "policy_parameters.csv",
           "manifest.json"
+        ],
+        "sealed_k1_tables": [
+          "main_cells.csv",
+          "main_table.csv",
+          "main_table.tex",
+          "paired_differences.csv",
+          "bound_checks.csv",
+          "identity_residuals.csv",
+          "policy_parameters.csv",
+          "manifest.json"
+        ],
+        "sealed_predictor_tables": [
+          "predictor_metrics.csv",
+          "manifest.json"
         ]
       }
     }
@@ -405,11 +421,11 @@
     "files": [
       {
         "path": "scripts/build_cache.py",
-        "sha256": "56603bf711ab345ebaa04d1ee3970f20e8932c50a1e0aec6bd692cfef12b6962"
+        "sha256": "4699e82911fe5d12efa203f752fd99b849e5e828b5b8b34643adbdc89efd5d0a"
       },
       {
         "path": "scripts/build_overlays.py",
-        "sha256": "d6f578f9a33ca2571ed12e6101a37ad550f1cd0395b3b31e20c270ef9f999cac"
+        "sha256": "d111ba063e5925b57ddf783bd8061d1f33314ac8ce2319aa35f6117ae6a5d4f3"
       },
       {
         "path": "scripts/check_features.py",
@@ -417,7 +433,7 @@
       },
       {
         "path": "scripts/check_generated.py",
-        "sha256": "947aaff2b12b6ae825ff7733ba2910438c87bc44dd7848987a315c68687aeab9"
+        "sha256": "8fca921802105afc522bd2f94b728f668d4416551f2830bb46bbfe8bca7edc45"
       },
       {
         "path": "scripts/check_overlays.py",
@@ -425,7 +441,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "a9d97cdf82bc91cdd8a945dfb2529369cb37cf408041e12e7b8744c604c5edf7"
+        "sha256": "473ef65d0f69f4d52d5fa00a5db179a1d8d323ba07745c0a4c073117c6b9e2fb"
       },
       {
         "path": "scripts/check_reproduction.py",
@@ -441,27 +457,31 @@
       },
       {
         "path": "scripts/emit_paper_tables.py",
-        "sha256": "07ddfa8745dae0a4a74625411caa02fb56cee09863e0a02e2b35043e8eec59d6"
+        "sha256": "f47e4a6ff4851757e8cc17acecebbe0597708162b2f95dd82bc61cb7a21197f7"
+      },
+      {
+        "path": "scripts/eval_scores.py",
+        "sha256": "43d591feb66d1f8a784798da494325e72043b05aeb30cf12768439a47cb7dcd0"
       },
       {
         "path": "scripts/fit_scores.py",
-        "sha256": "4ec1678f4c30be3b00575ede9e7f50092f327950286a87eaeedffcdb32b27a24"
+        "sha256": "ce87ae2e83f488bd58a8cbd1334e0275299c8bb45fd239ca72091828c79901d2"
       },
       {
         "path": "scripts/freeze_protocol.py",
-        "sha256": "28c45d7ab1799a13f94e5bf8c40b528fef58273ef456e7a12554deb308cdac73"
+        "sha256": "53217270f1511e4f6b71909c91f740b1e8b2eef459dfa95793c40efdf580728a"
       },
       {
         "path": "scripts/make_protocol_lock.py",
-        "sha256": "12abc0cce0f8e26e2227cf99b6eb22cfecf2e24ced5ecc0ea97233f3c8ebe3e1"
+        "sha256": "d7d5988bfad30e04eeec81dadc9c9799630d51f0caf07e9d7868414fe10cc24d"
       },
       {
         "path": "scripts/parse_archive.py",
-        "sha256": "0f686bb3f308c03c3c28a2df12c8c060c28c0370200b20f77a3ae91b48467703"
+        "sha256": "ea5b01b2142dbac736de4ef0f466fb4b1bd7b98aba2d07d0d3c0672d4aacc40d"
       },
       {
         "path": "scripts/run_main.py",
-        "sha256": "0221d3128b36eaa1a6771befae863e145266e9be5664b20fc184c3b7ce44e0fa"
+        "sha256": "326c2e36ba0ef8a1eadecac9bfddfdeca17420fac32280fa294854aa12d91bac"
       },
       {
         "path": "scripts/select_parameters.py",
@@ -485,7 +505,7 @@
       },
       {
         "path": "src/spjf_guard/data/cache.py",
-        "sha256": "6d962628e1c40a4e94be9ff84906c052b10359fb50ed2291f7ab17b9b3469d15"
+        "sha256": "3a2198794eae62cdfbb58fdc30c098b4902e7ee846b637f186c172c918f14f39"
       },
       {
         "path": "src/spjf_guard/data/clock.py",
@@ -493,11 +513,11 @@
       },
       {
         "path": "src/spjf_guard/data/events.py",
-        "sha256": "442781f34af18db397d0a66f6b694072437887eba6def90360a25e112a2c6f08"
+        "sha256": "ecb6976c304b3c6cf4bac01ae71200618c1e9d5cce2a6cffccb418a784ba3457"
       },
       {
         "path": "src/spjf_guard/data/sealed.py",
-        "sha256": "d44a2fe2563dbbbe1344b689aea7f69c9bc686701d62c342c4908617b44e6a2b"
+        "sha256": "811fc654f76368d5ccc387a59c4517ef7c0e3bc8e5544a51422b52f0bc34b80d"
       },
       {
         "path": "src/spjf_guard/experiment/__init__.py",
@@ -509,7 +529,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/bootstrap.py",
-        "sha256": "358f10f3540c48d20edef55994464b1024f291f71e8b46b4a53ff11e958b0f1d"
+        "sha256": "772aa94028db74734ceba150b5023fd409d6b33b934d7fab48c04e4327c6d5df"
       },
       {
         "path": "src/spjf_guard/experiment/grids.py",
@@ -521,7 +541,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/overlay.py",
-        "sha256": "d3a8cead675dd2b4b9f99d3f93ffd4157f38f4d2f03b5a539396ffa850114c70"
+        "sha256": "51417c28b4c3504bec6e0e8559f0d4317c22585478596b741b49d09520482931"
       },
       {
         "path": "src/spjf_guard/experiment/paper_tables.py",
@@ -532,16 +552,20 @@
         "sha256": "7c4a8d245dea0fcbf4a8e9ba3cc4f7a803a6148c3bfea4d19eef710889bf3534"
       },
       {
+        "path": "src/spjf_guard/experiment/predictor_metrics.py",
+        "sha256": "229eedee4853e8e2348b5ac57e9c053112bae8ddcc52f1f72d12d29333786543"
+      },
+      {
         "path": "src/spjf_guard/experiment/provenance.py",
-        "sha256": "95673af152c726f14c7106fc6607a91cc2d2497bfa372cb4bdb23f0cb866de97"
+        "sha256": "4fed2e981a95eb4ad72508d39d690c6ba848cc5ee98bb37344cdfb358a207fa9"
       },
       {
         "path": "src/spjf_guard/experiment/report.py",
-        "sha256": "cff8e9216fa2a37bf45ae20e9bf896a71a743005506458463fe81a23ecedbef8"
+        "sha256": "926ff97971b548d9b020a10991d95087f4ada828fee10f31da5b9a63fe2b93ce"
       },
       {
         "path": "src/spjf_guard/experiment/reproduce.py",
-        "sha256": "f26f5309c63ad2d237fdb43d08c019f16d28b0468b60b86c3b192642b9cc9ce2"
+        "sha256": "b1921178d8afaae8da95cdf9518c8aaef23fe0faeae9151cb8c5aa9393aa5df9"
       },
       {
         "path": "src/spjf_guard/experiment/select.py",
@@ -613,15 +637,19 @@
       },
       {
         "path": "tests/test_data_cache.py",
-        "sha256": "4deec46fe3762d079a7ee8514b7f59eee8399bbb66bf94acc6bfe40419193ebe"
+        "sha256": "be434a599b3560bbe9f87c9a915c622b1c7b8b5daf105810a7bfc6f87cc84a67"
       },
       {
         "path": "tests/test_diff_dev_tables.py",
         "sha256": "f78259fe8b2400589a90f8fbb71690c2f032003e27dbec9a1663a1ee2fb9f66a"
       },
       {
+        "path": "tests/test_eval_scores.py",
+        "sha256": "d6eb0783bdde325455b62debf81544cefcc948d834498a5580905205315c95b7"
+      },
+      {
         "path": "tests/test_experiment.py",
-        "sha256": "b1ba58f43f2c03649c529a6820602ef7db79a39e585e4f5d2e571fc747190341"
+        "sha256": "b332c83027c695bdd275dfd27baabd3c3526819f24548f27489be0f4730f6bff"
       },
       {
         "path": "tests/test_features_causal.py",
@@ -633,7 +661,7 @@
       },
       {
         "path": "tests/test_overlay_pools.py",
-        "sha256": "4401b855cd0dc587a9e675b267a49a58bc3a3154bba9cc9b460ae49289821f75"
+        "sha256": "8eca720a54471a4f9bfc4498149f0fd182d7c9f0b73082d1ae237521c39607ee"
       },
       {
         "path": "tests/test_paper_tables.py",
@@ -649,7 +677,7 @@
       },
       {
         "path": "tests/test_repo_hygiene.py",
-        "sha256": "f14a8aa78c2c3d4fe65eaa04cbad5a2953b75a01a69421779547e8e3f8d3b10f"
+        "sha256": "5cfc1175fa01963ca4c25026000fded5b56dd6974cf7068bbb484bae78df91a6"
       },
       {
         "path": "tests/test_run_main_smoke.py",
@@ -657,7 +685,15 @@
       },
       {
         "path": "tests/test_sealed_data.py",
-        "sha256": "e74439a001ea5b939306b2bf8d9c6b176cf639d38e1a82a74225e5d4d0101271"
+        "sha256": "9bd5aa69b8704b31ced220b4732dfd45c7b18194e769ccf6d298ac92f1bbe073"
+      },
+      {
+        "path": "tests/test_sealed_k1.py",
+        "sha256": "ac055c8cecfc8ab1f8b9fc82f28a171e8c010c6361a485f7ba23d528384b1683"
+      },
+      {
+        "path": "tests/test_sealed_paper_tables.py",
+        "sha256": "6d0330c342e4865999c4c8a84fd11e8cff2540039dc85f67d2e0a6bf01cd449c"
       },
       {
         "path": "tests/test_sim_crosscheck_prechecks.py",
@@ -676,7 +712,7 @@
         "sha256": "7826be72c11aca65a0a4f8d1e0ba8a3cb41990c477f289990a0103c3290e1e30"
       }
     ],
-    "digest": "bfbb0e152b6c8899d6914d7ad7bf69bd91501c16c17bb22afb7389e7d04ea95b"
+    "digest": "f4825a4bb0d64e4472814d2c202f3d3027d9e469a8cbb55d7ed258b47f9506c2"
   },
   "inputs": {
     "artefacts": [
@@ -2630,14 +2666,17 @@
       "code": [
         {
           "path": "src/spjf_guard/data/cache.py",
-          "sha256": "6d962628e1c40a4e94be9ff84906c052b10359fb50ed2291f7ab17b9b3469d15"
+          "sha256": "3a2198794eae62cdfbb58fdc30c098b4902e7ee846b637f186c172c918f14f39"
         },
         {
           "path": "scripts/build_cache.py",
-          "sha256": "56603bf711ab345ebaa04d1ee3970f20e8932c50a1e0aec6bd692cfef12b6962"
+          "sha256": "4699e82911fe5d12efa203f752fd99b849e5e828b5b8b34643adbdc89efd5d0a"
         }
       ],
       "sealed_inputs": [
+        "data/codebench/archives/cb_dataset_2023_1_v1.81.tar.gz",
+        "data/codebench/archives/cb_dataset_2023_2_v1.81.tar.gz",
+        "data/codebench/archives/cb_dataset_2024_1_v1.81.tar.gz",
         "data/codebench/parquet/events/2023-1.parquet",
         "data/codebench/parquet/code_features/2023-1.parquet",
         "data/codebench/parquet/assessments/2023-1.parquet",
@@ -2648,7 +2687,7 @@
         "data/codebench/parquet/code_features/2024-1.parquet",
         "data/codebench/parquet/assessments/2024-1.parquet"
       ],
-      "note": "sealed inputs are named, never hashed: hashing one would read it"
+      "note": "sealed inputs are named, never hashed: hashing one would read it. This is the same list the freeze hashes, so the draft a person reads describes the set that is frozen."
     },
     "sealed_tables": [
       "main_cells.csv",
@@ -2658,6 +2697,20 @@
       "bound_checks.csv",
       "identity_residuals.csv",
       "policy_parameters.csv",
+      "manifest.json"
+    ],
+    "sealed_k1_tables": [
+      "main_cells.csv",
+      "main_table.csv",
+      "main_table.tex",
+      "paired_differences.csv",
+      "bound_checks.csv",
+      "identity_residuals.csv",
+      "policy_parameters.csv",
+      "manifest.json"
+    ],
+    "sealed_predictor_tables": [
+      "predictor_metrics.csv",
       "manifest.json"
     ],
     "load": {

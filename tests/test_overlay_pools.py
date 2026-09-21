@@ -64,6 +64,30 @@ def test_the_single_server_selection_is_deterministic_for_one_seed():
     assert first == second
 
 
+def test_the_reused_count_takes_the_first_copies_and_reports_what_it_reaches():
+    """The count is the design value; the utilisation it lands on is not chosen.
+
+    On the pool the selection was made on, the reused count reproduces the prefix of the
+    drawn order; on another pool it reaches whatever it reaches.  ADR 0006.
+    """
+    per_term = _per_term()
+    entries, rho = ov.single_server_copies(sorted(per_term), per_term, "arr", 99, copies=7)
+    longer, _ = ov.single_server_copies(sorted(per_term), per_term, "arr", 99, copies=9)
+    assert len(entries) == 7
+    assert longer[:7] == entries
+    arrival, service, _, _ = ov.superpose(entries, per_term, "arr")
+    assert ov.busy_hour_work(arrival, service) / 3600.0 == pytest.approx(rho, abs=1e-9)
+
+
+def test_a_small_pool_is_listed_as_often_as_the_pinned_count_needs():
+    """A pool with fewer class-terms than the frozen count still yields that count."""
+    per_term = _per_term(n_terms=3, per_term=50)
+    entries, _ = ov.single_server_copies(
+        sorted(per_term), per_term, "arr", 5, copies=40, repeats=8
+    )
+    assert len(entries) == 40
+
+
 def test_a_pool_that_cannot_reach_the_window_is_an_error():
     """When no addition raises the busiest hour, the selection stops and says so.
 

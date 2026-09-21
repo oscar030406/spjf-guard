@@ -84,6 +84,18 @@ _Avoid_: replica, trace（trace 指仿真器的输入对象）, 副本
 冻结前不可读的部分：CodeBench 2023-1 / 2023-2 / 2024-1、ACcoding 编号 80%–100%、OULAD 2014。路径级拒绝，见 `src/spjf_guard/data/sealed.py`。
 _Avoid_: holdout, test set, 留出集
 
+**`\devnum{}` / `\sealednum{}`**（数字标注宏）：
+论文里每个数字外面的那一层。`\devnum` 说这个数来自开发数据，`\sealednum` 说它来自封存运行，
+两者互斥。出表脚本按这个分，逐值核对脚本也按这个找数，所以一个封存数字包进 `\devnum` 不只是
+标注错，还会让它被当成开发数字去核对。
+_Avoid_: 把封存数字写成 `\devnum`；给同一个数字两层标注
+
+**`rho_target` / `rho_realised`**（目标利用率 / 实际利用率）：
+`rho_target` 是这一格按哪一档负载建的，也是论文印的那个数；`rho_realised` 是这条叠加在这个 k 上
+忙时真正跑到的利用率（忙时工作量 ÷ 3600k）。两者的差来自 k 取整。封存学期上实际达到多少如实报告，
+不回头调 k 去凑目标值，所以两列都要在表里。
+_Avoid_: 把 `rho_realised` 当成目标值去比较；用「利用率」一个词同时指这两件事
+
 **protocol lock**（配置锁）：
 `protocol_lock.json`。冻结方法的那一份哈希：代码、配置、输入产物，加上学期划分、可见性协议、预测器与种子、排序分数、护栏家族与选择规则、k 与加压方式、主指标、bootstrap 设置。`protocol_lock.draft.json` 是草稿，不解封任何东西。
 _Avoid_: manifest, freeze file, 快照

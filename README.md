@@ -80,6 +80,9 @@ $UV python scripts/run_main.py --selection outputs/selection_v3/selected_paramet
 $UV python scripts/run_main.py --prefix k1 --reps 0 --levels 0 \
     --selection outputs/selection_v3/selected_parameters.csv --out-dir outputs/dev_tables/k1
 
+# 4c 排序分数当预测器看：逐目标学期的 AUROC、AP、log1p 尺度 RMSE、Spearman 与按用户分块的区间
+$UV python scripts/eval_scores.py --pool primary                    # 写 outputs/dev_predictor/
+
 # 5 验收与对照
 $UV python scripts/check_reproduction.py --overlay-dir data/derived/overlay_traces
 $UV python scripts/check_overlays.py                                # 叠加数组对上 v3.1
@@ -112,18 +115,34 @@ $UV python scripts/make_protocol_lock.py
 git add -A && git commit -m "..."
 $UV python scripts/freeze_protocol.py --dry-run
 $UV python scripts/freeze_protocol.py --yes
+git add protocol_lock.json docs/sealed_access_log.md    # 锁与冻结写的十二行台账一起提交
+git commit -m "Freeze the protocol"
 
-# 3 只此一次，打开封存学期（缓存、叠加、分数、主运行四步都要 --unseal）
-$UV python scripts/build_cache.py --pool sealed --unseal
-$UV python scripts/build_overlays.py --pool sealed --unseal
+# 3 只此一次，打开封存学期（七步都要 --unseal）
+$UV python scripts/build_cache.py --pool sealed --unseal          # 写 ev_sealed.parquet
+$UV python scripts/build_overlays.py --pool sealed --no-scores --unseal
 $UV python scripts/fit_scores.py --pool sealed \
     --out data/derived/package_ranking_scores/sealed_scores.parquet --unseal
 $UV python scripts/run_main.py --config configs/main.yaml --pool sealed \
     --score-parquet data/derived/package_ranking_scores/sealed_scores.parquet \
     --out-dir outputs/sealed_tables --unseal
+$UV python scripts/build_overlays.py --pool sealed --single-server --no-scores --unseal
+$UV python scripts/run_main.py --config configs/main.yaml --pool sealed \
+    --prefix sealed_k1 --reps 0 --levels 0 \
+    --score-parquet data/derived/package_ranking_scores/sealed_scores.parquet \
+    --out-dir outputs/sealed_tables/k1 --unseal
+$UV python scripts/eval_scores.py --pool sealed \
+    --scores data/derived/package_ranking_scores/sealed_scores.parquet \
+    --out-dir outputs/sealed_predictor --unseal
+
+# 4 出表与核对（不读封存数据，不要 --unseal）
+$UV python scripts/emit_paper_tables.py --sealed-dir outputs/sealed_tables \
+    --sealed-predictor-dir outputs/sealed_predictor
+$UV python scripts/check_paper_numbers.py --sealed-dir outputs/sealed_tables \
+    --sealed-predictor-dir outputs/sealed_predictor
 ```
 
-这四条命令每条跑完自己往 `docs/sealed_access_log.md` 追加一行（日期、脚本、读了哪些封存学期、产出了什么、谁看过、是否影响设计），冻结时对十二个封存输入文件求哈希也各记一行。要防的是「看了测试结果再改方法」，不是文件只能打开一次。封存学期上实际达到的利用率如实报告，不回头调 k 去凑目标值。详细步骤见 `docs/sealed_run_procedure.md`。
+封存学期的解析缓存是自己的一份 `ev_sealed.parquet`，开发期的 `ev.parquet` 原样留着：每个滚动起点的训练集都在开发缓存里，覆盖掉它封存运行就没有训练行了。这七条命令每条跑完自己往 `docs/sealed_access_log.md` 追加一行（日期、脚本、读了哪些封存学期、产出了什么、谁看过、是否影响设计），冻结时对十二个封存输入文件求哈希也各记一行。要防的是「看了测试结果再改方法」，不是文件只能打开一次。封存学期上实际达到的利用率如实报告，不回头调 k 去凑目标值——单机轨迹的拷贝数也一样，沿用开发池选出的 321 份，见 ADR 0006。详细步骤见 `docs/sealed_run_procedure.md`。
 
 逐步的前置检查、耗时与磁盘占用、中途崩了怎么重跑，见 `docs/sealed_run_procedure.md`。
 

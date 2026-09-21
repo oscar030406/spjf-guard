@@ -20,12 +20,24 @@ DEFAULT_SEED = 20260919
 _BLOCKS = 4000
 
 
+def block_multiplicities(
+    n_blocks: int, resamples: int = DEFAULT_RESAMPLES, seed: int = DEFAULT_SEED
+) -> np.ndarray:
+    """M[b, j] = how often block j appears in resample b, for whatever a block is.
+
+    A whole week of the overlay timeline for the queueing metrics, a user for the
+    predictor metrics: the unit differs because what is not independent differs, the
+    draw does not.
+    """
+    rng = np.random.default_rng(seed)
+    return rng.multinomial(n_blocks, np.full(n_blocks, 1.0 / n_blocks), size=resamples)
+
+
 def week_multiplicities(
     n_weeks: int, resamples: int = DEFAULT_RESAMPLES, seed: int = DEFAULT_SEED
 ) -> np.ndarray:
     """M[b, w] = how often week w appears in resample b.  The same draw for every policy."""
-    rng = np.random.default_rng(seed)
-    return rng.multinomial(n_weeks, np.full(n_weeks, 1.0 / n_weeks), size=resamples)
+    return block_multiplicities(n_weeks, resamples, seed)
 
 
 def with_point_estimate(multiplicities: np.ndarray) -> np.ndarray:

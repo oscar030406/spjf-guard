@@ -13,7 +13,9 @@ that a person cannot be relied on to do at that moment, and nothing else:
 3. **Every input is hashed**, including the sealed archives and the sealed per-semester
    parquet -- their *bytes*, never their contents.  Hashing is a read, so each hashed
    sealed file gets its own row in `docs/sealed_access_log.md`: the ledger has to show
-   every time a sealed file was opened at all, even to be weighed.
+   every time a sealed file was opened at all, even to be weighed.  `--dry-run` therefore
+   lists the files and their sizes and hashes nothing: a rehearsal that opened 1.58 GB of
+   sealed archives and wrote no row would be the very thing the ledger is for.
 4. **`protocol_lock.json` is written** from the draft, with the commit id and the sealed
    input hashes added, and the draft is left where it is.
 
@@ -38,14 +40,20 @@ from spjf_guard import config as cfgmod  # noqa: E402
 from spjf_guard.data import sealed  # noqa: E402
 
 GATES = (
-    ("ruff", ("ruff", "check", "src", "tests", "scripts")),
-    ("ruff format", ("ruff", "format", "--check", "src", "tests", "scripts")),
-    ("mypy", ("mypy",)),
-    ("pytest", ("python", "-m", "pytest", "-q")),
-    ("generated artefacts", ("python", "scripts/check_generated.py")),
-    ("paper numbers", ("python", "scripts/check_paper_numbers.py")),
+    ("ruff", ("-m", "ruff", "check", "src", "tests", "scripts")),
+    ("ruff format", ("-m", "ruff", "format", "--check", "src", "tests", "scripts")),
+    ("mypy", ("-m", "mypy")),
+    ("pytest", ("-m", "pytest", "-q")),
+    ("generated artefacts", ("scripts/check_generated.py",)),
+    ("paper numbers", ("scripts/check_paper_numbers.py",)),
 )
-"""What has to be green before the method stops being editable."""
+"""What has to be green before the method stops being editable.
+
+Every gate is spelled as arguments to *this* interpreter rather than as a command name:
+`python`, `ruff` and `mypy` on the PATH are whichever ones the shell finds, which on this
+machine is an interpreter without the project's dependencies, and a freeze that reported
+`No module named pytest` as a failing gate would be reporting the PATH, not the code.
+"""
 
 DRAFT = "protocol_lock.draft.json"
 FROZEN = "protocol_lock.json"
@@ -83,11 +91,11 @@ def commit_state() -> tuple[str | None, list[str]]:
     return head.stdout.strip(), complaints
 
 
-def run_gates(env_prefix: tuple[str, ...] = ()) -> list[str]:
-    """Every gate, in order; returns the names of the ones that failed."""
+def run_gates(runner: tuple[str, ...] = (sys.executable,)) -> list[str]:
+    """Every gate, in order, in this interpreter; returns the ones that failed."""
     failed = []
     for name, command in GATES:
-        done = subprocess.run(env_prefix + command, cwd=ROOT, capture_output=True, text=True)
+        done = subprocess.run(runner + command, cwd=ROOT, capture_output=True, text=True)
         state = "ok  " if done.returncode == 0 else "FAIL"
         print(f"  {state} {name}")
         if done.returncode != 0:
@@ -102,15 +110,28 @@ def sealed_files(cfg) -> list[Path]:
     """Every sealed input the run will read: the archives and the per-semester tables.
 
     They are hashed, not opened for content.  Naming them here is also the last chance to
-    see the list before it becomes part of the frozen document.
+    see the list before it becomes part of the frozen document.  A file that is not on
+    disk is an error and not a shorter list: the lock would then promise a set of inputs
+    that nobody can check, and the document says twelve.
     """
-    from spjf_guard.data.archive import archive_name
-    from spjf_guard.data.cache import files_for
+    from spjf_guard.data.cache import sealed_inputs
 
-    terms = list(cfg["overlay"]["pools"]["sealed"])
-    out = [cfg.data_path("archive_dir", archive_name(term)) for term in terms]
-    out += list(files_for(cfg.data_path("raw_parquet_dir"), terms))
-    return [p for p in out if p.is_file()]
+    out = sealed_inputs(
+        cfg.data_path("archive_dir"),
+        cfg.data_path("raw_parquet_dir"),
+        list(cfg["overlay"]["pools"]["sealed"]),
+    )
+    missing = [p for p in out if not p.is_file()]
+    if missing:
+        from make_protocol_lock import relative_to_root
+
+        raise SystemExit(
+            "these sealed inputs are not on disk: "
+            + ", ".join(relative_to_root(p, ROOT) for p in missing)
+            + f" ({len(out) - len(missing)} of {len(out)} present). The lock would name "
+            "files it never saw; put them in place or fix the configuration."
+        )
+    return out
 
 
 def hash_sealed_inputs(cfg, root: Path) -> list[dict]:
@@ -191,19 +212,26 @@ def main() -> int:
     print("3. the sealed inputs")
     cfg = cfgmod.load(args.config)
     terms = list(cfg["overlay"]["pools"]["sealed"])
+    files = sealed_files(cfg)
+    if args.dry_run:
+        # A dry run does not open a sealed file, not even to weigh it: reading the bytes
+        # to hash them is an opening, and an opening that writes no ledger row is exactly
+        # what the ledger exists to prevent.  The names and the sizes are what a person
+        # checks here, and `stat` reads neither.
+        from make_protocol_lock import relative_to_root
+
+        for path in files:
+            print(f"  {path.stat().st_size:>14,}  {relative_to_root(path, ROOT)}")
+        print(f"  dry run: {len(files)} sealed file(s) listed, none opened, none hashed")
+        print(f"  dry run: {FROZEN} not written, no ledger row appended")
+        return 0
     entries = hash_sealed_inputs(cfg, ROOT)
     for entry in entries:
         print(f"  {entry['sha256'][:16]}  {entry['bytes']:>14,}  {entry['path']}")
-    if not entries:
-        print("  FAIL no sealed input is on disk; the lock would promise files it never saw")
-        return 1
 
     print("4. the lock")
     draft = json.loads(draft_path.read_text(encoding="utf-8"))
     document = build_frozen(draft, commit, entries)
-    if args.dry_run:
-        print(f"  dry run: {FROZEN} not written, {len(entries)} ledger row(s) not appended")
-        return 0
     if not args.yes:
         print("  re-run with --yes to write the lock; freezing is a decision, not a step")
         return 0

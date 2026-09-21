@@ -75,6 +75,44 @@ def compare_tables(tables: dict, out_dir: Path, semester: str) -> list[dict]:
     return rows
 
 
+def parse_one(args, archives: Path, out_dir: Path, semester: str, outcome) -> int:
+    """One semester, from its archive: compare it or write it.  Returns failing columns.
+
+    The ledger row belongs to the reading, not to the writing: `--compare` opens the
+    archive exactly as a write does, and it used to return before anything was recorded.
+    """
+    path = Path(archives) / archive_name(semester)
+    if not path.is_file():
+        raise SystemExit(f"{path} is not on disk")
+    started = time.time()
+    outcome.at("流式解析归档")
+    tables, stats = parse_archive(path)
+    if stats["semester"] != semester:
+        raise SystemExit(f"{path.name} holds semester {stats['semester']!r}, not {semester!r}")
+    print(
+        f"{semester}: {stats['n_events']:,} events, {stats['n_users']} users, "
+        f"{stats['n_assessments']} assessments, {stats['n_logins']:,} logins, "
+        f"{stats['n_cm_rows']:,} editor minutes, {stats['uncompressed_mb']:.0f} MB read "
+        f"in {time.time() - started:.0f} s",
+        flush=True,
+    )
+    if args.compare:
+        rows = compare_tables(tables, out_dir, semester)
+        bad = [r for r in rows if r["status"] != "equal"]
+        for row in bad:
+            print(f"   {row['table']:12s} {row['column']:16s} {row['status']}")
+        print(f"   {len(rows) - len(bad)} of {len(rows)} columns equal")
+        outcome.done(
+            f"{stats['n_events']:,} 行事件重新解析，与盘上的 parquet 逐列比较"
+            f"（{len(rows) - len(bad)}/{len(rows)} 列相等），未写盘"
+        )
+        return len(bad)
+    written = write_tables(tables, out_dir, semester)
+    print("   wrote " + ", ".join(str(p.relative_to(ROOT)) for p in written))
+    outcome.done(f"{stats['n_events']:,} 行事件解析进 {out_dir.name}/")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", type=Path, default=ROOT / "configs" / "main.yaml")
@@ -97,39 +135,10 @@ def main() -> int:
 
     failures = 0
     for semester in semesters:
-        path = Path(archives) / archive_name(semester)
-        if not path.is_file():
-            raise SystemExit(f"{path} is not on disk")
-        started = time.time()
-        tables, stats = parse_archive(path)
-        if stats["semester"] != semester:
-            raise SystemExit(
-                f"{path.name} holds semester {stats['semester']!r}, not {semester!r}"
-            )
-        print(
-            f"{semester}: {stats['n_events']:,} events, {stats['n_users']} users, "
-            f"{stats['n_assessments']} assessments, {stats['n_logins']:,} logins, "
-            f"{stats['n_cm_rows']:,} editor minutes, {stats['uncompressed_mb']:.0f} MB read "
-            f"in {time.time() - started:.0f} s",
-            flush=True,
-        )
-        if args.compare:
-            rows = compare_tables(tables, out_dir, semester)
-            bad = [r for r in rows if r["status"] != "equal"]
-            for row in bad:
-                print(f"   {row['table']:12s} {row['column']:16s} {row['status']}")
-            print(f"   {len(rows) - len(bad)} of {len(rows)} columns equal")
-            failures += len(bad)
-            continue
-        written = write_tables(tables, out_dir, semester)
-        print("   wrote " + ", ".join(str(p.relative_to(ROOT)) for p in written))
-        sealed.record_run(
-            ROOT,
-            "scripts/parse_archive.py",
-            [semester],
-            f"{stats['n_events']:,} 行事件解析进 {out_dir.name}/",
-            unseal=args.unseal,
-        )
+        with sealed.recording(
+            ROOT, "scripts/parse_archive.py", [semester], args.unseal
+        ) as outcome:
+            failures += parse_one(args, archives, out_dir, semester, outcome)
     return 1 if failures else 0
 
 

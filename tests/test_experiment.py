@@ -270,3 +270,9 @@ def test_every_number_in_a_latex_row_is_wrapped():
         free = re.sub(r"\\devnum\{[^}]*\}", "", line)
         assert not re.search(r"\d", free), f"an unwrapped number survives in {free!r}"
     assert devnum(float("nan")) == r"\devnum{---}"
+
+    sealed_text = latex_table(rows, "caption", "tab:x", macro="sealednum")
+    assert r"\devnum" not in sealed_text, "a sealed table must not be marked development"
+    for line in [ln for ln in sealed_text.splitlines() if ln.startswith((" & ", "$\\rho"))]:
+        free = re.sub(r"\\sealednum\{[^}]*\}", "", line)
+        assert not re.search(r"\d", free), f"an unwrapped number survives in {free!r}"
