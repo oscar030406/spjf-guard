@@ -52,13 +52,13 @@ from spjf_guard.experiment.overlay import (  # noqa: E402
 )
 
 
-def clock_from(cfg):
+def clock_from(cfg, delta_s: float | None = None):
     from spjf_guard.data.clock import Clock
 
     section = cfg["clock"]
     return Clock(
         reading=section["reading"],
-        delta_s=float(section["delta_s"]),
+        delta_s=float(section["delta_s"] if delta_s is None else delta_s),
         test_outcome_lag_s=float(section["test_block_outcome_lag_s"]),
         jitter_enabled=bool(section["jitter"]["enabled"]),
         jitter_key=section["jitter"]["key"],
@@ -111,6 +111,10 @@ def prepare_everything(cfg, terms, unseal: bool):
 STORED_SCORES = {
     "tweedie": ("tweedie", cfgmod.SCORE_KEY),
     "log": ("log", cfgmod.LOG_SCORE_KEY),
+    "tweedie_conservative": (f"{cfgmod.SCORE_KEY}_conservative",),
+    "log_conservative": (f"{cfgmod.LOG_SCORE_KEY}_conservative",),
+    "tweedie_static": (f"{cfgmod.SCORE_KEY}_static",),
+    "log_static": (f"{cfgmod.LOG_SCORE_KEY}_static",),
 }
 """Array name in the trace -> the column spellings a score file may carry: the pre-check's
 (`tweedie`, `log`) and this package's own (`spjf_e`, `spjf_log`)."""

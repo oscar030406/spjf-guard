@@ -7,7 +7,7 @@ import pytest
 
 from conftest import LIMIT_S, random_trace
 from spjf_guard.sim import Policy, guard, simulate, spjf
-from spjf_guard.sim.policy import fcfs, sjf
+from spjf_guard.sim.policy import aging, fcfs, sjf
 from spjf_guard.sim.reference import kiefer_wolfowitz, lindley
 
 SERVERS = (1, 2, 3, 4, 7)
@@ -30,6 +30,22 @@ def test_fcfs_equals_the_lindley_recursion_at_one_server(rng):
     trace = random_trace(rng, 5000, 1, load=0.9)
     out = simulate(trace, fcfs(), 1)
     assert np.array_equal(out.wait_us, lindley(trace.arrival_us, trace.service_us))
+
+
+def test_linear_aging_is_the_equivalent_static_arrival_adjustment():
+    from spjf_guard.sim import Trace
+
+    trace = Trace.from_seconds(
+        [0.0, 1.0, 9.0],
+        [10.0, 1.0, 1.0],
+        scores={"pred": np.array([0.0, 10.0, 1.0])},
+    )
+    aged = simulate(trace, aging("pred", 2.0), 1)
+    transformed = trace.scores["pred"] + 2.0 * (trace.arrival_us - trace.arrival_us[0]) / 1e6
+    explicit = Trace(trace.arrival_us, trace.service_us, {"adjusted": transformed})
+    static = simulate(explicit, spjf("adjusted"), 1)
+    np.testing.assert_array_equal(aged.dispatch_order, static.dispatch_order)
+    assert aged.dispatch_order.tolist() == [0, 1, 2]
 
 
 @pytest.mark.parametrize("k", (2, 3, 4, 7))

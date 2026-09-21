@@ -70,6 +70,34 @@ features:
   visibility_rule: "done_j + delta <= a_i"
   set: M4
   groups: [code_static, exercise_history, user_history, user_exercise_prior, schedule]
+  # The original-clock scores remain an explicitly optimistic reference.  The headline
+  # uses only replayed submissions from the same shifted class-term copy and delays every
+  # result by D.  On the development cells max W_FCFS = 1544.602708 s, so the guard
+  # theorem requires at most 2744.602708 s for G <= 1200 s; D = 3600 s leaves an
+  # 855.397292 s (31.2%) margin.  Every run still reports W > D by policy and cell.
+  headline_variant: conservative
+  visibility_variants:
+    original:
+      score_suffix: ""
+      delta_s: 0.0
+      feature_group: M4
+      history_scope: global
+      eligible_results_only: false
+    conservative:
+      score_suffix: _conservative
+      delta_s: 3600.0
+      feature_group: M4
+      history_scope: class_term
+      eligible_results_only: true
+      development_max_fcfs_wait_s: 1544.602708
+      largest_guard_promise_s: 1200.0
+      safety_margin_s: 855.397292
+    static:
+      score_suffix: _static
+      delta_s: 0.0
+      feature_group: STATIC
+      history_scope: global
+      eligible_results_only: false
   # the heavy label and the class cut-offs are refit per target term with no look-ahead
   heavy_quantile: 0.95
   heavy_reference_semesters: ["2018-1", "2018-2", "2019-1", "2019-2"]
@@ -107,7 +135,10 @@ predictor:
 
 # --- scheduling ------------------------------------------------------------------------ #
 scheduling:
+  # run_main keeps the original-clock rows as an optimistic reference so every existing
+  # row remains bit-identical.  The frozen headline is emitted by run_visibility.py.
   ranking_score: spjf_e
+  headline_ranking_score: spjf_e_conservative
   # One mechanism.  budget(q, t) = min(B0 + gam * (waiting at a_q) + eta k (t - a_q), Bmax)
   # and the guarantee depends on the cap Bmax = k(G - (3 - 2/k)L) alone; the shape of the
   # budget under the cap is a design freedom.  The three shapes below are the three
@@ -161,6 +192,19 @@ scheduling:
     fixed_equal_promise: true              # eta = 0, B0 = Bmax; infeasible under the rule
     skip_charge: dispatch                  # N = floor(G k / L - (2k - 2))
   corrupted_scores: [reversed, random, longest_one_percent_called_shortest]
+  aging_baseline:
+    label: Aging(600)
+    guarantee: none
+    priority: "predicted_cost - credit_per_s * current_age_s"
+    reference_promise_s: 600.0
+    credit_per_s_grid: [0.00001, 0.00003, 0.0001, 0.0003, 0.001, 0.003,
+                        0.01, 0.03, 0.1, 0.3, 1.0]
+    selection:
+      trace: validation_only
+      constraint: "harm <= reference_promise_s / 2 in every cell"
+      objective: worst_cell_deadline_window_gap_closed
+      tie_break: [smaller_worst_harm, larger_credit]
+    selected_credit_per_s: 0.03            # selected by the validation rule above
 
 # --- load ------------------------------------------------------------------------------ #
 overlay:
@@ -240,4 +284,13 @@ run:
   # The sealed terms' predictor metrics, from scripts/eval_scores.py.
   sealed_predictor_tables:
     - predictor_metrics.csv
+    - manifest.json
+  # Policy-consistent comparison and original-clock exposure audit.  It is a separate
+  # sealed command because it fits no model and selects no parameter.
+  sealed_visibility_tables:
+    - visibility_cells.csv
+    - visibility_comparison.csv
+    - visibility_paired_differences.csv
+    - visibility_exposure.csv
+    - visibility_waits_and_lag.csv
     - manifest.json

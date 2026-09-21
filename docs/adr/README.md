@@ -13,3 +13,4 @@
 | [0004](0004-sealed-data-path-level-protection.md) | 封存数据的保护放在路径层，由配置锁加显式开关解除 |
 | [0005](0005-one-guard-three-budget-shapes.md) | 护栏是一个机制，预算形状是设计自由度；三张同等密度的网格由同一条规则选出胜者 |
 | [0006](0006-single-server-copies-reused-on-the-sealed-pool.md) | 单机轨迹的拷贝数在开发池上选定，封存池沿用并如实报告利用率 |
+| [0007](0007-policy-consistent-score-visibility.md) | 用班次—学期内的 3600 秒保守可见性作为预测排序的主结果 |

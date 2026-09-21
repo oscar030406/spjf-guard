@@ -3,7 +3,8 @@
     uv run python scripts/emit_paper_tables.py [--dev-dir outputs/dev_tables] \
         [--k1-dir outputs/dev_tables/k1] [--selection outputs/selection_v3] \
         [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
-        [--sealed-predictor-dir <dir>] [--out-dir outputs/paper_tables] [--paper paper]
+        [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] \
+        [--out-dir outputs/paper_tables] [--paper paper]
 
 Two products.  `outputs/paper_tables/*.tex` holds the six development tables with every
 number wrapped in `\\devnum{}`, in the structure the paper's tables already have.
@@ -408,6 +409,56 @@ def predictor_values(rows: list[dict], out: dict, source: str = "sealed_predicto
             add(row.get(field), digits, where)
 
 
+def visibility_values(rows: list[dict], out: dict, source: str = "visibility") -> None:
+    """Scheduling and exposure values printed by the policy-consistency tables."""
+    add = _adder(out)
+    for row in rows:
+        where = f"{source}/visibility_comparison.csv[{row['policy']} level {row['level']}]"
+        for field, digits in (
+            ("p99_dl_s", 2),
+            ("gap_closed", 3),
+            ("gap_closed_lo", 3),
+            ("gap_closed_hi", 3),
+            ("max_excess_s", 1),
+            ("harm_s", 1),
+            ("fired_pct", 2),
+        ):
+            add(row.get(field), digits, where)
+
+
+def visibility_exposure_values(rows: list[dict], out: dict, source: str = "visibility") -> None:
+    """Exposure values, including the percent spellings used by the generated table."""
+    add = _adder(out)
+    for row in rows:
+        where = f"{source}/visibility_exposure.csv[{row['policy']} level {row['level']}]"
+        for field in (
+            "overall_affected_share",
+            "deadline_affected_share",
+            "unreplayed_overall_affected_share",
+            "overall_any_exposure_share",
+        ):
+            value = row.get(field)
+            add(100.0 * float(value) if value not in (None, "") else value, 2, where)
+        for field in ("overall_premature_mean", "overall_premature_p99"):
+            add(row.get(field), 1, where)
+    groups = {(row["level"], row["policy"]) for row in rows}
+    for level, policy in groups:
+        selected = [row for row in rows if row["level"] == level and row["policy"] == policy]
+        where = f"{source}/visibility_exposure.csv[{policy} level {level} mean]"
+
+        def mean(field: str) -> float:
+            return sum(float(row[field]) for row in selected) / len(selected)
+
+        for field in (
+            "overall_affected_share",
+            "deadline_affected_share",
+            "unreplayed_overall_affected_share",
+        ):
+            add(100.0 * mean(field), 2, where)
+        for field in ("overall_premature_mean", "overall_premature_p99"):
+            add(mean(field), 1, where)
+
+
 RESIDUAL_POLICIES = ("SPJF-E", "Guard(600)", "SPJF-reversed")
 """The three policies `tab:resid` prints, on the first overlay."""
 
@@ -465,12 +516,41 @@ def emit_tables(cfg, run: dict, out_dir: Path, sealed: bool = False) -> list[str
     return written
 
 
-def run_values(run: dict, source: str, predictor: list[dict]) -> dict:
+def emit_visibility(tables: Path, out_dir: Path, sealed: bool = False) -> list[str]:
+    """The policy-consistency comparison and the original-clock exposure audit."""
+    comparison = read_rows(tables / "visibility_comparison.csv")
+    exposure = read_rows(tables / "visibility_exposure.csv")
+    written: list[str] = []
+    for stem, text in (
+        ("tab_visibility", pt.visibility_table(comparison) if comparison else ""),
+        ("tab_visibility_audit", pt.visibility_audit_table(exposure) if exposure else ""),
+    ):
+        if not text:
+            continue
+        name = f"{stem}_sealed.tex" if sealed else f"{stem}.tex"
+        (out_dir / name).write_text(as_sealed(text) if sealed else text, encoding="utf-8")
+        written.append(name)
+    return written
+
+
+def run_values(
+    run: dict,
+    source: str,
+    predictor: list[dict],
+    visibility_comparison: list[dict] | None = None,
+    visibility_exposure: list[dict] | None = None,
+) -> dict:
     """Every figure one run produces, indexed by the way the paper would print it."""
     values = produced_values(run["table"], run["k1"], run["residuals"], source)
     difference_values(run["differences"], values, source)
     difference_values(run["k1_differences"], values, f"{source}/k1")
     predictor_values(predictor, values)
+    visibility_values(
+        visibility_comparison or [], values, source.replace("tables", "visibility")
+    )
+    visibility_exposure_values(
+        visibility_exposure or [], values, source.replace("tables", "visibility")
+    )
     return values
 
 
@@ -488,6 +568,10 @@ def main() -> int:
     )
     ap.add_argument("--sealed-k1-dir", type=Path, default=None, help="default: <sealed>/k1")
     ap.add_argument("--sealed-predictor-dir", type=Path, default=None)
+    ap.add_argument(
+        "--dev-visibility-dir", type=Path, default=ROOT / "outputs" / "dev_visibility"
+    )
+    ap.add_argument("--sealed-visibility-dir", type=Path, default=None)
     ap.add_argument("--out-dir", type=Path, default=ROOT / "outputs" / "paper_tables")
     ap.add_argument("--paper", type=Path, default=ROOT / "paper")
     args = ap.parse_args()
@@ -499,6 +583,7 @@ def main() -> int:
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     written = emit_tables(cfg, development, args.out_dir)
+    written += emit_visibility(args.dev_visibility_dir, args.out_dir)
     if development["table"]:
         items = setup_items(
             cfg, development["table"], selection_rows, development["parameters"]
@@ -506,17 +591,31 @@ def main() -> int:
         (args.out_dir / "tab_setup.tex").write_text(pt.setup_table(items), encoding="utf-8")
         written.append("tab_setup.tex")
 
-    produced = run_values(development, "dev_tables", [])
+    produced = run_values(
+        development,
+        "dev_tables",
+        [],
+        read_rows(args.dev_visibility_dir / "visibility_comparison.csv"),
+        read_rows(args.dev_visibility_dir / "visibility_exposure.csv"),
+    )
     sealed_values = None
     if args.sealed_dir is not None:
         sealed_k1 = args.sealed_k1_dir or args.sealed_dir / "k1"
         sealed_run = read_run(cfg, args.sealed_dir, sealed_k1)
         written += emit_tables(cfg, sealed_run, args.out_dir, sealed=True)
+        if args.sealed_visibility_dir is not None:
+            written += emit_visibility(args.sealed_visibility_dir, args.out_dir, sealed=True)
         sealed_values = run_values(
             sealed_run,
             "sealed_tables",
             read_rows(args.sealed_predictor_dir / "predictor_metrics.csv")
             if args.sealed_predictor_dir
+            else [],
+            read_rows(args.sealed_visibility_dir / "visibility_comparison.csv")
+            if args.sealed_visibility_dir
+            else [],
+            read_rows(args.sealed_visibility_dir / "visibility_exposure.csv")
+            if args.sealed_visibility_dir
             else [],
         )
     numbers = paper_numbers(args.paper, produced, sealed_values)

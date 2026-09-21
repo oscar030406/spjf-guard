@@ -75,7 +75,7 @@ def test_the_labels_cover_every_policy_the_configuration_reports(tmp_path):
     unmapped = sorted(n for n in names if n not in dd.POLICY_LABEL)
     # The ablation rows are new in this pass and have no v3.1 counterpart; every policy
     # v3.1 also reported must still map, or the diff would silently skip it.
-    assert all(n.startswith("Guard-") for n in unmapped), unmapped
+    assert all(n.startswith("Guard-") or n == "Aging(600)" for n in unmapped), unmapped
 
 
 def test_the_report_is_written_even_when_nothing_differs(tmp_path):

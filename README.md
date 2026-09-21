@@ -70,11 +70,12 @@ $UV python scripts/build_overlays.py --pool primary
 $UV python scripts/build_overlays.py --pool validation
 $UV python scripts/build_overlays.py --single-server            # k = 1 那条
 $UV python scripts/fit_scores.py --repeat
-$UV python scripts/select_parameters.py --workers 3             # 只用验证叠加
+$UV python scripts/select_parameters.py --workers 2             # 只用验证叠加
+$UV python scripts/select_aging.py --workers 2                  # 无保证的简单 aging 基线
 
 # 4 主实验：五次叠加 × 三档负载，写 outputs/dev_tables/ 下的 CSV 与 .tex
 $UV python scripts/run_main.py --selection outputs/selection_v3/selected_parameters.csv \
-    --out-dir outputs/dev_tables --workers 3
+    --out-dir outputs/dev_tables --workers 2
 
 # 4b 单服务器那条（恒等式在 k = 1 严格相等）
 $UV python scripts/run_main.py --prefix k1 --reps 0 --levels 0 \
@@ -82,6 +83,9 @@ $UV python scripts/run_main.py --prefix k1 --reps 0 --levels 0 \
 
 # 4c 排序分数当预测器看：逐目标学期的 AUROC、AP、log1p 尺度 RMSE、Spearman 与按用户分块的区间
 $UV python scripts/eval_scores.py --pool primary                    # 写 outputs/dev_predictor/
+
+# 4d 原时钟暴露 + conservative/static，对 Guard 参数不重选
+$UV python scripts/run_visibility.py --pool primary --workers 2     # 写 outputs/dev_visibility/
 
 # 5 验收与对照
 $UV python scripts/check_reproduction.py --overlay-dir data/derived/overlay_traces
@@ -92,7 +96,7 @@ $UV python scripts/check_paper_numbers.py                           # 论文印�
 $UV python scripts/check_generated.py                               # 生成物没被手改、没有机器路径
 ```
 
-选参跑的是三张预先写定的网格（常数预算 42 点、随等待放宽 162 点、随队列长度放宽 54 点，见 ADR 0005），一个 cell 约 250 次仿真、约 20 分钟，15 个 cell 约 5 小时。逐 cell 落盘：崩了原样重跑会跳过已测的格，`--from-grid` 只重算规则不重跑仿真，`--part i --nparts n` 把一个 cell 拆成几段。机器还有空闲核时可以按叠加拆成几条命令同时跑（`--overlays 1,2` 与 `--overlays 3,4` 各 `--workers 3`，写进同一个 `--out-dir`），跑完再用 `--from-grid` 对齐十五格一次性出选择——**分开跑的每条命令自己那一步写出的 `selected_parameters.csv` 只看得到它测过的格，不是最终结果**，以 `--from-grid` 那一次为准。
+选参跑的是三张预先写定的网格（常数预算 42 点、随等待放宽 162 点、随队列长度放宽 54 点，见 ADR 0005），展开共 258 点、在一个 server count 下去重为 243 条调度。本机 `--workers 2` 的 conservative 单格实测约 29 分钟，十五格约 7.3 小时。逐 cell 落盘：崩了原样重跑会跳过已测的格，`--from-grid` 只重算规则不重跑仿真，`--part i --nparts n` 把一个 cell 拆成几段。分段命令写进同一个 `--out-dir` 后，用 `--from-grid` 对齐十五格一次性出选择；**分开跑的每条命令自己写出的 `selected_parameters.csv` 只看得到它测过的格，不是最终结果**。
 
 第 4 步里每一次带护栏的仿真都在运行中对**每一个** job 断言定理二的上界，不是事后在汇总量上查。第 5 步把这份代码的逐任务等待和 `prechecks/` 内核的逐任务等待对齐，并把汇总数字和 `prechecks/main_v3/v31/table_main_primary.csv` 对照。
 
@@ -105,7 +109,7 @@ $UV python scripts/check_generated.py                               # 生成物�
 封存的是 CodeBench 2023-1 / 2023-2 / 2024-1、ACcoding 编号 80%–100%、OULAD 2014。在冻结之前，任何会读到它们的调用都会抛 `SealedDataError`，而且拒绝发生在打开文件之前（`src/spjf_guard/data/sealed.py`，理由见 ADR 0004）。
 
 ```bash
-# 0 先彩排：打印会读哪些文件、锁的状态、16 条策略与参数，但一个文件都不打开
+# 0 先彩排：打印会读哪些文件、锁的状态、策略与参数，但一个文件都不打开
 $UV python scripts/run_main.py --config configs/main.yaml --dry-run-sealed
 
 # 1 写配置锁草稿：代码、配置、输入产物的 sha256，加上方案要求钉死的全部选择
@@ -118,14 +122,17 @@ $UV python scripts/freeze_protocol.py --yes
 git add protocol_lock.json docs/sealed_access_log.md    # 锁与冻结写的十二行台账一起提交
 git commit -m "Freeze the protocol"
 
-# 3 只此一次，打开封存学期（七步都要 --unseal）
+# 3 只此一次，打开封存学期（八步都要 --unseal）
 $UV python scripts/build_cache.py --pool sealed --unseal          # 写 ev_sealed.parquet
 $UV python scripts/build_overlays.py --pool sealed --no-scores --unseal
 $UV python scripts/fit_scores.py --pool sealed \
     --out data/derived/package_ranking_scores/sealed_scores.parquet --unseal
 $UV python scripts/run_main.py --config configs/main.yaml --pool sealed \
     --score-parquet data/derived/package_ranking_scores/sealed_scores.parquet \
-    --out-dir outputs/sealed_tables --unseal
+    --out-dir outputs/sealed_tables --workers 2 --unseal
+$UV python scripts/run_visibility.py --config configs/main.yaml --pool sealed \
+    --scores data/derived/package_ranking_scores/sealed_scores.parquet \
+    --out-dir outputs/sealed_visibility --workers 2 --unseal
 $UV python scripts/build_overlays.py --pool sealed --single-server --no-scores --unseal
 $UV python scripts/run_main.py --config configs/main.yaml --pool sealed \
     --prefix sealed_k1 --reps 0 --levels 0 \
@@ -137,12 +144,14 @@ $UV python scripts/eval_scores.py --pool sealed \
 
 # 4 出表与核对（不读封存数据，不要 --unseal）
 $UV python scripts/emit_paper_tables.py --sealed-dir outputs/sealed_tables \
-    --sealed-predictor-dir outputs/sealed_predictor
+    --sealed-predictor-dir outputs/sealed_predictor \
+    --sealed-visibility-dir outputs/sealed_visibility
 $UV python scripts/check_paper_numbers.py --sealed-dir outputs/sealed_tables \
-    --sealed-predictor-dir outputs/sealed_predictor
+    --sealed-predictor-dir outputs/sealed_predictor \
+    --sealed-visibility-dir outputs/sealed_visibility
 ```
 
-封存学期的解析缓存是自己的一份 `ev_sealed.parquet`，开发期的 `ev.parquet` 原样留着：每个滚动起点的训练集都在开发缓存里，覆盖掉它封存运行就没有训练行了。这七条命令每条跑完自己往 `docs/sealed_access_log.md` 追加一行（日期、脚本、读了哪些封存学期、产出了什么、谁看过、是否影响设计），冻结时对十二个封存输入文件求哈希也各记一行。要防的是「看了测试结果再改方法」，不是文件只能打开一次。封存学期上实际达到的利用率如实报告，不回头调 k 去凑目标值——单机轨迹的拷贝数也一样，沿用开发池选出的 321 份，见 ADR 0006。详细步骤见 `docs/sealed_run_procedure.md`。
+封存学期的解析缓存是自己的一份 `ev_sealed.parquet`，开发期的 `ev.parquet` 原样留着：每个滚动起点的训练集都在开发缓存里，覆盖掉它封存运行就没有训练行了。这八条命令每条跑完自己往 `docs/sealed_access_log.md` 追加一行（日期、脚本、读了哪些封存学期、产出了什么、谁看过、是否影响设计），冻结时对十二个封存输入文件求哈希也各记一行。要防的是「看了测试结果再改方法」，不是文件只能打开一次。封存学期上实际达到的利用率如实报告，不回头调 k 去凑目标值——单机轨迹的拷贝数也一样，沿用开发池选出的 321 份，见 ADR 0006。详细步骤见 `docs/sealed_run_procedure.md`。
 
 逐步的前置检查、耗时与磁盘占用、中途崩了怎么重跑，见 `docs/sealed_run_procedure.md`。
 

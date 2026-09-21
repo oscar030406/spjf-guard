@@ -133,6 +133,10 @@ def simulate(trace: Trace, policy: Policy, k: int, window: int = DEFAULT_WINDOW)
         score = trace.score_for(policy.score_key)
         if len(score) != len(trace):
             raise ValueError("score array does not match the trace length")
+        if policy.age_credit_per_s > 0.0:
+            age_origin = trace.arrival_us[0]
+            arrival_s = (trace.arrival_us - age_origin) / MICROS
+            score = score + policy.age_credit_per_s * arrival_s
     if policy.wrapper == WRAP_WORK and policy.b0_us > policy.bmax_us > 0:
         raise ValueError("B0 must not exceed B_max")
     en, ed = eta_fraction(policy.eta_k)

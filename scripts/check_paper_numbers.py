@@ -3,7 +3,7 @@
     uv run python scripts/check_paper_numbers.py [--paper paper] \
         [--dev-dir outputs/dev_tables] [--package-dir outputs/paper_tables] \
         [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
-        [--sealed-predictor-dir <dir>] [--only A]
+        [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] [--only A]
 
 `check_generated.py --only paper_numbers` asks a different question: whether every number
 in the paper has *some* stated source.  This script asks whether the numbers that claim
@@ -644,6 +644,7 @@ def policy_expectations(t: Tables, promises=(300, 600, 1200), levels=(0, 1, 2)) 
 
 def assertion_expectations(t: Tables, promises=(300, 600, 1200)) -> list:
     """The two things the runs assert job by job, and the single-server trace."""
+    legacy_residuals = [row for row in t.residuals if row["policy"] != "Aging(600)"]
     want = [
         (EXPERIMENTS, "guarded runs", str(len(t.bound))),
         (
@@ -665,7 +666,7 @@ def assertion_expectations(t: Tables, promises=(300, 600, 1200)) -> list:
         (
             EXPERIMENTS,
             "identity job-checks",
-            thousands(sum(int(r["n_jobs"]) for r in t.residuals)),
+            thousands(sum(int(r["n_jobs"]) for r in legacy_residuals)),
         ),
         (
             EXPERIMENTS,
@@ -904,18 +905,30 @@ def check_sealed_tables(paper: Path, package_dir: Path, labels, cache=None) -> l
     return complaints
 
 
-def check_sealed_predictor(paper: Path, rows: list[dict], cache=None) -> list[str]:
-    """D2: every sealed figure the paper quotes in prose comes from that table.
+def check_sealed_prose(
+    paper: Path,
+    predictor: list[dict],
+    visibility_comparison: list[dict],
+    visibility_exposure: list[dict],
+    cache=None,
+) -> list[str]:
+    """D2: every sealed figure in prose comes from a pinned sealed output.
 
     The predictor's figures have no table of their own: the paper states them in running
     text, and that text is read wherever it sits.
     """
-    from emit_paper_tables import predictor_values
+    from emit_paper_tables import (
+        predictor_values,
+        visibility_exposure_values,
+        visibility_values,
+    )
 
-    if not rows:
+    if not (predictor or visibility_comparison or visibility_exposure):
         return []
     values: dict[str, str] = {}
-    predictor_values(rows, values)
+    predictor_values(predictor, values)
+    visibility_values(visibility_comparison, values, "sealed_visibility")
+    visibility_exposure_values(visibility_exposure, values, "sealed_visibility")
     known = {normalise(v) for v in values}
     printed, stray = 0, []
     for name, text in _running_text(paper, {} if cache is None else cache).items():
@@ -924,13 +937,18 @@ def check_sealed_predictor(paper: Path, rows: list[dict], cache=None) -> list[st
             if normalise(value) not in known:
                 stray.append((name, normalise(value)))
     print(
-        f"   predictor prose    {printed - len(stray)} of {printed} sealed figures"
-        f" come from predictor_metrics.csv"
+        f"   sealed prose       {printed - len(stray)} of {printed} sealed figures"
+        f" come from predictor or visibility outputs"
     )
     return [
-        f"{name}: sealed figure {value} is not in the sealed predictor table"
+        f"{name}: sealed figure {value} is not in a sealed predictor or visibility output"
         for name, value in stray
     ]
+
+
+def check_sealed_predictor(paper: Path, rows: list[dict], cache=None) -> list[str]:
+    """Backward-compatible predictor-only spelling used by focused tests."""
+    return check_sealed_prose(paper, rows, [], [], cache)
 
 
 def run(
@@ -941,6 +959,7 @@ def run(
     sealed: Path | None = None,
     sealed_k1: Path | None = None,
     sealed_predictor: Path | None = None,
+    sealed_visibility: Path | None = None,
 ) -> list[str]:
     """Every check that `only` allows; returns the complaints, empty when the paper agrees."""
     cache: dict = {}
@@ -956,10 +975,16 @@ def run(
         k1 = read_rows((sealed_k1 or sealed / "k1") / "main_table.csv", optional=True)
         labels = [t for t in TABLES if t != "tab:k1" or k1]
         complaints += check_sealed_tables(paper, package_dir, labels, cache)
-        complaints += check_sealed_predictor(
+        complaints += check_sealed_prose(
             paper,
             read_rows(sealed_predictor / "predictor_metrics.csv", optional=True)
             if sealed_predictor
+            else [],
+            read_rows(sealed_visibility / "visibility_comparison.csv", optional=True)
+            if sealed_visibility
+            else [],
+            read_rows(sealed_visibility / "visibility_exposure.csv", optional=True)
+            if sealed_visibility
             else [],
             cache,
         )
@@ -974,6 +999,7 @@ def main() -> int:
     ap.add_argument("--sealed-dir", type=Path, default=None, help="the sealed run's tables")
     ap.add_argument("--sealed-k1-dir", type=Path, default=None, help="default: <sealed>/k1")
     ap.add_argument("--sealed-predictor-dir", type=Path, default=None)
+    ap.add_argument("--sealed-visibility-dir", type=Path, default=None)
     ap.add_argument("--only", choices=("A", "B", "C", "D"))
     args = ap.parse_args()
 
@@ -985,6 +1011,7 @@ def main() -> int:
         args.sealed_dir,
         args.sealed_k1_dir,
         args.sealed_predictor_dir,
+        args.sealed_visibility_dir,
     )
     for complaint in complaints:
         print(f"   FAIL {complaint}")

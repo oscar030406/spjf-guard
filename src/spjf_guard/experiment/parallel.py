@@ -16,10 +16,40 @@ import numpy as np
 _ARRAYS: dict[str, np.ndarray] = {}
 _TRACE = None
 
-ARRAY_NAMES = ("arrival_us", "service_us", "in_window", "is_heavy", "week", "fcfs_wait_us")
+ARRAY_NAMES = (
+    "arrival_us",
+    "service_us",
+    "in_window",
+    "is_heavy",
+    "week",
+    "fcfs_wait_us",
+    "job_row",
+    "copy_round",
+    "hist_user_local",
+    "hist_user_offset",
+    "hist_user_length",
+    "hist_user_query",
+    "hist_exercise_local",
+    "hist_exercise_offset",
+    "hist_exercise_length",
+    "hist_exercise_query",
+    "hist_pair_local",
+    "hist_pair_offset",
+    "hist_pair_length",
+    "hist_pair_query",
+    "hist_unreplayed",
+    "hist_layout_sizes",
+)
 
 
-def write_cell(directory: Path, trace, labels, fcfs_wait_us, scores: dict) -> Path:
+def write_cell(
+    directory: Path,
+    trace,
+    labels,
+    fcfs_wait_us,
+    scores: dict,
+    extra_arrays: dict[str, np.ndarray] | None = None,
+) -> Path:
     """Materialise one cell so that workers can map it instead of receiving it."""
     directory.mkdir(parents=True, exist_ok=True)
     np.save(directory / "arrival_us.npy", trace.arrival_us)
@@ -31,6 +61,8 @@ def write_cell(directory: Path, trace, labels, fcfs_wait_us, scores: dict) -> Pa
         np.save(directory / "week.npy", labels["week"])
     for name, values in scores.items():
         np.save(directory / f"score_{name}.npy", np.asarray(values, np.float64))
+    for name, values in (extra_arrays or {}).items():
+        np.save(directory / f"{name}.npy", np.asarray(values))
     return directory
 
 
@@ -127,6 +159,16 @@ def _run(task: dict):
         payload["replicates"] = _bootstrap(
             out.wait_us, np.asarray(_ARRAYS["week"]), task["bootstrap"], in_window
         )
+    if task.get("diagnostics"):
+        from spjf_guard.experiment.visibility import diagnostics
+
+        payload["diagnostics"] = diagnostics(
+            out.wait_us, in_window, float(task["visibility_lag_s"])
+        )
+    if task.get("exposure"):
+        from spjf_guard.experiment.visibility import exposure_summary
+
+        payload["exposure"] = exposure_summary(out.wait_us, _ARRAYS)
     if task.get("keep_waits"):
         payload["wait_us"] = out.wait_us
     return task["tag"], payload

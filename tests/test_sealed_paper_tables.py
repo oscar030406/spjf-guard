@@ -204,3 +204,19 @@ def test_a_sealed_predictor_figure_the_paper_invents_is_caught(tmp_path):
     assert cpn.check_sealed_predictor(paper, rows) == []
     section.write_text("AUROC \\sealednum{0.9321} on the sealed terms\n", encoding="utf-8")
     assert len(cpn.check_sealed_predictor(paper, rows)) == 1
+
+
+def test_a_sealed_visibility_figure_is_a_known_prose_source(tmp_path):
+    paper = tmp_path / "paper"
+    paper.mkdir()
+    (paper / "08_experiments.tex").write_text(
+        "gap closed \\sealednum{0.641}\n", encoding="utf-8"
+    )
+    comparison = [
+        {
+            "level": 0,
+            "policy": "Guard(600)",
+            "gap_closed": 0.641,
+        }
+    ]
+    assert cpn.check_sealed_prose(paper, [], comparison, []) == []

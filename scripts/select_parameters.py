@@ -19,11 +19,14 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import shutil
 import sys
 import tempfile
 import time
 from pathlib import Path
+
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -209,6 +212,50 @@ def write(rows, path: Path) -> Path:
     return path
 
 
+def write_protocol(cfg, chosen, grid_rows, path: Path) -> Path:
+    """The exact expanded grids and every count behind the selection table."""
+    points = grids.grid_points(cfg["scheduling"]["selection"]["grids"], cfg.promises_s)
+    servers = sorted({int(row["k"]) for row in grid_rows})
+    schedules = {}
+    for k in servers:
+        pairs, distinct = cell_policies(cfg, k)
+        schedules[str(k)] = {
+            "expanded_points": len(pairs),
+            "distinct_schedules": len(distinct),
+        }
+    document = {
+        "definition": cfg["scheduling"]["selection"]["grids"],
+        "expanded_points": [
+            {
+                "name": point.name,
+                "family": point.family,
+                "promise_s": point.promise_s,
+                "b0_base_s": point.b0_base_s,
+                "eta": point.eta,
+                "gam_base_s": point.gam_base_s,
+            }
+            for point in points
+        ],
+        "counts": [
+            {
+                "family": item.family,
+                "promise_s": item.promise_s,
+                "n_candidates": item.n_candidates,
+                "n_feasible": item.n_feasible,
+            }
+            for item in chosen
+        ],
+        "per_server_count": schedules,
+        "explanation": (
+            "Expanded points include schedules shared across promises. Candidate counts "
+            "apply the realised-promise filter at each G; distinct schedules deduplicate "
+            "points that dispatch identically at one server count."
+        ),
+    }
+    path.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
 def read_cells(paths) -> list[dict]:
     rows: list[dict] = []
     for path in paths:
@@ -234,6 +281,17 @@ def measure(cfg, args, out_dir: Path, scratch: Path) -> list[Path]:
             trace, servers, labels = load_overlay(
                 path, level, {args.score_array: SCORE}, cfg.limit_s
             )
+            if args.external_score is not None:
+                from spjf_guard.sim import Trace
+
+                with np.load(path) as store:
+                    rows = store["job_row"].astype(np.int64)
+                trace = Trace(
+                    trace.arrival_us,
+                    trace.service_us,
+                    {SCORE: args.external_score[rows]},
+                    trace.limit_s,
+                )
             rows, n_distinct, n_points = run_cell(
                 cfg,
                 trace,
@@ -290,6 +348,13 @@ def main() -> int:
     ap.add_argument("--overlays", default="0,1,2,3,4")
     ap.add_argument("--levels", default="0,1,2")
     ap.add_argument("--score-array", default="tweedie")
+    ap.add_argument(
+        "--score-parquet",
+        type=Path,
+        default=None,
+        help="attach one regenerated score column by job_row instead of a stored array",
+    )
+    ap.add_argument("--score-column", default=None)
     ap.add_argument("--out-dir", type=Path, default=None)
     ap.add_argument("--workers", type=int, default=3)
     ap.add_argument("--scratch", type=Path, default=None)
@@ -302,6 +367,14 @@ def main() -> int:
     args = ap.parse_args()
 
     cfg = cfgmod.load(args.config)
+    args.external_score = None
+    if args.score_parquet is not None:
+        import pandas as pd
+
+        column = args.score_column or str(cfg["scheduling"]["ranking_score"])
+        args.external_score = pd.read_parquet(args.score_parquet, columns=[column])[
+            column
+        ].to_numpy("float64")
     out_dir = args.out_dir or (ROOT / cfg["run"]["output_dir"] / "selection")
     harm_fraction = float(cfg["scheduling"]["selection"]["harm_fraction"])
     scratch = args.scratch or Path(tempfile.mkdtemp(prefix="spjf_select_"))
@@ -345,24 +418,34 @@ def main() -> int:
     written.append(
         write(selection_rows(chosen, cells, harm_fraction), out_dir / "selected_parameters.csv")
     )
+    written.append(write_protocol(cfg, chosen, grid_rows, out_dir / "selection_protocol.json"))
     provenance.write(
         out_dir,
         produced_by="scripts/select_parameters.py",
         config_path=args.config,
         outputs=written,
         inputs=(
-            []
-            if args.overlay_dir is None
-            else [
-                args.overlay_dir / f"{args.pool}_rep{o}.npz"
-                for o in (int(x) for x in args.overlays.split(","))
-            ]
+            ([args.score_parquet] if args.score_parquet is not None else [])
+            + (
+                []
+                if args.overlay_dir is None
+                else [
+                    args.overlay_dir / f"{args.pool}_rep{o}.npz"
+                    for o in (int(x) for x in args.overlays.split(","))
+                ]
+            )
         ),
         arguments={
             "pool": args.pool,
             "overlays": args.overlays,
             "levels": args.levels,
             "score_array": args.score_array,
+            "score_parquet": (
+                provenance.relative_path(args.score_parquet)
+                if args.score_parquet is not None
+                else None
+            ),
+            "score_column": args.score_column,
         },
         notes={
             "harm_fraction": harm_fraction,

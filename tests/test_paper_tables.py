@@ -120,6 +120,36 @@ def test_the_residual_table_prints_the_share_as_a_percentage():
     assert _undecorated_digits(text) == []
 
 
+def test_visibility_tables_wrap_comparison_and_exposure_numbers():
+    rows = []
+    for variant, policy in (
+        ("original", "Guard(600)-original"),
+        ("conservative", "Guard(600)"),
+        ("static", "Guard(600)-static"),
+    ):
+        row = dict(_table_rows()[0])
+        row.update({"policy": policy, "variant": variant})
+        rows.append(row)
+    comparison = pt.visibility_table(rows)
+    assert r"\label{tab:visibility}" in comparison
+    assert _undecorated_digits(comparison) == []
+
+    exposure = [
+        {
+            "level": 0,
+            "policy": "Guard(600)",
+            "overall_affected_share": 0.8,
+            "deadline_affected_share": 0.7,
+            "overall_premature_mean": 120.0,
+            "overall_premature_p99": 900.0,
+            "unreplayed_overall_affected_share": 0.95,
+        }
+    ]
+    audit = pt.visibility_audit_table(exposure)
+    assert r"\label{tab:visibility_audit}" in audit
+    assert _undecorated_digits(audit) == []
+
+
 @pytest.mark.skipif(
     not (ROOT / "outputs" / "paper_tables" / "numbers.csv").is_file(),
     reason="the numbers map has not been emitted on this machine",

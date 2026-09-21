@@ -18,6 +18,7 @@ is a rolling quantile and not a whole-term one.
 from __future__ import annotations
 
 from collections import deque
+from dataclasses import replace
 from math import log1p, sqrt
 
 import numpy as np
@@ -78,6 +79,7 @@ GROUPS = {
     "M4": list(CODE_COLUMNS) + CTX_COLS + HIST_COLS,
     "M5": list(CODE_COLUMNS) + CTX_COLS + HIST_COLS + REL_COLS,
     "M6": list(CODE_COLUMNS) + CTX_COLS + HIST_COLS + PERM_COLS,
+    "STATIC": list(CODE_COLUMNS) + CTX_COLS,
 }
 """Feature groups.  M4 is the set the scheduling experiment uses."""
 
@@ -87,21 +89,52 @@ _HIST_MISSING_EX = (_NAN,) * 8
 _HIST_MISSING_USER = (_NAN,) * 6
 
 
-def _merged_stream(prepared, arrival, availability):
+def _merged_stream(prepared, arrival, availability, record_mask=None):
     """(type, record) in (time, type, record) order, as one pass of lexsort."""
     n = len(arrival)
     rows = prepared.submission_rows
     n_sub = len(rows)
+    records = (
+        np.arange(n, dtype=np.int64)
+        if record_mask is None
+        else np.flatnonzero(np.asarray(record_mask, bool))
+    )
     if not np.all(availability >= arrival):
         raise AssertionError("a result became available before its own arrival")
-    zero_lag = availability == arrival
-    time = np.concatenate([availability, arrival[rows], arrival])
+    zero_lag = availability[records] == arrival[records]
+    time = np.concatenate([availability[records], arrival[rows], arrival[records]])
     kind = np.concatenate(
-        [np.where(zero_lag, 3, 0), np.ones(n_sub, np.int64), np.full(n, 2, np.int64)]
+        [
+            np.where(zero_lag, 3, 0),
+            np.ones(n_sub, np.int64),
+            np.full(len(records), 2, np.int64),
+        ]
     )
-    record = np.concatenate([np.arange(n), rows, np.arange(n)])
+    record = np.concatenate([records, rows, records])
     order = np.lexsort((record, kind, time))
     return kind[order].tolist(), record[order].tolist()
+
+
+def class_term_scoped(prepared):
+    """Give each class-term an independent user and exercise namespace.
+
+    An overlay entry is one shifted copy of one class-term.  Scoping the history before
+    fitting means that a copied score depends only on records with a unique counterpart
+    inside that same entry; independently shifted class-terms cannot supply one another
+    with outcomes from the original calendar.
+    """
+    exercise, exercise_uniques = pd.factorize(
+        pd.MultiIndex.from_arrays([prepared.class_term, prepared.exercise])
+    )
+    user, _ = pd.factorize(pd.MultiIndex.from_arrays([prepared.class_term, prepared.user]))
+    scoped_exercise = exercise.astype(np.int64)
+    return replace(
+        prepared,
+        exercise=scoped_exercise,
+        user=user.astype(np.int64),
+        n_exercises=len(exercise_uniques),
+        permuted_exercise=scoped_exercise.copy(),
+    )
 
 
 class _State:
@@ -326,10 +359,15 @@ def _absorb(state, prepared, record, when, sizes):
             entry[2] += heavy
 
 
-def causal_sweep(prepared, arrival: np.ndarray, availability: np.ndarray):
+def causal_sweep(
+    prepared,
+    arrival: np.ndarray,
+    availability: np.ndarray,
+    record_mask: np.ndarray | None = None,
+):
     """(history, relational, permuted relational, available-result counts), in
     submission order."""
-    kinds, records = _merged_stream(prepared, arrival, availability)
+    kinds, records = _merged_stream(prepared, arrival, availability, record_mask)
     n_sub = len(prepared.submission_rows)
     sizes = (prepared.n_exercises, prepared.n_classes)
     low, high = prepared.tercile_cuts
@@ -358,9 +396,11 @@ def causal_sweep(prepared, arrival: np.ndarray, availability: np.ndarray):
     )
 
 
-def feature_frame(prepared, arrival, availability) -> pd.DataFrame:
+def feature_frame(prepared, arrival, availability, record_mask=None) -> pd.DataFrame:
     """The sweep's output as the frame the cache stores."""
-    history, relational, permuted, aux = causal_sweep(prepared, arrival, availability)
+    history, relational, permuted, aux = causal_sweep(
+        prepared, arrival, availability, record_mask
+    )
     frame = pd.DataFrame(np.hstack([history, relational, permuted]), columns=FEATURE_COLUMNS)
     frame["ex_nres"], frame["u_nres"] = aux[:, 0], aux[:, 1]
     return frame
@@ -391,6 +431,11 @@ def design_matrix(static: dict, features: pd.DataFrame, arrival_s: np.ndarray) -
     out[:, n_code : n_code + len(CTX_COLS)] = context_block(static, arrival_s)
     out[:, n_code + len(CTX_COLS) :] = features[FEATURE_COLUMNS].to_numpy()
     return out
+
+
+def static_design_matrix(static: dict, arrival_s: np.ndarray) -> np.ndarray:
+    """Code and schedule columns only: no outcome released inside the target window."""
+    return np.column_stack([static["code"], context_block(static, arrival_s)]).astype("float32")
 
 
 def column_index(names) -> list[int]:

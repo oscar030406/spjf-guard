@@ -82,6 +82,7 @@ class Policy:
     bmax_us: int = 0
     skip_count: int = 0
     gam_us: int = 0
+    age_credit_per_s: float = 0.0
     """Budget added per job waiting when q arrived.  The guarantee does not depend on it:
     the shape of the budget under the cap is a design freedom, the cap is not."""
 
@@ -101,6 +102,8 @@ class Policy:
             )
         if self.wrapper == WRAP_SKIP and self.skip_count < 0:
             raise ValueError("skip count must be >= 0")
+        if self.age_credit_per_s < 0.0:
+            raise ValueError("the linear age credit must be >= 0")
 
     @property
     def needs_score(self) -> bool:
@@ -119,6 +122,23 @@ def fcfs() -> Policy:
 def spjf(score_key: str, name: str = "SPJF") -> Policy:
     """Rank the queue by the named score of the trace; no wrapper."""
     return Policy(name=name, base=BASE_SCORE, wrapper=WRAP_NONE, score_key=score_key)
+
+
+def aging(score_key: str, credit_per_s: float, name: str = "Aging") -> Policy:
+    """Rank by predicted cost minus a linear credit for time already spent waiting.
+
+    At a dispatch time t, ``score_i - beta * (t - a_i)`` has the same ordering as
+    ``score_i + beta * a_i`` because ``-beta*t`` is common to the whole queue.  The
+    runner applies that static transform, so the existing exact kernel needs no new
+    dynamic data structure.  This heuristic carries no per-job guarantee.
+    """
+    return Policy(
+        name=name,
+        base=BASE_SCORE,
+        wrapper=WRAP_NONE,
+        score_key=score_key,
+        age_credit_per_s=float(credit_per_s),
+    )
 
 
 def guard(

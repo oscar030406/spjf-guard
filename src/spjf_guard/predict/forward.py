@@ -19,7 +19,14 @@ import numpy as np
 import pandas as pd
 
 from spjf_guard.data.events import arrival_and_availability, heavy_threshold_and_cuts
-from spjf_guard.features.sweep import GROUPS, column_index, design_matrix, feature_frame
+from spjf_guard.features.sweep import (
+    GROUPS,
+    class_term_scoped,
+    column_index,
+    design_matrix,
+    feature_frame,
+    static_design_matrix,
+)
 from spjf_guard.predict.scores import SCORE_SPECS, ScoreSpec
 
 FIXED_CUTOFFS = "development terms"
@@ -76,21 +83,71 @@ def term_order(semester: np.ndarray, arrival_s: np.ndarray, terms) -> tuple[dict
     return first, sorted(terms, key=lambda t: first[t])
 
 
+def _history_prepared(prepared, scope: str):
+    if scope == "global":
+        return prepared
+    if scope == "class_term":
+        return class_term_scoped(prepared)
+    raise ValueError(f"unknown history scope {scope!r}")
+
+
+def _result_mask(prepared, eligible_only: bool) -> np.ndarray | None:
+    if not eligible_only:
+        return None
+    mask = np.zeros(len(prepared.is_submission), bool)
+    mask[prepared.submission_rows] = prepared.simulatable
+    return mask
+
+
+def _feature_design(prepared, static, arrival, availability, group, eligible_only):
+    rows = prepared.submission_rows
+    if group == "STATIC":
+        return static_design_matrix(static, arrival[rows])
+    frame = feature_frame(
+        prepared,
+        arrival,
+        availability,
+        record_mask=_result_mask(prepared, eligible_only),
+    )
+    return design_matrix(static, frame, arrival[rows])
+
+
 def _design_for_target(
-    base, prepared, static, clock, arrival, train_mask, events, fixed_cutoffs, limit_s
+    base,
+    prepared,
+    static,
+    clock,
+    arrival,
+    train_mask,
+    events,
+    fixed_cutoffs,
+    limit_s,
+    group,
+    history_scope,
+    eligible_only,
 ):
     """The design matrix a target must use, rebuilding the features when the cut-offs
     have to be refit."""
     core = np.isin(prepared.semester[prepared.submission_rows], fixed_cutoffs["terms"])
-    if train_mask[core].all():
+    if group == "STATIC" or train_mask[core].all():
         return base, fixed_cutoffs["threshold"], fixed_cutoffs["cuts"], FIXED_CUTOFFS
     cost32 = events["exec_time"].to_numpy()[prepared.submission_rows][train_mask]
     threshold, cuts = heavy_threshold_and_cuts(cost32, limit_s)
-    refitted = prepared.with_cutoffs(threshold, cuts)
+    refitted = _history_prepared(prepared.with_cutoffs(threshold, cuts), history_scope)
     new_arrival, new_availability = arrival_and_availability(refitted, clock)
-    frame = feature_frame(refitted, new_arrival, new_availability)
-    rows = prepared.submission_rows
-    return (design_matrix(static, frame, arrival[rows]), threshold, cuts, REFIT_CUTOFFS)
+    return (
+        _feature_design(
+            refitted,
+            static,
+            new_arrival,
+            new_availability,
+            group,
+            eligible_only,
+        ),
+        threshold,
+        cuts,
+        REFIT_CUTOFFS,
+    )
 
 
 def fit_forward(
@@ -103,16 +160,26 @@ def fit_forward(
     targets,
     all_terms,
     score_names=("spjf_e", "spjf_log"),
+    feature_group="M4",
+    history_scope="global",
+    eligible_results_only=False,
     progress=None,
 ) -> ForwardRun:
     """One frozen model per (score, target term).  Returns a score per submission row."""
-    arrival, availability = arrival_and_availability(prepared, clock)
+    history_prepared = _history_prepared(prepared, history_scope)
+    arrival, availability = arrival_and_availability(history_prepared, clock)
     rows = prepared.submission_rows
     semester = prepared.semester[rows]
     executed = np.minimum(prepared.cost_s[rows], limit_s)
-    base_features = feature_frame(prepared, arrival, availability)
-    base_design = design_matrix(static, base_features, arrival[rows])
-    columns = column_index(GROUPS["M4"])
+    base_design = _feature_design(
+        history_prepared,
+        static,
+        arrival,
+        availability,
+        feature_group,
+        eligible_results_only,
+    )
+    columns = column_index(GROUPS[feature_group])
     first, order = term_order(prepared.semester, arrival, all_terms)
     available = availability[rows]
     fixed = {
@@ -129,7 +196,18 @@ def fit_forward(
         train = np.isin(semester, prior) & (available < first[target])
         test = semester == target
         design, threshold, cuts, source = _design_for_target(
-            base_design, prepared, static, clock, arrival, train, events, fixed, limit_s
+            base_design,
+            prepared,
+            static,
+            clock,
+            arrival,
+            train,
+            events,
+            fixed,
+            limit_s,
+            feature_group,
+            history_scope,
+            eligible_results_only,
         )
         train_x = design[np.ix_(train, columns)]
         test_x = design[np.ix_(test, columns)]
@@ -146,6 +224,9 @@ def fit_forward(
                 "n_train": int(train.sum()),
                 "n_target": int(test.sum()),
                 "cutoff_source": source,
+                "feature_group": feature_group,
+                "history_scope": history_scope,
+                "eligible_results_only": eligible_results_only,
                 "heavy_threshold_s": round(threshold, 6),
                 "tercile_low": round(cuts[0], 6),
                 "tercile_high": round(cuts[1], 6),

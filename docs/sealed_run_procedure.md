@@ -19,17 +19,19 @@ export UV="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
 | 0b | `$UV python scripts/build_cache.py --pool development --compare data/derived/codebench_cache_r4/ev.parquet` | 58 列全部相等 |
 | 1 | `$UV ruff check src tests scripts` / `$UV mypy` / `$UV python -m pytest -q` | 全绿 |
 | 2 | `$UV python scripts/check_overlays.py` | 本包产的叠加与 v3.1 逐数组相等 |
-| 3 | `$UV python scripts/fit_scores.py --repeat` | 两遍分数逐位相同 |
-| 4 | `$UV python scripts/select_parameters.py --workers 3`，十五格齐了再 `--from-grid` | 三个家族各自的最好点与联合胜者，与 `configs/main.yaml` 的 `family_best` / `selected` 相同；`$UV python scripts/compare_selection.py` 与 v3.2 的九个家族选点逐个相同 |
-| 5 | `$UV python scripts/run_main.py --selection outputs/selection_v3/selected_parameters.csv --out-dir outputs/dev_tables` | 开发期全表出齐，且开头**没有** `selection mismatch` 那一行 |
-| 5b | `$UV python scripts/eval_scores.py --pool primary` | 六个开发目标学期 × 两个分数 + 合并行，共 14 行写到 `outputs/dev_predictor/predictor_metrics.csv`；heavy 阈值印成 1.559043 s，2022-2 是 40,844 行 536 个重任务（与 `evidence/predictor_neural/out_evaluate_core.txt` 的行数、重任务数、阈值相同）。约 4.5 分钟 |
+| 3 | `$UV python scripts/fit_scores.py --repeat` | original / conservative / static 各两列，共六列；两遍逐位相同 |
+| 4 | `$UV python scripts/select_parameters.py --workers 2`，十五格齐了再 `--from-grid` | 九个原 Guard 选点不变；`selection_protocol.json` 写出网格、展开点和候选/可行数 |
+| 4b | `$UV python scripts/select_aging.py --workers 2` | 11 点网格按同一 validation-only harm 规则选出 `credit_per_s = 0.03`，并写完整候选计数；该基线没有证明保证 |
+| 5 | `$UV python scripts/run_main.py --selection outputs/selection_v3/selected_parameters.csv --out-dir outputs/dev_tables --workers 2` | 开发期全表出齐，开头没有 `selection mismatch`；除新增 Aging 行外，既有行列逐位不变 |
+| 5b | `$UV python scripts/eval_scores.py --pool primary` | 六个目标学期 × 六个分数 + 六个 pooled 行，共 42 行；heavy 阈值仍为 1.559043 s，2022-2 仍是 40,844 行、536 个重任务。约 11 分钟 |
+| 5d | `$UV python scripts/run_visibility.py --pool primary --workers 2` | 十五格写 `outputs/dev_visibility/` 五张 CSV；FCFS 与 Guard 的 3600 秒 lag violation 都是 0，SPJF-E 如实报告；约 35 分钟 |
 | 5c | `$UV python scripts/build_overlays.py --pool validation --single-server --no-scores --out-dir <临时目录>` | 印 `321 copies (321 copies reused from pool primary)` 与实际忙时利用率（验证池上是 1.0043）。这一步彩排的是沿用拷贝数那条路径，产物不要写进 `data/derived/overlay_traces/` |
 | 6 | `$UV python scripts/emit_paper_tables.py` | 六张表写出，`numbers.csv` 里每个数要么有来源要么有理由 |
 | 7 | `$UV python scripts/check_paper_numbers.py` | 论文表体与本包逐值相同、正文数字重算得出、有来源的行仍然印着 |
 | 8 | `$UV python scripts/check_generated.py` | 产物清单、论文数字、论文印的值、机器路径、配置锁五项都过 |
-| 9 | `$UV python scripts/run_main.py --config configs/main.yaml --dry-run-sealed` | 打印计划；七个阶段、三份产物清单、两个缓存文件名；末行 `verdict REFUSED: no frozen protocol_lock.json exists` |
+| 9 | `$UV python scripts/run_main.py --config configs/main.yaml --dry-run-sealed` | 打印计划；八个阶段、四份产物清单、两个缓存文件名；末行 `verdict REFUSED: no frozen protocol_lock.json exists` |
 
-第 9 步是彩排：它打印封存学期名单、五条叠加 × 三档负载、16 条策略、每个承诺 G 对应的 B0、**会读哪些文件**、台账路径与锁的状态，然后退出。它一个文件都不打开，可以随便跑。
+第 9 步是彩排：它打印封存学期名单、五条叠加 × 三档负载、策略、三个 score variant、每个承诺 G 对应的 B0、**会读哪些文件**、四份输出清单、台账路径与锁的状态，然后退出。它一个文件都不打开，可以随便跑。
 
 封存学期的解析缓存现在由本包的 `scripts/build_cache.py` 从 `data/codebench/parquet/` 建（第三轮搬进来的），在开发学期上与旧缓存 58 列逐列相等。封存那一次的第 1 步就是它。
 
@@ -96,7 +98,7 @@ git commit -m "Freeze the protocol"
 
 ## 三 那一次运行
 
-七条命令，按顺序，每条都要 `--unseal`：
+八条命令，按顺序，每条都要 `--unseal`：
 
 ```bash
 # 1 解析缓存：三个封存学期的事件表，从盘上已有的 parquet 建（不重新解析归档）。
@@ -115,19 +117,24 @@ $UV python scripts/fit_scores.py --pool sealed \
 # 4 主运行：策略集与参数全部来自冻结的配置，不重新选参
 $UV python scripts/run_main.py --config configs/main.yaml --pool sealed \
     --score-parquet data/derived/package_ranking_scores/sealed_scores.parquet \
-    --out-dir outputs/sealed_tables --workers 3 --unseal
+    --out-dir outputs/sealed_tables --workers 2 --unseal
 
-# 5 单机轨迹：拷贝数沿用开发池选出的 321 份，利用率如实报告（ADR 0006）。
+# 5 策略一致的主比较与原时钟暴露审计：参数不重选；逐格写 3600 秒违反数。
+$UV python scripts/run_visibility.py --config configs/main.yaml --pool sealed \
+    --scores data/derived/package_ranking_scores/sealed_scores.parquet \
+    --out-dir outputs/sealed_visibility --workers 2 --unseal
+
+# 6 单机轨迹：拷贝数沿用开发池选出的 321 份，利用率如实报告（ADR 0006）。
 #   文件叫 sealed_k1_rep0.npz，不会盖掉开发期的 k1_rep0.npz
 $UV python scripts/build_overlays.py --pool sealed --single-server --no-scores --unseal
 
-# 6 单机那一次的表：产物清单是 run.sealed_k1_tables，与第 4 步各查各的
+# 7 单机那一次的表：产物清单是 run.sealed_k1_tables，与第 4 步各查各的
 $UV python scripts/run_main.py --config configs/main.yaml --pool sealed \
     --prefix sealed_k1 --reps 0 --levels 0 \
     --score-parquet data/derived/package_ranking_scores/sealed_scores.parquet \
     --out-dir outputs/sealed_tables/k1 --workers 2 --unseal
 
-# 7 封存学期的预测器指标：逐学期与合并，两个分数各四个指标加区间
+# 8 封存学期的预测器指标：逐学期与合并，六个分数各四个指标加区间
 $UV python scripts/eval_scores.py --pool sealed \
     --scores data/derived/package_ranking_scores/sealed_scores.parquet \
     --out-dir outputs/sealed_predictor --unseal
@@ -137,9 +144,11 @@ $UV python scripts/eval_scores.py --pool sealed \
 
 ```bash
 $UV python scripts/emit_paper_tables.py --sealed-dir outputs/sealed_tables \
-    --sealed-predictor-dir outputs/sealed_predictor
+    --sealed-predictor-dir outputs/sealed_predictor \
+    --sealed-visibility-dir outputs/sealed_visibility
 $UV python scripts/check_paper_numbers.py --sealed-dir outputs/sealed_tables \
-    --sealed-predictor-dir outputs/sealed_predictor
+    --sealed-predictor-dir outputs/sealed_predictor \
+    --sealed-visibility-dir outputs/sealed_visibility
 $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自动把封存那部分带上
 ```
 
@@ -150,7 +159,7 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 放在已有的 `\newcommand{\devnum}[1]{#1}` 旁边，三个文件都要加——`paper/main.tex`、
 `paper/main_article.tex`、`paper/supplementary.tex`。检查脚本认的就是这个宏。
 
-七条命令每条跑完自己往 `docs/sealed_access_log.md` 追加一行，格式是那张表已有的六列：
+八条命令每条跑完自己往 `docs/sealed_access_log.md` 追加一行，格式是那张表已有的六列：
 
 ```text
 | 2026-09-24 | `scripts/run_main.py` | 封存学期 2023-1, 2023-2, 2024-1 | <产出了什么> | 运行者 | 否 |
@@ -158,15 +167,16 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 
 「是否影响设计」默认写「否」。如果看了这次结果之后真的改了方法，那一行要改成「是」，并且在论文里说明——这才是台账存在的意义。
 
-产物是配置锁里钉死的**三份**清单，每份都一个不多一个不少，各查各的：
+产物是配置锁里钉死的**四份**清单，每份都一个不多一个不少，各查各的：
 
 | 命令 | 清单 | 内容 |
 |---|---|---|
 | 第 4 步 → `outputs/sealed_tables/` | `run.sealed_tables` | `main_cells.csv`（逐格）、`main_table.csv`（按叠加聚合）、`main_table.tex`、`paired_differences.csv`（成对差与区间）、`bound_checks.csv`（逐任务断言查了多少个任务、最坏用掉允许量的几成）、`identity_residuals.csv`（第一条叠加上的恒等残差）、`policy_parameters.csv`（每格每条策略实际用的 B0、η、γ、上限、N）、`manifest.json` |
-| 第 6 步 → `outputs/sealed_tables/k1/` | `run.sealed_k1_tables` | 同上八个文件名，写在子目录里 |
-| 第 7 步 → `outputs/sealed_predictor/` | `run.sealed_predictor_tables` | `predictor_metrics.csv`、`manifest.json` |
+| 第 5 步 → `outputs/sealed_visibility/` | `run.sealed_visibility_tables` | `visibility_cells.csv`、`visibility_comparison.csv`、`visibility_paired_differences.csv`、`visibility_exposure.csv`、`visibility_waits_and_lag.csv`、`manifest.json` |
+| 第 7 步 → `outputs/sealed_tables/k1/` | `run.sealed_k1_tables` | 同上八个文件名，写在子目录里 |
+| 第 8 步 → `outputs/sealed_predictor/` | `run.sealed_predictor_tables` | `predictor_metrics.csv`、`manifest.json` |
 
-「一个不多一个不少」不是口头约定：`--pool sealed` 的运行在写完之后自己比对写出的文件名集合与对应的那份清单，对不上就报错退出。三份清单不能并成一份，并了每条命令都会不匹配。开发期的表在 `outputs/dev_tables/`、`outputs/dev_predictor/`，两边不覆盖。
+「一个不多一个不少」不是口头约定：`--pool sealed` 的运行在写完之后自己比对写出的文件名集合与对应的那份清单，对不上就报错退出。四份清单不能并成一份，并了每条命令都会不匹配。开发期的表在 `outputs/dev_tables/`、`outputs/dev_visibility/`、`outputs/dev_predictor/`，两边不覆盖。
 
 报告口径：封存学期上实际达到的利用率如实报告，**不回头调 k 去凑目标值**。`main_cells.csv` 与 `main_table.csv` 里 `rho_target` 旁边多一列 `rho_realised`：前者是这一格按哪一档负载建的、论文印的那个数，后者是这条叠加在这个 k 上忙时真正跑到的利用率（忙时工作量 ÷ 3600k）。两者的差来自 k 取整，只有后者说得清一个数字是在多满的系统上测出来的。承诺 G 与选好的 (B0, η) 是冻结的，不因为封存学期上的结果重选。
 
@@ -176,22 +186,23 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 
 ## 四 要多久、占多少盘
 
-在这台机器上（4 个工作进程，每个进程单线程）实测：
+在这台机器上（2 个工作进程，LightGBM 固定 4 线程）实测：
 
 | 步骤 | 时间 | 盘 |
 |---|---|---|
 | 解析缓存（第 1 步） | 开发期 11 个学期约 5 分钟；封存池三个学期更快 | 开发缓存 `ev.parquet` 约 67 MB，`ev_sealed.parquet` 按学期数按比例，约 15 MB |
 | 叠加轨迹（5 条） | 拷贝数探针 6 s + 每条约 3 s，连读缓存带写盘约 2 分钟 | 每条约 790 MB，5 条约 4.0 GB |
-| 排序分数 | 83 s（6 个开发目标学期；封存池只有 3 个，更快。加 `--repeat` 翻倍） | 约 30 MB |
-| 主运行 15 格 | 每格 53–57 s（16 条策略 + 2,000 次成对 bootstrap，4 个工作进程），连读叠加共约 16 分钟 | 表格 < 5 MB；每格临时约 750 MB，跑完即删 |
-| 单机轨迹（第 5 步） | 开发池上实测 3 分钟（321 份拷贝、320 万个 job） | 约 145 MB |
-| 单机那一次（第 6 步） | 一格约 60 s（2 个工作进程） | 表格 < 1 MB |
-| 预测器指标（第 7 步） | 开发池六个目标学期实测 261 s，其中读缓存与建键约 60 s，其余是 2,001 次重采样 × 两个分数 × 七组；封存池三个学期约一半 | < 1 MB |
-| 合计 | 约 30 分钟 | 峰值约 5 GB |
+| 排序分数 | 开发池六个目标学期、六列约 3.5 分钟；`--repeat` 约 7 分钟。封存池只有 3 个目标学期 | 约 90 MB |
+| 主运行 15 格 | 29 条策略、2,000 次成对 bootstrap、2 个工作进程，开发池约 48 分钟 | 表格 < 5 MB；每格临时约 750 MB，跑完即删 |
+| 可见性比较（第 5 步） | 15 格、14 条比较策略，加旧历史逐 job 暴露扫描，开发池约 35 分钟 | 五张 CSV + manifest < 20 MB；临时峰值与主运行相近 |
+| 单机轨迹（第 6 步） | 开发池上实测 3 分钟（321 份拷贝、320 万个 job） | 约 145 MB |
+| 单机那一次（第 7 步） | 一格约 60 s（2 个工作进程） | 表格 < 1 MB |
+| 预测器指标（第 8 步） | 开发池 42 行实测约 11 分钟；封存池三个目标学期约一半 | < 1 MB |
+| 合计 | 封存池预期约 1.5–2 小时 | 峰值约 5 GB |
 
-这些是开发池（17.6 M job／条）上的实测值，封存池的三个学期规模相近，量级应当一样。对照：验证集选参跑 15 格要约 48 分钟（每格 190 s，48 个网格点），那一步在冻结之前做完，不属于封存那一次。
+这些是开发池（17.6 M job／条）上的实测值，封存池规模未知，故这里只给冻结前的量级估计，不用封存数据校准。Guard 原网格与 aging 的选择都在冻结之前完成，不属于封存那一次。
 
-临时文件默认落在系统临时目录（`spjf_main_*`），每格约 750 MB，跑完即删——但只在正常结束时删，崩一次就留一份。建议七条命令一律加 `--scratch <目录>` 指到一个自己清得动的地方；不加的话，重跑之前先把上次残留的 `spjf_main_*` 删掉再跑。`--workers` 控制进程数。
+临时文件默认落在系统临时目录（`spjf_main_*` / `spjf_visibility_*`），每格约 750 MB，跑完即删——但只在正常结束时删，崩一次就留一份。建议八条命令里支持 `--scratch` 的命令都指到一个自己清得动的目录；重跑前先核对并清理对应残留。`--workers` 固定用 2。
 
 ## 五 中途崩了怎么办
 
@@ -199,7 +210,7 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 
 1. **锁没变。** 重跑前核对 `sha256sum protocol_lock.json` 与第二节记下的指纹一致。不一致就不是同一份方法，停下来。
 2. **代码与配置没变。** 崩了不要「顺手修一下再跑」。真发现必须改的 bug，那就是新的一份方法：说明情况、重新冻结、在台账里写清楚前一次读过什么。
-3. **每一次都记台账。** 崩掉的那一次也有一行：七条命令都在 `finally` 里写台账，输出栏写的是「运行中断于<哪一步>，未产出汇总表」加异常类型，重跑再添一行，旧行不改。只有一种情况要手写——进程被整个杀掉（内存不足、机器断电），那时 Python 没有机会写。那一行照上面的六列格式补上，输出栏写清楚跑到哪一步。
+3. **每一次都记台账。** 崩掉的那一次也有一行：八条命令都在 `finally` 里写台账，输出栏写的是「运行中断于<哪一步>，未产出汇总表」加异常类型，重跑再添一行，旧行不改。只有一种情况要手写——进程被整个杀掉（内存不足、机器断电），那时 Python 没有机会写。那一行照上面的六列格式补上，输出栏写清楚跑到哪一步。
 
 具体怎么重跑：
 

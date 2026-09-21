@@ -402,10 +402,15 @@ def build_overlay(
     levels: together they are how the single-server trace is built, which superposes a
     selection of its own at one fixed server count instead of three derived ones.
     """
-    arrival, service, rows, _ = superpose(
+    arrival, service, rows, copy_entry = superpose(
         entries if entries is not None else overlay_entries(pool, copies, overlay, seed),
         inputs.per_term,
         arrival_key,
+    )
+    copy_round = (
+        copy_entry // len(pool)
+        if entries is None
+        else np.full(len(copy_entry), -1, dtype=np.int32)
     )
     work = busy_hour_work(arrival, service)
     servers = list(servers) if servers is not None else level_servers(work, utilisations)
@@ -425,6 +430,8 @@ def build_overlay(
         "W": np.float64(work),
         "copies": np.int64(copies),
         "job_row": rows,
+        "copy_entry": copy_entry,
+        "copy_round": copy_round,
     }
     for name, values in (scores or {}).items():
         out[name] = np.asarray(values)[rows].astype(np.float64)

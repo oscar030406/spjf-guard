@@ -98,6 +98,7 @@ def check_paper_numbers() -> tuple[bool, str]:
 
 SEALED_TABLES = Path("outputs") / "sealed_tables"
 SEALED_PREDICTOR = Path("outputs") / "sealed_predictor"
+SEALED_VISIBILITY = Path("outputs") / "sealed_visibility"
 """Where the sealed run writes.  They are looked for rather than asked for: before the
 sealed run nothing is there and the check is the development one, after it the sealed
 tables are checked too, and neither state needs a flag to be remembered."""
@@ -116,6 +117,7 @@ def check_paper_prints() -> tuple[bool, str]:
     package = ROOT / "outputs" / "paper_tables"
     sealed = ROOT / SEALED_TABLES
     predictor = ROOT / SEALED_PREDICTOR
+    visibility = ROOT / SEALED_VISIBILITY
     if not (paper.is_dir() and (dev / "main_table.csv").is_file()):
         return True, "paper prints: paper/ or outputs/dev_tables/ not on disk, skipped"
     complaints = run(
@@ -124,6 +126,9 @@ def check_paper_prints() -> tuple[bool, str]:
         package,
         sealed=sealed if (sealed / "main_table.csv").is_file() else None,
         sealed_predictor=predictor if (predictor / "predictor_metrics.csv").is_file() else None,
+        sealed_visibility=(
+            visibility if (visibility / "visibility_comparison.csv").is_file() else None
+        ),
     )
     if complaints:
         return False, "paper prints: " + "; ".join(complaints[:4]) + (

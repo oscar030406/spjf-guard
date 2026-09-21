@@ -20,7 +20,7 @@ from typing import Any
 
 import yaml
 
-from spjf_guard.sim.policy import Policy, fcfs, fixed, guard, sjf, skip, spjf
+from spjf_guard.sim.policy import Policy, aging, fcfs, fixed, guard, sjf, skip, spjf
 
 _PLACEHOLDER = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}")
 SCORE_KEY = "spjf_e"
@@ -140,7 +140,7 @@ class Config:
             self.limit_s,
             float(entry["b0_base_s"]) * servers / 4.0,
             float(entry["eta"]),
-            SCORE_KEY,
+            self["scheduling"]["ranking_score"],
             name=name,
             gam_s=float(entry.get("gam_base_s", 0.0)) * servers / 4.0,
         )
@@ -160,9 +160,24 @@ class Config:
         chose, keyed by (family, promise); `run_main` reports a disagreement rather than
         silently preferring one.
         """
-        out: list[Policy] = [fcfs(), sjf(), spjf(SCORE_KEY, "SPJF-E")]
+        score_key = self["scheduling"]["ranking_score"]
+        out: list[Policy] = [fcfs(), sjf(), spjf(score_key, "SPJF-E")]
         if include_log_control:
-            out.append(spjf(LOG_SCORE_KEY, "SPJF-log"))
+            log_key = (
+                f"{LOG_SCORE_KEY}_conservative"
+                if score_key.endswith("_conservative")
+                else LOG_SCORE_KEY
+            )
+            out.append(spjf(log_key, "SPJF-log"))
+        aging_section = self["scheduling"].get("aging_baseline")
+        if aging_section:
+            out.append(
+                aging(
+                    self["scheduling"].get("headline_ranking_score", score_key),
+                    float(aging_section["selected_credit_per_s"]),
+                    str(aging_section["label"]),
+                )
+            )
         chosen = selection or {}
         for promise in self.promises_s:
             joint = chosen.get(("joint", promise)) or self.selected(promise)
@@ -174,8 +189,8 @@ class Config:
                         continue
                     label = f"{self.family_label(family)}({promise:g})"
                     out.append(self._guard_from(entry, promise, servers, label))
-            out.append(fixed(promise, servers, self.limit_s, SCORE_KEY))
-            out.append(skip(promise, servers, self.limit_s, SCORE_KEY))
+            out.append(fixed(promise, servers, self.limit_s, score_key))
+            out.append(skip(promise, servers, self.limit_s, score_key))
         return out
 
 

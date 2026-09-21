@@ -296,3 +296,88 @@ def setup_table(items: list[tuple[str, str]]) -> str:
         "tab:setup",
         "What the development experiment runs, and what the selection chose.",
     )
+
+
+def visibility_table(rows: list[dict], promise: float = 600.0) -> str:
+    """Headline score variants under the unchanged selected guard parameters."""
+    names = (
+        ("original", f"Guard({promise:g})-original"),
+        ("conservative", f"Guard({promise:g})"),
+        ("static", f"Guard({promise:g})-static"),
+    )
+    body: list[str] = []
+    for level in sorted({int(row["level"]) for row in rows}):
+        block = {row["policy"]: row for row in rows if int(row["level"]) == level}
+        first = next(iter(block.values()))
+        body.append(rf"\multicolumn{{7}}{{l}}{{{_load_header(first)}}} \\")
+        for label, policy in names:
+            row = block.get(policy)
+            if row is None:
+                continue
+            body.append(
+                f" & {label:<14s} & "
+                + " & ".join(
+                    [
+                        _cell(float(row["p99_dl_s"]), 2),
+                        _cell(float(row["gap_closed"]), 3, _interval(row, "gap_closed")),
+                        _cell(float(row["max_excess_s"]), 1),
+                        _cell(float(row["harm_s"]), 1),
+                        _cell(float(row["fired_pct"]), 2),
+                    ]
+                )
+                + r" \\"
+            )
+        body.append(RULE)
+    if body and body[-1] == RULE:
+        body.pop()
+    return _table(
+        "llrlrrr",
+        r"Load & Score history & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm "
+        r"& Fired (\%)",
+        body,
+        "tab:visibility",
+        rf"Policy-consistent score variants at the unchanged selected Guard({promise:g}) "
+        "parameters, over five overlays.",
+    )
+
+
+def visibility_audit_table(rows: list[dict]) -> str:
+    """Original-clock exposure, averaged over the five primary overlays."""
+    policies = ("FCFS", "SPJF-E", "Guard(300)", "Guard(600)", "Guard(1200)")
+    body: list[str] = []
+    for level in sorted({int(row["level"]) for row in rows}):
+        for policy in policies:
+            selected = [
+                row for row in rows if int(row["level"]) == level and row["policy"] == policy
+            ]
+            if not selected:
+                continue
+
+            def mean(field: str) -> float:
+                return sum(float(row[field]) for row in selected) / len(selected)
+
+            body.append(
+                f"{_cell(level, 0)} & {policy_label(policy):<22s} & "
+                + " & ".join(
+                    [
+                        _cell(100.0 * mean("overall_affected_share"), 2),
+                        _cell(100.0 * mean("deadline_affected_share"), 2),
+                        _cell(mean("overall_premature_mean"), 1),
+                        _cell(mean("overall_premature_p99"), 1),
+                        _cell(100.0 * mean("unreplayed_overall_affected_share"), 2),
+                    ]
+                )
+                + r" \\"
+            )
+        body.append(RULE)
+    if body and body[-1] == RULE:
+        body.pop()
+    return _table(
+        "llrrrrr",
+        r"Level & Replay policy & Affected (\%) & Deadline (\%) & Mean records & "
+        r"p99 records & Unreplayed (\%)",
+        body,
+        "tab:visibility_audit",
+        "Exposure of original-clock outcome histories under replay. Counts are conditional "
+        "on an affected job; unreplayed histories have no job in the same replay pool.",
+    )

@@ -102,7 +102,14 @@ def read_external_scores(path: Path | None) -> dict:
     import pandas as pd
 
     frame = pd.read_parquet(path)
-    wanted = {SCORE: SCORE, cfgmod.LOG_SCORE_KEY: cfgmod.LOG_SCORE_KEY}
+    wanted = {
+        name: name
+        for name in frame.columns
+        if name == SCORE
+        or name == cfgmod.LOG_SCORE_KEY
+        or name.startswith(f"{SCORE}_")
+        or name.startswith(f"{cfgmod.LOG_SCORE_KEY}_")
+    }
     return {
         key: frame[column].to_numpy("float64")
         for column, key in wanted.items()
@@ -254,13 +261,14 @@ def attach_adversarial(cfg, trace):
     from spjf_guard.sim import Trace
     from spjf_guard.sim.policy import MICROS
 
-    if SCORE not in trace.scores:
+    ranking_score = str(cfg["scheduling"]["ranking_score"])
+    if ranking_score not in trace.scores:
         return trace
     scores = dict(trace.scores)
     scores.update(
         adversarial.adversarial_scores(
             trace.service_us / MICROS,
-            trace.scores[SCORE],
+            trace.scores[ranking_score],
             int(cfg["overlay"]["seed"]),
         )
     )
@@ -491,9 +499,9 @@ def check_sealed_tables(cfg, pool: str, prefix: str | None, written: list) -> No
 def sealed_plan(cfg, args) -> int:
     """Print every stage of the sealed run, what each would read, and the lock state.
 
-    Seven stages, in order, each needing `--unseal` of its own: the event cache, the
-    overlays, the ranking scores, this run, the single-server trace and its run, and the
-    predictor metrics.  Nothing here opens a file.
+    Eight stages, in order, each needing `--unseal` of its own: the event cache, the
+    overlays, the ranking scores, this run, the visibility comparison, the single-server
+    trace and its run, and the predictor metrics.  Nothing here opens a file.
     """
     from spjf_guard.data.cache import files_for
 
@@ -512,14 +520,19 @@ def sealed_plan(cfg, args) -> int:
             + scores,
         ),
         (
-            "5 k = 1 trace  scripts/build_overlays.py --pool sealed --single-server",
+            "5 visibility   scripts/run_visibility.py --pool sealed",
+            [args.overlay_dir / f"sealed_rep{o}.npz" for o in cfg["overlay"]["overlays"]]
+            + scores,
+        ),
+        (
+            "6 k = 1 trace  scripts/build_overlays.py --pool sealed --single-server",
             events,
         ),
         (
-            "6 k = 1 run    scripts/run_main.py --pool sealed --prefix sealed_k1",
+            "7 k = 1 run    scripts/run_main.py --pool sealed --prefix sealed_k1",
             [args.overlay_dir / "sealed_k1_rep0.npz"] + scores,
         ),
-        ("7 predictor    scripts/eval_scores.py --pool sealed", events + scores),
+        ("8 predictor    scripts/eval_scores.py --pool sealed", events + scores),
     ]
     decision = sealed.decide(ROOT, unseal=True)
     print("sealed run plan (nothing is opened by this command)")
@@ -544,6 +557,7 @@ def sealed_plan(cfg, args) -> int:
     print(f"  tables         {list(cfg['run']['sealed_tables'])}")
     print(f"  k = 1 tables   {list(cfg['run']['sealed_k1_tables'])}")
     print(f"  predictor      {list(cfg['run']['sealed_predictor_tables'])}")
+    print(f"  visibility     {list(cfg['run']['sealed_visibility_tables'])}")
     print(
         f"  k = 1 copies   {cfg['overlay']['single_server']['copies']} reused from pool "
         f"{cfg['overlay']['single_server']['pool']}; the utilisation reached is reported"
@@ -599,7 +613,10 @@ def sweep_cells(cfg, args, selection, scratch):
                         int(cfg["bootstrap"]["seed"]),
                     )
                 )
-            include_log = bool(args.log_score_array) or cfgmod.LOG_SCORE_KEY in trace.scores
+            include_log = bool(args.log_score_array) or any(
+                key == cfgmod.LOG_SCORE_KEY or key.startswith(f"{cfgmod.LOG_SCORE_KEY}_")
+                for key in trace.scores
+            )
             results = run_cell(
                 cfg,
                 trace,

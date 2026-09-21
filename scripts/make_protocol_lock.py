@@ -192,6 +192,7 @@ def build(cfg_path: Path, root: Path) -> dict:
             "sealed_tables": list(cfg["run"]["sealed_tables"]),
             "sealed_k1_tables": list(cfg["run"]["sealed_k1_tables"]),
             "sealed_predictor_tables": list(cfg["run"]["sealed_predictor_tables"]),
+            "sealed_visibility_tables": list(cfg["run"]["sealed_visibility_tables"]),
             "load": {
                 "target_busy_hour_utilisation": cfg["overlay"]["target_busy_hour_utilisation"],
                 "server_count_rule": cfg["overlay"]["server_count_rule"],

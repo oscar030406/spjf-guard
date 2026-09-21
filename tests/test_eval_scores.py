@@ -171,3 +171,25 @@ def test_the_pinned_output_list_is_its_own_list():
         )
         != ""
     )
+
+
+def test_visibility_outputs_have_a_separate_exact_pinned_list():
+    from spjf_guard import config as cfgmod
+    from spjf_guard.experiment import provenance
+
+    cfg = cfgmod.load(ROOT / "configs" / "main.yaml")
+    pinned = cfg["run"]["sealed_visibility_tables"]
+    expected = {
+        "visibility_cells.csv",
+        "visibility_comparison.csv",
+        "visibility_paired_differences.csv",
+        "visibility_exposure.csv",
+        "visibility_waits_and_lag.csv",
+        provenance.MANIFEST_NAME,
+    }
+    assert set(pinned) == expected
+    produced = [
+        Path("sealed_visibility") / name for name in expected if name != "manifest.json"
+    ]
+    assert provenance.pinned_outputs_complaint(pinned, produced) == ""
+    assert provenance.pinned_outputs_complaint(pinned, produced[:-1]) != ""

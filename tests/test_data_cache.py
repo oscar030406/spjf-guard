@@ -191,6 +191,64 @@ def _design(frame, prepared):
     return np.asarray(matrix[:, column_index(GROUPS["M4"])])
 
 
+def test_class_term_scoping_prevents_a_shifted_copy_from_reading_another_term():
+    import numpy as np
+
+    from spjf_guard.data.clock import Clock
+    from spjf_guard.data.events import arrival_and_availability, prepare
+    from spjf_guard.features.sweep import class_term_scoped, feature_frame
+
+    frame = _synthetic_events(["2018-1", "2022-2"], rows_per_term=10)
+    prepared = prepare(
+        frame,
+        seed=3,
+        limit_s=60.0,
+        train_terms=["2018-1"],
+        zero_cost_drop_terms=[],
+        jitter_key="cbjitter20260919",
+    )
+    clock = Clock(jitter_enabled=True, jitter_key="cbjitter20260919")
+    arrival, availability = arrival_and_availability(prepared, clock)
+    global_history = feature_frame(prepared, arrival, availability)
+    scoped = class_term_scoped(prepared)
+    scoped_history = feature_frame(scoped, arrival, availability)
+    first_second_term = int(
+        np.flatnonzero(prepared.semester[prepared.submission_rows] == "2022-2")[0]
+    )
+    assert global_history.iloc[first_second_term]["u_n"] > 0
+    assert scoped_history.iloc[first_second_term]["u_n"] == 0
+    assert scoped_history.iloc[first_second_term]["ex_n"] == 0
+
+
+def test_a_result_mask_excludes_records_that_have_no_replayed_job():
+    import numpy as np
+
+    from spjf_guard.data.clock import Clock
+    from spjf_guard.data.events import arrival_and_availability, prepare
+    from spjf_guard.features.sweep import class_term_scoped, feature_frame
+
+    frame = _synthetic_events(["2018-1"], rows_per_term=12)
+    prepared = prepare(
+        frame,
+        seed=3,
+        limit_s=60.0,
+        train_terms=["2018-1"],
+        zero_cost_drop_terms=[],
+        jitter_key="cbjitter20260919",
+    )
+    clock = Clock(jitter_enabled=True, jitter_key="cbjitter20260919")
+    arrival, availability = arrival_and_availability(prepared, clock)
+    scoped = class_term_scoped(prepared)
+    mask = np.ones(len(frame), bool)
+    first = prepared.submission_rows[0]
+    mask[first] = False
+    full = feature_frame(scoped, arrival, availability)
+    filtered = feature_frame(scoped, arrival, availability, record_mask=mask)
+    later_same_user = 5
+    assert full.iloc[later_same_user]["u_n"] == 1
+    assert filtered.iloc[later_same_user]["u_n"] == 0
+
+
 @pytest.mark.crosscheck
 @pytest.mark.slow
 def test_the_package_rebuilds_the_existing_cache_column_for_column():

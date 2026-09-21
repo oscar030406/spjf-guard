@@ -72,7 +72,14 @@ def read_scores(path: Path, n_rows: int) -> dict:
             f"{path} has {len(frame):,} rows and the prepared cache has {n_rows:,}; "
             "the scores were fitted on another cache, so they cannot be read by position"
         )
-    names = [n for n in (cfgmod.SCORE_KEY, cfgmod.LOG_SCORE_KEY) if n in frame.columns]
+    names = [
+        name
+        for name in frame.columns
+        if name == cfgmod.SCORE_KEY
+        or name == cfgmod.LOG_SCORE_KEY
+        or name.startswith(f"{cfgmod.SCORE_KEY}_")
+        or name.startswith(f"{cfgmod.LOG_SCORE_KEY}_")
+    ]
     if not names:
         raise SystemExit(f"{path} carries none of the score columns this package writes")
     return {name: frame[name].to_numpy("float64") for name in names}
@@ -97,7 +104,8 @@ def heavy_label(cfg, events, prepared) -> tuple[np.ndarray, np.ndarray, float]:
 
 def on_log1p_scale(name: str, score: np.ndarray) -> np.ndarray:
     """The score on the scale the error is taken on, without refitting anything."""
-    if SCORE_SPECS[name].target == "log1p_c_cap":
+    base = cfgmod.LOG_SCORE_KEY if name.startswith(cfgmod.LOG_SCORE_KEY) else cfgmod.SCORE_KEY
+    if SCORE_SPECS[base].target == "log1p_c_cap":
         return score
     return np.log1p(np.maximum(score, 0.0))
 

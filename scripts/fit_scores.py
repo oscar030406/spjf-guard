@@ -69,33 +69,57 @@ def load_prepared(cfg, unseal: bool):
     return events, prepared, terms
 
 
-def run_once(cfg, targets, unseal: bool, quiet: bool = False):
+def _score_name(base: str, variant: dict) -> str:
+    return base + str(variant["score_suffix"])
+
+
+def run_variant(cfg, targets, unseal: bool, variant_name: str, quiet: bool = False):
     from spjf_guard.data.events import static_submission_columns
 
     events, prepared, terms = load_prepared(cfg, unseal)
     static = static_submission_columns(events, prepared)
+    variant = cfg["features"]["visibility_variants"][variant_name]
 
     def report(entry):
         if not quiet:
             print(
-                f"  [{entry['target']}] train {entry['n_train']:,} "
+                f"  [{variant_name}/{entry['target']}] train {entry['n_train']:,} "
                 f"({entry['train_terms']}), target {entry['n_target']:,}, "
                 f"cut-offs from {entry['cutoff_source']} "
                 f"(heavy {entry['heavy_threshold_s']:.4f} s)",
                 flush=True,
             )
 
-    return fit_forward(
+    run = fit_forward(
         prepared,
         static,
         events,
-        clock_from(cfg),
+        clock_from(cfg, float(variant["delta_s"])),
         cfg["predictor"],
         cfg.limit_s,
         targets,
         terms,
+        feature_group=str(variant["feature_group"]),
+        history_scope=str(variant["history_scope"]),
+        eligible_results_only=bool(variant["eligible_results_only"]),
         progress=report,
     )
+    scores = {_score_name(name, variant): values for name, values in run.scores.items()}
+    log = [{"variant": variant_name, **entry} for entry in run.log]
+    return type(run)(scores=scores, log=log)
+
+
+def run_once(cfg, targets, unseal: bool, quiet: bool = False):
+    """Fit every pinned information regime over the same prepared rows."""
+    scores: dict[str, np.ndarray] = {}
+    log: list[dict] = []
+    for name in cfg["features"]["visibility_variants"]:
+        run = run_variant(cfg, targets, unseal, name, quiet)
+        scores.update(run.scores)
+        log.extend(run.log)
+    from spjf_guard.predict.forward import ForwardRun
+
+    return ForwardRun(scores=scores, log=log)
 
 
 def terms_read(cfg, targets: list[str], unseal: bool) -> list[str]:
