@@ -160,16 +160,18 @@ Table~S8, the residual of Theorem~\ref{thm:identity} on all nine cells; Table~S9
 single-server configuration; Tables~S10--S12, the aging comparator and the package
 predictor metrics; Table~S13, the alternative ranking losses; Table~S14, the
 trace-construction sensitivities; and Figures~S1--S3. Section~S4, the deferred proofs:
-the two that Appendices~\ref{app:strict} and~\ref{app:consistency} point to,
-Lemma~\ref{lem:gap} with its strictness and Proposition~\ref{prop:consistency} with the
-two counterexamples to its converse, together with the proofs and remarks deferred from
-Section~\ref{sec:theory}. Section~S5, the reproducibility specification, including exact
+Lemma~\ref{lem:gap} with its strictness, Theorem~\ref{thm:identity} with the two
+directions of its extremes, and Proposition~\ref{prop:consistency} with the
+two counterexamples to its converse, together with the remaining proofs and remarks
+deferred from Section~\ref{sec:theory}. Section~S5, the reproducibility specification, including exact
 grids, splits, information clocks and table provenance. Section~S6, the capacity sweep,
 physical timed-work experiment, feedback counterexamples and LPC-EGEE counterfactual.
 Section~S7, additional theory, with Table~S18 comparing the nearest guarantee
-disciplines. Section~S8, the extremal constructions whose ideas
-Appendix~\ref{app:proofs} states, in full and with the tables of exact values they
-attain.}
+disciplines. Section~S8, the extremal constructions, each opening
+with its own idea and then given in full with the tables of exact values it attains,
+together with the achievable fraction at one server. Section~S9, the extended related
+work: the per-paper detail behind Section~\ref{sec:related}, every work named there
+being cited in the manuscript as well.}
 
 \authorcontributions{[to be completed by the authors]. The template expects the
 CRediT roles (conceptualization, methodology, software, validation, formal
@@ -242,23 +244,13 @@ SRPT & Shortest remaining processing time
 }
 
 %=================================================================
-% Appendix. The appendix sections carry headings, so \appendixtitles{yes};
-% \appendix itself is issued by sections/A_proofs.tex.
-\appendixtitles{yes}
-\appendixstart
-% \appendixstart resets the theorem-like counters, but hyperref builds its PDF
-% destinations from the raw counter value, so the appendix's Lemma A1 would
-% claim the destination the body's Lemma 1 already holds ("Object @lemma.1
-% already defined" from xdvipdfmx). Give the appendix its own anchor prefix.
-% hyperref already does this for \section and \equation through its own
-% \appendix patch; the theorem-like counters are the ones mdpi.cls adds.
-\def\theHtheorem{app.\arabic{theorem}}
-\def\theHlemma{app.\arabic{lemma}}
-\def\theHcorollary{app.\arabic{corollary}}
-\def\theHproposition{app.\arabic{proposition}}
-\def\theHremark{app.\arabic{remark}}
-\def\theHdefinition{app.\arabic{definition}}
-\IfFileExists{sections/A_proofs.tex}{\input{sections/A_proofs}}{}
+% Ninth pass: the manuscript no longer carries an appendix. What stood in
+% sections/A_proofs.tex was the idea of each extremal construction beside a pointer to
+% the full argument; the ideas are now the opening of Supplementary Section~S8, beside
+% those arguments, and Proposition A1 is Proposition 6 of Supplementary Section S8.5.
+% sections/A_proofs.tex is kept as a stub recording where its content went, and is no
+% longer \input, so \appendixtitles, \appendixstart and the \theH... anchor prefixes
+% that went with it are gone as well.
 
 %=================================================================
 \begin{adjustwidth}{-\extralength}{0cm}

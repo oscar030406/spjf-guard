@@ -33,24 +33,19 @@ different numbers and the first is easy to read as the second.
 \subsection{What Was Selected on What}
 \label{sec:exp_prov}
 
-Three statements have to precede the numbers. First, the guard family and a coarse grid over
+Three statements precede the numbers. The guard family and a coarse grid over
 $(B_0, \eta)$ were explored on the evaluation trace before any validation-only selection
-existed, so the selection reported above chooses inside a family that had already been narrowed
-on the trace this section reports. Second, nothing here is held out. The validation pool is the
-development terms minus the last one, which is held out of the selection and not of the
-development process; that term cannot load a pool on its own
-(Section~\ref{sec:overlay}) and is therefore not evaluated separately. We do not describe any
-figure in this section as out-of-sample, validated on test
-data, or evidence of generalisation.
-
-
-Third, the grids, the feasibility rule, the objective and the tie-break were fixed
-before the grids were run, at comparable density across the three shapes, and the
-package comparisons use exact integer microseconds for arrivals, service and budget
-arithmetic. Supplementary Section~S5 records what the selection chose, which results
-the released package reproduces and which remain archived development evidence, and
-the drop-one-cell sensitivity of the worst-cell rule. No sealed result is printed
-here.
+existed, so the selection chooses inside a family already narrowed on the trace this
+section reports. Nothing here is held out: the validation pool is the development terms
+minus the last one, which is held out of the selection and not of the development
+process, and which cannot load a pool on its own (Section~\ref{sec:overlay}), so we
+describe no figure in this section as out of sample, validated on test data, or evidence
+of generalisation. And the grids, the feasibility rule, the objective and the tie-break
+were fixed before the grids were run, at comparable density across the three shapes, with
+exact integer microseconds for arrivals, service and budget arithmetic. Supplementary
+Section~S5 records what the selection chose, which results the released package
+reproduces and which remain archived development evidence, and the drop-one-cell
+sensitivity of the worst-cell rule. No sealed result is printed here.
 
 % SEALED-RESULTS-PLACEHOLDER
 % The line above is the single anchor at which the sealed-semester results are inserted
@@ -61,23 +56,21 @@ here.
 \label{sec:exp_visibility}
 
 The original feature sweep releases an outcome at its source-platform
-$\mathrm{done}_j$. Under policy $P$, the corresponding replayed job completes at
-$a_j+W_P[j]+C_j$. A feature may therefore be causal in the recorded log and still
-use a result unavailable in the replay. Neither a future-record perturbation test
-nor a source-clock brute-force feature audit resolves this discrepancy.
-
-The conservative score restricts user, exercise and pair history to submission
-outcomes in the same class-term copy, and admits a result only when
-$\mathrm{done}_j+\devnum{3600}\le a_i$; the static score uses code, course and clock
-information known at submission, without outcome history. Both use their own fitted
-models, so the three variants differ in more than release delay and their differences
-cannot be attributed to queueing delay alone. Guard parameters remain those selected
-under the original score, and the conservative variant is the empirical headline.
-Supplementary Section~S3 gives the same-copy exposure decomposition, the lag audit
-that finds \devnum{0} violations in every conservative Guard and FCFS cell and
+$\mathrm{done}_j$, whereas under policy $P$ the replayed job completes at
+$a_j+W_P[j]+C_j$, so a feature may be causal in the recorded log and still use a result
+unavailable in the replay; neither a future-record perturbation test nor a source-clock
+brute-force feature audit resolves that. The conservative score therefore restricts user,
+exercise and pair history to submission outcomes in the same class-term copy and admits a
+result only when $\mathrm{done}_j+\devnum{3600}\le a_i$, while the static score uses
+code, course and clock information known at submission, without outcome history. Both use
+their own fitted models, so the three variants differ in more than release delay and
+their differences cannot be attributed to queueing delay alone. Guard parameters remain
+those selected under the original score, and the conservative variant is the empirical
+headline. Supplementary Section~S3.7 gives the same-copy exposure decomposition, the lag
+audit that finds \devnum{0} violations in every conservative Guard and FCFS cell and
 \devnum{336} job occurrences beyond the lag under unguarded conservative SPJF-E, the
-pending policy-specific exact variant, the aging comparator outside the budget family
-and the package predictor metrics with their splits.
+pending policy-specific exact variant, the aging comparator outside the budget family and
+the package predictor metrics with their splits.
 
 
 
@@ -220,17 +213,16 @@ only separates predicted-heavy from predicted-light jobs recovers little of the
 benefit, so most of it comes from the fine ordering inside the light class.
 
 The two kinds of error do not cost the same. Replacing the largest \devnum{1\%} of
-underestimates by the true cost, and leaving the rest of the score alone, moves the
-deadline-window p99 at $\rho = \devnum{1.0}$ from \devnum{66.57} s to \devnum{45.01} s on the
-first overlay and from \devnum{65.02} s to \devnum{45.32} s on the second, which is
-\devnum{0.91} of the distance to the SJF reference in both. Repairing the largest
-\devnum{1\%} of overestimates instead moves it to \devnum{60.37} s and \devnum{59.72} s, which
-is \devnum{0.26} and \devnum{0.24} of that distance. At \devnum{0.1\%} the two figures are
-\devnum{0.47} and \devnum{0.04}. Treating a heavy job as light and letting it run first is the
-expensive mistake, by about an order of magnitude. This diagnoses the fitted predictor: replacing a score by true cost depends on its
-numerical scale and is not invariant to a monotone score transformation. It neither
-establishes a universal error asymmetry nor distinguishes the population targets of
-raw squared error and Tweedie loss.
+underestimates by the true cost, and leaving the rest of the score alone, closes
+\devnum{0.91} of the distance to the SJF reference in the deadline-window p99 at
+$\rho = \devnum{1.0}$ on both overlays, where repairing the largest \devnum{1\%} of
+overestimates instead closes \devnum{0.26} and \devnum{0.24}, and at \devnum{0.1\%} the
+two figures are \devnum{0.47} and \devnum{0.04}; Supplementary Section~S3.16 gives the
+six waits behind them. Treating a heavy job as light and letting it run first is the
+expensive mistake, by about an order of magnitude. This diagnoses the fitted predictor:
+replacing a score by true cost depends on its numerical scale and is not invariant to a
+monotone score transformation. It neither establishes a universal error asymmetry nor
+distinguishes the population targets of raw squared error and Tweedie loss.
 % Source of the asymmetry figures: evidence/ranking_score/out_sim_primary_rep0_mech.txt and
 %   out_sim_primary_rep1_mech.txt, blocks primary_rep{0,1}_r1_mech, column w_p99_dl, rows
 %   SPJF-M4, SJF-ref, ORACLE-top1.0pct-under, ORACLE-top1.0pct-over, ORACLE-top0.1pct-under,
@@ -354,15 +346,10 @@ baseline under the same conservative protocol.
 
 
 The jobs that pay are the heavy ones, and the worst wait among them is the last of the
-secondary metrics of Section~\ref{sec:model}. Over the five overlays it is \devnum{487},
-\devnum{1{,}023} and \devnum{1{,}543} s under FCFS at the three loads, \devnum{1{,}375},
-\devnum{3{,}313} and \devnum{6{,}286} s under SPJF-E, and \devnum{921}, \devnum{1{,}467} and
-\devnum{1{,}993} s under Guard($\devnum{600}$). The guard leaves the worst heavy job within
-about \devnum{450} s of the FCFS figure at every load (\devnum{434}, \devnum{444} and
-\devnum{450} s), inside the promise, where the unguarded
-ranking multiplies it by \devnum{2.8}, \devnum{3.2} and \devnum{4.1}.
-% Source: outputs/dev_tables/main_table.csv, column max_heavy_s (worst over the five
-%   overlays), rows FCFS, SPJF-E and Guard(600) at levels 0, 1, 2.
+secondary metrics of Section~\ref{sec:model}. The guard leaves the worst heavy job inside
+the promise at every load, within about \devnum{450} s of the FCFS figure, where the
+unguarded ranking multiplies it by between \devnum{2.8} and \devnum{4.1}; Supplementary
+Section~S3.16 gives the nine waits.
 
 
 \paragraph{What the shape of the budget is worth.}
@@ -383,10 +370,9 @@ run at the largest count that bound allows at each promise. What makes it loose 
 distribution. Overtakers on this trace are overwhelmingly shorter than a second, while a count
 of $\kappa$ has to be sized against the worst case $\kappa L$, so the count is exhausted long
 before the work it stands for is, and the baseline
-forces most dispatches back to the queue head. It is charged at dispatch, which allows
-\devnum{34} rather than \devnum{30} passes at
-$k = \devnum{4}$ and $G = \devnum{600}$ s; charging at completion instead changes the gap closed
-by at most \devnum{0.015}, and by at most \devnum{0.001} at the two higher loads.
+forces most dispatches back to the queue head. It is charged at dispatch; Supplementary
+Section~S3.16 gives the passes that allows and what charging at completion instead would
+change.
 
 Corrupted scores separate what the guard does from what it does not do
 (Supplementary Table~S7, Supplementary Figure~S3). Under a reversed order, a random order, or a
@@ -414,27 +400,26 @@ the same bounds on its own waiting times over \devnum{5.7} billion checks with \
 violations; that cross-check was run against the earlier development pipeline, whose dispatch
 sequence the package reproduces.
 
-The ratio of the realised worst excess to the bound falls as $k$ grows. It reaches
-\devnum{0.9950} at $k = 1$, \devnum{0.9311} at $k = 4$, \devnum{0.9219} at $k = 5$,
-\devnum{0.8975} at $k = 7$ and \devnum{0.8850} at $k = 8$. These are facts about the traces and
-leave the constant where Section~\ref{sec:theory} put it: $(3-2/k)L$ is the exact supremum at every $k$,
-but the family that approaches it is a geometric cascade that needs hundreds of jobs arranged
-against the wrapper, and nothing in a replayed workload arranges them. The
-finite-skip bound, by contrast, is attained exactly on small instances, at a ratio of
-\devnum{1.0000}.
+The ratio of the realised worst excess to the bound falls as $k$ grows, from
+\devnum{0.9950} at $k = 1$ to \devnum{0.8850} at $k = 8$, while the finite-skip bound is
+attained exactly on small instances. These are facts about the traces and leave the
+constant where Section~\ref{sec:theory} put it: $(3-2/k)L$ is the exact supremum at every
+$k$, but the family that approaches it is a geometric cascade that needs hundreds of jobs
+arranged against the wrapper, and nothing in a replayed workload arranges them.
+Supplementary Section~S3.16 gives the ratio at each $k$.
 
 
 \paragraph{The identity, measured job by job.}
 Theorem~\ref{thm:identity} is asserted on every job of every cell of overlay~0:
-\devnum{0} violations over \devnum{1{,}428{,}415{,}560} job-checks. The residual
-$D_i = k(W_P[i] - W_{\mathrm{FCFS}}[i]) - (\mathrm{In}_i - \mathrm{Out}_i)$ stays far
-from its ceiling: over all \devnum{81} cells the largest is \devnum{0.5173} of the
-bound $2(k-1)L$, so it never exceeds \devnum{0.518}, which is about $(k-1)L$. That is
-where a search that does not build the cascade of Theorem~\ref{thm:tight1} stops, so
-the measurement says the workload does not attain the constant, not that the constant
-is loose. Table~\ref{tab:resid} reports four cells and Supplementary Table~S8 all
-nine; Supplementary Section~S3 gives the recording kernels and their validation, the
-same-phase shares, and the variance of the excess that
+\devnum{0} violations over \devnum{1{,}428{,}415{,}560} job-checks, the residual
+$D_i = k(W_P[i] - W_{\mathrm{FCFS}}[i]) - (\mathrm{In}_i - \mathrm{Out}_i)$ reaching at
+most \devnum{0.5173} of its ceiling $2(k-1)L$ over all \devnum{81} cells, so that it
+never exceeds \devnum{0.518}, which is about $(k-1)L$. That is where a search which does
+not build the cascade of Theorem~\ref{thm:tight1} stops, so the measurement says the
+workload does not attain the constant and not that the constant is loose.
+Table~\ref{tab:resid} reports four cells and Supplementary Table~S8 all nine;
+Supplementary Section~S3.13 gives the recording kernels with their validation, the
+same-phase shares and the variance of the excess that
 $(\mathrm{In}_i - \mathrm{Out}_i)/k$ explains.
 
 \begin{table}[htbp]
@@ -504,10 +489,10 @@ promise is close to being spent.
 
 The single-server configuration also shows the cost of choosing a shape on one set of
 cells: the parameters were selected on the \devnum{15} multi-server validation cells,
-and $k = 1$ is not among them. Supplementary Section~S3 gives the five gaps that show
-the joint winner transferring at the two tighter promises and not at
-$G = \devnum{1200}$ s. We report the number the pre-stated rule produces and do not
-re-tune it on this cell; Section~\ref{sec:limits} states what it means.
+and $k = 1$ is not among them, so the joint winner transfers at the two tighter promises
+and not at $G = \devnum{1200}$ s (Supplementary Section~S3.14). We report the number the
+pre-stated rule produces and do not re-tune it on this cell;
+Section~\ref{sec:limits} states what it means.
 
 
 \subsection{Other Platforms}
@@ -614,22 +599,21 @@ improvement (Supplementary Section~S6).
 %     p99 0.86-1.16, p90 0.81-1.21); the same rows are in holdout.csv.  The row labels now name
 %     the fitted capacity instead of calling it "recorded capacity", which it was not.
 
-Two empirical screens assess where reordering and the uniform certificate may be
-useful. The first compares the FCFS tail scale with the certificate's additive term
-$(3-2/k)L$. Four of the original six workloads have smaller FCFS p99 values; this
-means that this certificate is too coarse at that scale, not that finer promises
-are impossible for a restricted base policy or workload. CodeBench at
-\devnum{4.56}$L$ and the serverless trace at \devnum{4.22}$L$ clear this screen.
-The compute farm is the extreme: the FCFS p99 is \devnum{18.7} h against a bound
-$L=\devnum{493{,}857}$ s, or \devnum{5.7} days, and the tested guards never fire.
-The second screen is cost concentration, an opportunity for reordering rather than
-a necessary condition. In the CI pools the longest \devnum{1\%} carry only
-\devnum{3.4\%} and \devnum{5.2\%} of work, and true-size ordering worsens p99 on
-three of the four reported windows. In the original-score CodeBench and serverless
-comparisons, the guard closes \devnum{0.48} to \devnum{0.71} of the reference gap
-and limits observed excess to \devnum{2.5} to \devnum{3.8}$L$ at a promise of
-\devnum{5}$L$. Clearing either screen does not guarantee a percentile improvement:
-the capacity experiment below contains counterexamples.
+Two empirical screens assess where reordering and the uniform certificate may be useful.
+The first compares the FCFS tail scale with the certificate's additive term $(3-2/k)L$:
+four of the original six workloads have smaller FCFS p99 values, which means the
+certificate is too coarse at that scale and not that finer promises are impossible for a
+restricted base policy or workload. CodeBench at \devnum{4.56}$L$ and the serverless
+trace at \devnum{4.22}$L$ clear it; the compute farm is the extreme, with an FCFS p99 of
+\devnum{18.7} h against a bound $L=\devnum{493{,}857}$ s, or \devnum{5.7} days, and
+guards that never fire. The second screen is cost concentration, an opportunity for
+reordering rather than a necessary condition: in the CI pools the longest \devnum{1\%}
+carry only \devnum{3.4\%} and \devnum{5.2\%} of work, and true-size ordering worsens p99
+on three of the four reported windows. Where both are cleared, in the original-score
+CodeBench and serverless comparisons, the guard closes \devnum{0.48} to \devnum{0.71} of
+the reference gap and limits observed excess to \devnum{2.5} to \devnum{3.8}$L$ at a
+promise of \devnum{5}$L$. Clearing either screen does not guarantee a percentile
+improvement: the capacity experiment below contains counterexamples.
 % Sources: outputs/dev_tables/main_table.csv; evidence/cross_domain/out_cross_domain_table.txt;
 % evidence/firefox_ci/out_SUMMARY.txt, corresponding rows of Table~\ref{tab:cross}.
 
@@ -637,25 +621,22 @@ the capacity experiment below contains counterexamples.
 \label{sec:exp_physical}
 
 The supplementary capacity sweep tests the archived score at every integer
-$k=\devnum{1},\ldots,\devnum{20}$ on all five development overlays and extends
-the first overlay to its exact zero-wait endpoint $k=\devnum{76}$. Benefit changes
-sign with capacity: at $k=\devnum{1}$, Guard(\devnum{600}) worsens deadline p99
-by \devnum{493.79} s, while positive simultaneous support for its improvement
-occurs only at $k=\devnum{4}$--\devnum{12}. The selected load points are therefore
-not evidence of positive benefit at every capacity. The sweep preserves complete
-trace state, uses an archived fit and leaves the offered work fixed.
+$k=\devnum{1},\ldots,\devnum{20}$ on all five development overlays and extends the first
+overlay to its exact zero-wait endpoint $k=\devnum{76}$. Benefit changes sign with
+capacity: at $k=\devnum{1}$ Guard(\devnum{600}) worsens deadline p99 by \devnum{493.79} s,
+while positive simultaneous support for its improvement occurs only at
+$k=\devnum{4}$--\devnum{12}, so the selected load points are not evidence of positive
+benefit at every capacity.
 % Sources: prechecks/weakness1_attack/summary_numbers.json, ranges and
 % support_by_policy; capacity_curve.csv, Guard(600), k=1, absolute_p99_improvement_s.
 
-The physical timed-work experiment executes \devnum{2{,}151} jobs on two workers
-in a selected empty-start release window. All \devnum{6{,}453} observed-prefix
-decisions pass the rule audit, but the guard's per-job discrepancy from its ideal
-measured-input replay reaches \devnum{1{,}354.10} s. Its physical p99 is
-\devnum{1{,}783.65} s against \devnum{1{,}763.30} s for separately timed FCFS,
-so this window does not establish a guarded p99 gain. Supplementary Section~S6
-reports the positive execution checks beside these negative results, explains
-the stall-corrected observed-trace certificate and distinguishes shadow FCFS on
-the guard's measured input from the separately executed baseline.
+The physical timed-work experiment executes \devnum{2{,}151} jobs on two workers in a
+selected empty-start release window. All \devnum{6{,}453} observed-prefix decisions pass
+the rule audit, but the guard's per-job discrepancy from its ideal measured-input replay
+reaches \devnum{1{,}354.10} s and its physical p99 is \devnum{1{,}783.65} s against
+\devnum{1{,}763.30} s for separately timed FCFS, so this window does not establish a
+guarded p99 gain. Supplementary Section~S6.2 reports the positive execution checks beside
+these negative results.
 % Sources: prechecks/weakness1_attack/physical_numbers.json, input.jobs,
 % observed-prefix audit counts, absolute_physical_minus_ideal_wait_s and wait_s;
 % prechecks/weakness1_attack/physical_verification.json.
@@ -664,16 +645,15 @@ the guard's measured input from the separately executed baseline.
 \label{sec:exp_sens}
 
 
-Five trace-construction variants were run through an earlier source-clock pipeline:
-they are sensitivity results for its stored M4 log-scale score and fixed
-completed-work budget, not for the selected expected-cost Guard($G$), and within that
-earlier configuration the alternatives retain a positive gap while the earlier
-fixed-budget guard ranges from \devnum{0.442} to \devnum{0.843} of the gap at full
-load. They support sensitivity of the earlier ordering experiment to timestamp
-interpretation, source-term inclusion and co-ending-run treatment, and do not validate
-robustness of the final selected Guard($G$), conservative history or policy-specific
-exact visibility. Supplementary Table~S14 gives the five variants; Supplementary
-Section~S5 gives the configuration and release boundary explicitly.
+Five trace-construction variants were run through an earlier source-clock pipeline, so
+they are sensitivity results for its stored M4 log-scale score and fixed completed-work
+budget and not for the selected expected-cost Guard($G$): within that configuration the
+alternatives retain a positive gap while the earlier fixed-budget guard ranges from
+\devnum{0.442} to \devnum{0.843} of the gap at full load. They support sensitivity of the
+earlier ordering experiment to timestamp interpretation, source-term inclusion and
+co-ending-run treatment, and validate neither the final selected Guard($G$) nor
+conservative history nor policy-specific exact visibility. Supplementary Table~S14 gives
+the five variants and Supplementary Section~S5 the configuration and release boundary.
 
 Two further limits of these runs --- what the intervals do and do not cover, and the
 prediction cost the runs do not charge --- are stated in Section~\ref{sec:limits}.

@@ -242,3 +242,20 @@ $16$ & $0.3139$ & $0.0161$ \\
 \end{center}
 Thus the larger ratios use $L=L_{\mathrm{sample}}=\max_j C_j$, not the published
 timeout $L_{\mathrm{cap}}=1000$.
+
+\subsection{Why kill-and-restart tiering does not escape the floor}
+\label{sec:supp_tiering}
+
+Section~9 of the manuscript states that the obvious escape from the $\Omega(L)$ floor
+fails. Kill-and-restart tiering runs every job for a short first quantum $\tau$ and
+restarts the survivors, discarding the killed attempt; on $n$ jobs of length $L$ arriving
+together it leaves some job with an excess of $n\tau/k - L$ over first-come first-served,
+and that excess is wasted work rather than overtaking, so no budget removes it. The
+light-job constant does not improve either, a second-tier piece being still a
+non-preemptive block of length $L$: holding $\tau$ fixed and varying $L$, the worst
+light-job additive constant we measure grows as about \devnum{1.1}$L$ and is flat in
+$\tau$. The mechanism is TAGS \cite{harcholbalter2002tags} with the dedicated hosts
+removed, and removing them is what breaks it: in TAGS the kill is a routing device and
+the work is redone on the next host, whereas in a judging queue the kill is terminal.
+% Ninth pass: this subsection stood in Section 9 of the manuscript, which keeps the
+%   statement, the citation and the reason the mechanism breaks.

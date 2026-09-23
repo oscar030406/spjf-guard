@@ -1,159 +1,27 @@
-\providecommand{\devnum}[1]{#1}
-
-\appendix
-
-\section{Deferred proofs and the extremal constructions}
-\label{app:proofs}
-
-This appendix gives the idea of each construction sketched in
-Section~\ref{sec:theory} and points to the full argument. All of them are exact in
-integer arithmetic; we
-simulated every one of them and checked every intermediate quantity of every
-proof job by job, including an independent audit of work conservation and server
-capacity re-derived from the produced schedule. The workload comparison and the
-consistency proposition are proved in Supplementary Section~S4; the cascade, the two
-tightness constructions, the single-server family, the price of the guarantee and the
-achievability and maximality proofs, with the tables of exact values they attain, are
-Supplementary Section~S8.
-
-% Eighth pass: the constructions and proofs that stood here in full are now
-% Supplementary Section S8.  Only the ideas and the pointers are left; nothing in any
-% argument changed, and every subsection keeps the label the theory section cites.
-
-\subsection{The workload comparison}
-\label{app:strict}
-
-% Sixth/seventh pass, referee item G3: the two proofs that stood here in full are now
-% Supplementary Section S4.1.  What is left is the proof idea and the pointer; nothing
-% in either argument changed.
-Section~\ref{sec:theory} gives the idea of the bound. The strictness at $k \ge 2$
-runs the same way: at the first instant $t_1$ at which $D = U_{Q_1} - U_{Q_2}$
-touches $(k-1)L$, the linear piece to its left must have positive slope, which
-forces at most $k-1$ jobs present under $Q_1$ there, so none of them waits and
-$U_{Q_1} \le (k-1)L$ on that piece; left limits then force $U_{Q_2}(t_1^-) = 0$ and
-$U_{Q_1}(t_1^-) = (k-1)L$, and $U_{Q_1}$ is strictly decreasing on the piece, so it
-cannot equal its own supremum at $t_1$. Both steps invoke $(k-1)L > 0$ and both fail
-at $k = 1$, where $U_{Q_1} \equiv U_{Q_2}$ and the bound $0$ is attained everywhere.
-Supplementary Section~S4.1 gives both proofs in full; that the constant cannot be
-lowered is the cascade of Appendix~\ref{app:cascade}.
-
-\subsection{The cascade}
-\label{app:cascade}
-
-Both tightness results begin from the same construction, which drives the
-workload gap of Lemma~\ref{lem:gap} to its ceiling geometrically. In $m$ identical
-rounds, each opening with $k-1$ long jobs of service $L$ and then $L$ short jobs of
-service $1$, a static-priority policy that prefers the short ones carries $k-1$
-part-served jobs into the next round, and the carried workload obeys
-$\rho_{j+1} = (k-1)(\rho_j + L)/k$, so that
-$\rho_m = (k-1)L(1 - ((k-1)/k)^m) \to (k-1)L$. Supplementary Section~S8.1 states the
-cascade lemma and proves it, including the rescaling that fixes an arbitrary service
-bound.
-
-
-
-\subsection{Tightness of the net-overtake identity}
-\label{app:tight1}
-
-Both witnesses run the cascade for $m$ rounds and then inject a finale at $T_m$.
-Upward, $k-1$ long jobs, the victim and a stream of more than $2kL$ unit jobs arrive
-together: first-come first-served starts the victim at once with
-$\rho^{\mathrm{FCFS}}_i = (k-1)L$, while the base policy holds it until the stream
-runs out, which leaves
-$\Delta_i \ge 2(k-1)L - (k-1)L((k-1)/k)^m - (k-1)$. Downward, the mirrored cascade is
-followed by a filler job of service $f$, the victim and $k-1$ jobs of service $L$,
-giving $\Delta_i = -\rho_m - (k-1)L \to -2(k-1)L$. Non-attainment follows from
-Lemma~\ref{lem:gap} and the \emph{Bounding $\rho$} step of
-Theorem~\ref{thm:identity}. Supplementary Section~S8.2 gives both constructions in
-full, with the table of the exact values of $\Delta_i/L$ they attain at
-$k = \devnum{2}, \devnum{3}, \devnum{4}$, the executed-work column, the same-phase
-shares and the victims' own excesses.
-
-
-
-\subsection{Tightness of the guard bound}
-\label{app:tight2}
-
-Part~(i) is a queue of $k$ jobs of service $L$, the victim and a stream of unit jobs:
-with the constant budget $B$ the guard fires at $L + \lceil B/k \rceil$, so the term
-$B/k$ is attained. Part~(ii) bounds every finite instance by
-Theorem~\ref{thm:guard} strictly, and approaches $3k-2$ from below by running the
-cascade for $m$ rounds and then injecting a finale timed so that
-$\mathrm{over}[i]$ sits below $B = f + L + 1$ at three successive dispatch epochs,
-at $0$, at $f$ and at $f + L = B - 1$, the last by a single unit, which lets the base
-policy fill every server three times before the guard fires. Supplementary
-Section~S8.3 gives both proofs and the table of the values the family reaches, which
-needs \devnum{396} jobs at $k = \devnum{2}$.
-
-
-
-\subsection{Consistency, and why the converse fails}
-\label{app:consistency}
-
-% Sixth/seventh pass, referee item G3: the proof and the two counterexamples that stood
-% here are now Supplementary Section S4.2.  Nothing in them changed.
-The induction sketched in Section~\ref{sec:theory} needs two further readings, both
-of them one line: the first consequence of Proposition~\ref{prop:consistency} uses
-$\mathrm{over}[q](t) \le \mathrm{In}^A_q$, a completed overtaker of $q$ having been
-dispatched while $q$ waited, and the second uses Corollary~\ref{cor:necessary}.
-Supplementary Section~S4.2 gives the induction and the two counterexamples in full.
-
-\subsection{Approaching the single-server bound}
-\label{app:floor}
-
-At $k = 1$, with budget $B > 0$ and a granularity $g$ dividing $B$, the victim is
-placed ahead of $B/g - 1$ jobs of service $g$ and one job of service $L$: the guard
-does not fire while $\mathrm{over}[i] = B - g < B$, so the long job is taken and
-$\mathrm{excess}_P[i] - B = L - g$, which approaches $L$ and never reaches it.
-Supplementary Section~S8.4 gives the family in full with two worked settings.
-
-
-
-\subsection{The price of the guarantee}
-\label{app:price}
-
-Counting inverted pairs in two ways makes $\sum_i \mathrm{In}_i$ and
-$\sum_i \mathrm{Out}_i$ the two sums of service times over the inversions exactly,
-which is the pairwise-interchange argument behind Smith's rule~\cite{smith1956}
-stated on an arbitrary arrival sequence; summing Theorem~\ref{thm:identity} over the
-$m+n$ jobs then brackets the total saving of any policy by the inversion sum divided
-by $k$, to within $\mathcal{E} = 2(1-1/k)L(m+n)$. Bounding the numerator through
-Corollary~\ref{cor:necessary} and the denominator through the $mn$ inversions of
-shortest job first gives the ratio, with the finite-sample term
-$\varepsilon = O((m+n)/(mn))$. Supplementary Section~S8.5 gives the proof in full.
-
-
-
-At $k = 1$ the error term vanishes identically and the sum identity is exact, so
-the achievable fraction can be computed rather than bounded.
-
-\begin{proposition}[The achievable fraction at one server]
-\label{prop:k1frac}
-In the family of Theorem~\ref{thm:price} with $k = 1$, the largest value of
-$(\overline{W}_{\mathrm{FCFS}} - \overline{W}_{P})
- /(\overline{W}_{\mathrm{FCFS}} - \overline{W}_{\mathrm{SJF}})$
-over all non-preemptive work-conserving $P$ with
-$\mathrm{excess}_P[j] \le G$ for every job is exactly
-$\min\bigl(1, \lfloor G/\sigma \rfloor / n\bigr)$.
-\end{proposition}
-
-Supplementary Section~S8.5 proves it and reports the exhaustive check of every
-work-conserving schedule of the family over \devnum{1{,}161} parameter settings.
-
-
-
-\subsection{Achievability and maximal permission}
-\label{app:achievability}
-
-The lower bound of Theorem~\ref{thm:two_size_achievability} counts the short jobs
-exact shortest job first places before the first long one, which is
-$r_g = \min(n, k\lceil B/(k\sigma)\rceil)$ and at least $qn$; the upper bound applies
-Corollary~\ref{cor:necessary} to each long job. Theorem~\ref{thm:k1_maximal} turns on
-one relabelling: if a wrapper permits a later-ranked job while the head has
-$\mathrm{over}[h] > G - L$, giving that job the unrevealed size $L$ leaves the
-transcript the wrapper sees unchanged and pushes the head past $G$.
-Corollary~\ref{cor:k1_frontier} then counts $r = \lfloor (G-L)/\sigma \rfloor + 1$
-permitted short-before-long moves. Supplementary Section~S8.6 gives the three proofs
-in full.
-
-
+% Ninth pass, the length budget: this file was Appendix A of the manuscript, "Deferred
+% proofs and the extremal constructions".  It carried the idea of each construction
+% sketched in Section 6 beside a pointer to the full argument, and one statement of its
+% own, Proposition A1, the achievable fraction at one server.
+%
+% All of it moved into paper/supplementary.tex, so that the manuscript carries no
+% appendix:
+%
+%   A       the framing and the audit sentence   -> S8, opening paragraph
+%   A.1     the workload comparison, strictness  -> S4, opening paragraph (proof in S4.1)
+%   A.2     the cascade                          -> S8, opening paragraph (proof in S8.1)
+%   A.3     tightness of the identity            -> S8, opening paragraph (proofs in S8.2)
+%   A.4     tightness of the guard bound         -> S8, opening paragraph (proofs in S8.3)
+%   A.5     consistency, why the converse fails  -> S4, opening paragraph (proof in S4.2)
+%   A.6     approaching the single-server bound  -> S8, opening paragraph (family in S8.4)
+%   A.7     the price of the guarantee, and      -> S8, opening paragraph; Proposition A1
+%           Proposition A1                          is now Proposition 6 of S8.5
+%   A.8     achievability and maximal permission -> S8, opening paragraph (proofs in S8.6)
+%
+% Nothing in any argument changed and no number was dropped; only the cross-references
+% were rewritten, a \ref into the manuscript not resolving from the supplementary file.
+% The citation of Smith's rule that stood in A.7 is now in Section 6 of the manuscript,
+% so the reference keeps a main-text citation.
+%
+% main.tex no longer \input s this file, and \appendixtitles, \appendixstart and the
+% \theH... anchor prefixes that went with the appendix are gone from it.  The file is
+% kept as this record of where its content went.

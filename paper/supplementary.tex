@@ -91,7 +91,8 @@ table no longer prints, the corrupted scores, the aging comparator, the alternat
 ranking losses, the identity residual on all nine cells, the single-server configuration
 and the trace-construction sensitivities (Section~S3); and the deferred proofs and
 remarks of the theory section, the workload comparison and the consistency proposition
-among them (Section~S4). Section numbers here carry an S prefix and every
+among them, including the proof of the net-overtake identity (Section~S4). Section
+numbers here carry an S prefix and every
 table is numbered S. A cross-reference without an S --- ``Section~8.2'', ``Table~5'',
 ``Theorem~1'' --- points into the main manuscript, since a \verb|\ref| across the two
 files does not resolve. The traces are the ones the manuscript's Table~2 names: the
@@ -99,9 +100,10 @@ CodeBench judging logs \cite{codebench_dataset}, the Azure Functions invocation 
 \cite{azure2021trace}, the Intel Netbatch logs \cite{netbatch2012trace} and the two
 Firefox continuous-integration pools collected from Mozilla's public APIs
 \cite{taskcluster_docs,treeherder_docs}. The additional reproducibility specification is Section~S5; capacity, physical
-queueing, feedback and LPC-EGEE results are Section~S6. Additional theory is Section~S7,
-and the extremal constructions and remaining proofs of the manuscript's Appendix~A are
-Section~S8. Every empirical figure quoted here is a development
+queueing, feedback and LPC-EGEE results are Section~S6. Additional theory is Section~S7;
+the extremal constructions and remaining proofs behind Section~6 of the manuscript,
+which carries no appendix of its own, are Section~S8; and the per-paper detail behind
+Section~2 of the manuscript is Section~S9. Every empirical figure quoted here is a development
 figure in the sense of Section~8.2 of the manuscript: nothing in this file comes from a
 sealed part of any trace, and nothing here was recomputed for it.
 
@@ -355,6 +357,15 @@ picks nearly the same capacity; on pool~B the reverse split's held-out capacity 
 mean ratio of \devnum{1.14} on its test part where the whole-window capacity gives
 \devnum{0.99}. The difference between those two numbers is the size of the circularity
 that fitting on the reported window would have hidden.
+
+What the split does not cover is stated in Section~9 of the manuscript and belongs here
+in full. Out of sample the 90th percentile lands up to \devnum{21\%} from the recorded
+one and is systematically low on the larger pool. The split is chronological inside one
+\devnum{21}-day and one \devnum{7}-day window of two pools, not a different cluster,
+quarter or workload, and the capacity is held constant over the test part although the
+real machine count varies.
+% Ninth pass: this paragraph stood in Section 9 of the manuscript, which keeps the
+%   statement that the upper middle of the simulated distribution is too steep.
 % Sources of Section~\ref{sec:supp_data} (carried over from 07_data.tex):
 %   Field audit: evidence/codebench_audit/out_tail_and_counts.txt and
 %     evidence/codebench_service_v2/out_service_v2.txt (slopes, kill feedback, the 60 s
@@ -1088,6 +1099,20 @@ baseline beside it.
 \subsection{The Identity, Measured Job by Job}
 \label{sec:supp_identity}
 
+Section~6 of the manuscript states that neither exhaustive search nor real input reaches
+the error term of Theorem~1. Exhaustive and random search over millions of small
+instances never exceeds $(k-1)L$ by more than one time unit, and on the
+\devnum{17.6}-million-job trace of Section~8 of the manuscript the largest residual
+reaches \devnum{0.470} to \devnum{0.518} of $2(k-1)L$, again about $(k-1)L$.
+% PROVENANCE (lines above).  The range 0.470-0.518 is the minimum and the maximum
+% of column ratio_to_bound over all 81 rows of
+% outputs/dev_tables/identity_residuals.csv: min 0.46982235 (overlay 0, level 0,
+% k = 8, Skip(300)), max 0.51727123 (overlay 0, level 1, k = 5, Guard(300)).
+% Printed rounded outwards, so that the same 0.518 serves the "never exceeds"
+% reading in Section 8 of the manuscript; the stale 0.485/0.521 pair came from
+% an earlier run and is not reproducible from the released package.
+% Ninth pass: this paragraph stood in Section 6.4 of the manuscript.
+
 This subsection supports the manuscript's report in Section~8.6 that the residual of
 Theorem~1 never exceeds \devnum{0.518} of its bound on the trace, by giving the
 recording kernels, their validation and the same-phase shares behind that figure.
@@ -1116,7 +1141,7 @@ bound $2(k-1)L$ is \devnum{14}$L$, and over those nine cells the maximum sits be
 \devnum{0.518}. That is where a search that does not
 build the cascade of Theorem~2 of the manuscript stops, so the measurement says the workload does
 not attain the constant, not that the constant is loose. Same-phase bookkeeping, the mechanism
-behind the degenerate extremal instances of Remark~1 of the manuscript, accounts for at most
+behind the degenerate extremal instances of Remark~\ref{rem:directions} above, accounts for at most
 \devnum{0.36\%} of the total $\mathrm{In}$ in any of those nine cells, so the executed-work
 convention would not change the picture for these
 policies. It is not negligible everywhere: under the randomised ranking, which ties many jobs
@@ -1216,14 +1241,70 @@ boundary explicitly.
 %   tab:s_scores and tab:s_sens.  Nothing was recomputed for this file.
 
 %=================================================================
+\subsection{Further Measurements from the Guarded Runs}
+\label{sec:supp_guardmeas}
+
+This subsection carries three measurements that Section~8 of the manuscript states in
+summary: the worst wait among heavy jobs, how the realised worst excess compares with the
+bound at each $k$, and what the accounting of the count baseline is worth.
+
+The worst wait among heavy jobs, over the five overlays, is \devnum{487},
+\devnum{1{,}023} and \devnum{1{,}543} s under FCFS at the three loads, \devnum{1{,}375},
+\devnum{3{,}313} and \devnum{6{,}286} s under SPJF-E, and \devnum{921}, \devnum{1{,}467}
+and \devnum{1{,}993} s under Guard($\devnum{600}$). The guard therefore leaves the worst
+heavy job within \devnum{434}, \devnum{444} and \devnum{450} s of the FCFS figure, inside
+the promise, where the unguarded ranking multiplies it by \devnum{2.8}, \devnum{3.2} and
+\devnum{4.1}.
+% Source: outputs/dev_tables/main_table.csv, column max_heavy_s (worst over the five
+%   overlays), rows FCFS, SPJF-E and Guard(600) at levels 0, 1, 2.
+% Ninth pass: this paragraph stood in Section 8.5 of the manuscript.
+
+The ratio of the realised worst excess to the bound reaches \devnum{0.9950} at $k = 1$,
+\devnum{0.9311} at $k = 4$, \devnum{0.9219} at $k = 5$, \devnum{0.8975} at $k = 7$ and
+\devnum{0.8850} at $k = 8$. The finite-skip bound, by contrast, is attained exactly on
+small instances, at a ratio of \devnum{1.0000}.
+% Source: outputs/dev_tables/bound_checks.csv, column used_over_allowed, and
+%   outputs/dev_tables/k1/bound_checks.csv for the k = 1 figure; the finite-skip ratio is
+%   evidence/main_v3/out_main_v31.txt section 10.
+% Ninth pass: these figures stood in Section 8.6 of the manuscript.
+
+Replacing the largest \devnum{1\%} of underestimates by the true cost moves the
+deadline-window p99 at $\rho = \devnum{1.0}$ from \devnum{66.57} s to \devnum{45.01} s on
+the first overlay and from \devnum{65.02} s to \devnum{45.32} s on the second; repairing
+the largest \devnum{1\%} of overestimates instead moves it to \devnum{60.37} s and
+\devnum{59.72} s. Section~8.4 of the manuscript prints the four fractions of the distance
+to the SJF reference that these give, and the two at \devnum{0.1\%}.
+% Source of the asymmetry figures: evidence/ranking_score/out_sim_primary_rep0_mech.txt and
+%   out_sim_primary_rep1_mech.txt, blocks primary_rep{0,1}_r1_mech, column w_p99_dl, rows
+%   SPJF-M4, SJF-ref, ORACLE-top1.0pct-under, ORACLE-top1.0pct-over, ORACLE-top0.1pct-under,
+%   ORACLE-top0.1pct-over.  The fractions are (SPJF-M4 - ORACLE)/(SPJF-M4 - SJF-ref) per
+%   overlay: 0.9099 / 0.9099 (under 1%), 0.2619 / 0.2448 (over 1%), 0.4882 / 0.4495 (under
+%   0.1%), 0.0509 / 0.0320 (over 0.1%).
+% Ninth pass: the six waits stood in Section 8.4 of the manuscript, which keeps the
+%   fractions computed from them.
+
+The count baseline is charged at dispatch, which allows \devnum{34} rather than
+\devnum{30} passes at $k = \devnum{4}$ and $G = \devnum{600}$ s; charging at completion
+instead changes the gap closed by at most \devnum{0.015}, and by at most \devnum{0.001}
+at the two higher loads.
+% Ninth pass: this sentence stood in Section 8.5 of the manuscript, beside equation (2).
+
+%=================================================================
 \section{Deferred Proofs}
 \label{sec:supp_proofs}
 
-Appendices~A.1 and~A.5 of the manuscript give the ideas behind the arguments
-proved here. The workload comparison uses continuity and left limits, whereas
-consistency is proved by induction. The tightness constructions and the
-remaining proofs are Section~\ref{sec:supp_constructions} of this file, whose ideas
-Appendices~A.2--A.4 and~A.6--A.8 of the manuscript state. We use the manuscript's notation:
+Section~6 of the manuscript gives the ideas behind the arguments proved here. The
+workload comparison uses continuity and left limits, whereas consistency is proved by
+induction; the strictness at $k \ge 2$ runs the same way as the bound itself, in that at
+the first instant $t_1$ at which $D = U_{Q_1} - U_{Q_2}$ touches $(k-1)L$ the linear
+piece to its left must have positive slope, which forces at most $k-1$ jobs present
+under $Q_1$ there, so none of them waits, and left limits then make $U_{Q_1}$ strictly
+decreasing on that piece, so it cannot equal its own supremum at $t_1$. The consistency
+induction needs two further readings, both one line: its first consequence uses
+$\mathrm{over}[q](t) \le \mathrm{In}^A_q$, a completed overtaker of $q$ having been
+dispatched while $q$ waited, and the second uses Corollary~2 of the manuscript. The
+tightness constructions and the remaining proofs are
+Section~\ref{sec:supp_constructions} of this file. We use the manuscript's notation:
 $U_Q(t)$ is the unfinished work at time $t$ under policy $Q$, and $N_Q(t)$ is the
 number of jobs present.
 
@@ -1314,21 +1395,76 @@ wrapper with $B = 0$ is first-come first-served while the base ordering by
 service time is not, and the ratio of mean waits is $(2L + m - 1)/(m+1)$,
 unbounded in $L$.
 % Source of Section~\ref{sec:supp_proofs}: sections/A_proofs.tex, Appendices A.1 and A.5
-%   of the manuscript, moved here in the seventh revision pass under referee item G3.
+%   of the manuscript as it then stood, moved here in the seventh revision pass under
+%   referee item G3; the manuscript has carried no appendix since the ninth pass.
 %   The two arguments are verbatim; only the cross-references were rewritten, since a
 %   \ref into the manuscript does not resolve from this file: Lemma~\ref{lem:gap} is
 %   Lemma 1, Proposition~\ref{prop:consistency} is Proposition 1,
-%   Corollary~\ref{cor:necessary} is Corollary 2 and Appendix~\ref{app:cascade} is
-%   Appendix A.2.  Simulated and checked in evidence/guard_theory; nothing was
+%   Corollary~\ref{cor:necessary} is Corollary 2 and the cascade is
+%   Section~\ref{sec:supp_cascade}.  Simulated and checked in evidence/guard_theory; nothing was
 %   recomputed for this file.
 
 
-\subsection{The Two Directions of the Identity}
+\subsection{The Net-Overtake Identity, and Its Two Directions}
 \label{sec:supp_directions}
 
-This subsection supports the statement in Section~6 of the manuscript that the upward
-and downward extremes of Theorem~1 do not have the same content, and that the
-executed-work convention would change only the downward one.
+This subsection proves Theorem~1 of the manuscript, of which Section~6 there keeps the
+statement, the busy-period accounting (1) and the idea; it then supports the statement
+made in the same section that the upward and downward extremes of the theorem do not
+have the same content, and that the executed-work convention would change only the
+downward one.
+
+\begin{proof}[Proof of Theorem~1 of the manuscript]
+\emph{Busy-period accounting.} Job $i$ waits throughout $[a_i, s^P_i)$, so by
+work conservation every server is busy on that interval and exactly $k\,W_P[i]$
+units of work are executed there, none of it on $i$. (If $s^P_i = a_i$ the
+interval is empty and both sides vanish.) Split that work by rank.
+
+A job $j$ of rank above $i$ has $a_j \ge a_i$, so it executes inside the window
+only if it is dispatched inside it, that is only if $j \prec i$; conversely every
+such $j$ is dispatched at or before $s^P_i$. The work executed on jobs of rank
+above $i$ is therefore $\mathrm{In}_i - \rho^{\mathrm{new}}$, where
+$\rho^{\mathrm{new}}$ is the remaining work at $s^P_i$ of those overtakers not
+finished by then; a same-phase overtaker contributes $C_j$ to both terms and $0$
+to the executed work, as it must.
+
+Every job of rank below $i$ is present at $a_i$, with total remaining $R^P_i$.
+At $s^P_i$ their total remaining is $\mathrm{Out}_i$, the jobs not dispatched
+before $i$ each carrying their full service time, plus $\rho^{\mathrm{old}}$,
+the unfinished part of those dispatched strictly before $i$, so the work
+executed on them is $R^P_i - \mathrm{Out}_i - \rho^{\mathrm{old}}$. Adding the
+two parts gives equation~(1) of the manuscript,
+$k\,W_P[i] = R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \rho^P_i$ with
+$\rho^P_i := \rho^{\mathrm{old}} + \rho^{\mathrm{new}}$.
+
+\emph{Bounding $\rho$.} The jobs counted in $\rho^P_i$ occupy distinct servers,
+and none of them occupies the server that takes $i$, so there are at most $k-1$
+of them and each has remaining work at most $L$: $0 \le \rho^P_i \le (k-1)L$.
+
+\emph{The reference policy.} Under first-come first-served,
+$\mathrm{In}_i = 0$, since a job of rank above $i$ dispatched before $i$ would
+have to be chosen at an instant at which $i$ waits, and
+$\mathrm{Out}_i = 0$, since at $s^{\mathrm{FCFS}}_i$ every job of rank below $i$
+has already been dispatched. So (1) reads
+$k\,W_{\mathrm{FCFS}}[i] = R^{\mathrm{FCFS}}_i - \rho^{\mathrm{FCFS}}_i$ with
+$0 \le \rho^{\mathrm{FCFS}}_i \le (k-1)L$.
+
+\emph{Comparison.} At $a_i$, after the arrivals there are processed, the two
+systems contain the same jobs, and those of rank $i$ or above are untouched in
+both, so $U_P(a_i) - U_{\mathrm{FCFS}}(a_i) = R^P_i - R^{\mathrm{FCFS}}_i$ and
+Lemma~1 of the manuscript gives $|R^P_i - R^{\mathrm{FCFS}}_i| \le (k-1)L$, strictly
+for $k \ge 2$. Subtracting
+the two instances of (1) gives the identity. Each direction uses
+only two of the three ranges: upward
+$R^P_i - R^{\mathrm{FCFS}}_i \le (k-1)L$ and $\rho^{\mathrm{FCFS}}_i \le (k-1)L$
+with $\rho^P_i \ge 0$, and downward the mirror image, so the slack is
+$2(k-1)L$ and not $3(k-1)L$. At $k = 1$ all three terms vanish.
+\end{proof}
+% Ninth pass: the proof above stood in Section 6 of the manuscript, which now keeps the
+%   theorem statement, the displayed busy-period equation (1) with its label, and the
+%   idea.  The argument is verbatim; only the cross-references were rewritten, since a
+%   \ref into the manuscript does not resolve from this file: Lemma~1 is the workload
+%   comparison and (1) is the busy-period accounting, both of the manuscript.
 
 \begin{remark}[The upward and downward extremes have different content]
 \label{rem:directions}
@@ -1357,9 +1493,20 @@ well.
 \subsection{What a Count of Overtakes Costs}
 \label{sec:supp_counts}
 
-This subsection supports Remark~2 of the manuscript, that a count bound on overtakes is
+This subsection supports Remark~1 of the manuscript, that a count bound on overtakes is
 sufficient for a per-job guarantee only through the worst-case charge of $L$ per pass
 and is not necessary for one.
+
+How the count is charged decides which guarantee. Charged when an overtaker is
+\emph{dispatched}, every overtaker of $i$ goes out at an instant at which no job fires,
+since a firing dispatch serves the queue head and the head is not an overtaker of $i$;
+so at most $\kappa$ overtakers are dispatched while $i$ waits, which is what gives
+$\mathrm{In}_i \le \kappa L$ and equation~(2) of the manuscript. Charging the count at
+completion instead leaves up to $k-1$ overtakers in service and the one being dispatched
+uncounted, which costs a further $L$ on the right and gives the baseline fewer passes at
+the same promise.
+% Ninth pass: the paragraph above stood inside Remark 1 of Section 6.5 of the manuscript,
+%   which keeps the remark, its displayed equation (2) and the loss factor.
 
  Both halves are below. The sufficiency uses the bound on
 service times, and without that bound a single
@@ -1537,7 +1684,7 @@ least $L$.
 %   authors' length budget.  The arguments are verbatim; only the cross-references were
 %   rewritten, since a \ref into the manuscript does not resolve from this file:
 %   Theorem~1 is thm:identity, Theorem~3 thm:guard, Theorem~4 thm:guardmult, Lemma~2
-%   lem:outbound, Corollary~2 cor:necessary, Proposition~3 prop:floor, Remark~2
+%   lem:outbound, Corollary~2 cor:necessary, Proposition~3 prop:floor, Remark~1
 %   rem:counts, Algorithm~1 alg:guard, Section~3 sec:model, Section~5 sec:scheduling,
 %   and (3), (4) and (5) are eq:guardin, eq:guardadd and eq:guardinmult.  Nothing was
 %   recomputed for this file.
@@ -1557,7 +1704,7 @@ necessary: a job can be passed any number of times and stay inside its promise, 
 the work that passes it is small. Counting is sufficient in this model, but only through
 the worst-case charge of $L$ per overtake, since every overtaker is bounded by the time
 limit; a count of $\kappa$ therefore buys a promise of $(\kappa + 2k-2)L/k$
-(Remark~2 and equation~(2) of the manuscript). That is the bound a count can give, and it
+(Remark~1 and equation~(2) of the manuscript). That is the bound a count can give, and it
 is loose by the ratio $L/\bar{C}$, one to two orders of magnitude on our traces. Ten
 overtakers that each run for the full limit $L$ and ten that run for ten milliseconds
 carry the same count and delays that differ by three orders of magnitude, so the charge
@@ -2033,7 +2180,18 @@ stalls and does not restore an advance uncorrected real-time promise.
 
 \subsection{Why Open-Loop Benefit Has No Known Bias Direction}
 
-The replay compares policies conditional on fixed offered work. In an exact
+The replay compares policies conditional on fixed offered work. Feitelson states the
+objection at its strongest, that ``logged workloads actually contain a `signature' of the
+logged system'' \cite{feitelson2021resampling}: a trace-driven simulation issues requests
+irrespective of system state \cite{shmueli2009simulation}, so faster replies cannot
+induce more submissions, change their costs or alter which jobs enter a deadline-window
+quantile. Shmueli and Feitelson also distinguish increased productivity from improvement
+in conventional waiting metrics \cite{shmueli2009simulation}. The two constructions below
+show that the bias from the missing feedback has no known direction.
+% Ninth pass: the framing above stood in Section 9 of the manuscript, which keeps the
+%   statement that the results are conditional on fixed offered work.
+
+In an exact
 single-server feedback construction, jobs of length \devnum{10} and \devnum{1} s
 arrive together, the long job first, and the short job's user submits a second
 unit job \devnum{0.5} s after completion. Replaying the FCFS-induced arrivals
@@ -2101,7 +2259,53 @@ recorded-feature conditional counterfactual, not a closed-loop deployment result
 \section{Extremal Constructions and the Remaining Proofs}
 \label{sec:supp_constructions}
 
-This section supports Section~6 of the manuscript: it gives in full the constructions and proofs whose ideas Appendix~A of the manuscript states, so that every constant the theory section calls exact is witnessed here. All of them are exact in integer arithmetic; every one was simulated and every intermediate quantity of every proof checked job by job, with an independent audit of work conservation and server capacity re-derived from the produced schedule. A cross-reference without an S points into the main manuscript.
+This section supports Section~6 of the manuscript: it gives in full the constructions and proofs whose ideas that section states, so that every constant the theory section calls exact is witnessed here. All of them are exact in integer arithmetic; every one was simulated and every intermediate quantity of every proof checked job by job, with an independent audit of work conservation and server capacity re-derived from the produced schedule. A cross-reference without an S points into the main manuscript.
+
+The six subsections below run in the order the theory section raises them, and each is
+its own idea in one line. The cascade drives the workload gap of Lemma~1 of the
+manuscript to its ceiling geometrically: in $m$ identical rounds, each opening with
+$k-1$ long jobs of service $L$ and then $L$ short jobs of service $1$, a static-priority
+policy that prefers the short ones carries $k-1$ part-served jobs into the next round,
+and the carried workload obeys $\rho_{j+1} = (k-1)(\rho_j + L)/k$, so that
+$\rho_m = (k-1)L(1 - ((k-1)/k)^m) \to (k-1)L$; the rescaling that fixes an arbitrary
+service bound is part of the lemma. Both witnesses for the identity run that cascade
+and then inject a finale at $T_m$: upward, $k-1$ long jobs, the victim and a stream of
+more than $2kL$ unit jobs arrive together, first-come first-served starts the victim at
+once with $\rho^{\mathrm{FCFS}}_i = (k-1)L$ while the base policy holds it until the
+stream runs out, leaving
+$\Delta_i \ge 2(k-1)L - (k-1)L((k-1)/k)^m - (k-1)$; downward, the mirrored cascade is
+followed by a filler job of service $f$, the victim and $k-1$ jobs of service $L$,
+giving $\Delta_i = -\rho_m - (k-1)L \to -2(k-1)L$, and non-attainment follows from
+Lemma~1 of the manuscript and the \emph{Bounding $\rho$} step of Theorem~1.
+For the guard bound, part~(i) is a queue of $k$ jobs of service $L$, the victim and a
+stream of unit jobs, where the constant budget $B$ makes the guard fire at
+$L + \lceil B/k \rceil$, so the term $B/k$ is attained; part~(ii) bounds every finite
+instance by Theorem~3 of the manuscript strictly and approaches $3k-2$ from below by
+running the cascade for $m$ rounds and then injecting a finale timed so that
+$\mathrm{over}[i]$ sits below $B = f + L + 1$ at three successive dispatch epochs, at
+$0$, at $f$ and at $f + L = B - 1$, the last by a single unit, which lets the base
+policy fill every server three times before the guard fires. The single-server family
+places the victim ahead of $B/g - 1$ jobs of service $g$ and one job of service $L$,
+with $g$ dividing $B$: the guard does not fire while $\mathrm{over}[i] = B - g < B$, so
+the long job is taken and $\mathrm{excess}_P[i] - B = L - g$, which approaches $L$ and
+never reaches it. The price of the guarantee counts inverted pairs in two ways, which
+makes $\sum_i \mathrm{In}_i$ and $\sum_i \mathrm{Out}_i$ the two sums of service times
+over the inversions exactly --- the pairwise-interchange argument behind Smith's
+rule~\cite{smith1956} stated on an arbitrary arrival sequence --- and then bounds the
+numerator through Corollary~2 of the manuscript and the denominator through the $mn$
+inversions of shortest job first. Achievability counts the short jobs exact shortest job
+first places before the first long one, which is
+$r_g = \min(n, k\lceil B/(k\sigma)\rceil)$ and at least $qn$, while maximality turns on
+one relabelling: if a wrapper permits a later-ranked job while the head has
+$\mathrm{over}[h] > G - L$, giving that job the unrevealed size $L$ leaves the
+transcript the wrapper sees unchanged and pushes the head past $G$, after which the
+frontier counts $r = \lfloor (G-L)/\sigma \rfloor + 1$ permitted short-before-long
+moves.
+% Ninth pass: the paragraph above is Appendix A of the manuscript, which the ninth
+%   length pass folded into this file so that the manuscript carries no appendix.  The
+%   ideas are unchanged; only the cross-references were rewritten, a \ref into the
+%   manuscript not resolving from here.  Proposition A1 of that appendix is now
+%   Proposition~\ref{prop:s_k1frac} of Section~\ref{sec:supp_price}.
 
 \subsection{The Cascade}
 \label{sec:supp_cascade}
@@ -2257,7 +2461,7 @@ $k$ & $L$ & $m$ & upward $\Delta_i/L$ & downward $\Delta_i/L$ & $2(k-1)$ \\
 \end{tabular}
 \end{center}
 
-In the executed-work convention of Remark~1 of the manuscript the upward
+In the executed-work convention of Remark~\ref{rem:directions} of this file the upward
 column is unchanged to within $o(L)$, while the downward column becomes
 $-63/64$, $-130/81$ and $-111/64$, values that tend to $-(k-1)L$ as $m$ grows
 rather than to $-2(k-1)L$.
@@ -2269,6 +2473,13 @@ The same-phase share of $|\Delta_i|$ is \devnum{0.00\%}, \devnum{0.69\%} and
 
 \subsection{Tightness of the Guard Bound}
 \label{sec:supp_tight2}
+
+Section~6 of the manuscript states that search does not see the growth of the additive
+constant with $k$. A hill-climb over instances of at most \devnum{20} jobs suggests a
+flat value near \devnum{$1.75L$}, while the witness below needs \devnum{396} jobs at
+$k = \devnum{2}$.
+% Ninth pass: the sentence above stood in Section 6.7 of the manuscript; the job count is
+%   the same one the table at the end of this subsection prints.
 
 This subsection proves Theorem~5 of the manuscript, that both constants of the guard bound are exact.
 
@@ -2410,7 +2621,23 @@ $(64, 32, 1)$ gives $63$.
 \subsection{The Price of the Guarantee}
 \label{sec:supp_price}
 
-This subsection proves Theorem~6 of the manuscript, which caps how much reordering can buy at a given promise, and Proposition~A1, the exact achievable fraction at one server.
+This subsection proves Theorem~6 of the manuscript, which caps how much reordering can
+buy at a given promise, and the exact achievable fraction at one server. At $k = 1$ the
+error term of Theorem~1 of the manuscript vanishes identically and the sum identity is
+exact, so that fraction can be computed rather than bounded.
+
+\begin{proposition}[The achievable fraction at one server]
+\label{prop:s_k1frac}
+In the family of Theorem~6 of the manuscript with $k = 1$, the largest value of
+$(\overline{W}_{\mathrm{FCFS}} - \overline{W}_{P})
+ /(\overline{W}_{\mathrm{FCFS}} - \overline{W}_{\mathrm{SJF}})$
+over all non-preemptive work-conserving $P$ with
+$\mathrm{excess}_P[j] \le G$ for every job is exactly
+$\min\bigl(1, \lfloor G/\sigma \rfloor / n\bigr)$.
+\end{proposition}
+% Ninth pass: this statement was Proposition A1 of the manuscript's Appendix A, which the
+%   ninth length pass folded into this file; its proof and the exhaustive check over
+%   1,161 parameter settings were already below.  Nothing was recomputed.
 
 \begin{proof}[Proof of Theorem~6 of the manuscript]
 Let $\mathcal{I}(Q)$ be the set of inverted pairs of a policy $Q$, that is the pairs
@@ -2612,17 +2839,112 @@ short-before-long moves on this transcript.
 \end{proof}
 
 % Source of Section~\ref{sec:supp_constructions}: sections/A_proofs.tex,
-%   Appendices A.2, A.3, A.4, A.6, A.7 and A.8 of the manuscript, moved here whole in the
+%   Appendices A.2, A.3, A.4, A.6, A.7 and A.8 of the manuscript as it then stood, moved here whole in the
 %   eighth revision pass under the authors' length budget.  The arguments and every
 %   value in the two tables are verbatim; only the cross-references were rewritten,
 %   since a \ref into the manuscript does not resolve from this file: Lemma~1 is
 %   lem:gap, Theorem~1 thm:identity, Theorem~2 thm:tight1, Theorem~3 thm:guard,
 %   Theorem~5 thm:tight2, Theorem~6 thm:price, Theorem~7 thm:two_size_achievability,
 %   Theorem~8 thm:k1_maximal, Corollary~2 cor:necessary, Corollary~3 cor:params,
-%   Corollary~4 cor:k1_frontier, Proposition~3 prop:floor, Proposition~A1 prop:k1frac,
-%   Remark~1 rem:directions and (3) eq:guardin.  Simulated and checked in
+%   Corollary~4 cor:k1_frontier, Proposition~3 prop:floor, Proposition~A1 now prop:s_k1frac here,
+%   (3) eq:guardin; rem:directions is this file's own Remark 1.  Simulated and checked in
 %   evidence/guard_theory; nothing was recomputed for this file.
 
+
+%=================================================================
+\section{Extended Related Work}
+\label{sec:supp_related}
+
+Section~2 of the manuscript keeps one paragraph per theme and a compact citation list.
+This section holds the per-paper detail that paragraph compresses, in the same order;
+every work named here is cited in the manuscript as well. Nothing in it is a result of
+ours.
+
+\subsection{Fairness Referenced to First-Come First-Served}
+
+Definition~2 of Schwiegelshohn and Yahyapour \cite{schwiegelshohn2000fairness} calls a
+schedule $\lambda$-fair when jobs submitted after job $i$ cannot increase $i$'s flow
+time by more than a factor $\lambda$. Their Lemma~4 bounds fairness and efficiency
+jointly: the preemptive PFCFS policy is $(2+2\bar s)$-fair, with competitive bounds for
+weighted completion time and makespan, where $\bar s$ is the normalised preemption
+penalty, and the proof bounds the delay caused to $i$ by a later wide job by
+$(1+2\bar s)p_i$. That is tighter for a short job than an $L$-denominated bound, and it
+is obtained by gang preemption, which our model does not have.
+% Source for Definition 2, Lemma 4, PFCFS, and all displayed constants:
+% prechecks/guard_optimality_verify/literature_check.md and
+% prechecks/guard_optimality_verify/verification.md, Sections 9.2--9.3.
+
+In the fair-start-time line, Sabin, Kochhar and Sadayappan \cite{sabin2004fairness}
+compare a job with a re-simulation excluding later arrivals, and Sabin and Sadayappan
+\cite{sabin2005unfairness} and Rajbhandary, Bunde and Leung \cite{rajbhandary2013fairness}
+use the resulting excess as a job-level metric. The fair start time is defined in two
+variants; the reference used in the manuscript, first-come first-served with no
+backfilling, is the relaxed one.
+
+\subsection{Overtaking Restrictions in Queueing Theory}
+
+Nudge \cite{grosof2021nudge}, Nudge-$K$ \cite{vanhoudt2022nudgek} and Nudge*(M)
+\cite{charlet2026nudgestarm} are analysed in steady state under Poisson arrivals with
+light-tailed or phase-type sizes, and yield, for suitable parameters, stochastic
+dominance over first-come first-served. Because a job is passed at most once, Nudge
+implies on every sample path a per-job additive bound of one small-job length; that
+implication is our own reading and not a claim of \cite{grosof2021nudge}. Theorem~2 of
+the WCFS finite-skip work \cite{grosof2022wcfs} brackets the mean response time within
+additive constants of the M/G/1 first-come first-served expression at every load. Yu and
+Scully \cite{yu2024boost} define the \emph{crossing work} of later arrivals that precede
+a tagged job under $\gamma$-Boost and derive stationary response-time bounds, and Yu,
+Harlev, Adakroy and Scully \cite{yu2025twotraffics} extend the line to $k$ servers.
+
+\subsection{The Additive Shape, Stated as Its Sources State It}
+
+Worst-case fair weighted fair queueing bounds a session's service in both directions
+against the ideal fluid reference, falling behind it by at most one maximum packet and
+running ahead of it by less than one of the session's own \cite{bennett1996wf2q}. The
+error term in the packet scale rate guarantee for expedited forwarding is the
+transmission time of one maximum-size lower-priority packet, and exists because that
+packet cannot be preempted \cite{bennett2002psrg}; additive per-individual bounds
+against a reference discipline are older still \cite{parekh1993gps,parekh1994gps}.
+EEVDF, a preemptive proportional-share scheduler, bounds a client's lag against the
+fluid ideal by $-r_{\max} < \mathrm{lag} < \max(r_{\max}, q)$, with $r_{\max}$ the
+largest request and $q$ the quantum, and by $\pm q$ when no request exceeds a quantum
+\cite{stoica1995eevdf}. In Graham's list-scheduling bound the additive form is
+$(1-1/k)$ times the length of the last task to finish, and it appears inside his proof
+\cite{graham1969bounds}. The pathwise work-difference bound nearest to Lemma~1 of the
+manuscript is \cite[Lemma~2]{grosof2018srpt}, where the work of jobs of remaining size
+at most $x$ under $k$-server preemptive shortest-remaining-processing-time exceeds its
+single-server counterpart by at most $kx$; Lemma~1 differs in comparing two arbitrary
+non-preemptive work-conserving $k$-server policies, in bounding total unfinished work,
+and in being two-sided. In the conservation-law family a weighted sum of mean waiting
+times is invariant across a class of disciplines in steady state
+\cite{kleinrock1965conservation}, and the multiserver accumulating priority queue orders
+service by a credit linear in waiting time, with exact class waiting-time distributions
+under exponential service \cite{sharif2014mapq,li2016mapq}.
+
+\subsection{Deployed Systems and Relational Benchmarks}
+
+The judging-queue scheduler of Zhang, Wu and Lu \cite{zhang2024ojscheduling} cuts the
+queue into fixed-size windows and dispatches in ascending predicted runtime within each;
+it reports mean response time against first-come first-served, no per-job bound and no
+adversarial-prediction test in its abstract or its results, and does not describe its
+arrival process as recorded. The tail-aware inference
+scheduler \cite{li2026tailaware} argues about starvation in the crossing-work terms of
+\cite{yu2024boost}. SFS orchestrates the Linux first-in first-out and fair schedulers from
+user space to approximate shortest-remaining-time-first, trading longer durations for
+long functions against the short ones \cite{fu2022sfs}, and ALPS derives its per-function
+rank and time-slice cap from an offline shortest-remaining-processing-time replay of
+recent traces and reuses the fair scheduler to keep long functions from starving
+\cite{fu2024alps}. In the RelBench study against a human
+data scientist \cite{robinson2024relbench}, the relational model matched or beat the
+expert on 11 of 15 tasks, while the authors record that regression tasks are where it
+struggles; the successor benchmark \cite{gu2026relbenchv2} keeps the same baseline
+construction.
+% Ninth pass: this section is the per-paper detail of Section 2 of the manuscript, moved
+%   here under the authors' length budget.  Every sentence is the one the manuscript
+%   carried, with cross-references rewritten, and every work named here keeps a citation
+%   in the manuscript as well, as MDPI requires.  Reading depth: full arXiv paper for
+%   Load Balancing Guardrails and publisher abstract for the supervisory-control maximal
+%   -language result; bibliographic verification is recorded in the x-verified fields of
+%   the cited entries.
 
 %=================================================================
 \begin{adjustwidth}{-\extralength}{0cm}
