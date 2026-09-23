@@ -2,26 +2,35 @@
 
 # Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking
 
-Code, derived tables and run logs for the manuscript *Prediction-Driven Non-Preemptive
-Scheduling with Bounded Overtaking for Shared Execution Services under Deadline-Driven
-Bursty Load*.
+This repository holds the code, the derived tables and the run logs behind one paper:
+*Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution
+Services under Deadline-Driven Bursty Load*.
 
-A shared execution service — an automated judge for programming courses, a serverless
-platform, a continuous-integration pool, a compute farm — runs jobs on a fixed number of
-servers, without preemption, under a per-job time limit `L`. Reordering the queue by
-predicted cost shortens most waits and can leave one job far behind: on the trace used
-here, close to 6,000 seconds behind first-come first-served. An operator will not deploy
-that.
+The paper is about a kind of queue that many systems share. A service takes jobs from
+many users, runs them on a fixed set of machines, one job per machine at a time, and never
+interrupts a job once it has started; a job is stopped only when it reaches a time limit
+`L`. The automatic grader of a programming course works this way. So do a serverless
+platform, a build farm and a compute cluster.
 
-The manuscript proves a pathwise identity — for any non-preemptive work-conserving
-`k`-server policy, a job's delay relative to FCFS equals its net overtaken work divided by
-`k`, to within `(2-2/k)L` — and builds a wrapper around any base policy that bounds the
-work allowed to overtake a waiting job. The wrapper turns that bound into a per-job
-promise `W <= W_FCFS + G` that holds under arbitrary arrivals and arbitrary prediction
-error. This repository is the simulator, the predictor, the experiment driver and the
-evidence behind every number the manuscript prints.
+The problem the paper starts from is concrete. Before an assignment deadline, hundreds of
+students submit at once. One submission that loops until its time limit keeps a grading
+machine busy for the whole limit, and every submission queued behind it waits. Reordering
+the queue by predicted running time shortens most waits, but a wrong prediction can push
+one job to the back again and again: on the log studied here, one job waited close to
+6,000 seconds longer than it would have in arrival order. No operator will deploy a
+scheduler that can do that.
 
-The repository is the reproduction package, not a deployable scheduler.
+The paper's answer is a promise to each job. It proves that, on any such service with `k`
+machines, a job's extra wait compared with first-come first-served (arrival order) equals
+the work that overtook it divided by `k`, to within `(2-2/k)L`. It then wraps any
+ordering rule in a guard that limits the work allowed to overtake a waiting job, so that
+no job waits more than `G` seconds longer than it would have in arrival order, whatever
+the predictions do. The claim is tested on real logs from two programming-course graders,
+a serverless platform, two continuous-integration pools and a compute farm.
+
+This repository is the simulator, the predictor, the experiment driver and the evidence
+behind every number the paper prints. It is a reproduction package, not a deployable
+scheduler.
 
 ## What is here
 
