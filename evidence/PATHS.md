@@ -174,6 +174,8 @@ way if only the paper is updated.
 | `GENERATED.md` (inputs table) | `prechecks/ranking_score/rs_fit.py` | `evidence/ranking_score/rs_fit.py` |
 | `GENERATED.md` (inputs table) | `prechecks/main_v3/v31/primary_rep*.npz` | **no new path** — see below |
 | `README.md` (contents, steps 2 and 5, conclusions) | `prechecks/` | `evidence/` |
+| `08_experiments.tex` (second physical run, source comment) | `prechecks/platform_testbed/records/summary.json`, `simulator_replay.json` | `evidence/platform_testbed/records/summary.json`, `simulator_replay.json` |
+| `supplementary.tex` (platform back-end section, source comments) | `prechecks/platform_testbed/records/summary.json`, `simulator_replay.json`, `results.md` | `evidence/platform_testbed/records/summary.json`, `simulator_replay.json`, `results.md` |
 
 `prechecks/main_v3/v31/primary_rep*.npz` is the one row that does not map. Those overlay
 traces are rebuilt into the cache directory by `v31_build.py` and are not on disk under

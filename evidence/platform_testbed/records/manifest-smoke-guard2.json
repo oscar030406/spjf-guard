@@ -1,0 +1,25 @@
+{
+  "cell": "smoke-guard2",
+  "base": "http://127.0.0.1:3210",
+  "corpus": "ai",
+  "users": [
+    "loadtest_u001",
+    "loadtest_u002",
+    "loadtest_u003",
+    "loadtest_u004",
+    "loadtest_u005",
+    "loadtest_u006"
+  ],
+  "jobsRequested": 8,
+  "jobsIssued": 8,
+  "thinkRule": "independent",
+  "thinkMeanS": 15,
+  "thinkSlope": 0.5,
+  "mix": null,
+  "pattern": "guide,guide,blueprint,blueprint,blueprint,blueprint,blueprint,blueprint",
+  "seed": 20260923,
+  "schedule": null,
+  "startedAtMs": 1790146422471,
+  "finishedAtMs": 1790146622789,
+  "wallSeconds": 200.318
+}

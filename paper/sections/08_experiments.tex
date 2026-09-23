@@ -551,6 +551,26 @@ selection rule and the positive execution checks beside these negative results.
 % observed-prefix audit counts, absolute_physical_minus_ideal_wait_s and wait_s;
 % prechecks/weakness1_attack/physical_verification.json.
 
+A second physical run puts the guard on the two-worker back end of a course platform,
+whose jobs are calls to a language model that write a study plan or a learner report,
+and whose server stops a job at an enforced limit of \devnum{170} s or \devnum{25} s by
+class. Twenty scripted accounts submitted \devnum{100} jobs per cell in a
+deadline-shaped burst, each waiting for its result before submitting again, under a
+promise of \devnum{400} s. Unguarded predicted-order dispatch left \devnum{7} jobs
+beyond the promise, the worst by \devnum{4.67} times $G$. The four guarded cells,
+\devnum{400} jobs in all, left none, with a worst excess of \devnum{0.514}~$G$, and the
+package simulator, fed the measured arrivals and service times, reproduced every
+measured wait within \devnum{0.17} s. Because the accounts waited for results, the
+arrival sequence differed from cell to cell, so each cell is compared only with its own
+replayed first-come first-served run. One hundred jobs per cell give no p99, and no
+human learner was in the loop. Supplementary Section~S6.9 gives the six cells, the
+enforced-limit check, the dispatch overhead and what the run does not support.
+% Sources: prechecks/platform_testbed/records/summary.json, per cell:
+% limitMsByClass, jobs, promiseMs, boundCheck.jobsOverPromise, boundCheck.ratio
+% (spjf 4.6746; guarded maximum 0.5138, reservation cell);
+% prechecks/platform_testbed/records/simulator_replay.json, max_abs_error_s
+% (largest comparable cell 0.1678 s).
+
 \subsection{Sensitivities}
 \label{sec:exp_sens}
 

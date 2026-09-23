@@ -1,0 +1,10 @@
+{"cell":"smoke-fcfs","rank":1,"tUs":12259295567,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":20,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":2,"tUs":12259297146,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":11,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":3,"tUs":12276903445,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":27,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":4,"tUs":12287409236,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":11,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":5,"tUs":12324983962,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":16,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":6,"tUs":12431234432,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":7,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":7,"tUs":12437179203,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":8,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":8,"tUs":12458995379,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":32,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":9,"tUs":12469705523,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":7,"waitingBefore":[]}
+{"cell":"smoke-fcfs","rank":10,"tUs":12475753344,"guardFired":false,"baseProposalRank":null,"queueLen":1,"epochUs":5,"waitingBefore":[]}

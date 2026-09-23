@@ -79,6 +79,7 @@ folder, not deleted.
 | `upc_wifi`, `upc_wifi_gnn` | an early direction — access-point load on a campus Wi-Fi trace, and a heterogeneous graph network against hand-built neighbour features. Nothing in the paper rests on either |
 | `guard_optimality` | the optimality note that `guard_optimality_verify` checks. The re-check restates every theorem it rules on, and governs where the two disagree |
 | `recorded_queue_hunt` | the search for a trace that records queue waits, which ended at LPC-EGEE. Its conclusion is carried in `weakness1_attack/AUDIT_A.md`, which also records where that conclusion was wrong |
+| `platform_testbed` | the guard run on a course platform's own two-worker back end, with an enforced per-job limit and scripted accounts that wait for each result: six cells, the enforced-limit check, the simulator comparison and the dispatch overhead | §8.5 second physical run; supplement section on the platform back end | 1.2 MB |
 
 Some included studies still point at those directories, because that is where their own
 history is: `accoding_v2/accoding_v2.py` at `accoding` (the SQL parse it inherits),

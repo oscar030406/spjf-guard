@@ -3019,9 +3019,137 @@ the p99 wait worse than first-come first-served on three of the four windows we 
 % Thirteenth pass: the two paragraphs above stood in Section 9 of the manuscript,
 %   which keeps three sentences and this pointer.
 
+\subsection{The Guard on a Course Platform's Own Two-Worker Back End}
+\label{sec:supp_platform}
+
+The timed-work experiment of Section~S6.2 ran the guard on a service whose jobs were
+sleeps of known length. This run puts it on a real one. The service is the back end of
+an online course platform whose jobs are calls to a language model: a short call that
+writes a learner report and a long one that writes a study plan. Two worker slots serve
+one queue. The server stops a job at an enforced limit, \devnum{25} s for a report and
+\devnum{170} s for a plan; a stopped job holds its slot until the model call has
+returned, so the executed work of a stopped job is the limit itself and not a
+number read off afterwards. Dispatch, the guard and the limit were added to the
+platform's own code and run locally on the authors' machine; nothing was deployed,
+and no human learner was in the loop. The demand came from \devnum{20} scripted
+accounts. Each account submitted in the class pattern of the platform's own users,
+six reports for every two plans, in a burst shaped like the deadline hours of the
+main trace, and waited for each result before submitting again; the think time was
+drawn per seat from one seed, so it was the same in every cell. The promise was
+$G=\devnum{400}$ s with $k=\devnum{2}$, budget shape $B_0=\devnum{30}$ s and
+$\eta=\devnum{0.5}$, the shape of the timed-work experiment and not a new selection.
+Each cell ran \devnum{100} jobs.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Six cells on the platform back end. $\rho$ is measured executed work over $k$
+times the span. Excess is measured wait minus the wait in an offline first-come
+first-served replay of that cell's own arrivals and measured service times. The last
+column is the largest per-job difference between the measured wait and the package
+simulator fed the same inputs; the reservation cell is not comparable because the
+simulator has no reservation-and-refund wrapper.}
+\label{tab:s_platform}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrrrr}
+\toprule
+Cell & Policy, demand rule & $\rho$ & Mean wait & p90 wait & Max excess & Excess$/G$ & Fired & Simulator \\
+\midrule
+1 & FCFS, closed & \devnum{1.000} & \devnum{308.8} & \devnum{479.4} & \devnum{0.17} & \devnum{0.0004} & \devnum{0} & \devnum{167.8} ms \\
+2 & SPJF, closed & \devnum{0.971} & \devnum{227.4} & \devnum{1083.3} & \devnum{1869.9} & \devnum{4.67} & \devnum{0} & \devnum{125.3} ms \\
+3 & Guard, completed-work charging, closed & \devnum{0.994} & \devnum{235.2} & \devnum{680.2} & \devnum{151.7} & \devnum{0.379} & \devnum{24} & \devnum{138.8} ms \\
+4 & Guard, reservation charging, closed & \devnum{0.976} & \devnum{206.7} & \devnum{896.8} & \devnum{205.5} & \devnum{0.514} & \devnum{20} & --- \\
+5 & Guard, completed-work charging, open & \devnum{0.695} & \devnum{70.3} & \devnum{177.3} & \devnum{184.0} & \devnum{0.460} & \devnum{5} & \devnum{115.5} ms \\
+6 & Guard, completed-work charging, closed with slower resubmission & \devnum{0.993} & \devnum{205.7} & \devnum{433.8} & \devnum{184.8} & \devnum{0.462} & \devnum{21} & \devnum{132.8} ms \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: prechecks/platform_testbed/records/summary.json, cells full-fcfs-r2,
+% full-spjf-r2, full-guard-completed-r2, full-guard-reservation-r2,
+% full-guard-completed-r1open, full-guard-completed-r3: load.rho, waitS.mean,
+% waitS.p90, boundCheck.maxExcessS, boundCheck.ratio, guardFirings;
+% prechecks/platform_testbed/records/simulator_replay.json, max_abs_error_s.
+% The six-cell table of prechecks/platform_testbed/results.md prints the same rows.
+
+\paragraph{The promise held.} Jobs beyond the promise: \devnum{0} in cells 1 and 3 to
+6, \devnum{7} in cell 2. Cell 2 is the unguarded base policy, which promises nothing;
+its row measures what the guard is for. On the same $k$ and the same promise it let
+the worst job wait \devnum{1869.9} s longer than first-come first-served,
+\devnum{4.67} times $G$. The same base policy under the guard (cell 3) brought that to
+\devnum{151.7} s, \devnum{0.379}~$G$. Against its own replayed first-come first-served
+run, unguarded SPJF cut the mean wait from \devnum{725.2} s to \devnum{227.4} s and the
+guarded policy from \devnum{483.7} s to \devnum{235.2} s; the cost moved from
+\devnum{20} jobs each waiting \devnum{460.2} s longer on average to \devnum{32} jobs
+each waiting \devnum{57.8} s longer.
+% Source: summary.json boundCheck.jobsOverPromise; replayFcfsWaitS.mean;
+% results.md section 3 (harmed job counts and their mean excess).
+
+\paragraph{The limit is enforced.} Of the \devnum{600} jobs, \devnum{29} reached their
+own limit, \devnum{22} plans and \devnum{7} reports. The largest amount by which a
+measured service time exceeded its limit was \devnum{16.1} ms. The engine log records
+\devnum{26} of the stops itself; in the other \devnum{3} the caller's abort and the
+engine's deadline fell on the same instant and the abort landed first. Within each
+class the service times are not heavy-tailed: the coefficient of variation is
+\devnum{0.20} to \devnum{0.69} per class and per cell. The mixture of the two classes
+has a coefficient of variation above \devnum{1}, and that is a property of the mixture,
+not of the platform's jobs.
+% Source: summary.json classes.*.timedOut, engineDeadlineHit, capExceededMsMax,
+% serviceS.cv; results.md section 2.
+
+\paragraph{Demand reacted to waiting.} This is what the timed-work experiment could
+not measure. Because every account waited for its result before submitting again,
+the arrival sequence was a function of the policy, and the first-come first-served
+replay of each cell's own arrivals gave a different load in every cell: a mean wait
+from \devnum{141.9} s in the open-loop cell to \devnum{725.2} s in the unguarded cell,
+whose fast short jobs made the accounts resubmit sooner. Measured $\rho$ was
+\devnum{0.97} to \devnum{1.00} in the four closed-loop cells and \devnum{0.695} in the
+open-loop cell, where arrivals followed a fixed timetable. Measured waits therefore
+cannot be compared across cells; the only clean comparison is each cell against its
+own replay. Cell 6 made the accounts think longer the longer they had waited, and
+the mean wait fell from \devnum{235.2} s in cell 3 to \devnum{205.7} s.
+% Source: summary.json replayFcfsWaitS.mean, load.rho, waitS.mean; results.md section 4.
+
+\paragraph{Two ways of charging the budget.} Cell 4 charges the budget by the
+reservation-and-refund rule of Section~S7.6, whose threshold is lower by $L$, so under
+the same promise its cap was \devnum{460} s against \devnum{120} s for completed-work
+charging. It let more overtaking through, kept more of the base policy's benefit
+(mean wait \devnum{206.7} s; reports waited \devnum{26.9} s on average) and cost the
+jobs it did delay more (\devnum{102.6} s each on average against \devnum{57.8} s).
+Neither cell exceeded the promise. The two cells are not a controlled comparison,
+since their caps differ by rule and their demand differed under the closed loop; they
+show that both rules run on this stack and held the promise.
+% Source: summary.json budgetCapMs; results.md section 5.
+
+\paragraph{The simulator agrees with the service.} Fed each cell's measured arrivals,
+service times, scores and $k$, the package simulator reproduced the measured wait of
+every one of the \devnum{500} jobs in the five comparable cells within
+\devnum{167.8} ms. Cell 4 is excluded: the simulator has no reservation-and-refund
+wrapper, and its \devnum{982} s difference on that cell measures the difference between
+the two mechanisms, not the simulator's accuracy. The dispatcher itself took
+\devnum{10} to \devnum{12} $\mu$s per dispatch epoch on average and at most
+\devnum{75} $\mu$s, at measured queue depths of \devnum{11} to \devnum{18}, against
+service times of seconds to minutes. The six cells took \devnum{3} h \devnum{27} min
+of wall clock and at least \devnum{832{,}109} model tokens; jobs stopped at the limit
+were cut before their usage record arrived, so the true figure is a few percent higher.
+% Source: simulator_replay.json max_abs_error_s and comparable; summary.json
+% dispatch overhead; results.md sections 6 to 8.
+
+\paragraph{What this run does not support.} No human learner took part; the demand
+was scripted on a local deployment, and the platform's own log holds no learner demand
+to replay. One hundred jobs per cell give no p99, and the burst shape was borrowed from
+the main trace, since the platform has no assignment deadlines of its own. The budget
+shape was not reselected. The size proxy the scores came from is uncalibrated, which
+the guarantee tolerates and the benefit figures do not. The run is one process on one
+machine and says nothing about distributed dispatch. And the simulator's agreement here
+does not undo the timed-work result of Section~S6.2, where the guard's per-job
+difference from its ideal replay reached \devnum{1354.10} s on \devnum{2151} jobs; one
+hundred jobs and about twenty firings per cell do not reach that regime.
+% Source: results.md section 10; the timed-work figures are those of Section S6.2.
+
 \input{sections/S_theory_additions}
 
 %=================================================================
+
 \section{Extremal Constructions and the Remaining Proofs}
 \label{sec:supp_constructions}
 

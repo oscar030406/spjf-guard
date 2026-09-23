@@ -1,0 +1,4 @@
+{"cell":"smoke-guard","rank":0,"tUs":12949988402,"guardFired":false,"baseProposalRank":0,"queueLen":1,"epochUs":59,"waitingBefore":[]}
+{"cell":"smoke-guard","rank":1,"tUs":12949992839,"guardFired":false,"baseProposalRank":1,"queueLen":1,"epochUs":11,"waitingBefore":[]}
+{"cell":"smoke-guard","rank":2,"tUs":12954720859,"guardFired":false,"baseProposalRank":2,"queueLen":1,"epochUs":14,"waitingBefore":[]}
+{"cell":"smoke-guard","rank":3,"tUs":12969157494,"guardFired":false,"baseProposalRank":3,"queueLen":1,"epochUs":25,"waitingBefore":[]}
