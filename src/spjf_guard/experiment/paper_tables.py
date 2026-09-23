@@ -74,11 +74,53 @@ def _load_header(row: dict) -> str:
     )
 
 
+def _levels(rows: list[dict]) -> list[int]:
+    """The load levels a table prints, in the order it prints them."""
+    return sorted({int(row["level"]) for row in rows})
+
+
+def _at_level(rows: list[dict], level: int) -> list[dict]:
+    """One load level's rows, in the order the CSV carries them."""
+    return [row for row in rows if int(row["level"]) == level]
+
+
+def _keyed(rows: list[dict], level: int) -> dict:
+    """One load level's rows by policy name, for a table that looks its rows up."""
+    return {row["policy"]: row for row in _at_level(rows, level)}
+
+
+def _without_trailing_rule(body: list[str]) -> list[str]:
+    """The body without the separator the last block left behind, which would otherwise
+    print a rule directly above `\\bottomrule`."""
+    if body and body[-1] == RULE:
+        body.pop()
+    return body
+
+
+def _policy_cell(name: str, params: dict) -> str:
+    r"""A policy's name, carrying the skip count the run used when it has one."""
+    label = policy_label(name)
+    if params.get("skip_count"):
+        return rf"{label}, $\kappa={int(params['skip_count'])}$"
+    return label
+
+
+def _outcome_cells(row: dict) -> list[str]:
+    """The five scheduling outcomes the policy tables print, in that order."""
+    return [
+        _cell(float(row["p99_dl_s"]), 2),
+        _cell(float(row["gap_closed"]), 3, _interval(row, "gap_closed")),
+        _cell(float(row["max_excess_s"]), 1),
+        _cell(float(row["harm_s"]), 1),
+        _cell(float(row["fired_pct"]), 2),
+    ]
+
+
 def rank_table(table: list[dict], policies=("FCFS", "SJF", "SPJF-log", "SPJF-E")) -> str:
     """tab:rank -- the ranking scores at the three loads."""
     body: list[str] = []
-    for level in sorted({int(r["level"]) for r in table}):
-        block = [r for r in table if int(r["level"]) == level]
+    for level in _levels(table):
+        block = _at_level(table, level)
         body.append(_load_header(block[0]))
         for name in policies:
             row = next((r for r in block if r["policy"] == name), None)
@@ -97,46 +139,45 @@ def rank_table(table: list[dict], policies=("FCFS", "SJF", "SPJF-log", "SPJF-E")
                 + r" \\"
             )
         body.append(RULE)
-    if body and body[-1] == RULE:
-        body.pop()
     return _table(
         "llrlrr",
         r"Load & Policy & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Mean",
-        body,
+        _without_trailing_rule(body),
         "tab:rank",
         "Ranking scores at the three load levels, five overlays.",
     )
 
 
+def _guard_header(block: dict) -> str:
+    """The load line of `tab:guard`, carrying the two unguarded references the guarded
+    rows below it are read against."""
+    head = _load_header(next(iter(block.values())))
+    reference, spjf = block.get("FCFS"), block.get("SPJF-E")
+    if reference is not None and spjf is not None:
+        base_p99 = f"{float(reference['p99_dl_s']):.2f}"
+        spjf_p99 = f"{float(spjf['p99_dl_s']):.2f}"
+        spjf_excess = _thousands(float(spjf["max_excess_s"]), 1)
+        head += (
+            rf"; FCFS p99$_{{\mathrm{{dl}}}}$ = \devnum{{{base_p99}}} s, "
+            rf"SPJF-E \devnum{{{spjf_p99}}} s with max excess "
+            rf"\devnum{{{spjf_excess}}} s"
+        )
+    return head
+
+
 def guard_table(table: list[dict], parameters: dict, guard_names) -> str:
     """tab:guard -- the guard family, its ablations and the comparators, per load."""
     body: list[str] = []
-    for level in sorted({int(r["level"]) for r in table}):
-        block = {r["policy"]: r for r in table if int(r["level"]) == level}
-        first = next(iter(block.values()))
-        head = _load_header(first)
-        reference = block.get("FCFS")
-        spjf = block.get("SPJF-E")
-        if reference is not None and spjf is not None:
-            base_p99 = f"{float(reference['p99_dl_s']):.2f}"
-            spjf_p99 = f"{float(spjf['p99_dl_s']):.2f}"
-            spjf_excess = _thousands(float(spjf["max_excess_s"]), 1)
-            head += (
-                rf"; FCFS p99$_{{\mathrm{{dl}}}}$ = \devnum{{{base_p99}}} s, "
-                rf"SPJF-E \devnum{{{spjf_p99}}} s with max excess "
-                rf"\devnum{{{spjf_excess}}} s"
-            )
-        body.append(rf"\multicolumn{{9}}{{l}}{{{head}}} \\")
+    for level in _levels(table):
+        block = _keyed(table, level)
+        body.append(rf"\multicolumn{{9}}{{l}}{{{_guard_header(block)}}} \\")
         for name in guard_names:
             row = block.get(name)
             if row is None:
                 continue
             params = parameters.get((level, name), {})
-            label = policy_label(name)
-            if params.get("skip_count"):
-                label = rf"{label}, $\kappa={int(params['skip_count'])}$"
             body.append(
-                f" & {label:<26s} & "
+                f" & {_policy_cell(name, params):<26s} & "
                 + " & ".join(
                     [
                         _cell(params.get("promise_s", float("nan")), 0),
@@ -151,13 +192,11 @@ def guard_table(table: list[dict], parameters: dict, guard_names) -> str:
                 + r" \\"
             )
         body.append(RULE)
-    if body and body[-1] == RULE:
-        body.pop()
     return _table(
         "llrrlrrrr",
         r"Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & "
         r"Max exc. & Harm & Fired (\%)",
-        body,
+        _without_trailing_rule(body),
         "tab:guard",
         "The guard at three promises, its three budget shapes, and the comparators.",
     )
@@ -173,8 +212,8 @@ ADVERSARIAL_LABELS = {
 def adversarial_table(table: list[dict], promise: float = 600.0) -> str:
     """tab:adv -- each corrupted ranking alone and under the guard."""
     body: list[str] = []
-    for level in sorted({int(r["level"]) for r in table}):
-        block = {r["policy"]: r for r in table if int(r["level"]) == level}
+    for level in _levels(table):
+        block = _keyed(table, level)
         first = next(iter(block.values()))
         for i, (kind, label) in enumerate(ADVERSARIAL_LABELS.items()):
             bare, guarded = block.get(f"SPJF-{kind}"), block.get(f"Guard({promise:g})-{kind}")
@@ -216,21 +255,11 @@ def single_server_table(table: list[dict], parameters: dict, policies) -> str:
         if row is None:
             continue
         params = parameters.get((0, name), {})
-        label = policy_label(name)
-        if params.get("skip_count"):
-            label = rf"{label}, $\kappa={int(params['skip_count'])}$"
         promise = params.get("promise_s")
         body.append(
-            f"{label:<28s} & "
+            f"{_policy_cell(name, params):<28s} & "
             + " & ".join(
-                [
-                    _cell(promise, 0) if promise else "---",
-                    _cell(float(row["p99_dl_s"]), 2),
-                    _cell(float(row["gap_closed"]), 3, _interval(row, "gap_closed")),
-                    _cell(float(row["max_excess_s"]), 1),
-                    _cell(float(row["harm_s"]), 1),
-                    _cell(float(row["fired_pct"]), 2),
-                ]
+                [_cell(promise, 0) if promise else "---", *_outcome_cells(row)]
             )
             + r" \\"
         )
@@ -246,8 +275,8 @@ def single_server_table(table: list[dict], parameters: dict, policies) -> str:
 def residual_table(rows: list[dict], policies) -> str:
     """tab:resid -- how much of the excess the identity explains."""
     body: list[str] = []
-    for level in sorted({int(r["level"]) for r in rows}):
-        block = {r["policy"]: r for r in rows if int(r["level"]) == level}
+    for level in _levels(rows):
+        block = _keyed(rows, level)
         first = next(iter(block.values()))
         body.append(
             rf"$\rho = \devnum{{{float(first.get('rho_target', 0)):g}}}$, "
@@ -272,13 +301,11 @@ def residual_table(rows: list[dict], policies) -> str:
                 + r" \\"
             )
         body.append(RULE)
-    if body and body[-1] == RULE:
-        body.pop()
     return _table(
         "llrrrrrr",
         r"Load & Policy & $\max|D_i|/L$ & Ratio & $D_i = 0$ & Same-phase & $R^2$ "
         r"& worst err.\ (s)",
-        body,
+        _without_trailing_rule(body),
         "tab:resid",
         "Identity residuals on the first overlay: what $(In - Out)/k$ explains. "
         r"Same-phase is the share of $\sum In$ contributed by jobs dispatched in the "
@@ -306,35 +333,21 @@ def visibility_table(rows: list[dict], promise: float = 600.0) -> str:
         ("static", f"Guard({promise:g})-static"),
     )
     body: list[str] = []
-    for level in sorted({int(row["level"]) for row in rows}):
-        block = {row["policy"]: row for row in rows if int(row["level"]) == level}
+    for level in _levels(rows):
+        block = _keyed(rows, level)
         first = next(iter(block.values()))
         body.append(rf"\multicolumn{{7}}{{l}}{{{_load_header(first)}}} \\")
         for label, policy in names:
             row = block.get(policy)
             if row is None:
                 continue
-            body.append(
-                f" & {label:<14s} & "
-                + " & ".join(
-                    [
-                        _cell(float(row["p99_dl_s"]), 2),
-                        _cell(float(row["gap_closed"]), 3, _interval(row, "gap_closed")),
-                        _cell(float(row["max_excess_s"]), 1),
-                        _cell(float(row["harm_s"]), 1),
-                        _cell(float(row["fired_pct"]), 2),
-                    ]
-                )
-                + r" \\"
-            )
+            body.append(f" & {label:<14s} & " + " & ".join(_outcome_cells(row)) + r" \\")
         body.append(RULE)
-    if body and body[-1] == RULE:
-        body.pop()
     return _table(
         "llrlrrr",
         r"Load & Score history & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm "
         r"& Fired (\%)",
-        body,
+        _without_trailing_rule(body),
         "tab:visibility",
         rf"Policy-consistent score variants at the unchanged selected Guard({promise:g}) "
         "parameters, over five overlays.",
@@ -345,11 +358,9 @@ def visibility_audit_table(rows: list[dict]) -> str:
     """Original-clock exposure, averaged over the five primary overlays."""
     policies = ("FCFS", "SPJF-E", "Guard(300)", "Guard(600)", "Guard(1200)")
     body: list[str] = []
-    for level in sorted({int(row["level"]) for row in rows}):
+    for level in _levels(rows):
         for policy in policies:
-            selected = [
-                row for row in rows if int(row["level"]) == level and row["policy"] == policy
-            ]
+            selected = [row for row in _at_level(rows, level) if row["policy"] == policy]
             if not selected:
                 continue
 
@@ -370,13 +381,11 @@ def visibility_audit_table(rows: list[dict]) -> str:
                 + r" \\"
             )
         body.append(RULE)
-    if body and body[-1] == RULE:
-        body.pop()
     return _table(
         "llrrrrr",
         r"Level & Replay policy & Affected (\%) & Deadline (\%) & Mean records & "
         r"p99 records & Unreplayed (\%)",
-        body,
+        _without_trailing_rule(body),
         "tab:visibility_audit",
         "Exposure of original-clock outcome histories under replay. Counts are conditional "
         "on an affected job; unreplayed histories have no job in the same replay pool.",
@@ -386,19 +395,21 @@ def visibility_audit_table(rows: list[dict]) -> str:
 EXACT_POLICIES = ("SPJF-E", "Guard(300)", "Guard(600)", "Guard(1200)", "Aging(600)")
 
 
+def _base_policy(row: dict) -> str:
+    """The policy a row of the exact comparison belongs to, however it spells its name."""
+    return row.get("base_policy") or row["policy"].split("|", 1)[0]
+
+
 def exact_visibility_table(rows: list[dict]) -> str:
     """Original versus converged policy-specific scores under every frozen policy.
 
     Print the full predeclared family without choosing a policy from its outcomes.
     """
     body: list[str] = []
-    for level in sorted({int(row["level"]) for row in rows}):
-        block = [row for row in rows if int(row["level"]) == level]
+    for level in _levels(rows):
+        block = _at_level(rows, level)
         body.append(rf"\multicolumn{{8}}{{l}}{{{_load_header(block[0])}}} \\")
-        keyed = {
-            (row.get("base_policy") or row["policy"].split("|", 1)[0], row["variant"]): row
-            for row in block
-        }
+        keyed = {(_base_policy(row), row["variant"]): row for row in block}
         for policy in EXACT_POLICIES:
             for variant in ("original", "exact"):
                 row = keyed.get((policy, variant))
@@ -406,31 +417,26 @@ def exact_visibility_table(rows: list[dict]) -> str:
                     continue
                 body.append(
                     f" & {policy_label(policy):<22s} & {variant:<9s} & "
-                    + " & ".join(
-                        [
-                            _cell(float(row["p99_dl_s"]), 2),
-                            _cell(float(row["gap_closed"]), 3, _interval(row, "gap_closed")),
-                            _cell(float(row["max_excess_s"]), 1),
-                            _cell(float(row["harm_s"]), 1),
-                            _cell(float(row["fired_pct"]), 2),
-                        ]
-                    )
+                    + " & ".join(_outcome_cells(row))
                     + r" \\"
                 )
         body.append(RULE)
-    if body and body[-1] == RULE:
-        body.pop()
     return _table(
         "lllrlrrr",
         r"Load & Policy & Score visibility & p99$_{\mathrm{dl}}$ & Gap closed & "
         r"Max exc. & Harm & Fired (\%)",
-        body,
+        _without_trailing_rule(body),
         "tab:exact_visibility",
         "Original-clock and converged policy-specific scores under the frozen policies.",
     )
 
 
 HEADLINE_VARIANTS = ("exact", "original", "conservative", "static")
+
+
+def _variants_of(block: list[dict], base: str) -> dict:
+    """One policy's rows in a load level, by the information protocol each one ran under."""
+    return {row["variant"]: row for row in block if _base_policy(row) == base}
 
 
 def exact_headline_table(rows: list[dict], promise: float = 600.0) -> str:
@@ -441,13 +447,8 @@ def exact_headline_table(rows: list[dict], promise: float = 600.0) -> str:
     """
     base = f"Guard({promise:g})"
     body: list[str] = []
-    for level in sorted({int(row["level"]) for row in rows}):
-        block = [row for row in rows if int(row["level"]) == level]
-        keyed = {
-            row["variant"]: row
-            for row in block
-            if (row.get("base_policy") or row["policy"].split("|", 1)[0]) == base
-        }
+    for level in _levels(rows):
+        keyed = _variants_of(_at_level(rows, level), base)
         if not keyed:
             continue
         body.append(rf"\multicolumn{{7}}{{l}}{{{_load_header(next(iter(keyed.values())))}}} \\")
@@ -455,27 +456,13 @@ def exact_headline_table(rows: list[dict], promise: float = 600.0) -> str:
             row = keyed.get(variant)
             if row is None:
                 continue
-            body.append(
-                f" & {variant:<14s} & "
-                + " & ".join(
-                    [
-                        _cell(float(row["p99_dl_s"]), 2),
-                        _cell(float(row["gap_closed"]), 3, _interval(row, "gap_closed")),
-                        _cell(float(row["max_excess_s"]), 1),
-                        _cell(float(row["harm_s"]), 1),
-                        _cell(float(row["fired_pct"]), 2),
-                    ]
-                )
-                + r" \\"
-            )
+            body.append(f" & {variant:<14s} & " + " & ".join(_outcome_cells(row)) + r" \\")
         body.append(RULE)
-    if body and body[-1] == RULE:
-        body.pop()
     return _table(
         "llrlrrr",
         r"Load & Score history & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm "
         r"& Fired (\%)",
-        body,
+        _without_trailing_rule(body),
         "tab:visibility",
         rf"Guard({promise:g}) at the unchanged selected parameters under four "
         "information protocols, over five overlays.",
@@ -486,8 +473,8 @@ def same_copy_exposure_table(rows: list[dict]) -> str:
     """How often same-copy withholding changes a score and its dispatch-queue rank."""
     body: list[str] = []
     order = ("FCFS", *EXACT_POLICIES)
-    for level in sorted({int(row["level"]) for row in rows}):
-        block = {row["policy"]: row for row in rows if int(row["level"]) == level}
+    for level in _levels(rows):
+        block = _keyed(rows, level)
         for policy in order:
             row = block.get(policy)
             if row is None:
@@ -508,13 +495,11 @@ def same_copy_exposure_table(rows: list[dict]) -> str:
                 + r" \\"
             )
         body.append(RULE)
-    if body and body[-1] == RULE:
-        body.pop()
     return _table(
         "llrrrrrrr",
         r"Level & Replay policy & Affected (\%) & Deadline (\%) & Records mean & "
         r"Records p99 & $|\Delta s|$ p99 & $|\Delta r|$ p99 & $|\Delta r|$ max",
-        body,
+        _without_trailing_rule(body),
         "tab:same_copy_exposure",
         "Same-copy outcome withholding and score-rank displacement. Statistics are averaged "
         "over overlays, except the maximum displacement, which is the largest over overlays.",

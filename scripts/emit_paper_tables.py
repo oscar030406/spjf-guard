@@ -77,6 +77,7 @@ BY_SECTION = {
     "07_data": "data-description",
     "09_limitations": "limitation-quote",
     "A_proofs": "theory-constant",
+    "S_theory_additions": "theory-constant",
     "main": "abstract-quote",
     "main_article": "abstract-quote",
     "supplementary": "moved-from-main",
@@ -162,6 +163,16 @@ def read_exact_rows(tables: Path) -> tuple[list[dict], list[dict]]:
             raise SystemExit(f"explicit exact source has no data rows: {path}")
         loaded.append(rows)
     return loaded[0], loaded[1]
+
+
+def read_optional_exact(tables: Path | None) -> tuple[list[dict], list[dict]] | None:
+    """The exact source when a directory was given, and nothing at all when none was."""
+    return read_exact_rows(tables) if tables is not None else None
+
+
+def exact_pair(rows: tuple[list[dict], list[dict]] | None) -> tuple[list[dict], list[dict]]:
+    """The exact comparison and its exposure audit, as two lists a run can always index."""
+    return rows if rows is not None else ([], [])
 
 
 def parameter_map(rows: list[dict], promises) -> dict:
@@ -295,6 +306,56 @@ def _number_row(found: dict, produced: dict, not_produced: tuple) -> dict:
     }
 
 
+def _macros(produced: dict, sealed: dict | None) -> list[tuple]:
+    """The macros a run reads, with the values each one is matched against.  The sealed
+    macro joins the list only once a sealed run's values are given."""
+    return [(DEVNUM, produced, "")] + (
+        [(SEALEDNUM, sealed, SEALED_PREFIX)] if sealed is not None else []
+    )
+
+
+def _anchor_state(line: str, table: str, anchor: str) -> tuple[str, str]:
+    """Where a figure on this line sits: inside which table, under which section."""
+    heading = SECTION_CMD.search(line)
+    if heading:
+        anchor = slug(heading.group(1))
+    found = LABEL.search(line)
+    if found:
+        table = found.group(1)
+    if r"\end{table}" in line or r"\end{table*}" in line:
+        table = ""
+    return table, anchor
+
+
+def _file_numbers(path: Path, macros: list[tuple], not_produced: tuple) -> list[dict]:
+    """Every marked figure in one file, in the order the file prints them."""
+    rows: list[dict] = []
+    table, anchor = "", "front-matter"
+    seen: dict[str, int] = {}
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        table, anchor = _anchor_state(line, table, anchor)
+        for pattern, values, prefix in macros:
+            for value in pattern.findall(line):
+                spot = table or anchor
+                where = f"{prefix}{spot}"
+                seen[where] = seen.get(where, 0) + 1
+                rows.append(
+                    _number_row(
+                        {
+                            "key": f"{prefix}{path.stem}:{spot}:{seen[where]}",
+                            "section": path.stem,
+                            "line": number,
+                            "table": table,
+                            "value": value,
+                            "context": line,
+                        },
+                        values or {},
+                        not_produced,
+                    )
+                )
+    return rows
+
+
 def paper_numbers(paper_dir: Path, produced: dict, sealed: dict | None = None) -> list[dict]:
     """Every marked figure in the paper, with where it sits and who produces it.
 
@@ -309,40 +370,11 @@ def paper_numbers(paper_dir: Path, produced: dict, sealed: dict | None = None) -
     is read only when a sealed run's values are given, and its keys carry the `sealed.`
     prefix, counted in their own sequence.
     """
-    macros = [(DEVNUM, produced, "")] + (
-        [(SEALEDNUM, sealed, SEALED_PREFIX)] if sealed is not None else []
-    )
-    rows = []
+    macros = _macros(produced, sealed)
+    not_produced = reasons(sealed is not None)
+    rows: list[dict] = []
     for path in sorted(paper_dir.rglob("*.tex")):
-        table, anchor = "", "front-matter"
-        seen: dict[str, int] = {}
-        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            heading = SECTION_CMD.search(line)
-            if heading:
-                anchor = slug(heading.group(1))
-            found = LABEL.search(line)
-            if found:
-                table = found.group(1)
-            if r"\end{table}" in line:
-                table = ""
-            for pattern, values, prefix in macros:
-                for value in pattern.findall(line):
-                    where = f"{prefix}{table or anchor}"
-                    seen[where] = seen.get(where, 0) + 1
-                    rows.append(
-                        _number_row(
-                            {
-                                "key": f"{prefix}{path.stem}:{table or anchor}:{seen[where]}",
-                                "section": path.stem,
-                                "line": number,
-                                "table": table,
-                                "value": value,
-                                "context": line,
-                            },
-                            values or {},
-                            reasons(sealed is not None),
-                        )
-                    )
+        rows += _file_numbers(path, macros, not_produced)
     return rows
 
 
@@ -467,6 +499,12 @@ def visibility_exposure_values(rows: list[dict], out: dict, source: str = "visib
             add(100.0 * float(value) if value not in (None, "") else value, 2, where)
         for field in ("overall_premature_mean", "overall_premature_p99"):
             add(row.get(field), 1, where)
+    _exposure_means(rows, add, source)
+
+
+def _exposure_means(rows: list[dict], add, source: str) -> None:
+    """The same exposure figures averaged over the overlays, as the audit table prints
+    them: a mean the paper quotes has to find the cell group it came from."""
     groups = {(row["level"], row["policy"]) for row in rows}
     for level, policy in groups:
         selected = [row for row in rows if row["level"] == level and row["policy"] == policy]
@@ -691,7 +729,105 @@ def run_values(
     return values
 
 
-def main() -> int:
+def emit_development(cfg, args, development: dict, selection_rows: list[dict]) -> list[str]:
+    """Every table the development run writes, `tab:setup` included.
+
+    `tab:setup` describes what the run and the selection did rather than what they
+    measured, so it is built here from both and has no counterpart in a sealed package.
+    """
+    written = emit_tables(cfg, development, args.out_dir)
+    written += emit_visibility(args.dev_visibility_dir, args.out_dir)
+    written += emit_optional_exact(args.dev_exact_dir, args.out_dir)
+    if development["table"]:
+        items = setup_items(
+            cfg, development["table"], selection_rows, development["parameters"]
+        )
+        (args.out_dir / "tab_setup.tex").write_text(pt.setup_table(items), encoding="utf-8")
+        written.append("tab_setup.tex")
+    return written
+
+
+def development_run_values(args, development: dict, exact_rows) -> dict:
+    """Every figure the development run produces, indexed as the paper prints it."""
+    return run_values(
+        development,
+        "dev_tables",
+        [],
+        read_rows(args.dev_visibility_dir / "visibility_comparison.csv"),
+        read_rows(args.dev_visibility_dir / "visibility_exposure.csv"),
+        *exact_pair(exact_rows),
+        *read_exact_extras(args.dev_exact_dir),
+    )
+
+
+def emit_sealed(cfg, args, sealed_run: dict) -> list[str]:
+    """The sealed run's copies of the result tables, the optional ones included."""
+    written = emit_tables(cfg, sealed_run, args.out_dir, sealed=True)
+    if args.sealed_visibility_dir is not None:
+        written += emit_visibility(args.sealed_visibility_dir, args.out_dir, sealed=True)
+    written += emit_optional_exact(args.sealed_exact_dir, args.out_dir, sealed=True)
+    return written
+
+
+def sealed_run_values(args, sealed_run: dict, exact_rows) -> dict:
+    """Every figure the sealed run produces, from whichever of its directories were given."""
+    visibility = args.sealed_visibility_dir
+    return run_values(
+        sealed_run,
+        "sealed_tables",
+        read_rows(args.sealed_predictor_dir / "predictor_metrics.csv")
+        if args.sealed_predictor_dir
+        else [],
+        read_rows(visibility / "visibility_comparison.csv") if visibility else [],
+        read_rows(visibility / "visibility_exposure.csv") if visibility else [],
+        *exact_pair(exact_rows),
+        *read_exact_extras(args.sealed_exact_dir),
+    )
+
+
+def write_numbers(numbers: list[dict], out_dir: Path) -> None:
+    """`numbers.csv`: one row per marked figure, in the order the paper prints them."""
+    with open(out_dir / "numbers.csv", "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(numbers[0]))
+        writer.writeheader()
+        writer.writerows(numbers)
+
+
+def reason_counts(unmatched: list[dict]) -> dict[str, int]:
+    """How many unmatched figures each reason accounts for.  A figure with no reason is
+    counted under "no reason", which is what `check_generated.py` fails on."""
+    counts: dict[str, int] = {}
+    for row in unmatched:
+        reason = row["not_produced"] or "no reason"
+        counts[reason] = counts.get(reason, 0) + 1
+    return counts
+
+
+def report_differences(differs: list[dict]) -> None:
+    """Where this package now prints its own value: the answer to "which numbers changed"."""
+    if not differs:
+        return
+    where: dict[str, int] = {}
+    for row in differs:
+        key = f"{row['section']} {row['table']}"
+        where[key] = where.get(key, 0) + 1
+    print(f"  of which this package prints its own value for {len(differs)}:")
+    for key, count in sorted(where.items(), key=lambda kv: -kv[1]):
+        print(f"    {key}: {count}")
+
+
+def report(numbers: list[dict], written: list[str], out_dir: Path) -> None:
+    """What the run wrote, what it matched, and what it did not, largest reason first."""
+    matched = sum(1 for r in numbers if r["produced_by"])
+    unmatched = [r for r in numbers if not r["produced_by"]]
+    print(f"wrote {', '.join(written)} in {out_dir}")
+    print(f"paper numbers: {len(numbers)}, matched to this package: {matched}")
+    for reason, count in sorted(reason_counts(unmatched).items(), key=lambda kv: -kv[1]):
+        print(f"  not produced [{reason}]: {count}")
+    report_differences([r for r in unmatched if r["not_produced"] == DIFFERS])
+
+
+def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", type=Path, default=ROOT / "configs" / "main.yaml")
     ap.add_argument("--dev-dir", type=Path, default=ROOT / "outputs" / "dev_tables")
@@ -718,16 +854,13 @@ def main() -> int:
     ap.add_argument("--sealed-exact-dir", type=Path, default=None)
     ap.add_argument("--out-dir", type=Path, default=ROOT / "outputs" / "paper_tables")
     ap.add_argument("--paper", type=Path, default=ROOT / "paper")
-    args = ap.parse_args()
+    return ap.parse_args()
 
-    dev_exact_rows = (
-        read_exact_rows(args.dev_exact_dir) if args.dev_exact_dir is not None else None
-    )
-    sealed_exact_rows = (
-        read_exact_rows(args.sealed_exact_dir)
-        if args.sealed_exact_dir is not None
-        else None
-    )
+
+def main() -> int:
+    args = parse_args()
+    dev_exact_rows = read_optional_exact(args.dev_exact_dir)
+    sealed_exact_rows = read_optional_exact(args.sealed_exact_dir)
 
     cfg = cfgmod.load(args.config, expand_environment=False)
     k1_dir = args.k1_dir or args.dev_dir / "k1"
@@ -735,77 +868,19 @@ def main() -> int:
     selection_rows = read_rows(args.selection / "selected_parameters.csv")
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    written = emit_tables(cfg, development, args.out_dir)
-    written += emit_visibility(args.dev_visibility_dir, args.out_dir)
-    written += emit_optional_exact(args.dev_exact_dir, args.out_dir)
-    if development["table"]:
-        items = setup_items(
-            cfg, development["table"], selection_rows, development["parameters"]
-        )
-        (args.out_dir / "tab_setup.tex").write_text(pt.setup_table(items), encoding="utf-8")
-        written.append("tab_setup.tex")
-
-    produced = run_values(
-        development,
-        "dev_tables",
-        [],
-        read_rows(args.dev_visibility_dir / "visibility_comparison.csv"),
-        read_rows(args.dev_visibility_dir / "visibility_exposure.csv"),
-        dev_exact_rows[0] if dev_exact_rows is not None else [],
-        dev_exact_rows[1] if dev_exact_rows is not None else [],
-        *read_exact_extras(args.dev_exact_dir),
-    )
+    written = emit_development(cfg, args, development, selection_rows)
+    produced = development_run_values(args, development, dev_exact_rows)
     sealed_values = None
     if args.sealed_dir is not None:
         sealed_k1 = args.sealed_k1_dir or args.sealed_dir / "k1"
         sealed_run = read_run(cfg, args.sealed_dir, sealed_k1)
-        written += emit_tables(cfg, sealed_run, args.out_dir, sealed=True)
-        if args.sealed_visibility_dir is not None:
-            written += emit_visibility(args.sealed_visibility_dir, args.out_dir, sealed=True)
-        written += emit_optional_exact(args.sealed_exact_dir, args.out_dir, sealed=True)
-        sealed_values = run_values(
-            sealed_run,
-            "sealed_tables",
-            read_rows(args.sealed_predictor_dir / "predictor_metrics.csv")
-            if args.sealed_predictor_dir
-            else [],
-            read_rows(args.sealed_visibility_dir / "visibility_comparison.csv")
-            if args.sealed_visibility_dir
-            else [],
-            read_rows(args.sealed_visibility_dir / "visibility_exposure.csv")
-            if args.sealed_visibility_dir
-            else [],
-            sealed_exact_rows[0] if sealed_exact_rows is not None else [],
-            sealed_exact_rows[1] if sealed_exact_rows is not None else [],
-            *read_exact_extras(args.sealed_exact_dir),
-        )
-    numbers = paper_numbers(args.paper, produced, sealed_values)
-    with open(args.out_dir / "numbers.csv", "w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=list(numbers[0]))
-        writer.writeheader()
-        writer.writerows(numbers)
-    written.append("numbers.csv")
+        written += emit_sealed(cfg, args, sealed_run)
+        sealed_values = sealed_run_values(args, sealed_run, sealed_exact_rows)
 
-    matched = sum(1 for r in numbers if r["produced_by"])
-    unmatched = [r for r in numbers if not r["produced_by"]]
-    by_reason: dict[str, int] = {}
-    for row in unmatched:
-        by_reason[row["not_produced"] or "no reason"] = (
-            by_reason.get(row["not_produced"] or "no reason", 0) + 1
-        )
-    print(f"wrote {', '.join(written)} in {args.out_dir}")
-    print(f"paper numbers: {len(numbers)}, matched to this package: {matched}")
-    for reason, count in sorted(by_reason.items(), key=lambda kv: -kv[1]):
-        print(f"  not produced [{reason}]: {count}")
-    differs = [r for r in unmatched if r["not_produced"] == DIFFERS]
-    if differs:
-        where: dict[str, int] = {}
-        for row in differs:
-            key = f"{row['section']} {row['table']}"
-            where[key] = where.get(key, 0) + 1
-        print(f"  of which this package prints its own value for {len(differs)}:")
-        for key, count in sorted(where.items(), key=lambda kv: -kv[1]):
-            print(f"    {key}: {count}")
+    numbers = paper_numbers(args.paper, produced, sealed_values)
+    write_numbers(numbers, args.out_dir)
+    written.append("numbers.csv")
+    report(numbers, written, args.out_dir)
     return 0
 
 

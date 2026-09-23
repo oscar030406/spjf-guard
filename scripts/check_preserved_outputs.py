@@ -40,22 +40,48 @@ def _sources(ancillary: bool) -> list[Path]:
     )
 
 
+def record(source: Path) -> dict:
+    with source.open(encoding="utf-8-sig", newline="") as fh:
+        rows = list(csv.reader(fh))
+    return {
+        "path": source.relative_to(ROOT).as_posix(),
+        "sha256": digest(source),
+        "bytes": source.stat().st_size,
+        "rows": max(len(rows) - 1, 0),
+        "columns": rows[0] if rows else [],
+    }
+
+
+DERIVED = ("outputs/paper_tables/numbers.csv", "outputs/prefreeze/forward_scores.log.csv")
+"""The two snapshotted files that are not measurements: `numbers.csv` is an index of the
+manuscript's figures and changes whenever `paper/` does, and the pre-freeze log is
+appended by every pre-freeze run.  `--refresh` may replace their records and no other."""
+
+
+def refresh(path: Path, names: list[str]) -> int:
+    """Replace the records of derived files after a deliberate regeneration.
+
+    A measurement table is never refreshed this way: a changed one is the failure the
+    snapshot exists to catch, and the only honest answer is to restore its bytes.
+    """
+    stray = [name for name in names if name not in DERIVED]
+    if stray:
+        print("refusing to refresh a measurement table: " + ", ".join(stray))
+        return 1
+    records = json.loads(path.read_text(encoding="utf-8"))
+    for entry in records:
+        if entry["path"] in names:
+            new = record(ROOT / entry["path"])
+            print(f"{entry['path']}: {entry['sha256'][:12]} -> {new['sha256'][:12]}")
+            entry.update(new)
+    path.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    return 0
+
+
 def snapshot(path: Path, ancillary: bool = False) -> None:
     if path.exists():
         raise FileExistsError(f"refusing to overwrite the original snapshot {path}")
-    records = []
-    for source in _sources(ancillary):
-        with source.open(encoding="utf-8-sig", newline="") as fh:
-            rows = list(csv.reader(fh))
-        records.append(
-            {
-                "path": source.relative_to(ROOT).as_posix(),
-                "sha256": digest(source),
-                "bytes": source.stat().st_size,
-                "rows": max(len(rows) - 1, 0),
-                "columns": rows[0] if rows else [],
-            }
-        )
+    records = [record(source) for source in _sources(ancillary)]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
     print(f"snapshotted {len(records)} existing CSV tables")
@@ -128,10 +154,13 @@ def main() -> int:
     parser.add_argument(
         "--file", type=Path, default=ROOT / "outputs/consistent_original_tables.json"
     )
+    parser.add_argument("--refresh", nargs="+", metavar="PATH", help="derived files only")
     args = parser.parse_args()
     if args.snapshot:
         snapshot(args.file, args.ancillary)
         return 0
+    if args.refresh:
+        return refresh(args.file, args.refresh)
     if args.pin_historical_config:
         return pin_historical_config(args.file)
     return verify(args.file)
