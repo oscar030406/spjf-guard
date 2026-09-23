@@ -24,8 +24,9 @@ the back of the queue again and again. On the log studied here, one job waited c
 order. No operator will deploy a scheduler that can do that to a user.
 
 The paper gives every job a promise. It first proves that, on any such service with `k`
-machines, the extra time a job waits compared with arrival order equals the amount of
-work that jumped ahead of it divided by `k`, up to an error of at most `(2 - 2/k) L`. It
+machines, the extra time a job waits compared with arrival order equals the work that
+jumped ahead of it, minus the work it jumped ahead of itself, divided by `k`, up to an
+error of at most `(2 - 2/k) L`. It
 then wraps any ordering rule in a *guard*: a small rule that counts how much work has
 jumped ahead of each waiting job and, when the count reaches a budget, makes the oldest
 waiting job run next. The result is that no job waits more than `G` seconds longer than
