@@ -3,10 +3,11 @@
 \section{Scheduling Algorithm}
 \label{sec:scheduling}
 
-The scheduler has two layers. A base policy orders the queue by a score computed at
-arrival, and a wrapper limits how much work may overtake any waiting job. The two are
-independent, in that the wrapper accepts any base policy and its guarantee does not
-depend on that policy behaving well.
+The scheduler has two layers, because the ranking that shortens the queue is also what
+can leave one submission behind indefinitely. A base policy orders the queue by a score
+computed at arrival, and a wrapper limits how much work may overtake any waiting job.
+The two are independent: the wrapper accepts any base policy, and its guarantee does
+not depend on that policy behaving well.
 
 \subsection{Ranking by Expected Cost}
 \label{sec:rank}
@@ -17,8 +18,9 @@ conditional mean service times. The same conclusion does not hold in general on
 $k\geq2$ servers. For example, on two servers let $A=2$, $C=3$, and let $B$ be
 $0.1$ with probability $0.9$ and $100$ with probability $0.1$. Ordering the three
 conditional means starts $A$ and $C$ and has expected mean wait $2/3$; starting
-$A$ and $B$ instead has expected mean wait $0.096667$. Thus expected-cost ordering
-is an empirically motivated base policy here, not a multi-server optimality claim.
+$A$ and $B$ instead has expected mean wait $0.096667$. Expected-cost ordering is
+therefore an empirically motivated base policy here, not a multiserver optimality
+claim.
 % Source for the two-server calculation and its independent script check:
 % docs/referee_readthrough/independent_review/checks_output.txt, CHECK 1
 % (script: docs/referee_readthrough/independent_review/checks.ps1).
@@ -37,9 +39,9 @@ by squared error on $\log(1+C)$ and then inverted.
 
 The literal inverse $\exp(\mathbb{E}[\log(1+C)\mid x])-1$ is no larger than the
 conditional arithmetic mean, with equality only in the degenerate case. The gap is
-not determined by the conditional variance alone. A residual-distribution correction,
-such as the smearing estimator of Duan~\cite{duan1983smearing}, is required to use a
-log-scale regression as a mean estimator under its stated conditions.
+not determined by the conditional variance alone. To use a log-scale regression as a
+mean estimator under its stated conditions, one needs a residual-distribution
+correction such as the smearing estimator of Duan~\cite{duan1983smearing}.
 
 Only the order of the fitted score is used. Its level does not transfer across
 periods, since the share of heavy jobs in the training periods differs from the target
@@ -84,14 +86,14 @@ $\mathrm{over}[q](t)$ is non-increasing in rank, so $E(t)$ is non-empty exactly 
 the queue head belongs to it and the rule degenerates to a test on the head. Setting
 $B = 0$ recovers FCFS.
 
-\paragraph{The Cap Carries the Promise; the Shape Does Not.}
+\paragraph{The cap carries the promise; the shape does not.}
 The guarantee of Section~\ref{sec:theory} reads the budget only through an upper
-bound on it: if $0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job and
+bound on it. If $0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job and
 every instant, then every job waits at most
-$W_{\mathrm{FCFS}} + B_{\max}/k + (3-2/k)L$, for any base policy, any arrival
-sequence and any predictions. Everything below the cap is a design freedom that
-changes how much of the base policy's benefit survives and which jobs pay for it,
-and changes the promise not at all. We study the one-line family
+$W_{\mathrm{FCFS}} + B_{\max}/k + (3-2/k)L$, for every base policy, every arrival
+sequence and every set of predictions. Everything below the cap is a design freedom:
+it decides how much of the base policy's benefit survives and which jobs pay for it,
+and it changes the promise not at all. We study the one-line family
 \[
   \mathrm{budget}(q,t) \;=\;
   \min\bigl(\,B_0 + \gamma\,n_q + \eta\,k\,(t - a_q),\ B_{\max}\,\bigr),
@@ -99,20 +101,19 @@ and changes the promise not at all. We study the one-line family
 with $B_0, \gamma \ge 0$, $0 \le \eta < 1$ and $n_q$ the number of jobs waiting when
 $q$ arrives, and read three shapes off it: \emph{constant} ($\gamma = \eta = 0$),
 \emph{age-relative} ($\eta > 0$), and \emph{queue-length} ($\gamma > 0$). The
-coefficient $\eta$ says that a waiting job tolerates at most a fraction $\eta$ of the
-system's entire service capacity, over its own waiting time, being spent on jobs that
-arrived after it, so the allowance grows with the wait a job has already had; being a
-fraction of capacity it is dimensionless and needs no retuning when $k$ or the load
-changes. The term $\gamma n_q$ instead widens the allowance only for jobs that arrive
-into a queue that is already long, and is flat in the wait. $B_0$, $\gamma$ and
-$B_{\max}$ are measured in work and scale with $k$.
+coefficient $\eta$ says how much of the system's capacity, over a job's own waiting
+time, may be spent on jobs that arrived after it. In other words, the allowance grows
+with the wait a job has already had. We chose a fraction of capacity rather than a
+number of seconds because it is dimensionless: it needs no retuning when $k$ or the
+load changes. The term $\gamma n_q$ instead widens the allowance only for jobs that
+arrive into a queue that is already long, and it is flat in the wait. The quantities
+$B_0$, $\gamma$ and $B_{\max}$ are measured in work and scale with $k$.
 
-Only the age-relative shape carries a second, multiplicative bound,
-$W < (W_{\mathrm{FCFS}} + B_0/k + (3-2/k)L)/(1-\eta)$, and only when $\gamma = 0$:
-with $\gamma > 0$ the constant part of the budget differs from job to job, so the
-multiplicative form holds per job with that job's own constant, and no single
-number is available for the operator to state in advance
-(Supplementary Section~S4.6). For
+Only the age-relative shape carries a second, multiplicative bound, and only when
+$\gamma = 0$: $W < (W_{\mathrm{FCFS}} + B_0/k + (3-2/k)L)/(1-\eta)$. With
+$\gamma > 0$ the constant part of the budget differs from job to job. The
+multiplicative form then holds per job, with that job's own constant, and the operator
+has no single number to state in advance (Supplementary Section~S4.6). For
 $\gamma > 0$ we claim the additive bound alone.
 
 \begin{algorithm}
@@ -150,17 +151,17 @@ $\gamma > 0$ we claim the additive bound alone.
 The operator states $G$, the number of seconds by which any job may exceed its FCFS
 waiting time, and reads off $B_{\max} = k\bigl(G - (3 - 2/k)\,L\bigr)$, the inversion
 of the uniform certificate proved in Section~\ref{sec:theory}. No data are needed for
-this step. Corollary~\ref{cor:params} issues no positive budget below
-$(3-2/k)L$; the zero budget remains admissible and reproduces FCFS exactly.
-Proposition~\ref{prop:floor} separately gives an $L$-scale floor only for this wrapper
-family when it must protect against every opaque base-policy proposal sequence. The
-promise $G$ follows from $B_{\max}$ alone.
-The shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of the base policy's
-benefit survives and which jobs pay for it, so we choose them on a validation trace
-that excludes the test period; that pool is held out of the selection and not of the
-development process, and Section~\ref{sec:exp_prov} states what the selection therefore
-does and does not establish. The rule is fixed before the grids are run, and Supplementary Section~S5 states it in
-full together with what each grid selected. Supplementary Table~S4 gives the grids and what they selected.
+this step. The rule issues no positive budget below $(3-2/k)L$; the zero budget
+remains admissible and reproduces FCFS exactly. Section~\ref{sec:theory} separately
+gives an $L$-scale floor, but only for this wrapper family when it must protect
+against every opaque base-policy proposal sequence. The promise $G$ follows from
+$B_{\max}$ alone. The shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of
+the base policy's benefit survives and which jobs pay for it, so we choose them on a
+validation trace that excludes the test period. That pool is held out of the selection
+and not of the development process, and Section~\ref{sec:exp_prov} states what the
+selection therefore does and does not establish. The rule is fixed before the grids
+are run. Supplementary Section~S5 states it in full, and Supplementary Table~S4 gives
+the grids and what they selected.
 
 
 \paragraph{What is charged, and why no service time is needed at dispatch.}
@@ -181,9 +182,11 @@ sizes enters.
 Algorithm~\ref{alg:guard} is written for readability rather than for execution, since
 its inner loop over waiting jobs at each completion is linear. A Fenwick tree over
 completed work and a segment tree over the window of waiting ranks make each event cost
-$O(\log n)$, with all budget arithmetic carried in integer microseconds so that the
-firing test is exact and no floating-point clock enters the schedule. Supplementary
-Section~S5 gives the two structures and the rewriting of the firing test.
+$O(\log n)$. All budget arithmetic is carried in integer microseconds, so the firing
+test is exact and no floating-point clock enters the schedule. Supplementary
+Section~S5 gives the two structures and the rewriting of the firing test. A promise in
+seconds thus becomes a number the dispatcher can check, and the dispatcher never reads
+a prediction to check it.
 
 \paragraph{Why the budget is measured in work and not in positions.}
 Earlier bounded-overtaking mechanisms limit how many times a job may be passed, which

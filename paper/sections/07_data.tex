@@ -5,11 +5,13 @@
 
 \subsection{The Traces}
 
-The validation scenario is an educational one: two programming-assignment judging
-platforms supply the demand traces, and four further workloads bound the claim from
-outside that setting. What each trace can be used for is decided by whether its arrival
-times are observed or reconstructed, whether the queue wait is recorded, and how long a job may run there
-(Table~\ref{tab:traces}).
+The two judging platforms record how long each submission ran; neither records what it
+waited for. The pool, its capacity and the queue are therefore ours, and this section
+says how we built them and what supports the construction. Two programming-assignment
+judging platforms supply the demand traces, and four further workloads bound the claim
+from outside that setting. What each trace can be used for is decided by whether its
+arrival times are observed or reconstructed, whether the queue wait is recorded, and
+how long a job may run there (Table~\ref{tab:traces}).
 
 % Wider than the MDPI text block, so it is set across the full page with the
 % template's adjustwidth/\extralength mechanism; \fulllength is that measure.
@@ -90,27 +92,29 @@ seconds.
 \subsection{What the Fields of the Main Trace Mean}
 
 Several fields of that trace had to be interpreted before a queueing model could use
-them. Four readings carry the rest of the paper; Supplementary Section~S2 gives the
-audit that establishes them, together with the release-statistics reconciliation and the
-two truncated archives.
+them. Supplementary Section~S2 gives the audit that establishes the readings below,
+together with the release-statistics reconciliation and the two truncated archives.
 
-The timestamp on an execution block is the moment the result was written, not the moment
-the code was received, so we take $\mathrm{done}_j$ to be the recorded stamp and
-reconstruct the arrival as $a_i = t_i - C_i$, carrying the opposite reading through the
-pipeline as a sensitivity with its own features and models. Stamps are recorded to the
-whole second while costs are recorded to the microsecond, which opens a leak that we
-close by jittering each stamp deterministically: a classifier given only the fractional
-part of the gap to the previous record separates heavy from light jobs with AUROC
-\devnum{0.8091} on the whole-second clock and \devnum{0.4499} after the jitter, while
-the forward models of the two clocks stay within \devnum{0.008} of AUROC of each other.
-The observed regime has an upper ceiling of \devnum{60} s; this is not evidence of
-a documented enforced timeout. The last run to reach a longer time ends at
-\devnum{2019-08-28}; the periods before that date stay out of the primary pool, and
+The timestamp on an execution block is the moment the result was written, not the
+moment the code was received. We therefore take $\mathrm{done}_j$ to be the recorded
+stamp and reconstruct the arrival as $a_i = t_i - C_i$, and we carry the opposite
+reading through the pipeline as a sensitivity with its own features and models. Stamps
+are recorded to the whole second while costs are recorded to the microsecond, and that
+opens a leak. We close it by jittering each stamp deterministically. The leak is larger
+than we expected: a classifier given only the fractional part of the gap to the
+previous record separates heavy from light jobs with AUROC \devnum{0.8091} on the
+whole-second clock. After the jitter it scores \devnum{0.4499}, which is chance. The
+forward models of the two clocks stay within \devnum{0.008} of AUROC of each other, so
+the repair costs nothing.
+
+The observed regime has an upper ceiling of \devnum{60} s; this is not evidence of a
+documented enforced timeout. The last run to reach a longer time ends at
+\devnum{2019-08-28}. The periods before that date stay out of the primary pool, and
 where used at all they carry the later limit, $C^{\mathrm{cap}} = \min(C, 60)$
-(Supplementary Table~S3). Groups of runs by the same user that end in the same second are
-\devnum{7.53\%} of blocks and \devnum{26.28\%} of capped work; they overlapped and
-stretched each other, so we neither delete them silently nor treat each as an
-independent arrival, and the scheduling trace is rebuilt twice, once with each group
+(Supplementary Table~S3). Groups of runs by the same user that end in the same second
+are \devnum{7.53\%} of blocks and \devnum{26.28\%} of capped work. They overlap and
+stretch each other, so we neither delete them silently nor treat each as an
+independent arrival. We rebuild the scheduling trace twice, once with each group
 collapsed into one job and once with the groups removed (Supplementary Table~S14).
 
 \subsection{What the Source Platform Identifies}
@@ -130,30 +134,28 @@ of concurrent graders, replays the busiest hours before a shared deadline and me
 queue wait~\cite{peveler2019sandbox}. That replay compresses its window fourfold and
 sixteenfold; we raise load by overlaying whole class-terms instead
 (Section~\ref{sec:overlay}), for the reason Section~\ref{sec:limits} gives. Dedicated
-per-entity capacity is also known to sit
-idle in the workloads this one resembles. In the serverless characterisation behind our
-invocation trace, \devnum{45\%} of applications are invoked once an hour or less and
-\devnum{81\%} once a minute or less, so the authors report that the cost of keeping them
-warm relative to their billable execution time can be prohibitively
-high~\cite{shahrad2020wild}; and a cluster manager that measured the alternative directly
-reports that splitting each large user's workload into its own cell would need
-\devnum{2} to \devnum{16} times as many cells and \devnum{20} to \devnum{150\%} more
+per-entity capacity is also known to sit idle in the workloads this one resembles. Two
+measurements outside our own traces point the same way. In the serverless
+characterisation behind our invocation trace, \devnum{45\%} of applications are
+invoked once an hour or less and \devnum{81\%} once a minute or less, and the authors
+report that keeping them warm can cost far more than their billable execution
+time~\cite{shahrad2020wild}. A cluster manager measured the opposite design directly:
+splitting each large user's workload into its own cell would need \devnum{2} to
+\devnum{16} times as many cells and \devnum{20} to \devnum{150\%} more
 machines~\cite{verma2015borg}. Neither source is about judging, and neither licenses a
 number of our own.
 
-
-
-The second support is a measurement on the same demand: replayed under the dedicated
-design, the 99th percentile of containers alive at once is \devnum{1{,}636} and each
-container executes code for \devnum{0.12\%} of the time it is alive, while a shared
-pool holds the 99th percentile of deadline-window waits under \devnum{1} s with
-\devnum{14} servers under FCFS and \devnum{13} under the predictor-ordered policy. The
-third is that the simulator reproduces waits somebody else recorded: the CI logs carry
-the queue wait of every run, and an effective capacity and a setup term refitted on one
-chronological part of each window return the held-out mean wait, the per-hour profile
-and the per-job ordering, with the 90th percentile the one quantile that does not
-survive. Supplementary Section~S2 gives both in full, with the six session
-reconstructions, the five chronological splits, the step-of-one sharpness check and the
+The second support is a measurement on the same demand. Replayed under the dedicated
+design, that demand keeps \devnum{1{,}636} containers alive at the 99th percentile,
+each executing code for \devnum{0.12\%} of the time it is alive. A shared pool holds
+the 99th percentile of deadline-window waits under \devnum{1} s with \devnum{14}
+servers under FCFS and \devnum{13} under the predictor-ordered policy. The third
+support is that the simulator reproduces waits somebody else recorded. The CI logs
+carry the queue wait of every run. Refitting an effective capacity and a setup term on
+one chronological part of each window returns the held-out mean wait, the per-hour
+profile and the per-job ordering; the 90th percentile is the one quantile that does
+not survive. Supplementary Section~S2 gives both in full, with the six session
+reconstructions, the five chronological splits, the sharpness check and the
 circularity of the original whole-window fit. The pooled side is simulated, so neither
 supports a claim that the platform ever queued.
 
@@ -201,16 +203,19 @@ gives a combined-minus-lag-only difference of
 % Source: evidence/codebench/out_codebench.txt, P4 grouped-class-CV h=168
 % (lgbm_lags, lgbm_cal_only, lgbm_lags_cal) and paired CV h=168 rows.
  The corroborating trace shows the same shape
-elsewhere: clicks in the three days up to an assessment due date are \devnum{1.29} to
-\devnum{2.95} times the other test days across its nine course-presentations, and a
-seven-day-ahead peak warning on distinct active students goes from F1 \devnum{0.000} under
-a moving-average baseline to \devnum{0.593} once calendar features are added.
+elsewhere. Across its nine course-presentations, the three days up to an assessment
+due date carry \devnum{1.29} to \devnum{2.95} times the clicks of the other test days,
+and a seven-day-ahead peak warning on distinct active students goes from F1
+\devnum{0.000} under a moving-average baseline to \devnum{0.593} once calendar
+features are added.
 
 Costs are concentrated in a small fraction of jobs on every workload except the CI
-pools, which motivates the empirical cost-concentration screen (Supplementary Table~S3, which also
-records the provenance of the analysis bound $L$ on every trace). Supplementary
-Section~S2 gives what the arrival and service fields of each trace are, which of them
-are proxies, and how many jobs each analysis truncation touches.
+pools, which motivates the empirical cost-concentration screen (Supplementary
+Table~S3, which also records where the analysis bound $L$ comes from on every trace).
+Supplementary Section~S2 gives what the arrival and service fields of each trace are,
+which of them are proxies, and how many jobs each analysis truncation touches. The
+traces give a demand model and a replayed queue, and no historical measurement of
+either.
 
 
 
@@ -223,10 +228,10 @@ On the main trace it is three terms, \devnum{2023-1}, \devnum{2023-2} and
 \devnum{2024-1}; on the second judging platform it is the last \devnum{20\%} of
 the submission-id range, \devnum{809{,}330} rows, of which only the row count and
 the first id have been read; on the corroborating trace it is the \devnum{2014}
-academic year. Only the main trace's sealed terms will be opened for this paper, once,
-after the method, its parameters and the primary metric have been frozen; the frozen
-pipeline covers those three terms and nothing else, and the sealed parts of the
-other two traces stay shut and are reported on by neither. The serverless trace,
+academic year. We will open only the main trace's sealed terms for this paper, once,
+after freezing the method, its parameters and the primary metric. The frozen pipeline
+covers those three terms and nothing else; the sealed parts of the other two traces
+stay shut, and we report on neither. The serverless trace,
 the compute farm and the two continuous-integration pools have no sealed part,
 so every figure we give for them is development data. No cost distribution,
 prediction or scheduling result has been computed on any sealed part, and every

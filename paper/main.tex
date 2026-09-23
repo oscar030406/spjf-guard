@@ -108,7 +108,7 @@ $^{2}$ \quad [Second author: department, institution, city and postcode, country
 
 \corres{Correspondence: [corresponding author e-mail]}
 
-\abstract{A shared execution service runs jobs on a fixed pool of servers, without preemption, under a per-job time limit $L$. Reordering by predicted cost shortens most waits and can leave one job far behind. We prove a pathwise identity: for any non-preemptive work-conserving $k$-server policy and input, a job's delay relative to first-come first-served equals its net overtaken work divided by $k$, to within $(2-2/k)L$, an exact supremum. Bounding overtaken work is therefore sufficient for a per-job guarantee, and necessary up to an additive $O(kL)$; a count of overtakes is not necessary, and suffices only by charging $L$ per pass. A wrapper enforcing that budget bounds every wait against first-come first-served under arbitrary arrivals and predictions. It reads the budget only through a cap, so the shape below is free; the additive constant $(3-2/k)L$ is likewise exact, and the cap follows from a promise in seconds. Expected-cost ordering is an empirically motivated base policy rather than a multiserver optimality claim. We evaluate on two judging platforms, a serverless trace, two continuous-integration pools that check the simulator, and a compute farm. The empirical headline uses conservative outcome visibility: at the busiest development load, a \devnum{600}-second guard closes \devnum{0.429} of the FCFS-to-SJF tail-wait gap, with interval \devnum{[0.357, 0.533]}. Original-clock results are optimistic references. We report when the uniform certificate is too coarse for the observed waits and when cost concentration offers little benefit.}
+\abstract{Programming-assignment judges, build farms and serverless platforms run jobs without preemption on a fixed pool of $k$ servers, under a per-job time limit $L$. Ordering the queue by predicted cost shortens most waits, but one wrong prediction can leave one job far behind. We ask what such a service can promise to every job when the predictions are arbitrary. We prove a pathwise identity: under any non-preemptive work-conserving $k$-server policy, a job's delay relative to first-come first-served (FCFS) equals the net work that overtook it divided by $k$, to within $(2-2/k)L$, and this constant is exact. A budget on overtaken work is therefore sufficient for a per-job guarantee and necessary up to an additive $O(kL)$; a count of overtakes is not. A wrapper that enforces the budget bounds every job's wait against FCFS for arbitrary arrivals, predictions and base policies, with the exact additive constant $(3-2/k)L$, and the operator sets its cap from a promise stated in seconds. We evaluate on logs from two judging platforms, a serverless trace, two continuous-integration pools and a compute farm, checking every simulated job against the bound. Under conservative outcome visibility, a \devnum{600}-second guard closes \devnum{0.429} of the FCFS-to-shortest-job-first tail-wait gap at the busiest development load, with interval \devnum{[0.357, 0.533]}. We also report where the guarantee is too coarse for the observed waits and where cost concentration offers little to gain.}
 
 % Source of the abstract's empirical values: outputs/dev_visibility/visibility_comparison.csv,
 % level=2, Guard(600), gap_closed and gap_closed_lo/hi.
@@ -141,53 +141,68 @@ $^{2}$ \quad [Second author: department, institution, city and postcode, country
 % [to be completed by the authors] and is not invented.
 
 % The supplementary file is paper/supplementary.tex, built on its own with the same class
-% under the `supfile' article type and the same bibliography. Its S-items are listed here
-% in the order they appear there.
+% under the `supfile' article type and the same bibliography.  Eleventh pass: the S-items
+% are listed in MDPI's named-element form, "Table S1: title; ...", in the order they are
+% numbered there, with the nine supplementary sections named after them.  The numbers were
+% read off the built supplementary.pdf; a table added to the supplement shifts every later
+% number here.
 \supplementary{The following supporting information can be downloaded at
-\linksupplementary{s1}. Section~S1, cost prediction: the visibility audit of the feature
-pipeline in full; Table~S1, predictors on the four non-judging traces by feature group;
-the release delay treated as a sensitivity; the three predictor families and the
-ablation ladder; Table~S2, predictors on the two judging traces; and the measured cost
-of predicting. Section~S2, traces: the field audit of the main judging trace with the
-release-statistics reconciliation and the two truncated archives; the
-capacity-sharpness and circularity checks of the continuous-integration refit; what
-supports the shared-pool design; and Table~S3, cost concentration with the provenance of
-the analysis bound on every trace. Section~S3, experiments: Table~S4, the experimental
-configuration and the selection protocol; Table~S5, the selected budget parameters at
-the three promises with the nine per-shape grid winners; Table~S6, the age-relative and
-queue-length ablation rows of Table~\ref{tab:guard}; Table~S7, the corrupted scores;
-Table~S8, the residual of Theorem~\ref{thm:identity} on all nine cells; Table~S9, the
-single-server configuration; Tables~S10--S12, the aging comparator and the package
-predictor metrics; Table~S13, the alternative ranking losses; Table~S14, the
-trace-construction sensitivities; and Figures~S1--S3. Section~S4, the deferred proofs:
-Lemma~\ref{lem:gap} with its strictness, Theorem~\ref{thm:identity} with the two
-directions of its extremes, and Proposition~\ref{prop:consistency} with the
-two counterexamples to its converse, together with the remaining proofs and remarks
-deferred from Section~\ref{sec:theory}. Section~S5, the reproducibility specification, including exact
-grids, splits, information clocks and table provenance. Section~S6, the capacity sweep,
-physical timed-work experiment, feedback counterexamples, the closed-loop replay with
-recorded think times in Table~S18, and the LPC-EGEE counterfactual pooled and, in
-Tables~S19 and~S20, per walltime class. Section~S7, additional theory, with Table~S21
-comparing the nearest guarantee disciplines and reservation-and-refund charging under
-enforced run-time caps. Section~S8, the extremal constructions, each opening
-with its own idea and then given in full with the tables of exact values it attains,
-together with the achievable fraction at one server. Section~S9, the extended related
-work: the per-paper detail behind Section~\ref{sec:related}, every work named there
-being cited in the manuscript as well.}
+\linksupplementary{s1}: Table S1: Predictors on the four non-judging traces, by feature
+group; Table S2: Predictors on the two judging traces under one visibility protocol and
+one split; Table S3: Share of executed work carried by the longest jobs, with the
+provenance of the analysis bound on every trace; Table S4: Experimental configuration and
+the selection protocol for the guard parameters; Table S5: The three selected budget
+points and the nine per-shape grid winners; Table S6: The age-relative and queue-length
+winners at three promises and three loads; Table S7: Deliberately corrupted scores,
+unguarded and under the guard; Table S8: The residual of
+Theorem~\ref{thm:identity} on all nine cells; Table S9: The single-server configuration;
+Table S10: Additional policy definition for linear aging; Table S11: Conservative-score
+comparison with the selected aging baseline; Table S12: Package development AUROC with
+user-block intervals; Table S13: Ranking scores fitted on one feature set and run through
+one simulator; Table S14: Trace-construction sensitivities; Table S15: Unguarded
+policies, five overlays; Table S16: Candidates and feasible points after promise
+assignment and the harm filter; Table S17: Capacity sweep with archived scores; Table
+S18: Physical timed-work runs; Table S19: Open-loop against think-time-preserving replay;
+Table S20: LPC-EGEE by walltime class, both partitions pooled; Table S21: Replay of the
+900-second test class at its own limit; Table S22: Scope of the nearest per-job
+guarantees and wrapper precedent; Figure S1: Gap--harm trade-offs for every selected
+budget shape and Fixed($G$); Figure S2: What each budget shape keeps of the FCFS-to-SJF
+gap as the promise varies; Figure S3: Original-score reference and its corrupted-score
+controls. The nine supplementary sections that carry them are Section S1, cost
+prediction, with the visibility audit in full, the release delay as a sensitivity, the
+predictor families and the measured cost of predicting; Section S2, traces, with the
+field audit of the main judging trace, the checks on the continuous-integration refit and
+what supports the shared-pool design; Section S3, experiments; Section S4, the deferred
+proofs, including Lemma~\ref{lem:gap}, Theorem~\ref{thm:identity} with the two directions
+of its extremes, Proposition~\ref{prop:consistency} with the two counterexamples to its
+converse, and the relaxations of the assumptions behind
+Section~\ref{sec:theory}; Section S5, the reproducibility specification, with exact
+grids, splits, information clocks and table provenance; Section S6, the capacity sweep,
+the physical timed-work experiment, the feedback counterexamples, the closed-loop replay
+and the LPC-EGEE counterfactual; Section S7, additional theory, with
+reservation-and-refund charging under enforced run-time caps; Section S8, the extremal
+constructions, together with achievability and the maximal permission rule at one server;
+and Section S9, the extended related work behind Section~\ref{sec:related}, every work
+named there being cited in the manuscript as well.}
 
-\authorcontributions{[to be completed by the authors]. The template expects the
-CRediT roles (conceptualization, methodology, software, validation, formal
-analysis, investigation, data curation, writing---original draft preparation,
-writing---review and editing, visualization, supervision, project
-administration, funding acquisition), each attributed by author initials,
-followed by ``All authors have read and agreed to the published version of the
-manuscript.''}
+% CRediT, in the template's own sentence form.  Every initial below is a placeholder:
+% replace [A.B.] and [C.D.] with the authors' initials and delete any role that does not
+% apply.  Nothing here is invented.
+\authorcontributions{Conceptualization, [A.B.] and [C.D.]; methodology, [A.B.];
+software, [A.B.]; validation, [A.B.] and [C.D.]; formal analysis, [A.B.];
+investigation, [A.B.]; resources, [C.D.]; data curation, [A.B.];
+writing---original draft preparation, [A.B.]; writing---review and editing,
+[A.B.] and [C.D.]; visualization, [A.B.]; supervision, [C.D.]; project
+administration, [C.D.]; funding acquisition, [C.D.]. All authors have read and
+agreed to the published version of the manuscript.}
 
-\funding{[to be completed by the authors]. If there is no external funding, the
-template asks for ``This research received no external funding''; otherwise the
-grant number and the funding body go here.}
+% Replace the bracketed clause.  If there was no external funding, the whole statement
+% becomes ``This research received no external funding.''
+\funding{This research was funded by [funding body to be completed by the
+authors], grant number [grant number to be completed by the authors].}
 
-\institutionalreview{Not applicable.}
+\institutionalreview{Not applicable. This study used previously published,
+pseudonymised logs and involved no human participants and no animals.}
 
 \informedconsent{Not applicable.}
 
@@ -220,11 +235,12 @@ completed by the authors].}
 
 \acknowledgments{[to be completed by the authors].}
 
-\conflictsofinterest{[to be completed by the authors]. The template asks for
-``The authors declare no conflicts of interest'' where that holds, and otherwise
-for the competing interest and for a statement on the role of any funder in the
-design, collection, analysis or interpretation, in the writing, or in the
-decision to publish.}
+% Keep the first sentence if it holds.  Otherwise replace it with the competing interest
+% and keep the second, which the template requires whenever there is a funder.
+\conflictsofinterest{The authors declare no conflicts of interest. [To be
+confirmed by the authors: if there is a funder, state here what role it had in
+the design of the study, in the collection, analysis or interpretation of data,
+in the writing of the manuscript, or in the decision to publish the results.]}
 
 \abbreviations{Abbreviations}{%
 The following abbreviations are used in this manuscript:\\
@@ -249,9 +265,10 @@ SRPT & Shortest remaining processing time
 % Ninth pass: the manuscript no longer carries an appendix. What stood in
 % sections/A_proofs.tex was the idea of each extremal construction beside a pointer to
 % the full argument; the ideas are now the opening of Supplementary Section~S8, beside
-% those arguments, and Proposition A1 is Proposition 9 of Supplementary Section S8.5
+% those arguments, and Proposition A1 is Proposition 11 of Supplementary Section S8.5
 % (Proposition 6 until the tenth pass added three propositions to Supplementary
-% Section S7.6, which precedes it).
+% Section S7.6, and Proposition 9 until the eleventh pass added two to Supplementary
+% Section S4.10, which also precedes it).
 % sections/A_proofs.tex is kept as a stub recording where its content went, and is no
 % longer \input, so \appendixtitles, \appendixstart and the \theH... anchor prefixes
 % that went with it are gone as well.

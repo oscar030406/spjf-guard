@@ -1,17 +1,17 @@
 \providecommand{\devnum}[1]{#1}
 
-\section{Additional theory: scope, accounting, and instance-dependent bounds}
+\section{Additional Theory: Scope, Accounting and Instance-Dependent Bounds}
 \label{sec:supp_theory_additions}
 
-This section records results that delimit, rather than enlarge, the main-text
-claims. The first example rules out instance optimality for the uniform guard.
+The results below delimit the main-text claims rather than enlarge them. The first
+example rules out instance optimality for the uniform guard.
 The exact identity that follows is a useful job-level accounting decomposition;
 its core is standard sample-path workload balance, and we do not treat it as a
 new conservation law. The final bounds replace the global timeout by realised
 order statistics, but in their actual-size form they are retrospective
 certificates under completion-only observation.
 
-\subsection{Comparison with the nearest guarantee disciplines}
+\subsection{Comparison with the Nearest Guarantee Disciplines}
 
 \begin{table*}[htbp]
 \centering
@@ -36,12 +36,13 @@ Load Balancing Guardrails \cite{grosof2019guardrails} & Unconstrained dispatcher
 % rows: prechecks/guard_optimality_verify/literature_check.md and
 % prechecks/guard_optimality_verify/verification.md, Section 9.
 
-\subsection{No uniform instance-optimality ratio}
+\subsection{No Uniform Instance-Optimality Ratio}
 
 \begin{proposition}[An unbounded instance-optimality ratio]
 \label{prop:supp_unbounded_instance}
 At $k=1$, let three batch jobs have rank-order service times $(L,1,1)$, with
-$L\geq2$, and set $G=L$. The cap of the parameter rule of the main text (its Corollary on parameters from a promise, $B_{\max} = k(G-(3-2/k)L)$) is $B=0$, so the
+$L\geq2$, and set $G=L$. The cap of the parameter rule of the manuscript
+(Corollary~3 there, $B_{\max} = k(G-(3-2/k)L)$) is $B=0$, so the
 guard is FCFS and has total waiting time $2L+1$. The order $(1,1,L)$ has total
 waiting time $3$ and satisfies the per-job promise $G$. Consequently the ratio
 between the guard's total wait and that of a feasible policy is at least
@@ -59,11 +60,11 @@ $G$-feasible. The comparison allows a clairvoyant feasible policy; restricting
 the comparator to completion-only policies would be a different question.
 \end{proof}
 
-The pointwise-maximal budget $B^{*}=G-L+1$ of the main text's one-server theorem
+The pointwise-maximal budget $B^{*}=G-L+1$ of Proposition~\ref{thm:k1_maximal}
 admits one short job here, giving total wait $L+2$ and ratio $(L+2)/3$; the
 conclusion is unchanged.
 
-\subsection{Idle-capacity accounting}
+\subsection{Idle-Capacity Accounting}
 
 Let $t_0$ be the first arrival time, let $b_Q(u)$ be the number of busy servers
 under policy $Q$ at time $u$, and define the cumulative unused capacity
@@ -123,7 +124,7 @@ $\Gamma_{\mathrm{FCFS}}(a_i)$ depends on when an FCFS-shadow job completes
 before its size has been revealed in the realised run; simulating the shadow
 does not supply that missing completion time.
 
-\subsection{Instance-dependent order-statistic bounds}
+\subsection{Instance-Dependent Order-Statistic Bounds}
 
 For a set of jobs $S$, let $\Lambda_r(S)$ be the sum of its largest at most $r$
 original service times, with missing terms replaced by zero. We abbreviate
@@ -243,7 +244,7 @@ $16$ & $0.3139$ & $0.0161$ \\
 Thus the larger ratios use $L=L_{\mathrm{sample}}=\max_j C_j$, not the published
 timeout $L_{\mathrm{cap}}=1000$.
 
-\subsection{Why kill-and-restart tiering does not escape the floor}
+\subsection{Why Kill-and-Restart Tiering Does Not Escape the Floor}
 \label{sec:supp_tiering}
 
 Section~9 of the manuscript states that the obvious escape from the $\Omega(L)$ floor
@@ -342,7 +343,7 @@ not known.
 Two consequences are worth separating, because they are easy to confuse. The
 \emph{entry threshold} does not drop by $L$. An admitted overtaker always has
 $\ell_j \le Z_q$, so at $k=1$ an overtaker of cap $L$ becomes admissible as soon as
-$G \ge L$, which meets the $L$-scale floor of Proposition~3 of the manuscript with
+$G \ge L$, which meets the $L$-scale floor of Proposition~2 of the manuscript with
 equality, and for general $k$ the condition is $G \ge (2-1/k)L$ against
 $G > (3-2/k)L$ for Algorithm~1 of the manuscript, a difference of $(1-1/k)L$, which is
 zero at one server. It is the additive constant of the promise, not the threshold, that
