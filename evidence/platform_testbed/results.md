@@ -250,7 +250,7 @@ cell 3 是 235.2 s、p90 680.2 s；cell 6 的重放反事实（346.7 s）也比 
 | 模拟器比对脚本 | `evidence/platform_testbed/replay_simulator.py` |
 | 到达表裁剪脚本 | `evidence/platform_testbed/make_arrivals.py` |
 
-平台侧（`D:\UserData\Desktop\挑战杯`，分支 `sched-experiment`）：
+平台侧（`<platform-repo>`，分支 `sched-experiment`）：
 派发器 `apps/classroom/lib/server/classroom-dispatch.ts`、
 引擎侧执行上限 `apps/agent-engine/backend/services/call_deadline.py`、
 实验脚本 `experiments/scheduling/`、改动与回退说明 `docs/调度实验改动说明.md`。

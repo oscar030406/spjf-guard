@@ -2,7 +2,7 @@
 
 2026-09-23。只在本机跑，没有 push，没有部署，没有碰 `jizhi.chenmingkun.cn`。
 平台侧的改动全在分支 `sched-experiment` 上，一次本地提交 `b953e20`；
-逐文件的改动说明与回退步骤在平台仓 `D:\UserData\Desktop\挑战杯\docs\调度实验改动说明.md`
+逐文件的改动说明与回退步骤在平台仓 `<platform-repo>\docs\调度实验改动说明.md`
 （那个仓的 `.gitignore` 把 `/docs/*` 排除在外，所以这份说明留在盘上而不进版本库）。
 
 **先说超支**：任务书写的是「每个策略至多 10 个 job，总共 ≤ 30 次模型调用」。
@@ -400,7 +400,7 @@ Next.js 路由里，调用一个真实的 Python 引擎，做真实的模型调�
   开环到达表（`arrivals_deadline_burst.csv`）。
   另有 `*-abandoned-n3.*` 三条，是 §4.1 那一轮作废的 cell，留着以免被误读成有效数据。
 
-平台仓（`D:\UserData\Desktop\挑战杯`，分支 `sched-experiment`，本地提交 `b953e20`）：
+平台仓（`<platform-repo>`，分支 `sched-experiment`，本地提交 `b953e20`）：
 
 - `apps/classroom/lib/server/classroom-dispatch.ts` —— 派发器
 - `apps/classroom/tests/server/classroom-dispatch.test.ts` —— 离线检验

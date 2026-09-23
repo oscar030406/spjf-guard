@@ -1,8 +1,8 @@
 # 挑战杯 平台能否当调度论文的真实试验台
 
-读时间 2026-09-23。只读检查，未改动 `D:\UserData\Desktop\挑战杯` 任何文件，未起服务，未部署任何东西。
+读时间 2026-09-23。只读检查，未改动 `<platform-repo>` 任何文件，未起服务，未部署任何东西。
 未读 `.env*`。`apps/classroom/data/accounts/accounts.json` 含 `password` 列，只统计了行数与列名，未读取内容。
-提交包解到 scratchpad（`...\scratchpad\jizhi_pkg\`，两个仓库之外），只取了三份 `.md`；
+提交包解到两个仓库之外的一个临时目录，只取了三份 `.md`；
 `挑战杯报名表.pdf` 与 `03-测试数据/学情数据组/*.json`（含画像）未读内容。
 论文只读了 abstract、`paper/sections/03_problem_model.tex`、`paper/sections/07_data.tex`，
 以及 `paper/sections/05_scheduling.tex` 的 Algorithm 1。
@@ -388,7 +388,7 @@ per-job 承诺在实测等待上成立"。
 C_hat_i, rank, over[i]@dispatch, guardFired, k, B_max, L, timedOut, accountTag, corpus, status`，
 外加每个 dispatch epoch 的派发器耗时（微秒）。
 落到 `apps/classroom/data/classroom-jobs/` 现有 JSON（已有一半字段），
-再导一份 CSV 归档到 `D:\UserData\Desktop\图神经网络\prechecks\platform_testbed\`。
+再导一份 CSV 归档到 `<repo-root>\prechecks\platform_testbed\`。
 
 ### 期望的证据
 
