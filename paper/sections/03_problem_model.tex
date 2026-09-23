@@ -13,7 +13,7 @@ Job $i$ arrives at time $a_i \ge 0$ and requires $C_i$ units of service. Service
 server that starts a job keeps it until the job finishes or until it has been running
 for the per-job time limit $L$, at which point the system stops it. Throughout, $C_i$
 denotes executed work, so $0 < C_i \le L$ by construction and a job stopped at the
-limit contributes exactly $L$. An enforced timeout terminates such a job without a
+limit contributes exactly $L$. An enforced timeout ends such a job without a
 successful result; the waiting-time guarantee does not bound that loss of completion
 quality. Observed maxima and analysis truncations in a trace are distinguished from
 enforced timeouts in Section~\ref{sec:data}. One quantity carries three names in this paper: we write
@@ -40,7 +40,7 @@ and that load is neither stationary nor Poisson.
 \subsection{What the Scheduler Knows}
 
 The service time $C_i$ is hidden at arrival. The scheduler reads it at the instant $i$
-completes and not before. Any service that runs submitted work without inspecting it
+completes and not before. Any service that runs submitted work without looking inside it
 first is in that position. Available at $a_i$ are a feature vector $x_i$ and a
 score $\hat{C}_i$ computed from it.
 
@@ -95,7 +95,7 @@ included. Two words are kept apart from here on: the \emph{promise} is the numbe
 the operator states, and the \emph{guarantee} is the proved statement that
 $\mathrm{excess}_P[i] \le G$ holds for every job. An operator chooses a promise; a
 theorem supplies a guarantee. The statement is per job and holds on the realised sample
-path, in no sense in distribution or on average, and it does not presume that the score
+path, in no sense in distribution or on average, and it does not assume that the score
 is any good. Packet scheduling states per-individual additive bounds against a
 reference discipline~\cite{parekh1993gps}, and batch schedulers measure the same
 difference after the fact as a fairness
@@ -109,7 +109,7 @@ We take FCFS as the reference because it is what these services deploy by defaul
 the excess is a quantity an operator can be held to. It also has a known extremal
 property for the unfinished-work vector in a multiserver
 system: the FCFS workload vector is minimal in the weak-majorisation order among
-systems whose allocation of arrivals to servers does not depend on service
+systems whose assignment of arrivals to servers does not depend on service
 times~\cite{daley1987fcfs}, a hypothesis narrower than work conservation alone. That
 extremality is why single-server arguments do not transfer
 unchanged to $k > 1$.
@@ -119,7 +119,7 @@ unchanged to $k > 1$.
 The primary metric is the 99th percentile of waiting time inside deadline windows, and
 we write $\mathrm{p99}_{\mathrm{dl}}$ for it, the symbol the tables carry as a column
 head. A
-deadline window is the 24 hours preceding a deadline; a job belongs to the window if
+deadline window is the 24 hours before a deadline; a job belongs to the window if
 and only if its arrival falls inside it, and a job that arrives inside but completes
 after the window closes is still counted. We fix this choice before any sealed part of
 a trace is opened.
@@ -152,16 +152,11 @@ it as one.
 Stationary queueing models give closed forms for the mean wait of a non-preemptive
 priority class~\cite{harcholbalter2013} and would let class thresholds be placed
 analytically. They need a stationary arrival process, which deadline-driven load does
-not supply. We measured the mismatch. On
-a synthetic Poisson stream whose service distribution matches the first two moments of
-the real one, the formula agrees with simulation to \devnum{0.4\%}. On the same
-workload replayed at its recorded timestamps, the measured wait is
-\devnum{10.7}--\devnum{13.7} times what the formula predicts on the development trace.
-A threshold tuned on the formula would be tuned against a number that is off by an
-order of magnitude.
-
-We therefore use steady-state expressions as motivation only, and every promise made
-in this paper is a per-job statement on the realised sample path
-(Section~\ref{sec:theory}). The mechanism that makes reordering worth doing is the
-three-job arithmetic of the introduction, where total work is unchanged while one long
-job moves back a little and several short ones move forward a lot.
+not supply. On a synthetic Poisson stream the formula agrees with simulation to
+\devnum{0.4\%}, but on the same workload at its recorded timestamps the measured wait is
+\devnum{10.7}--\devnum{13.7} times what it predicts (Supplementary Section~S2.5). We
+therefore use steady-state expressions as motivation only, and every promise here is a
+per-job statement on the realised sample path (Section~\ref{sec:theory}). The mechanism
+that makes reordering useful is the three-job arithmetic of the introduction, where
+total work is unchanged while one long job moves back a little and several short ones
+move forward a lot.

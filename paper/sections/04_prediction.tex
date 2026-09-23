@@ -56,7 +56,7 @@ for a rule that is not there.
 Third, we treat the delay $\delta$ with which results reach the feature store as a
 sensitivity, not as an assumption. Supplementary Section~S1 gives the two clocks in
 full. Under them, ranking survives a ten-minute feedback delay while the probability
-calibration degrades.
+calibration gets worse.
 
 All families see the same rows, the same split and the same availability rule.
 Supplementary Section~S1 defines the three families and their ablation ladders: the
@@ -74,7 +74,7 @@ signal, these two must lose it.
 
 Supplementary Table~S2 gives the two judging traces. One-hop relational aggregates add
 nothing on either: M5 $-$ M4 is \devnum{$+0.0019$} of AUROC on the first and
-\devnum{$-0.0002$} on the second. The ladder tells the same story with a trained model
+\devnum{$-0.0002$} on the second. The ladder gives the same result with a trained model
 in place of hand-built aggregates. Deleting every edge (G0) and permuting the edges
 (G2) leave AUROC within \devnum{0.002} of G1, and the paired intervals for G1 $-$ G0
 (\devnum{$-0.0001$ $[-0.0019, 0.0018]$}) and G1 $-$ G2 (\devnum{$+0.0019$ $[-0.0000,
@@ -98,26 +98,12 @@ consistent effect in the queue. R1S reaches AUROC \devnum{0.9366} against M4's
 wins on RMSE and Spearman. Inside the queue we find no consistent improvement. Against
 the same ranking objective it gains \devnum{$+0.007$ $[0.003, 0.011]$} of the
 deadline-window gap at busy-hour utilisation \devnum{0.8}, loses
-\devnum{$-0.010$ $[-0.022, -0.002]$} at \devnum{0.5}, and is unresolved at
+\devnum{$-0.010$ $[-0.022, -0.002]$} at \devnum{0.5}, and is open at
 \devnum{1.0}. A control fitted on the same \devnum{90\%} of rows that the GRU's early
 stopping left available moves the same way, so the smaller training set does not
 explain it.
 
-Which information matters is not a constant across platforms. On the first judging
-trace the user's own history and the static features of the artefact beat the task's
-history; on the second the task's history beats the user's by \devnum{0.11} of AUROC
-(Supplementary Table~S2). A task on the first platform is attempted by one cohort
-within a few days, so who is writing still carries information. A task on the second
-is attempted by thousands of users over years, so the task's own record has already
-fixed the cost. The non-judging traces push this further. On the serverless trace the
-identity of the function explains \devnum{0.867} of the variance of $\log(1+C)$ on its
-own, and static and calendar features alone are close to useless for ranking (Spearman
-\devnum{0.021}). The two CI pools sit at opposite ends: entity history gives AUROC
-\devnum{0.9968} on one and \devnum{0.6334} on the other, because that pool's job
-labels do not separate its costs. The compute-farm trace is predictable in rank and
-not in level. Supplementary Table~S1 gives all four traces by feature group, and the
-AUROC column of Table~\ref{tab:cross} carries the figure the scheduling results are
-read against.
+Which information matters is not a constant across platforms: the user's own history leads on the first judging trace, and the task's history leads on the second by \devnum{0.11} of AUROC (Supplementary Table~S2). The four non-judging traces spread wider still, and Supplementary Section~S1.2 reads them by feature group, the AUROC column of Table~\ref{tab:cross} carrying the figure the scheduling results are read against.
 
 \subsection{Cost of Predicting, and What Enters the Scheduler}
 

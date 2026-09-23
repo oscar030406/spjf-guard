@@ -4,7 +4,7 @@
 \label{sec:scheduling}
 
 The scheduler has two layers, because the ranking that shortens the queue is also what
-can leave one submission behind indefinitely. A base policy orders the queue by a score
+can leave one submission behind without end. A base policy orders the queue by a score
 computed at arrival, and a wrapper limits how much work may overtake any waiting job.
 The two are independent: the wrapper accepts any base policy, and its guarantee does
 not depend on that policy behaving well.
@@ -49,15 +49,15 @@ period by a factor of several, so we never read the score as a quantity, neither
 estimated finish time nor as a threshold. The scheduler is therefore invariant to a
 monotone recalibration of the score.
 
-Section~\ref{sec:exp_rank} measures what the fitted objective is worth, together with
+Section~\ref{sec:exp_rank} measures what the fitted objective gains, together with
 the alternatives we tried and rejected: a predicted quantile, a two-class rule, and
 squared error on raw seconds. Its partial-oracle repair replaces selected scores with
 truth and is not invariant to an arbitrary monotone rescoring of the original output.
-It therefore diagnoses the errors of this fitted predictor; it does not establish a
+It therefore identifies the errors of this fitted predictor; it does not establish a
 universal asymmetry of prediction errors or a different population estimand.
 
-No choice of ranking function bounds the worst case. A job the score misjudges can still
-be passed indefinitely, whatever the score is and however it was fitted;
+No choice of ranking function bounds the worst case. A job the score gets wrong can still
+be passed without end, whatever the score is and however it was fitted;
 Section~\ref{sec:guard} is what bounds it.
 
 \subsection{The Overtake-Budget Guard}
@@ -92,7 +92,7 @@ bound on it. If $0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job 
 every instant, then every job waits at most
 $W_{\mathrm{FCFS}} + B_{\max}/k + (3-2/k)L$, for every base policy, every arrival
 sequence and every set of predictions. Everything below the cap is a design freedom:
-it decides how much of the base policy's benefit survives and which jobs pay for it,
+it decides how much of the base policy's benefit survives and which jobs bear the harm,
 and it changes the promise not at all. We study the one-line family
 \[
   \mathrm{budget}(q,t) \;=\;
@@ -102,7 +102,7 @@ with $B_0, \gamma \ge 0$, $0 \le \eta < 1$ and $n_q$ the number of jobs waiting 
 $q$ arrives, and read three shapes off it: \emph{constant} ($\gamma = \eta = 0$),
 \emph{age-relative} ($\eta > 0$), and \emph{queue-length} ($\gamma > 0$). The
 coefficient $\eta$ says how much of the system's capacity, over a job's own waiting
-time, may be spent on jobs that arrived after it. In other words, the allowance grows
+time, may go to jobs that arrived after it. In other words, the allowance grows
 with the wait a job has already had. We chose a fraction of capacity rather than a
 number of seconds because it is dimensionless: it needs no retuning when $k$ or the
 load changes. The term $\gamma n_q$ instead widens the allowance only for jobs that
@@ -189,22 +189,19 @@ seconds thus becomes a number the dispatcher can check, and the dispatcher never
 a prediction to check it.
 
 \paragraph{Why the budget is measured in work and not in positions.}
-Earlier bounded-overtaking mechanisms limit how many times a job may be passed, which
-is the currency of the finite-skip and Nudge-$K$
-rules~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Counting is not
-necessary, and it is sufficient in this model only through the worst-case charge of $L$
-per overtake, so a count of $\kappa$ buys a promise of $(\kappa + 2k-2)L/k$
-(Remark~\ref{rem:counts}, \eqref{eq:skip}) and is loose by the ratio $L/\bar{C}$, one to
-two orders of magnitude on our traces. Supplementary Section~S4.9 gives the argument in
-full, and Section~\ref{sec:experiments} runs the count rule as a baseline and measures
-how much the looseness costs on a real load.
+Earlier bounded-overtaking mechanisms count passes
+instead~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. A count is loose
+against a work budget by the ratio $L/\bar{C}$, one to two orders of magnitude on our
+traces; Supplementary Sections~S4.4 and~S4.9 give the argument, and
+Section~\ref{sec:experiments} measures what the looseness costs on a real load.
 
 \subsection{Compared Policies}
 
 Table~\ref{tab:policies} names the policies evaluated in
-Section~\ref{sec:experiments} and fixes the names used in every table of this paper.
+Section~\ref{sec:experiments} and fixes the names used in every table of this
+paper; Supplementary Section~S5.7 states what each one is for at length.
 Guard($G$) wrapped around SPJF-E is the method; the others separate its parts and
-attack it.
+test it.
 
 \begin{table}[htbp]
 \centering
@@ -215,16 +212,16 @@ attack it.
 \hline
 Name & Role \\
 \hline
-FCFS & Deployed baseline, and the reference against which the guarantee is stated \\
-SJF & Sorts waiting jobs by their true service times. Undeployable reference policy, not an optimum; the denominator of the fraction of the gap closed \\
-SPJF-E & Ranks by the expected-cost score of Section~\ref{sec:rank}, unguarded. Transmission from prediction quality to waiting time \\
-SPJF-log & The same pipeline fitted on the log scale, and the other candidate scores of Section~\ref{sec:rank}, run through the same simulator \\
-Guard($G$) & SPJF-E wrapped in the overtake-budget guard at the promise $G$, with the budget shape the selection rule of Supplementary Table~S4 picks over all three grids together. This is the method \\
-Guard-fixed($G$), Guard-age($G$), Guard-queue($G$) & The same wrapper and the same promise, with the shape the rule picks inside the constant, age-relative and queue-length grid respectively. Ablation rows: they isolate what the shape is worth at a fixed cap, and one of them coincides with Guard($G$) at each promise \\
-Fixed($G$) & The same wrapper at the equal-promise budget $\mathrm{budget} \equiv B_{\max}$. It carries the promise $G$ but not the harm constraint, and the selection rule rejects it as infeasible; it is reported as the comparator that spends the whole cap \\
-Skip($G$) & Position-count guard, finite-skip family, counted at dispatch with $\kappa = \lfloor Gk/L \rfloor - (2k-2)$ from \eqref{eq:skip}, the largest count that still promises $G$ under that accounting \\
-Corrupted scores & SPJF-E and Guard($G$) under a reversed order, a random order, and a score that calls the truly longest \devnum{1\%} the shortest; tests the guard where the base policy is worst \\
-Counterexamples & Retained traces from two audits and adversarial review; every job must satisfy the bounds of Section~\ref{sec:theory} \\
+FCFS & Deployed baseline, and the reference the guarantee is stated against \\
+SJF & Undeployable reference that sorts by true service time; the denominator of the gap closed \\
+SPJF-E & Ranks by the expected-cost score of Section~\ref{sec:rank}, unguarded \\
+SPJF-log & The same pipeline on the log scale, and the other candidate scores of Section~\ref{sec:rank} \\
+Guard($G$) & SPJF-E wrapped in the overtake-budget guard at the promise $G$. This is the method \\
+Guard-fixed($G$), Guard-age($G$), Guard-queue($G$) & The same wrapper with the shape the rule picks inside one grid. Ablation rows \\
+Fixed($G$) & The same wrapper at the equal-promise budget $\mathrm{budget} \equiv B_{\max}$; infeasible under the harm rule \\
+Skip($G$) & Position-count guard, finite-skip family, counted at dispatch (Supplementary Section~S4.4) \\
+Corrupted scores & SPJF-E and Guard($G$) under a reversed order, a random order and an inverted-tail score \\
+Counterexamples & Retained traces from two audits and adversarial review, checked against the bounds \\
 \hline
 \end{tabular}
 \end{table}

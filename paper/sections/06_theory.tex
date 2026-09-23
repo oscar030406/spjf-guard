@@ -26,9 +26,10 @@ upper bounds hold against a base policy that knows the future. An identity ties 
 job's delay relative to first-come first-served to the work that overtook it; two
 bounds turn that identity into the guarantee of Algorithm~\ref{alg:guard}; and a
 set of constructions shows that each constant in those bounds is an exact
-supremum. Every statement is given here with the idea of its argument; Supplementary
-Sections~S4 and~S8 give every deferred proof and every extremal construction, S8 opening
-with the idea of each construction beside it.
+supremum. Every statement kept here comes with the idea of its argument; Supplementary
+Sections~S4 and~S8 give every deferred proof, every extremal construction and the
+statements this section only summarises, S8 opening with the idea of each construction
+beside it.
 
 \subsection{Conventions}
 
@@ -218,31 +219,14 @@ per-job guarantee are the same requirement, up to an additive $O(kL)$ in the
 budget. Neither says that Algorithm~\ref{alg:guard} is the least restrictive
 rule with its guarantee, and we do not claim it.
 
-\begin{remark}[Counting overtakes is not necessary, and is sufficient only at
-the worst-case charge]
-\label{rem:counts}
-Bounded-overtaking mechanisms in the literature limit how many times a job may
-be passed~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Inside the
-model of Section~\ref{sec:model}, where $0 < C_i \le L$, a count bound does give
-a per-job guarantee; it is not necessary for one, and it buys the guarantee at a
-factor $L/\bar{C}$. Charged when an overtaker is \emph{dispatched}, the reading a
-position counter in the prior art implements, a bound of $\kappa$ passes gives
-$\mathrm{In}_i \le \kappa L$, and Corollary~\ref{cor:sufficient} turns that into
-\begin{equation}
-  W_P[i] \;\le\; W_{\mathrm{FCFS}}[i] + (\kappa + 2k - 2)\,L/k ,
-  \label{eq:skip}
-\end{equation}
-which is the accounting and the formula used wherever this baseline appears below;
-inverting it, a promise $G$ admits $\kappa = \lfloor Gk/L \rfloor - (2k-2)$ passes, the
-largest integer with $(\kappa + 2k-2)L/k \le G$. Either accounting charges every
-overtaker the worst case $L$, so the rule is loose against a work budget by the
-ratio $L/\bar{C}$, \devnum{one to two orders of magnitude} on our traces.
-Supplementary Section~S4.4 proves both halves, with the instance outside the model on
-which a single overtake makes the excess arbitrarily large, the instance inside it on
-which the count is unbounded while every job stays inside its promise, why at most
-$\kappa$ overtakers can be dispatched while $i$ waits, and what charging the count at
-completion instead costs.
-\end{remark}
+Bounded-overtaking mechanisms in the literature limit instead how many times a job may
+be passed~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Inside the model of
+Section~\ref{sec:model} such a count is not necessary for a per-job guarantee, and it
+gives one only at the worst-case charge of $L$ per pass. That charge makes it loose
+against a work budget by the ratio $L/\bar{C}$, \devnum{one to two orders of magnitude}
+on our traces. Supplementary Section~S4.4 states this as a remark and proves both
+halves, and it carries the conversion from a count to a promise that the Skip baseline
+of Section~\ref{sec:scheduling} uses.
 
 \subsection{The Guarantee of the Guard}
 
@@ -280,40 +264,19 @@ into \eqref{eq:guardadd}. Supplementary Section~S4.5 gives the proof in full.
 Nothing in the proof reads the budget rule except through the cap, so the shape
 of the budget below the cap is a free choice and the promise is unaffected by
 it. One shape carries a second bound, in which the allowance grows with the wait
-the job has already had rather than being flat in it.
-
-\begin{theorem}[Multiplicative bound for the age-relative shape]
-\label{thm:guardmult}
-Suppose in addition that
-$\mathrm{budget}(q,t) = \min\bigl(B_0 + \eta k (t - a_q),\ B_{\max}\bigr)$ with
-one constant $B_0 \ge 0$ for every job and $\eta \in [0,1)$. Then for every
-input and every job $i$,
-\begin{align}
-  \mathrm{In}_i &\;<\; B_0 + \eta k W + kL ,
-  \label{eq:guardinmult}\\
-  (1 - \eta)\,W &\;<\; W_{\mathrm{FCFS}}[i] + B_0/k + (3 - 2/k)L ,
-  \label{eq:guardmult}
-\end{align}
-with \eqref{eq:guardinmult} asserted whenever $i$ has at least one overtaker.
-\end{theorem}
-
-\begin{proof}[Proof idea]
-The same computation runs at $t \le s^P_i = a_i + W$, which bounds
-$\mathrm{budget}(i,t)$ by $B_0 + \eta k W$; Supplementary Section~S4.5 gives it in
-full.
-\end{proof}
-
-The computation goes through for a quantity fixed at $i$'s own arrival. With the
-queue-length shape of Section~\ref{sec:scheduling}, where
-$B_{0,q} = B_0 + \gamma n_q$ varies from job to job, the multiplicative bound stated
-with a common $B_0$ is false by a margin that grows with $\gamma$: Supplementary
-Section~S4.6 gives the counterexample. For $\gamma > 0$ we therefore claim
-Theorem~\ref{thm:guard} and not Theorem~\ref{thm:guardmult}. The cap, and with it
-the promise, is unaffected either way.
+the job has already had rather than being flat in it. For the age-relative budget
+$\mathrm{budget}(q,t) = \min\bigl(B_0 + \eta k (t - a_q),\ B_{\max}\bigr)$, with one
+constant $B_0 \ge 0$ for every job and $\eta \in [0,1)$, the wait obeys
+$(1 - \eta)\,W < W_{\mathrm{FCFS}}[i] + B_0/k + (3 - 2/k)L$; Supplementary
+Section~S4.5 states that as a proposition and proves it. The same bound written with a
+common $B_0$ is false for the queue-length shape of Section~\ref{sec:scheduling}, by a
+margin that grows with $\gamma$, so for $\gamma > 0$ we claim Theorem~\ref{thm:guard}
+alone and Supplementary Section~S4.6 gives the counterexample. The cap, and with it the
+promise, is unaffected either way.
 
 A scheduler that learns $C_j$ at completion cannot charge work in progress, so
-only completed work is charged; the $kL$ in \eqref{eq:guardin} is the price of
-that and is what forces the additive term. Inverting \eqref{eq:guardadd} gives
+only completed work is charged; the $kL$ in \eqref{eq:guardin} comes from that, and it
+is what forces the additive term. Inverting \eqref{eq:guardadd} gives
 the parameter rule of Section~\ref{sec:scheduling}:
 
 \begin{corollary}[The cap that offers a promise]
@@ -339,75 +302,23 @@ backfilling's \cite{mualem2001backfilling,lindsay2013backfilling}, so Supplement
 Section~S7.6 carries it, with the single-server maximality and the counterexample that
 rules maximality out for $k \ge 2$.
 
-\subsection{Both Constants of the Guarantee Are Exact}
+Neither constant in Theorem~\ref{thm:guard} can be improved. Under a constant budget
+$B$ the term $B/k$ is reached exactly, on a queue of $k$ jobs of service $L$ followed
+by a stream of unit jobs. The additive constant $(3 - 2/k)L$ of \eqref{eq:guardadd} is
+the exact supremum at every $k$, approached by a cascade that has to be run for enough
+rounds. Both sources of slack, the constant of Theorem~\ref{thm:identity} and
+the $kL$ of \eqref{eq:guardin}, are saturated on that one instance, where the excess is
+real waiting time rather than bookkeeping. Supplementary Section~S8.3 states this as a
+proposition, gives both constructions, and reports what a hill-climb over small
+instances suggests instead, beside the size the witness actually needs.
 
-Neither constant in Theorem~\ref{thm:guard} can be improved. The term $B/k$ is
-reached exactly on a small family, and the additive term is approached to within
-any margin by a cascade that has to be run for enough rounds.
-
-\begin{theorem}[Tightness of Theorem~\ref{thm:guard}]
-\label{thm:tight2}
-Take the constant budget $\mathrm{budget}(q,t) \equiv B = B_{\max}$, and write
-$c(k) = \sup (k\,\mathrm{excess}_P[i] - B)/L$ over all inputs, base policies and
-budgets; by Theorem~\ref{thm:guard} the supremum over all budget rules that
-respect the cap $B$ is the same number. Then
-\begin{enumerate}
-\item the term $B/k$ is attained: on an explicit family the excess is exactly
-$\lceil B/k \rceil$, hence $B/k$ whenever $k$ divides $B$;
-\item every finite instance satisfies
-$(k\,\mathrm{excess}_P[i]-B)/L<3k-2$, while its supremum is exactly $3k-2$
-for every $k \ge 1$. Equivalently, at every $k$ the additive constant
-$(3 - 2/k)L$ of \eqref{eq:guardadd} cannot be lowered.
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}[Proof idea]
-Part (i) is a queue of $k$ jobs of service $L$, the victim, and a stream of unit
-jobs: the guard fires at $L + \lceil B/k \rceil$. For part (ii) the upper bound
-is Theorem~\ref{thm:guard}, strictly; the lower bound runs the cascade for $m$
-rounds and then injects a sequence timed so that $\mathrm{over}[i]$ stays below
-the budget $B = f + L + 1$ at three successive dispatch epochs---at $0$, at
-$f$, and at $f + L = B - 1$, the last of them by a single unit---letting the
-base policy take every free server three times before the guard fires.
-Supplementary Section~S8.3 gives both
-constructions and the values they reach.
-\end{proof}
-
-Both sources of slack in Theorem~\ref{thm:guard}, the constant of
-Theorem~\ref{thm:identity} and the $kL$ of \eqref{eq:guardin}, are saturated on the same
-instance, and there the excess is real waiting time rather than bookkeeping, every
-overtaker completing before the victim starts. The additive constant
-$(3 - 2/k)L$ grows with $k$, from $L$ at $k = 1$ towards $3L$, and search does not see
-this; Supplementary Section~S8.3 reports what a hill-climb over small instances suggests
-instead, beside the size the witness actually needs.
-
-\subsection{When the Wrapper Changes Nothing}
-
-A guard that never fires should leave the base policy alone, and it does. The
-condition is checkable on the base policy's own run, before the wrapper is
-placed around it.
-
-\begin{proposition}[Consistency, one direction]
-\label{prop:consistency}
-Run the base policy $A$ alone. If $\mathrm{over}[q](t) < \mathrm{budget}(q,t)$
-for every waiting $q$ at every dispatch epoch of that run, then the wrapped run
-is identical to it, with the same dispatch sequence and the same waits.
-Consequently, for a constant budget $B$, each of the following implies
-$\text{guard}(A,B) = A$: $\max_i \mathrm{In}^A_i < B$; or $A$ itself satisfies
-$\mathrm{excess}_A[i] \le G$ on this input and $B > kG + (3k-2)L$.
-\end{proposition}
-
-\begin{proof}[Proof idea]
-The proof inducts on dispatch epochs, and Supplementary Section~S4.2 gives it in
-full. That section also carries the two counterexamples: the guard can fire and
-happen to choose what the base would have chosen, so the converse fails, and the
-ratio of mean waits between the wrapper at $B = 0$ and a base ordering by service
-time is unbounded in $L$, so there is no multiplicative consistency.
-\end{proof}
-
-Consistency is therefore one-sided. A run on which no job ever reaches its
-budget is the base policy's own run; a run the guard leaves unchanged need not
-be one.
+A guard that never fires leaves the base policy alone, and the condition is checkable
+on the base policy's own run, before the wrapper is placed around it. If
+$\mathrm{over}[q](t)$ stays below $\mathrm{budget}(q,t)$ for every waiting job at every
+dispatch epoch of that run, the wrapped run is that run, with the same dispatch
+sequence and the same waits. Supplementary Section~S4.2 states this as a proposition,
+with the two conditions under which a constant budget meets its hypothesis and the two
+counterexamples that make consistency one-sided.
 
 \subsection{Which Assumptions Can Be Dropped}
 
@@ -445,7 +356,7 @@ generality in which Theorem~\ref{thm:guard} is stated.
 \begin{proof}[Proof idea]
 Put $k+1$ jobs of service $L$ into an empty system at $t = 0$: nothing has
 completed, so no waiting job fires, the wrapper accepts the base policy's choices, and
-the first choice beyond the first $k$ ranks displaces a job that first-come
+the first choice beyond the first $k$ ranks pushes back a job that first-come
 first-served starts at once, leaving it with excess $L$. For a base policy that ranks
 by predictions, such as SPJF-E, the predictions in the input already force this and
 $A$ need not be chosen. The hypothesis can be neither
@@ -464,7 +375,7 @@ approached and not attained; at $B=0$ the wrapper is first-come first-served and
 the excess is exactly zero. Supplementary Section~S8.4 gives the single-server
 family that approaches $B+L$ without reaching it.
 
-The guarantee also caps how much reordering can buy at all, and not only how much
+The guarantee also caps how much reordering can gain at all, and not only how much
 it may cost a single job.
 
 \begin{theorem}[Price of the guarantee]
@@ -505,7 +416,7 @@ settings.
 \subsection{Achievability and Maximal Permission}
 
 Two further results say how far the guarantee can be pushed, so that the
-preceding ones are not read only as a robust wrapper beside a necessary budget.
+earlier ones are not read only as a robust wrapper beside a necessary budget.
 On the two-size batch family of Theorem~\ref{thm:price}, the guard around exact
 shortest-job-first closes a fraction of the first-come-first-served-to-SJF gap
 that meets the upper bound of that theorem, up to $2(3k-2)L/(n\sigma)$ and two

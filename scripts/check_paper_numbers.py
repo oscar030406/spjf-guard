@@ -86,19 +86,20 @@ SUPPLEMENT = "supplementary.tex"
 
 PAPER_TABLES = {
     "tab:rank": ((EXPERIMENTS, "tab:rank"),),
-    "tab:guard": ((EXPERIMENTS, "tab:guard"), (SUPPLEMENT, "tab:s_guard_abl")),
+    "tab:guard": ((SUPPLEMENT, "tab:s_guard"), (SUPPLEMENT, "tab:s_guard_abl")),
     "tab:adv": ((EXPERIMENTS, "tab:adv"),),
     "tab:k1": ((SUPPLEMENT, "tab:s_k1"),),
     "tab:resid": ((SUPPLEMENT, "tab:s_resid"),),
 }
 """Which of the paper's tables carry each package table's rows.
 
-The referee asked for a shorter manuscript, so three of the five moved: the single-server
+The referee asked for a shorter manuscript, so four of the five moved: the single-server
 table and the residual table went to the supplementary file whole, and the guard table was
-split, its two ablation shapes going to Table S3 while the winner, its fixed-budget
-ablation, the equal-promise budget and the skip count stayed in the main text.  A package
-table is therefore compared against the union of the paper tables listed here, as one
-multiset: a row that was moved is still printed, a row that was dropped is not.
+split twice, its two ablation shapes going to one supplementary table and, in the
+thirteenth pass, the rest of it to another, the manuscript keeping the nine Guard(G) rows
+as a shortened copy registered in SUBSETS.  A package table is therefore compared against
+the union of the paper tables listed here, as one multiset: a row that was moved is still
+printed, a row that was dropped is not.
 
 The file is where the table sat when this list was written, and is printed so that a
 reader can find it; the label is what the table is looked for by, in every source and
@@ -109,6 +110,11 @@ SUBSETS = (
         (EXPERIMENTS, "tab:resid"),
         (SUPPLEMENT, "tab:s_resid"),
         "the main text keeps four of the nine cells the supplement prints in full",
+    ),
+    (
+        (EXPERIMENTS, "tab:guard"),
+        (SUPPLEMENT, "tab:s_guard"),
+        "the main text keeps the nine Guard(G) rows and the three block headers",
     ),
 )
 """(smaller table, larger table, why).  A table the paper prints twice at different

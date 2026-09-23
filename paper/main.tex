@@ -152,19 +152,20 @@ group; Table S2: Predictors on the two judging traces under one visibility proto
 one split; Table S3: Share of executed work carried by the longest jobs, with the
 provenance of the analysis bound on every trace; Table S4: Experimental configuration and
 the selection protocol for the guard parameters; Table S5: The three selected budget
-points and the nine per-shape grid winners; Table S6: The age-relative and queue-length
-winners at three promises and three loads; Table S7: Deliberately corrupted scores,
-unguarded and under the guard; Table S8: The residual of
-Theorem~\ref{thm:identity} on all nine cells; Table S9: The single-server configuration;
-Table S10: Additional policy definition for linear aging; Table S11: Conservative-score
-comparison with the selected aging baseline; Table S12: Package development AUROC with
-user-block intervals; Table S13: Ranking scores fitted on one feature set and run through
-one simulator; Table S14: Trace-construction sensitivities; Table S15: Unguarded
-policies, five overlays; Table S16: Candidates and feasible points after promise
-assignment and the harm filter; Table S17: Capacity sweep with archived scores; Table
-S18: Physical timed-work runs; Table S19: Open-loop against think-time-preserving replay;
-Table S20: LPC-EGEE by walltime class, both partitions pooled; Table S21: Replay of the
-900-second test class at its own limit; Table S22: Scope of the nearest per-job
+points and the nine per-shape grid winners; Table S6: The guard at three promises and
+the comparators, in full; Table S7: The age-relative and queue-length
+winners at three promises and three loads; Table S8: Deliberately corrupted scores,
+unguarded and under the guard; Table S9: The residual of
+Theorem~\ref{thm:identity} on all nine cells; Table S10: The single-server configuration;
+Table S11: Additional policy definition for linear aging; Table S12: Conservative-score
+comparison with the selected aging baseline; Table S13: Package development AUROC with
+user-block intervals; Table S14: Ranking scores fitted on one feature set and run through
+one simulator; Table S15: Trace-construction sensitivities; Table S16: Unguarded
+policies, five overlays; Table S17: Candidates and feasible points after promise
+assignment and the harm filter; Table S18: Capacity sweep with archived scores; Table
+S19: Physical timed-work runs; Table S20: Open-loop against think-time-preserving replay;
+Table S21: LPC-EGEE by walltime class, both partitions pooled; Table S22: Replay of the
+900-second test class at its own limit; Table S23: Scope of the nearest per-job
 guarantees and wrapper precedent; Figure S1: Gap--harm trade-offs for every selected
 budget shape and Fixed($G$); Figure S2: What each budget shape keeps of the FCFS-to-SJF
 gap as the promise varies; Figure S3: Original-score reference and its corrupted-score
@@ -174,16 +175,18 @@ predictor families and the measured cost of predicting; Section S2, traces, with
 field audit of the main judging trace, the checks on the continuous-integration refit and
 what supports the shared-pool design; Section S3, experiments; Section S4, the deferred
 proofs, including Lemma~\ref{lem:gap}, Theorem~\ref{thm:identity} with the two directions
-of its extremes, Proposition~\ref{prop:consistency} with the two counterexamples to its
-converse, and the relaxations of the assumptions behind
+of its extremes, the consistency proposition with the two counterexamples to its
+converse, the multiplicative bound for the age-relative shape, the count-of-overtakes
+remark, and the relaxations of the assumptions behind
 Section~\ref{sec:theory}; Section S5, the reproducibility specification, with exact
 grids, splits, information clocks and table provenance; Section S6, the capacity sweep,
-the physical timed-work experiment, the feedback counterexamples, the closed-loop replay
-and the LPC-EGEE counterfactual; Section S7, additional theory, with
+the physical timed-work experiment, the feedback counterexamples, the closed-loop replay,
+the LPC-EGEE counterfactual and the footnotes to
+Table~\ref{tab:cross}; Section S7, additional theory, with
 reservation-and-refund charging under enforced run-time caps; Section S8, the extremal
-constructions, together with achievability and the maximal permission rule at one server;
-and Section S9, the extended related work behind Section~\ref{sec:related}, every work
-named there being cited in the manuscript as well.}
+constructions, together with the tightness of the guard bound, achievability and the
+maximal permission rule at one server;
+and Section S9, the extended related work behind Section~\ref{sec:related}.}
 
 % CRediT, in the template's own sentence form.  Every initial below is a placeholder:
 % replace [A.B.] and [C.D.] with the authors' initials and delete any role that does not
@@ -268,7 +271,8 @@ SRPT & Shortest remaining processing time
 % those arguments, and Proposition A1 is Proposition 11 of Supplementary Section S8.5
 % (Proposition 6 until the tenth pass added three propositions to Supplementary
 % Section S7.6, and Proposition 9 until the eleventh pass added two to Supplementary
-% Section S4.10, which also precedes it).
+% Section S4.10, which also precedes it; the twelfth pass added three more that precede
+% it, in Supplementary Sections S4.2, S4.5 and S8.3, so it is Proposition 14 there).
 % sections/A_proofs.tex is kept as a stub recording where its content went, and is no
 % longer \input, so \appendixtitles, \appendixstart and the \theH... anchor prefixes
 % that went with it are gone as well.

@@ -3,10 +3,10 @@
 \section{Limitations and Threats to Validity}
 \label{sec:limits}
 
-Three things here could be wrong in ways the experiments would not show: the queue we
-replay never existed, the scores we rank by were fitted with hindsight that we only
-partly remove, and the guarantee is measured in $L$. We take them in turn, and the
-smaller threats after them.
+Three things here could be wrong in ways the experiments would not show. The queue we
+replay never existed. The scores we rank by were fitted with knowledge of later events
+that we only partly remove. And the guarantee is measured in $L$. We take them in turn,
+and the smaller threats after them.
 
 \paragraph{The shared pool is our design.}
 CodeBench gives each logged-in student a private container, so on the real platform
@@ -21,7 +21,7 @@ concurrent containers with \devnum{14} servers on the same demand
 that evidence. They also say why the container ratio belongs to the overlay and to no
 deployment, and why it is not a cost saving, since the container also serves the
 student's editing session. The physical timed-work run does not validate transport of
-submitted-program costs either: its rule-conformance checks coexist with a worse
+submitted-program costs either: its rule-conformance checks sit beside a worse
 guarded p99 and with large per-job deviations from the ideal simulator (Supplementary
 Section~S6.2).
 
@@ -50,7 +50,7 @@ Feitelson's objection in his own words and the productivity distinction Shmueli 
 Feitelson draw. Replaying into a differently sized pool is established practice
 \cite{harcholbalter2003sizebased}, and the width coupling that distorts parallel-job
 replays does not arise here, because a job occupies one server whatever $k$ is. One
-choice is deliberate. We raise load by superposing whole class-semesters aligned on
+choice is deliberate. We raise load by overlaying whole class-semesters aligned on
 weekday and clock time, rather than by compressing inter-arrival times, which shrinks
 the daily load cycle along with the gaps \cite{feitelson2021resampling}.
 % Sources for the think-time and closed-replay figures: prechecks/closed_loop/out/
@@ -83,30 +83,20 @@ floor.
 
 \paragraph{Two applicability conditions, each with traces that fail it.}
 The first condition asks whether the uniform certificate is informative at the waits
-that matter. Four of the original six workloads fail it: their first-come first-served
-p99 wait runs from \devnum{0.021} to \devnum{1.78} multiples of $L$, against the
-additive term of about \devnum{3}$L$ in the certificate. The Intel Netbatch compute
-farm \cite{netbatch2012trace,shai2014netbatch} is the extreme. Its service cap is
-\devnum{5.7} days against a worst-window p99 wait of \devnum{18.7} hours, so the
-uniform additive term is about \devnum{17} days, the guard never fires at any positive
-budget tested, and predicted-cost ordering makes the p99 wait worse than first-come
-first-served there under sustained overload. This does not establish impossibility
-below that term for a restricted base policy or workload, and the guard results we
-report on the four workloads that fail the condition measure the ordering mechanism
-there. The second condition is an empirical opportunity screen, not a theorem
-assumption and not a necessary condition for a benefit. On the two Firefox CI hardware
-pools \cite{taskcluster_docs,treeherder_docs} the longest \devnum{1\%} of jobs carry
-\devnum{3.4\%} and \devnum{5.2\%} of the work, at coefficients of variation
-\devnum{0.61} and \devnum{0.87}, and there even true-size ordering makes the p99 wait
-worse than first-come first-served on three of the four windows we ran.
-Section~\ref{sec:exp_cross} gives both conditions in numbers, trace by trace.
+that matter, and the second is an empirical opportunity screen rather than a theorem
+assumption. Four of the original six workloads fail the first, the Intel Netbatch
+compute farm \cite{netbatch2012trace,shai2014netbatch} worst at a \devnum{5.7}-day
+service cap, and the two Firefox CI pools \cite{taskcluster_docs,treeherder_docs} fail
+the second. Section~\ref{sec:exp_cross} gives both conditions in numbers, trace by
+trace, and Supplementary Section~S6.8 says what failing either does and does not
+establish.
 
 \paragraph{The guarantee is per job, not per quantile.}
-On a fixed job subset, the pointwise bound implies
+On a fixed set of jobs, the pointwise bound implies
 $Q_\alpha(W_P)\le Q_\alpha(W_{\mathrm{FCFS}})+G$ by monotonicity of quantiles. It does
 not imply an improvement in that percentile. A guarded run can have a worse
 deadline-window p99 than the baseline its guarantee is stated against, by as much as
-the promise itself. Supplementary Table~S7 shows it doing so under two of the three
+the promise itself. Supplementary Table~S8 shows it doing so under two of the three
 corrupted scores at the busiest load, while the worst single job stays inside the
 promise.
 
@@ -129,35 +119,21 @@ main trace alone (Section~\ref{sec:sealed}).
 
 \paragraph{The budget shape is selected on one set of cells, and does not always
 transfer.}
-The promise holds for any budget under the cap, so nothing about the guarantee depends
-on the shape. What the shape decides is how much of the base policy's benefit
-survives, and we select it on \devnum{15} multiserver validation cells, which are the
-whole evidence we have for it. The single-server configuration shows the limit of that
-evidence. At $G = \devnum{1200}$ s the queue-length shape wins the joint comparison on
-those cells and closes \devnum{0.701} of the gap at $k = 1$, where the age-relative
-shape closes \devnum{0.895}; at the two tighter promises the same choice does
-transfer. We report the number the pre-stated rule produces and do not re-tune on the
-configuration that exposes it. An operator whose pool is much smaller than the
-validation pool should re-run the selection rather than take our shape. The three
-shapes also differ in where the harm falls, so which is preferable depends on a
-judgement about the jobs first-come first-served would have started at once, and that
-judgement is the operator's.
+The promise holds for any budget under the cap, so the shape decides only how much of
+the base policy's benefit survives, and we select it on \devnum{15} multiserver
+validation cells that do not include $k = 1$. Supplementary Section~S3.16 gives the
+single-server configuration where that choice does not transfer, what the pre-stated
+rule reports there, and why an operator with a much smaller pool should re-run the
+selection instead of taking our shape.
 
 \paragraph{What the recorded costs mean.}
-The cost we replay is the platform's recorded execution time: a wall-clock duration
-for one evaluation, including interpreter start-up. Part of that duration is
-contention, which we then re-impose inside the pool: between \devnum{38\%} and
-\devnum{79\%} of jobs longer than a second end in the same second as another block of
-that student. The observed \devnum{60}-second regime is not documentation of an
-enforced timeout, and how the platform enforces such a limit is undocumented in the
-sources we found. We wrote to the maintainers about both points and had no answer.
-ACcoding \cite{accoding2024} records no submission timestamps, so its arrival process
-is synthetic. The Firefox CI checks fit an effective capacity and a setup term on one
-chronological part of each window and test on the other. Out of sample the mean wait,
-the per-hour profile and the per-job ordering survive and the 90th percentile does
-not, so the simulated distribution is too steep in its upper middle. Supplementary
-Section~S2.2 gives that refit with its sharpness and circularity checks and the window
-lengths the split is taken inside.
+The cost we replay is the platform's recorded execution time, a wall-clock duration for
+one evaluation that already contains contention we then re-impose inside the pool.
+Supplementary Section~S2.1 gives how much of it is contention, and why the observed
+\devnum{60}-second regime is not documentation of an enforced timeout. It also records
+that ACcoding \cite{accoding2024} carries no submission timestamps, so its arrival
+process is synthetic, and Supplementary Section~S2.3 reports which quantile of the
+Firefox CI refit does not survive out of sample.
 
 \paragraph{History availability and the recorded-queue counterexample.}
 Original-clock scores may use outcomes that are still pending in the replay. The
@@ -168,20 +144,12 @@ final same-copy replay. It does not certify an online fixed point, and it does n
 certify a deployment with globally shared copied-user state
 (Section~\ref{sec:exp_visibility}).
 
-LPC-EGEE provides both recorded waits and concentrated costs. But the fitted FCFS
-approximation underestimates chronological-test mean waits by \devnum{24\%} and
-\devnum{39\%} on its two physical partitions, and with its six documented walltime
-classes pooled under the largest limit the work-budget guards never fire at the tested
-promises. Read as one pool per class, the \devnum{900}-second class is the one reading
-of this log on which a guard does fire, at \devnum{1.42\%} of dispatch epochs, and it
-nearly spends its bound, \devnum{3{,}129} s of an allowed \devnum{3{,}150} s. That
-class is a pool we impose, its capacity is the boundary value of the search grid, and
-its held-out wait profile is not reproduced, so it is not a deployment result either.
-We therefore treat its policy replays as conditional counterfactuals rather than
-validated estimates of deployment benefit. Supplementary Sections~S6.4 and~S6.6 give
-the correlations, what the archive says about its ordering, the concurrency ceilings
-and middleware the replay omits, and the per-class reading with the six objections it
-does not answer.
+LPC-EGEE provides both recorded waits and concentrated costs, but its fitted
+first-come first-served approximation underestimates the chronological-test mean waits,
+and the one reading on which a guard fires is a per-class pool we impose ourselves. We
+therefore treat its policy replays as conditional counterfactuals rather than validated
+estimates of deployment benefit, and Supplementary Sections~S6.4 and~S6.6 give both
+readings with the six objections the per-class one does not answer.
 % Sources: prechecks/lpc_egee/validation.csv, fitted/test rows, simulated/recorded
 % mean ratios and hourly_pearson; guard_dispatches.csv, Constant/Age forced_sum=0;
 % prechecks/lpc_egee_queues/guard_dispatches.csv, queue_name=test
@@ -214,13 +182,13 @@ is a mechanism without a proved per-job bound.
 An operator can now answer the student whose submission sat behind the looping one.
 The queue is reordered by predicted cost, and no submission waits more than $G$ seconds
 longer than it would have in arrival order, whatever the predictor does. We find that
-work, not position, is the currency the excess is written in. A job's delay relative
+work, not position, is the unit the excess is written in. A job's delay relative
 to first-come first-served equals its net overtaken work divided by the number of
 servers, up to a constant multiple of the time limit, and a budget on that quantity is
 sufficient and necessary for a per-job guarantee. Counting overtakes is not necessary,
-and it buys a guarantee only at the worst-case charge of the time limit per pass,
-which on our traces overstates the work that actually passes by one to two orders of
-magnitude. Under conservative visibility, Guard($\devnum{600}$) closes
+and it gives a guarantee only at the worst-case charge of the time limit per pass. On
+our traces that charge stands for one to two orders of magnitude more work than
+actually passes. Under conservative visibility, Guard($\devnum{600}$) closes
 $\devnum{0.429}$ of the reference gap at the busiest load, against $\devnum{0.670}$
 for unguarded ordering. These are development results, conditional on the constructed
 demand and on the information protocol. Four of the original six workloads have tail
@@ -233,7 +201,7 @@ necessary.
 We have not run the guard in production. The physical service reproduces the dispatch
 rule but not the ideal simulator's waits, the sealed terms are still sealed, and the
 graph model's failure is a result about traces where every user already has a history.
-Two questions are left open. The identity is stated in the dispatch-sequence currency,
+Two questions are left open. The identity is stated in the dispatch-sequence convention,
 where the constant is exactly determined in both directions. Under the executed-work
 convention the upward constant is unchanged, but we know only that the downward one
 lies in $((k-1)L, 2(k-1)L]$; closing that gap would make the two conventions
