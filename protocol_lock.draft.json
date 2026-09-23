@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-23T06:32:04-04:00",
+  "written_at": "2026-09-23T06:33:36-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -582,7 +582,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "2baf108c768a43f917d261c9c322db5e5c9b3256d131a31a275c5078bb74fbd6"
+        "sha256": "6216c73f5f664c83c46fe4ca5400c12f969364344abc7eeceed75248a1c399f6"
       },
       {
         "path": "scripts/check_preserved_outputs.py",
@@ -941,7 +941,7 @@
         "sha256": "7d80a03f4ab32976602f6a21a0d816316a1c1fb175faf9b62db7ea2e5ea54e4d"
       }
     ],
-    "digest": "afaae61861db6131d2a3e921f950130dc4c9be2d5527bf03543c558dad8bb907"
+    "digest": "0563a71b0ec322a06f1ead5295b40388dc146cb0e3719a441e1fcc58214bded0"
   },
   "inputs": {
     "artefacts": [

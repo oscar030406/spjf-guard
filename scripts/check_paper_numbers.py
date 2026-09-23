@@ -1104,35 +1104,63 @@ def run(
     if only in (None, "C"):
         complaints += check_sourced(paper, package_dir, cache)
     if only in (None, "D"):
-        if sealed is not None:
-            k1 = read_rows((sealed_k1 or sealed / "k1") / "main_table.csv", optional=True)
-            labels = [t for t in TABLES if t != "tab:k1" or k1]
-            complaints += check_sealed_tables(paper, package_dir, labels, cache)
-        if sealed_exact is not None:
-            complaints += check_exact_tables(
-                paper,
-                package_dir,
-                sealed_exact,
-                sealed=True,
-                cache=cache,
-                source_rows=sealed_exact_rows,
-            )
-        if any((sealed, sealed_predictor, sealed_visibility, sealed_exact)):
-            complaints += check_sealed_prose(
-                paper,
-                read_rows(sealed_predictor / "predictor_metrics.csv", optional=True)
-                if sealed_predictor
-                else [],
-                read_rows(sealed_visibility / "visibility_comparison.csv", optional=True)
-                if sealed_visibility
-                else [],
-                read_rows(sealed_visibility / "visibility_exposure.csv", optional=True)
-                if sealed_visibility
-                else [],
-                cache=cache,
-                exact_comparison=sealed_exact_rows.get("tab:exact_visibility", []),
-                exact_exposure=sealed_exact_rows.get("tab:same_copy_exposure", []),
-            )
+        complaints += _check_sealed(
+            paper,
+            package_dir,
+            cache,
+            sealed=sealed,
+            sealed_k1=sealed_k1,
+            sealed_predictor=sealed_predictor,
+            sealed_visibility=sealed_visibility,
+            sealed_exact=sealed_exact,
+            sealed_exact_rows=sealed_exact_rows,
+        )
+    return complaints
+
+
+def _check_sealed(
+    paper: Path,
+    package_dir: Path,
+    cache: dict,
+    *,
+    sealed: Path | None,
+    sealed_k1: Path | None,
+    sealed_predictor: Path | None,
+    sealed_visibility: Path | None,
+    sealed_exact: Path | None,
+    sealed_exact_rows: dict[str, list[dict]],
+) -> list[str]:
+    """Check D: the sealed tables, the sealed exact tables and the sealed prose."""
+    complaints: list[str] = []
+    if sealed is not None:
+        k1 = read_rows((sealed_k1 or sealed / "k1") / "main_table.csv", optional=True)
+        labels = [t for t in TABLES if t != "tab:k1" or k1]
+        complaints += check_sealed_tables(paper, package_dir, labels, cache)
+    if sealed_exact is not None:
+        complaints += check_exact_tables(
+            paper,
+            package_dir,
+            sealed_exact,
+            sealed=True,
+            cache=cache,
+            source_rows=sealed_exact_rows,
+        )
+    if any((sealed, sealed_predictor, sealed_visibility, sealed_exact)):
+        complaints += check_sealed_prose(
+            paper,
+            read_rows(sealed_predictor / "predictor_metrics.csv", optional=True)
+            if sealed_predictor
+            else [],
+            read_rows(sealed_visibility / "visibility_comparison.csv", optional=True)
+            if sealed_visibility
+            else [],
+            read_rows(sealed_visibility / "visibility_exposure.csv", optional=True)
+            if sealed_visibility
+            else [],
+            cache=cache,
+            exact_comparison=sealed_exact_rows.get("tab:exact_visibility", []),
+            exact_exposure=sealed_exact_rows.get("tab:same_copy_exposure", []),
+        )
     return complaints
 
 
