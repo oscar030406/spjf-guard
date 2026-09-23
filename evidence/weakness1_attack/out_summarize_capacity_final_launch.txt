@@ -1,0 +1,12 @@
+﻿protocol cc8e1cc5e7477e045e7caf1d0bef2969ba99f9584aee1992a0e96e5c8e654f4a
+required cells 156
+all 156 JSON/NPZ pairs passed protocol, parameter, policy, shape, and point checks
+simultaneous 95% max-|t| band: 80 coordinates, critical=3.83037
+wrote capacity_envelope.svg and capacity_envelope.png
+wrote capacity_improvement_bands.svg and capacity_improvement_bands.png
+wrote capacity_curve.csv (120 rows)
+wrote extension_curve.csv (344 rows)
+wrote coverage.json and summary_numbers.json
+timing wall_s=3.198148 cpu_s=2.859375
+interval scope: conditional paired-week outcome resampling; not a queue-process bootstrap and not structural uncertainty
+ratio intervals require 2,000/2,000 finite draws; maximum resampling ranges are stability diagnostics, not population-maximum confidence intervals

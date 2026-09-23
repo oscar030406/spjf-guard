@@ -1,0 +1,13 @@
+﻿env.exe : Traceback (most recent call last):
+At line:2 char:159
++ ... drift.txt'; & 'C:\Program Files\Git\usr\bin\env.exe' -u PYTHONHOME -u ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "<repo-root>\prechecks\weakness1_attack\verify_artifacts.py", line 238, in <module>
+    main()
+  File "<repo-root>\prechecks\weakness1_attack\verify_artifacts.py", line 201, in main
+    assert actual==expected_hash, path
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: <repo-root>\data\derived\overlay_traces\primary_rep0.npz

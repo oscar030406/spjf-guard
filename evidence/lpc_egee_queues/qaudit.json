@@ -1,0 +1,101 @@
+{
+  "raw_n": 234889,
+  "origin_submit": 3585977,
+  "span_days": 238.64515046296296,
+  "status_raw": {
+    "1": 207825,
+    "5": 16574,
+    "0": 10490
+  },
+  "filters": [
+    {
+      "filter": "known status 0/1/5",
+      "before": 234889,
+      "removed": 0,
+      "after": 234889
+    },
+    {
+      "filter": "positive runtime",
+      "before": 234889,
+      "removed": 20567,
+      "after": 214322
+    },
+    {
+      "filter": "nonnegative wait and submit",
+      "before": 214322,
+      "removed": 0,
+      "after": 214322
+    },
+    {
+      "filter": "one allocated processor",
+      "before": 214322,
+      "removed": 0,
+      "after": 214322
+    },
+    {
+      "filter": "known queue/partition",
+      "before": 214322,
+      "removed": 0,
+      "after": 214322
+    },
+    {
+      "filter": "arrival or observed lifetime intersects original SWF outage [138d,153d)",
+      "before": 214322,
+      "removed": 8100,
+      "after": 206222
+    }
+  ],
+  "retained_matches_previous_study": true,
+  "sharing": [
+    {
+      "pool": "CE1",
+      "nominal_cpus": 84,
+      "pool_max_concurrent": 85,
+      "sum_of_queue_maxima": 337,
+      "queues_share_machines": true
+    },
+    {
+      "pool": "CE2",
+      "nominal_cpus": 56,
+      "pool_max_concurrent": 56,
+      "sum_of_queue_maxima": 203,
+      "queues_share_machines": true
+    }
+  ],
+  "partition_spans": [
+    {
+      "part": 1,
+      "pool": "GLOP195",
+      "n": 34467,
+      "first_day": 0.0,
+      "last_day": 76.75748842592593,
+      "n_test": 0,
+      "n_fit_visible": 34467,
+      "max_concurrent": 58
+    },
+    {
+      "part": 2,
+      "pool": "CE1",
+      "n": 111236,
+      "first_day": 1.5449305555555555,
+      "last_day": 238.64114583333333,
+      "n_test": 66538,
+      "n_fit_visible": 44677,
+      "max_concurrent": 85
+    },
+    {
+      "part": 3,
+      "pool": "CE2",
+      "n": 60519,
+      "first_day": 77.62689814814814,
+      "last_day": 238.64515046296296,
+      "n_test": 50272,
+      "n_fit_visible": 10212,
+      "max_concurrent": 56
+    }
+  ],
+  "calendar_epoch": 1091615532,
+  "split_utc": "2005-01-12T22:38:29+00:00",
+  "header_partitions": "One small partition, later replaced by two disjoint partitions (SWF header)",
+  "header_queues": "Queues enforce a runtime limit on the jobs that populate them (SWF header)"
+}

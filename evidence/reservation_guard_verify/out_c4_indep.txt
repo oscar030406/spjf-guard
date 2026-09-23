@@ -1,0 +1,25 @@
+==============================================================================
+C4(a) independent  a victim with In=Out=0 and excess -> L
+==============================================================================
+  k    L      m    n       In_i     Out_i    excess   pred f     excess < L ?
+  2    8      1    11      0        0        4        4          True
+  2    8      2    20      0        0        6        6          True
+  2    8      3    29      0        0        7        7          True
+  2    8      5    47      0        0        7        31/4       True
+     MISMATCH  gap at T = 7 , (k-1)L = 8
+  3    27     1    31      0        0        9        9          True
+  3    27     2    60      0        0        15       15         True
+  3    27     3    89      0        0        19       19         True
+  3    27     5    147     0        0        23       211/9      True
+     MISMATCH  gap at T = 46 , (k-1)L = 54
+  4    64     1    69      0        0        16       16         True
+  4    64     2    136     0        0        28       28         True
+  4    64     3    203     0        0        37       37         True
+  4    64     5    337     0        0        48       781/16     True
+     MISMATCH  gap at T = 146 , (k-1)L = 192
+  all rows have In=Out=0, excess = L(1-((k-1)/k)^m) < L : False
+  comparison with the residual of Cor. sufficient, (2-2/k)L:
+     k=2 : sup of this construction = L ; (2-2/k)L = 1L ; construction covers the residual only at k=2
+     k=3 : sup of this construction = L ; (2-2/k)L = 4/3L ; construction covers the residual only at k=2
+     k=4 : sup of this construction = L ; (2-2/k)L = 3/2L ; construction covers the residual only at k=2
+     k=8 : sup of this construction = L ; (2-2/k)L = 7/4L ; construction covers the residual only at k=2

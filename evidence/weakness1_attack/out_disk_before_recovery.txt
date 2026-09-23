@@ -1,0 +1,2 @@
+﻿Filesystem         1B-blocks         Used    Available Use% Mounted on
+D:             1024208138240 647967707136 376240431104  64% /d

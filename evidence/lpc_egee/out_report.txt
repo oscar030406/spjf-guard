@@ -1,0 +1,10 @@
+START 2026-09-21T12:02:30.848205+00:00
+SCRIPT_SHA256 c1aad9becba5bfc1e24811f1ef1135e27b6907d6d06da807cb887422e2270d7c
+VERIFIED latest script hashes, row identities, per-job bounds, causal source features, all saved policy metrics
+WROTE AUDIT.md, REPORT.md, manifest.json; all findings from persisted numerical outputs
+TIMING {"stage": "report", "wall_s": 0.4773427999971318, "cpu_s": 0.34375}
+START 2026-09-21T12:03:29.059792+00:00
+SCRIPT_SHA256 5fc525583b494003726c9605abb2718f75db5e1c13c0ac65689e108863221e41
+VERIFIED latest script hashes, row identities, per-job bounds, causal source features, all saved policy metrics
+WROTE AUDIT.md, REPORT.md, manifest.json; all findings from persisted numerical outputs
+TIMING {"stage": "report", "wall_s": 0.39926310000009835, "cpu_s": 0.359375}

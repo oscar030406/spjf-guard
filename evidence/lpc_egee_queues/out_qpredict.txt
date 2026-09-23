@@ -1,0 +1,16 @@
+START 2026-09-23T06:08:41.002937+00:00
+SCRIPT_SHA256 1bc234c11015a95f47ca1e490f306f324e51c7279d5569200ba922562fab4bef
+INDEPENDENT HISTORY RECOMPUTATION all-queue history 160 rows, 0 mismatches
+MODEL PARAMETERS {"learning_rate": 0.05, "num_leaves": 63, "min_data_in_leaf": 50, "feature_fraction": 0.9, "bagging_fraction": 0.9, "bagging_freq": 1, "verbose": -1, "tweedie_variance_power": 1.5, "objective": "tweedie", "seed": 3, "random_state": 3, "num_threads": 4, "deterministic": true, "force_row_wise": true} rounds 400
+INDEPENDENT HISTORY RECOMPUTATION same-queue history (queue 1) 160 rows, 0 mismatches
+SCORE test all_queue_history {"n_train": 6436, "n_test": 34707, "heavy_threshold_s": 16.0, "heavy_rate": 0.2115, "auroc": 0.7463, "average_precision": 0.4974, "spearman": 0.5011}
+SCORE test same_queue_history {"n_train": 6436, "n_test": 34707, "heavy_threshold_s": 16.0, "heavy_rate": 0.2115, "auroc": 0.6736, "average_precision": 0.3697, "spearman": 0.3381}
+SCORE short all_queue_history {"n_train": 50093, "n_test": 19353, "heavy_threshold_s": 1004.0, "heavy_rate": 0.0934, "auroc": 0.8462, "average_precision": 0.278, "spearman": 0.5505}
+SCORE short same_queue_history {"n_train": 50093, "n_test": 19353, "heavy_threshold_s": 1004.0, "heavy_rate": 0.0934, "auroc": 0.8992, "average_precision": 0.4046, "spearman": 0.6428}
+SCORE long all_queue_history {"n_train": 9361, "n_test": 21235, "heavy_threshold_s": 3494.0, "heavy_rate": 0.1113, "auroc": 0.7365, "average_precision": 0.2847, "spearman": 0.6427}
+SCORE long same_queue_history {"n_train": 9361, "n_test": 21235, "heavy_threshold_s": 3494.0, "heavy_rate": 0.1113, "auroc": 0.661, "average_precision": 0.1659, "spearman": 0.5437}
+SCORE day all_queue_history {"n_train": 337, "n_test": 18236, "heavy_threshold_s": 3486.4, "heavy_rate": 0.197, "auroc": 0.7148, "average_precision": 0.3952, "spearman": 0.389}
+SCORE day same_queue_history {"n_train": 337, "n_test": 18236, "heavy_threshold_s": 3486.4, "heavy_rate": 0.197, "auroc": 0.7733, "average_precision": 0.3967, "spearman": 0.6274}
+SCORE infinite all_queue_history {"n_train": 23129, "n_test": 21773, "heavy_threshold_s": 38060.2, "heavy_rate": 0.0758, "auroc": 0.7918, "average_precision": 0.264, "spearman": 0.6375}
+SCORE infinite same_queue_history {"n_train": 23129, "n_test": 21773, "heavy_threshold_s": 38060.2, "heavy_rate": 0.0758, "auroc": 0.7334, "average_precision": 0.1606, "spearman": 0.5598}
+TIMING {"stage": "qpredict", "wall_s": 11.773754499999995, "cpu_s": 29.296875}

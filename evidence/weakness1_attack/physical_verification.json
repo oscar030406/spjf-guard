@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "profile": "development_overlay",
+  "protocol": "27742c88b7ce6115c3942ac2c7a5654bfc18fcf784779f286e9262346bc75108",
+  "input_path": "<repo-root>\\prechecks\\weakness1_attack\\physical_input.npz",
+  "input_sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+  "jobs": 2151,
+  "scope": "all physical jobs and an independent integer-nanosecond shadow-FCFS check; observed-run audit, not a future real-time guarantee",
+  "policies": {
+    "FCFS": {
+      "jobs": 2151,
+      "input_fixed_fields_match": true,
+      "artifact_audit_equals_summary_audit": true,
+      "exact_clock_order_passed": true,
+      "positive_measured_services": true,
+      "valid_worker_ids": true,
+      "worker_intervals_do_not_overlap": true
+    },
+    "SPJF-E": {
+      "jobs": 2151,
+      "input_fixed_fields_match": true,
+      "artifact_audit_equals_summary_audit": true,
+      "exact_clock_order_passed": true,
+      "positive_measured_services": true,
+      "valid_worker_ids": true,
+      "worker_intervals_do_not_overlap": true
+    },
+    "Guard(300)": {
+      "jobs": 2151,
+      "input_fixed_fields_match": true,
+      "artifact_audit_equals_summary_audit": true,
+      "exact_clock_order_passed": true,
+      "positive_measured_services": true,
+      "valid_worker_ids": true,
+      "worker_intervals_do_not_overlap": true,
+      "exact_nanosecond_bound_checks": 2151,
+      "exact_nanosecond_violations": 0,
+      "max_exact_excess_s": 222.2075511,
+      "minimum_bound_slack_s": 77.7924489,
+      "max_abs_production_shadow_rounding_error_s": 6.7e-06
+    }
+  },
+  "execution": {
+    "wall_s": 0.2583070000036969,
+    "cpu_s": 0.234375
+  }
+}

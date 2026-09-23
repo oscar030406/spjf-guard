@@ -1,0 +1,336 @@
+{
+  "protocol": "cc8e1cc5e7477e045e7caf1d0bef2969ba99f9584aee1992a0e96e5c8e654f4a",
+  "parameters": {
+    "reps": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "common_k": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "extension_rep": 0,
+    "extension_k": [
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76
+    ],
+    "resamples": 2000,
+    "seed": 20260921,
+    "score": "tweedie",
+    "limit_s": 60.0,
+    "window": 4194304,
+    "guard_settings": [
+      [
+        300.0,
+        15.0,
+        0.5,
+        0.0
+      ],
+      [
+        600.0,
+        30.0,
+        0.75,
+        0.0
+      ],
+      [
+        1200.0,
+        0.0,
+        0.0,
+        4.0
+      ]
+    ]
+  },
+  "complete_cells": 156,
+  "expected_cells": 156,
+  "source_json_files": 156,
+  "source_npz_files": 156,
+  "common_scope": {
+    "overlays": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "capacities": [
+      1,
+      20
+    ],
+    "policies": [
+      "FCFS",
+      "SJF",
+      "SPJF-E",
+      "Guard(300)",
+      "Guard(600)",
+      "Guard(1200)"
+    ]
+  },
+  "extension_scope": {
+    "overlay": 0,
+    "capacities": [
+      1,
+      76
+    ],
+    "policies_above_20": [
+      "FCFS",
+      "SJF",
+      "SPJF-E",
+      "Guard(600)"
+    ]
+  },
+  "simultaneous_band": {
+    "method": "centered coordinate-standardized single-bootstrap max-|t| band",
+    "level": 0.95,
+    "critical_value": 3.830366753880591,
+    "coordinates": 80,
+    "bootstrap_draws": 2000,
+    "zero_variance_coordinates": [],
+    "coverage_scope": "conditional calendar-week uncertainty on the five constructed development overlays; no semester, predictor-fit, structural queue-model, or demand-feedback uncertainty"
+  },
+  "ratio_validity": {
+    "gap_min_valid_bootstrap_draws": 771,
+    "reduction_min_valid_bootstrap_draws": 771,
+    "gap_rows_with_interval": 102,
+    "reduction_rows_with_interval": 102,
+    "interval_rule": "a ratio interval is reported only when the observed ratio and all 2,000 declared bootstrap ratios are finite with positive denominators; otherwise lo/hi are missing",
+    "invalid_draws_are_never_conditioned_away": true
+  },
+  "realised_maximum_resampling": {
+    "point_fields": [
+      "max_excess_s",
+      "harm_s"
+    ],
+    "stability_fields": [
+      "max_excess_resample_stability_lo",
+      "max_excess_resample_stability_hi",
+      "harm_resample_stability_lo",
+      "harm_resample_stability_hi"
+    ],
+    "interpretation": "conditional empirical week-resampling stability ranges for realised trace maxima; they are not confidence intervals for population maxima"
+  },
+  "guard_execution": {
+    "source_guard_policy_cells": 356,
+    "simulated": 307,
+    "certified_identical": 49,
+    "kernel_validations": 2,
+    "bound_checks": 6277974560,
+    "bound_violations": 0,
+    "max_reported_bound_violation_s": 0.0
+  },
+  "simultaneous_positive_support": {
+    "SPJF-E": {
+      "simultaneous_positive_k": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "simultaneous_not_positive_k": [
+        1,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "min_point_improvement_s": -21885.81016911035,
+      "min_simultaneous_lower_s": -94817.17898747546,
+      "max_point_improvement_s": 8518.410570459999
+    },
+    "Guard(300)": {
+      "simultaneous_positive_k": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "simultaneous_not_positive_k": [
+        1,
+        2,
+        3,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "min_point_improvement_s": -208.6086705699563,
+      "min_simultaneous_lower_s": -330.91431064973057,
+      "max_point_improvement_s": 109.12781943999957
+    },
+    "Guard(600)": {
+      "simultaneous_positive_k": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "simultaneous_not_positive_k": [
+        1,
+        2,
+        3,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "min_point_improvement_s": -493.7945356199489,
+      "min_simultaneous_lower_s": -647.3964413358357,
+      "max_point_improvement_s": 183.8904232500005
+    },
+    "Guard(1200)": {
+      "simultaneous_positive_k": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "simultaneous_not_positive_k": [
+        1,
+        2,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "min_point_improvement_s": -1071.7246308699541,
+      "min_simultaneous_lower_s": -1276.4296674924885,
+      "max_point_improvement_s": 593.0748083099994
+    }
+  },
+  "cross_week_diagnostic": {
+    "max_wait_s": 412270.285375,
+    "max_wait_plus_L_weeks": 0.6817630379877645,
+    "interpretation": "upper diagnostic for how many week lengths one realised wait plus one job limit spans; it reveals potential cross-week dependence but does not turn the outcome-resampling procedure into a queue-process bootstrap"
+  },
+  "firing_field_note": "All non-guard fired/forced fields in the summary are defined as zero. The production kernel's raw FCFS forced flag marks FIFO selection, not a guard override, and is therefore not a guard firing statistic.",
+  "limitations": [
+    "development data only; no held-out, structural, or predictor-fit uncertainty",
+    "the five overlays reuse the same source jobs and are not independent datasets",
+    "week multiplicities resample realised outcomes without rerunning queue state",
+    "k=21..76 is overlay 0 only, and above k=20 only Guard(600) is present",
+    "ratios are undefined whenever their resampled denominator is nonpositive"
+  ],
+  "figures": [
+    "capacity_envelope.svg",
+    "capacity_envelope.png",
+    "capacity_improvement_bands.svg",
+    "capacity_improvement_bands.png"
+  ],
+  "summary_timing": {
+    "wall_s": 3.8461879000024055,
+    "cpu_s": 3.265625
+  }
+}

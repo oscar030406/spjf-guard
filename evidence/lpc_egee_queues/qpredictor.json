@@ -1,0 +1,40 @@
+{
+  "features": [
+    "uid",
+    "gid",
+    "part",
+    "time_req",
+    "L",
+    "history_count",
+    "history_mean_c",
+    "history_mean_log",
+    "history_sd_log",
+    "history_last_c",
+    "history_last5_mean",
+    "history_age_s"
+  ],
+  "per_queue": true,
+  "primary_features": "all_queue_history",
+  "ablation": "same_queue_history",
+  "visibility": "recorded completion <= recorded arrival, own user only",
+  "caveat": "open-loop: the history stream is the recorded one and is not recomputed under the counterfactual schedules",
+  "params": {
+    "learning_rate": 0.05,
+    "num_leaves": 63,
+    "min_data_in_leaf": 50,
+    "feature_fraction": 0.9,
+    "bagging_fraction": 0.9,
+    "bagging_freq": 1,
+    "verbose": -1,
+    "tweedie_variance_power": 1.5,
+    "objective": "tweedie",
+    "seed": 3,
+    "random_state": 3,
+    "num_threads": 4,
+    "deterministic": true,
+    "force_row_wise": true
+  },
+  "rounds": 400,
+  "seed": 3,
+  "defaults_source": "src/spjf_guard/predict/scores.py"
+}

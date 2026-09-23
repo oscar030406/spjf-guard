@@ -1,0 +1,145 @@
+======================================================================
+[A] T1(a): exhaustive F*(G) on the two-size family, and the sandwich
+======================================================================
+rows (setting, G)                      : 2300
+F* above the published upper bound     : 0
+guard below the claimed lower end      : 0  None
+guard above F* (impossible)            : 0
+guard breaks its own promise           : 0
+guard EXACTLY on the line C_lo         : 1211
+guard strictly ABOVE the line C_lo     : 186
+  (the boxed corollary says the realised pairs "lie on the line";
+   any row in the last category refutes that reading.)
+
+======================================================================
+[A2] T1(a): does the guard sit exactly on C_lo at k = 1, 2?
+======================================================================
+  k=1 L=6 s=2 m=3 n=4 G=7: guard 0.2500 vs C_lo 0.1250
+  k=1 L=6 s=2 m=3 n=4 G=9: guard 0.5000 vs C_lo 0.3750
+  k=1 L=6 s=2 m=3 n=4 G=11: guard 0.7500 vs C_lo 0.6250
+  k=1 L=6 s=2 m=3 n=4 G=13: guard 1.0000 vs C_lo 0.8750
+  k=1 L=6 s=2 m=3 n=5 G=7: guard 0.2000 vs C_lo 0.1000
+  k=1 L=6 s=2 m=3 n=5 G=9: guard 0.4000 vs C_lo 0.3000
+rows where the guard is NOT exactly on C_lo: 145
+
+======================================================================
+[B] T1(b): instance optimality of the guard
+======================================================================
+B_max = k(G-(3-2/k)L) = 0; guard closes 0.000 of the gap
+rival policy: worst excess 10 (<= G = 10), closes 1.000
+additive gap in total wait: 360
+=> the guard is NOT instance-optimal among G-feasible policies.
+
+  sweep, arrivals not all at 0:
+  worst additive shortfall of the guard vs the best G-feasible schedule: 36 time units
+
+  unbounded TOTAL-WAIT ratio, still with admissible G >= L:
+  one rank-first job of size L, two unit jobs, k=1, G=L;
+  guard B=G-L=0 is FCFS, rival dispatches the two units first.
+    L=   10: guard/rival total wait=    7.000, rival max excess=2 <= G=10
+    L=  100: guard/rival total wait=   67.000, rival max excess=2 <= G=100
+    L= 1000: guard/rival total wait=  667.000, rival max excess=2 <= G=1000
+    L=10000: guard/rival total wait= 6667.000, rival max excess=2 <= G=10000
+
+======================================================================
+[C] T1(b'): the worst excess of guard(B) at k = 1, over ALL bases
+======================================================================
+exhaustive over every guard-realisable schedule (= every base)
+rows 11606; guard(B) excess above B+L-1 at k=1: 0
+
+  interrupted script's attempted family (not a sharp witness):
+    L=  4 B=  1: best excess found   1   target B+L-1 = 4
+    L=  4 B=  2: best excess found   2   target B+L-1 = 5
+    L=  4 B=  4: best excess found   4   target B+L-1 = 7
+    L=  4 B=  8: best excess found   8   target B+L-1 = 11
+    L=  8 B=  1: best excess found   1   target B+L-1 = 8
+    L=  8 B=  4: best excess found   4   target B+L-1 = 11
+    L=  8 B=  8: best excess found   8   target B+L-1 = 15
+    L=  8 B= 16: best excess found  16   target B+L-1 = 23
+    L= 16 B=  1: best excess found   1   target B+L-1 = 16
+    L= 16 B=  8: best excess found   8   target B+L-1 = 23
+    L= 16 B= 16: best excess found  16   target B+L-1 = 31
+    L= 16 B= 32: best excess found  32   target B+L-1 = 47
+
+  direct sharp witness (B-1 units, then one size-L overtaker):
+    L=  4 B=  1: victim excess   4, target   4
+    L=  4 B=  2: victim excess   5, target   5
+    L=  4 B=  4: victim excess   7, target   7
+    L=  4 B=  8: victim excess  11, target  11
+    L=  8 B=  1: victim excess   8, target   8
+    L=  8 B=  4: victim excess  11, target  11
+    L=  8 B=  8: victim excess  15, target  15
+    L=  8 B= 16: victim excess  23, target  23
+    L= 16 B=  1: victim excess  16, target  16
+    L= 16 B=  8: victim excess  23, target  23
+    L= 16 B= 16: victim excess  31, target  31
+    L= 16 B= 32: victim excess  47, target  47
+  direct-witness mismatches: 0
+
+  exhaustive attainment search over small instances
+    L=2 B=1: max excess found 2, B+L-1 = 2  ATTAINED
+    L=2 B=2: max excess found 3, B+L-1 = 3  ATTAINED
+    L=2 B=3: max excess found 4, B+L-1 = 4  ATTAINED
+    L=2 B=4: max excess found 5, B+L-1 = 5  ATTAINED
+    L=3 B=1: max excess found 3, B+L-1 = 3  ATTAINED
+    L=3 B=2: max excess found 4, B+L-1 = 4  ATTAINED
+    L=3 B=3: max excess found 5, B+L-1 = 5  ATTAINED
+    L=3 B=4: max excess found 6, B+L-1 = 6  ATTAINED
+    L=3 B=5: max excess found 7, B+L-1 = 7  ATTAINED
+    L=3 B=6: max excess found 8, B+L-1 = 8  ATTAINED
+    L=4 B=1: max excess found 4, B+L-1 = 4  ATTAINED
+    L=4 B=2: max excess found 5, B+L-1 = 5  ATTAINED
+    L=4 B=3: max excess found 6, B+L-1 = 6  ATTAINED
+    L=4 B=4: max excess found 7, B+L-1 = 7  ATTAINED
+    L=4 B=5: max excess found 8, B+L-1 = 8  ATTAINED
+    L=4 B=6: max excess found 9, B+L-1 = 9  ATTAINED
+    L=4 B=7: max excess found 10, B+L-1 = 10  ATTAINED
+    L=4 B=8: max excess found 11, B+L-1 = 11  ATTAINED
+
+======================================================================
+[C2] T1(b') lemma: the relabelling adversary, and its hypothesis
+======================================================================
+threshold wrappers theta = G-L+1 and theta = G-L+2 at k = 1
+  L=  4 G=  4 theta=  1: worst excess   4  OK
+  L=  4 G=  4 theta=  2: worst excess   5  EXCEEDS G by 1
+  L=  4 G=  6 theta=  3: worst excess   6  OK
+  L=  4 G=  6 theta=  4: worst excess   7  EXCEEDS G by 1
+  L=  4 G=  8 theta=  5: worst excess   8  OK
+  L=  4 G=  8 theta=  6: worst excess   9  EXCEEDS G by 1
+  L=  6 G=  6 theta=  1: worst excess   6  OK
+  L=  6 G=  6 theta=  2: worst excess   7  EXCEEDS G by 1
+  L=  6 G=  8 theta=  3: worst excess   8  OK
+  L=  6 G=  8 theta=  4: worst excess   9  EXCEEDS G by 1
+  L=  6 G= 12 theta=  7: worst excess  12  OK
+  L=  6 G= 12 theta=  8: worst excess  13  EXCEEDS G by 1
+  L= 10 G= 10 theta=  1: worst excess  10  OK
+  L= 10 G= 10 theta=  2: worst excess  11  EXCEEDS G by 1
+  L= 10 G= 12 theta=  3: worst excess  12  OK
+  L= 10 G= 12 theta=  4: worst excess  13  EXCEEDS G by 1
+  L= 10 G= 20 theta= 11: worst excess  20  OK
+  L= 10 G= 20 theta= 12: worst excess  21  EXCEEDS G by 1
+
+  does the lemma need its "Out_i = 0" hypothesis?
+  search: k=1 guard(B) schedules with a waiting job i that has
+  Out_i > 0 and over[i](t) > G-L at an epoch where a higher-ranked
+  job is dispatched, while EVERY job still keeps excess <= G.
+  witnesses with Out_i > 0 and over[i] > G-L: 1
+  (the witness shows the hypothesis is load-bearing for arbitrary i;
+   verification.md repairs the proof by choosing the queue head.)
+
+  real-size edge: the +1 is an integrality effect
+  With the published >= firing test, every B>G-L is unsafe: choose
+  completed work w strictly between G-L and B, then dispatch a
+  still-unseen job of size L.  B=G-L fires at equality although
+  equality is safe.  A pointwise-maximal real-size rule must fire
+  on over>G-L (strict), not over>=B for any constant B.
+
+======================================================================
+[D] T1(c): the size-oblivious frontier at k = 1
+======================================================================
+C_bo(G) = min(1, (floor((G-L)/s)+1)/n)
+rows 803
+  exhaustive frontier != C_bo                 : 0
+  guard at B* = G-L+1 not exactly on C_bo     : 0
+  guard at the PAPER's B_max = G-L off C_bo   : 130
+  (the last line is the cost of keeping the published B_max.)

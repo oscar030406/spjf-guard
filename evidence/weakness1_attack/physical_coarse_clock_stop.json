@@ -1,0 +1,11 @@
+﻿{
+    "reason":  "GetTickCount64 timestamp resolution 15.625 ms; replace with QPC before measurement",
+    "stopped_at":  "2026-09-21T10:08:41.6783541-04:00",
+    "root_pid":  18276,
+    "root_command":  "\"<python-root>\\python.exe\" prechecks/weakness1_attack/physical_service.py",
+    "root_cpu_s":  2.328125,
+    "child_pids":  [
+                       10496,
+                       17600
+                   ]
+}

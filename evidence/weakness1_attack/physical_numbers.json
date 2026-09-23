@@ -1,0 +1,838 @@
+{
+  "profile": "development_overlay",
+  "input": {
+    "protocol": "27742c88b7ce6115c3942ac2c7a5654bfc18fcf784779f286e9262346bc75108",
+    "parameters": {
+      "protocol_version": 2,
+      "source": "primary_rep0",
+      "selection": "largest offered capped-service sum in a complete calendar-aligned 300 s bin",
+      "window_s": 300.0,
+      "workers": 2,
+      "policies": [
+        "FCFS",
+        "SPJF-E",
+        "Guard(300)"
+      ],
+      "policy_order": "sequential",
+      "requested_service": "unchanged source C_cap, at most 60 s",
+      "arrival_spacing": "unchanged within selected calendar bin",
+      "guard": {
+        "G_s": 300.0,
+        "formal_L_s": 61.0,
+        "B0_s": 30.0,
+        "eta": 0.5,
+        "gamma_s": 0.0,
+        "Bmax_s": 356.0
+      },
+      "clock": "time.perf_counter_ns (system-wide monotonic QPC on Windows)",
+      "service_for_guard": "worker_finish_ns - worker_start_ns, learned at completion receipt"
+    },
+    "source_terms": [
+      "2020-ERE",
+      "2020-2",
+      "2021-1",
+      "2021-2",
+      "2022-1",
+      "2022-2"
+    ],
+    "source_rep": 0,
+    "selection_used_policy_outcomes": false,
+    "calendar_bin_id": 28402,
+    "source_window_start_ns": 8520600000000000,
+    "source_window_stop_ns": 8520900000000000,
+    "window_s": 300.0,
+    "jobs": 2151,
+    "offered_requested_work_s": 4118.215007,
+    "offered_work_per_worker_s": 2059.1075035,
+    "work_only_drain_lower_bound_s": 1759.1075035,
+    "first_target_offset_s": 0.256537,
+    "last_target_offset_s": 299.946344,
+    "source_busy_hour_work_s": 15247.543180003762,
+    "source_copies": 44,
+    "input_sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+    "written_at": "2026-09-21T10:11:00-0400"
+  },
+  "confidence_interval": null,
+  "interval_reason": "one selected window; no independent window replication",
+  "policies": {
+    "FCFS": {
+      "wait_s": {
+        "n": 2151,
+        "mean": 1337.0461390683402,
+        "q0.5": 1458.4333338,
+        "q0.95": 1762.2116712,
+        "q0.99": 1763.3048828,
+        "q1": 1764.1756223
+      },
+      "queue_wait_exceeding_1ms_jobs": 2139,
+      "queue_wait_exceeding_1s_jobs": 2096,
+      "physical_minus_ideal_wait_s": {
+        "n": 2151,
+        "mean": 0.24812438307763843,
+        "q0.5": 0.24626420000004146,
+        "q0.95": 0.46569750000014665,
+        "q0.99": 0.47935929999994187,
+        "q1": 0.4862141999999494
+      },
+      "absolute_physical_minus_ideal_wait_s": {
+        "n": 2151,
+        "mean": 0.24812438307763843,
+        "q0.5": 0.24626420000004146,
+        "q0.95": 0.46569750000014665,
+        "q0.99": 0.47935929999994187,
+        "q1": 0.4862141999999494
+      },
+      "decision_wall_ms": {
+        "n": 2151,
+        "mean": 0.032761134356113435,
+        "q0.5": 0.0295,
+        "q0.95": 0.07565,
+        "q0.99": 0.08280000000000001,
+        "q1": 0.1299
+      },
+      "decision_to_dispatch_ms": {
+        "n": 2151,
+        "mean": 0.05101269177126918,
+        "q0.5": 0.0466,
+        "q0.95": 0.10975,
+        "q0.99": 0.1232,
+        "q1": 0.2043
+      },
+      "dispatch_to_start_ms": {
+        "n": 2151,
+        "mean": 0.1038346350534635,
+        "q0.5": 0.0777,
+        "q0.95": 0.20240000000000002,
+        "q0.99": 0.2392,
+        "q1": 0.3169
+      },
+      "completion_receipt_lag_ms": {
+        "n": 2151,
+        "mean": 0.19375871687587168,
+        "q0.5": 0.1811,
+        "q0.95": 0.28205,
+        "q0.99": 0.36819999999999997,
+        "q1": 0.68
+      },
+      "decision_cpu_ms": {
+        "n": 2151,
+        "mean": 0.0,
+        "q0.5": 0.0,
+        "q0.95": 0.0,
+        "q0.99": 0.0,
+        "q1": 0.0
+      },
+      "release_lateness_ms": {
+        "n": 2151,
+        "mean": 7.893561971176197,
+        "q0.5": 7.8903,
+        "q0.95": 15.251100000000001,
+        "q0.99": 16.19075,
+        "q1": 26.2313
+      },
+      "measured_service_s": {
+        "n": 2151,
+        "mean": 1.9149913456531844,
+        "q0.5": 0.2329795,
+        "q0.95": 7.22727735,
+        "q0.99": 41.012373499999995,
+        "q1": 53.4927977
+      },
+      "sleep_overshoot_ms": {
+        "n": 2151,
+        "mean": 0.43299744304974436,
+        "q0.5": 0.4303,
+        "q0.95": 0.6948,
+        "q0.99": 0.76875,
+        "q1": 2.4581
+      },
+      "nominal_top_one_percent_work_share": 0.24596936009368475,
+      "audits": {
+        "protocol": "27742c88b7ce6115c3942ac2c7a5654bfc18fcf784779f286e9262346bc75108",
+        "input_sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+        "policy": "FCFS",
+        "jobs": 2151,
+        "physical_time_definition": {
+          "arrival": "dispatcher actual_enqueue_ns",
+          "wait": "worker_start_ns - actual_enqueue_ns",
+          "service_C": "worker_finish_ns - worker_start_ns",
+          "visible_completion": "dispatcher_completion_receipt_ns",
+          "slot_occupancy_diagnostic": "dispatcher_completion_receipt_ns - dispatcher_dispatch_ns"
+        },
+        "prefix_audit_scope": "each decision uses only completion messages already received and jobs already enqueued by the dispatcher; worker finish and completion receipt are both logged",
+        "production_replay_service": "actual enqueue times and measured worker holding C; it excludes dispatcher/IPC overhead and is therefore an ideal work-conserving comparison, not an exact replica",
+        "event_prefix_audit": {
+          "passed": true,
+          "error_count": 0,
+          "error_counts": {},
+          "first_error": null,
+          "event_rows": 6525,
+          "dispatches_checked": 2151,
+          "event_path": "physical_records/fcfs_attempt_20260921T101103_54852600764400_events.jsonl",
+          "event_sha256": "31f4fc66be33ccd2ef5f774d9a1e2dec190be9045c30c4b238a15453368b86bc",
+          "target_release_diagnostic": {
+            "decisions_with_target_due_unenqueued": 0,
+            "decision_target_due_unenqueued_count": 0,
+            "max_target_due_unenqueued_lateness_ns": 0,
+            "first_target_due_unenqueued": null,
+            "interpretation": "target release can pass between the final enqueue scan and the decision clock; scheduling is audited against actual observed enqueue events"
+          }
+        },
+        "ideal_guard_epoch_audit": null,
+        "model_L_s": 61.0,
+        "model_assumption_failed": false,
+        "jobs_exceeding_L": 0,
+        "max_measured_worker_holding_s": 53.4927977,
+        "wait_comparison": {
+          "mean_physical_minus_production_s": 0.24812438400743841,
+          "max_abs_physical_minus_production_s": 0.486214,
+          "per_job_compared": 2151
+        },
+        "physical_wait": {
+          "mean_s": 1337.0461390683404,
+          "p99_s": 1763.3048828,
+          "max_s": 1764.1756223,
+          "positive_wait_job_count": 2151
+        },
+        "release_lateness": {
+          "count": 2151,
+          "mean_ms": 7.893561971176197,
+          "p50_ms": 7.8903,
+          "p95_ms": 15.251100000000001,
+          "p99_ms": 16.19075,
+          "max_ms": 26.2313
+        },
+        "dispatch_comparison": {
+          "production_mismatching_jobs": 0,
+          "nominal_mismatching_jobs": 0
+        },
+        "firing_comparison": {
+          "physical_visible_prefix_count": 0,
+          "production_replay_count": 0,
+          "difference": 0,
+          "physical_choice_changed_count": 0,
+          "physical_vs_ideal_per_job_mismatch_count": 0,
+          "physical_vs_ideal_mismatch_jobs": [],
+          "physical_vs_ideal_first_mismatch_job": null,
+          "semantics": "guard firing means E(t) is nonempty; choice_changed separately means the minimum fired rank differs from the base-policy candidate"
+        },
+        "dispatcher_overhead": {
+          "decision_wall_distribution": {
+            "count": 2151,
+            "mean_ms": 0.032761134356113435,
+            "p50_ms": 0.0295,
+            "p95_ms": 0.07565,
+            "p99_ms": 0.08280000000000001,
+            "max_ms": 0.1299
+          },
+          "decision_cpu_distribution": {
+            "count": 2151,
+            "mean_ms": 0.0,
+            "p50_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 0.0
+          },
+          "decision_wall_ns_sum": 70469200,
+          "decision_cpu_ns_sum": 0,
+          "dispatch_send_wall_ns_sum": 69078500,
+          "dispatch_send_cpu_ns_sum": 0,
+          "dispatch_to_start_mean_ms": 0.10383463505346349,
+          "dispatch_to_start_max_ms": 0.3169,
+          "completion_receipt_lag_mean_ms": 0.1937587168758717,
+          "completion_receipt_lag_max_ms": 0.68,
+          "slot_overhead_mean_ms": 0.2975933519293352,
+          "slot_overhead_max_ms": 0.717,
+          "worker_idle_gap_from_prior_finish_mean_ms": 2.3201195905072125,
+          "worker_idle_gap_from_prior_finish_max_ms": 805.7751,
+          "dispatcher_visible_idle_gap_mean_ms": 2.126335272219637,
+          "dispatcher_visible_idle_gap_max_ms": 805.553,
+          "sleep_overshoot_mean_ms": 0.4329974430497443,
+          "sleep_overshoot_max_ms": 2.4581
+        },
+        "guard_bound": {
+          "physical_violations_against_same_measured_trace_shadow_fcfs": 0,
+          "physical_max_violation_s": 0.0,
+          "production_replay_assertion": {
+            "attempted": false,
+            "passed": null,
+            "checked_jobs": 0,
+            "error": null
+          },
+          "model_premise_failed": false
+        },
+        "independent_physical_fcfs": null,
+        "nominal_replay": {
+          "arrival": "frozen target offsets",
+          "service": "frozen requested C_cap",
+          "mean_physical_minus_nominal_wait_s": 0.4731584560669456,
+          "max_abs_physical_minus_nominal_wait_s": 0.940621
+        },
+        "run_resources": {
+          "wall_s": 2063.4672987,
+          "physical_wall_s_from_origin": 2062.3434013,
+          "release_window_s": 300.0,
+          "actual_drain_after_release_window_s": 1762.3434013,
+          "dispatcher_cpu_s": 1.21875,
+          "worker_service_interval_cpu_s": 0.09375,
+          "worker_cpu_through_last_finish_s": 0.265625,
+          "total_measured_cpu_through_last_finish_s": 1.484375,
+          "worker_cpu_scope": "worker_main entry through each worker's last finish; interpreter startup and the final completion send are outside this measurement"
+        },
+        "no_exact_correspondence_claimed": true
+      },
+      "deadline_wait_s": {
+        "n": 511,
+        "mean": 1381.0500563866929,
+        "q0.5": 1630.2477135,
+        "q0.95": 1762.8296239000001,
+        "q0.99": 1763.8692595799998,
+        "q1": 1764.1756223
+      }
+    },
+    "SPJF-E": {
+      "wait_s": {
+        "n": 2151,
+        "mean": 142.7934817254765,
+        "q0.5": 5.880766,
+        "q0.95": 743.16768415,
+        "q0.99": 1687.4743286,
+        "q1": 1997.1324706
+      },
+      "queue_wait_exceeding_1ms_jobs": 2136,
+      "queue_wait_exceeding_1s_jobs": 1468,
+      "physical_minus_ideal_wait_s": {
+        "n": 2151,
+        "mean": 0.31539124198047364,
+        "q0.5": 0.06940239999999998,
+        "q0.95": 0.42725405000004457,
+        "q0.99": 0.61142005,
+        "q1": 392.8362586
+      },
+      "absolute_physical_minus_ideal_wait_s": {
+        "n": 2151,
+        "mean": 0.3519216545327749,
+        "q0.5": 0.11020680000000005,
+        "q0.95": 0.42992534999996224,
+        "q0.99": 0.6427819499999995,
+        "q1": 392.8362586
+      },
+      "decision_wall_ms": {
+        "n": 2151,
+        "mean": 0.044480055788005575,
+        "q0.5": 0.0465,
+        "q0.95": 0.0825,
+        "q0.99": 0.11385,
+        "q1": 0.2146
+      },
+      "decision_to_dispatch_ms": {
+        "n": 2151,
+        "mean": 0.05434690841469085,
+        "q0.5": 0.0559,
+        "q0.95": 0.09905,
+        "q0.99": 0.1361,
+        "q1": 0.2416
+      },
+      "dispatch_to_start_ms": {
+        "n": 2151,
+        "mean": 0.09748400743840076,
+        "q0.5": 0.1003,
+        "q0.95": 0.173,
+        "q0.99": 0.20845,
+        "q1": 0.2852
+      },
+      "completion_receipt_lag_ms": {
+        "n": 2151,
+        "mean": 0.17291780567178058,
+        "q0.5": 0.1653,
+        "q0.95": 0.2446,
+        "q0.99": 0.27885000000000004,
+        "q1": 0.4181
+      },
+      "decision_cpu_ms": {
+        "n": 2151,
+        "mean": 0.007264063226406323,
+        "q0.5": 0.0,
+        "q0.95": 0.0,
+        "q0.99": 0.0,
+        "q1": 15.625
+      },
+      "release_lateness_ms": {
+        "n": 2151,
+        "mean": 8.241594235239422,
+        "q0.5": 7.9934,
+        "q0.95": 15.0996,
+        "q0.99": 21.45345,
+        "q1": 27.9367
+      },
+      "measured_service_s": {
+        "n": 2151,
+        "mean": 1.9149755563923754,
+        "q0.5": 0.2329079,
+        "q0.95": 7.22728885,
+        "q0.99": 41.01230165,
+        "q1": 53.4921537
+      },
+      "sleep_overshoot_ms": {
+        "n": 2151,
+        "mean": 0.41720818224081824,
+        "q0.5": 0.3964,
+        "q0.95": 0.6802,
+        "q0.99": 0.7663,
+        "q1": 10.0448
+      },
+      "nominal_top_one_percent_work_share": 0.24596936009368475,
+      "audits": {
+        "protocol": "27742c88b7ce6115c3942ac2c7a5654bfc18fcf784779f286e9262346bc75108",
+        "input_sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+        "policy": "SPJF-E",
+        "jobs": 2151,
+        "physical_time_definition": {
+          "arrival": "dispatcher actual_enqueue_ns",
+          "wait": "worker_start_ns - actual_enqueue_ns",
+          "service_C": "worker_finish_ns - worker_start_ns",
+          "visible_completion": "dispatcher_completion_receipt_ns",
+          "slot_occupancy_diagnostic": "dispatcher_completion_receipt_ns - dispatcher_dispatch_ns"
+        },
+        "prefix_audit_scope": "each decision uses only completion messages already received and jobs already enqueued by the dispatcher; worker finish and completion receipt are both logged",
+        "production_replay_service": "actual enqueue times and measured worker holding C; it excludes dispatcher/IPC overhead and is therefore an ideal work-conserving comparison, not an exact replica",
+        "event_prefix_audit": {
+          "passed": true,
+          "error_count": 0,
+          "error_counts": {},
+          "first_error": null,
+          "event_rows": 6525,
+          "dispatches_checked": 2151,
+          "event_path": "physical_records/spjf_e_attempt_20260921T104529_56918181265900_events.jsonl",
+          "event_sha256": "cfec599acccc5c71b0b3ff27d9679ea9aa427ca6e153306b9a65d88f713d9b46",
+          "target_release_diagnostic": {
+            "decisions_with_target_due_unenqueued": 0,
+            "decision_target_due_unenqueued_count": 0,
+            "max_target_due_unenqueued_lateness_ns": 0,
+            "first_target_due_unenqueued": null,
+            "interpretation": "target release can pass between the final enqueue scan and the decision clock; scheduling is audited against actual observed enqueue events"
+          }
+        },
+        "ideal_guard_epoch_audit": null,
+        "model_L_s": 61.0,
+        "model_assumption_failed": false,
+        "jobs_exceeding_L": 0,
+        "max_measured_worker_holding_s": 53.4921537,
+        "wait_comparison": {
+          "mean_physical_minus_production_s": 0.3153912357043236,
+          "max_abs_physical_minus_production_s": 392.836259,
+          "per_job_compared": 2151
+        },
+        "physical_wait": {
+          "mean_s": 142.79348172547654,
+          "p99_s": 1687.4743286,
+          "max_s": 1997.1324706,
+          "positive_wait_job_count": 2151
+        },
+        "release_lateness": {
+          "count": 2151,
+          "mean_ms": 8.241594235239422,
+          "p50_ms": 7.9934,
+          "p95_ms": 15.0996,
+          "p99_ms": 21.45345,
+          "max_ms": 27.9367
+        },
+        "dispatch_comparison": {
+          "production_mismatching_jobs": 1401,
+          "nominal_mismatching_jobs": 1471
+        },
+        "firing_comparison": {
+          "physical_visible_prefix_count": 0,
+          "production_replay_count": 0,
+          "difference": 0,
+          "physical_choice_changed_count": 0,
+          "physical_vs_ideal_per_job_mismatch_count": 0,
+          "physical_vs_ideal_mismatch_jobs": [],
+          "physical_vs_ideal_first_mismatch_job": null,
+          "semantics": "guard firing means E(t) is nonempty; choice_changed separately means the minimum fired rank differs from the base-policy candidate"
+        },
+        "dispatcher_overhead": {
+          "decision_wall_distribution": {
+            "count": 2151,
+            "mean_ms": 0.044480055788005575,
+            "p50_ms": 0.0465,
+            "p95_ms": 0.0825,
+            "p99_ms": 0.11385,
+            "max_ms": 0.2146
+          },
+          "decision_cpu_distribution": {
+            "count": 2151,
+            "mean_ms": 0.007264063226406323,
+            "p50_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 15.625
+          },
+          "decision_wall_ns_sum": 95676600,
+          "decision_cpu_ns_sum": 15625000,
+          "dispatch_send_wall_ns_sum": 55054500,
+          "dispatch_send_cpu_ns_sum": 0,
+          "dispatch_to_start_mean_ms": 0.09748400743840074,
+          "dispatch_to_start_max_ms": 0.2852,
+          "completion_receipt_lag_mean_ms": 0.17291780567178058,
+          "completion_receipt_lag_max_ms": 0.4181,
+          "slot_overhead_mean_ms": 0.2704018131101813,
+          "slot_overhead_max_ms": 0.5565,
+          "worker_idle_gap_from_prior_finish_mean_ms": 2.2757803629595164,
+          "worker_idle_gap_from_prior_finish_max_ms": 804.5513,
+          "dispatcher_visible_idle_gap_mean_ms": 2.1029145649139136,
+          "dispatcher_visible_idle_gap_max_ms": 804.4023,
+          "sleep_overshoot_mean_ms": 0.41720818224081824,
+          "sleep_overshoot_max_ms": 10.0448
+        },
+        "guard_bound": {
+          "physical_violations_against_same_measured_trace_shadow_fcfs": 0,
+          "physical_max_violation_s": 0.0,
+          "production_replay_assertion": {
+            "attempted": false,
+            "passed": null,
+            "checked_jobs": 0,
+            "error": null
+          },
+          "model_premise_failed": false
+        },
+        "independent_physical_fcfs": null,
+        "nominal_replay": {
+          "arrival": "frozen target offsets",
+          "service": "frozen requested C_cap",
+          "mean_physical_minus_nominal_wait_s": 0.4625233370525337,
+          "max_abs_physical_minus_nominal_wait_s": 392.882672
+        },
+        "run_resources": {
+          "wall_s": 2065.7872318,
+          "physical_wall_s_from_origin": 2064.6713154,
+          "release_window_s": 300.0,
+          "actual_drain_after_release_window_s": 1764.6713154,
+          "dispatcher_cpu_s": 0.890625,
+          "worker_service_interval_cpu_s": 0.0625,
+          "worker_cpu_through_last_finish_s": 0.421875,
+          "total_measured_cpu_through_last_finish_s": 1.3125,
+          "worker_cpu_scope": "worker_main entry through each worker's last finish; interpreter startup and the final completion send are outside this measurement"
+        },
+        "no_exact_correspondence_claimed": true
+      },
+      "deadline_wait_s": {
+        "n": 511,
+        "mean": 123.5409032994129,
+        "q0.5": 23.6301832,
+        "q0.95": 529.2656995,
+        "q0.99": 1006.3128877999932,
+        "q1": 1149.3201397
+      }
+    },
+    "Guard(300)": {
+      "wait_s": {
+        "n": 2151,
+        "mean": 480.39067124053923,
+        "q0.5": 63.7086012,
+        "q0.95": 1699.1263434,
+        "q0.99": 1783.64837275,
+        "q1": 1838.9460283
+      },
+      "queue_wait_exceeding_1ms_jobs": 2136,
+      "queue_wait_exceeding_1s_jobs": 1754,
+      "physical_minus_ideal_wait_s": {
+        "n": 2151,
+        "mean": 5.368542406043696,
+        "q0.5": 0.16328469999984918,
+        "q0.95": 363.83486250000004,
+        "q0.99": 776.24881345,
+        "q1": 1310.0265895
+      },
+      "absolute_physical_minus_ideal_wait_s": {
+        "n": 2151,
+        "mean": 119.42062130925152,
+        "q0.5": 58.4233883,
+        "q0.95": 772.70906725,
+        "q0.99": 1171.599374,
+        "q1": 1354.1020331
+      },
+      "decision_wall_ms": {
+        "n": 2151,
+        "mean": 0.573633240353324,
+        "q0.5": 0.6209,
+        "q0.95": 0.9789,
+        "q0.99": 1.13185,
+        "q1": 1.5463
+      },
+      "decision_to_dispatch_ms": {
+        "n": 2151,
+        "mean": 0.581883589028359,
+        "q0.5": 0.6293,
+        "q0.95": 0.9874499999999999,
+        "q0.99": 1.14465,
+        "q1": 1.563
+      },
+      "dispatch_to_start_ms": {
+        "n": 2151,
+        "mean": 0.12327154811715482,
+        "q0.5": 0.1368,
+        "q0.95": 0.1955,
+        "q0.99": 0.22449999999999998,
+        "q1": 0.4508
+      },
+      "completion_receipt_lag_ms": {
+        "n": 2151,
+        "mean": 0.21428414690841469,
+        "q0.5": 0.1813,
+        "q0.95": 0.37795,
+        "q0.99": 0.6871,
+        "q1": 3.7612
+      },
+      "decision_cpu_ms": {
+        "n": 2151,
+        "mean": 0.05811250581125058,
+        "q0.5": 0.0,
+        "q0.95": 0.0,
+        "q0.99": 0.0,
+        "q1": 15.625
+      },
+      "release_lateness_ms": {
+        "n": 2151,
+        "mean": 7.587092840539284,
+        "q0.5": 7.7295,
+        "q0.95": 14.9356,
+        "q0.99": 16.33475,
+        "q1": 25.812
+      },
+      "measured_service_s": {
+        "n": 2151,
+        "mean": 1.914970051650395,
+        "q0.5": 0.2329329,
+        "q0.95": 7.2276431500000005,
+        "q0.99": 41.0123603,
+        "q1": 53.4922855
+      },
+      "sleep_overshoot_ms": {
+        "n": 2151,
+        "mean": 0.41170344026034406,
+        "q0.5": 0.4084,
+        "q0.95": 0.68125,
+        "q0.99": 0.76135,
+        "q1": 2.1474
+      },
+      "nominal_top_one_percent_work_share": 0.24596936009368475,
+      "audits": {
+        "protocol": "27742c88b7ce6115c3942ac2c7a5654bfc18fcf784779f286e9262346bc75108",
+        "input_sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+        "policy": "Guard(300)",
+        "jobs": 2151,
+        "physical_time_definition": {
+          "arrival": "dispatcher actual_enqueue_ns",
+          "wait": "worker_start_ns - actual_enqueue_ns",
+          "service_C": "worker_finish_ns - worker_start_ns",
+          "visible_completion": "dispatcher_completion_receipt_ns",
+          "slot_occupancy_diagnostic": "dispatcher_completion_receipt_ns - dispatcher_dispatch_ns"
+        },
+        "prefix_audit_scope": "each decision uses only completion messages already received and jobs already enqueued by the dispatcher; worker finish and completion receipt are both logged",
+        "production_replay_service": "actual enqueue times and measured worker holding C; it excludes dispatcher/IPC overhead and is therefore an ideal work-conserving comparison, not an exact replica",
+        "event_prefix_audit": {
+          "passed": true,
+          "error_count": 0,
+          "error_counts": {},
+          "first_error": null,
+          "event_rows": 6525,
+          "dispatches_checked": 2151,
+          "event_path": "physical_records/guard_300_attempt_20260921T111956_58985285149700_events.jsonl",
+          "event_sha256": "e121cbe509736324fdddeb7a4c8fdc66f5af36a396b0ea40c1197fe471043019",
+          "target_release_diagnostic": {
+            "decisions_with_target_due_unenqueued": 0,
+            "decision_target_due_unenqueued_count": 0,
+            "max_target_due_unenqueued_lateness_ns": 0,
+            "first_target_due_unenqueued": null,
+            "interpretation": "target release can pass between the final enqueue scan and the decision clock; scheduling is audited against actual observed enqueue events"
+          }
+        },
+        "ideal_guard_epoch_audit": {
+          "passed": true,
+          "error_count": 0,
+          "first_error": null,
+          "dispatches_checked": 2151,
+          "waiting_budget_evaluations_checked": 1241424,
+          "reconstructed_firing_epochs": 372,
+          "kernel_n_forced": 372
+        },
+        "model_L_s": 61.0,
+        "model_assumption_failed": false,
+        "jobs_exceeding_L": 0,
+        "max_measured_worker_holding_s": 53.4922855,
+        "wait_comparison": {
+          "mean_physical_minus_production_s": 5.3685423970246395,
+          "max_abs_physical_minus_production_s": 1354.102033,
+          "per_job_compared": 2151
+        },
+        "physical_wait": {
+          "mean_s": 480.3906712405393,
+          "p99_s": 1783.64837275,
+          "max_s": 1838.9460283,
+          "positive_wait_job_count": 2151
+        },
+        "release_lateness": {
+          "count": 2151,
+          "mean_ms": 7.587092840539284,
+          "p50_ms": 7.7295,
+          "p95_ms": 14.9356,
+          "p99_ms": 16.33475,
+          "max_ms": 25.812
+        },
+        "dispatch_comparison": {
+          "production_mismatching_jobs": 1753,
+          "nominal_mismatching_jobs": 1266
+        },
+        "firing_comparison": {
+          "physical_visible_prefix_count": 322,
+          "production_replay_count": 372,
+          "difference": -50,
+          "physical_choice_changed_count": 322,
+          "physical_vs_ideal_per_job_mismatch_count": 52,
+          "physical_vs_ideal_mismatch_jobs": [
+            58,
+            78,
+            79,
+            102,
+            103,
+            104,
+            105,
+            106,
+            128,
+            129,
+            130,
+            131,
+            213,
+            214,
+            215,
+            216,
+            217,
+            218,
+            271,
+            272,
+            273,
+            274,
+            275,
+            282,
+            283,
+            284,
+            285,
+            286,
+            287,
+            319,
+            320,
+            321,
+            322,
+            323,
+            324,
+            350,
+            351,
+            352,
+            353,
+            354,
+            355,
+            356,
+            357,
+            391,
+            392,
+            393,
+            394,
+            548,
+            549,
+            550,
+            552,
+            553
+          ],
+          "physical_vs_ideal_first_mismatch_job": 58,
+          "semantics": "guard firing means E(t) is nonempty; choice_changed separately means the minimum fired rank differs from the base-policy candidate"
+        },
+        "dispatcher_overhead": {
+          "decision_wall_distribution": {
+            "count": 2151,
+            "mean_ms": 0.573633240353324,
+            "p50_ms": 0.6209,
+            "p95_ms": 0.9789,
+            "p99_ms": 1.13185,
+            "max_ms": 1.5463
+          },
+          "decision_cpu_distribution": {
+            "count": 2151,
+            "mean_ms": 0.05811250581125058,
+            "p50_ms": 0.0,
+            "p95_ms": 0.0,
+            "p99_ms": 0.0,
+            "max_ms": 15.625
+          },
+          "decision_wall_ns_sum": 1233885100,
+          "decision_cpu_ns_sum": 125000000,
+          "dispatch_send_wall_ns_sum": 60258100,
+          "dispatch_send_cpu_ns_sum": 0,
+          "dispatch_to_start_mean_ms": 0.12327154811715482,
+          "dispatch_to_start_max_ms": 0.4508,
+          "completion_receipt_lag_mean_ms": 0.21428414690841469,
+          "completion_receipt_lag_max_ms": 3.7612,
+          "slot_overhead_mean_ms": 0.33755569502556954,
+          "slot_overhead_max_ms": 3.9111,
+          "worker_idle_gap_from_prior_finish_mean_ms": 2.893626384364821,
+          "worker_idle_gap_from_prior_finish_max_ms": 809.3961,
+          "dispatcher_visible_idle_gap_mean_ms": 2.6795074918566772,
+          "dispatcher_visible_idle_gap_max_ms": 809.2372,
+          "sleep_overshoot_mean_ms": 0.411703440260344,
+          "sleep_overshoot_max_ms": 2.1474
+        },
+        "guard_bound": {
+          "physical_violations_against_same_measured_trace_shadow_fcfs": 0,
+          "physical_max_violation_s": 0.0,
+          "production_replay_assertion": {
+            "attempted": true,
+            "passed": true,
+            "checked_jobs": 2151,
+            "error": null
+          },
+          "model_premise_failed": false
+        },
+        "independent_physical_fcfs": {
+          "same_requested_jobs": true,
+          "same_realised_service_times": false,
+          "theorem_baseline": false,
+          "mean_wait_difference_s": -856.655467827801,
+          "max_wait_difference_s": 222.0324018,
+          "min_wait_difference_s": -1762.8974383,
+          "max_abs_worker_holding_difference_s": 0.0021964,
+          "interpretation": "diagnostic comparison with a separate physical FCFS execution; it is not the theorem's same-a/same-C shadow FCFS baseline"
+        },
+        "nominal_replay": {
+          "arrival": "frozen target offsets",
+          "service": "frozen requested C_cap",
+          "mean_physical_minus_nominal_wait_s": 1.6275124658298468,
+          "max_abs_physical_minus_nominal_wait_s": 1175.262582
+        },
+        "run_resources": {
+          "wall_s": 2066.1833535,
+          "physical_wall_s_from_origin": 2065.0839623,
+          "release_window_s": 300.0,
+          "actual_drain_after_release_window_s": 1765.0839623,
+          "dispatcher_cpu_s": 5.890625,
+          "worker_service_interval_cpu_s": 0.0625,
+          "worker_cpu_through_last_finish_s": 0.3125,
+          "total_measured_cpu_through_last_finish_s": 6.203125,
+          "worker_cpu_scope": "worker_main entry through each worker's last finish; interpreter startup and the final completion send are outside this measurement"
+        },
+        "no_exact_correspondence_claimed": true
+      },
+      "deadline_wait_s": {
+        "n": 511,
+        "mean": 685.9113374976517,
+        "q0.5": 264.1538005,
+        "q0.95": 1749.1500019999999,
+        "q0.99": 1820.87319594,
+        "q1": 1822.0481008
+      }
+    }
+  },
+  "execution": {
+    "wall_s": 2.8646412000016426,
+    "cpu_s": 1.59375
+  }
+}

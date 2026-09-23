@@ -1,0 +1,19 @@
+[2026-09-21 10:09:39] smoke start FCFS
+[2026-09-21 10:09:39] physical FCFS started: 6 jobs, two fresh workers
+[2026-09-21 10:09:44] smoke complete FCFS: prefix_errors=0
+[2026-09-21 10:09:44] smoke start SPJF-E
+[2026-09-21 10:09:44] physical SPJF-E started: 6 jobs, two fresh workers
+[2026-09-21 10:09:46] smoke complete SPJF-E: prefix_errors=0
+[2026-09-21 10:09:46] smoke start Guard(300)
+[2026-09-21 10:09:46] physical Guard(300) started: 6 jobs, two fresh workers
+[2026-09-21 10:09:47] PHYSICAL_SMOKE_FAILED AssertionError: Guard: synthetic production replay did not fire
+[2026-09-21 10:10:37] smoke start FCFS
+[2026-09-21 10:10:37] physical FCFS started: 6 jobs, two fresh workers
+[2026-09-21 10:10:42] smoke complete FCFS: prefix_errors=0
+[2026-09-21 10:10:42] smoke start SPJF-E
+[2026-09-21 10:10:42] physical SPJF-E started: 6 jobs, two fresh workers
+[2026-09-21 10:10:43] smoke complete SPJF-E: prefix_errors=0
+[2026-09-21 10:10:43] smoke start Guard(300)
+[2026-09-21 10:10:43] physical Guard(300) started: 6 jobs, two fresh workers
+[2026-09-21 10:10:45] smoke complete Guard(300): prefix_errors=0
+[2026-09-21 10:10:45] PHYSICAL_SMOKE_COMPLETE wall=8.294s

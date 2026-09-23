@@ -1,0 +1,33 @@
+{
+  "python": "3.12.13",
+  "clocks": {
+    "monotonic": {
+      "implementation": "GetTickCount64()",
+      "resolution_s": 0.015625,
+      "monotonic": true,
+      "adjustable": false,
+      "different_samples": 1,
+      "minimum_observed_positive_increment_ns": null
+    },
+    "perf_counter": {
+      "implementation": "QueryPerformanceCounter()",
+      "resolution_s": 1e-07,
+      "monotonic": true,
+      "adjustable": false,
+      "different_samples": 4437,
+      "minimum_observed_positive_increment_ns": 100
+    },
+    "process_time": {
+      "implementation": "GetProcessTimes()",
+      "resolution_s": 1e-07,
+      "monotonic": true,
+      "adjustable": false,
+      "different_samples": 1,
+      "minimum_observed_positive_increment_ns": null
+    }
+  },
+  "execution": {
+    "wall_s": 0.0034072999987984076,
+    "cpu_s": 0.0
+  }
+}

@@ -1,0 +1,280 @@
+{
+  "status": "PASS",
+  "profile": "development_overlay",
+  "policy": "Guard(300)",
+  "jobs": 2151,
+  "protocol": "27742c88b7ce6115c3942ac2c7a5654bfc18fcf784779f286e9262346bc75108",
+  "input_sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+  "units": "All time/work checks are exact integer nanoseconds; work sums are worker-nanoseconds.",
+  "parameters": {
+    "k": 2,
+    "L_ns": 61000000000,
+    "B0_ns": 30000000000,
+    "Bmax_ns": 356000000000,
+    "eta_numerator": 1,
+    "eta_denominator": 2,
+    "gamma_ns": 0,
+    "G_ns": 300000000000
+  },
+  "scope": "Measured-trace conditional pathwise certificate; no fixed future real-time promise.",
+  "sources": {
+    "verification": {
+      "path": "physical_verification.json",
+      "sha256": "1359ff3bd9c9402a0b95ea6a88cdb350084982152ff1de2fc67b37d5a6ba1e0c",
+      "bytes": 1766
+    },
+    "checkpoint": {
+      "path": "physical_checkpoint.json",
+      "sha256": "7d57da059b15f7419c275477483772acde4e5bfd7496a5d65b34396d60f1f22e",
+      "bytes": 2322
+    },
+    "summary": {
+      "path": "physical_summary.json",
+      "sha256": "c8e576c23a555b49bcede94fad195c525420cc22faf5a9ba4d87a41740edae11",
+      "bytes": 21887
+    },
+    "input": {
+      "path": "physical_input.npz",
+      "sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+      "bytes": 89773
+    },
+    "shared_verifier": {
+      "path": "verify_physical.py",
+      "sha256": "4b56768fa988c60e82038d4868875f708bf7e9891870697eceb1bd62951aa881",
+      "bytes": 13390
+    },
+    "proof": {
+      "path": "STALL_BOUND.md",
+      "sha256": "d74e87a8f77867610fd61311d88901a29d62a4f57a5cab654e5f549f7298c26f",
+      "bytes": 20757
+    },
+    "jobs": {
+      "path": "physical_guard_300_jobs.jsonl",
+      "sha256": "65596c1e22906fbc634edef92e21874ec57876274f6ec6f841478c6dd0205b11",
+      "bytes": 4883388
+    },
+    "decisions": {
+      "path": "physical_guard_300_decisions.jsonl",
+      "sha256": "f16f8a200610c476ef060906830b256940969edb7ff580d453c4d7ab1491cc19",
+      "bytes": 248582534
+    },
+    "audit": {
+      "path": "physical_guard_300_audit.json",
+      "sha256": "a9b1a3332d026164a4744a963eb0fb2cfbef9d2d8c5e7d2d9914473813800869",
+      "bytes": 6501
+    },
+    "events": {
+      "path": "physical_records\\guard_300_attempt_20260921T111956_58985285149700_events.jsonl",
+      "sha256": "e121cbe509736324fdddeb7a4c8fdc66f5af36a396b0ea40c1197fe471043019",
+      "bytes": 1627633
+    }
+  },
+  "sweep": {
+    "linear_endpoints_checked": 10756,
+    "J_end_worker_ns": 2252826700,
+    "minimum_lemma4_margin_work_ns": 60007770900
+  },
+  "metrics": {
+    "corrected_violations": 0,
+    "uncorrected_nonstrict_violations": 0,
+    "maximum_uncorrected_excess_ns": 222207551100,
+    "minimum_uncorrected_margin_ns": 77792448900,
+    "minimum_corrected_margin_twice_ns": 157539517700,
+    "maximum_J_dispatch_worker_ns": 2252634800,
+    "maximum_dispatch_to_start_ns": 450800,
+    "sum_dispatch_to_start_ns": 265157100,
+    "maximum_additive_correction_twice_ns": 2253018600
+  },
+  "job_table": {
+    "path": "stall_bound_jobs.csv",
+    "sha256": "501b7fdd676ccc2b6740920ac02e09678149632fc39f5f54abdefd6acb95c723",
+    "rows": 2151
+  },
+  "checks": {
+    "integer_clock_fields": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "timestamp_order": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "job_binding": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "rank_arrivals": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "empty_common_origin": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "holding_cost_and_cap": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "wait_and_launch_fields": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "worker_id": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "dispatch_indices": {
+      "checked": 1,
+      "failed": 0
+    },
+    "serial_decisions": {
+      "checked": 2150,
+      "failed": 0
+    },
+    "receipt_before_next_decision": {
+      "checked": 2149,
+      "failed": 0
+    },
+    "physical_nonoverlap": {
+      "checked": 2149,
+      "failed": 0
+    },
+    "event_empty_start": {
+      "checked": 1,
+      "failed": 0
+    },
+    "event_unique_ranked_arrival": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_arrival_matches": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_monotone_clock": {
+      "checked": 6453,
+      "failed": 0
+    },
+    "event_dispatch_binding": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_available_slot": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_decision_clock": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_waiting_prefix": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "all_actual_arrivals_before_decision_including_ties": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_completed_counter": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_evaluation_ranks": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_exact_budget_and_charge": {
+      "checked": 1127815,
+      "failed": 0
+    },
+    "event_guard_choice": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_unique_reserved_completion": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_completion_matches": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "event_complete_state": {
+      "checked": 1,
+      "failed": 0
+    },
+    "event_all_records_complete": {
+      "checked": 1,
+      "failed": 0
+    },
+    "sweep_capacity_and_work": {
+      "checked": 10756,
+      "failed": 0
+    },
+    "lemma4_all_linear_endpoints": {
+      "checked": 10756,
+      "failed": 0
+    },
+    "sweep_empty_end": {
+      "checked": 1,
+      "failed": 0
+    },
+    "arrival_gap_partition": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "residual_ranges": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "reference_busy_identity": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "eq6_exact_identity": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "lemma7": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "corrected_additive_strict_bound": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "corrected_multiplicative_strict_bound": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "eq2_corrected_physical_bound": {
+      "checked": 2151,
+      "failed": 0
+    },
+    "last_overtaker_prefix": {
+      "checked": 1698,
+      "failed": 0
+    },
+    "last_overtaker_partition": {
+      "checked": 1698,
+      "failed": 0
+    },
+    "lemma8_guard_work_cap": {
+      "checked": 1698,
+      "failed": 0
+    },
+    "lemma9_guard_age_work": {
+      "checked": 1698,
+      "failed": 0
+    }
+  },
+  "first_failures": [],
+  "execution": {
+    "wall_ns": 4697265300,
+    "cpu_ns": 4640625000,
+    "new_worker_processes": 0,
+    "numeric_tolerances": 0,
+    "decision_records_streamed": true
+  },
+  "checker_sha256": "fe6a5abb6105e97f636263e2b2f90c28c66ea34bcb2c4901b2ec77f14df7e209"
+}

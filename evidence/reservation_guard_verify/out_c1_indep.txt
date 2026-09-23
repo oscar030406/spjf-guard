@@ -1,0 +1,10 @@
+==============================================================================
+C1 (independent)  rule R: In_i <= Z_i ; k=1 exc <= B ; k>=2 k*exc - B <= (2k-2)L
+==============================================================================
+  n=4 L=3 sizes{1,2,3} caps[C..L] k=1,2,3 B=0,1,2,3,5
+     runs 372246    checks 1488984    max(In-Z)=0  max(k*exc-Z-(2k-2)L)=0  max(exc-Z | k=1)=0  viol In/exc 0/0
+  n=5 L=3 sizes{1,3} caps[C..L] k=1..4 B=0,1,2,4,6
+     runs 925412    checks 4627060    max(In-Z)=0  max(k*exc-Z-(2k-2)L)=0  max(exc-Z | k=1)=0  viol In/exc 0/0
+  n=6 L=2 sizes{1,2} caps[C..L] k=1,2,3 B=0,1,2,3
+     runs 685809    checks 4114854    max(In-Z)=0  max(k*exc-Z-(2k-2)L)=0  max(exc-Z | k=1)=0  viol In/exc 0/0
+  TOTAL runs 1983467 checks 10230898   violations In 0  excess 0

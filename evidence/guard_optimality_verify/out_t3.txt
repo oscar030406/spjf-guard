@@ -1,0 +1,24 @@
+========================================================================
+[A] random T3 checks, arrivals, ties, equal sizes, k=1..4
+========================================================================
+T3-1 time-checks 132424, violations 0
+T3-2 job-checks 145180, violations 0
+T3-3 overtaker-case violations 0
+T3-4 violations 0
+
+========================================================================
+[B] T3-1 over every enumerated work-conserving schedule pair
+========================================================================
+schedule-pairs 23478, time-checks 170326, violations 0
+
+========================================================================
+[C] truncated Pareto: ex-post sample maximum vs fixed support bound
+========================================================================
+Pareto alpha=1.5, xmin=1.0, hard cap=1000.0, 200 jobs, 5000 samples, seed=73621
+ k   E[Lambda/((k-1)*sample_max)]   E[Lambda/((k-1)*cap)]
+ 4                 0.6825                       0.0444
+ 8                 0.4648                       0.0263
+16                 0.3139                       0.0161
+The first column is comparable to the earlier script, which sets L
+to each finite sample maximum.  The second uses the known truncation
+cap, matching a deployed timeout bound fixed before the sample.

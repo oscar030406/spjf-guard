@@ -57,9 +57,109 @@ and checked line by line.
 | `supplementary.tex:213` | `prechecks/codebench_service_v2/out_service_v2.txt` | `evidence/codebench_service_v2/out_service_v2.txt` |
 | `supplementary.tex:216` | `prechecks/firefox_ci_holdout/out_SUMMARY.txt` | `evidence/firefox_ci_holdout/out_SUMMARY.txt` |
 | `supplementary.tex:531` | `prechecks/guard_theory` | `evidence/guard_theory` |
+| `01_introduction.tex:35` | `prechecks/heldout_scope/heldout_scope.md` | `evidence/heldout_scope/heldout_scope.md` |
+| `07_data.tex:242` | `prechecks/heldout_scope/heldout_scope.md` | `evidence/heldout_scope/heldout_scope.md` |
+| `08_experiments.tex:547` | `prechecks/lpc_egee_queues/applicability.csv` | `evidence/lpc_egee_queues/applicability.csv` |
+| `08_experiments.tex:553` | `prechecks/lpc_egee/applicability.csv` | `evidence/lpc_egee/applicability.csv` |
+| `08_experiments.tex:585` | `prechecks/lpc_egee/capacity.json` | `evidence/lpc_egee/capacity.json` |
+| `08_experiments.tex:597` | `prechecks/lpc_egee_queues/tables.md` | `evidence/lpc_egee_queues/tables.md` |
+| `08_experiments.tex:659` | `prechecks/lpc_egee_queues/applicability.csv` | `evidence/lpc_egee_queues/applicability.csv` |
+| `08_experiments.tex:662` | `prechecks/lpc_egee/bound_checks.csv` | `evidence/lpc_egee/bound_checks.csv` |
+| `08_experiments.tex:677` | `prechecks/weakness1_attack/summary_numbers.json` | `evidence/weakness1_attack/summary_numbers.json` |
+| `08_experiments.tex:687` | `prechecks/weakness1_attack/physical_numbers.json` | `evidence/weakness1_attack/physical_numbers.json` |
+| `08_experiments.tex:689` | `prechecks/weakness1_attack/physical_verification.json` | `evidence/weakness1_attack/physical_verification.json` |
+| `08_experiments.tex:722` | `prechecks/closed_loop/out/open_vs_closed_mean.csv` | `evidence/closed_loop/out/open_vs_closed_mean.csv` |
+| `09_limitations.tex:56` | `prechecks/closed_loop/out/` | `evidence/closed_loop/out/` |
+| `09_limitations.tex:185` | `prechecks/lpc_egee/validation.csv` | `evidence/lpc_egee/validation.csv` |
+| `09_limitations.tex:187` | `prechecks/lpc_egee_queues/guard_dispatches.csv` | `evidence/lpc_egee_queues/guard_dispatches.csv` |
+| `S_theory_additions.tex:36` | `prechecks/guard_optimality_verify/literature_check.md` | `evidence/guard_optimality_verify/literature_check.md` |
+| `S_theory_additions.tex:37` | `prechecks/guard_optimality_verify/verification.md` | `evidence/guard_optimality_verify/verification.md` |
+| `S_theory_additions.tex:52` | `prechecks/guard_optimality_verify/out_t1.txt` | `evidence/guard_optimality_verify/out_t1.txt` |
+| `S_theory_additions.tex:53` | `prechecks/guard_optimality_verify/verification.md` | `evidence/guard_optimality_verify/verification.md` |
+| `S_theory_additions.tex:91` | `prechecks/guard_optimality_verify/out_t2.txt` | `evidence/guard_optimality_verify/out_t2.txt` |
+| `S_theory_additions.tex:92` | `prechecks/guard_optimality_verify/verification.md` | `evidence/guard_optimality_verify/verification.md` |
+| `S_theory_additions.tex:230` | `prechecks/guard_optimality_verify/out_t3.txt` | `evidence/guard_optimality_verify/out_t3.txt` |
+| `S_theory_additions.tex:231` | `prechecks/guard_optimality_verify/verification.md` | `evidence/guard_optimality_verify/verification.md` |
+| `S_theory_additions.tex:293` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
+| `S_theory_additions.tex:340` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
+| `S_theory_additions.tex:360` | `prechecks/reservation_guard_verify/out_overR_eq_overC_k1.txt` | `evidence/reservation_guard_verify/out_overR_eq_overC_k1.txt` |
+| `S_theory_additions.tex:401` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
+| `S_theory_additions.tex:410` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
+| `S_theory_additions.tex:427` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
+| `supplementary.tex:1867` | `prechecks/heldout_scope/heldout_scope.md` | `evidence/heldout_scope/heldout_scope.md` |
+| `supplementary.tex:1984` | `prechecks/weakness1_attack/REPORT.md` | `evidence/weakness1_attack/REPORT.md` |
+| `supplementary.tex:2013` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2014` | `prechecks/weakness1_attack/summarize_capacity.py` | `evidence/weakness1_attack/summarize_capacity.py` |
+| `supplementary.tex:2036` | `prechecks/weakness1_attack/` | `evidence/weakness1_attack/` |
+| `supplementary.tex:2148` | `prechecks/weakness1_attack/summary_numbers.json` | `evidence/weakness1_attack/summary_numbers.json` |
+| `supplementary.tex:2149` | `prechecks/weakness1_attack/verification.json` | `evidence/weakness1_attack/verification.json` |
+| `supplementary.tex:2150` | `prechecks/weakness1_attack/REPORT.md` | `evidence/weakness1_attack/REPORT.md` |
+| `supplementary.tex:2164` | `prechecks/weakness1_attack/summary_numbers.json` | `evidence/weakness1_attack/summary_numbers.json` |
+| `supplementary.tex:2165` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2179` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2181` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2183` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2185` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2187` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2189` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2191` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2193` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2210` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2212` | `prechecks/weakness1_attack/summary_numbers.json` | `evidence/weakness1_attack/summary_numbers.json` |
+| `supplementary.tex:2222` | `prechecks/weakness1_attack/capacity_curve.csv` | `evidence/weakness1_attack/capacity_curve.csv` |
+| `supplementary.tex:2224` | `prechecks/weakness1_attack/pilot.json` | `evidence/weakness1_attack/pilot.json` |
+| `supplementary.tex:2237` | `prechecks/weakness1_attack/physical_numbers.json` | `evidence/weakness1_attack/physical_numbers.json` |
+| `supplementary.tex:2248` | `prechecks/weakness1_attack/physical_numbers.json` | `evidence/weakness1_attack/physical_numbers.json` |
+| `supplementary.tex:2249` | `prechecks/weakness1_attack/physical_verification.json` | `evidence/weakness1_attack/physical_verification.json` |
+| `supplementary.tex:2261` | `prechecks/weakness1_attack/physical_numbers.json` | `evidence/weakness1_attack/physical_numbers.json` |
+| `supplementary.tex:2263` | `prechecks/weakness1_attack/physical_numbers.json` | `evidence/weakness1_attack/physical_numbers.json` |
+| `supplementary.tex:2265` | `prechecks/weakness1_attack/physical_numbers.json` | `evidence/weakness1_attack/physical_numbers.json` |
+| `supplementary.tex:2280` | `prechecks/weakness1_attack/physical_numbers.json` | `evidence/weakness1_attack/physical_numbers.json` |
+| `supplementary.tex:2292` | `prechecks/weakness1_attack/stall_bound_check.json` | `evidence/weakness1_attack/stall_bound_check.json` |
+| `supplementary.tex:2294` | `prechecks/weakness1_attack/physical_verification.json` | `evidence/weakness1_attack/physical_verification.json` |
+| `supplementary.tex:2318` | `prechecks/weakness1_attack/out_feedback_counterexamples.txt` | `evidence/weakness1_attack/out_feedback_counterexamples.txt` |
+| `supplementary.tex:2330` | `prechecks/weakness1_attack/out_feedback_counterexamples.txt` | `evidence/weakness1_attack/out_feedback_counterexamples.txt` |
+| `supplementary.tex:2344` | `prechecks/lpc_egee/applicability.csv` | `evidence/lpc_egee/applicability.csv` |
+| `supplementary.tex:2345` | `prechecks/lpc_egee/capacity.json` | `evidence/lpc_egee/capacity.json` |
+| `supplementary.tex:2354` | `prechecks/lpc_egee/validation.csv` | `evidence/lpc_egee/validation.csv` |
+| `supplementary.tex:2366` | `prechecks/lpc_egee/pooled_policy_metrics.csv` | `evidence/lpc_egee/pooled_policy_metrics.csv` |
+| `supplementary.tex:2391` | `prechecks/closed_loop/out/think_time.json` | `evidence/closed_loop/out/think_time.json` |
+| `supplementary.tex:2404` | `prechecks/closed_loop/out/validation.json` | `evidence/closed_loop/out/validation.json` |
+| `supplementary.tex:2405` | `prechecks/closed_loop/out/closed_cells.csv` | `evidence/closed_loop/out/closed_cells.csv` |
+| `supplementary.tex:2443` | `prechecks/closed_loop/out/open_vs_closed_mean.csv` | `evidence/closed_loop/out/open_vs_closed_mean.csv` |
+| `supplementary.tex:2446` | `prechecks/closed_loop/out/report_tables.md` | `evidence/closed_loop/out/report_tables.md` |
+| `supplementary.tex:2447` | `prechecks/closed_loop/make_tables.py` | `evidence/closed_loop/make_tables.py` |
+| `supplementary.tex:2460` | `prechecks/closed_loop/out/open_vs_closed_mean.csv` | `evidence/closed_loop/out/open_vs_closed_mean.csv` |
+| `supplementary.tex:2482` | `prechecks/closed_loop/out/open_vs_closed_mean.csv` | `evidence/closed_loop/out/open_vs_closed_mean.csv` |
+| `supplementary.tex:2501` | `prechecks/closed_loop/out/bootstrap.json` | `evidence/closed_loop/out/bootstrap.json` |
+| `supplementary.tex:2504` | `prechecks/closed_loop/out/report_tables.md` | `evidence/closed_loop/out/report_tables.md` |
+| `supplementary.tex:2534` | `prechecks/lpc_egee_queues/bound_checks.csv` | `evidence/lpc_egee_queues/bound_checks.csv` |
+| `supplementary.tex:2535` | `prechecks/lpc_egee/bound_checks.csv` | `evidence/lpc_egee/bound_checks.csv` |
+| `supplementary.tex:2547` | `prechecks/lpc_egee_queues/tables.md` | `evidence/lpc_egee_queues/tables.md` |
+| `supplementary.tex:2579` | `prechecks/lpc_egee_queues/tables.md` | `evidence/lpc_egee_queues/tables.md` |
+| `supplementary.tex:2583` | `prechecks/lpc_egee/applicability.csv` | `evidence/lpc_egee/applicability.csv` |
+| `supplementary.tex:2596` | `prechecks/lpc_egee_queues/tables.md` | `evidence/lpc_egee_queues/tables.md` |
+| `supplementary.tex:2627` | `prechecks/lpc_egee_queues/tables.md` | `evidence/lpc_egee_queues/tables.md` |
+| `supplementary.tex:2628` | `prechecks/lpc_egee_queues/policy_metrics.csv` | `evidence/lpc_egee_queues/policy_metrics.csv` |
+| `supplementary.tex:2631` | `prechecks/lpc_egee_queues/tables.md` | `evidence/lpc_egee_queues/tables.md` |
+| `supplementary.tex:2643` | `prechecks/lpc_egee_queues/bound_checks.csv` | `evidence/lpc_egee_queues/bound_checks.csv` |
+| `supplementary.tex:2647` | `prechecks/lpc_egee_queues/REPORT.md` | `evidence/lpc_egee_queues/REPORT.md` |
+| `supplementary.tex:2666` | `prechecks/lpc_egee_queues/tables.md` | `evidence/lpc_egee_queues/tables.md` |
+| `supplementary.tex:2670` | `prechecks/lpc_egee_queues/REPORT.md` | `evidence/lpc_egee_queues/REPORT.md` |
+| `supplementary.tex:3398` | `prechecks/guard_optimality_verify/literature_check.md` | `evidence/guard_optimality_verify/literature_check.md` |
+| `supplementary.tex:3399` | `prechecks/guard_optimality_verify/verification.md` | `evidence/guard_optimality_verify/verification.md` |
 
-Line numbers are as of the state of `paper/` when this folder was assembled; the path
-strings are what to search for.
+Line numbers are as of the state of `paper/` when this folder was assembled, and the
+manuscript was being edited at the time; the path strings are what to search for, not the
+line numbers.
+
+## Studies the paper names that are not published here
+
+Two working directories are still named from inside this folder and have no copy of their
+own: `prechecks/guard_optimality`, the optimality note that `guard_optimality_verify`
+checks, and `prechecks/recorded_queue_hunt`, the trace search whose conclusion
+`weakness1_attack/AUDIT_A.md` carries and corrects. Neither is named in a paper source
+comment. `evidence/README.md` says why each was left out.
 
 ## Paths named elsewhere in the repository
 
@@ -82,7 +182,7 @@ them. The row in `GENERATED.md` should say so.
 
 ## Inside the copied files
 
-`.md` and `.py` files in this folder had their own `prechecks/…` cross-references
-rewritten to `evidence/…`, so the studies point at each other correctly. The `out_*.txt`
+`.md`, `.py`, `.sh` and `.ps1` files in this folder had their own `prechecks/…`
+cross-references rewritten to `evidence/…`, so the studies point at each other correctly. The `out_*.txt`
 run logs were **not** touched — they are run output and still print `prechecks/<study>/`.
 Read those as `evidence/<study>/`.

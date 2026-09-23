@@ -1,0 +1,37 @@
+﻿{
+    "recorded":  "2026-09-21T08:41:32.6799872-04:00",
+    "sources":  [
+                    {
+                        "path":  "src/spjf_guard/data/sealed.py",
+                        "sha256":  "811fc654f76368d5ccc387a59c4517ef7c0e3bc8e5544a51422b52f0bc34b80d"
+                    },
+                    {
+                        "path":  "src/spjf_guard/experiment/reproduce.py",
+                        "sha256":  "b1921178d8afaae8da95cdf9518c8aaef23fe0faeae9151cb8c5aa9393aa5df9"
+                    },
+                    {
+                        "path":  "src/spjf_guard/experiment/bootstrap.py",
+                        "sha256":  "772aa94028db74734ceba150b5023fd409d6b33b934d7fab48c04e4327c6d5df"
+                    },
+                    {
+                        "path":  "src/spjf_guard/sim/runner.py",
+                        "sha256":  "7e061794fde171b130dfadf1f0229959cb3612bab56fcef2921e239bb5a42ad7"
+                    },
+                    {
+                        "path":  "src/spjf_guard/sim/kernel.py",
+                        "sha256":  "f70ad598ff79962a1eb2a6794130f2458fa5c093269ef3d67d4a51cd91800f88"
+                    },
+                    {
+                        "path":  "src/spjf_guard/sim/policy.py",
+                        "sha256":  "54309b5fd9f7df832484dc7e26755151e7b766c874906f505cc72345882b0e60"
+                    },
+                    {
+                        "path":  "src/spjf_guard/sim/bounds.py",
+                        "sha256":  "6bd64b495d3eb8408d4e466ce8b189101903f144a793dcfad1095fc2533d13f9"
+                    },
+                    {
+                        "path":  "configs/main.yaml",
+                        "sha256":  "a3c9f8da06c6868ff8c1a9c91d9dac6be73a2dff1aef9629d5f8afd49a7a3664"
+                    }
+                ]
+}

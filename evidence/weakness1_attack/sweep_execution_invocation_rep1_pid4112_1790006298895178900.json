@@ -1,0 +1,10 @@
+{
+  "protocol": "cc8e1cc5e7477e045e7caf1d0bef2969ba99f9584aee1992a0e96e5c8e654f4a",
+  "rep": 1,
+  "resume_validation": "protocol, parameters, policy rows, NPZ schema/shape/finite",
+  "wall_s": 0.1983812999969814,
+  "cpu_s": 0.03125,
+  "invocation_ledger": "sweep_execution_invocation_rep1_pid4112_1790006298895178900.json",
+  "canonical_execution_file": "sweep_execution_rep1.json",
+  "canonical_preserved": true
+}

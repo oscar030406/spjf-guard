@@ -1,0 +1,25 @@
+{
+  "rep": 0,
+  "candidate_sha256": "489985370be6e8e9f29e1e6edc6ffb1aa75b56b8332e084a9142534da032b881",
+  "expected_sha256": "4f5a6c84a59d1e60342593d26a81e92a38cb76a2b730c69a6babaffc983d4971",
+  "matches": false,
+  "array_keys": [
+    "a",
+    "svc",
+    "dl",
+    "exam",
+    "hvt",
+    "wk",
+    "weeks",
+    "K",
+    "W",
+    "copies",
+    "job_row",
+    "tweedie",
+    "log"
+  ],
+  "timing": {
+    "wall_s": 1.5102568000002066,
+    "cpu_s": 1.515625
+  }
+}

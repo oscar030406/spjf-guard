@@ -1,0 +1,42 @@
+# Placeholder. The manuscript's front matter has no author names yet
+# (paper/main.tex marks them "[to be completed by the authors]"), so the two
+# entries below are placeholders. Fill in given-names, family-names,
+# affiliation and orcid, set the repository-code URL, and add the preferred
+# citation's journal, volume, pages and DOI once the paper is accepted.
+cff-version: 1.2.0
+title: >-
+  Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for
+  Shared Execution Services under Deadline-Driven Bursty Load
+message: >-
+  If you use this software or the tables in evidence/, please cite the
+  manuscript below.
+type: software
+authors:
+  - given-names: FIRST-AUTHOR-GIVEN-NAME
+    family-names: FIRST-AUTHOR-FAMILY-NAME
+    affiliation: FIRST-AUTHOR-AFFILIATION
+  - given-names: SECOND-AUTHOR-GIVEN-NAME
+    family-names: SECOND-AUTHOR-FAMILY-NAME
+    affiliation: SECOND-AUTHOR-AFFILIATION
+license: MIT
+repository-code: https://github.com/OWNER/spjf-guard
+keywords:
+  - non-preemptive scheduling
+  - scheduling with predictions
+  - multiserver queues
+  - bounded overtaking
+  - per-job guarantee
+  - first-come first-served
+  - runtime prediction
+preferred-citation:
+  type: article
+  title: >-
+    Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for
+    Shared Execution Services under Deadline-Driven Bursty Load
+  authors:
+    - given-names: FIRST-AUTHOR-GIVEN-NAME
+      family-names: FIRST-AUTHOR-FAMILY-NAME
+    - given-names: SECOND-AUTHOR-GIVEN-NAME
+      family-names: SECOND-AUTHOR-FAMILY-NAME
+  journal: Mathematics
+  year: 2026

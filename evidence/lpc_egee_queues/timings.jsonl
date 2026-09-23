@@ -1,0 +1,5 @@
+{"stage": "qaudit", "wall_s": 1.7351083000012295, "cpu_s": 1.71875}
+{"stage": "qvalidate", "wall_s": 2.599773500000083, "cpu_s": 2.546875}
+{"stage": "qpredict", "wall_s": 11.773754499999995, "cpu_s": 29.296875}
+{"stage": "qreplay", "wall_s": 8.749895800001468, "cpu_s": 8.609375}
+{"stage": "qreport", "wall_s": 2.3772109000001365, "cpu_s": 2.328125}

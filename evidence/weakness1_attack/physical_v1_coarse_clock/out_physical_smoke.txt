@@ -1,0 +1,10 @@
+[2026-09-21 09:50:13] smoke start FCFS
+[2026-09-21 09:50:13] physical FCFS started: 6 jobs, two fresh workers
+[2026-09-21 09:50:18] smoke complete FCFS: prefix_errors=0
+[2026-09-21 09:50:18] smoke start SPJF-E
+[2026-09-21 09:50:18] physical SPJF-E started: 6 jobs, two fresh workers
+[2026-09-21 09:50:19] smoke complete SPJF-E: prefix_errors=0
+[2026-09-21 09:50:19] smoke start Guard(300)
+[2026-09-21 09:50:20] physical Guard(300) started: 6 jobs, two fresh workers
+[2026-09-21 09:50:21] smoke complete Guard(300): prefix_errors=0
+[2026-09-21 09:50:21] PHYSICAL_SMOKE_COMPLETE wall=8.447s

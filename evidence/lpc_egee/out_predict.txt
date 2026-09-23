@@ -1,0 +1,13 @@
+START 2026-09-21T11:53:51.244225+00:00
+SCRIPT_SHA256 c07d5d2548c5f93d3d1b14517468519b2c3c304eb8de4dbc6fff20a7eb9f1905
+INDEPENDENT HISTORY RECOMPUTATION 290 rows, 0 mismatches; completion <= arrival
+{"score": "spjf_e", "pool": "all", "n": 116810, "heavy_threshold_s": 4567.5, "heavy_rate": 0.08820306480609537, "auroc": 0.8922414804678224, "average_precision": 0.48201063674649874, "log_rmse": 1.8879202446942067, "spearman": 0.757169022069849}
+{"score": "spjf_e", "pool": "CE1", "n": 66538, "heavy_threshold_s": 4567.5, "heavy_rate": 0.10467702666145662, "auroc": 0.8773140300975877, "average_precision": 0.4555406942724332, "log_rmse": 1.8347786882288661, "spearman": 0.7887713604667244}
+{"score": "spjf_e", "pool": "old_CE2", "n": 50272, "heavy_threshold_s": 4567.5, "heavy_rate": 0.06639879057924888, "auroc": 0.899961259546219, "average_precision": 0.5284927950083418, "log_rmse": 1.9560375029542094, "spearman": 0.7004582581054597}
+MODEL PARAMETERS spjf_e {'learning_rate': 0.05, 'num_leaves': 63, 'min_data_in_leaf': 50, 'feature_fraction': 0.9, 'bagging_fraction': 0.9, 'bagging_freq': 1, 'verbose': -1, 'tweedie_variance_power': 1.5, 'objective': 'tweedie', 'seed': 3, 'random_state': 3, 'num_threads': 4, 'deterministic': True, 'force_row_wise': True} rounds 400
+{"score": "spjf_log", "pool": "all", "n": 116810, "heavy_threshold_s": 4567.5, "heavy_rate": 0.08820306480609537, "auroc": 0.8741378943832114, "average_precision": 0.4635833264592359, "log_rmse": 1.9278178172786247, "spearman": 0.72770594450522}
+{"score": "spjf_log", "pool": "CE1", "n": 66538, "heavy_threshold_s": 4567.5, "heavy_rate": 0.10467702666145662, "auroc": 0.8487079808904212, "average_precision": 0.4130216166466387, "log_rmse": 1.829150535213359, "spearman": 0.7841909932681921}
+{"score": "spjf_log", "pool": "old_CE2", "n": 50272, "heavy_threshold_s": 4567.5, "heavy_rate": 0.06639879057924888, "auroc": 0.8866797652162415, "average_precision": 0.5667790648726891, "log_rmse": 2.051124506525126, "spearman": 0.6416178546504637}
+MODEL PARAMETERS spjf_log {'learning_rate': 0.05, 'num_leaves': 63, 'min_data_in_leaf': 50, 'feature_fraction': 0.9, 'bagging_fraction': 0.9, 'bagging_freq': 1, 'verbose': -1, 'objective': 'regression', 'seed': 3, 'random_state': 3, 'num_threads': 4, 'deterministic': True, 'force_row_wise': True} rounds 400
+STATIC-ONLY ABLATION AUROC 0.6746649150383406
+TIMING {"stage": "predict", "wall_s": 6.859973600003286, "cpu_s": 18.84375}

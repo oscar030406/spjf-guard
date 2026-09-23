@@ -1,0 +1,25 @@
+{
+  "inputs": [
+    {
+      "rep": 0,
+      "path": "data/derived/overlay_traces/primary_rep0.npz",
+      "bytes": 793567608,
+      "sha256": "4f5a6c84a59d1e60342593d26a81e92a38cb76a2b730c69a6babaffc983d4971",
+      "source_rebuild_sha256": "78d063485a4281f6fd07560a717ee3d9440a93ac11912e8f74f934d8009061c8",
+      "source_rebuild_bytes": 1498959560,
+      "recovered_path": "raw/recovered_development/primary_rep0.npz",
+      "candidate_sha256": "489985370be6e8e9f29e1e6edc6ffb1aa75b56b8332e084a9142534da032b881",
+      "candidate_bytes": 793567608,
+      "removed_members": [
+        "copy_entry.npy",
+        "copy_round.npy",
+        "log_conservative.npy",
+        "log_static.npy",
+        "tweedie_conservative.npy",
+        "tweedie_static.npy"
+      ],
+      "source": "documented local development cache rebuild; no network retrieval",
+      "status": "hash_mismatch"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+part 0  head-only test == full test, for a constant allowance Z
+   19381 decisions, 0 disagreements between the head-only test and the full test
+
+part 1  (k*excess - B)/L for the victim of the S8.2 upward witness under rule R
+  k   m    L       n        f        B        (k e - B)/L    In_R     target 2k-2
+  2   1    2       25       1        4        1              4        2
+  2   2    4       48       3        8        3/2            8        2
+  2   3    8       97       7        16       7/4            16       2
+  2   4    16      202      15       32       15/8           32       2
+  2   5    32      427      31       64       31/16          64       2
+  2   6    64      908      63       128      63/32          128      2
+  2   7    128     1933     127      256      127/64         256      2
+  2   8    256     4110     255      512      255/128        512      2
+  3   1    3       40       1        5        7/3            5        4
+  3   2    9       113      5        15       3              15       4
+  3   3    27      350      19       47       91/27          47       4
+  3   4    81      1119     65       147      97/27          147      4
+  3   5    243     3600     211      455      907/243        455      4
+  4   1    4       59       1        6        7/2            6        6
+  4   2    16      222      7        24       17/4           24       6
+  4   3    64      925      37       102      151/32         102      6
+  4   4    256     3956     175      432      323/64         432      6

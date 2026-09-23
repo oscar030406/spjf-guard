@@ -1,0 +1,32 @@
+{
+  "unit": "one pool per (physical partition, queue) walltime class; L is that class documented limit",
+  "partitions": "SWF partitions 2 (CE1, 84 CPUs) and 3 (CE2, 56 CPUs); partition 1 (clrglop195) stops on day 76.8 and owns no held-out arrival, so it is audited and then excluded",
+  "min_fit_rows": 500,
+  "split_days_after_first_cleaned_submit": 120,
+  "outage_original_SWF_days_half_open": [
+    138,
+    153
+  ],
+  "seed": 3,
+  "bootstrap_seed": 20260921,
+  "bootstrap_replicates": 2000,
+  "busy_definition": "arrival-hour count >= that cell own fit-part 90th percentile over all non-outage hours, at least 1",
+  "k_grid": "every integer 1..nominal CPUs of the host partition, independently per cell",
+  "capacity_objective": "abs(log((sim_mean+1)/(rec_mean+1))) + abs(log((sim_p90+1)/(rec_p90+1)))",
+  "fit_visibility": "submit < cutoff and recorded completion < cutoff",
+  "cap": "service = min(recorded run, documented partition/queue wall limit); CE2 short 5400 s",
+  "theorem_L": "the cell own queue limit, NOT the pool maximum: this is the whole point of the study",
+  "promises_L": [
+    3.5,
+    5.0,
+    10.0
+  ],
+  "shapes": {
+    "constant": "B0=Bmax, eta=0",
+    "age_3.5L_and_5L": "B0=k*L/4, eta=0.5 (the paper 5L development point, reused at 3.5L)",
+    "age_10L": "B0=k*L/2, eta=0.75 (the paper 10L development point)"
+  },
+  "predictor": "per-queue LightGBM, package defaults, submission fields plus own-user completion history visible at arrival",
+  "no_test_selection": true,
+  "caveat": "queues shared the machines of their partition; a per-queue pool is a model we impose, so the recorded waits of a queue validate the sub-pool model only"
+}

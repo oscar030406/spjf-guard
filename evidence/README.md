@@ -18,9 +18,9 @@ because they record the order the scripts were run in and the traps that were hi
 
 Two conventions run through all of it:
 
-- `<repo-root>` is your checkout and `<cache-dir>` is a scratch directory outside the
-  repository. Both were absolute paths on the machine the runs were made on; set them
-  before rerunning anything.
+- `<repo-root>` is your checkout, `<cache-dir>` is a scratch directory outside the
+  repository, and `<python-root>` is the interpreter install. All three were absolute
+  paths on the machine the runs were made on; set them before rerunning anything.
 - **No raw data is redistributed here.** Every study reads from `data/`, and
   `data/README.md` says where each dataset comes from and under what terms. Large
   intermediates are written to `<cache-dir>`, never into this folder.
@@ -55,12 +55,21 @@ any run recorded in this folder.
 | `main_v31_verify` | independent verification of v3.1 | finding G1, which is why v3.2 exists | 0.46 MB |
 | `consolidation` | dedicated containers versus a shared pool | supports the shared-pool framing; no individual paper number | 0.11 MB |
 | `restart_tier` | kill-and-restart tiering, examined and rejected | §9 limitations | 0.21 MB |
+| `closed_loop` | does the result survive a replay in which users wait for one result before submitting the next | §8 closed-replay paragraph; §9 open-loop limitation; supplement S6.5-S6.6 | 0.26 MB |
+| `lpc_egee_queues` | the same protocol on a compute farm, one pool per walltime class, where the guard's bound is nearly attained | §8 applicability; §9 forced dispatches; supplement S7.6 | 0.32 MB |
+| `reservation_guard` | reservation-and-refund charging: six conjectures on the additive constant | the study behind the supplementary theory section | 0.07 MB |
+| `reservation_guard_verify` | independent re-check of that rule from its written definition | supplementary theory section, decision table and witnesses | 0.08 MB |
+| `weakness1_attack` | does the result depend on the capacity and on open-loop demand; the physical two-worker run and the stall-corrected certificate | §8 capacity paragraphs; supplement capacity, physical, stall-bound and feedback sections | 3.68 MB |
+| `lpc_egee` | the recorded-wait grid log, pooled by partition: a real queue, a weak replay validation, and a promise too coarse to fire | §8 and §9 cross-domain rows; supplement LPC sections | 3.36 MB |
+| `guard_optimality_verify` | independent re-check of the optimality note's T1, T2 and T3 | supplementary theory section | 0.10 MB |
+| `heldout_scope` | what the paper promises about sealed data against what can be run | §1 and §7 sealed-scope sentences; supplement Q2 | 0.04 MB |
 
-633 files, 11.8 MB.
+1,114 files, 18.8 MB.
 
 ## What is not here
 
-Five studies were left out. They are kept in the working folder, not deleted.
+Studies that no paper number rests on were left out. They are kept in the working
+folder, not deleted.
 
 | study | why |
 | --- | --- |
@@ -68,14 +77,19 @@ Five studies were left out. They are kept in the working folder, not deleted.
 | `codebench_service` (first version) | superseded by `codebench_service_v2`. Its history features were built by submission order rather than by result-availability time, so its numbers leak and are optimistic; the directory says so itself |
 | `guard_check` | superseded by `guard_variants`, which checks the same per-job upper bound over the whole family of budget rules |
 | `upc_wifi`, `upc_wifi_gnn` | an early direction — access-point load on a campus Wi-Fi trace, and a heterogeneous graph network against hand-built neighbour features. Nothing in the paper rests on either |
+| `guard_optimality` | the optimality note that `guard_optimality_verify` checks. The re-check restates every theorem it rules on, and governs where the two disagree |
+| `recorded_queue_hunt` | the search for a trace that records queue waits, which ended at LPC-EGEE. Its conclusion is carried in `weakness1_attack/AUDIT_A.md`, which also records where that conclusion was wrong |
 
-Six places inside the included studies still point at those five directories, because
-that is where their own history is: `accoding_v2/accoding_v2.py` (the SQL parse it
-inherits), `codebench_service_v2/README.md` and `service_precheck_v2.py` (what v1 did
-wrong, and the trace it replays), and `restart_tier/notes.md` (a cost figure). Those
-paths do not resolve inside this folder; the text around each one says what the file was.
+Some included studies still point at those directories, because that is where their own
+history is: `accoding_v2/accoding_v2.py` at `accoding` (the SQL parse it inherits),
+`codebench_service_v2/README.md`, `service_precheck_v2.py` and `restart_tier/notes.md`
+at `codebench_service` (what v1 did wrong, the trace it replays, a cost figure),
+`guard_optimality_verify/README.md`, `verification.md` and `sim.py` at
+`guard_optimality` (the note under review), and `weakness1_attack/AUDIT_A.md` at
+`recorded_queue_hunt` (a claim it corrects). Those paths do not resolve inside this
+folder; the text around each one says what the file was.
 
-Four kinds of file were left out of the studies that are here:
+Seven kinds of file were left out of the studies that are here:
 
 - **Parse caches and derived per-job tables** (`*.parquet`, 40 files, 71 MB) — derived
   student-log data. Each study's README says which script rebuilds them.
@@ -83,8 +97,23 @@ Four kinds of file were left out of the studies that are here:
   their copyright, not ours.
 - **Bytecode and numba compilation caches** (`__pycache__/`, 222 files) — build
   artefacts.
+- **Simulation state and fitted models** — `closed_loop/out/chains/chain_rep*.npz` (five
+  files, 2.02 GB), the per-user submission chains rebuilt by `build_chains.py`; the
+  parsed per-job tables `lpc_egee_queues/jobs.csv` (20.7 MB) and `test_jobs.csv`
+  (4.2 MB), which are the source log in another form and are rebuilt by `qaudit.py` and
+  `qvalidate.py`; and the LightGBM dumps `lpc_egee_queues/model_q1..q5.txt` (11.3 MB),
+  rebuilt by `qpredict.py`.
+- **Array files** (`*.npy`, `*.npz`) — predictions, per-policy wait vectors, busy masks
+  and per-cell bootstrap draws; each study's README says which stage writes them.
+- **Event records and figures** — the attempt-level streams of the physical run in
+  `weakness1_attack` (`physical_records/`, `physical_*_jobs.jsonl`,
+  `physical_*_decisions.jsonl`, 50 files, 549 MB), the raw public-API responses under
+  its `raw/taskcluster_probe/`, which carry no identified data licence, and the six
+  `.png` / `.svg` figures its summarisers redraw from the CSVs that are here. One
+  machine-local recovery script was dropped with its log: it searched a temporary
+  directory on one machine by a run identifier and cannot run anywhere else.
 - Nothing else was dropped: no file in the included studies exceeded the 5 MB limit once
-  those three categories were gone.
+  those categories were gone.
 
 ## Personal data
 
@@ -98,8 +127,8 @@ the raw logs are explicit about keeping counts and flags rather than text.
 
 ## Internal documents that are cited but not distributed
 
-Some study notes cite `docs/research_plan.md`, `docs/related_work/` and
-`docs/referee_readthrough/`. Those are internal working documents kept out of the
+Some study notes cite `docs/research_plan.md`, `docs/related_work/`,
+`docs/referee_readthrough/` and the working ideas list. Those are internal working documents kept out of the
 repository. Where their content is load-bearing it is reproduced in the study that uses
 it — the referee items, for example, are listed in `guard_theory/CHANGES_rev5.md` and in
 the CHANGELOG of `guard_theory/theory.md`.

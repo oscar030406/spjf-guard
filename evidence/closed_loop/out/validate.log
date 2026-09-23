@@ -1,0 +1,15 @@
+overlay 0, level 0
+  FCFS: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 5.3, 'package_kernel_s': 6.6, 'p99_dl_s': 22.170393000000068}
+  SJF: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 2.0, 'package_kernel_s': 6.5, 'p99_dl_s': 8.310025650000071}
+  SPJF-E: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 2.0, 'package_kernel_s': 6.5, 'p99_dl_s': 12.135950700000043}
+  Guard(600): {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 7.2, 'package_kernel_s': 13.1, 'p99_dl_s': 12.269782950000051}
+overlay 0, level 1
+  FCFS: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 1.8, 'package_kernel_s': 6.7, 'p99_dl_s': 109.70798725000037}
+  SJF: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 2.0, 'package_kernel_s': 6.7, 'p99_dl_s': 34.18627585000001}
+  SPJF-E: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 2.0, 'package_kernel_s': 6.7, 'p99_dl_s': 43.768337600000216}
+  Guard(600): {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 8.3, 'package_kernel_s': 13.3, 'p99_dl_s': 47.70680730000011}
+overlay 0, level 2
+  FCFS: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 1.7, 'package_kernel_s': 6.9, 'p99_dl_s': 263.1202411500015}
+  SJF: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 2.0, 'package_kernel_s': 6.8, 'p99_dl_s': 42.88080230000007}
+  SPJF-E: {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 2.1, 'package_kernel_s': 6.9, 'p99_dl_s': 61.81080275000139}
+  Guard(600): {'max_abs_diff_us': 0, 'n_differing': 0, 'closed_kernel_s': 7.8, 'package_kernel_s': 13.6, 'p99_dl_s': 87.54104590000027}

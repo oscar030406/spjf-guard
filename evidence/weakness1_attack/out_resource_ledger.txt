@@ -1,0 +1,546 @@
+{
+  "recorded_at_utc": "2026-09-21T16:11:32.055900+00:00",
+  "plan_created_utc": "2026-09-21T12:22:33.211419+00:00",
+  "elapsed_since_plan_creation_s": 13738.844481945038,
+  "experiments": [
+    {
+      "experiment": "pilot",
+      "wall_s": 96.94055359999766,
+      "cpu_s": 94.234375,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": ""
+    },
+    {
+      "experiment": "initial serial capacity invocation",
+      "wall_s": 246.520964,
+      "cpu_s": 242.234375,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": "completed cells were reused; partial in-flight work is included"
+    },
+    {
+      "experiment": "resumed two-worker capacity sweep",
+      "wall_s": 4062.969828299996,
+      "cpu_s": 7897.609375,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": "CPU is the sum of the five worker invocation CPU totals, not the sum of cell timers"
+    },
+    {
+      "experiment": "capacity sweep no-op coordinator rerun",
+      "wall_s": 1.122071899997536,
+      "cpu_s": 0.328125,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "sweep_execution_invocation_coordinator_pid34408_1790006299483613500.json",
+      "details": {
+        "canonical_preserved": true,
+        "canonical_execution_file": "sweep_execution.json",
+        "invocation_ledger": "sweep_execution_invocation_coordinator_pid34408_1790006299483613500.json",
+        "workers": 2
+      },
+      "note": "one coordinator invocation; CPU already sums its child processes, so nested runs and rep invocation ledgers are not added separately"
+    },
+    {
+      "experiment": "source drift audit",
+      "wall_s": 0.16186829999787733,
+      "cpu_s": 0.0625,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "source_drift.json",
+      "details": null,
+      "note": "separate audit; not included in capacity-worker CPU"
+    },
+    {
+      "experiment": "recover original development-input backups",
+      "wall_s": 9.274860999998054,
+      "cpu_s": 9.15625,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "recovered_development_inputs.json; out_recover_original_backups.txt",
+      "details": null,
+      "note": "one successful recovery invocation covering all five originals; counted once"
+    },
+    {
+      "experiment": "recovered-container serialization diagnostic",
+      "wall_s": 1.5102568000002066,
+      "cpu_s": 1.515625,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "container_serialization_check.json; out_check_recovered_container.txt",
+      "details": null,
+      "note": "container diagnostic only; rejected candidate generation is accounted separately"
+    },
+    {
+      "experiment": "failed additive recovery attempt",
+      "wall_s": null,
+      "cpu_s": null,
+      "timing_status": "unknown",
+      "included_in_instrumented_wall_sum": false,
+      "included_in_instrumented_cpu_sum": false,
+      "evidence": "rejected_additive_recovery.json; out_recover_development_inputs.txt",
+      "details": null,
+      "note": "failure and rejected candidate are preserved, but launcher wall/CPU timing was not recorded; excluded from instrumented sums rather than estimated"
+    },
+    {
+      "experiment": "failed source-drift capacity verification",
+      "wall_s": null,
+      "cpu_s": null,
+      "timing_status": "unknown",
+      "included_in_instrumented_wall_sum": false,
+      "included_in_instrumented_cpu_sum": false,
+      "evidence": "out_verify_artifacts_source_drift.txt",
+      "details": null,
+      "note": "failure log retained; no independent invocation wall/CPU timer was recorded"
+    },
+    {
+      "experiment": "failed input-drift capacity verification",
+      "wall_s": null,
+      "cpu_s": null,
+      "timing_status": "unknown",
+      "included_in_instrumented_wall_sum": false,
+      "included_in_instrumented_cpu_sum": false,
+      "evidence": "out_verify_artifacts_input_drift.txt",
+      "details": null,
+      "note": "failure log retained; no independent invocation wall/CPU timer was recorded"
+    },
+    {
+      "experiment": "physical preparation with rejected log collision",
+      "wall_s": null,
+      "cpu_s": null,
+      "timing_status": "unknown",
+      "included_in_instrumented_wall_sum": false,
+      "included_in_instrumented_cpu_sum": false,
+      "evidence": "out_prepare_physical_input_log_collision.txt",
+      "details": null,
+      "note": "failure log retained; no independent invocation wall/CPU timer was recorded"
+    },
+    {
+      "experiment": "physical clock resolution diagnostic",
+      "wall_s": 0.0034072999987984076,
+      "cpu_s": 0.0,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "clock_resolution.json; out_clock_resolution.txt",
+      "details": null,
+      "note": "identified the 15.625 ms GetTickCount64 resolution and the 100 ns QPC replacement; the recorded CPU value of zero is a known measurement, not missing timing"
+    },
+    {
+      "experiment": "archived v1 physical input preparation",
+      "wall_s": 2.171544199998607,
+      "cpu_s": 2.125,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "physical_v1_coarse_clock/physical_preparation.json",
+      "details": null,
+      "note": "coarse-clock protocol preparation; separate from the later QPC preparation"
+    },
+    {
+      "experiment": "archived v1 coarse-clock physical smoke",
+      "wall_s": 8.446942400005355,
+      "cpu_s": 3.53125,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "physical_v1_coarse_clock/physical_smoke/summary.json",
+      "details": {
+        "worker_cpu_s": 0.0,
+        "dispatcher_cpu_s": 0.046875,
+        "audit_files": 3
+      },
+      "note": "invalidated as timing evidence by the coarse clock, but its consumed resources are counted"
+    },
+    {
+      "experiment": "stopped v1 coarse-clock physical FCFS attempt",
+      "wall_s": 399.678354,
+      "cpu_s": 2.328125,
+      "timing_status": "partial",
+      "included_in_instrumented_wall_sum": false,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "out_physical_service.txt; physical_coarse_clock_stop.json; physical_records\\fcfs_attempt_20260921T100204_54313046000000_events.jsonl",
+      "details": {
+        "wall_measurement": "estimated_from_one_second_log_stamp",
+        "root_cpu_measurement": "known",
+        "worker_cpu_measurement": "unknown",
+        "completed_jobs_observed": 171,
+        "charged_worker_holding_s_not_cpu": 739.4409999999995
+      },
+      "note": "wall is derived from a one-second-resolution log start and an exact stop timestamp; CPU is root-process CPU only, so worker CPU and shutdown overhead remain unknown"
+    },
+    {
+      "experiment": "stopped v1 coarse-clock worker CPU remainder",
+      "wall_s": null,
+      "cpu_s": null,
+      "timing_status": "unknown",
+      "included_in_instrumented_wall_sum": false,
+      "included_in_instrumented_cpu_sum": false,
+      "evidence": "physical_records\\fcfs_attempt_20260921T100204_54313046000000_events.jsonl",
+      "details": null,
+      "note": "completion events preserve counts and holding time but not worker process CPU; excluded from sums"
+    },
+    {
+      "experiment": "failed v2 QPC arrival-fixture smoke",
+      "wall_s": 8.331772700003057,
+      "cpu_s": 0.03125,
+      "timing_status": "partial",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "physical_smoke_v2_arrival_fixture/summary.json",
+      "details": {
+        "worker_cpu_s": 0.015625,
+        "dispatcher_cpu_s": 0.015625,
+        "audit_files": 3,
+        "root_total_cpu_measurement": "unknown"
+      },
+      "note": "wall is known; CPU is a measured lower bound from three policy audits because overall root CPU was not recorded before the fixture assertion failed"
+    },
+    {
+      "experiment": "failed v2 QPC smoke root/audit CPU remainder",
+      "wall_s": null,
+      "cpu_s": null,
+      "timing_status": "unknown",
+      "included_in_instrumented_wall_sum": false,
+      "included_in_instrumented_cpu_sum": false,
+      "evidence": "physical_smoke_v2_arrival_fixture/summary.json",
+      "details": null,
+      "note": "root preparation, simulator-audit, and failure-handling CPU were not recorded; excluded from sums"
+    },
+    {
+      "experiment": "initial capacity summary",
+      "wall_s": 3.8461879000024055,
+      "cpu_s": 3.265625,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": ""
+    },
+    {
+      "experiment": "first capacity summary label/CSV rerun",
+      "wall_s": 3.284885100001702,
+      "cpu_s": 2.9375,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": ""
+    },
+    {
+      "experiment": "final capacity summary figure-caption rerun",
+      "wall_s": 3.198147600000084,
+      "cpu_s": 2.859375,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": ""
+    },
+    {
+      "experiment": "capacity verification",
+      "wall_s": 8.126488800000516,
+      "cpu_s": 8.03125,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": ""
+    },
+    {
+      "experiment": "physical input preparation",
+      "wall_s": 2.106517000000167,
+      "cpu_s": 2.0625,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": ""
+    },
+    {
+      "experiment": "physical summary",
+      "wall_s": 2.8646412000016426,
+      "cpu_s": 1.59375,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": ""
+    },
+    {
+      "experiment": "capacity table formatting",
+      "wall_s": 0.009712799997942057,
+      "cpu_s": 0.0,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "out_report_capacity_tables.txt",
+      "details": null,
+      "note": "formatting pass only; no new inference or simulation"
+    },
+    {
+      "experiment": "exact transport-bound arithmetic check",
+      "wall_s": 0.011776500003179535,
+      "cpu_s": 0.0,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "out_transport_bound_check.txt",
+      "details": {
+        "parameter_document": {
+          "k_values": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "arrival_epsilon": "1/3",
+          "service_delta": "1/7",
+          "sjf_H": 60,
+          "sjf_epsilons": [
+            "1/2",
+            "1/16",
+            "1/256",
+            "1/4096"
+          ],
+          "rank_swap_eta": "1/1024",
+          "arithmetic": "fractions.Fraction and integer event times",
+          "numpy_version_environment_only": "2.5.3",
+          "scope": "analytical checks only; no empirical epsilon is estimated"
+        },
+        "result_status": "PASS"
+      },
+      "note": "final JSON result after the heading and parameter JSON; zero CPU is a recorded value"
+    },
+    {
+      "experiment": "stored physical SPJF sequence discrepancy diagnostic",
+      "wall_s": 0.19706150000274647,
+      "cpu_s": 0.1875,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "physical_discrepancy.json; out_physical_discrepancy.txt",
+      "details": null,
+      "note": "single-process JSON postprocessing; no new scheduling run"
+    },
+    {
+      "experiment": "exact dispatch-stall accounting and bound check",
+      "wall_s": 4.6972653,
+      "cpu_s": 4.640625,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "stall_bound_check.json; out_stall_bound_check.txt",
+      "details": {
+        "status": "PASS"
+      },
+      "note": "single-process exact-integer checks; no physical execution or worker process"
+    },
+    {
+      "experiment": "physical artifact verification",
+      "wall_s": 0.2583070000036969,
+      "cpu_s": 0.234375,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "physical_verification.json; out_verify_physical.txt",
+      "details": null,
+      "note": "verification-process timing only; physical workers are counted with the service invocation"
+    },
+    {
+      "experiment": "frozen-window thinning sensitivity",
+      "wall_s": 2.8573154999976396,
+      "cpu_s": 2.796875,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "thinning_check.json; out_thinning_check.txt",
+      "details": null,
+      "note": "single-process total from thinning_check; per-scenario simulator timings are not added"
+    },
+    {
+      "experiment": "natural-window preflight stopped at import-time source gate",
+      "wall_s": null,
+      "cpu_s": null,
+      "timing_status": "unknown",
+      "included_in_instrumented_wall_sum": false,
+      "included_in_instrumented_cpu_sum": false,
+      "evidence": "out_natural_preflight_launch.txt",
+      "details": null,
+      "note": "source mismatch occurred before the script invocation timer and before data access; launcher output is retained, but no internal process CPU total was recorded"
+    },
+    {
+      "experiment": "natural configuration source recovery: out_natural_source_recovery_attempt1.txt",
+      "wall_s": 0.03801829999429174,
+      "cpu_s": 0.0,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "out_natural_source_recovery_attempt1.txt",
+      "details": {
+        "status": "FAIL"
+      },
+      "note": "source-only recovery; CPU is the Python process timer and excludes Git subprocess CPU; a duplicate canonical log is counted only once"
+    },
+    {
+      "experiment": "natural configuration source recovery: out_natural_source_recovery_attempt2.txt",
+      "wall_s": 0.03901719999703346,
+      "cpu_s": 0.0,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "out_natural_source_recovery_attempt2.txt",
+      "details": {
+        "status": "FAIL"
+      },
+      "note": "source-only recovery; CPU is the Python process timer and excludes Git subprocess CPU; a duplicate canonical log is counted only once"
+    },
+    {
+      "experiment": "natural configuration source recovery: out_natural_source_recovery_attempt3.txt",
+      "wall_s": 0.041826500004390255,
+      "cpu_s": 0.0,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "out_natural_source_recovery_attempt3.txt",
+      "details": {
+        "status": "FAIL"
+      },
+      "note": "source-only recovery; CPU is the Python process timer and excludes Git subprocess CPU; a duplicate canonical log is counted only once"
+    },
+    {
+      "experiment": "physical service including input and ideal audits",
+      "wall_s": 6212.054433099998,
+      "cpu_s": 25.3125,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": "root invocation CPU plus worker cumulative CPU through last finish; worker shutdown CPU is not instrumented"
+    },
+    {
+      "experiment": "exact feedback counterexamples",
+      "wall_s": 0.0698308,
+      "cpu_s": 0.03125,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": ""
+    },
+    {
+      "experiment": "bounded public-queue probe",
+      "wall_s": 6.5953571000063675,
+      "cpu_s": 0.109375,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": null,
+      "details": null,
+      "note": "see probe summary for exact timing fields and retrieval/cache counts"
+    },
+    {
+      "experiment": "synthetic physical smoke check",
+      "wall_s": 8.293847599998116,
+      "cpu_s": 3.421875,
+      "timing_status": "known",
+      "included_in_instrumented_wall_sum": true,
+      "included_in_instrumented_cpu_sum": true,
+      "evidence": "physical_smoke/summary.json",
+      "details": {
+        "worker_cpu_s": 0.0,
+        "dispatcher_cpu_s": 0.046875,
+        "audit_files": 3
+      },
+      "note": "passed v3 QPC occupied-workers fixture; root CPU plus worker cumulative CPU through last finish"
+    }
+  ],
+  "summed_instrumented_cpu_s": 8310.640625,
+  "summed_instrumented_experiment_wall_s": 10696.044707300003,
+  "estimated_wall_s_excluded_from_instrumented_sum": 399.678354,
+  "missing_timing_rows": [
+    "failed additive recovery attempt",
+    "failed source-drift capacity verification",
+    "failed input-drift capacity verification",
+    "physical preparation with rejected log collision",
+    "stopped v1 coarse-clock worker CPU remainder",
+    "failed v2 QPC smoke root/audit CPU remainder",
+    "natural-window preflight stopped at import-time source gate"
+  ],
+  "known_timing_rows": [
+    "pilot",
+    "initial serial capacity invocation",
+    "resumed two-worker capacity sweep",
+    "capacity sweep no-op coordinator rerun",
+    "source drift audit",
+    "recover original development-input backups",
+    "recovered-container serialization diagnostic",
+    "physical clock resolution diagnostic",
+    "archived v1 physical input preparation",
+    "archived v1 coarse-clock physical smoke",
+    "initial capacity summary",
+    "first capacity summary label/CSV rerun",
+    "final capacity summary figure-caption rerun",
+    "capacity verification",
+    "physical input preparation",
+    "physical summary",
+    "capacity table formatting",
+    "exact transport-bound arithmetic check",
+    "stored physical SPJF sequence discrepancy diagnostic",
+    "exact dispatch-stall accounting and bound check",
+    "physical artifact verification",
+    "frozen-window thinning sensitivity",
+    "natural configuration source recovery: out_natural_source_recovery_attempt1.txt",
+    "natural configuration source recovery: out_natural_source_recovery_attempt2.txt",
+    "natural configuration source recovery: out_natural_source_recovery_attempt3.txt",
+    "physical service including input and ideal audits",
+    "exact feedback counterexamples",
+    "bounded public-queue probe",
+    "synthetic physical smoke check"
+  ],
+  "unknown_timing_rows": [
+    "failed additive recovery attempt",
+    "failed source-drift capacity verification",
+    "failed input-drift capacity verification",
+    "physical preparation with rejected log collision",
+    "stopped v1 coarse-clock worker CPU remainder",
+    "failed v2 QPC smoke root/audit CPU remainder",
+    "natural-window preflight stopped at import-time source gate"
+  ],
+  "partial_timing_rows": [
+    "stopped v1 coarse-clock physical FCFS attempt",
+    "failed v2 QPC arrival-fixture smoke"
+  ],
+  "limitations": [
+    "command launcher and interpreter startup are not fully instrumented",
+    "read-only inspection, writing and public documentation browsing CPU are not instrumented",
+    "elapsed wall includes analysis and review between sequential experiments",
+    "no resource usage from other concurrent research jobs is included"
+  ],
+  "ledger_execution": {
+    "wall_s": 0.009543399995891377,
+    "cpu_s": 0.0
+  }
+}

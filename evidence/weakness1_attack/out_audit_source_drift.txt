@@ -1,0 +1,79 @@
+{
+  "status": "PASS",
+  "recorded_utc": "2026-09-21T13:45:27.875470+00:00",
+  "sources": [
+    {
+      "path": "src/spjf_guard/data/sealed.py",
+      "baseline_sha256": "811fc654f76368d5ccc387a59c4517ef7c0e3bc8e5544a51422b52f0bc34b80d",
+      "current_sha256": "811fc654f76368d5ccc387a59c4517ef7c0e3bc8e5544a51422b52f0bc34b80d",
+      "current_matches_baseline": true,
+      "last_write_unix": 1789969602.8302107,
+      "snapshot": "source_snapshot/src/spjf_guard/data/sealed.py"
+    },
+    {
+      "path": "src/spjf_guard/experiment/reproduce.py",
+      "baseline_sha256": "b1921178d8afaae8da95cdf9518c8aaef23fe0faeae9151cb8c5aa9393aa5df9",
+      "current_sha256": "b1921178d8afaae8da95cdf9518c8aaef23fe0faeae9151cb8c5aa9393aa5df9",
+      "current_matches_baseline": true,
+      "last_write_unix": 1789966478.6737797,
+      "snapshot": "source_snapshot/src/spjf_guard/experiment/reproduce.py"
+    },
+    {
+      "path": "src/spjf_guard/experiment/bootstrap.py",
+      "baseline_sha256": "772aa94028db74734ceba150b5023fd409d6b33b934d7fab48c04e4327c6d5df",
+      "current_sha256": "772aa94028db74734ceba150b5023fd409d6b33b934d7fab48c04e4327c6d5df",
+      "current_matches_baseline": true,
+      "last_write_unix": 1789965407.9766257,
+      "snapshot": "source_snapshot/src/spjf_guard/experiment/bootstrap.py"
+    },
+    {
+      "path": "src/spjf_guard/sim/runner.py",
+      "baseline_sha256": "7e061794fde171b130dfadf1f0229959cb3612bab56fcef2921e239bb5a42ad7",
+      "current_sha256": "6163be9a2f36aa21102dafb5f63757f517ce3c23366f08938f4adce9da260e62",
+      "current_matches_baseline": false,
+      "last_write_unix": 1789996285.3303697,
+      "AST_identical_after_removing_age_extension": true,
+      "snapshot": "pinned_src/spjf_guard/sim/runner.py"
+    },
+    {
+      "path": "src/spjf_guard/sim/kernel.py",
+      "baseline_sha256": "f70ad598ff79962a1eb2a6794130f2458fa5c093269ef3d67d4a51cd91800f88",
+      "current_sha256": "f70ad598ff79962a1eb2a6794130f2458fa5c093269ef3d67d4a51cd91800f88",
+      "current_matches_baseline": true,
+      "last_write_unix": 1789894837.9019468,
+      "snapshot": "pinned_src/spjf_guard/sim/kernel.py"
+    },
+    {
+      "path": "src/spjf_guard/sim/policy.py",
+      "baseline_sha256": "54309b5fd9f7df832484dc7e26755151e7b766c874906f505cc72345882b0e60",
+      "current_sha256": "a4142ff0146f2457ffe41c1ff11ac195384bcb194ffda32e8febda485c3ae54a",
+      "current_matches_baseline": false,
+      "last_write_unix": 1789996285.3293684,
+      "AST_identical_after_removing_age_extension": true,
+      "snapshot": "pinned_src/spjf_guard/sim/policy.py"
+    },
+    {
+      "path": "src/spjf_guard/sim/bounds.py",
+      "baseline_sha256": "6bd64b495d3eb8408d4e466ce8b189101903f144a793dcfad1095fc2533d13f9",
+      "current_sha256": "6bd64b495d3eb8408d4e466ce8b189101903f144a793dcfad1095fc2533d13f9",
+      "current_matches_baseline": true,
+      "last_write_unix": 1789913923.065072,
+      "snapshot": "pinned_src/spjf_guard/sim/bounds.py"
+    },
+    {
+      "path": "configs/main.yaml",
+      "baseline_sha256": "a3c9f8da06c6868ff8c1a9c91d9dac6be73a2dff1aef9629d5f8afd49a7a3664",
+      "current_sha256": "74f993ecea71003d96912dcfcdf03d6b335322ae98d93656d3dbc431bf4486d0",
+      "current_matches_baseline": false,
+      "last_write_unix": 1789998239.7968712,
+      "snapshot": "source_snapshot/configs/main.yaml"
+    }
+  ],
+  "zero_age_credit_policies_checked": 231,
+  "interpretation": "Concurrent changes add an optional age-credit ranking. All frozen study policies have zero credit. Capacity workers imported before this edit; subsequent study replays use the hash-matched baseline simulation snapshot. Current repository files are untouched.",
+  "config_scope": "The experiment uses its frozen parameter literals and cached tweedie arrays, not the newly changed headline predictor configuration.",
+  "timing": {
+    "wall_s": 0.16186829999787733,
+    "cpu_s": 0.0625
+  }
+}

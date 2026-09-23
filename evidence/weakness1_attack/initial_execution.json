@@ -1,0 +1,7 @@
+﻿{
+    "pid":  26648,
+    "reason":  "Resume completed cells with two workers to reduce wall time",
+    "cpu_s":  242.234375,
+    "start":  "2026-09-21T08:28:26.2188052-04:00",
+    "stop":  "2026-09-21T08:32:32.7397690-04:00"
+}

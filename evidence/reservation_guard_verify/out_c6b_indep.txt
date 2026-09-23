@@ -1,0 +1,18 @@
+generic k=1 witness: victim of size 1 at t=0, then B unit jobs; caps = sizes
+ B   In_victim  excess_victim   E(B)=B ?
+ 0   0          0               True
+ 1   1          1               True
+ 2   2          2               True
+ 3   3          3               True
+ 4   4          4               True
+ 5   5          5               True
+ 10  10         10              True
+ 20  20         20              True
+ 40  40         40              True
+E(B)=B attained for every B in 0..40 : True
+
+and B+1 is unsafe: with budget B+1 the same instance reaches excess B+1 > B
+  promise G=0, budget B=1 -> worst excess 1
+  promise G=3, budget B=4 -> worst excess 4
+  promise G=7, budget B=8 -> worst excess 8
+  promise G=12, budget B=13 -> worst excess 13

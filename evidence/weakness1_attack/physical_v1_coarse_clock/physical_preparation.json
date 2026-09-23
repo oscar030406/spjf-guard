@@ -1,0 +1,97 @@
+{
+  "input": {
+    "protocol": "892606e188e0eb6d27d864686f583db61eb41a64125201949fd25ad4c9304fb4",
+    "parameters": {
+      "protocol_version": 1,
+      "source": "primary_rep0",
+      "selection": "largest offered capped-service sum in a complete calendar-aligned 300 s bin",
+      "window_s": 300.0,
+      "workers": 2,
+      "policies": [
+        "FCFS",
+        "SPJF-E",
+        "Guard(300)"
+      ],
+      "policy_order": "sequential",
+      "requested_service": "unchanged source C_cap, at most 60 s",
+      "arrival_spacing": "unchanged within selected calendar bin",
+      "guard": {
+        "G_s": 300.0,
+        "formal_L_s": 61.0,
+        "B0_s": 30.0,
+        "eta": 0.5,
+        "gamma_s": 0.0,
+        "Bmax_s": 356.0
+      },
+      "clock": "time.monotonic_ns",
+      "service_for_guard": "worker_finish_ns - worker_start_ns, learned at completion receipt"
+    },
+    "source_terms": [
+      "2020-ERE",
+      "2020-2",
+      "2021-1",
+      "2021-2",
+      "2022-1",
+      "2022-2"
+    ],
+    "source_rep": 0,
+    "selection_used_policy_outcomes": false,
+    "calendar_bin_id": 28402,
+    "source_window_start_ns": 8520600000000000,
+    "source_window_stop_ns": 8520900000000000,
+    "window_s": 300.0,
+    "jobs": 2151,
+    "offered_requested_work_s": 4118.215007,
+    "offered_work_per_worker_s": 2059.1075035,
+    "work_only_drain_lower_bound_s": 1759.1075035,
+    "first_target_offset_s": 0.256537,
+    "last_target_offset_s": 299.946344,
+    "source_busy_hour_work_s": 15247.543180003762,
+    "source_copies": 44,
+    "input_sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+    "written_at": "2026-09-21T10:00:45-0400"
+  },
+  "input_sha256": "85a04f5c3a5de412310b6c066cfeed9ce09e5445eb591d01740102d1617e457d",
+  "selection_unchanged_after_policy_estimates": true,
+  "purpose": "resource estimate after the deterministic demand-only selection; no policy-based window selection",
+  "nominal_replays": [
+    {
+      "policy": "FCFS",
+      "jobs": 2151,
+      "nominal_physical_makespan_s": 2061.402874,
+      "nominal_wait_mean_s": 1336.572980613203,
+      "nominal_wait_p99_s": 1762.4107415,
+      "nominal_max_waiting_at_dispatch": 1996,
+      "nominal_waiting_job_evaluations": 2114481,
+      "nominal_guard_firings": 0,
+      "nominal_bound_checks": 0
+    },
+    {
+      "policy": "SPJF-E",
+      "jobs": 2151,
+      "nominal_physical_makespan_s": 2063.78902,
+      "nominal_wait_mean_s": 142.33095838214786,
+      "nominal_wait_p99_s": 1686.5936775,
+      "nominal_max_waiting_at_dispatch": 740,
+      "nominal_waiting_job_evaluations": 702910,
+      "nominal_guard_firings": 0,
+      "nominal_bound_checks": 0
+    },
+    {
+      "policy": "Guard(300)",
+      "jobs": 2151,
+      "nominal_physical_makespan_s": 2063.494739,
+      "nominal_wait_mean_s": 478.7631587656904,
+      "nominal_wait_p99_s": 1782.108597,
+      "nominal_max_waiting_at_dispatch": 1006,
+      "nominal_waiting_job_evaluations": 1124164,
+      "nominal_guard_firings": 321,
+      "nominal_bound_checks": 2151
+    }
+  ],
+  "estimated_three_policy_real_time_s": 6188.686633,
+  "execution": {
+    "wall_s": 2.171544199998607,
+    "cpu_s": 2.125
+  }
+}

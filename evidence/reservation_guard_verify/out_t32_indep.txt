@@ -1,0 +1,1 @@
+T3-2 instance form k*exc <= B + Lam_hi + Lam_lo : 1488984 checks; max slack by k = {1: 0, 2: 0, 3: 0}

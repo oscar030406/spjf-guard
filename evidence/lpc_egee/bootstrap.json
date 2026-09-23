@@ -1,0 +1,54 @@
+{
+  "n_weeks": 17,
+  "replicates": 2000,
+  "seed": 20260921,
+  "method": "paired resampling of arrival-week blocks; same multiplicities across all policies and both pools; exact expanded-sample linear quantiles; endpoints include partial weeks",
+  "limits": "conditional on the fixed trace, capacity, fitted models, and open-loop arrivals; no refitting or queue rerun inside bootstrap",
+  "log_vs_expected": {
+    "all_mean_log_minus_E": {
+      "lo": -15.4196732302508,
+      "hi": 6.732122119902435,
+      "valid": 2000
+    },
+    "all_p99_log_minus_E": {
+      "lo": -679.6324999999655,
+      "hi": 882.0932499999925,
+      "valid": 2000
+    },
+    "all_p99_busy_log_minus_E": {
+      "lo": -1851.25,
+      "hi": 930.9029999999719,
+      "valid": 2000
+    },
+    "CE1_mean_log_minus_E": {
+      "lo": -1.946731302743933,
+      "hi": 13.753853747578814,
+      "valid": 2000
+    },
+    "CE1_p99_log_minus_E": {
+      "lo": -562.05525,
+      "hi": 912.2069999999995,
+      "valid": 2000
+    },
+    "CE1_p99_busy_log_minus_E": {
+      "lo": -630.0545000000009,
+      "hi": 964.997500000115,
+      "valid": 2000
+    },
+    "old_CE2_mean_log_minus_E": {
+      "lo": -40.83075003406141,
+      "hi": 3.6325853583955166,
+      "valid": 2000
+    },
+    "old_CE2_p99_log_minus_E": {
+      "lo": -1800.1482499998451,
+      "hi": 1847.0749999999996,
+      "valid": 2000
+    },
+    "old_CE2_p99_busy_log_minus_E": {
+      "lo": -8670.421250002128,
+      "hi": 1306.0,
+      "valid": 2000
+    }
+  }
+}
