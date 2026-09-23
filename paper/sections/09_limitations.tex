@@ -84,7 +84,8 @@ window we build is \devnum{18.7} hours, so the uniform additive term is
 about \devnum{17} days and the guard never fires at any of the positive budgets tested;
 predicted-cost ordering also makes the p99 wait worse than first-come
 first-served there under sustained overload. The guard results we report on the
-four measure the ordering mechanism there; the uniform bound is too coarse to
+four workloads that fail this condition measure the ordering mechanism there; the
+uniform bound is too coarse to
 provide a useful promise at the reported tail scale.
 The second is an empirical opportunity screen: concentrated service costs can
 make reordering useful. A heavy tail is not a theorem assumption or a necessary
@@ -100,7 +101,7 @@ On a fixed job subset, the pointwise bound implies
 $Q_\alpha(W_P)\le Q_\alpha(W_{\mathrm{FCFS}})+G$ by monotonicity of quantiles.
 It does not imply an improvement in that percentile. A
 guarded run can have a worse deadline-window p99 than the baseline its guarantee
-is stated against, by as much as the promise itself, and Table~\ref{tab:adv}
+is stated against, by as much as the promise itself, and Supplementary Table~S7
 shows it doing so under two of the three corrupted scores at the busiest load
 while the worst single job stays inside the promise.
 

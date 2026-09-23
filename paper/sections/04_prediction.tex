@@ -50,39 +50,26 @@ available by that instant are dropped; on the primary configuration the rule bin
 \devnum{0} rows. We report the zero because a rule that never binds is easily mistaken
 for a rule that is not there.
 
+
+
 Third, we treat the delay $\delta$ with which results reach the feature store as a
-sensitivity and not as an assumption. At $\delta = 0$ the full tabular model reaches
-AUROC \devnum{0.9283} and at $\delta = \devnum{600}$ s it reaches \devnum{0.9066}. On the second judging
-platform, where the log carries no clock and lag has to be expressed in records, the same
-model moves from \devnum{0.9266} at lag \devnum{0} to \devnum{0.8902} at lag
-\devnum{1{,}000}. Ranking survives a ten-minute feedback delay; the probability
-calibration degrades, average precision falling from \devnum{0.289} to \devnum{0.139}.
+sensitivity and not as an assumption; Supplementary Section~S1 gives the two clocks in
+full, on which ranking survives a ten-minute feedback delay while the probability
+calibration degrades.
 
-\subsection{Predictor Families}
-
-All families see the same rows, the same split and the same availability rule. The
-tabular family is gradient-boosted trees~\cite{ke2017lightgbm} over five feature groups:
-task history (M1), user history (M2), static features of the submitted artefact (M3),
-everything tabular (M4), and M4 plus one-hop relational aggregates over the
-task-assignment and user-cohort neighbourhoods (M5). A control (M6) permutes task
-identity across assignments, so that M5's aggregates are keyed on a scrambled
-neighbourhood; it reaches AUROC \devnum{0.9288} in the primary configuration against
-M5's \devnum{0.9302}, so the aggregates lose almost nothing when the identity they are
-built on is destroyed. The sequence family is a GRU over the earlier jobs of one
-user whose results are already available, used alone (R1) and as a state vector appended
-to M4's columns inside the boosted model (R1S). The relational family is a heterogeneous
-network over user, task, assignment and cohort nodes~\cite{schlichtkrull2018rgcn} with no
-node-identity embeddings, so an unseen task or user is handled by the same weights. Its
-ablation ladder runs N0 (a multilayer perceptron on exactly M4's columns), G0U (the
-relational architecture with every neighbour slot empty and the assignment and cohort
-roots removed, which leaves exactly M4's information), G0 (empty neighbour slots, roots
-kept), G1 (the real edges) and G2 (the same network on edges permuted within a period and
-time block, so that neighbour counts and recency are preserved and only the identity of
-the neighbour changes).
+All families see the same rows, the same split and the same availability rule.
+Supplementary Section~S1 defines them: the gradient-boosted tabular groups M1 (task
+history), M2 (user history), M3 (static features of the submitted artefact), M4
+(everything tabular) and M5 (M4 plus one-hop relational aggregates), with the
+scrambled-neighbourhood control M6; the sequence family R1 and R1S, a GRU over the
+user's own earlier jobs used alone and as a state vector inside the boosted model; and
+the relational ladder N0, G0U, G0, G1 and G2, which runs a heterogeneous network from
+a multilayer perceptron on M4's columns through empty neighbour slots to the real
+edges and then to edges permuted inside a period and time block.
 
 \subsection{What the Comparison Shows}
 
-Table~\ref{tab:pred_edu} gives the two judging traces. One-hop relational aggregates add
+Supplementary Table~S2 gives the two judging traces. One-hop relational aggregates add
 nothing on either: M5 $-$ M4 is \devnum{$+0.0019$} of AUROC on the first and
 \devnum{$-0.0002$} on the second. The ladder tells the same story with a trained model in
 place of hand-built aggregates. Deleting every edge (G0) and permuting the edges (G2)
@@ -116,7 +103,7 @@ not explain it.
 Which information matters is not a constant across platforms. On the first judging trace
 the user's own history and the static features of the artefact beat the task's history;
 on the second the task's history beats the user's by \devnum{0.11} of AUROC
-(Table~\ref{tab:pred_edu}). A task on the first platform is attempted by one cohort within
+(Supplementary Table~S2). A task on the first platform is attempted by one cohort within
 a few days, so who is writing still carries information; a task on the second is attempted
 by thousands of users over years, so the task's own record has already fixed the cost.
 The non-judging traces push this further. On the
@@ -131,14 +118,11 @@ against.
 
 \subsection{Cost of Predicting, and What Enters the Scheduler}
 
+
 Prediction has to be cheap enough to sit in front of a queue whose median job is
-\devnum{204} ms. Measured in a streaming loop over \devnum{20{,}000} jobs, the
-tabular path costs a median of \devnum{0.076} ms per job and a 99th percentile of
-\devnum{0.188} ms; the relational network costs \devnum{0.434} ms per row plus
-\devnum{0.121} ms of graph lookup, and the GRU \devnum{0.576} ms. Charging the measured
-feature and inference latency to the predictive policies before they enqueue changes the
-closed gap by less than \devnum{0.001} at every load we ran, so the choice between these
-predictors is not a latency decision at this job size.
+\devnum{204} ms, and it is: Supplementary Section~S1 gives the measured per-job cost of
+each family, and charging it to the predictive policies before they enqueue changes the
+closed gap by less than \devnum{0.001} at every load we ran.
 
 It is a queueing decision. M5 has the higher AUROC of the two tabular candidates and
 loses in the queue at all three loads, by \devnum{0.012}, \devnum{0.008} and
@@ -148,47 +132,6 @@ therefore take M4, the full tabular model, into Section~\ref{sec:scheduling}: it
 selected on the queueing outcome on validation periods, not on prediction quality, and
 the two orderings do not agree.
 
-\begin{table}[htbp]
-\centering
-\caption{Predictors on the two judging traces under one visibility protocol and one split.
-Heavy is the training-period 95th percentile of executed cost. RMSE and Spearman (Sp.) are
-on $\log(1+C)$. R-net is the heterogeneous relational network.}
-\label{tab:pred_edu}
-\small
-\begin{tabular}{llcccc}
-\hline
-Model & Information & AUROC & AUPRC & RMSE & Sp. \\
-\hline
-\multicolumn{6}{l}{\textit{CodeBench}, $n = \devnum{40{,}844}$} \\
-M1  & task history            & \devnum{0.7960} & \devnum{0.053} & \devnum{0.3000} & \devnum{0.219} \\
-M2  & user history            & \devnum{0.8591} & \devnum{0.242} & \devnum{0.2605} & \devnum{0.302} \\
-M3  & static features         & \devnum{0.8632} & \devnum{0.082} & \devnum{0.2892} & \devnum{0.290} \\
-M4  & all tabular             & \devnum{0.9283} & \devnum{0.289} & \devnum{0.2519} & \devnum{0.312} \\
-M5  & M4 + one-hop            & \devnum{0.9302} & \devnum{0.299} & \devnum{0.2507} & \devnum{0.344} \\
-N0  & MLP on M4's columns     & \devnum{0.9209} & \devnum{0.306} & \devnum{0.2463} & \devnum{0.278} \\
-G0U & R-net, no edges or roots & \devnum{0.9348} & \devnum{0.322} & \devnum{0.2417} & \devnum{0.321} \\
-G0  & R-net, no edges         & \devnum{0.9325} & \devnum{0.316} & \devnum{0.2402} & \devnum{0.324} \\
-G1  & R-net, real edges       & \devnum{0.9324} & \devnum{0.322} & \devnum{0.2397} & \devnum{0.329} \\
-G2  & R-net, permuted edges   & \devnum{0.9305} & \devnum{0.318} & \devnum{0.2396} & \devnum{0.323} \\
-R1  & GRU over user history   & \devnum{0.9239} & \devnum{0.324} & \devnum{0.2396} & \devnum{0.313} \\
-R1S & M4 columns + GRU state  & \devnum{0.9366} & \devnum{0.315} & \devnum{0.2414} & \devnum{0.329} \\
-\hline
-\multicolumn{6}{l}{\textit{ACcoding}, $n = \devnum{647{,}465}$; the neural models were not fitted here} \\
-M1  & task history            & \devnum{0.8990} & \devnum{0.431} & \devnum{0.2904} & \devnum{0.683} \\
-M2  & user history            & \devnum{0.7855} & \devnum{0.292} & \devnum{0.3190} & \devnum{0.471} \\
-M3  & static features         & \devnum{0.7884} & \devnum{0.165} & \devnum{0.3429} & \devnum{0.493} \\
-M4  & all tabular             & \devnum{0.9266} & \devnum{0.527} & \devnum{0.2714} & \devnum{0.692} \\
-M5  & M4 + one-hop            & \devnum{0.9264} & \devnum{0.527} & \devnum{0.2713} & \devnum{0.696} \\
-\hline
-\end{tabular}
-\end{table}
-% Sources of Table~\ref{tab:pred_edu}:
-%   CodeBench column: evidence/predictor_neural/out_evaluate_core.txt (test 2022-2, group
-%     "all", mean over seeds 3/4/5); the M1-M6 rows agree with
-%     evidence/codebench_service_v2/out_service_v2.txt SUMMARY 1 (config ires0, train core).
-%   ACcoding column: evidence/accoding_v2/out_accoding_v2.txt, stage boot, lag 0,
-%     "devtest rows = all" table; cross-platform row labels from its stage "compare", section C.
-%   Heavy cut-offs 1.559 s and 1,314 ms: the same two files.
 
 % The table of predictor scores on the non-judging traces (label tab:pred_cross) moved to
 % supplementary.tex as Supplementary Table S1 in the sixth revision pass, referee item G5.

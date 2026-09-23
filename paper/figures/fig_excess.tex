@@ -1,8 +1,8 @@
 % Figure: worst per-job excess over FCFS, unguarded and under Guard(600),
 % for the clean score and the three corrupted ones, at the three loads.
-% Clean-score pair: the block headers of Table~\ref{tab:guard} (SPJF-E max excess
+% Clean-score pair: the block headers of Table 5 of the manuscript (SPJF-E max excess
 % 1,241.4 / 3,044.5 / 5,904.5 s) and its Guard(600) "Max exc." rows
-% (492.2 / 507.8 / 523.7 s).  Corrupted pairs: Table~\ref{tab:adv}, columns
+% (492.2 / 507.8 / 523.7 s).  Corrupted pairs: Table~\ref{tab:s_adv}, columns
 % "Max excess" unguarded / guarded.  Both tables come from
 % outputs/paper_tables/.  No new computation.
 \begin{figure}[htbp]
@@ -53,12 +53,12 @@
 \end{tikzpicture}}
 \caption{Original-score reference and its corrupted-score controls. The worst single job, with and without the guard, under the
 expected-cost score (``clean'') and the three corrupted scores of
-Table~\ref{tab:adv}: reversed (rev), random (rand) and truly-longest-called-shortest
+Table~\ref{tab:s_adv}: reversed (rev), random (rand) and truly-longest-called-shortest
 (l-as-s). The dashed line is the promise $G = \devnum{600}$ s. Sources: the clean
 pair is the block header and the Guard($\devnum{600}$) row of
-Table~\ref{tab:guard}; the three corrupted pairs are the ``Max excess'' columns
-of Table~\ref{tab:adv}. The unguarded bar grows with load and with corruption;
-the guarded bar does not, which is the content of Theorem~\ref{thm:guard} and
+Table~5 of the manuscript; the three corrupted pairs are the ``Max excess'' columns
+of Table~\ref{tab:s_adv}. The unguarded bar grows with load and with corruption;
+the guarded bar does not, which is the content of Theorem~3 of the manuscript and
 not a property of the trace.}
 \label{fig:excess}
 \end{figure}

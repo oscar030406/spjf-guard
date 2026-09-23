@@ -18,7 +18,7 @@ The main scheduling comparisons replay the overlaid CodeBench pool built in
 Section~\ref{sec:overlay}. The three load levels differ only in the pool size and the
 five overlays only in the per-copy week shift, and every policy sees the same arrival
 instants and the same service times, so the comparison is pathwise.
-Table~\ref{tab:setup} collects the configuration and the selection protocol; the
+Supplementary Table~S4 collects the configuration and the selection protocol; the
 metrics are defined in Section~\ref{sec:model} and the policy names in
 Table~\ref{tab:policies}, extended by the aging comparator below.
 Section~\ref{sec:exp_visibility} gives the conservative-visibility headline. The
@@ -29,38 +29,6 @@ development fit and are reported separately. We report the fraction of the FCFS-
 plain percentage reduction against FCFS side by side throughout, because they are
 different numbers and the first is easy to read as the second.
 
-\begin{table}[htbp]
-\centering
-\caption{Experimental configuration and the selection protocol for the guard parameters.}
-\label{tab:setup}
-\small
-\begin{tabular}{p{0.24\textwidth}p{0.69\textwidth}}
-\toprule
-Item & Value \\
-\midrule
-Trace and pool & CodeBench development terms under the \devnum{60} s limit, overlaid as in Section~\ref{sec:overlay}; \devnum{17{,}634{,}760} jobs, \devnum{30} weeks, five overlays \\
-Load levels & $k = \devnum{8/5/4}$ on four of the five overlays and $\devnum{7/5/4}$ on the fifth, whose work per busy hour is the lowest; busy-hour $\rho = \devnum{0.529} / \devnum{0.847} / \devnum{1.059}$ on overlay~0 \\
-Single-server configuration & separate trace, \devnum{321} copies, \devnum{3{,}209{,}347} jobs, busy-hour $\rho = \devnum{0.80}$ at $k = 1$ \\
-Primary metric & 99th percentile of the wait among jobs arriving in the \devnum{24}~h before their own deadline; secondary metrics as defined in Section~\ref{sec:model}, the gap closed printed beside the percentage reduction \\
-Intervals & paired week-block bootstrap, \devnum{2{,}000} resamples of the \devnum{30} whole weeks, one draw of week multiplicities applied to every policy and to all five overlays \\
-Promise to parameter & $B_{\max} = k(G - (3-2/k)L)$ with $L = \devnum{60}$ s, no data used \\
-Budget shapes & one mechanism under one cap, three shapes: constant ($\gamma = \eta = 0$), age-relative ($+\,\eta k (t - a_q)$), queue-length ($+\,\gamma n_q$). Three pre-stated grids, \devnum{42} $+$ \devnum{162} $+$ \devnum{54} $=$ \devnum{258} points \\
-Selection rule & a point is feasible if its harm is $\le G/2$ at each of the three load levels of each of the five validation overlays (\devnum{15} cells); the objective is the deadline-window gap closed in the worst cell; ties to smaller worst harm, then smaller $B_0$, then $\eta$, then $\gamma$. Guard($G$) is the winner over the three grids together; the winner inside each grid is an ablation row \\
-What the rule selected & Age-relative at $G = \devnum{300}$ and $\devnum{600}$ s ($B_0 = \devnum{60}$ and $\devnum{120}\,k/4$ s, $\eta = \devnum{0.50}$ and $\devnum{0.75}$), queue-length at $G = \devnum{1200}$ s ($\gamma = \devnum{16}k/4$ s). Supplementary Table~S2 gives the three selected points with their worst-cell gap and harm, the feasible counts and the nine per-shape winners; the same values are in \texttt{protocol\_lock.draft.json} \\
-Comparators & As named in Table~\ref{tab:policies}. Fixed($G$) is the equal-promise budget $B_{\max}$, which the harm rule rejects at every promise; Skip($G$) takes the largest dispatch-charged count \eqref{eq:skip} allows at that $G$ and that cell's $k$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-% Source of Table~\ref{tab:setup}: outputs/paper_tables/tab_setup.tex, produced by
-%   `python scripts/emit_paper_tables.py` from outputs/dev_tables/ (see GENERATED.md for the
-%   regeneration recipe and its check).  The trace, load-level, single-server, metric and
-%   interval rows are unchanged from evidence/main_v3/out_main_v31.txt section 2 (trace table,
-%   rows primary 0-4 and k1) and are not produced by the package.  The grids, the rule, the
-%   three selected points, the per-shape winners and the feasible counts are
-%   protocol_lock.draft.json (search_grids.n_points 42/162/54, selection_rule, selected_parameters,
-%   family_best) and docs/repo_build_status.md third pass, section 3.
-%   Finite-skip count rule: \eqref{eq:skip}; per-cell counts in outputs/dev_tables/
-%   policy_parameters.csv, column skip_count.
 
 \subsection{What Was Selected on What}
 \label{sec:exp_prov}
@@ -75,33 +43,14 @@ development process; that term cannot load a pool on its own
 figure in this section as out-of-sample, validated on test
 data, or evidence of generalisation.
 
-Third, the grids, the feasibility rule, the objective and the tie-break were fixed before the
-grids were run, at comparable density across the three shapes, and the package comparisons use exact integer microseconds for arrivals, service
-and budget arithmetic. Earlier predictor comparisons, cross-domain analyses and
-trace-construction sensitivities remain archived development evidence, with their
-different fits and configurations identified in the captions and Supplementary
-Section~S5. They are not all regenerated by the package. Two properties of the outcome belong here. The winning shape is not the same at
-every promise: the age-relative
-shape wins the joint comparison at $G = \devnum{300}$ and $\devnum{600}$ s and the queue-length
-shape at $G = \devnum{1200}$ s, where it reaches worst-cell gap \devnum{0.7283} at worst-cell
-harm \devnum{145.3} s against \devnum{483.9} s for the best age-relative point. And a worst-cell
-rule can be decided by a single cell: dropping the one validation cell that decides
-the $G = \devnum{600}$ choice moves that choice to $B_0 = \devnum{15}k/4$ s, $\eta =
-\devnum{0.90}$, with worst-cell gap \devnum{0.7237}. The sealed terms will be opened
-once after the protocol freeze and reported in the same multi-server tables as an
-additional column, with the parameters unchanged. The current frozen-run procedure
-also produces a separate single-server trace and its tables, per-term and pooled
-predictor metrics, conservative/static visibility tables and exposure/lag audits,
-and a separate policy-specific exact-visibility stage. It does not produce the
-refit-control and GRU rows of Table~\ref{tab:rank}, the other predictor-family
-comparisons, cross-domain sealed results, or the earlier trace-construction
-sensitivities. No sealed result is printed here.
-% Source of the paragraph above: protocol_lock.draft.json (grids, rule, selected points);
-%   docs/repo_build_status.md third pass, sections 1 and 3 (the three grids at comparable
-%   density, the nine family winners, the integer-microsecond kernel and the deterministic
-%   refit); evidence/main_v3/out_main_v32.txt section 4 (the drop-one-cell sensitivity table,
-%   row G = 600 capped) and section 1 (what the second decimal of the older floating-point runs
-%   does).
+
+Third, the grids, the feasibility rule, the objective and the tie-break were fixed
+before the grids were run, at comparable density across the three shapes, and the
+package comparisons use exact integer microseconds for arrivals, service and budget
+arithmetic. Supplementary Section~S5 records what the selection chose, which results
+the released package reproduces and which remain archived development evidence, and
+the drop-one-cell sensitivity of the worst-cell rule. No sealed result is printed
+here.
 
 % SEALED-RESULTS-PLACEHOLDER
 % The line above is the single anchor at which the sealed-semester results are inserted
@@ -117,49 +66,21 @@ $a_j+W_P[j]+C_j$. A feature may therefore be causal in the recorded log and stil
 use a result unavailable in the replay. Neither a future-record perturbation test
 nor a source-clock brute-force feature audit resolves this discrepancy.
 
-Let $H_i$ be the set of distinct outcome records used by score $i$, counting a record
-only once if it enters several entity aggregates. Separate records from the same
-class-term copy, histories from other classes or terms, and records with no
-submission job in the replayed pool. Same-copy queueing exposure is
-\[
- V_i(P)=\{j\in H_i:\ \operatorname{copy}(j)=\operatorname{copy}(i),\quad
-             a_j+W_P[j]+C_j>a_i\}.
-\]
-An external past record is not unavailable merely because it has no replayed job.
-The earlier audit mapped histories through the same replication round while
-different classes were independently shifted. Its roughly \devnum{80\%} affected
-jobs and \devnum{95.39\%} with unreplayed history are mapping-exposure statistics,
-not estimates of same-copy queueing leakage. Supplementary Section~S5 specifies
-the external-history clock and the separate class-history sensitivity.
-% Source: outputs/dev_visibility/visibility_exposure.csv, overall_affected_share
-% (approximately 0.80 across cells), unreplayed_overall_affected_share=0.9538935602.
-
-\paragraph{Conservative headline and static control.}
 The conservative score restricts user, exercise and pair history to submission
 outcomes in the same class-term copy, and admits a result only when
-$\mathrm{done}_j+\devnum{3600}\le a_i$, with times in seconds. The static score
-uses code, course and clock information known at submission, without outcome
-history. Both use their own fitted models; original, conservative and static
-therefore differ in more than release delay. Their differences cannot be attributed
-to queueing delay alone and are not mathematical upper or lower performance bounds.
-Guard parameters remain those selected under the original score. Consistent with
-the committed visibility decision, the conservative variant is the empirical
-headline; the original-score results are optimistic references.
-% Source: outputs/dev_visibility/manifest.json, notes.conservative_lag_s,
-% headline_variant and selected_parameters_unchanged.
+$\mathrm{done}_j+\devnum{3600}\le a_i$; the static score uses code, course and clock
+information known at submission, without outcome history. Both use their own fitted
+models, so the three variants differ in more than release delay and their differences
+cannot be attributed to queueing delay alone. Guard parameters remain those selected
+under the original score, and the conservative variant is the empirical headline.
+Supplementary Section~S3 gives the same-copy exposure decomposition, the lag audit
+that finds \devnum{0} violations in every conservative Guard and FCFS cell and
+\devnum{336} job occurrences beyond the lag under unguarded conservative SPJF-E, the
+pending policy-specific exact variant, the aging comparator outside the budget family
+and the package predictor metrics with their splits.
 
-For a same-copy submission, $W_P[j]\le D$ is a sufficient availability condition
-under a source release lag $D$. The largest development FCFS wait is
-\devnum{1544.602708} s. Adding the largest evaluated promise, \devnum{1200} s,
-still lies below the \devnum{3600} s lag. All conservative Guard and FCFS cells
-have \devnum{0} lag violations. Unguarded conservative SPJF-E has
-\devnum{336} job occurrences with waits beyond the lag across the evaluated cells;
-it lacks the guard's certificate, so its performance is a lagged-score comparator
-with residual availability violations. A new pool must pass the per-job lag audit;
-the development maximum does not certify it in advance.
-% Source: outputs/dev_visibility/visibility_waits_and_lag.csv, max(wait_max_s)
-% for FCFS; sum(lag_violations) for conservative SPJF-E=336 and for FCFS/Guard=0;
-% outputs/dev_visibility/manifest.json, promises and conservative_lag_s.
+
+
 
 At the busiest load, conservative Guard($\devnum{600}$) gives p99
 \devnum{174.71} s and closes \devnum{0.429 [0.357, 0.533]} of the reference gap,
@@ -211,110 +132,9 @@ Load & Score history & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm & Fire
 % Source: outputs/dev_visibility/visibility_comparison.csv, Guard(600) variants, all levels.
 
 
-\paragraph{Policy-specific refinement.}
-The exact variant freezes the original model weights, replays each policy, withholds
-same-copy outcomes still unavailable at the target arrival, recomputes affected
-histories and scores, and repeats until no used outcome violates availability.
-Withheld sets only grow, so this finite procedure terminates. It certifies
-availability in its final replay; it is not a claim of minimal withholding, a unique
-fixed point, or an online predictor driven by completion events. A full comparison
-and the associated exposure decomposition remain pending. The conservative and static
-results above are the completed controls; no partial exact result is used to select
-parameters or replace the headline.
-% EXACT-VISIBILITY-PENDING: add completed exact_comparison.csv cells at each load
-% beside original/conservative/static in tab:visibility; add same_copy_exposure.csv
-% only after complete coverage and terminal-zero certification. No exact values yet.
-
-\paragraph{Aging outside the budget family.}
-Table~\ref{tab:aging_policy} extends the policy definitions with linear aging.
-It uses the same conservative score as the headline, with a validation search
-over \devnum{11} credits, of which \devnum{4} pass the \devnum{300} s harm limit.
-The selected credit is $\beta=\devnum{0.03}$; its worst validation gap is
-\devnum{0.0375} and harm \devnum{246.36} s. The label Aging(\devnum{600}) records
-the reference promise used to set the validation constraint, and carries no proved
-per-job guarantee. All evaluated loads and harmful outcomes are retained.
-% Sources: outputs/selection_aging/aging_protocol.json and selected_aging.csv,
-% candidate_count, feasible_count, credit_per_s, worst_gap_closed, worst_harm_s.
-
-\begin{table}[htbp]
-\centering\small
-\caption{Additional policy definition; the reference label is not a theorem.}
-\label{tab:aging_policy}
-\begin{tabular}{lp{0.58\textwidth}l}
-\toprule
-Policy & Dispatch priority, smallest first & Guarantee \\
-\midrule
-Aging($G$) & $\hat C_i-\beta(t-a_i)$, equivalently $\hat C_i+\beta a_i$;
-ties by arrival rank. Select $\beta$ on validation cells under harm $\le G/2$. & None proved \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[htbp]
-\centering\small
-\caption{Conservative-score comparison with the selected aging baseline. All waits,
-excesses and harms are in seconds; intervals are paired week-block intervals.}
-\label{tab:aging_results}
-\begin{tabular}{llrlrr}
-\toprule
-Load & Policy & p99$_{\mathrm{dl}}$ & Gap closed & Max excess & Harm \\
-\midrule
-\devnum{0.5} & Guard(600) & \devnum{16.68} & \devnum{0.640 [0.604, 0.671]} & \devnum{499.9} & \devnum{235.2} \\
-% Source: outputs/dev_visibility/visibility_comparison.csv, level=0, policy=Guard(600).
-\devnum{0.5} & Aging(600) & \devnum{23.83} & \devnum{0.228 [0.180, 0.271]} & \devnum{306.8} & \devnum{155.8} \\
-% Source: outputs/dev_visibility/visibility_comparison.csv, level=0, policy=Aging(600).
-\devnum{0.8} & Guard(600) & \devnum{64.77} & \devnum{0.634 [0.560, 0.688]} & \devnum{509.4} & \devnum{327.7} \\
-% Source: outputs/dev_visibility/visibility_comparison.csv, level=1, policy=Guard(600).
-\devnum{0.8} & Aging(600) & \devnum{109.83} & \devnum{0.111 [0.082, 0.161]} & \devnum{673.0} & \devnum{179.1} \\
-% Source: outputs/dev_visibility/visibility_comparison.csv, level=1, policy=Aging(600).
-\devnum{1.0} & Guard(600) & \devnum{174.71} & \devnum{0.429 [0.357, 0.533]} & \devnum{527.8} & \devnum{303.5} \\
-% Source: outputs/dev_visibility/visibility_comparison.csv, level=2, policy=Guard(600).
-\devnum{1.0} & Aging(600) & \devnum{261.68} & \devnum{0.051 [0.035, 0.074]} & \devnum{855.6} & \devnum{184.7} \\
-% Source: outputs/dev_visibility/visibility_comparison.csv, level=2, policy=Aging(600).
-\bottomrule
-\end{tabular}
-\end{table}
 
 
-\paragraph{Predictor metrics and their splits.}
-The AUROC \devnum{0.928} in the earlier predictor comparison is M4 under the
-source-clock I-res protocol, using heavy-class classifier probabilities averaged
-over seeds, trained on the core terms and evaluated on
-\devnum{2022-2}. It is not the AUROC of the package's deployed expected-cost score.
-The latter is \devnum{0.9360} pooled over rolling forward development predictions
-and \devnum{0.9372} on \devnum{2022-2}; the conservative pooled score is
-\devnum{0.9116}. Table~\ref{tab:development_predictor} uses the package values and
-split definitions that will accompany the sealed predictor column. The earlier
-value remains evidence for its own retrospective classifier comparison, whose
-predictions never enter scheduling; it is not a competing estimate of the same fitted score.
-% Sources: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1, core/M4/ires0;
-% outputs/dev_predictor/predictor_metrics.csv, pooled and 2022-2, spjf_e and
-% spjf_e_conservative. Exact training periods are specified in Supplementary Section S5.
 
-\begin{table}[htbp]
-\centering\small
-\caption{Package development AUROC with user-block intervals. Pooled means pooling
-unreplicated forward-prediction rows, not averaging term AUROCs.}
-\label{tab:development_predictor}
-\begin{tabular}{lll}
-\toprule
-Target & Score variant & AUROC [interval] \\
-\midrule
-pooled & Original & \devnum{0.9360 [0.9289, 0.9424]} \\
-% Source: outputs/dev_predictor/predictor_metrics.csv, target=pooled, score=spjf_e.
-pooled & Conservative & \devnum{0.9116 [0.9054, 0.9173]} \\
-% Source: outputs/dev_predictor/predictor_metrics.csv, target=pooled, score=spjf_e_conservative.
-pooled & Static & \devnum{0.8371 [0.8249, 0.8492]} \\
-% Source: outputs/dev_predictor/predictor_metrics.csv, target=pooled, score=spjf_e_static.
-2022-2 & Original & \devnum{0.9372 [0.9218, 0.9491]} \\
-% Source: outputs/dev_predictor/predictor_metrics.csv, target=2022-2, score=spjf_e.
-2022-2 & Conservative & \devnum{0.9196 [0.9060, 0.9324]} \\
-% Source: outputs/dev_predictor/predictor_metrics.csv, target=2022-2, score=spjf_e_conservative.
-2022-2 & Static & \devnum{0.8806 [0.8544, 0.9022]} \\
-% Source: outputs/dev_predictor/predictor_metrics.csv, target=2022-2, score=spjf_e_static.
-\bottomrule
-\end{tabular}
-\end{table}
 
 
 \subsection{Question 2: What to Rank By}
@@ -392,48 +212,12 @@ it in the second decimal of a wait.
 %   gap_hi.  The two footnote-a rows and the refit-noise control in the text are
 %   evidence/main_v3/out_main_v31.txt sections 4 and 5, rows SPJF-M4refit and SPJF-r1s.
 
-Alternative ranking losses were fitted on the same features and run through the same
-simulator (Table~\ref{tab:scores}). The fitted quantile scores and raw-second squared-error model lose to the Tweedie
-fit at every load in this comparison. Raw squared error and the Tweedie mean loss
-have the same unrestricted population target, so this does not identify a change
-of estimand as the cause. Finite model capacity, error weighting, regularisation
-and optimisation can produce different rankings for the same target. A two-class rule that
-sends predicted-heavy jobs behind predicted-light ones and runs FCFS inside each class reaches a
-deadline-window p99 of \devnum{64.05} s at $\rho = \devnum{0.8}$ on the first overlay, against
-\devnum{43.86} s for the full ordering on the same overlay, so most of the benefit comes from
-the fine ordering inside the light class and little of it from separating the two classes.
 
-\begin{table}[htbp]
-\centering
-\caption{Ranking scores fitted on one feature set and run through one simulator: fraction of the
-deadline-window gap closed, five overlays, and the paired difference against the log-scale
-score. Archived source-clock fits, distinct from the package refit in
-Table~\ref{tab:rank}; differences between the tables do not compare identical fitted scores.}
-\label{tab:scores}
-\small
-\begin{tabular}{lcccc}
-\toprule
-Score & $\rho = \devnum{0.5}$ & $\rho = \devnum{0.8}$ & $\rho = \devnum{1.0}$ & Difference at $\rho = \devnum{1.0}$ \\
-\midrule
-SPJF-log                   & \devnum{0.7528} & \devnum{0.8728} & \devnum{0.8967} & --- \\
-SPJF-E                     & \devnum{0.7515} & \devnum{0.8847} & \devnum{0.9159} & \devnum{$+0.0191$ $[+0.0111, +0.0238]$} \\
-Expected cost, gamma hurdle & \devnum{0.7404} & \devnum{0.8826} & \devnum{0.9141} & \devnum{$+0.0174$ $[+0.0082, +0.0223]$} \\
-Probability of heavy       & \devnum{0.7476} & \devnum{0.8821} & \devnum{0.9122} & \devnum{$+0.0155$ $[+0.0066, +0.0199]$} \\
-Predicted 99th percentile  & \devnum{0.7245} & \devnum{0.8742} & \devnum{0.9005} & \devnum{$+0.0038$ $[-0.0050, +0.0097]$} \\
-Predicted 90th percentile  & \devnum{0.7024} & \devnum{0.8470} & \devnum{0.8755} & \devnum{$-0.0212$ $[-0.0297, -0.0156]$} \\
-Predicted median           & \devnum{0.7071} & \devnum{0.8196} & \devnum{0.8402} & \devnum{$-0.0565$ $[-0.0684, -0.0463]$} \\
-Squared error, raw seconds & \devnum{0.7197} & \devnum{0.8585} & \devnum{0.8873} & \devnum{$-0.0094$ $[-0.0194, -0.0043]$} \\
-\bottomrule
-\end{tabular}
-\end{table}
-% Source of Table~\ref{tab:scores}: evidence/ranking_score/out_table_primary_5reps.txt, the
-%   three blocks "primary, reps 0,1,2,3,4, busy-hour rho target 0.5 / 0.8 / 1.0"; column
-%   gain_p99dl for the three load columns and column dgain_p99dl_vs_M4 of the rho 1.0 block for
-%   the last column.  Rows SPJF-M4 / SPJF-tweedie / SPJF-hurdle / SPJF-phv / SPJF-q99 /
-%   SPJF-q90 / SPJF-q50 / SPJF-l2raw.  This is a separate study with its own fits, which is why
-%   its M4 and Tweedie figures differ in the third decimal from Table~\ref{tab:rank}.
-%   Two-class figures in the text: evidence/ranking_score/out_sim_primary_rep0_twoclass.txt,
-%   block primary_rep0_r0.8_twoclass, rows 2CLASS-FCFS-tau0.02 and SPJF-tweedie, column w_p99_dl.
+Alternative ranking losses fitted on the same features and run through the same
+simulator are Supplementary Table~S13: the fitted quantile scores and the raw-second
+squared-error model lose to the Tweedie fit at every load, and a two-class rule that
+only separates predicted-heavy from predicted-light jobs recovers little of the
+benefit, so most of it comes from the fine ordering inside the light class.
 
 The two kinds of error do not cost the same. Replacing the largest \devnum{1\%} of
 underestimates by the true cost, and leaving the rest of the score alone, moves the
@@ -458,9 +242,11 @@ raw squared error and Tweedie loss.
 \label{sec:exp_guard}
 
 Table~\ref{tab:guard} reports the guarded policies at three promises and three loads, and
-Figure~\ref{fig:gapvsg} plots the gap closed against the promise. The cost of the promise
-depends on the promise and on the load. At $\rho = \devnum{1.0}$, Guard($\devnum{600}$) closes
-\devnum{0.801} of the FCFS-to-SJF gap against \devnum{0.916} for the unguarded policy, so it
+Supplementary Figure~S2 plots the gap closed against the promise. The cost of the promise
+depends on the promise and on the load. Under the original source-clock score, an
+optimistic reference rather than the headline of Table~\ref{tab:visibility}, at
+$\rho = \devnum{1.0}$ Guard($\devnum{600}$) closes \devnum{0.801} of the FCFS-to-SJF
+gap against \devnum{0.916} for the unguarded policy, so it
 gives up \devnum{0.115} of the gap at a promise of ten job-limits, about an eighth of what the
 unguarded ordering buys; at $G = \devnum{1200}$ s the cost is \devnum{0.087} and at
 $G = \devnum{300}$ s, five job-limits, \devnum{0.438}. The paired week-block intervals for
@@ -477,7 +263,7 @@ $G$ we tested.
 \caption{The guard at three promises and the comparators. Guard($G$)
 is the shape the selection rule picks over all three grids and Guard-fixed($G$) is the winner
 inside the constant grid; the age-relative and queue-length winners are Supplementary
-Table~S3, and one of the three repeats Guard($G$) at each promise. Fixed($G$) spends the whole
+Table~S6, and one of the three repeats Guard($G$) at each promise. Fixed($G$) spends the whole
 cap at the same promise and
 is infeasible under the harm rule. Budgets scale as $k/4$ and the skip count is
 $\kappa = \lfloor Gk/L \rfloor - (2k-2)$, the largest integer with $(\kappa + 2k-2)L/k \le G$,
@@ -553,44 +339,19 @@ Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max ex
 %   to match Section 6 (RR-13, RR-31).  Both sets of rows are still the same rows of
 %   main_table.csv; nothing was recomputed.
 
-\input{figures/fig_gapvsg}
-\input{figures/fig_gap_harm}
 
 The validation harm constraint need not transfer to new cells.
 The original-score Guard($\devnum{600}$) has evaluation harms of \devnum{319.6} and
 \devnum{339.9} s that exceed the \devnum{300} s validation limit at the middle and busiest
 loads. This is failure of that empirical constraint to transfer, while every excess
-remains within the proved promise. Figure~\ref{fig:gap_harm} displays each selected
+remains within the proved promise. Supplementary Figure~S1 displays each selected
 shape and the full-cap comparator against harm, with the validation trade-offs
-shown separately. Its aging point uses conservative scores and is therefore a
-reference across information protocols; Table~\ref{tab:aging_results} makes the
-comparison under the same conservative protocol.
+shown separately, and Supplementary Section~S3 makes the comparison with the aging
+baseline under the same conservative protocol.
 % Sources: outputs/dev_tables/main_table.csv, Guard(600), levels=1,2, harm_s;
 % outputs/selection_v3/selected_parameters.csv, joint, promise_s=600, harm_limit_s.
 
 
-\paragraph{What the shape of the budget is worth.}
-The promise is the cap's alone, so the three shapes are compared at a fixed promise and the
-question is only how much of the base policy's benefit each keeps and who pays for it. The
-two shapes the main table no longer prints are read here through the paired differences and
-in full in Supplementary Table~S3. The
-shape matters where the promise is tight and the load is high, and hardly at all elsewhere. At
-$G = \devnum{600}$ s the constant shape trails the joint winner by
-\devnum{0.007 [0.003, 0.012]}, \devnum{0.028 [0.020, 0.038]} and \devnum{0.119 [0.074, 0.176]}
-of the gap as the load rises through the three levels, each interval clear of zero; at
-$G = \devnum{300}$ s the same three differences are \devnum{0.008 [-0.002, 0.015]},
-\devnum{0.099 [0.056, 0.157]} and \devnum{0.262 [0.202, 0.288]}; and at $G = \devnum{1200}$ s
-they are \devnum{$-0.001$}, \devnum{$-0.001$} and \devnum{0.003}, none of the three intervals
-excluding zero. At a loose promise and a light load the shape is not doing measurable work.
-
-The other axis is harm. At $G = \devnum{600}$ s the queue-length shape reaches within
-\devnum{0.009} of the joint winner's gap at every load while its worst-overlay harm is
-\devnum{106.0}, \devnum{117.7} and \devnum{123.4} s against the winner's \devnum{237.0},
-\devnum{319.6} and \devnum{339.9} s, under half at every load. That is also why
-the rule picks the queue-length shape at $G = \devnum{1200}$ s, where the three shapes are
-within \devnum{0.005} of one another on the validation objective and it has the smallest worst
-harm. The shape decides which jobs pay for the promise more than it decides how much of the
-benefit survives.
 
 The jobs that pay are the heavy ones, and the worst wait among them is the last of the
 secondary metrics of Section~\ref{sec:model}. Over the five overlays it is \devnum{487},
@@ -603,27 +364,20 @@ ranking multiplies it by \devnum{2.8}, \devnum{3.2} and \devnum{4.1}.
 % Source: outputs/dev_tables/main_table.csv, column max_heavy_s (worst over the five
 %   overlays), rows FCFS, SPJF-E and Guard(600) at levels 0, 1, 2.
 
-Fixed($G$), which spends the whole cap, is an equal-promise candidate in the search,
-but is infeasible under the validation harm constraint at every promise.
-Its evaluation-overlay harm is \devnum{181.8}, \devnum{195.4} and \devnum{208.2} s at
-$G = \devnum{300}$ s against a \devnum{150} s limit, \devnum{237.0}, \devnum{447.1} and
-\devnum{465.5} s at $G = \devnum{600}$ s against \devnum{300} s, and \devnum{237.0},
-\devnum{469.2} and \devnum{708.8} s at $G = \devnum{1200}$ s against \devnum{600} s.
-Thus the evaluation cells also exceed the corresponding limits at each promise.
-It is ahead of the joint winner on the gap
-closed in eight of the nine cells, by up to \devnum{0.042}, so it buys its extra gap with harm
-above the declared limit in some cells; we make no claim that any shape beats it on
-the gap at equal promise.
-% Sources: outputs/selection_v3/selection_worst.csv, family=fixed full-cap candidates,
-% worst_harm_s; outputs/dev_tables/main_table.csv, Fixed(G), harm_s and gap_closed.
-% Source of the two paragraphs above: outputs/dev_tables/paired_differences.csv (rows
-%   left = Guard(G), right = Guard-fixed(G) / Guard-queue(G) at levels 0, 1, 2; columns
-%   difference_gap, gap_lo, gap_hi, excludes_zero_gap) and the Harm and Gap-closed columns of
-%   Table~\ref{tab:guard}.  The worst-cell validation objectives of the three shapes at
-%   G = 1200 s (0.7257 / 0.7273 / 0.7283) are docs/repo_build_status.md third pass, section 3.
+
+\paragraph{What the shape of the budget is worth.}
+The promise is the cap's alone, so the three shapes are compared at a fixed promise
+and the question is only how much of the base policy's benefit each keeps and who
+pays for it. The shape matters where the promise is tight and the load is high, and
+hardly at all elsewhere; it decides which jobs pay for the promise more than it
+decides how much of the benefit survives. Supplementary Section~S3 gives the paired
+differences at the three promises, the harm axis on which the queue-length shape
+comes within \devnum{0.009} of the joint winner's gap at under half its worst harm,
+and the equal-promise Fixed($G$) comparator that the harm rule rejects at every
+promise while leading on the gap in eight of the nine cells.
 
 Counting positions buys almost nothing on this load
-(Figure~\ref{fig:gapvsg}, dotted). This measures how loose the count bound is here, not
+(Supplementary Figure~S2, dotted). This measures how loose the count bound is here, not
 whether a count can give a bound at all: \eqref{eq:skip} does give one, and the count rule is
 run at the largest count that bound allows at each promise. What makes it loose is the cost
 distribution. Overtakers on this trace are overwhelmingly shorter than a second, while a count
@@ -635,7 +389,7 @@ $k = \devnum{4}$ and $G = \devnum{600}$ s; charging at completion instead change
 by at most \devnum{0.015}, and by at most \devnum{0.001} at the two higher loads.
 
 Corrupted scores separate what the guard does from what it does not do
-(Table~\ref{tab:adv}, Figure~\ref{fig:excess}). Under a reversed order, a random order, or a
+(Supplementary Table~S7, Supplementary Figure~S3). Under a reversed order, a random order, or a
 score that calls the truly longest \devnum{1\%} the shortest, the unguarded policy delays some
 job by more than \devnum{6{,}000} s beyond FCFS at full load, and Guard($\devnum{600}$) holds
 every job inside its promise. The deadline-window p99 is not rescued: it stays at
@@ -644,36 +398,7 @@ worse than FCFS for two of the three. The guarantee is per job and additive, so 
 permits: a guarded run may have a worse quantile than FCFS, by at most $G$, and what it
 removes is the worst single job and not the shape of the tail.
 
-\begin{table}[htbp]
-\centering
-\caption{Deliberately corrupted scores, unguarded and under Guard($\devnum{600}$).
-Waits and excesses in seconds; corruption of the original source-clock scores.}
-\label{tab:adv}
-\small
-\begin{tabular}{llrrrrr}
-\toprule
- & & \multicolumn{2}{c}{p99$_{\mathrm{dl}}$} & \multicolumn{2}{c}{Max excess} & Harm \\
-Load & Score & unguarded & guarded & unguarded & guarded & guarded \\
-\midrule
-$\rho = \devnum{0.5}$ & reversed    & \devnum{42.72}  & \devnum{43.39}  & \devnum{1{,}240.1} & \devnum{497.1} & \devnum{287.1} \\
-                      & random      & \devnum{16.82}  & \devnum{17.12}  & \devnum{1{,}307.7} & \devnum{489.9} & \devnum{324.0} \\
-                      & longest as shortest & \devnum{38.24} & \devnum{38.71} & \devnum{1{,}305.8} & \devnum{497.1} & \devnum{273.4} \\
-$\rho = \devnum{0.8}$ & reversed    & \devnum{228.12} & \devnum{232.41} & \devnum{3{,}387.9} & \devnum{513.5} & \devnum{323.4} \\
-                      & random      & \devnum{78.52}  & \devnum{88.39}  & \devnum{3{,}319.4} & \devnum{504.5} & \devnum{352.3} \\
-                      & longest as shortest & \devnum{212.54} & \devnum{222.52} & \devnum{3{,}292.0} & \devnum{516.1} & \devnum{306.0} \\
-$\rho = \devnum{1.0}$ & reversed    & \devnum{557.44} & \devnum{546.48} & \devnum{6{,}295.7} & \devnum{534.8} & \devnum{309.1} \\
-                      & random      & \devnum{194.78} & \devnum{261.93} & \devnum{6{,}235.5} & \devnum{520.7} & \devnum{332.9} \\
-                      & longest as shortest & \devnum{523.55} & \devnum{543.63} & \devnum{6{,}107.8} & \devnum{534.7} & \devnum{324.6} \\
-\bottomrule
-\end{tabular}
-\end{table}
-% Source of Table~\ref{tab:adv}: outputs/paper_tables/tab_adv.tex, produced by
-%   `python scripts/emit_paper_tables.py` (see GENERATED.md), from
-%   outputs/dev_tables/main_table.csv, rows SPJF-{reversed,random,top1short} and
-%   Guard(600)-{reversed,random,top1short} at levels 0, 1, 2; columns p99_dl_s, max_excess_s,
-%   harm_s.
 
-\input{figures/fig_excess}
 
 \subsection{The Bounds on the Traces}
 \label{sec:exp_bound}
@@ -698,41 +423,19 @@ against the wrapper, and nothing in a replayed workload arranges them. The
 finite-skip bound, by contrast, is attained exactly on small instances, at a ratio of
 \devnum{1.0000}.
 
-\paragraph{The identity, measured job by job.}
-The net-overtake identity had been tested on small synthetic instances and never measured on
-the trace this paper runs on, so we measured it. Table~\ref{tab:resid} reports the residual
-$D_i = k(W_P[i] - W_{\mathrm{FCFS}}[i]) - (\mathrm{In}_i - \mathrm{Out}_i)$ on overlay~0 at
-the three load levels under Guard($\devnum{600}$), with the reversed score at the busiest
-load beside it and the other five cells, SPJF-E among them, in Supplementary Table~S4, and
-with FCFS on the same input as the reference schedule in every cell. Recovering $\mathrm{In}_i$ and
-$\mathrm{Out}_i$ needs the dispatch sequence, which the guard kernel does not expose, so the
-kernel and the independent reference simulator were each copied verbatim and given recorders
-that add no branch and no state update; the two agree on the dispatch sequence of every job of
-\devnum{3{,}000} random instances, the recording kernel reproduces the production kernel's
-waits element for element inside every cell, and $\mathrm{In}_i$ and $\mathrm{Out}_i$ are
-carried in exact integer microseconds, the currency the guard itself meters.
 
-Theorem~\ref{thm:identity} is asserted on every job of every cell: \devnum{0} violations over
-\devnum{1{,}428{,}415{,}560} job-checks, the \devnum{27} policies of this overlay at the three
-loads. The residual stays far from its ceiling. The
-largest $|D_i|$ over the nine cells of Supplementary Table~S4 is \devnum{6.788}$L$, at
-$k = \devnum{8}$, where the
-bound $2(k-1)L$ is \devnum{14}$L$, and over those nine cells the maximum sits between
-\devnum{0.485} and \devnum{0.514} of the bound, which is about $(k-1)L$; over all
-\devnum{81} cells the largest is \devnum{0.5173} of the bound, so it never exceeds
-\devnum{0.518}. That is where a search that does not
-build the cascade of Theorem~\ref{thm:tight1} stops, so the measurement says the workload does
-not attain the constant, not that the constant is loose. Same-phase bookkeeping, the mechanism
-behind the degenerate extremal instances of Remark~\ref{rem:directions}, accounts for at most
-\devnum{0.36\%} of the total $\mathrm{In}$ in any of those nine cells, so the executed-work
-convention would not change the picture for these
-policies. It is not negligible everywhere: under the randomised ranking, which ties many jobs
-into one dispatch instant, the share reaches \devnum{14.95\%}.
-$(\mathrm{In}_i - \mathrm{Out}_i)/k$ explains $R^2 = \devnum{0.983}$ to \devnum{0.9996} of the
-variance of $W_P[i] - W_{\mathrm{FCFS}}[i]$, with a worst per-job error of \devnum{44.9} to
-\devnum{50.9} s where the theorem permits $(2-2/k)L$, that is \devnum{90} s at $k = 4$ and
-\devnum{105} s at $k = 8$. This is one overlay of development data, and the residual is a
-property of a schedule rather than a statistic, so no interval is attached to it.
+\paragraph{The identity, measured job by job.}
+Theorem~\ref{thm:identity} is asserted on every job of every cell of overlay~0:
+\devnum{0} violations over \devnum{1{,}428{,}415{,}560} job-checks. The residual
+$D_i = k(W_P[i] - W_{\mathrm{FCFS}}[i]) - (\mathrm{In}_i - \mathrm{Out}_i)$ stays far
+from its ceiling: over all \devnum{81} cells the largest is \devnum{0.5173} of the
+bound $2(k-1)L$, so it never exceeds \devnum{0.518}, which is about $(k-1)L$. That is
+where a search that does not build the cascade of Theorem~\ref{thm:tight1} stops, so
+the measurement says the workload does not attain the constant, not that the constant
+is loose. Table~\ref{tab:resid} reports four cells and Supplementary Table~S8 all
+nine; Supplementary Section~S3 gives the recording kernels and their validation, the
+same-phase shares, and the variance of the excess that
+$(\mathrm{In}_i - \mathrm{Out}_i)/k$ explains.
 
 \begin{table}[htbp]
 \centering
@@ -742,7 +445,7 @@ which is \devnum{14}$L$, \devnum{8}$L$ and \devnum{6}$L$ at the three loads;
 $R^2$ and the worst error are for $(\mathrm{In}_i - \mathrm{Out}_i)/k$
 against the realised excess over FCFS. The last row is the reversed score at the busiest
 load, against the Guard($\devnum{600}$) row above it: the residual is a property of the
-schedule and barely moves with the policy. Supplementary Table~S4 gives all nine cells.}
+schedule and barely moves with the policy. Supplementary Table~S8 gives all nine cells.}
 \label{tab:resid}
 \small
 \setlength{\tabcolsep}{3pt}
@@ -792,26 +495,20 @@ $\rho = \devnum{1.0}$, $k = \devnum{4}$
 
 At $k = 1$ the additive constant $(3 - 2/k)L$ is exactly $L$, the identity of
 Section~\ref{sec:theory} holds with no error term, and the separation between budget shapes is
-largest (Supplementary Table~S5). Guard($\devnum{600}$) and Fixed($\devnum{600}$) are
+largest (Supplementary Table~S9). Guard($\devnum{600}$) and Fixed($\devnum{600}$) are
 statistically indistinguishable on the gap closed and differ by a factor of \devnum{3.41} in
 harm; the corresponding factors are \devnum{3.01} at $G = \devnum{300}$ s and \devnum{12.18} at
 $G = \devnum{1200}$ s. The realised excess reaches \devnum{595.5} s against the promised
 \devnum{600} s, and under the worst corrupted score \devnum{597.0} s, so at one server the
 promise is close to being spent.
 
-The single-server configuration also shows the cost of choosing a shape on one set of cells.
-The parameters were selected on the \devnum{15} multi-server validation cells, and $k = 1$ is
-not among them. At $G = \devnum{300}$ and $\devnum{600}$ s the joint winner transfers: it closes
-\devnum{0.746} and \devnum{0.854} of the gap, against \devnum{0.543} and \devnum{0.791} for the
-constant shape. At $G = \devnum{1200}$ s it does not: the queue-length shape that wins the
-joint comparison on the multi-server cells closes \devnum{0.701} here, while the age-relative
-shape closes \devnum{0.895} and the constant shape \devnum{0.865}. We report the number the
-pre-stated rule produces and do not re-tune it on this cell; Section~\ref{sec:limits} states
-what it means.
-% The single-server table (label tab:k1) moved to supplementary.tex as Supplementary Table S5
-% in the sixth revision pass, referee item G2.  Its source comment moved with it.  The five
-% gaps, the three harm ratios and the two realised excesses this subsection quotes are the
-% same rows of outputs/dev_tables/k1/main_table.csv that the table prints.
+The single-server configuration also shows the cost of choosing a shape on one set of
+cells: the parameters were selected on the \devnum{15} multi-server validation cells,
+and $k = 1$ is not among them. Supplementary Section~S3 gives the five gaps that show
+the joint winner transferring at the two tighter promises and not at
+$G = \devnum{1200}$ s. We report the number the pre-stated rule produces and do not
+re-tune it on this cell; Section~\ref{sec:limits} states what it means.
+
 
 \subsection{Other Platforms}
 \label{sec:exp_cross}
@@ -866,7 +563,7 @@ in this row is a statement about the ordering mechanism and not about waiting on
 its budgets were set at fixed multiples of $L$ instead of from a promise, and the entry shown
 is the largest one tested, $B = \devnum{10}L$. Its tail share is the simulated one, with the
 assumed fixed term and $L = \devnum{30.5}$ s; on measured cost alone, at $L = \devnum{30.0}$ s,
-it is \devnum{0.275} (Table~\ref{tab:tails}), the figure the introduction quotes.
+it is \devnum{0.275} (Supplementary Table~S3), the figure the introduction quotes.
 \textsuperscript{b} On CI pool A, SJF is itself worse than FCFS at the p99, so the p99 gap has
 no usable denominator; the guard entry is the mean-wait gap.
 \textsuperscript{c} (on the two $k_{\mathrm{eff}}$ row labels) The CI capacities are fitted, not recorded, and the two scheduling
@@ -966,54 +663,17 @@ the guard's measured input from the separately executed baseline.
 \subsection{Sensitivities}
 \label{sec:exp_sens}
 
-Five trace-construction variants were run through an earlier source-clock pipeline
-(Table~\ref{tab:sens}). These are sensitivity results for its stored M4 log-scale
-score and fixed completed-work budget, not the selected expected-cost Guard($G$).
-Within that earlier configuration, the alternatives retain a positive gap; adding the term whose busiest
-hour is dominated by runs that outlived their container raises the gap, and the opposite reading
-of the timestamp, in which the stamp is receipt rather than completion, gives
-\devnum{0.926} against \devnum{0.895}. Merging or dropping the groups of runs by one user that
-end in the same second moves the gap closed by \devnum{0.017} and \devnum{0.003} at full load,
-so that earlier result survives these two treatments of co-ending runs;
-delaying the visibility of a completed job's outcome costs prediction quality and not much of
-it (Section~\ref{sec:prediction}). The earlier fixed-budget guard is more sensitive to the
-construction, ranging from \devnum{0.442} to \devnum{0.843} of the gap at a fixed budget of
-\devnum{600} s at full load.
 
-\begin{table}[htbp]
-\centering
-\caption{Trace-construction sensitivities at busy-hour $\rho = \devnum{1.0}$, three overlays,
-fraction of the deadline-window gap closed. Archived M4 log-scale score and fixed
-completed-work budget; the budget in the last column is not a promise of equal value.}
-\label{tab:sens}
-\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lcrcc}
-\toprule
-Variant & $k$ & FCFS p99$_{\mathrm{dl}}$ & Unguarded & Guard, budget \devnum{600} s \\
-\midrule
-Primary pool (overlays 0--2) & \devnum{4.000} & --- & \devnum{0.895 [0.864, 0.916]} & \devnum{0.442 [0.345, 0.631]} \\
-Earlier term added           & \devnum{4.667} & \devnum{95.41}  & \devnum{0.945 [0.885, 0.965]} & \devnum{0.843 [0.715, 0.880]} \\
-Co-ending runs merged        & \devnum{4.000} & \devnum{228.19} & \devnum{0.912 [0.892, 0.924]} & \devnum{0.603 [0.445, 0.740]} \\
-Co-ending runs dropped       & \devnum{4.000} & \devnum{209.30} & \devnum{0.898 [0.879, 0.914]} & \devnum{0.608 [0.471, 0.753]} \\
-Opposite timestamp reading   & \devnum{4.000} & \devnum{268.75} & \devnum{0.926 [0.904, 0.939]} & \devnum{0.545 [0.422, 0.699]} \\
-\bottomrule
-\end{tabular}
-\end{table}
-% Source of Table~\ref{tab:sens}: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 5,
-%   the four blocks "pool19 / sbatch / sdrop / isub0 (3 reps), target rho 1.0"; columns k,
-%   p99_dl (FCFS row), and the variant's own gain_p99_dl for rows SPJF-M4 and GUARD-M4-B600.
-%   The "Primary pool" row is the "primary(0-2) gain_p99_dl" column of the same blocks, which
-%   is why it carries no FCFS p99 of its own.  The delta figures in the text are SUMMARY 1 of
-%   the same file, table "auroc, all test rows", row (core, M4), columns ires0, ires600, isub0,
-%   isub60, isub600, isub3600.
-
-Table~\ref{tab:sens} supports sensitivity of the earlier ordering experiment to
-timestamp interpretation, source-term inclusion and co-ending-run treatment. It does
-not validate robustness of the final selected Guard($G$), conservative history or
-policy-specific exact visibility. Those variants were not rerun under each altered
-trace construction. Supplementary Section~S5 gives the configuration and release
-boundary explicitly.
+Five trace-construction variants were run through an earlier source-clock pipeline:
+they are sensitivity results for its stored M4 log-scale score and fixed
+completed-work budget, not for the selected expected-cost Guard($G$), and within that
+earlier configuration the alternatives retain a positive gap while the earlier
+fixed-budget guard ranges from \devnum{0.442} to \devnum{0.843} of the gap at full
+load. They support sensitivity of the earlier ordering experiment to timestamp
+interpretation, source-term inclusion and co-ending-run treatment, and do not validate
+robustness of the final selected Guard($G$), conservative history or policy-specific
+exact visibility. Supplementary Table~S14 gives the five variants; Supplementary
+Section~S5 gives the configuration and release boundary explicitly.
 
 Two further limits of these runs --- what the intervals do and do not cover, and the
 prediction cost the runs do not charge --- are stated in Section~\ref{sec:limits}.

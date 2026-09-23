@@ -112,7 +112,7 @@ $W < (W_{\mathrm{FCFS}} + B_0/k + (3-2/k)L)/(1-\eta)$, and only when $\gamma = 0
 with $\gamma > 0$ the constant part of the budget differs from job to job, so the
 multiplicative form holds per job with that job's own constant, and no single
 number is available for the operator to state in advance
-(Remark~\ref{rem:mult_scope}). For
+(Supplementary Section~S4.6). For
 $\gamma > 0$ we claim the additive bound alone.
 
 \begin{algorithm}
@@ -159,30 +159,9 @@ The shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of the base poli
 benefit survives and which jobs pay for it, so we choose them on a validation trace
 that excludes the test period; that pool is held out of the selection and not of the
 development process, and Section~\ref{sec:exp_prov} states what the selection therefore
-does and does not establish. The rule is fixed before the grids are run: three
-pre-stated grids, one per shape, \devnum{258} points in all; a point is feasible when
-its harm is at most $G/2$ in every one of the \devnum{15} validation cells; the
-objective is the deadline-window gap closed in the worst cell, with ties going to
-smaller worst harm and then to smaller $B_0$, $\eta$, $\gamma$. Guard($G$) is the
-winner over the three grids together; the winner inside each grid is reported as an
-ablation row. Table~\ref{tab:setup} gives the grids and what they selected.
+does and does not establish. The rule is fixed before the grids are run, and Supplementary Section~S5 states it in
+full together with what each grid selected. Supplementary Table~S4 gives the grids and what they selected.
 
-\paragraph{Cost per event.}
-Algorithm~\ref{alg:guard} is written for readability rather than for execution, since
-its inner loop over waiting jobs at each completion is linear. We keep
-$\mathrm{over}[q] = TC - F(q)$ instead, where $TC$ is the total completed work and
-$F(q)$ the prefix sum over ranks up to $q$ of completed work, maintained in a Fenwick
-tree, so that a completion is one point update and a query one prefix sum. The firing
-test is a segment tree over the window of waiting ranks supporting suffix range-add
-and the query ``leftmost leaf with value at least $T$'', after rewriting
-$\mathrm{over}[q](t) \ge B_{0,q} + \eta k (t - a_q)$, where $B_{0,q} = B_0 + \gamma n_q$
-is fixed at $q$'s arrival, with $\eta k = e_n/e_d$ in lowest terms as
-$e_n a_q - e_d B_{0,q} - e_d F(q) \ge e_n t - e_d\, TC$,
-whose left side is a per-job value changed only by range-add at completions and whose
-right side depends on $t$ alone. The capped channel needs only the head, since at a
-fixed threshold $\mathrm{over}$ is non-increasing in rank. All budget arithmetic is
-carried in integer microseconds, so the test is exact and no floating-point clock
-enters the schedule. Each event costs $O(\log n)$.
 
 \paragraph{What is charged, and why no service time is needed at dispatch.}
 The budget is charged the true executed work of overtakers, and only when they
@@ -197,23 +176,25 @@ budget by at most $kL$. Under the timeout at $L$, executed work means $\min(C_j,
 the log records that quantity and the guard charges it, so no assumption on raw
 sizes enters.
 
+
+\paragraph{Cost per event.}
+Algorithm~\ref{alg:guard} is written for readability rather than for execution, since
+its inner loop over waiting jobs at each completion is linear. A Fenwick tree over
+completed work and a segment tree over the window of waiting ranks make each event cost
+$O(\log n)$, with all budget arithmetic carried in integer microseconds so that the
+firing test is exact and no floating-point clock enters the schedule. Supplementary
+Section~S5 gives the two structures and the rewriting of the firing test.
+
 \paragraph{Why the budget is measured in work and not in positions.}
 Earlier bounded-overtaking mechanisms limit how many times a job may be passed, which
 is the currency of the finite-skip and Nudge-$K$
 rules~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Counting is not
-necessary: a job can be passed any number of times and stay inside its promise, provided
-the work that passes it is small. Counting is sufficient in this model, but only through
-the worst-case charge of $L$ per overtake, since every overtaker is bounded by the time
-limit; a count of $\kappa$ therefore buys a promise of $(\kappa + 2k-2)L/k$
-(Remark~\ref{rem:counts}, \eqref{eq:skip}). That is the bound a count can give, and it
-is loose by the ratio $L/\bar{C}$, one to two orders of magnitude on our traces. Ten
-overtakers that each run for the full limit $L$ and ten that run for ten milliseconds
-carry the same count and delays that differ by three orders of magnitude, so the charge
-is paid on every dispatch whether or not the work is there.
-Section~\ref{sec:experiments} runs the count rule as a baseline and measures how much
-the looseness costs on a real load. That work is the currency the excess is actually
-written in is the content of the identity of Section~\ref{sec:theory}, not a claim of
-ours about what earlier mechanisms could not do.
+necessary, and it is sufficient in this model only through the worst-case charge of $L$
+per overtake, so a count of $\kappa$ buys a promise of $(\kappa + 2k-2)L/k$
+(Remark~\ref{rem:counts}, \eqref{eq:skip}) and is loose by the ratio $L/\bar{C}$, one to
+two orders of magnitude on our traces. Supplementary Section~S4.9 gives the argument in
+full, and Section~\ref{sec:experiments} runs the count rule as a baseline and measures
+how much the looseness costs on a real load.
 
 \subsection{Compared Policies}
 
@@ -235,7 +216,7 @@ FCFS & Deployed baseline, and the reference against which the guarantee is state
 SJF & Sorts waiting jobs by their true service times. Undeployable reference policy, not an optimum; the denominator of the fraction of the gap closed \\
 SPJF-E & Ranks by the expected-cost score of Section~\ref{sec:rank}, unguarded. Transmission from prediction quality to waiting time \\
 SPJF-log & The same pipeline fitted on the log scale, and the other candidate scores of Section~\ref{sec:rank}, run through the same simulator \\
-Guard($G$) & SPJF-E wrapped in the overtake-budget guard at the promise $G$, with the budget shape the selection rule of Table~\ref{tab:setup} picks over all three grids together. This is the method \\
+Guard($G$) & SPJF-E wrapped in the overtake-budget guard at the promise $G$, with the budget shape the selection rule of Supplementary Table~S4 picks over all three grids together. This is the method \\
 Guard-fixed($G$), Guard-age($G$), Guard-queue($G$) & The same wrapper and the same promise, with the shape the rule picks inside the constant, age-relative and queue-length grid respectively. Ablation rows: they isolate what the shape is worth at a fixed cap, and one of them coincides with Guard($G$) at each promise \\
 Fixed($G$) & The same wrapper at the equal-promise budget $\mathrm{budget} \equiv B_{\max}$. It carries the promise $G$ but not the harm constraint, and the selection rule rejects it as infeasible; it is reported as the comparator that spends the whole cap \\
 Skip($G$) & Position-count guard, finite-skip family, counted at dispatch with $\kappa = \lfloor Gk/L \rfloor - (2k-2)$ from \eqref{eq:skip}, the largest count that still promises $G$ under that accounting \\

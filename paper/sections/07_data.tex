@@ -107,11 +107,11 @@ The observed regime has an upper ceiling of \devnum{60} s; this is not evidence 
 a documented enforced timeout. The last run to reach a longer time ends at
 \devnum{2019-08-28}; the periods before that date stay out of the primary pool, and
 where used at all they carry the later limit, $C^{\mathrm{cap}} = \min(C, 60)$
-(Table~\ref{tab:tails}). Groups of runs by the same user that end in the same second are
+(Supplementary Table~S3). Groups of runs by the same user that end in the same second are
 \devnum{7.53\%} of blocks and \devnum{26.28\%} of capped work; they overlapped and
 stretched each other, so we neither delete them silently nor treat each as an
 independent arrival, and the scheduling trace is rebuilt twice, once with each group
-collapsed into one job and once with the groups removed (Table~\ref{tab:sens}).
+collapsed into one job and once with the groups removed (Supplementary Table~S14).
 
 \subsection{What the Source Platform Identifies}
 
@@ -141,68 +141,21 @@ reports that splitting each large user's workload into its own cell would need
 machines~\cite{verma2015borg}. Neither source is about judging, and neither licenses a
 number of our own.
 
-The second is a measurement on the same demand. Replaying the overlay of
-Section~\ref{sec:overlay} under the dedicated design, the 99th percentile of containers
-alive at once is \devnum{1{,}636} and each container executes code for \devnum{0.12\%} of
-the time it is alive; since only \devnum{11\%} to \devnum{35\%} of logins have a logout
-written after them, session boundaries are reconstructed, and across six reconstructions
-that percentile lies between \devnum{1{,}003} and \devnum{2{,}525} containers and the
-utilisation between \devnum{0.07\%} and \devnum{0.17\%}. A shared pool holds the 99th
-percentile of deadline-window waits under \devnum{1} s with \devnum{14} servers under
-FCFS and \devnum{13} under the predictor-ordered policy. Pooling is worth two orders of
-magnitude here and the scheduler is worth one server (\devnum{14} to \devnum{13} at
-\devnum{1} s, \devnum{11} to \devnum{10} at \devnum{5} s, \devnum{8} to \devnum{7} at
-\devnum{30} s). It does not support a claim that the platform ever queued, the pooled
-side being simulated, nor that the containers are over-provisioned, since they also run
-the editing session the pool does not replace, nor that any of it is a cost saving.
 
-The third is that the simulator reproduces waits somebody else recorded. The CI logs carry
-the queue wait of every run, so we replay the recorded arrivals and services through our
-own $k$-server non-preemptive kernel. Two quantities are fitted: the effective capacity
-$k_{\mathrm{eff}}$, the shortfall against the listed machine count being machines that are
-up but not claiming work, and a setup term, the median short gap between consecutive runs
-on the same machine, added to every service because a machine is not reusable the instant
-a run resolves. Fitting both on the window and then reporting agreement on that same
-window would be circular, so we refit both on one chronological part of each window and
-test on the other, five splits over the two pools.
-This split is internal to the recorded window and is held out of the fit only; it
-is not sealed in the sense of Section~\ref{sec:sealed}, and the whole window has
-been read.
 
-The capacity is stable across splits. On pool~A the three splits choose \devnum{155},
-\devnum{155} and \devnum{157} of \devnum{173} listed machines, and on pool~B the two
-splits choose \devnum{96} and \devnum{92} of \devnum{105}; the setup term moves between
-\devnum{54.2} and \devnum{55.3} s on the first and between \devnum{126.2} and
-\devnum{128.6} s on the second. The objective is sharp in $k$. With those parameters
-frozen, the held-out part comes
-back at \devnum{0.90} to \devnum{1.14} times the recorded mean wait, \devnum{0.86} to
-\devnum{1.16} at the 99th percentile and \devnum{0.89} to \devnum{1.28} at the 99.9th,
-with a per-hour mean-wait correlation of \devnum{0.936} to \devnum{0.981}, a per-job rank
-correlation of \devnum{0.940} to \devnum{0.963}, and a median per-job absolute error of
-\devnum{16} to \devnum{84} s.
-
-The 90th percentile does not survive the held-out test. It lands at \devnum{0.81} to
-\devnum{1.21}
-of the recorded one, and on the larger pool it is below the recorded value on all three
-splits while the 99th is above it, so the simulated distribution is too steep in its upper
-middle; the two-term objective hides this in sample by trading the mean against the p90,
-so we fit out of sample and say so. What the fit absorbs is nonetheless a
-property of the pool and no artefact of fitting: told instead that every listed
-machine is available, the same simulator underestimates the held-out mean wait by a factor
-of \devnum{1.3} to \devnum{2.6} and its per-hour correlation falls to \devnum{0.75}.
-Supplementary Section~S2 gives the step-of-one sharpness check and reads the circularity
-of the original whole-window fit off the two pools directly.
-% Sources of the three paragraphs above:
-%   evidence/firefox_ci_holdout/out_SUMMARY.txt, section A (k_eff step-1 per split and the
-%   setup term on the fit part: osx 155/155/157 of 173, talos 96/92 of 105; setup 54.2-55.3 s
-%   and 126.2-128.6 s), section B (the HELD OUT rows: mean x, p99 x, p99.9 x, rho_h, sp,
-%   med|e|, and the "no fit k = nominal machines" rows for the 1.3-2.6x and the 0.75),
-%   section E (5-8 values of k inside 10% of the recorded mean) and section F (the p90
-%   range 0.81-1.21 and the circularity comparison 1.14 vs 0.99 on the talos reverse split).
-%   The same rows are in holdout.csv.  Pool A = releng-hardware/gecko-t-osx-1500-m4
-%   (173 machines, 21 d), pool B = releng-hardware/gecko-t-linux-talos-2404 (105, 7 d),
-%   matching Table~\ref{tab:traces}.  The sharpness check and the circularity read-off
-%   moved to supplementary.tex, Supplementary Section~S2 (referee item G9).
+The second support is a measurement on the same demand: replayed under the dedicated
+design, the 99th percentile of containers alive at once is \devnum{1{,}636} and each
+container executes code for \devnum{0.12\%} of the time it is alive, while a shared
+pool holds the 99th percentile of deadline-window waits under \devnum{1} s with
+\devnum{14} servers under FCFS and \devnum{13} under the predictor-ordered policy. The
+third is that the simulator reproduces waits somebody else recorded: the CI logs carry
+the queue wait of every run, and an effective capacity and a setup term refitted on one
+chronological part of each window return the held-out mean wait, the per-hour profile
+and the per-job ordering, with the 90th percentile the one quantile that does not
+survive. Supplementary Section~S2 gives both in full, with the six session
+reconstructions, the five chronological splits, the step-of-one sharpness check and the
+circularity of the original whole-window fit. The pooled side is simulated, so neither
+supports a claim that the platform ever queued.
 
 \paragraph{Capacity and physical checks.}
 The supplementary capacity sweep retains the complete offered stream and varies
@@ -254,83 +207,13 @@ seven-day-ahead peak warning on distinct active students goes from F1 \devnum{0.
 a moving-average baseline to \devnum{0.593} once calendar features are added.
 
 Costs are concentrated in a small fraction of jobs on every workload except the CI
-pools, which motivates the empirical cost-concentration screen (Table~\ref{tab:tails}).
+pools, which motivates the empirical cost-concentration screen (Supplementary Table~S3, which also
+records the provenance of the analysis bound $L$ on every trace). Supplementary
+Section~S2 gives what the arrival and service fields of each trace are, which of them
+are proxies, and how many jobs each analysis truncation touches.
 
-\begin{table}[htbp]
-\centering
-\caption{Share of executed work carried by the longest jobs, and provenance of the
-analysis bound $L$. An analysis cap is applied to the replay, not evidence of a
-platform-enforced timeout.}
-\label{tab:tails}
-\small
-\begin{tabular}{lccp{0.30\textwidth}}
-\hline
-Trace & Top \devnum{1\%} & Top \devnum{5\%} & Bound and provenance \\
-\hline
-CodeBench, \devnum{60} s regime & \devnum{0.375} & \devnum{0.432} & \devnum{60} s, observed regime ceiling; analysis cap \\
-CodeBench, no-limit periods, raw & \devnum{0.941} & \devnum{0.960} & none \\
-CodeBench, no-limit periods, capped & \devnum{0.494} & \devnum{0.658} & \devnum{60} s, imposed analysis truncation \\
-ACcoding, measured cost & \devnum{0.275} & \devnum{0.628} & \devnum{30.0} s, observed maximum of measured test-cost sum \\
-ACcoding, with the assumed fixed term & \devnum{0.122} & \devnum{0.290} & \devnum{30.5} s, observed maximum after assumed overhead \\
-Serverless invocations & \devnum{0.443} & \devnum{0.879} & \devnum{286.8} s, training p99.9 analysis cap \\
-Compute farm & \devnum{0.372} & \devnum{0.628} & \devnum{493{,}857} s, training p99.9 analysis cap \\
-CI pool A & \devnum{0.034} & \devnum{0.107} & \devnum{5{,}066} s, training p99.9 of run plus setup; clipped \\
-CI pool B & \devnum{0.052} & \devnum{0.159} & \devnum{4{,}140} s, training p99.9 of run plus setup; clipped \\
-\hline
-\end{tabular}
-\end{table}
-% Sources of Table~\ref{tab:tails}:
-%   CodeBench rows: evidence/codebench_audit/out_tail_and_counts.txt (eras 2020-ERE..2022-2
-%     and 2018-1..2019-2, columns top1_share / top5_share, raw C and C_cap = min(C,60)).
-%   ACcoding rows and both per-job limits: evidence/accoding_v2/out_accoding_v2.txt,
-%     stage compare section B (time_cost and 0.5 + time_cost columns).
-%   Serverless and compute farm: evidence/cross_domain/out_cross_domain_table.txt section A
-%     (L used column) and out_audit_azure.txt / out_audit_netbatch.txt (work-share lines).
-%   CI pools: evidence/firefox_ci/out_SUMMARY.txt section A ("share of total work carried
-%     by the top" and "L' (train p99.9 of service)").
 
-\paragraph{Arrival and service provenance across traces.}
-CodeBench's jittered result stamp minus the recorded duration is an execution-start
-proxy, not a measured receipt time. ACcoding has no submission clock: arrivals are
-drawn, including the Poisson comparison and the deadline-shaped construction; its
-submission ids determine ordering, not elapsed time. Its measured cost sums test
-case execution times, each subject to its problem limit, and the replay adds an
-assumed \devnum{0.5} s overhead. Thus neither the observed \devnum{30.0} s sum nor
-the resulting \devnum{30.5} s maximum is a verified whole-job timeout.
-% Source: evidence/accoding_v2/out_accoding_v2.txt, field audit and compare section B.
 
-For Azure, the replay arrival is the documented end timestamp minus duration,
-again a start proxy; the publisher explicitly states that invocation timestamps
-were modified from the production trace \cite{azure2021trace}. The Netbatch replay
-uses the recorded SWF submission time and run duration. Their bounds in
-Table~\ref{tab:tails} are training p99.9 truncations, not observed platform timeouts.
-Both FCFS and every reordered policy receive the same truncated service sequence.
-The truncation affects \devnum{1{,}187} Azure jobs and \devnum{7{,}696} Netbatch jobs
-in the analysed pools; it removes \devnum{3.18\%} and \devnum{2.16\%} of raw work.
-% Sources: evidence/cross_domain/meta_azure.csv and meta_netbatch.csv;
-% evidence/cross_domain/out_leaktest_azure.txt and out_leaktest_netbatch.txt,
-% clipped counts; out_audit_azure.txt and out_audit_netbatch.txt, work removed.
-
-In the CI pools, arrival is the recorded scheduled instant, when dependencies have
-cleared and a worker may claim the run; recorded wait is started minus scheduled.
-Service is resolved minus started plus a fitted same-worker setup term. The analysis
-first adds setup and then clips this occupancy at the training p99.9 $L$;
-longer jobs are retained with truncated service, not excluded. This clips
-\devnum{227} runs in pool~A and \devnum{27} in pool~B. FCFS and all comparison
-policies use exactly that same capped occupancy sequence. The source scheduler's
-priority-then-FIFO rule and operational capacity are distinct from the counterfactual
-FCFS model used for the guarantee.
-% Sources: evidence/firefox_ci/out_leaktest_releng-hardware__gecko-t-osx-1500-m4.txt and
-% out_leaktest_releng-hardware__gecko-t-linux-talos-2404.txt;
-% evidence/firefox_ci/meta_releng-hardware__gecko-t-osx-1500-m4.csv and
-% meta_releng-hardware__gecko-t-linux-talos-2404.csv; fci_build.py and fci_sim.py.
-
-An enforced $L$ in a deployed service would instead kill an unfinished job at the
-limit and charge that executed work to the same-input FCFS comparison. The killed
-job would not yield its intended result; these replays do not estimate the resulting
-completion-quality cost or users' resubmission response. The table therefore
-supports finite-input bounds under its stated transformations, not a future
-operational timeout claim.
 
 \subsection{Sealed Data}
 \label{sec:sealed}

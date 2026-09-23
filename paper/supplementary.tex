@@ -9,12 +9,27 @@
 % carries the source comment it had there, and nothing here was recomputed.
 \documentclass[mathematics,supfile,submit,moreauthors]{Definitions/mdpi}
 \usepackage{xurl}
+% Eighth pass: two pgfplots figures moved here from the manuscript, so this file needs
+% the same graphics packages main.tex loads.
+\usetikzlibrary{decorations.pathmorphing,positioning,arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 
 % Match the lowercase theorem environments used by the included theory section.
 \let\proposition\Proposition
 \let\endproposition\endProposition
 \let\lemma\Lemma
 \let\endlemma\endLemma
+% Eighth pass: the remarks and theorem statements moved out of the manuscript's theory
+% section and its appendix need the same aliases.
+\let\theorem\Theorem
+\let\endtheorem\endTheorem
+\let\corollary\Corollary
+\let\endcorollary\endCorollary
+\let\definition\Definition
+\let\enddefinition\endDefinition
+\let\remark\Remark
+\let\endremark\endRemark
 
 % EPS logo under XeTeX: same substitution as main.tex; see the comment there.
 \makeatletter
@@ -66,21 +81,27 @@ $^{2}$ \quad [Second author: department, institution, city and postcode, country
 
 \maketitle
 
-This file holds supporting material for the manuscript: the visibility audit of the feature pipeline and the predictor
-scores on the four non-judging traces (Section~S1); the field audit of the main judging
-trace and two checks on the continuous-integration refit (Section~S2); five tables of
-experimental detail, the selected budget points, the two budget shapes the main guard
-table no longer prints, the identity residual on all nine cells and the single-server
-configuration (Section~S3); and two deferred proofs, of the workload comparison and of
-the consistency proposition (Section~S4). Section numbers here carry an S prefix and every
-table is numbered S. A cross-reference without an S --- ``Section~8.2'', ``Table~8'',
+This file holds supporting material for the manuscript: the visibility audit of the
+feature pipeline, the predictor families and the predictor scores on the two judging
+traces and on the four non-judging ones (Section~S1); the field audit of the main
+judging trace, what supports the shared-pool design, two checks on the
+continuous-integration refit and the cost-concentration screen (Section~S2); the
+experimental configuration, the selected budget points, the budget shapes the main guard
+table no longer prints, the corrupted scores, the aging comparator, the alternative
+ranking losses, the identity residual on all nine cells, the single-server configuration
+and the trace-construction sensitivities (Section~S3); and the deferred proofs and
+remarks of the theory section, the workload comparison and the consistency proposition
+among them (Section~S4). Section numbers here carry an S prefix and every
+table is numbered S. A cross-reference without an S --- ``Section~8.2'', ``Table~5'',
 ``Theorem~1'' --- points into the main manuscript, since a \verb|\ref| across the two
-files does not resolve. The traces are the ones the manuscript's Table~3 names: the
+files does not resolve. The traces are the ones the manuscript's Table~2 names: the
 CodeBench judging logs \cite{codebench_dataset}, the Azure Functions invocation trace
 \cite{azure2021trace}, the Intel Netbatch logs \cite{netbatch2012trace} and the two
 Firefox continuous-integration pools collected from Mozilla's public APIs
 \cite{taskcluster_docs,treeherder_docs}. The additional reproducibility specification is Section~S5; capacity, physical
-queueing, feedback and LPC-EGEE results are Section~S6. Additional theory is Section~S7. Every empirical figure quoted here is a development
+queueing, feedback and LPC-EGEE results are Section~S6. Additional theory is Section~S7,
+and the extremal constructions and remaining proofs of the manuscript's Appendix~A are
+Section~S8. Every empirical figure quoted here is a development
 figure in the sense of Section~8.2 of the manuscript: nothing in this file comes from a
 sealed part of any trace, and nothing here was recomputed for it.
 
@@ -109,9 +130,9 @@ the later ones.
 
 \subsection{Predictors on the Non-Judging Traces}
 
-Table~\ref{tab:s_pred_cross} is the cross-trace counterpart of Table~1 of the
-manuscript. The three figures Section~4.4 quotes from it are the serverless STATIC
-Spearman correlation and the two CI pools' ENT AUROC; the AUROC column of Table~11 of
+Table~\ref{tab:s_pred_cross} is the cross-trace counterpart of
+Table~\ref{tab:s_pred_edu}. The three figures Section~4.3 of the manuscript quotes from it are the serverless STATIC
+Spearman correlation and the two CI pools' ENT AUROC; the AUROC column of Table~7 of
 the manuscript carries the figure the scheduling results there are read against, which
 is the ALL row of each trace.
 
@@ -147,8 +168,125 @@ Compute farm           & ENT    & \devnum{0.8903} & \devnum{0.265} & \devnum{1.4
 %     section B ("predictability of the cost from information at arrival"), rows azure */netbatch *.
 %   CI pools A and B: evidence/firefox_ci/out_SUMMARY.txt, section C; A =
 %     releng-hardware/gecko-t-osx-1500-m4, B = releng-hardware/gecko-t-linux-talos-2404.
-%   The identity variance shares (0.867 serverless, 0.638 compute farm) quoted in Section 4.4
+%   The identity variance shares (0.867 serverless, 0.638 compute farm) quoted in Section 4.3
 %     are the eta^2 column of the same table in out_cross_domain_table.txt.
+
+%=================================================================
+
+\subsection{The Release Delay as a Sensitivity}
+\label{sec:supp_lag}
+
+This subsection supports the third commitment of Section~4.2 of the manuscript, that the
+delay with which results reach the feature store is treated as a sensitivity and not as
+an assumption.
+
+Third, we treat the delay $\delta$ with which results reach the feature store as a
+sensitivity and not as an assumption. At $\delta = 0$ the full tabular model reaches
+AUROC \devnum{0.9283} and at $\delta = \devnum{600}$ s it reaches \devnum{0.9066}. On the second judging
+platform, where the log carries no clock and lag has to be expressed in records, the same
+model moves from \devnum{0.9266} at lag \devnum{0} to \devnum{0.8902} at lag
+\devnum{1{,}000}. Ranking survives a ten-minute feedback delay at the top of the
+curve; retrieval of the small heavy class degrades, average precision falling from
+\devnum{0.289} to \devnum{0.139}.
+% Source: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1, table
+% "auprc, all test rows", row (core, M4): column ires0 = 0.2891 and column
+% ires600 = 0.1388.  The AUROC pair 0.9283 / 0.9066 of the sentence before it is the
+% same row of the table "heavy-vs-not AUROC [95%% user-block CI], all test rows".
+
+
+\subsection{Predictor Families}
+\label{sec:supp_families}
+
+This subsection defines the three model families the manuscript compares in Section~4.3
+under one visibility protocol and one split, and the ablation ladder its negative
+relational result is read off.
+
+
+All families see the same rows, the same split and the same availability rule. The
+tabular family is gradient-boosted trees~\cite{ke2017lightgbm} over five feature groups:
+task history (M1), user history (M2), static features of the submitted artefact (M3),
+everything tabular (M4), and M4 plus one-hop relational aggregates over the
+task-assignment and user-cohort neighbourhoods (M5). A control (M6) permutes task
+identity across assignments, so that M5's aggregates are keyed on a scrambled
+neighbourhood; it reaches AUROC \devnum{0.9288} in the primary configuration against
+M5's \devnum{0.9302}, so the aggregates lose almost nothing when the identity they are
+built on is destroyed. The sequence family is a GRU over the earlier jobs of one
+user whose results are already available, used alone (R1) and as a state vector appended
+to M4's columns inside the boosted model (R1S). The relational family is a heterogeneous
+network over user, task, assignment and cohort nodes~\cite{schlichtkrull2018rgcn} with no
+node-identity embeddings, so an unseen task or user is handled by the same weights. Its
+ablation ladder runs N0 (a multilayer perceptron on exactly M4's columns), G0U (the
+relational architecture with every neighbour slot empty and the assignment and cohort
+roots removed, which leaves exactly M4's information), G0 (empty neighbour slots, roots
+kept), G1 (the real edges) and G2 (the same network on edges permuted within a period and
+time block, so that neighbour counts and recency are preserved and only the identity of
+the neighbour changes).
+
+
+\subsection{Predictors on the Two Judging Traces}
+\label{sec:supp_pred_edu}
+
+This subsection carries the table behind Section~4.3 of the manuscript, the predictor
+scores on the two judging traces.
+
+\begin{table}[htbp]
+\centering
+\caption{Predictors on the two judging traces under one visibility protocol and one split.
+Heavy is the training-period 95th percentile of executed cost. RMSE and Spearman (Sp.) are
+on $\log(1+C)$. R-net is the heterogeneous relational network.}
+\label{tab:s_pred_edu}
+\small
+\begin{tabular}{llcccc}
+\hline
+Model & Information & AUROC & AUPRC & RMSE & Sp. \\
+\hline
+\multicolumn{6}{l}{\textit{CodeBench}, $n = \devnum{40{,}844}$} \\
+M1  & task history            & \devnum{0.7960} & \devnum{0.053} & \devnum{0.3000} & \devnum{0.219} \\
+M2  & user history            & \devnum{0.8591} & \devnum{0.242} & \devnum{0.2605} & \devnum{0.302} \\
+M3  & static features         & \devnum{0.8632} & \devnum{0.082} & \devnum{0.2892} & \devnum{0.290} \\
+M4  & all tabular             & \devnum{0.9283} & \devnum{0.289} & \devnum{0.2519} & \devnum{0.312} \\
+M5  & M4 + one-hop            & \devnum{0.9302} & \devnum{0.299} & \devnum{0.2507} & \devnum{0.344} \\
+N0  & MLP on M4's columns     & \devnum{0.9209} & \devnum{0.306} & \devnum{0.2463} & \devnum{0.278} \\
+G0U & R-net, no edges or roots & \devnum{0.9348} & \devnum{0.322} & \devnum{0.2417} & \devnum{0.321} \\
+G0  & R-net, no edges         & \devnum{0.9325} & \devnum{0.316} & \devnum{0.2402} & \devnum{0.324} \\
+G1  & R-net, real edges       & \devnum{0.9324} & \devnum{0.322} & \devnum{0.2397} & \devnum{0.329} \\
+G2  & R-net, permuted edges   & \devnum{0.9305} & \devnum{0.318} & \devnum{0.2396} & \devnum{0.323} \\
+R1  & GRU over user history   & \devnum{0.9239} & \devnum{0.324} & \devnum{0.2396} & \devnum{0.313} \\
+R1S & M4 columns + GRU state  & \devnum{0.9366} & \devnum{0.315} & \devnum{0.2414} & \devnum{0.329} \\
+\hline
+\multicolumn{6}{l}{\textit{ACcoding}, $n = \devnum{647{,}465}$; the neural models were not fitted here} \\
+M1  & task history            & \devnum{0.8990} & \devnum{0.431} & \devnum{0.2904} & \devnum{0.683} \\
+M2  & user history            & \devnum{0.7855} & \devnum{0.292} & \devnum{0.3190} & \devnum{0.471} \\
+M3  & static features         & \devnum{0.7884} & \devnum{0.165} & \devnum{0.3429} & \devnum{0.493} \\
+M4  & all tabular             & \devnum{0.9266} & \devnum{0.527} & \devnum{0.2714} & \devnum{0.692} \\
+M5  & M4 + one-hop            & \devnum{0.9264} & \devnum{0.527} & \devnum{0.2713} & \devnum{0.696} \\
+\hline
+\end{tabular}
+\end{table}
+% Sources of Table~\ref{tab:s_pred_edu}:
+%   CodeBench column: evidence/predictor_neural/out_evaluate_core.txt (test 2022-2, group
+%     "all", mean over seeds 3/4/5); the M1-M6 rows agree with
+%     evidence/codebench_service_v2/out_service_v2.txt SUMMARY 1 (config ires0, train core).
+%   ACcoding column: evidence/accoding_v2/out_accoding_v2.txt, stage boot, lag 0,
+%     "devtest rows = all" table; cross-platform row labels from its stage "compare", section C.
+%   Heavy cut-offs 1.559 s and 1,314 ms: the same two files.
+
+
+\subsection{The Cost of Predicting}
+\label{sec:supp_predcost}
+
+This subsection supports the manuscript's statement in Section~4.4 that the choice
+between these predictors is a queueing decision and not a latency one.
+
+Prediction has to be cheap enough to sit in front of a queue whose median job is
+\devnum{204} ms. Measured in a streaming loop over \devnum{20{,}000} jobs, the
+tabular path costs a median of \devnum{0.076} ms per job and a 99th percentile of
+\devnum{0.188} ms; the relational network costs \devnum{0.434} ms per row plus
+\devnum{0.121} ms of graph lookup, and the GRU \devnum{0.576} ms. Charging the measured
+feature and inference latency to the predictive policies before they enqueue changes the
+closed gap by less than \devnum{0.001} at every load we ran, so the choice between these
+predictors is not a latency decision at this job size.
+
 
 %=================================================================
 \section{Traces and Workload Characterisation}
@@ -227,12 +365,208 @@ that fitting on the reported window would have hidden.
 %     comparison 1.14 vs 0.99 on the talos reverse split); the same rows are in holdout.csv.
 
 %=================================================================
+
+\subsection{What Supports the Shared-Pool Design}
+\label{sec:supp_pool}
+
+This subsection supports the second and third of the three things Section~7.3 of the
+manuscript says support its shared-pool design: a measurement on the same demand, and
+the simulator reproducing waits somebody else recorded.
+
+The second is a measurement on the same demand. Replaying the overlay of
+Section~7.4 of the manuscript under the dedicated design, the 99th percentile of containers
+alive at once is \devnum{1{,}636} and each container executes code for \devnum{0.12\%} of
+the time it is alive; since only \devnum{11\%} to \devnum{35\%} of logins have a logout
+written after them, session boundaries are reconstructed, and across six reconstructions
+that percentile lies between \devnum{1{,}003} and \devnum{2{,}525} containers and the
+utilisation between \devnum{0.07\%} and \devnum{0.17\%}. A shared pool holds the 99th
+percentile of deadline-window waits under \devnum{1} s with \devnum{14} servers under
+FCFS and \devnum{13} under the predictor-ordered policy. Pooling is worth two orders of
+magnitude here and the scheduler is worth one server (\devnum{14} to \devnum{13} at
+\devnum{1} s, \devnum{11} to \devnum{10} at \devnum{5} s, \devnum{8} to \devnum{7} at
+\devnum{30} s). It does not support a claim that the platform ever queued, the pooled
+side being simulated, nor that the containers are over-provisioned, since they also run
+the editing session the pool does not replace, nor that any of it is a cost saving.
+
+The third is that the simulator reproduces waits somebody else recorded. The CI logs carry
+the queue wait of every run, so we replay the recorded arrivals and services through our
+own $k$-server non-preemptive kernel. Two quantities are fitted: the effective capacity
+$k_{\mathrm{eff}}$, the shortfall against the listed machine count being machines that are
+up but not claiming work, and a setup term, the median short gap between consecutive runs
+on the same machine, added to every service because a machine is not reusable the instant
+a run resolves. Fitting both on the window and then reporting agreement on that same
+window would be circular, so we refit both on one chronological part of each window and
+test on the other, five splits over the two pools.
+This split is internal to the recorded window and is held out of the fit only; it
+is not sealed in the sense of Section~7.6 of the manuscript, and the whole window has
+been read.
+
+The capacity is stable across splits. On pool~A the three splits choose \devnum{155},
+\devnum{155} and \devnum{157} of \devnum{173} listed machines, and on pool~B the two
+splits choose \devnum{96} and \devnum{92} of \devnum{105}; the setup term moves between
+\devnum{54.2} and \devnum{55.3} s on the first and between \devnum{126.2} and
+\devnum{128.6} s on the second. The objective is sharp in $k$. With those parameters
+frozen, the held-out part comes
+back at \devnum{0.90} to \devnum{1.14} times the recorded mean wait, \devnum{0.86} to
+\devnum{1.16} at the 99th percentile and \devnum{0.89} to \devnum{1.28} at the 99.9th,
+with a per-hour mean-wait correlation of \devnum{0.936} to \devnum{0.981}, a per-job rank
+correlation of \devnum{0.940} to \devnum{0.963}, and a median per-job absolute error of
+\devnum{16} to \devnum{84} s.
+
+The 90th percentile does not survive the held-out test. It lands at \devnum{0.81} to
+\devnum{1.21}
+of the recorded one, and on the larger pool it is below the recorded value on all three
+splits while the 99th is above it, so the simulated distribution is too steep in its upper
+middle; the two-term objective hides this in sample by trading the mean against the p90,
+so we fit out of sample and say so. What the fit absorbs is nonetheless a
+property of the pool and no artefact of fitting: told instead that every listed
+machine is available, the same simulator underestimates the held-out mean wait by a factor
+of \devnum{1.3} to \devnum{2.6} and its per-hour correlation falls to \devnum{0.75}.
+Section~S2.2 gives the step-of-one sharpness check and reads the circularity
+of the original whole-window fit off the two pools directly.
+% Sources of the three paragraphs above:
+%   evidence/firefox_ci_holdout/out_SUMMARY.txt, section A (k_eff step-1 per split and the
+%   setup term on the fit part: osx 155/155/157 of 173, talos 96/92 of 105; setup 54.2-55.3 s
+%   and 126.2-128.6 s), section B (the HELD OUT rows: mean x, p99 x, p99.9 x, rho_h, sp,
+%   med|e|, and the "no fit k = nominal machines" rows for the 1.3-2.6x and the 0.75),
+%   section E (5-8 values of k inside 10% of the recorded mean) and section F (the p90
+%   range 0.81-1.21 and the circularity comparison 1.14 vs 0.99 on the talos reverse split).
+%   The same rows are in holdout.csv.  Pool A = releng-hardware/gecko-t-osx-1500-m4
+%   (173 machines, 21 d), pool B = releng-hardware/gecko-t-linux-talos-2404 (105, 7 d),
+%   matching Table~2 of the manuscript.  The sharpness check and the circularity read-off
+%   moved to supplementary.tex, Section~S2.2 (referee item G9).
+
+
+\subsection{Cost Concentration and the Provenance of the Analysis Bound}
+\label{sec:supp_tails}
+
+This subsection carries the cost-concentration screen of Section~7.5 of the manuscript
+and says, trace by trace, what its arrival and service fields are and what each analysis
+truncation removes.
+
+\begin{table}[htbp]
+\centering
+\caption{Share of executed work carried by the longest jobs, and provenance of the
+analysis bound $L$. An analysis cap is applied to the replay, not evidence of a
+platform-enforced timeout.}
+\label{tab:s_tails}
+\small
+\begin{tabular}{lccp{0.30\textwidth}}
+\hline
+Trace & Top \devnum{1\%} & Top \devnum{5\%} & Bound and provenance \\
+\hline
+CodeBench, \devnum{60} s regime & \devnum{0.375} & \devnum{0.432} & \devnum{60} s, observed regime ceiling; analysis cap \\
+CodeBench, no-limit periods, raw & \devnum{0.941} & \devnum{0.960} & none \\
+CodeBench, no-limit periods, capped & \devnum{0.494} & \devnum{0.658} & \devnum{60} s, imposed analysis truncation \\
+ACcoding, measured cost & \devnum{0.275} & \devnum{0.628} & \devnum{30.0} s, observed maximum of measured test-cost sum \\
+ACcoding, with the assumed fixed term & \devnum{0.122} & \devnum{0.290} & \devnum{30.5} s, observed maximum after assumed overhead \\
+Serverless invocations & \devnum{0.443} & \devnum{0.879} & \devnum{286.8} s, training p99.9 analysis cap \\
+Compute farm & \devnum{0.372} & \devnum{0.628} & \devnum{493{,}857} s, training p99.9 analysis cap \\
+CI pool A & \devnum{0.034} & \devnum{0.107} & \devnum{5{,}066} s, training p99.9 of run plus setup; clipped \\
+CI pool B & \devnum{0.052} & \devnum{0.159} & \devnum{4{,}140} s, training p99.9 of run plus setup; clipped \\
+\hline
+\end{tabular}
+\end{table}
+% Sources of Table~\ref{tab:s_tails}:
+%   CodeBench rows: evidence/codebench_audit/out_tail_and_counts.txt (eras 2020-ERE..2022-2
+%     and 2018-1..2019-2, columns top1_share / top5_share, raw C and C_cap = min(C,60)).
+%   ACcoding rows and both per-job limits: evidence/accoding_v2/out_accoding_v2.txt,
+%     stage compare section B (time_cost and 0.5 + time_cost columns).
+%   Serverless and compute farm: evidence/cross_domain/out_cross_domain_table.txt section A
+%     (L used column) and out_audit_azure.txt / out_audit_netbatch.txt (work-share lines).
+%   CI pools: evidence/firefox_ci/out_SUMMARY.txt section A ("share of total work carried
+%     by the top" and "L' (train p99.9 of service)").
+
+\paragraph{Arrival and service provenance across traces.}
+CodeBench's jittered result stamp minus the recorded duration is an execution-start
+proxy, not a measured receipt time. ACcoding has no submission clock: arrivals are
+drawn, including the Poisson comparison and the deadline-shaped construction; its
+submission ids determine ordering, not elapsed time. Its measured cost sums test
+case execution times, each subject to its problem limit, and the replay adds an
+assumed \devnum{0.5} s overhead. Thus neither the observed \devnum{30.0} s sum nor
+the resulting \devnum{30.5} s maximum is a verified whole-job timeout.
+% Source: evidence/accoding_v2/out_accoding_v2.txt, field audit and compare section B.
+
+For Azure, the replay arrival is the documented end timestamp minus duration,
+again a start proxy; the publisher explicitly states that invocation timestamps
+were modified from the production trace \cite{azure2021trace}. The Netbatch replay
+uses the recorded SWF submission time and run duration. Their bounds in
+Table~\ref{tab:s_tails} are training p99.9 truncations, not observed platform timeouts.
+Both FCFS and every reordered policy receive the same truncated service sequence.
+The truncation affects \devnum{1{,}187} Azure jobs and \devnum{7{,}696} Netbatch jobs
+in the analysed pools; it removes \devnum{3.18\%} and \devnum{2.16\%} of raw work.
+% Sources: evidence/cross_domain/meta_azure.csv and meta_netbatch.csv;
+% evidence/cross_domain/out_leaktest_azure.txt and out_leaktest_netbatch.txt,
+% clipped counts; out_audit_azure.txt and out_audit_netbatch.txt, work removed.
+
+In the CI pools, arrival is the recorded scheduled instant, when dependencies have
+cleared and a worker may claim the run; recorded wait is started minus scheduled.
+Service is resolved minus started plus a fitted same-worker setup term. The analysis
+first adds setup and then clips this occupancy at the training p99.9 $L$;
+longer jobs are retained with truncated service, not excluded. This clips
+\devnum{227} runs in pool~A and \devnum{27} in pool~B. FCFS and all comparison
+policies use exactly that same capped occupancy sequence. The source scheduler's
+priority-then-FIFO rule and operational capacity are distinct from the counterfactual
+FCFS model used for the guarantee.
+% Sources: evidence/firefox_ci/out_leaktest_releng-hardware__gecko-t-osx-1500-m4.txt and
+% out_leaktest_releng-hardware__gecko-t-linux-talos-2404.txt;
+% evidence/firefox_ci/meta_releng-hardware__gecko-t-osx-1500-m4.csv and
+% meta_releng-hardware__gecko-t-linux-talos-2404.csv; fci_build.py and fci_sim.py.
+
+An enforced $L$ in a deployed service would instead kill an unfinished job at the
+limit and charge that executed work to the same-input FCFS comparison. The killed
+job would not yield its intended result; these replays do not estimate the resulting
+completion-quality cost or users' resubmission response. The table therefore
+supports finite-input bounds under its stated transformations, not a future
+operational timeout claim.
+
+
+%=================================================================
 \section{Experiments}
 \label{sec:supp_exp}
 
+\subsection{The Experimental Configuration}
+\label{sec:supp_config}
+
+This subsection carries the configuration and selection-protocol table that
+Section~8.1 of the manuscript refers to, unchanged and under its own label.
+
+\begin{table}[htbp]
+\centering
+\caption{Experimental configuration and the selection protocol for the guard parameters.}
+\label{tab:setup}
+\small
+\begin{tabular}{p{0.24\textwidth}p{0.69\textwidth}}
+\toprule
+Item & Value \\
+\midrule
+Trace and pool & CodeBench development terms under the \devnum{60} s limit, overlaid as in Section~7.4 of the manuscript; \devnum{17{,}634{,}760} jobs, \devnum{30} weeks, five overlays \\
+Load levels & $k = \devnum{8/5/4}$ on four of the five overlays and $\devnum{7/5/4}$ on the fifth, whose work per busy hour is the lowest; busy-hour $\rho = \devnum{0.529} / \devnum{0.847} / \devnum{1.059}$ on overlay~0 \\
+Single-server configuration & separate trace, \devnum{321} copies, \devnum{3{,}209{,}347} jobs, busy-hour $\rho = \devnum{0.80}$ at $k = 1$ \\
+Primary metric & 99th percentile of the wait among jobs arriving in the \devnum{24}~h before their own deadline; secondary metrics as defined in Section~3 of the manuscript, the gap closed printed beside the percentage reduction \\
+Intervals & paired week-block bootstrap, \devnum{2{,}000} resamples of the \devnum{30} whole weeks, one draw of week multiplicities applied to every policy and to all five overlays \\
+Promise to parameter & $B_{\max} = k(G - (3-2/k)L)$ with $L = \devnum{60}$ s, no data used \\
+Budget shapes & one mechanism under one cap, three shapes: constant ($\gamma = \eta = 0$), age-relative ($+\,\eta k (t - a_q)$), queue-length ($+\,\gamma n_q$). Three pre-stated grids, \devnum{42} $+$ \devnum{162} $+$ \devnum{54} $=$ \devnum{258} points \\
+Selection rule & a point is feasible if its harm is $\le G/2$ at each of the three load levels of each of the five validation overlays (\devnum{15} cells); the objective is the deadline-window gap closed in the worst cell; ties to smaller worst harm, then smaller $B_0$, then $\eta$, then $\gamma$. Guard($G$) is the winner over the three grids together; the winner inside each grid is an ablation row \\
+What the rule selected & Age-relative at $G = \devnum{300}$ and $\devnum{600}$ s ($B_0 = \devnum{60}$ and $\devnum{120}\,k/4$ s, $\eta = \devnum{0.50}$ and $\devnum{0.75}$), queue-length at $G = \devnum{1200}$ s ($\gamma = \devnum{16}k/4$ s). Table~\ref{tab:s_setup} gives the three selected points with their worst-cell gap and harm, the feasible counts and the nine per-shape winners; the same values are in \texttt{protocol\_lock.draft.json} \\
+Comparators & As named in Table~1 of the manuscript. Fixed($G$) is the equal-promise budget $B_{\max}$, which the harm rule rejects at every promise; Skip($G$) takes the largest dispatch-charged count equation~(2) of the manuscript allows at that $G$ and that cell's $k$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source of Table~\ref{tab:setup}: outputs/paper_tables/tab_setup.tex, produced by
+%   `python scripts/emit_paper_tables.py` from outputs/dev_tables/ (see GENERATED.md for the
+%   regeneration recipe and its check).  The trace, load-level, single-server, metric and
+%   interval rows are unchanged from evidence/main_v3/out_main_v31.txt section 2 (trace table,
+%   rows primary 0-4 and k1) and are not produced by the package.  The grids, the rule, the
+%   three selected points, the per-shape winners and the feasible counts are
+%   protocol_lock.draft.json (search_grids.n_points 42/162/54, selection_rule, selected_parameters,
+%   family_best) and docs/repo_build_status.md third pass, section 3.
+%   Finite-skip count rule: equation~(2) of the manuscript; per-cell counts in outputs/dev_tables/
+%   policy_parameters.csv, column skip_count.
+
 \subsection{What the Selection Rule Chose}
 
-Table~5 of the manuscript gives the three pre-stated grids, the feasibility rule, the
+Table~\ref{tab:setup} gives the three pre-stated grids, the feasibility rule, the
 objective and the tie-break, and names the shape the rule selected at each promise.
 Table~\ref{tab:s_setup} gives the selected points in full and the nine per-shape winners.
 The same values are in \texttt{protocol\_lock.draft.json}, which is the artefact the
@@ -265,18 +599,18 @@ Per-shape winners & constant: $B_0 = \devnum{329.671}$, \devnum{981.126}, \devnu
 
 \subsection{The Two Budget Shapes the Main Table No Longer Prints}
 
-Section~8.4 of the manuscript compares the three budget shapes at a fixed promise through
+Section~8.5 of the manuscript compares the three budget shapes at a fixed promise through
 the paired differences, which is how the comparison is read. Table~\ref{tab:s_guard_abl}
-gives the age-relative and queue-length rows themselves, in the format of Table~8 and in
+gives the age-relative and queue-length rows themselves, in the format of Table~5 and in
 the same cells; the Guard($G$), Guard-fixed($G$), Fixed($G$) and Skip($G$) rows stay
 there. One of the three shape winners coincides with Guard($G$) at each promise, which is
-why some rows below repeat a row of Table~8.
+why some rows below repeat a row of Table~5.
 
 \begin{table}[H]
 \begin{adjustwidth}{-\extralength}{0cm}
 \centering
 \caption{The age-relative and queue-length winners at three promises and three loads, in
-the format of Table~8 of the manuscript. Excess and harm are the worst over the five
+the format of Table~5 of the manuscript. Excess and harm are the worst over the five
 overlays, the rest are means; budgets scale as $k/4$.}
 \label{tab:s_guard_abl}
 \small
@@ -320,9 +654,46 @@ Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max ex
 %   levels 0, 1, 2; columns p99_dl_s, gap_closed with gap_closed_lo/hi, reduction_pct,
 %   max_excess_s, harm_s, fired_pct.  Nothing was recomputed for this file.
 
+\subsection{Deliberately Corrupted Scores}
+\label{sec:supp_adv}
+
+This subsection carries the table behind the manuscript's answer in Section~8.5 to
+what happens when the predictions are wrong: the guard holds every job inside its
+promise under a reversed, a random and a longest-called-shortest score, while the
+deadline-window percentile is not rescued.
+
+\begin{table}[htbp]
+\centering
+\caption{Deliberately corrupted scores, unguarded and under Guard($\devnum{600}$).
+Waits and excesses in seconds; corruption of the original source-clock scores.}
+\label{tab:s_adv}
+\small
+\begin{tabular}{llrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{p99$_{\mathrm{dl}}$} & \multicolumn{2}{c}{Max excess} & Harm \\
+Load & Score & unguarded & guarded & unguarded & guarded & guarded \\
+\midrule
+$\rho = \devnum{0.5}$ & reversed    & \devnum{42.72}  & \devnum{43.39}  & \devnum{1{,}240.1} & \devnum{497.1} & \devnum{287.1} \\
+                      & random      & \devnum{16.82}  & \devnum{17.12}  & \devnum{1{,}307.7} & \devnum{489.9} & \devnum{324.0} \\
+                      & longest as shortest & \devnum{38.24} & \devnum{38.71} & \devnum{1{,}305.8} & \devnum{497.1} & \devnum{273.4} \\
+$\rho = \devnum{0.8}$ & reversed    & \devnum{228.12} & \devnum{232.41} & \devnum{3{,}387.9} & \devnum{513.5} & \devnum{323.4} \\
+                      & random      & \devnum{78.52}  & \devnum{88.39}  & \devnum{3{,}319.4} & \devnum{504.5} & \devnum{352.3} \\
+                      & longest as shortest & \devnum{212.54} & \devnum{222.52} & \devnum{3{,}292.0} & \devnum{516.1} & \devnum{306.0} \\
+$\rho = \devnum{1.0}$ & reversed    & \devnum{557.44} & \devnum{546.48} & \devnum{6{,}295.7} & \devnum{534.8} & \devnum{309.1} \\
+                      & random      & \devnum{194.78} & \devnum{261.93} & \devnum{6{,}235.5} & \devnum{520.7} & \devnum{332.9} \\
+                      & longest as shortest & \devnum{523.55} & \devnum{543.63} & \devnum{6{,}107.8} & \devnum{534.7} & \devnum{324.6} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source of Table~\ref{tab:s_adv}: outputs/paper_tables/tab_adv.tex, produced by
+%   `python scripts/emit_paper_tables.py` (see GENERATED.md), from
+%   outputs/dev_tables/main_table.csv, rows SPJF-{reversed,random,top1short} and
+%   Guard(600)-{reversed,random,top1short} at levels 0, 1, 2; columns p99_dl_s, max_excess_s,
+%   harm_s.
+
 \subsection{The Residual on All Nine Cells}
 
-Table~10 of the manuscript prints the three Guard($\devnum{600}$) cells and one reversed
+Table~6 of the manuscript prints the three Guard($\devnum{600}$) cells and one reversed
 score. Table~\ref{tab:s_resid} gives all nine. The reading Section~8.5 takes from them is
 that the residual is a property of the schedule and barely moves with the policy: inside
 each load the ratios are similar in scale, but are not equal to the third decimal.
@@ -434,13 +805,425 @@ Skip($\devnum{1200}$), $\kappa=20$ & \devnum{1200} & \devnum{217.64} & \devnum{0
 %   the one cell where this table differs from the package's own.
 
 %=================================================================
+
+\subsection{Outcome Visibility: Exposure, Lag and the Variants}
+\label{sec:supp_visibility}
+
+This subsection supports the conservative-visibility headline of Section~8.3 of the
+manuscript: it defines the same-copy queueing exposure the headline conditions on,
+audits the release lag, and gives the two controls and the pending exact variant that
+the manuscript's headline table names.
+
+Let $H_i$ be the set of distinct outcome records used by score $i$, counting a record
+only once if it enters several entity aggregates. Separate records from the same
+class-term copy, histories from other classes or terms, and records with no
+submission job in the replayed pool. Same-copy queueing exposure is
+\[
+ V_i(P)=\{j\in H_i:\ \operatorname{copy}(j)=\operatorname{copy}(i),\quad
+             a_j+W_P[j]+C_j>a_i\}.
+\]
+An external past record is not unavailable merely because it has no replayed job.
+The earlier audit mapped histories through the same replication round while
+different classes were independently shifted. Its roughly \devnum{80\%} affected
+jobs and \devnum{95.39\%} with unreplayed history are mapping-exposure statistics,
+not estimates of same-copy queueing leakage. Section~S5 specifies
+the external-history clock and the separate class-history sensitivity.
+% Source: outputs/dev_visibility/visibility_exposure.csv, overall_affected_share
+% (approximately 0.80 across cells), unreplayed_overall_affected_share=0.9538935602.
+
+The conservative score restricts user, exercise and pair history to submission
+outcomes in the same class-term copy, and admits a result only when
+$\mathrm{done}_j+\devnum{3600}\le a_i$, with times in seconds. The static score
+uses code, course and clock information known at submission, without outcome
+history. Both use their own fitted models; original, conservative and static
+therefore differ in more than release delay. Their differences cannot be attributed
+to queueing delay alone and are not mathematical upper or lower performance bounds.
+Guard parameters remain those selected under the original score. Consistent with
+the committed visibility decision, the conservative variant is the empirical
+headline; the original-score results are optimistic references.
+% Source: outputs/dev_visibility/manifest.json, notes.conservative_lag_s,
+% headline_variant and selected_parameters_unchanged.
+
+For a same-copy submission, $W_P[j]\le D$ is a sufficient availability condition
+under a source release lag $D$. The largest development FCFS wait is
+\devnum{1544.602708} s. Adding the largest evaluated promise, \devnum{1200} s,
+still lies below the \devnum{3600} s lag. All conservative Guard and FCFS cells
+have \devnum{0} lag violations. Unguarded conservative SPJF-E has
+\devnum{336} job occurrences with waits beyond the lag across the evaluated cells;
+it lacks the guard's certificate, so its performance is a lagged-score comparator
+with residual availability violations. A new pool must pass the per-job lag audit;
+the development maximum does not certify it in advance.
+% Source: outputs/dev_visibility/visibility_waits_and_lag.csv, max(wait_max_s)
+% for FCFS; sum(lag_violations) for conservative SPJF-E=336 and for FCFS/Guard=0;
+% outputs/dev_visibility/manifest.json, promises and conservative_lag_s.
+
+The exact variant freezes the original model weights, replays each policy, withholds
+same-copy outcomes still unavailable at the target arrival, recomputes affected
+histories and scores, and repeats until no used outcome violates availability.
+Withheld sets only grow, so this finite procedure terminates. It certifies
+availability in its final replay; it is not a claim of minimal withholding, a unique
+fixed point, or an online predictor driven by completion events. A full comparison
+and the associated exposure decomposition remain pending. The conservative and static
+results above are the completed controls; no partial exact result is used to select
+parameters or replace the headline.
+% EXACT-VISIBILITY-PENDING: add completed exact_comparison.csv cells at each load
+% beside original/conservative/static in tab:visibility; add same_copy_exposure.csv
+% only after complete coverage and terminal-zero certification. No exact values yet.
+
+
+\subsection{Aging Outside the Budget Family}
+\label{sec:supp_aging}
+
+This subsection supports the manuscript's statement in Section~8.3 that a linear aging
+credit, selected under the same conservative score and the same harm limit, carries no
+proved per-job guarantee and closes far less of the gap.
+
+Table~\ref{tab:s_aging_policy} extends the policy definitions with linear aging.
+It uses the same conservative score as the headline, with a validation search
+over \devnum{11} credits, of which \devnum{4} pass the \devnum{300} s harm limit.
+The selected credit is $\beta=\devnum{0.03}$; its worst validation gap is
+\devnum{0.0375} and harm \devnum{246.36} s. The label Aging(\devnum{600}) records
+the reference promise used to set the validation constraint, and carries no proved
+per-job guarantee. All evaluated loads and harmful outcomes are retained.
+% Sources: outputs/selection_aging/aging_protocol.json and selected_aging.csv,
+% candidate_count, feasible_count, credit_per_s, worst_gap_closed, worst_harm_s.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Additional policy definition; the reference label is not a theorem.}
+\label{tab:s_aging_policy}
+\begin{tabular}{lp{0.58\textwidth}l}
+\toprule
+Policy & Dispatch priority, smallest first & Guarantee \\
+\midrule
+Aging($G$) & $\hat C_i-\beta(t-a_i)$, equivalently $\hat C_i+\beta a_i$;
+ties by arrival rank. Select $\beta$ on validation cells under harm $\le G/2$. & None proved \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Conservative-score comparison with the selected aging baseline. All waits,
+excesses and harms are in seconds; intervals are paired week-block intervals.}
+\label{tab:s_aging_results}
+\begin{tabular}{llrlrr}
+\toprule
+Load & Policy & p99$_{\mathrm{dl}}$ & Gap closed & Max excess & Harm \\
+\midrule
+\devnum{0.5} & Guard(600) & \devnum{16.68} & \devnum{0.640 [0.604, 0.671]} & \devnum{499.9} & \devnum{235.2} \\
+% Source: outputs/dev_visibility/visibility_comparison.csv, level=0, policy=Guard(600).
+\devnum{0.5} & Aging(600) & \devnum{23.83} & \devnum{0.228 [0.180, 0.271]} & \devnum{306.8} & \devnum{155.8} \\
+% Source: outputs/dev_visibility/visibility_comparison.csv, level=0, policy=Aging(600).
+\devnum{0.8} & Guard(600) & \devnum{64.77} & \devnum{0.634 [0.560, 0.688]} & \devnum{509.4} & \devnum{327.7} \\
+% Source: outputs/dev_visibility/visibility_comparison.csv, level=1, policy=Guard(600).
+\devnum{0.8} & Aging(600) & \devnum{109.83} & \devnum{0.111 [0.082, 0.161]} & \devnum{673.0} & \devnum{179.1} \\
+% Source: outputs/dev_visibility/visibility_comparison.csv, level=1, policy=Aging(600).
+\devnum{1.0} & Guard(600) & \devnum{174.71} & \devnum{0.429 [0.357, 0.533]} & \devnum{527.8} & \devnum{303.5} \\
+% Source: outputs/dev_visibility/visibility_comparison.csv, level=2, policy=Guard(600).
+\devnum{1.0} & Aging(600) & \devnum{261.68} & \devnum{0.051 [0.035, 0.074]} & \devnum{855.6} & \devnum{184.7} \\
+% Source: outputs/dev_visibility/visibility_comparison.csv, level=2, policy=Aging(600).
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{Package Predictor Metrics and Their Splits}
+\label{sec:supp_devpred}
+
+This subsection supports the manuscript's distinction in Section~8.3 between the AUROC
+of the earlier retrospective classifier comparison and the AUROC of the deployed
+expected-cost score.
+
+The AUROC \devnum{0.928} in the earlier predictor comparison is M4 under the
+source-clock I-res protocol, using heavy-class classifier probabilities averaged
+over seeds, trained on the core terms and evaluated on
+\devnum{2022-2}. It is not the AUROC of the package's deployed expected-cost score.
+The latter is \devnum{0.9360} pooled over rolling forward development predictions
+and \devnum{0.9372} on \devnum{2022-2}; the conservative pooled score is
+\devnum{0.9116}. Table~\ref{tab:s_development_predictor} uses the package values and
+split definitions that will accompany the sealed predictor column. The earlier
+value remains evidence for its own retrospective classifier comparison, whose
+predictions never enter scheduling; it is not a competing estimate of the same fitted score.
+% Sources: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1, core/M4/ires0;
+% outputs/dev_predictor/predictor_metrics.csv, pooled and 2022-2, spjf_e and
+% spjf_e_conservative. Exact training periods are specified in Section S5.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Package development AUROC with user-block intervals. Pooled means pooling
+unreplicated forward-prediction rows, not averaging term AUROCs.}
+\label{tab:s_development_predictor}
+\begin{tabular}{lll}
+\toprule
+Target & Score variant & AUROC [interval] \\
+\midrule
+pooled & Original & \devnum{0.9360 [0.9289, 0.9424]} \\
+% Source: outputs/dev_predictor/predictor_metrics.csv, target=pooled, score=spjf_e.
+pooled & Conservative & \devnum{0.9116 [0.9054, 0.9173]} \\
+% Source: outputs/dev_predictor/predictor_metrics.csv, target=pooled, score=spjf_e_conservative.
+pooled & Static & \devnum{0.8371 [0.8249, 0.8492]} \\
+% Source: outputs/dev_predictor/predictor_metrics.csv, target=pooled, score=spjf_e_static.
+2022-2 & Original & \devnum{0.9372 [0.9218, 0.9491]} \\
+% Source: outputs/dev_predictor/predictor_metrics.csv, target=2022-2, score=spjf_e.
+2022-2 & Conservative & \devnum{0.9196 [0.9060, 0.9324]} \\
+% Source: outputs/dev_predictor/predictor_metrics.csv, target=2022-2, score=spjf_e_conservative.
+2022-2 & Static & \devnum{0.8806 [0.8544, 0.9022]} \\
+% Source: outputs/dev_predictor/predictor_metrics.csv, target=2022-2, score=spjf_e_static.
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{Alternative Ranking Losses}
+\label{sec:supp_scores}
+
+This subsection supports the manuscript's answer in Section~8.4 to the question of what
+a scheduler should rank by, by running seven further fitted scores through the same
+simulator.
+
+Alternative ranking losses were fitted on the same features and run through the same
+simulator (Table~\ref{tab:s_scores}). The fitted quantile scores and raw-second squared-error model lose to the Tweedie
+fit at every load in this comparison. Raw squared error and the Tweedie mean loss
+have the same unrestricted population target, so this does not identify a change
+of estimand as the cause. Finite model capacity, error weighting, regularisation
+and optimisation can produce different rankings for the same target. A two-class rule that
+sends predicted-heavy jobs behind predicted-light ones and runs FCFS inside each class reaches a
+deadline-window p99 of \devnum{64.05} s at $\rho = \devnum{0.8}$ on the first overlay, against
+\devnum{43.86} s for the full ordering on the same overlay, so most of the benefit comes from
+the fine ordering inside the light class and little of it from separating the two classes.
+
+\begin{table}[htbp]
+\centering
+\caption{Ranking scores fitted on one feature set and run through one simulator: fraction of the
+deadline-window gap closed, five overlays, and the paired difference against the log-scale
+score. Archived source-clock fits, distinct from the package refit in
+Table~4 of the manuscript; differences between the tables do not compare identical fitted scores.}
+\label{tab:s_scores}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Score & $\rho = \devnum{0.5}$ & $\rho = \devnum{0.8}$ & $\rho = \devnum{1.0}$ & Difference at $\rho = \devnum{1.0}$ \\
+\midrule
+SPJF-log                   & \devnum{0.7528} & \devnum{0.8728} & \devnum{0.8967} & --- \\
+SPJF-E                     & \devnum{0.7515} & \devnum{0.8847} & \devnum{0.9159} & \devnum{$+0.0191$ $[+0.0111, +0.0238]$} \\
+Expected cost, gamma hurdle & \devnum{0.7404} & \devnum{0.8826} & \devnum{0.9141} & \devnum{$+0.0174$ $[+0.0082, +0.0223]$} \\
+Probability of heavy       & \devnum{0.7476} & \devnum{0.8821} & \devnum{0.9122} & \devnum{$+0.0155$ $[+0.0066, +0.0199]$} \\
+Predicted 99th percentile  & \devnum{0.7245} & \devnum{0.8742} & \devnum{0.9005} & \devnum{$+0.0038$ $[-0.0050, +0.0097]$} \\
+Predicted 90th percentile  & \devnum{0.7024} & \devnum{0.8470} & \devnum{0.8755} & \devnum{$-0.0212$ $[-0.0297, -0.0156]$} \\
+Predicted median           & \devnum{0.7071} & \devnum{0.8196} & \devnum{0.8402} & \devnum{$-0.0565$ $[-0.0684, -0.0463]$} \\
+Squared error, raw seconds & \devnum{0.7197} & \devnum{0.8585} & \devnum{0.8873} & \devnum{$-0.0094$ $[-0.0194, -0.0043]$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source of Table~\ref{tab:s_scores}: evidence/ranking_score/out_table_primary_5reps.txt, the
+%   three blocks "primary, reps 0,1,2,3,4, busy-hour rho target 0.5 / 0.8 / 1.0"; column
+%   gain_p99dl for the three load columns and column dgain_p99dl_vs_M4 of the rho 1.0 block for
+%   the last column.  Rows SPJF-M4 / SPJF-tweedie / SPJF-hurdle / SPJF-phv / SPJF-q99 /
+%   SPJF-q90 / SPJF-q50 / SPJF-l2raw.  This is a separate study with its own fits, which is why
+%   its M4 and Tweedie figures differ in the third decimal from Table~4 of the manuscript.
+%   Two-class figures in the text: evidence/ranking_score/out_sim_primary_rep0_twoclass.txt,
+%   block primary_rep0_r0.8_twoclass, rows 2CLASS-FCFS-tau0.02 and SPJF-tweedie, column w_p99_dl.
+
+
+\subsection{What the Shape of the Budget Is Worth}
+\label{sec:supp_shape}
+
+This subsection supports the manuscript's statement in Section~8.5 that the cap carries
+the promise and the shape decides only how much of the base policy's benefit survives
+and which jobs pay for it.
+
+The promise is the cap's alone, so the three shapes are compared at a fixed promise and the
+question is only how much of the base policy's benefit each keeps and who pays for it. The
+two shapes the main table no longer prints are read here through the paired differences and
+in full in Table~\ref{tab:s_guard_abl}. The
+shape matters where the promise is tight and the load is high, and hardly at all elsewhere. At
+$G = \devnum{600}$ s the constant shape trails the joint winner by
+\devnum{0.007 [0.003, 0.012]}, \devnum{0.028 [0.020, 0.038]} and \devnum{0.119 [0.074, 0.176]}
+of the gap as the load rises through the three levels, each interval clear of zero; at
+$G = \devnum{300}$ s the same three differences are \devnum{0.008 [-0.002, 0.015]},
+\devnum{0.099 [0.056, 0.157]} and \devnum{0.262 [0.202, 0.288]}; and at $G = \devnum{1200}$ s
+they are \devnum{$-0.001$}, \devnum{$-0.001$} and \devnum{0.003}, none of the three intervals
+excluding zero. At a loose promise and a light load the shape is not doing measurable work.
+
+The other axis is harm. At $G = \devnum{600}$ s the queue-length shape reaches within
+\devnum{0.009} of the joint winner's gap at every load while its worst-overlay harm is
+\devnum{106.0}, \devnum{117.7} and \devnum{123.4} s against the winner's \devnum{237.0},
+\devnum{319.6} and \devnum{339.9} s, under half at every load. That is also why
+the rule picks the queue-length shape at $G = \devnum{1200}$ s, where the three shapes are
+within \devnum{0.005} of one another on the validation objective and it has the smallest worst
+harm. The shape decides which jobs pay for the promise more than it decides how much of the
+benefit survives.
+
+Fixed($G$), which spends the whole cap, is an equal-promise candidate in the search,
+but is infeasible under the validation harm constraint at every promise.
+Its evaluation-overlay harm is \devnum{181.8}, \devnum{195.4} and \devnum{208.2} s at
+$G = \devnum{300}$ s against a \devnum{150} s limit, \devnum{237.0}, \devnum{447.1} and
+\devnum{465.5} s at $G = \devnum{600}$ s against \devnum{300} s, and \devnum{237.0},
+\devnum{469.2} and \devnum{708.8} s at $G = \devnum{1200}$ s against \devnum{600} s.
+Thus the evaluation cells also exceed the corresponding limits at each promise.
+It is ahead of the joint winner on the gap
+closed in eight of the nine cells, by up to \devnum{0.042}, so it buys its extra gap with harm
+above the declared limit in some cells; we make no claim that any shape beats it on
+the gap at equal promise.
+% Sources: outputs/selection_v3/selection_worst.csv, family=fixed full-cap candidates,
+% worst_harm_s; outputs/dev_tables/main_table.csv, Fixed(G), harm_s and gap_closed.
+% Source of the two paragraphs above: outputs/dev_tables/paired_differences.csv (rows
+%   left = Guard(G), right = Guard-fixed(G) / Guard-queue(G) at levels 0, 1, 2; columns
+%   difference_gap, gap_lo, gap_hi, excludes_zero_gap) and the Harm and Gap-closed columns of
+%   Table~5 of the manuscript.  The worst-cell validation objectives of the three shapes at
+%   G = 1200 s (0.7257 / 0.7273 / 0.7283) are docs/repo_build_status.md third pass, section 3.
+
+\input{figures/fig_gap_harm}
+
+\subsection{The Gap Closed against the Promise}
+\label{sec:supp_gapvsg}
+
+This subsection carries the figure behind the manuscript's Section~8.5: the fraction
+of the gap each policy closes, plotted against the promise, with the count-based
+baseline beside it.
+
+\input{figures/fig_gapvsg}
+
+\subsection{The Identity, Measured Job by Job}
+\label{sec:supp_identity}
+
+This subsection supports the manuscript's report in Section~8.6 that the residual of
+Theorem~1 never exceeds \devnum{0.518} of its bound on the trace, by giving the
+recording kernels, their validation and the same-phase shares behind that figure.
+
+The net-overtake identity had been tested on small synthetic instances and never measured on
+the trace this paper runs on, so we measured it. Table~6 of the manuscript reports the residual
+$D_i = k(W_P[i] - W_{\mathrm{FCFS}}[i]) - (\mathrm{In}_i - \mathrm{Out}_i)$ on overlay~0 at
+the three load levels under Guard($\devnum{600}$), with the reversed score at the busiest
+load beside it and the other five cells, SPJF-E among them, in Table~\ref{tab:s_resid}, and
+with FCFS on the same input as the reference schedule in every cell. Recovering $\mathrm{In}_i$ and
+$\mathrm{Out}_i$ needs the dispatch sequence, which the guard kernel does not expose, so the
+kernel and the independent reference simulator were each copied verbatim and given recorders
+that add no branch and no state update; the two agree on the dispatch sequence of every job of
+\devnum{3{,}000} random instances, the recording kernel reproduces the production kernel's
+waits element for element inside every cell, and $\mathrm{In}_i$ and $\mathrm{Out}_i$ are
+carried in exact integer microseconds, the currency the guard itself meters.
+
+Theorem~1 of the manuscript is asserted on every job of every cell: \devnum{0} violations over
+\devnum{1{,}428{,}415{,}560} job-checks, the \devnum{27} policies of this overlay at the three
+loads. The residual stays far from its ceiling. The
+largest $|D_i|$ over the nine cells of Table~\ref{tab:s_resid} is \devnum{6.788}$L$, at
+$k = \devnum{8}$, where the
+bound $2(k-1)L$ is \devnum{14}$L$, and over those nine cells the maximum sits between
+\devnum{0.485} and \devnum{0.514} of the bound, which is about $(k-1)L$; over all
+\devnum{81} cells the largest is \devnum{0.5173} of the bound, so it never exceeds
+\devnum{0.518}. That is where a search that does not
+build the cascade of Theorem~2 of the manuscript stops, so the measurement says the workload does
+not attain the constant, not that the constant is loose. Same-phase bookkeeping, the mechanism
+behind the degenerate extremal instances of Remark~1 of the manuscript, accounts for at most
+\devnum{0.36\%} of the total $\mathrm{In}$ in any of those nine cells, so the executed-work
+convention would not change the picture for these
+policies. It is not negligible everywhere: under the randomised ranking, which ties many jobs
+into one dispatch instant, the share reaches \devnum{14.95\%}.
+$(\mathrm{In}_i - \mathrm{Out}_i)/k$ explains $R^2 = \devnum{0.983}$ to \devnum{0.9996} of the
+variance of $W_P[i] - W_{\mathrm{FCFS}}[i]$, with a worst per-job error of \devnum{44.9} to
+\devnum{50.9} s where the theorem permits $(2-2/k)L$, that is \devnum{90} s at $k = 4$ and
+\devnum{105} s at $k = 8$. This is one overlay of development data, and the residual is a
+property of a schedule rather than a statistic, so no interval is attached to it.
+
+\input{figures/fig_excess}
+
+\subsection{Choosing a Shape on One Set of Cells}
+\label{sec:supp_k1shape}
+
+This subsection supports the manuscript's statement in Section~8.7 that the budget shape
+selected on the fifteen multi-server validation cells does not transfer to a single
+server at the loosest promise.
+
+The single-server configuration also shows the cost of choosing a shape on one set of cells.
+The parameters were selected on the \devnum{15} multi-server validation cells, and $k = 1$ is
+not among them. At $G = \devnum{300}$ and $\devnum{600}$ s the joint winner transfers: it closes
+\devnum{0.746} and \devnum{0.854} of the gap, against \devnum{0.543} and \devnum{0.791} for the
+constant shape. At $G = \devnum{1200}$ s it does not: the queue-length shape that wins the
+joint comparison on the multi-server cells closes \devnum{0.701} here, while the age-relative
+shape closes \devnum{0.895} and the constant shape \devnum{0.865}. We report the number the
+pre-stated rule produces and do not re-tune it on this cell; Section~9 of the manuscript states
+what it means.
+% The single-server table (label tab:k1) moved to supplementary.tex as Supplementary Table S5
+% in the sixth revision pass, referee item G2.  Its source comment moved with it.  The five
+% gaps, the three harm ratios and the two realised excesses this subsection quotes are the
+% same rows of outputs/dev_tables/k1/main_table.csv that the table prints.
+
+
+\subsection{Trace-Construction Sensitivities}
+\label{sec:supp_sens}
+
+This subsection supports the manuscript's statement in Section~8.10 that the earlier
+ordering experiment survives five alternative readings of the source log, and that those
+variants were not rerun under the final selected policy.
+
+Five trace-construction variants were run through an earlier source-clock pipeline
+(Table~\ref{tab:s_sens}). These are sensitivity results for its stored M4 log-scale
+score and fixed completed-work budget, not the selected expected-cost Guard($G$).
+Within that earlier configuration, the alternatives retain a positive gap; adding the term whose busiest
+hour is dominated by runs that outlived their container raises the gap, and the opposite reading
+of the timestamp, in which the stamp is receipt rather than completion, gives
+\devnum{0.926} against \devnum{0.895}. Merging or dropping the groups of runs by one user that
+end in the same second moves the gap closed by \devnum{0.017} and \devnum{0.003} at full load,
+so that earlier result survives these two treatments of co-ending runs;
+delaying the visibility of a completed job's outcome costs prediction quality and not much of
+it (Section~4 of the manuscript). The earlier fixed-budget guard is more sensitive to the
+construction, ranging from \devnum{0.442} to \devnum{0.843} of the gap at a fixed budget of
+\devnum{600} s at full load.
+
+\begin{table}[htbp]
+\centering
+\caption{Trace-construction sensitivities at busy-hour $\rho = \devnum{1.0}$, three overlays,
+fraction of the deadline-window gap closed. Archived M4 log-scale score and fixed
+completed-work budget; the budget in the last column is not a promise of equal value.}
+\label{tab:s_sens}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcrcc}
+\toprule
+Variant & $k$ & FCFS p99$_{\mathrm{dl}}$ & Unguarded & Guard, budget \devnum{600} s \\
+\midrule
+Primary pool (overlays 0--2) & \devnum{4.000} & --- & \devnum{0.895 [0.864, 0.916]} & \devnum{0.442 [0.345, 0.631]} \\
+Earlier term added           & \devnum{4.667} & \devnum{95.41}  & \devnum{0.945 [0.885, 0.965]} & \devnum{0.843 [0.715, 0.880]} \\
+Co-ending runs merged        & \devnum{4.000} & \devnum{228.19} & \devnum{0.912 [0.892, 0.924]} & \devnum{0.603 [0.445, 0.740]} \\
+Co-ending runs dropped       & \devnum{4.000} & \devnum{209.30} & \devnum{0.898 [0.879, 0.914]} & \devnum{0.608 [0.471, 0.753]} \\
+Opposite timestamp reading   & \devnum{4.000} & \devnum{268.75} & \devnum{0.926 [0.904, 0.939]} & \devnum{0.545 [0.422, 0.699]} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source of Table~\ref{tab:s_sens}: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 5,
+%   the four blocks "pool19 / sbatch / sdrop / isub0 (3 reps), target rho 1.0"; columns k,
+%   p99_dl (FCFS row), and the variant's own gain_p99_dl for rows SPJF-M4 and GUARD-M4-B600.
+%   The "Primary pool" row is the "primary(0-2) gain_p99_dl" column of the same blocks, which
+%   is why it carries no FCFS p99 of its own.  The delta figures in the text are SUMMARY 1 of
+%   the same file, table "auroc, all test rows", row (core, M4), columns ires0, ires600, isub0,
+%   isub60, isub600, isub3600.
+
+Table~\ref{tab:s_sens} supports sensitivity of the earlier ordering experiment to
+timestamp interpretation, source-term inclusion and co-ending-run treatment. It does
+not validate robustness of the final selected Guard($G$), conservative history or
+policy-specific exact visibility. Those variants were not rerun under each altered
+trace construction. Section~S5 gives the configuration and release
+boundary explicitly.
+
+% Source of Sections~\ref{sec:supp_visibility} to~\ref{sec:supp_sens}:
+%   sections/08_experiments.tex, moved here whole in the eighth revision pass under the
+%   authors' length budget.  Every value and every source comment is verbatim; only the
+%   cross-references were rewritten, since a \ref into the manuscript does not resolve
+%   from this file.  The tables keep their rows and take the supplement's tab:s_
+%   spelling: tab:s_aging_policy, tab:s_aging_results, tab:s_development_predictor,
+%   tab:s_scores and tab:s_sens.  Nothing was recomputed for this file.
+
+%=================================================================
 \section{Deferred Proofs}
 \label{sec:supp_proofs}
 
 Appendices~A.1 and~A.5 of the manuscript give the ideas behind the arguments
 proved here. The workload comparison uses continuity and left limits, whereas
-consistency is proved by induction. The tightness constructions remain in
-Appendices~A.2--A.4, A.6 and~A.7 of the manuscript. We use the manuscript's notation:
+consistency is proved by induction. The tightness constructions and the
+remaining proofs are Section~\ref{sec:supp_constructions} of this file, whose ideas
+Appendices~A.2--A.4 and~A.6--A.8 of the manuscript state. We use the manuscript's notation:
 $U_Q(t)$ is the unfinished work at time $t$ under policy $Q$, and $N_Q(t)$ is the
 number of jobs present.
 
@@ -468,7 +1251,7 @@ $D(t_0^-) \le U_{Q_1}(t_0^-) \le (k-1)L$ because $U_{Q_2} \ge 0$. On $(t_0, t]$
 we have
 $U_{Q_1} > (k-1)L$, so $D$ does not increase there, and $D(t) \le (k-1)L$.
 Exchanging $Q_1$ and $Q_2$ gives the other direction. That the constant cannot be
-lowered is the cascade of Appendix~A.2 of the manuscript, which reaches
+lowered is the cascade of Section~\ref{sec:supp_cascade} of this file, which reaches
 $(k-1)L\,(1 - ((k-1)/k)^m)$ after $m$ rounds. At $k = 1$ the bound reads
 $|D| \le 0$ and is attained everywhere: one server executes work at rate $1$
 whenever any job is present, so $U_{Q_1} \equiv U_{Q_2}$.
@@ -539,6 +1322,253 @@ unbounded in $L$.
 %   Appendix A.2.  Simulated and checked in evidence/guard_theory; nothing was
 %   recomputed for this file.
 
+
+\subsection{The Two Directions of the Identity}
+\label{sec:supp_directions}
+
+This subsection supports the statement in Section~6 of the manuscript that the upward
+and downward extremes of Theorem~1 do not have the same content, and that the
+executed-work convention would change only the downward one.
+
+\begin{remark}[The upward and downward extremes have different content]
+\label{rem:directions}
+Upward, the extremal value is a statement about delay: on the witnesses we have
+computed exactly, none of $\mathrm{In}_i$ is same-phase work and the victim's own
+excess is about $+3L$. Downward, half of the extremal value is an accounting
+convention. There $\mathrm{In}_i = (k-1)L$ consists entirely of overtakers
+dispatched in the victim's own phase, which execute nothing while it waits; the
+same-phase share of $|\Delta_i|$ is \devnum{50\%} to \devnum{63\%} at
+$k = 2, 3, 4$ (Section~S8.2), and the downward victim's excess is
+negative, since it starts earlier under $P$ than under first-come first-served.
+If $\mathrm{In}_i$ is redefined as the work of higher-ranked jobs actually
+\emph{executed} during $[a_i, s^P_i)$, Theorem~1 of the manuscript holds with the
+same constant and the same proof, the upward supremum is still $2(k-1)L$, and
+the best downward witness we have falls to $(k-1)L$. We keep the
+dispatch-sequence convention for two reasons. Its constant is exactly determined
+in both directions, whereas the downward constant for the executed-work variant
+is open, somewhere in $((k-1)L, 2(k-1)L]$; and its two sides are symmetric.
+Completed work lower-bounds both currencies, so the guard is implementable
+either way: a job $j$ of rank above $i$ that completes while $i$ waits has
+$a_j \ge a_i$ and is dispatched at or after $a_i$, so all of $C_j$ is executed
+inside $[a_i, s^P_i)$ and is counted in full by the executed-work variant as
+well.
+\end{remark}
+
+\subsection{What a Count of Overtakes Costs}
+\label{sec:supp_counts}
+
+This subsection supports Remark~2 of the manuscript, that a count bound on overtakes is
+sufficient for a per-job guarantee only through the worst-case charge of $L$ per pass
+and is not necessary for one.
+
+ Both halves are below. The sufficiency uses the bound on
+service times, and without that bound a single
+overtake makes the excess arbitrarily large: at
+$t = 0$ let $k-1$ jobs of service $X$, then a job of service $\epsilon$, then one
+more job of service $X$ arrive together; first-come first-served starts the
+victim immediately, a policy that takes the last job instead fills every server,
+and the victim waits $X$ with an overtake count of $1$. That instance steps
+outside Section~3 of the manuscript, which fixes $C_i \le L$; inside the model the
+same accounting is what makes a count bound work, with $L$ charged per pass.
+Necessity fails with no such caveat: normalise to $k=1$, $L=1$ and $G=1/2$.
+Let a victim of service $1$ arrive first together with $M$ short jobs, each of
+service $1/(2M)$. Running the short jobs first gives every job excess at most
+$1/2$, uses $\mathrm{In}_i=kG$ exactly, and lets the overtake count $M$ exceed
+any fixed limit.
+
+
+\subsection{Proofs of the Guard Bounds}
+\label{sec:supp_guardproofs}
+
+This subsection proves Theorem~3 and Theorem~4 of the manuscript, the additive
+guarantee of the wrapper under any budget rule that respects the cap and the
+multiplicative form the age-relative shape carries.
+
+\begin{proof}[Proof of Theorem~3 of the manuscript]
+For (3) of the manuscript, let $j$ be the overtaker of $i$ dispatched last in the
+dispatch sequence and let $t$ be its instant. Because dispatches are sequential
+and $i$ is dispatched after $j$, job $i$ is waiting at the moment $j$ is
+dispatched; this includes the case $t = s^P_i$, in which $j$ is dispatched in
+$i$'s own phase, just before $i$. Since $j$ is dispatched, either $E(t)$ is empty
+or its minimum-rank member is $j$; in both cases $i \notin E(t)$, because $i$ has
+the smaller rank. Hence
+$\mathrm{over}[i](t) < \mathrm{budget}(i,t) \le B_{\max}$.
+
+The overtakers of $i$ dispatched strictly before $j$ split into those completed
+by $t$, whose total service is $\mathrm{over}[i](t)$, and those still in service
+at $t$; the latter occupy distinct servers, none of them the server taking $j$,
+so there are at most $k-1$ of them, each of service at most $L$. Adding $j$
+itself gives $\mathrm{In}_i < \mathrm{budget}(i,t) + kL \le B_{\max} + kL$.
+
+For (4) of the manuscript, Theorem~1 of the manuscript with
+$\mathrm{Out}_i \ge 0$ gives
+$k\,(W - W_{\mathrm{FCFS}}[i]) \le \mathrm{In}_i + 2(k-1)L$; substituting
+(3) of the manuscript and dividing by $k$ gives the claim, strictly. If $i$ has no
+overtaker then $\mathrm{In}_i = 0$, the excess is at most $(2 - 2/k)L$, and the
+bound holds strictly because $L > 0$ in the model of Section~3 of the manuscript.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~4 of the manuscript]
+The argument for (3) of the manuscript gives
+$\mathrm{In}_i < \mathrm{budget}(i,t) + kL$ at the instant $t$ of $i$'s last
+overtaker, and $t \le s^P_i = a_i + W$ gives
+$\mathrm{budget}(i,t) \le B_0 + \eta k W$, which is (5) of the manuscript.
+Theorem~1 of the manuscript with $\mathrm{Out}_i \ge 0$ then yields
+$kW - \eta k W < k W_{\mathrm{FCFS}}[i] + B_0 + (3k-2)L$; divide by $k$. Both
+inequalities are strict, by the same argument as Theorem~3 of the manuscript: when
+$i$ has an overtaker the strictness comes from (3) of the manuscript, and when it
+has none $\mathrm{In}_i = 0$ and the excess is at most $(2-2/k)L < (3-2/k)L$.
+\end{proof}
+
+\subsection{Why the Multiplicative Bound Is Claimed for One Shape Only}
+\label{sec:supp_multscope}
+
+This subsection supports the restriction Section~5 of the manuscript places on
+Theorem~4: with the queue-length shape the multiplicative bound stated with one common
+constant is false.
+
+\begin{remark}[Why the multiplicative bound is claimed for one shape only]
+\label{rem:mult_scope}
+The same computation goes through when $B_0$ is replaced by a quantity
+$B_{0,i}$ fixed at $i$'s own arrival, and then bounds $W$ in terms of
+$B_{0,i}$. The queue-length shape of Section~5 of the manuscript sets
+$B_{0,q} = B_0 + \gamma n_q$ with $n_q$ the number of jobs waiting when $q$
+arrives, so $B_{0,i}$ varies from job to job. Stated with the common $B_0$ the
+multiplicative bound is then false, by a margin that grows with $\gamma$. Take
+$k = 1$, $B_0 = 0$, $B_{\max} = \gamma$, any $\eta \in [0,1)$, and the input: a
+job of service $L$ at $t = 0$, which is dispatched at once; a second job of
+service $L$ at $t = 1$, which waits with $n_q = 0$; the victim $i$, also of
+service $L$, at $t = 1$ and ranked after it, so that $i$ arrives behind a single
+waiting job, has $n_i = 1$ and hence budget $\gamma$; and $\gamma$ jobs of
+service $1$ at $t = 2L$, all ranked above $i$. First-come first-served runs the
+first two jobs on $[0,L]$ and $[L,2L]$ and starts $i$ at $2L$, so
+$W_{\mathrm{FCFS}}[i] = 2L-1$. Under the wrapper the second job is taken at
+$t = L$ as well, by the guard if $\eta = 0$ and by the base otherwise; at
+$t = 2L$ the victim has
+$\mathrm{over}[i] = 0 < \gamma$, so the guard does not fire and the base spends
+the whole budget on the stream, giving $W_P[i] = 2L - 1 + \gamma$ against a
+right-hand side of $(3L-1)/(1-\eta)$. The bound is violated for every
+$\gamma > (3L-1)/(1-\eta) - (2L-1)$, that is for $\gamma > L$ at $\eta = 0$, and
+the margin grows without bound in $\gamma$. The same happens for
+any per-job constant. For $\gamma > 0$ we therefore claim
+Theorem~3 of the manuscript and not Theorem~4 of the manuscript. The cap, and with
+it the promise, is unaffected either way.
+\end{remark}
+
+\subsection{Proofs of the Necessity Pair}
+\label{sec:supp_necessity}
+
+This subsection proves Lemma~2 and Corollary~2 of the manuscript, which together make a
+work budget necessary for a per-job guarantee up to an additive $O(kL)$.
+
+\begin{proof}[Proof of Lemma~2 of the manuscript]
+Every job $j$ counted in $\mathrm{Out}_i$ has rank below $i$, so first-come
+first-served dispatches it before $i$ and $s^P_j \le s^{\mathrm{FCFS}}_j + G \le
+s^{\mathrm{FCFS}}_i + G$; it is also dispatched at or after $s^P_i$. All of them
+therefore start inside a window of length
+$w = G - \mathrm{excess}_P[i] \ge 0$. Of the jobs one server starts inside
+such a window, all but the last complete inside it, so their total service is at
+most $w$ and the last adds at most $L$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~2 of the manuscript]
+Theorem~1 of the manuscript gives
+$\mathrm{In}_i - \mathrm{Out}_i \le k\,\mathrm{excess}_P[i] + 2(k-1)L$; add
+Lemma~2 of the manuscript, whose hypothesis holds because the guarantee is
+assumed for every job, and the terms in $\mathrm{excess}_P[i]$ cancel.
+\end{proof}
+
+\subsection{The Floor of Order \texorpdfstring{$L$}{L}, and the Scope of Its Hypothesis}
+\label{sec:supp_floorscope}
+
+This subsection proves Proposition~3 of the manuscript and shows that its hypothesis can
+be neither dropped nor tightened, the remaining cases of the budget family being
+exhaustive.
+
+\begin{proof}[Proof of Proposition~3 of the manuscript]
+Into an empty system, at $t=0$, let $k+1$ jobs arrive together, all of service
+$L$. The first $k$ ranks are precisely the jobs FCFS starts at once. Nothing has
+completed, so every waiting job has $\mathrm{over}=0$; because its first-epoch
+budget is positive, no waiting job fires and the wrapper accepts the base
+policy's choices. At the first choice of a job beyond the first $k$ ranks, that
+job displaces one of FCFS's first $k$ equal-length jobs. The displaced job waits
+until a completion under the wrapper but starts at zero under FCFS, and hence has
+excess $L$. A prediction-ranked base produces the same choice when one of the
+later ranks receives the preferred score. At $k=1$ and $B>0$,
+(3) of the manuscript gives $\mathrm{excess}<B+L$ strictly, and a family approaching
+it is in Section~S8.4; $B=0$ is FCFS.
+\end{proof}
+
+Two remarks on the hypothesis, because the proposition is easy to state too
+widely and too narrowly. It cannot be dropped: as a claim about policies the
+statement is false, since first-come first-served is non-preemptive,
+work-conserving, reads no service time before completion, and has excess $0$ on
+every input, as does any rank-ordered policy. For the same reason it is false as
+a claim about every base policy: the guard run around first-come first-served is
+first-come first-served, whatever the budget. The force comes from the guard's
+not firing, which is a property of the budget rule and not of work conservation,
+together with a base policy that uses the freedom this leaves it.
+It is also not necessary. A rule that is $0$ at the first dispatch epoch and
+positive later, such as the age-relative shape with $B_0 = 0$ and $\eta > 0$,
+falls to the same instance placed behind a saturating prefix: let $k$ jobs
+of service $L$ arrive at $t = 0$, the victim just after them, and $k$ further
+jobs just before $t = L$. The victim's wait up to $t = L$ is what first-come
+first-served gives it, its budget at $t = L$ is positive because it has aged,
+and the $k$ newcomers then take every server. The remaining case is degenerate:
+if the rule gives budget $0$ to a job whenever no completed work has overtaken
+it, then at every dispatch epoch the lowest-ranked waiting job $h$ has
+$\mathrm{over}[h] = 0$, so $h$ lies in $E(t)$ and is its minimum-rank member and
+is dispatched, and by induction the wrapper is first-come first-served itself,
+whatever the base policy. For the budget of Algorithm~1 of the manuscript these cases
+are exhaustive. If $B_{\max} = 0$ or $B_0 = \gamma = \eta = 0$ the budget is
+identically zero and the wrapper is first-come first-served. If $B_0 > 0$ the
+proposition applies, and if $B_0 = 0 < \eta$ the saturating prefix does. If
+$B_0 = \eta = 0 < \gamma$, let $k+2$ jobs of service $L$ arrive together at
+$t = 0$: the first has $n_q = 0$, hence budget $0$, and is released at once,
+every other job has a positive budget and nothing has overtaken it, so a base
+policy that prefers the highest ranks passes over the second job at $t = 0$ when
+$k \ge 2$, and at $t = L$ when $k = 1$, and that job's excess is $L$. A budget
+rule of this family therefore either makes the wrapper first-come first-served
+around every base policy, or admits a base policy and an input with excess at
+least $L$.
+
+% Source of Sections~\ref{sec:supp_directions} to~\ref{sec:supp_floorscope}:
+%   sections/06_theory.tex, moved here whole in the eighth revision pass under the
+%   authors' length budget.  The arguments are verbatim; only the cross-references were
+%   rewritten, since a \ref into the manuscript does not resolve from this file:
+%   Theorem~1 is thm:identity, Theorem~3 thm:guard, Theorem~4 thm:guardmult, Lemma~2
+%   lem:outbound, Corollary~2 cor:necessary, Proposition~3 prop:floor, Remark~2
+%   rem:counts, Algorithm~1 alg:guard, Section~3 sec:model, Section~5 sec:scheduling,
+%   and (3), (4) and (5) are eq:guardin, eq:guardadd and eq:guardinmult.  Nothing was
+%   recomputed for this file.
+
+%=================================================================
+
+\subsection{Why the Budget Is Measured in Work and Not in Positions}
+\label{sec:supp_workpositions}
+
+This subsection supports the choice of currency Section~5.2 of the manuscript makes, and
+the looseness Section~8.5 measures.
+
+Earlier bounded-overtaking mechanisms limit how many times a job may be passed, which
+is the currency of the finite-skip and Nudge-$K$
+rules~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Counting is not
+necessary: a job can be passed any number of times and stay inside its promise, provided
+the work that passes it is small. Counting is sufficient in this model, but only through
+the worst-case charge of $L$ per overtake, since every overtaker is bounded by the time
+limit; a count of $\kappa$ therefore buys a promise of $(\kappa + 2k-2)L/k$
+(Remark~2 and equation~(2) of the manuscript). That is the bound a count can give, and it
+is loose by the ratio $L/\bar{C}$, one to two orders of magnitude on our traces. Ten
+overtakers that each run for the full limit $L$ and ten that run for ten milliseconds
+carry the same count and delays that differ by three orders of magnitude, so the charge
+is paid on every dispatch whether or not the work is there.
+Section~8 of the manuscript runs the count rule as a baseline and measures how much
+the looseness costs on a real load. That work is the currency the excess is actually
+written in is the content of the identity of Section~6 of the manuscript, not a claim of
+ours about what earlier mechanisms could not do.
+
+
+%=================================================================
 \section{Reproducibility and Provenance of the Empirical Results}
 \label{sec:supp_repro}
 
@@ -762,6 +1792,77 @@ including the policy-specific exact stage, with unchanged declared selection
 rules and parameters. It does not extend the earlier predictor-family or
 cross-domain studies. No sealed result is present in this supplement.
 
+
+
+\subsection{The Selection Rule and the Cost per Event}
+\label{sec:supp_rule}
+
+This subsection supports Section~5.2 of the manuscript: it states the pre-stated
+selection rule in full and gives the data structures that make the guard's firing test
+cost $O(\log n)$ per event.
+
+The rule is fixed before the grids are run: three
+pre-stated grids, one per shape, \devnum{258} points in all; a point is feasible when
+its harm is at most $G/2$ in every one of the \devnum{15} validation cells; the
+objective is the deadline-window gap closed in the worst cell, with ties going to
+smaller worst harm and then to smaller $B_0$, $\eta$, $\gamma$. Guard($G$) is the
+winner over the three grids together; the winner inside each grid is reported as an
+ablation row.
+
+Algorithm~1 of the manuscript is written for readability rather than for execution, since
+its inner loop over waiting jobs at each completion is linear. We keep
+$\mathrm{over}[q] = TC - F(q)$ instead, where $TC$ is the total completed work and
+$F(q)$ the prefix sum over ranks up to $q$ of completed work, maintained in a Fenwick
+tree, so that a completion is one point update and a query one prefix sum. The firing
+test is a segment tree over the window of waiting ranks supporting suffix range-add
+and the query ``leftmost leaf with value at least $T$'', after rewriting
+$\mathrm{over}[q](t) \ge B_{0,q} + \eta k (t - a_q)$, where $B_{0,q} = B_0 + \gamma n_q$
+is fixed at $q$'s arrival, with $\eta k = e_n/e_d$ in lowest terms as
+$e_n a_q - e_d B_{0,q} - e_d F(q) \ge e_n t - e_d\, TC$,
+whose left side is a per-job value changed only by range-add at completions and whose
+right side depends on $t$ alone. The capped channel needs only the head, since at a
+fixed threshold $\mathrm{over}$ is non-increasing in rank. All budget arithmetic is
+carried in integer microseconds, so the test is exact and no floating-point clock
+enters the schedule. Each event costs $O(\log n)$ in the guard's own maintenance,
+exclusive of what the base policy spends producing a proposal, and $n$ counts
+waiting jobs, with arrivals sharing a timestamp processed in rank order.
+
+\subsection{What the Selection Was Run On}
+\label{sec:supp_selection_scope}
+
+This subsection supports the three statements Section~8.2 of the manuscript places
+before its numbers, by recording what the released package regenerates and what remains
+archived development evidence.
+
+Third, the grids, the feasibility rule, the objective and the tie-break were fixed before the
+grids were run, at comparable density across the three shapes, and the package comparisons use exact integer microseconds for arrivals, service
+and budget arithmetic. Earlier predictor comparisons, cross-domain analyses and
+trace-construction sensitivities remain archived development evidence, with their
+different fits and configurations identified in the captions and this section. They are not all regenerated by the package. Two properties of the outcome belong here. The winning shape is not the same at
+every promise: the age-relative
+shape wins the joint comparison at $G = \devnum{300}$ and $\devnum{600}$ s and the queue-length
+shape at $G = \devnum{1200}$ s, where it reaches worst-cell gap \devnum{0.7283} at worst-cell
+harm \devnum{145.3} s against \devnum{483.9} s for the best age-relative point. And a worst-cell
+rule can be decided by a single cell: dropping the one validation cell that decides
+the $G = \devnum{600}$ choice moves that choice to $B_0 = \devnum{15}k/4$ s, $\eta =
+\devnum{0.90}$, with worst-cell gap \devnum{0.7237}. The sealed terms will be opened
+once after the protocol freeze and reported in the same multi-server tables as an
+additional column, with the parameters unchanged. The current frozen-run procedure
+also produces a separate single-server trace and its tables, per-term and pooled
+predictor metrics, conservative/static visibility tables and exposure/lag audits,
+and a separate policy-specific exact-visibility stage. It does not produce the
+refit-control and GRU rows of Table~4 of the manuscript, the other predictor-family
+comparisons, cross-domain sealed results, or the earlier trace-construction
+sensitivities. No sealed result is printed here.
+% Source of the paragraph above: protocol_lock.draft.json (grids, rule, selected points);
+%   docs/repo_build_status.md third pass, sections 1 and 3 (the three grids at comparable
+%   density, the nine family winners, the integer-microsecond kernel and the deterministic
+%   refit); evidence/main_v3/out_main_v32.txt section 4 (the drop-one-cell sensitivity table,
+%   row G = 600 capped) and section 1 (what the second decimal of the older floating-point runs
+%   does).
+
+
+%=================================================================
 \section{Capacity, Physical Queueing and Feedback}
 \label{sec:supp_physical}
 
@@ -995,6 +2096,533 @@ recorded-feature conditional counterfactual, not a closed-loop deployment result
 
 
 \input{sections/S_theory_additions}
+
+%=================================================================
+\section{Extremal Constructions and the Remaining Proofs}
+\label{sec:supp_constructions}
+
+This section supports Section~6 of the manuscript: it gives in full the constructions and proofs whose ideas Appendix~A of the manuscript states, so that every constant the theory section calls exact is witnessed here. All of them are exact in integer arithmetic; every one was simulated and every intermediate quantity of every proof checked job by job, with an independent audit of work conservation and server capacity re-derived from the produced schedule. A cross-reference without an S points into the main manuscript.
+
+\subsection{The Cascade}
+\label{sec:supp_cascade}
+
+This subsection supports the claim of Section~6 of the manuscript that the constant $2(k-1)L$ of Theorem~1 cannot be lowered, by driving the workload gap of Lemma~1 to its ceiling.
+
+\begin{lemma}
+\label{lem:cascade}
+Fix $k \ge 2$ and $m \ge 1$ and set $L = k^m$. There is an input and a
+work-conserving policy $P$ such that, at time $T_m = mL$, first-come first-served
+has completed every job and idles all $k$ servers, while $P$ holds exactly $k-1$
+jobs in service, each with remaining service
+\[
+  f \;=\; \frac{\rho_m}{k-1} \;=\; L\Bigl(1 - \bigl(\tfrac{k-1}{k}\bigr)^{m}\Bigr) ,
+  \qquad
+  \rho_m \;=\; (k-1)L\Bigl(1 - \bigl(\tfrac{k-1}{k}\bigr)^{m}\Bigr) ,
+\]
+so that $U_P(T_m) - U_{\mathrm{FCFS}}(T_m) = \rho_m \to (k-1)L$ as
+$m \to \infty$. Every $\rho_j$ and every intermediate time is an integer.
+For any prescribed service bound $L_0>0$, multiplying every arrival time and
+service time in the construction by $L_0/k^m$ gives the same ratios with bound
+$L_0$; integrality is used only before this final rescaling.
+\end{lemma}
+
+\begin{proof}
+The input consists of $m$ identical rounds; round $j$ occupies
+$[T_j, T_{j+1}) = [jL, (j+1)L)$. At time $T_j$ inject, in rank order, $k-1$
+\emph{long} jobs of service $L$ and then $L$ \emph{short} jobs of service $1$, so
+that the long jobs carry the lower ranks. Let $P$ be the static-priority policy
+that dispatches a waiting short job whenever one exists and a long job
+otherwise; it is work-conserving.
+
+The empty-system base round must be treated separately. At $T_0=0$ both systems
+are empty. First-come first-served dispatches the $k-1$ long jobs and one short
+job; its remaining server completes all $L$ short jobs by $T_1=L$, when the long
+jobs also complete. Policy $P$ first processes the $L$ short jobs across all
+$k$ servers, finishing them at $L/k$, and then dispatches the $k-1$ long jobs.
+At $T_1$ each has $L/k$ remaining, so
+$\rho_1=(k-1)L/k=(k-1)(\rho_0+L)/k$ with $\rho_0=0$.
+
+For the induction step, fix $1\le j<m$ and suppose that at $T_j$ FCFS is empty,
+whereas $P$ has exactly $k-1$ carried-over jobs with equal remaining service and
+total $\rho_j$. FCFS again dispatches the new $k-1$ long jobs and one short job;
+one server processes the $L$ short jobs and all work finishes at $T_{j+1}$.
+Under $P$, the one free server takes a short job. The carried-over jobs complete
+at $T_j+\rho_j/(k-1)$ and their servers then take short jobs. All $k$ servers are
+busy until the short work runs out at $T_j+\tau_j$, where
+$k\tau_j=\rho_j+L$. Indeed, $\rho_j/(k-1)\leq\tau_j$ is equivalent to
+$\rho_j\leq(k-1)L$, which follows from the induction hypothesis. At that instant
+$P$ dispatches the round's $k-1$ long jobs and leaves one server idle.
+
+On $(T_j+\tau_j,T_{j+1}]$, FCFS has $k$ busy servers and $P$ has $k-1$.
+At $T_{j+1}$ each of those long jobs has $\tau_j$ left, reproducing the
+hypothesis with
+$\rho_{j+1}=(k-1)\tau_j=(k-1)(\rho_j+L)/k$. Together with the base round this
+solves to $\rho_j=(k-1)L(1-((k-1)/k)^j)$. With $L=k^m$, every raw $\rho_j$ and
+$\tau_j$ for $j\leq m$ is an integer; the rescaling in the statement is then
+applied to the whole input, including its arrival times.
+\end{proof}
+
+\subsection{Tightness of the Net-Overtake Identity}
+\label{sec:supp_tight1}
+
+This subsection proves Theorem~2 of the manuscript, that $\sup|\Delta_i| = 2(k-1)L$ in both directions.
+
+\begin{proof}[Proof of Theorem~2 of the manuscript]
+\emph{Upward.} Run the cascade of Lemma~\ref{lem:cascade} for $m$ rounds and, at
+$T_m$, inject in rank order $k-1$ jobs of service $L$, then the victim $i$ of
+service $L$, then $n_{\mathrm{sh}} > 2kL$ jobs of service $1$. Let $P$ continue as the static
+priority ``the $k-1$ new long jobs first, then the short jobs, then $i$''.
+
+At $T_m$ all $k$ servers of the reference policy are free and its waiting set in
+rank order is the $k-1$ new long jobs, then $i$, then the short ones. It
+dispatches the long jobs and then $i$, all in the phase at $T_m$. Hence
+$W_{\mathrm{FCFS}}[i] = 0$; the $k-1$ new long jobs are dispatched strictly
+before $i$ in its sequence and are in service at $s^{\mathrm{FCFS}}_i = T_m$
+with their full service, so $\rho^{\mathrm{FCFS}}_i = (k-1)L$ and
+$R^{\mathrm{FCFS}}_i = (k-1)L$.
+
+Under $P$, one server is free at $T_m$ and takes a new long job; when the $k-1$
+carried-over jobs finish, all at $T_m + f$ with $f < L$, their servers take the
+remaining new long jobs and then short jobs. The victim waits while any short
+job waits. Short jobs are executed at rate at most $k$, so they are not exhausted
+before $T_m + n_{\mathrm{sh}}/k$, and $n_{\mathrm{sh}} > 2kL > k(f+L)$ makes
+that later than $T_m + f + L$,
+by which time every new long job has completed. So $i$ is dispatched after all
+$k-1$ new long jobs have finished, and at $s^P_i$ the other $k-1$ servers hold
+short jobs, giving $0 \le \rho^P_i \le k-1$. Also
+$R^P_i = \rho_m + (k-1)L$, since the carried-over jobs and the new long jobs all
+have rank below $i$ and the new long jobs are untouched at $a_i$. Therefore
+$R^P_i - R^{\mathrm{FCFS}}_i = \rho_m$ and
+\begin{align*}
+  \Delta_i \;&=\; \bigl(R^P_i - R^{\mathrm{FCFS}}_i\bigr) - \rho^P_i
+                 + \rho^{\mathrm{FCFS}}_i
+  \;\ge\; \rho_m + (k-1)L - (k-1) \\
+  \;&=\; 2(k-1)L - (k-1)L\bigl(\tfrac{k-1}{k}\bigr)^{m} - (k-1) ,
+\end{align*}
+and both error terms are $o(L)$ as $m \to \infty$ with $L = k^m$.
+
+\emph{Downward.} Run the mirrored cascade: inject the $L$ short jobs first in
+rank order and the $k-1$ long jobs after, and let $P$ be ``long jobs before short
+ones''. The induction of Lemma~\ref{lem:cascade} runs with the roles of the two
+policies exchanged, so at $T_m$ the policy $P$ is empty and idle while the
+reference holds $k-1$ jobs with $f$ of service left each. At $T_m$ inject, in
+rank order, one \emph{filler} job of service $f$, the victim $i$ of service
+$L-1$, and $k-1$ jobs of service $L$; let $P$ be ``the $k-1$ new long jobs
+first, then $i$, then the filler''.
+
+At $T_m$ the reference policy has $k-1$ servers busy with carried-over jobs,
+each with exactly $f$ left, and one free server, which takes the filler --- the
+lowest-ranked waiting job --- which also has service $f$. So all $k$ of its
+servers complete simultaneously at $T_m + f$, and it then dispatches $i$, with
+nothing else dispatched in that phase before it. Hence
+$W_{\mathrm{FCFS}}[i] = f$ and $\rho^{\mathrm{FCFS}}_i = 0$.
+
+Under $P$ the system is empty at $T_m$ with $k$ free servers, and it dispatches
+the $k-1$ new long jobs and then $i$, all at $T_m$. So $W_P[i] = 0$,
+$\mathrm{In}_i = (k-1)L$, $\rho^P_i = (k-1)L$, and the filler, of rank below
+$i$, is dispatched after $i$, so $\mathrm{Out}_i = f$. Therefore
+\begin{align*}
+  \Delta_i \;&=\; k(0 - f) - \bigl((k-1)L - f\bigr)
+           \;=\; -(k-1)f - (k-1)L \\
+           \;&=\; -\rho_m - (k-1)L \;\longrightarrow\; -2(k-1)L .
+\end{align*}
+
+These calculations use the raw normalisation $L=k^m$. Given a fixed target
+bound $L_0$ and tolerance $\varepsilon$, multiply the entire upward or downward
+instance by $L_0/k^m$. The service bound is then exactly $L_0$, all waiting
+times and every term in $\Delta_i$ scale by the same factor, and the upward
+error becomes
+$(k-1)L_0((k-1)/k)^m+(k-1)L_0/k^m$, while the downward error tends to zero.
+Choosing $m$ large proves the statement with $L_0$ fixed.
+
+\emph{Non-attainment.} For $k \ge 2$, Lemma~1 of the manuscript gives
+$|R^P_i - R^{\mathrm{FCFS}}_i| < (k-1)L$ strictly, and the \emph{Bounding
+$\rho$} step of the proof of
+Theorem~1 of the manuscript gives $0 \le \rho^P_i, \rho^{\mathrm{FCFS}}_i \le
+(k-1)L$; combining them in each direction gives $|\Delta_i| < 2(k-1)L$.
+\end{proof}
+
+For the record, the exact values of $\Delta_i / L$ produced by these two
+families, against the ceiling $2(k-1)$:
+
+\begin{center}
+\begin{tabular}{rrrrrr}
+\hline
+$k$ & $L$ & $m$ & upward $\Delta_i/L$ & downward $\Delta_i/L$ & $2(k-1)$ \\
+\hline
+2 & 64 & 6 & $127/64 = 1.984$ & $-127/64 = -1.984$ & 2 \\
+3 & 81 & 4 & $290/81 = 3.580$ & $-292/81 = -3.605$ & 4 \\
+4 & 64 & 3 & $303/64 = 4.734$ & $-303/64 = -4.734$ & 6 \\
+\hline
+\end{tabular}
+\end{center}
+
+In the executed-work convention of Remark~1 of the manuscript the upward
+column is unchanged to within $o(L)$, while the downward column becomes
+$-63/64$, $-130/81$ and $-111/64$, values that tend to $-(k-1)L$ as $m$ grows
+rather than to $-2(k-1)L$.
+The same-phase share of $|\Delta_i|$ is \devnum{0.00\%}, \devnum{0.69\%} and
+\devnum{0.00\%} upward and \devnum{50.39\%}, \devnum{55.48\%} and
+\devnum{63.37\%} downward, and the victim's own excess is
+\devnum{$+3.00L$}, \devnum{$+3.20L$}, \devnum{$+3.19L$} upward and
+\devnum{$-0.98L$}, \devnum{$-0.80L$}, \devnum{$-0.58L$} downward.
+
+\subsection{Tightness of the Guard Bound}
+\label{sec:supp_tight2}
+
+This subsection proves Theorem~5 of the manuscript, that both constants of the guard bound are exact.
+
+\begin{proof}[Proof of Theorem~5 of the manuscript(i)]
+At $t = 0$ let there arrive, in rank order, $k$ jobs of service $L$, the victim
+$i$, and at least $B + k$ jobs of service $1$; let the base policy be the static
+priority ``the $k$ long jobs, then the short ones in rank order, then $i$'', and
+take the
+constant budget $B$. First-come first-served dispatches the $k$ long jobs in the
+phase at $t = 0$, filling every server, so $W_{\mathrm{FCFS}}[i] = L$.
+
+If $B = 0$ then $E(t)$ contains every waiting job at every dispatch epoch and the
+wrapper is first-come first-served, so the excess is $0 = \lceil B/k \rceil$. If
+$B > 0$ then at $t = 0$ no job has completed, $E(0)$ is empty, and the base fills
+the servers with the $k$ long jobs. They complete at $t = L$, and
+$\mathrm{over}[i](L) = 0$ still, every completed job having rank below $i$. From
+$t = L$ on, all $k$ servers are free at each integer instant; while
+$\mathrm{over}[i] < B$ the set $E$ is empty --- the waiting jobs of rank above
+$i$ have no completed job of still higher rank ahead of them --- so the base
+dispatches $k$ short jobs, which complete one time unit later. Hence
+$\mathrm{over}[i](L + r) = rk$, the first instant at which
+$\mathrm{over}[i] \ge B$ is $L + \lceil B/k \rceil$, and there $i$ is the
+minimum-rank member of $E$ and is dispatched. So
+$\mathrm{excess}_P[i] = \lceil B/k \rceil$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~5 of the manuscript(ii)]
+For every finite instance, Theorem~3 of the manuscript gives
+$c_{\mathrm{inst}}(k)<3k-2$: for a constant budget,
+$k\,\mathrm{excess}_P[i] \le \mathrm{In}_i - \mathrm{Out}_i + 2(k-1)L
+ \le \mathrm{In}_i + 2(k-1)L < B + kL + 2(k-1)L = B + (3k-2)L$, the last step
+being the strict inequality (3) of the manuscript. When $i$ has no overtaker the
+excess is at most $(2-2/k)L$ and the inequality is strict as well.
+
+For the lower bound at $k = 1$, the family of Section~S8.4 gives
+$\mathrm{excess}_P[i] - B = L - g \to L$, so
+$(k\,\mathrm{excess}_P[i] - B)/L \to 1 = 3k - 2$. For $k \ge 2$, fix $m \ge 1$, $L = k^m$, and let $f$ and
+$\rho_m$ be as in Lemma~\ref{lem:cascade}. Run the cascade for $m$ rounds. At
+$T_m$ inject, all arriving at $T_m$ and in rank order,
+\begin{itemize}
+  \item $k-1$ \emph{new long} jobs of service $L$, of rank below the victim;
+  \item the victim $i$, of service $L$;
+  \item one \emph{sync} job of service $f$;
+  \item one \emph{pre} job of service $L$;
+  \item $k$ \emph{final} jobs of service $L$;
+\end{itemize}
+set the constant budget to $B = f + L + 1$, and let the base policy be the static
+priority ``short jobs of the cascade, then sync, then the new long jobs and pre,
+then the finals, and the victim last''.
+
+\emph{The reference run.} At $T_m$ it is empty with all $k$ servers free; it
+dispatches the $k-1$ new long jobs and then $i$ in the phase at $T_m$, so
+$W_{\mathrm{FCFS}}[i] = 0$.
+
+\emph{The guard does not fire during the cascade.} Inside round $j$ the only
+waiting jobs with completed higher-ranked work are that round's long jobs, whose
+higher-ranked jobs are the $L$ short jobs of the round and everything in later
+rounds, which have not arrived. Over $[T_j, T_j + \tau_j]$ the $k$ servers
+execute $k\tau_j = \rho_j + L$ units of work, of which $\rho_j$ belongs to the
+carried-over jobs, so at most $L$ units of short-job work can have completed.
+Hence $\mathrm{over}[q](t) \le L < B$ for every waiting $q$ at every dispatch
+epoch of the cascade, $E(t)$ is empty throughout, and the wrapped run reproduces
+Lemma~\ref{lem:cascade}.
+
+\emph{The finale.} At $T_m$ one server is free and $\mathrm{over}[q](T_m) = 0$
+for every waiting $q$, so the base chooses and takes the sync job. The $k-1$
+carried-over jobs have exactly $f$ left and the sync job has service $f$, so all
+$k$ servers free simultaneously at $T_m + f$. There $\mathrm{over}[i] = f$,
+because only the sync job has rank above $i$ among the completed jobs, and
+$f < B$; no other waiting job has a completed higher-ranked job either, so $E$ is
+empty and the base fills all $k$ servers with the $k-1$ new long jobs and pre.
+These all have service $L$ and complete simultaneously at $T_m + f + L$, where
+\[
+  \mathrm{over}[i] \;=\; f + L \;=\; B - 1 \;<\; B ,
+\]
+since only sync and pre have rank above $i$ among the completed jobs. So $E$ is
+still empty, the base fills all $k$ servers with the $k$ final jobs, and they
+complete at $T_m + f + 2L$, at which instant
+$\mathrm{over}[i] = B - 1 + kL \ge B$. The guard fires, $i$ is the minimum-rank
+member of $E$, and it is dispatched with every server free, so $\rho^P_i = 0$.
+
+\emph{The value.} $W_P[i] = f + 2L$, $\mathrm{In}_i = B - 1 + kL$,
+$\mathrm{Out}_i = 0$, and
+\[
+  \frac{k\,\mathrm{excess}_P[i] - B}{L}
+  \;=\; \frac{k(f + 2L) - (f + L + 1)}{L}
+  \;=\; \frac{(k-1)f + (2k-1)L - 1}{L} .
+\]
+As $m \to \infty$ with $L = k^m$ we have $f/L \to 1$ and $1/L \to 0$, so the
+ratio tends to $(k-1) + (2k-1) = 3k-2$. Hence the supremum, although no finite
+instance attains it, equals $3k-2$.
+
+The same instance also has $\Delta_i = \rho_m + (k-1)L \to 2(k-1)L$, so the two
+sources of slack in Theorem~3 of the manuscript are saturated together.
+\end{proof}
+
+The values produced, against the ceiling $3k-2$:
+
+\begin{center}
+\begin{tabular}{rrrrrrr}
+\hline
+$k$ & $L$ & $m$ & jobs & $B$ & excess & $(k\,\mathrm{excess}-B)/L$ \\
+\hline
+2 & 64 & 6 & 396 & 128 & 191 & $127/32 = 3.969$ \\
+2 & 128 & 7 & 909 & 256 & 383 & $255/64 = 3.984$ \\
+3 & 81 & 4 & 340 & 147 & 227 & $178/27 = 6.593$ \\
+3 & 243 & 5 & 1233 & 455 & 697 & $1636/243 = 6.733$ \\
+4 & 64 & 3 & 211 & 102 & 165 & $279/32 = 8.719$ \\
+4 & 256 & 4 & 1046 & 432 & 687 & $579/64 = 9.047$ \\
+5 & 125 & 3 & 399 & 187 & 311 & $1368/125 = 10.944$ \\
+6 & 216 & 3 & 677 & 308 & 523 & $1415/108 = 13.102$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Approaching the Single-Server Bound}
+\label{sec:supp_floor}
+
+This subsection proves the second claim of Proposition~3 of the manuscript, that at one server the bound $B+L$ is the exact supremum of the excess.
+
+\begin{proof}[Proof of the second claim of Proposition~3 of the manuscript]
+Fix $L$, a budget $B>0$, and a granularity $g$ dividing $B$ with $0 < g \le L$.
+Take $k = 1$ and, at $t = 0$, the victim $i$ of rank $0$, then $B/g - 1$ jobs of
+service $g$, then one job of service $L$; let the base policy dispatch the jobs
+of service $g$ first, then the one of service $L$, and never the victim.
+First-come first-served starts $i$ at once, so $W_{\mathrm{FCFS}}[i] = 0$.
+
+Under the wrapper, after $r$ of the jobs of service $g$ have completed,
+$\mathrm{over}[i] = rg$, which stays below $B$ for $r \le B/g - 1$. At the last
+such instant $\mathrm{over}[i] = B - g < B$, the guard does not fire, and the
+base dispatches the job of service $L$. When it completes,
+$\mathrm{over}[i] = B - g + L \ge B$ and the guard releases $i$. Hence
+$\mathrm{excess}_P[i] = B - g + L$, so $\mathrm{excess}_P[i] - B = L - g$, which
+approaches $L$ as $g \to 0$ and never reaches it. For example
+$(L, B, g) = (100, 40, 1)$ gives $\mathrm{excess}_P[i] - B = 99$, and
+$(64, 32, 1)$ gives $63$.
+\end{proof}
+
+\subsection{The Price of the Guarantee}
+\label{sec:supp_price}
+
+This subsection proves Theorem~6 of the manuscript, which caps how much reordering can buy at a given promise, and Proposition~A1, the exact achievable fraction at one server.
+
+\begin{proof}[Proof of Theorem~6 of the manuscript]
+Let $\mathcal{I}(Q)$ be the set of inverted pairs of a policy $Q$, that is the pairs
+$(u,v)$ with $u < v$ in rank and $v \prec u$. Counting the same pairs in two ways,
+\[
+  \sum_i \mathrm{In}_i \;=\; \sum_{(u,v) \in \mathcal{I}(Q)} C_v ,
+  \qquad
+  \sum_i \mathrm{Out}_i \;=\; \sum_{(u,v) \in \mathcal{I}(Q)} C_u ,
+\]
+exactly, for every $k$. This is the standard exchange argument: at $k = 1$,
+where Theorem~1 of the manuscript is an equality, it says that the only way to
+beat first-come first-served in mean wait is to invert pairs whose later-ranked
+job is the shorter one, and that the saving is exactly the sum of the service
+differences over the inversions. That is the classical pairwise-interchange
+argument behind Smith's rule~\cite{smith1956}, stated here on an arbitrary
+arrival sequence rather than on a single batch; we use it as an observation and
+claim nothing new in it.
+Write $S(Q) = \sum_i (W_{\mathrm{FCFS}}[i] -
+W_Q[i])$ for the total saving against the reference and
+$\mathcal{E} = 2(1 - 1/k)L(m+n)$.
+Summing Theorem~1 of the manuscript over the $m+n$ jobs gives
+\begin{equation}
+  \Bigl| S(Q) - \tfrac{1}{k} \sum_{(u,v) \in \mathcal{I}(Q)} (C_u - C_v) \Bigr|
+  \;\le\; \mathcal{E}
+  \qquad \text{for every } Q .
+  \label{eq:sumbound}
+\end{equation}
+
+\emph{Numerator.} A pair contributes positively only when $u$ is a long job and
+$v$ a short one, contributing $L - \sigma$. For a fixed long job $u$, the number of
+short jobs dispatched before it is at most $\mathrm{In}_u / \sigma$, and
+Corollary~2 of the manuscript gives $\mathrm{In}_u \le kG + (3k-2)L$. Summing
+over the $m$ long jobs and applying \eqref{eq:sumbound},
+\[
+  S(P) \;\le\; \tfrac{1}{k}\, m\,(L-\sigma)\,\frac{kG + (3k-2)L}{\sigma}
+        \;+\; \mathcal{E} .
+\]
+
+\emph{Denominator.} Sorting by service time inverts every one of the $mn$
+long--short pairs, so its pair sum is exactly $mn(L-\sigma)$, and
+\eqref{eq:sumbound} applied to it gives
+$S(\mathrm{SJF}) \ge \tfrac{1}{k} m n (L-\sigma) - \mathcal{E}$. At $k > 1$ the
+denominator carries the same error as the numerator, so treating the reference
+saving as exact would understate $\varepsilon$.
+
+\emph{Division.} Writing $\mathcal{N}$ and $\mathcal{D}$ for the two leading
+terms $\tfrac{1}{k} m (L-\sigma)(kG + (3k-2)L)/\sigma$ and
+$\tfrac{1}{k} m n (L-\sigma)$, both bounds are positive once
+$\mathcal{D} > \mathcal{E}$, and then
+\[
+  \frac{S(P)}{S(\mathrm{SJF})}
+  \;\le\; \frac{\mathcal{N} + \mathcal{E}}{\mathcal{D} - \mathcal{E}}
+  \;=\; \frac{kG + (3k-2)L}{n \sigma} \;+\; \varepsilon ,
+  \qquad
+  \varepsilon \;=\; \frac{\mathcal{E}\,(\mathcal{N} + \mathcal{D})}
+                         {\mathcal{D}\,(\mathcal{D} - \mathcal{E})} .
+\]
+The leading terms are
+$\Theta(mn)$ and $\mathcal{E} = \Theta(m+n)$, so
+$\varepsilon = O((m+n)/(mn)) \to 0$; since
+$\mathcal{E}/\mathcal{D} = 2(k-1)L(m+n)/(mn(L-\sigma))$ and
+$\mathcal{N}/\mathcal{D} = (kG+(3k-2)L)/(n\sigma)$, the product $\varepsilon\,mn/(m+n)$ equals
+\[
+  \frac{2(k-1)L}{L-\sigma}
+  \Bigl(1 + \frac{kG + (3k-2)L}{n\sigma}\Bigr)
+  \Big/ \Bigl(1 - \frac{\mathcal{E}}{\mathcal{D}}\Bigr) ,
+\]
+which exceeds the same expression without the last factor and approaches it as
+$m,n$ grow. With $k,L,\sigma,G$ fixed it tends to
+$2(k-1)L/(L-\sigma)$, and it vanishes at $k=1$.
+Dividing numerator and denominator by $m+n$ turns the two total savings into the
+two mean savings and leaves the ratio unchanged.
+\end{proof}
+
+\begin{proof}
+Write $r_u$ for the number of short jobs dispatched before a long job $u$. Every
+short job ranks above every long one, so $\mathrm{Out}_u$ contains only long
+jobs, and a long--long inversion $(p,q)$ puts $L$ into $\mathrm{In}_p$ and the
+same $L$ into $\mathrm{Out}_q$; summing over the long jobs those terms cancel,
+and since $k = 1$ makes Theorem~1 of the manuscript an equality,
+\[
+  \sum_{u \text{ long}} \mathrm{excess}_P[u]
+  \;=\; \sum_{u \text{ long}} (\mathrm{In}_u - \mathrm{Out}_u)
+  \;=\; \sigma \sum_{u \text{ long}} r_u .
+\]
+Let $u^{*}$ be the long job dispatched last among the long ones. It has no
+lower-ranked long job after it, so $\mathrm{Out}_{u^{*}} = 0$ and
+$\mathrm{excess}_P[u^{*}] \ge \sigma r_{u^{*}}$; and $r$ is non-decreasing along
+the dispatch order, so $r_{u^{*}} = \max_u r_u$. The guarantee therefore forces
+$\max_u r_u \le \lfloor G/\sigma \rfloor$ and
+$\sum_u r_u \le m \lfloor G/\sigma \rfloor$. Only long--short inversions
+contribute to the saving, each contributing $L - \sigma$, so
+$S(P) = (L-\sigma)\sum_u r_u$ against $S(\mathrm{SJF}) = (L-\sigma)mn$ and the
+fraction is at most $\min(1, \lfloor G/\sigma \rfloor / n)$.
+
+For achievability, put $r = \min(n, \lfloor G/\sigma \rfloor)$ and dispatch the
+$r$ lowest-ranked short jobs, then the $m$ long jobs in rank order, then the
+remaining short jobs in rank order. Every long job then has excess exactly
+$r\sigma \le G$, every short job has excess at most $0$, and the fraction is
+$r/n$.
+\end{proof}
+
+So the shape of Theorem~6 of the manuscript is right at $k = 1$ and its additive
+$(3k-2)L$ is slack: the guarantee is spent on the long jobs together, not one at
+a time. Exhaustive enumeration of every work-conserving schedule of the family,
+over all $1{,}161$ parameter settings with $m \le 3$, $n \le 4$ and
+$G \le 3L$, agrees with Proposition~A1 of the manuscript in every case.
+% PROVENANCE: evidence/guard_theory/rev5_items.py, section RR-4, logged in
+% evidence/guard_theory/out_rev5_items.txt.  Not an outputs/ table: this is a
+% theory precheck, and the count is of enumerated (m,n,L,sigma,G) settings.
+
+\subsection{Achievability and Maximal Permission}
+\label{sec:supp_achiev}
+
+This subsection proves Theorem~7, Theorem~8 and Corollary~4 of the manuscript, which match the price bound on the two-size batch family and identify the pointwise-maximal permission rule at one server.
+
+\begin{proof}[Proof of Theorem~7 of the manuscript]
+For a policy $Q$, let
+\[
+ I(Q)=\sum_{(u,v)\in\mathcal I(Q)}(C_u-C_v).
+\]
+The summed identity \eqref{eq:sumbound} gives
+$|\Delta(Q)-I(Q)/k|\leq E$ and, because SJF inverts all $mn$ long--short
+pairs, $D_0-E\leq\Delta(\mathrm{SJF})\leq D_0+E$.
+
+If $B=0$, the guard is FCFS and the lower bound is immediate because $q=0$.
+Suppose $B>0$. Until the first long job is dispatched, every completed
+overtaker is short and exact SJF continues to propose short jobs. They complete
+in waves of at most $k$, so the number dispatched before that first long job is
+\[
+ r_g=\min\!\left(n,k\left\lceil\frac{B}{k\sigma}\right\rceil\right),
+ \qquad \frac{r_g}{n}\geq q.
+\]
+Those $r_g$ short jobs precede every long job, and hence contribute at least
+$m r_g(L-\sigma)$ to $I(\mathrm{guard})$. It follows that
+$\Delta(\mathrm{guard})\geq qD_0-E$. Therefore
+\[
+ \Delta(\mathrm{guard})-q\Delta(\mathrm{SJF})\geq-E(1+q),
+\]
+and division by the positive lower bound $D_0-E$ gives
+$F(\mathrm{guard})\geq q-\varepsilon_-$.
+
+For any feasible $P$, Corollary~2 of the manuscript bounds the number of short
+jobs inverted ahead of each long job by
+$(kG+(3k-2)L)/\sigma$. Consequently its positive inversion sum is at most
+$A kD_0$, and \eqref{eq:sumbound} gives
+$\Delta(P)\leq A D_0+E$. Dividing by
+$\Delta(\mathrm{SJF})\geq D_0-E$ yields
+\[
+ F(P)\leq\frac{A D_0+E}{D_0-E}
+      =A+\frac{E(1+A)}{D_0-E}=A+\varepsilon_+.
+\]
+SJF minimises total waiting time for a simultaneous batch on identical servers,
+so $F(P)\leq1$. The guarded policy is itself feasible by
+Corollary~3 of the manuscript, which places it below $F^*(G)$ and completes the
+sandwich.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~8 of the manuscript]
+At one server Theorem~1 of the manuscript is the exact relation
+$\mathrm{excess}_P[i]=\mathrm{In}_i-\mathrm{Out}_i$. If $B=0$, the queue head
+always fires and the guard is FCFS. Let $B\geq1$. Immediately before the last
+overtaker of a job is dispatched, completed overtaking work is an integer
+strictly below $B$, hence at most $B-1$; the last unrevealed job has size at most
+$L$. Thus every excess is at most $B+L-1$. Equality is attained by putting a
+queue-head victim before $B-1$ unit overtakers and then one overtaker of size
+$L$, and having the opaque base propose them in that order. This proves the first
+claim and shows that a positive constant budget has promise $G$ exactly when
+$B\leq G-L+1$.
+
+For pointwise maximality, consider the minimum-rank waiting job $h$ at a
+reachable dispatch history and write $w=\mathrm{over}[h]$. All lower-ranked jobs
+have already been dispatched, so eventually $\mathrm{Out}_h=0$. If a wrapper
+permits a later-ranked job $j$ when $w>G-L$, relabel the still-unfinished $j$ to
+have size $L$ and replay the same opaque proposal transcript. The wrapper has
+seen the same arrivals, dispatches, completions, revealed sizes and proposals,
+so determinism makes it take the same action. The FCFS start of $h$ is unchanged
+because $j$ has later rank, whereas
+$\mathrm{excess}[h]=\mathrm{In}_h\geq w+L>G$, contradicting the promise.
+Conversely, if $w\leq G-L$, permitting one later-ranked waiting job can add at
+most $L$ to the head's overtaking work, so dispatching the head next remains
+within $G$. On the integer grid, $w>G-L$ is equivalent to
+$w\geq B^*=G-L+1$, exactly the guard's trigger.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~4 of the manuscript]
+With $B^*=G-L+1$, exact SJF proposes short jobs until the guard fires. The number
+that can pass every long job is
+\[
+ r=\min\!\left(n,\left\lceil\frac{B^*}{\sigma}\right\rceil\right)
+  =\min\!\left(n,\left\lfloor\frac{G-L}{\sigma}\right\rfloor+1\right).
+\]
+Each of the $m$ long jobs is inverted with exactly these $r$ short jobs, so the
+closed fraction is $r/n$. Once their completed work exceeds $G-L$, the next long
+job is the queue head and Theorem~8 of the manuscript forces every opaque-base
+wrapper with promise $G$ to dispatch it; the same applies successively to the
+remaining long jobs. No such wrapper can therefore permit more of the
+short-before-long moves on this transcript.
+\end{proof}
+
+% Source of Section~\ref{sec:supp_constructions}: sections/A_proofs.tex,
+%   Appendices A.2, A.3, A.4, A.6, A.7 and A.8 of the manuscript, moved here whole in the
+%   eighth revision pass under the authors' length budget.  The arguments and every
+%   value in the two tables are verbatim; only the cross-references were rewritten,
+%   since a \ref into the manuscript does not resolve from this file: Lemma~1 is
+%   lem:gap, Theorem~1 thm:identity, Theorem~2 thm:tight1, Theorem~3 thm:guard,
+%   Theorem~5 thm:tight2, Theorem~6 thm:price, Theorem~7 thm:two_size_achievability,
+%   Theorem~8 thm:k1_maximal, Corollary~2 cor:necessary, Corollary~3 cor:params,
+%   Corollary~4 cor:k1_frontier, Proposition~3 prop:floor, Proposition~A1 prop:k1frac,
+%   Remark~1 rem:directions and (3) eq:guardin.  Simulated and checked in
+%   evidence/guard_theory; nothing was recomputed for this file.
+
 
 %=================================================================
 \begin{adjustwidth}{-\extralength}{0cm}
