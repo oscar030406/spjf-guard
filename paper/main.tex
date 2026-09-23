@@ -30,6 +30,24 @@
 \makeatother
 % --------------------------------------------------------------------------
 
+% --- Journal logo on the title page ---------------------------------------
+% In `submit' status mdpi.cls prints only the MDPI logo, at the right. The
+% journal's own Word template (mathematics-template.dot, MDPI, 2025) prints
+% the MDPI logo at the left and the Mathematics logo at the right, and that is
+% the look the class itself uses once the status is `accept'. The patch below
+% gives the submission build the same header. It rewrites one line of the
+% title macro at load time; mdpi.cls is not edited. Definitions/
+% mathematics-logo.png is the logo image taken from that Word template.
+\makeatletter
+\patchcmd{\@maketitle}%
+  {\hfill \href{https://www.mdpi.com}{\includegraphics[height=1cm]{Definitions/logo-mdpi.eps}}}%
+  {\href{https://www.mdpi.com}{\includegraphics[height=1cm]{Definitions/logo-mdpi.eps}}%
+   \hfill
+   \href{https://www.mdpi.com/journal/mathematics}{\includegraphics[height=1.2cm]{Definitions/mathematics-logo.png}}}%
+  {}{\ClassWarning{main}{title-page logo patch did not apply}}
+\makeatother
+% --------------------------------------------------------------------------
+
 % The class already loads amsmath, amssymb, amsthm, booktabs, graphicx, tikz,
 % natbib, hyperref and cleveref, so none of those is loaded again here.
 \usepackage{algorithm}

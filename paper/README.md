@@ -14,3 +14,5 @@
 ```
 epstopdf --outfile=Definitions/logo-mdpi.pdf Definitions/logo-mdpi.eps
 ```
+
+第二个例外是 `Definitions/mathematics-logo.png`，期刊 logo，从 MDPI 的 Word 模板 `mathematics-template.dot`（2025 版，`word/media/image3.png`）里取出。`mdpi.cls` 在 `submit` 状态下只印右上角的 MDPI logo，`accept` 状态才印期刊 logo；Word 模板则两个状态都是左 MDPI、右期刊。`main.tex` 里用 `\patchcmd` 改写标题宏的那一行，让投稿版也是这个样子，类文件仍然没动。删掉那段 patch 就回到类文件原样。
