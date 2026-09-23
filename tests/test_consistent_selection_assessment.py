@@ -52,8 +52,5 @@ def test_the_declared_seed_and_budget_are_read_from_the_config():
     settings["selection_cost_seed"] = 4001
     assert script.timing_plan(cfg) != original
     settings["reselection_budget_hours"] = 2.0
-    rows = [
-        {**row, "family": row["point"]["family"], "seconds": 120.0}
-        for row in original
-    ]
+    rows = [{**row, "family": row["point"]["family"], "seconds": 120.0} for row in original]
     assert script._projection(cfg, rows)["budget_hours"] == 2.0

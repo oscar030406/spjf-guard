@@ -103,9 +103,7 @@ def _clock():
 
 def _target_rows(prepared, base):
     terms = prepared.semester[prepared.submission_rows]
-    return np.flatnonzero(
-        np.isfinite(base) & prepared.simulatable & np.isin(terms, ["s1"])
-    )
+    return np.flatnonzero(np.isfinite(base) & prepared.simulatable & np.isin(terms, ["s1"]))
 
 
 def _replay_mask(prepared):
@@ -121,8 +119,7 @@ def _lagged_availability(prepared, availability, target, lag_s):
     rows = prepared.submission_rows
     event = rows[target]
     source_events = rows[
-        (prepared.class_term[rows] == prepared.class_term[event])
-        & prepared.simulatable
+        (prepared.class_term[rows] == prepared.class_term[event]) & prepared.simulatable
     ]
     changed[source_events] += lag_s
     return changed
@@ -152,9 +149,8 @@ def _brute_force_scores(prepared, arrival, availability, frozen, base):
             history = _history(prepared, arrival, perturbed)[target]
             expected[f"same_copy_lag_{int(lag_s)}"][target] = frozen.score(history)
         event = prepared.submission_rows[target]
-        same_semester_other_class = (
-            (prepared.semester == prepared.semester[event])
-            & (prepared.class_term != prepared.class_term[event])
+        same_semester_other_class = (prepared.semester == prepared.semester[event]) & (
+            prepared.class_term != prepared.class_term[event]
         )
         history = _history(
             prepared,

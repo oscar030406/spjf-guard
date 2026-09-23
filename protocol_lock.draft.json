@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-23T08:43:35-04:00",
+  "written_at": "2026-09-23T09:18:01-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -622,7 +622,7 @@
       },
       {
         "path": "scripts/make_protocol_lock.py",
-        "sha256": "8329cab65d2fd4dd7d91cc4dea16b782baefc4955634347087cf0c56cffc8661"
+        "sha256": "be6bbf33ee24f09bef1afe4722ce602c337684fdd70d39cffeddb80cdff1c7a5"
       },
       {
         "path": "scripts/parse_archive.py",
@@ -634,7 +634,7 @@
       },
       {
         "path": "scripts/run_main.py",
-        "sha256": "2644012141abd09e479b697bcd5e18d6de690a65a991a27396dd2fff3703f87c"
+        "sha256": "c4e453095052e4eb6dd68a1f14b6d8e46d4ddacb7eb19c2c65e19643d22ba46a"
       },
       {
         "path": "scripts/run_visibility.py",
@@ -678,7 +678,7 @@
       },
       {
         "path": "src/spjf_guard/data/sealed.py",
-        "sha256": "dd9138521d327ac3c7b2bd8703c2c7ab7ce0b89f2e230a52bf438324f42c9192"
+        "sha256": "d0417e9ab4fed942059e27418f687c5bcdaf59fe52890b472e172ed760cb909e"
       },
       {
         "path": "src/spjf_guard/experiment/__init__.py",
@@ -710,7 +710,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/paper_tables.py",
-        "sha256": "5778078b78458cb398e094ca051a617402af90a73521350742550beb98f3dab2"
+        "sha256": "fba5e4506591de5928a9954ff911abbde0ef421af0a2cecc7a5f5f562a39a9e8"
       },
       {
         "path": "src/spjf_guard/experiment/parallel.py",
@@ -834,7 +834,7 @@
       },
       {
         "path": "tests/test_consistent_selection_assessment.py",
-        "sha256": "cdf5a3dc6fd2c71f647d9cb0335917e07e19b32b674ba93ad570190e51709d39"
+        "sha256": "e8591d3b26c12099c010cf6c92f992b79f654f8fabc0f4b6f211a203564fba31"
       },
       {
         "path": "tests/test_consistent_visibility.py",
@@ -938,10 +938,10 @@
       },
       {
         "path": "tests/test_visibility_controls.py",
-        "sha256": "7d80a03f4ab32976602f6a21a0d816316a1c1fb175faf9b62db7ea2e5ea54e4d"
+        "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "096ce97dc42d521aa71ea7616b8d3999c002a227af35d7019ecdaf89b594a5c5"
+    "digest": "377c7a9a2dfcd259efe65d68e7934447945c04afc9fae29985e6ed81ae5748ec"
   },
   "inputs": {
     "artefacts": [

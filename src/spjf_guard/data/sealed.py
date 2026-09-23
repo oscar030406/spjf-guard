@@ -51,6 +51,7 @@ CONFIG_SNAPSHOT_PATHS = (
 )
 """Archived ordinary configurations that the frozen protocol must preserve."""
 
+
 class SealedDataError(RuntimeError):
     """Raised when a sealed term, id block or academic year would be read."""
 

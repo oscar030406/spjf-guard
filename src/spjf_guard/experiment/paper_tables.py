@@ -258,9 +258,7 @@ def single_server_table(table: list[dict], parameters: dict, policies) -> str:
         promise = params.get("promise_s")
         body.append(
             f"{_policy_cell(name, params):<28s} & "
-            + " & ".join(
-                [_cell(promise, 0) if promise else "---", *_outcome_cells(row)]
-            )
+            + " & ".join([_cell(promise, 0) if promise else "---", *_outcome_cells(row)])
             + r" \\"
         )
     return _table(
