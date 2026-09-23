@@ -259,3 +259,170 @@ removed, and removing them is what breaks it: in TAGS the kill is a routing devi
 the work is redone on the next host, whereas in a judging queue the kill is terminal.
 % Ninth pass: this subsection stood in Section 9 of the manuscript, which keeps the
 %   statement, the citation and the reason the mechanism breaks.
+
+\subsection{Reservation-and-Refund Charging under Enforced Run-Time Caps}
+\label{sec:supp_reservation}
+
+Everything below assumes an information model the manuscript does not. Each job $j$
+carries a cap $\ell_j$ with $C_j \le \ell_j \le L$ that is known when the job arrives and
+that the service enforces, whereas Sections~5 and~6 of the manuscript assume a service
+that learns a job's cost only at its completion. That is why this is a supplementary
+subsection and not a
+theorem of Section~6: admitting it into the main line would put two information models
+side by side.
+
+The mechanism itself is older than the guard, and we claim none of it. Conservative
+backfilling gives every queued job a reservation when it is submitted and lets a job move
+ahead only if it does not delay any job in the queue \cite{mualem2001backfilling}, and
+enforced caps are standard there, a job that exceeds its declared run time being killed.
+With one server-slot per job the head's reservation is whichever server is free at that
+instant, so in our model both conservative and aggressive (EASY) backfilling reduce to
+first-come first-served and neither is a comparator here. Lindsay
+et~al.~\cite{lindsay2013backfilling} keep the same tentative profile, reserve on the
+enforced estimate, compress the profile when a job ends early, and guarantee every job an
+absolute start time fixed at its arrival. Reservation with refund is therefore their
+mechanism; what differs here is the quantity guaranteed, a per-job bound on the delay
+relative to first-come first-served, proved pathwise, with a maximal permission rule at
+one server, and the exact constants at $k=1$. Load-balancing guardrails
+\cite{grosof2019guardrails} charge dispatched work per size rank and per server and
+balance those counters across servers, with the size known at dispatch, no reference
+policy and no budget parameter; their Definition~2.1 does adjust a counter, lowering it
+to the minimum across servers when a server empties, so it is not a rule without refund,
+only one that never refunds at an individual job's completion.
+% Source: prechecks/reservation_guard_verify/verification.md, Section 4 (the three
+% readings, the corrected pointer to Definition 2.1, the counter reset, and the
+% extension of the collapse argument to EASY) and its Section 5 list of statements that
+% survive the check.
+
+Write $\mathrm{over}_R[q](t)$ for the charge a waiting job $q$ carries: for every job of
+rank above $q$ already dispatched, its cap while it is in service and its true service
+time once it has completed.
+
+\begin{proposition}[Reservation charging bounds the overtaken work]
+\label{prop:supp_reservation_in}
+Accept the base policy's proposal $j$ only when $j$ is the queue head or when
+$\mathrm{over}_R[q]+\ell_j \le Z_q$ for every waiting $q$ of rank below $j$, and dispatch
+the head otherwise. Then $\mathrm{In}_i \le Z_i$ for every input, every base policy and
+every job $i$.
+\end{proposition}
+
+\begin{proof}
+Rank is decided by $(a_j,\text{index})$, so every job counted in $\mathrm{In}_i$ is
+dispatched after $i$ arrives and before $i$ starts, at an epoch where $i$ is waiting and
+is not the head; the head exemption therefore does not apply and the test is run with
+$q=i$. The charge carried for an already dispatched job is its cap while it runs and its
+true service time afterwards, and both are at least its service time, so
+$\mathrm{over}_R[i]$ at the dispatch of the $s$-th overtaker is at least
+$\sum_{u<s}C_{j_u}$; the test then gives
+$\sum_{u\le s}C_{j_u} \le \mathrm{over}_R[i]+\ell_{j_s} \le Z_i$. A rejected epoch
+dispatches the head, whose rank is not above $i$, so it never enters $\mathrm{In}_i$. The
+third step is where the cap has to be enforced: a job that may exceed $\ell_j$ breaks it
+at once.
+\end{proof}
+
+\begin{proposition}[The promise under a constant allowance]
+\label{prop:supp_reservation_promise}
+With $Z \equiv B$, the rule gives $\mathrm{excess} \le B$ at $k=1$, attained, and
+$k\,\mathrm{excess} < B+(2-2/k)L$ for $k \ge 2$, strictly. Setting
+$B = k\bigl(G-(2-2/k)L\bigr)$ therefore offers the promise $G$.
+\end{proposition}
+
+The additive constant of the promise falls from $(3-2/k)L$ to $(2-2/k)L$, a drop of
+exactly $L$ at every $k$: the $kL$ overshoot that completed-work charging pays in the
+guard's overtaken-work bound disappears, while the $2(k-1)L$ slack of the identity
+remains. That residual is still approached and not attained. On the witness family of
+Section~S8.2 run at $B=f+L+1$, the ratio $(k\,\mathrm{excess}-B)/L$ is exactly
+$2-2^{1-m}$ after $m$ rounds at $k=2$, reaching \devnum{255/128}, and reaches
+\devnum{907/243} at $k=3$ and \devnum{323/64} at $k=4$, against the limits $2k-2$ of
+\devnum{2}, \devnum{4} and \devnum{6}; a closed-form witness that attains the constant is
+not known.
+% Source: prechecks/reservation_guard_verify/verification.md, decision table rows C1-c,
+% C1-d and C1-e, and out_c1b_indep.txt, which runs the S8.2 witness to m = 8.
+
+Two consequences are worth separating, because they are easy to confuse. The
+\emph{entry threshold} does not drop by $L$. An admitted overtaker always has
+$\ell_j \le Z_q$, so at $k=1$ an overtaker of cap $L$ becomes admissible as soon as
+$G \ge L$, which meets the $L$-scale floor of Proposition~3 of the manuscript with
+equality, and for general $k$ the condition is $G \ge (2-1/k)L$ against
+$G > (3-2/k)L$ for Algorithm~1 of the manuscript, a difference of $(1-1/k)L$, which is
+zero at one server. It is the additive constant of the promise, not the threshold, that
+falls by exactly $L$.
+
+At one server the reservation is inert. A dispatch epoch there has an idle server, so no
+job of rank above the head is in service and $\mathrm{over}_R$ coincides with the
+completed-work charge: over \devnum{255{,}861} readings at $k=1$ the two never differ,
+against \devnum{8{,}277} differences in \devnum{110{,}503} readings at $k \ge 2$. The
+single-server gain comes entirely from the forward-looking $\ell_j$ term in the admission
+test. For a constant allowance only the queue head has to be tested, because
+$\mathrm{over}_R[q]$ is non-increasing in rank, so the implementation cost of
+Section~5 of the manuscript is unchanged.
+% Source: prechecks/reservation_guard_verify/out_overR_eq_overC_k1.txt (reading counts
+% and mismatches at k = 1 and k >= 2) and out_c1b_indep.txt part 0 (19,381 head-only
+% decisions, no divergence).
+
+\begin{proposition}[One server: closed form and maximal permission]
+\label{prop:supp_reservation_k1}
+On the integer two-size batch family at one server, around an exact shortest-job-first
+proposal sequence, the rule closes
+$\min\bigl(1,\ \max(0,\lfloor (G-\ell)/\sigma \rfloor+1)/n\bigr)$ of the FCFS-to-SJF
+total-wait gap. This is $\lfloor G/\sigma \rfloor/n$ at $\ell = C$, the size-aware
+optimum, and $(\lfloor (G-L)/\sigma \rfloor+1)/n$ at $\ell = L$, the size-oblivious
+frontier, so at $\ell=L$ it matches, and does not beat, the sharp completed-work guard.
+Moreover, at any reachable history with queue head $h$, a wrapper that reads the caps and
+promises $G$ must reject a later-ranked proposal $j$ whenever
+$\mathrm{over}_R[h]+\ell_j > G$; the largest constant allowance with promise $G$ is
+therefore exactly $B^{*}=G$, against $B^{*}=G-L+1$ for completed-work charging, and the
+statement needs no integer lattice.
+\end{proposition}
+
+The maximality argument runs through the relabelling of $j$ to its cap. Three points
+decide whether it closes. Only $j$ itself and the unfinished dispatched jobs of rank
+above $h$ may be relabelled, and at $k=1$ there are none of the latter, so the general
+form of the step is not available and is not needed. $W_{\mathrm{FCFS}}[h]$ is unchanged
+because $h$ is the head, every job of rank below $h$ has already been dispatched, and
+first-come first-served starts $h$ at a time fixed by the arrivals and service times of
+jobs ranked below it alone. And the promise has to be quantified over the base policy's
+proposal transcript: a base that reads true sizes, exact shortest-job-first among them,
+could propose differently after the relabelling, and without that quantifier the
+indistinguishability step fails. Nothing is needed about later steps, since $h$ is the
+head, $\mathrm{Out}_h$ is always zero and $\mathrm{In}_h$ is non-decreasing.
+
+At $k \ge 2$ the rule is not pointwise maximal, and this is settled rather than open.
+Take two servers, four unit jobs arriving together and $G=0$. At the first epoch the rule
+refuses every later-ranked proposal, because $\mathrm{over}_R[0]+\ell_1 = 1 > 0$, yet
+dispatching job~1 is safe: the second server takes the head in the same instant, the
+remaining two start at $t=1$ exactly as under first-come first-served, and every job has
+excess $0$ under any continuation. The scale of the gap is not marginal. Of
+\devnum{452{,}810} refused actions at $k=2$, \devnum{416{,}368} leave the victim inside
+the promise after relabelling, and \devnum{481{,}964} of \devnum{491{,}340} do so at
+$k=3$. This is what one expects once $\mathrm{In}$ and excess stop corresponding one to
+one on several servers.
+% Source: prechecks/reservation_guard_verify/verification.md, row C2-c and Section 2,
+% counterexample 1; out_c2b_indep.txt, refused-action and safe-after-relabelling counts
+% at k = 2 and k = 3.
+
+Finally, the residual the reservation cannot remove is not an artefact of charging. There
+are inputs on which a job has $\mathrm{In}_i=\mathrm{Out}_i=0$ and excess
+$L\bigl(1-((k-1)/k)^m\bigr)$, so no charging rule of any kind removes an $\Omega(L)$
+term. Its supremum is $L$, approached and not attained, which is the whole of
+$(2-2/k)L$ at $k=2$ and only the part of it up to $L$ for $k \ge 3$.
+% Source: prechecks/reservation_guard_verify/verification.md, rows C4a-a to C4a-c and
+% out_c4b_indep.txt, k = 2 and k = 3 at m = 1..6 with excess/L = 1/2, 3/4, ..., 63/64
+% and 1/3, 5/9, ..., 665/729.
+
+The claims above are the ones an independent check re-derived from the written rule and
+re-ran against its own implementation: \devnum{1{,}983{,}467} exhaustive runs and
+\devnum{10{,}230{,}898} per-job checks give
+$\max(\mathrm{In}-Z)=\devnum{0}$ with no violation, the instance form
+$k\,\mathrm{excess} \le B+\Lambda_{k-1}(a_i)+\Lambda^{<i}_{k-1}$ holds with zero margin
+over \devnum{1{,}488{,}984} checks, the closed form of
+Proposition~\ref{prop:supp_reservation_k1} matches on all \devnum{848} family rows
+including the corner cases $\ell = C$ and $\ell = L$, and the $k=1$ maximality step
+survives \devnum{573{,}252} relabelling tests. Two statements of the earlier study did
+not survive that check and are not made here: that the entry threshold drops by $L$, and
+that maximality at $k \ge 2$ is open. A third needs a qualifier: the largest excess
+attainable at budget $B$ equals $B$ when the cap is tight, $\ell = C$, and is $0$ while
+$B < L$ when $\ell = L$, so in general only $\le B$ can be claimed.
+% Source: prechecks/reservation_guard_verify/verification.md, decision table rows C1-a,
+% C1-f, C2-a, C2-b, C3-d, C2-c and C6-c, with out_c1_indep.txt, out_t32_indep.txt,
+% out_c2a_indep.txt and out_c2b_indep.txt.

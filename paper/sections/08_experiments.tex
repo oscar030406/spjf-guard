@@ -533,6 +533,13 @@ CI pool A\textsuperscript{c}, $k_{\mathrm{eff}} = \devnum{156}$ of \devnum{173} 
 CI pool B\textsuperscript{c}, $k_{\mathrm{eff}} = \devnum{96}$ of \devnum{105} & \devnum{0.052} & \devnum{0.997} & \devnum{0.373} & no & \devnum{0.958} & \devnum{0.34}$L$ & \devnum{0.958} / \devnum{0.34}$L$ \\
 Compute farm, window $\rho = \devnum{0.95}$ & \devnum{0.372} & \devnum{0.890} & \devnum{0.136} & no & \devnum{$-4.111$} & \devnum{0.85}$L$ & \devnum{$-4.346$} / \devnum{0.83}$L$ \\
 LPC-EGEE, chronological test\textsuperscript{d} & \devnum{0.351} & \devnum{0.892} & \devnum{0.042} & no & \devnum{0.193} & \devnum{0.162}$L$ & \devnum{0.193} / \devnum{0.162}$L$ \\
+LPC-EGEE \texttt{test} class, per-class pool\textsuperscript{e} & \devnum{0.213} & \devnum{0.746} & \devnum{13.76} & yes & \devnum{0.679} & \devnum{86.07}$L$ & \devnum{0.569} / \devnum{3.48}$L$ \\
+% Sources: prechecks/lpc_egee_queues/applicability.csv, period=test variant=fit
+% queue_name=test pooled row: top1 (0.213), fcfs_p99_over_L (13.763) and
+% condition1_3L; prediction_metrics.csv, class=test AUROC (0.746);
+% policy_metrics.csv, scope=test queue_name=test: SPJF-E p99_busy_gap (0.679) and
+% max_excess (77,467 s = 86.07 L at L = 900), Constant-3.5L mean_gap (0.569) and
+% max_excess (3,129 s = 3.48 L).
 % Sources: prechecks/lpc_egee/applicability.csv, test/all top1; prediction_metrics.csv,
 % all/spjf_e AUROC; pooled_policy_metrics.csv, FCFS p99_busy/L and SPJF-E
 % p99_busy_gap/max_excess; L=259200 from policy_parameters.csv.
@@ -567,6 +574,22 @@ fires. This conditional FCFS counterfactual is not evidence of real-scheduler
 improvement (Supplementary Section~S6).
 % Sources: prechecks/lpc_egee/capacity.json, policy_parameters.csv and
 % guard_dispatches.csv, Age-5L, forced_sum=0; pooled_policy_metrics.csv.
+\textsuperscript{e} The \texttt{test} class is a pool we impose on machines the six
+queues demonstrably shared, at the boundary capacity $k=\devnum{1}$ of the search grid on
+each partition, and its held-out wait profile is not reproduced. Condition~1 holds on
+both partitions' recorded waits and on the pooled FCFS counterfactual, and fails at the
+\devnum{3}$L$ form on one partition and at the observed concurrency ceiling on both. The
+\devnum{0.679} is the unguarded score's busy-hour p99 gap, whose interval spans zero, and
+the guard's own is \devnum{$-0.103$}, so the last column reports its resolved mean gap,
+\devnum{0.569} [\devnum{0.534}, \devnum{0.630}], at $G = \devnum{3.5}L$ rather than the
+\devnum{5}$L$ of the other rows, where its largest excess is \devnum{3{,}129} s of an
+allowed \devnum{3{,}150} s (Supplementary Section~S6.6).
+% Sources: prechecks/lpc_egee_queues/tables.md, "Queues shared the machines of their
+% partition" (nominal_cpus, sum_of_queue_maxima) and "Applicability per cell, held-out
+% part" (CE2 test fcfs_p99_over_L = 2.448, obs rows fcfs_p99 = 0); REPORT.md section 4
+% for the 7.6 and 14.2 fit-window days; policy_metrics.csv scope=test, p99_busy_gap and
+% mean_gap with its interval; bound_checks.csv, queue_name=test Constant-3.5L
+% max_excess_s and theoretical_max_s.
 \end{minipage}
 \end{adjustwidth}
 \end{table}
@@ -614,6 +637,19 @@ CodeBench and serverless comparisons, the guard closes \devnum{0.48} to \devnum{
 the reference gap and limits observed excess to \devnum{2.5} to \devnum{3.8}$L$ at a
 promise of \devnum{5}$L$. Clearing either screen does not guarantee a percentile
 improvement: the capacity experiment below contains counterexamples.
+
+Which screen a trace clears can depend on how its pool is drawn. Read as one pool per
+walltime class rather than one per site, LPC-EGEE's \devnum{900}-second class has an FCFS
+p99 of \devnum{13.76}$L$ and is the one reading of that log on which the work-budget
+guard fires, spending \devnum{0.993} of its allowance against \devnum{0.046} pooled,
+while cost concentration inside it falls to \devnum{0.213} from the \devnum{0.407} of the
+pooled trace; the row's footnote and Supplementary Section~S6.6 say why that is not
+evidence of deployment benefit.
+% Sources: prechecks/lpc_egee_queues/applicability.csv, period=test variant=fit
+% queue_name=test pooled row, fcfs_p99_over_L and top1; tables.md "Per-queue audit, all
+% retained arrivals", pooled top1 = 0.407; bound_checks.csv, queue_name=test
+% policy=Constant-3.5L worst_ratio = 0.9933; prechecks/lpc_egee/bound_checks.csv,
+% Constant-3.5L worst_ratio = 0.0464, the pooled reading whose guards never fire.
 % Sources: outputs/dev_tables/main_table.csv; evidence/cross_domain/out_cross_domain_table.txt;
 % evidence/firefox_ci/out_SUMMARY.txt, corresponding rows of Table~\ref{tab:cross}.
 
@@ -654,6 +690,27 @@ earlier ordering experiment to timestamp interpretation, source-term inclusion a
 co-ending-run treatment, and validate neither the final selected Guard($G$) nor
 conservative history nor policy-specific exact visibility. Supplementary Table~S14 gives
 the five variants and Supplementary Section~S5 the configuration and release boundary.
+
+A sixth variant changes the arrival process instead of the trace construction. The logs
+carry a recorded think time, the offset between one result and that student's next
+submission, and releasing each submission after its predecessor's result plus that offset
+shortens every wait by a factor of \devnum{1.3} to \devnum{3.8}. The baseline gains most,
+its own longer waits delaying its own users more, so the absolute gap narrows while the
+fraction of it a policy closes does not: Guard(\devnum{600}) closes \devnum{0.825},
+\devnum{0.809} and \devnum{0.810} of it against \devnum{0.734}, \devnum{0.827} and
+\devnum{0.800} at the recorded instants, and the price of the promise falls with the
+queue, from \devnum{41.6\%} above unguarded SPJF-E to \devnum{3.7\%}, while the guarantee
+is untouched on all \devnum{17{,}634{,}760} jobs of each run against first-come
+first-served on that run's own realised arrivals. These runs read the original-clock
+scores of the main development cells, so they are a sensitivity to the arrival process
+and not a restatement of the conservative headline; Supplementary Section~S6.5 gives the
+table, the bootstrap and the limits, the first being that the recorded think times were
+produced on a platform where no student waited.
+% Sources: prechecks/closed_loop/out/open_vs_closed_mean.csv, p99_dl_s and gap_closed
+% for FCFS and Guard(600) at mode=open and mode=closed/late_submissions=kept,
+% levels 0-2, and n_jobs and bound_violations on the guarded rows; the 1.3-3.8 factor
+% is the range of the open-to-closed p99_dl_s ratios, and the 41.6 and 3.7 per cent are
+% Guard(600) p99_dl_s against SPJF-E p99_dl_s at level 2 in the two modes.
 
 Two further limits of these runs --- what the intervals do and do not cover, and the
 prediction cost the runs do not charge --- are stated in Section~\ref{sec:limits}.

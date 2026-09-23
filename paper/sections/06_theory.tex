@@ -306,6 +306,17 @@ the inequality is strict; at equality $B_{\max} = 0$ and the wrapper is first-co
 first-served.
 \end{corollary}
 
+One assumption can be traded for a smaller constant. If the service enforces a per-job
+run-time cap $\ell_j \le L$ known at arrival, charging it at dispatch and refunding it at
+completion keeps $\mathrm{In}_i$ within the budget, so the $kL$ of \eqref{eq:guardin}
+goes and the additive constant falls from $(3-2/k)L$ to $(2-2/k)L$, a drop of exactly
+$L$, the promise at $k = 1$ becoming $\mathrm{excess} \le B$ exactly. The information
+model is then not the completion-only one of Section~\ref{sec:scheduling} and the
+mechanism is conservative
+backfilling's \cite{mualem2001backfilling,lindsay2013backfilling}, so Supplementary
+Section~S7.6 carries it, with the single-server maximality and the counterexample that
+rules maximality out for $k \ge 2$.
+
 \subsection{Both constants of the guarantee are exact}
 
 \begin{theorem}[Tightness of Theorem~\ref{thm:guard}]

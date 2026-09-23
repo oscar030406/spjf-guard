@@ -21,9 +21,20 @@ from the ideal simulator, does not validate transport of submitted-program costs
 \paragraph{Open-loop replay.}
 Arrivals come from the log at their recorded instants and do not react to our scheduler,
 so a scheduler is neither rewarded with the work it would attract nor punished by the
-users it would drive away \cite{feitelson2021resampling,shmueli2009simulation}. We cannot
-restore that feedback, our logs carrying no session boundaries, no think times and no
-resubmission semantics, and its direction is not identified: the results are conditional
+users it would drive away \cite{feitelson2021resampling,shmueli2009simulation}. One
+component of that feedback is in the logs, which identify each submission's author and
+its position in that student's sequence: the offset between one result and the next
+submission is a recorded think time, non-negative for \devnum{98.38\%} of consecutive
+pairs, with median \devnum{123.5} s and Spearman correlation \devnum{0.015} with the
+previous job's cost. Releasing each submission after its predecessor's result plus that
+offset shortens every wait and reverses the benefit in none of the nine development
+cells: on their original-clock scores Guard(\devnum{600}) closes \devnum{0.734},
+\devnum{0.827} and \devnum{0.800} of the FCFS-to-SJF deadline-window gap at the three
+loads under the recorded instants and \devnum{0.825}, \devnum{0.809} and \devnum{0.810}
+under gating (Supplementary Section~S6.5). It does not restore abandonment or content
+feedback, and the recorded think times come from a platform on which no student ever
+waited, so the direction of what is left is still not identified:
+the results are conditional
 on fixed offered work rather than lower bounds on closed-loop benefit, and the exact
 feedback counterexample in Supplementary Section~S6.3 shows a scheduling advantage
 disappearing in one construction and reversing in another. That section also states
@@ -34,6 +45,12 @@ replays does not arise here, a job occupying one server whatever $k$ is. One cho
 deliberate: we raise load by superposing whole class-semesters aligned on weekday and
 clock time, rather than compressing inter-arrival times, which shrinks the daily load
 cycle along with the gaps \cite{feitelson2021resampling}.
+% Sources for the think-time and closed-replay figures: prechecks/closed_loop/out/
+% think_time.json, rep0 share_result_gated, delta_all_s q0.5 and
+% spearman_delta_vs_c_pred_result_gated; open_vs_closed_mean.csv, gap_closed for
+% Guard(600) at mode=open and mode=closed/late_submissions=kept, levels 0-2, and the
+% p99_dl_s ratios that give the 1.3-3.8 factor; bound_violations = 0 on every guarded
+% row.
 
 \paragraph{The guarantee is denominated in $L$.}
 Every constant in Section~\ref{sec:theory} is a multiple of the per-job time
@@ -137,13 +154,23 @@ online fixed point or a deployment with globally shared copied-user state
 
 LPC-EGEE provides both recorded waits and concentrated costs, but the fitted FCFS
 approximation underestimates chronological-test mean waits by \devnum{24\%} and
-\devnum{39\%} on its two physical partitions, and the work-budget guards never fire at
-the tested promises. We therefore treat its policy replays as conditional counterfactuals
-rather than validated estimates of deployment benefit; Supplementary Section~S6.4 gives
-the correlations, what the archive says about its ordering, and the concurrency ceilings
-and middleware the replay omits.
+\devnum{39\%} on its two physical partitions, and with its six documented walltime
+classes pooled under the largest limit the work-budget guards never fire at the tested
+promises. Read as one pool per class, the \devnum{900}-second class is the one reading of
+this log on which a guard does fire, at \devnum{1.42\%} of
+dispatch epochs, and it nearly spends its bound, \devnum{3{,}129} s of an allowed
+\devnum{3{,}150} s; that class is a pool we impose, its capacity is the boundary value of
+the search grid and its held-out wait profile is not reproduced, so it is not a
+deployment result either. We therefore treat its policy replays as conditional
+counterfactuals rather than validated estimates of deployment benefit; Supplementary
+Sections~S6.4 and~S6.6 give the correlations, what the archive says about its ordering,
+the concurrency ceilings and middleware the replay omits, and the per-class reading with
+the six objections it does not answer.
 % Sources: prechecks/lpc_egee/validation.csv, fitted/test rows, simulated/recorded
-% mean ratios and hourly_pearson; guard_dispatches.csv, Constant/Age forced_sum=0.
+% mean ratios and hourly_pearson; guard_dispatches.csv, Constant/Age forced_sum=0;
+% prechecks/lpc_egee_queues/guard_dispatches.csv, queue_name=test
+% policy=Constant-3.5L, n_forced over n_dispatch summed across the partitions (585 of
+% 41,143 = 1.42 %); bound_checks.csv, same rows, max_excess_s and theoretical_max_s.
 
 \paragraph{Not studied.}
 Preemption is outside the model, so nothing here applies to a system that can checkpoint

@@ -2253,6 +2253,308 @@ recorded-feature conditional counterfactual, not a closed-loop deployment result
 % history_counterfactual_diagnostic.csv, affected count/share.
 
 
+\subsection{Closed-Loop Replay with the Recorded Think Times}
+\label{sec:supp_closed_loop}
+
+Section~S6.3 leaves the direction of the missing feedback unidentified. On the main
+judging trace one component of that feedback is recorded, and this subsection replays the
+development overlays a second time with it.
+
+The logs identify each submission's author and its position in that student's sequence,
+so for two consecutive submissions of the same student-term the offset
+$\delta_i = a_i - (a_{\mathrm{pred}} + C_{\mathrm{pred}})$ between the previous result and
+the next submission is in the data. It is non-negative for \devnum{98.38\%} of the
+\devnum{17{,}566{,}120} consecutive pairs, and for \devnum{97.17\%} of the
+\devnum{4{,}217{,}092} pairs inside deadline windows, so on the header reading of
+Section~7 of the manuscript the next submission almost always follows the previous
+result. Its median is \devnum{123.5} s over all pairs and \devnum{109.0} s inside
+windows, with \devnum{11.7} s at the tenth percentile and \devnum{35.0} s at the
+twenty-fifth, and it carries no measurable dependence on the previous job's predicted
+cost: the Spearman correlation is \devnum{0.015} over \devnum{2{,}000{,}000} sampled
+result-gated pairs. The chains are \devnum{68{,}640} in number, \devnum{1{,}560} real
+student-terms replicated \devnum{44} times across \devnum{17{,}634{,}760} jobs.
+% Source: prechecks/closed_loop/out/think_time.json, rep0: share_result_gated;
+% delta_in_window.share_result_gated and delta_in_window.n_with_predecessor;
+% delta_all_s q0.1, q0.25, q0.5; delta_in_window.quantiles_s q0.5;
+% spearman_delta_vs_c_pred_result_gated and n_sampled_for_correlation; n_jobs,
+% n_first_submissions and n_with_predecessor.
+
+The closed rule releases a submission at its predecessor's completion in the replay plus
+that pair's recorded $\delta_i$ when $\delta_i \ge 0$, and preserves the recorded
+inter-submission gap otherwise; the open rule is the recorded instants the rest of the
+paper uses. With gating switched off, the closed kernel reproduces the package simulator
+job for job, at a maximum absolute wait difference of \devnum{0} microseconds over four
+policies at three load levels, and its open-loop rows reproduce the main development
+cells to every printed digit.
+% Source: prechecks/closed_loop/out/validation.json, max_abs_diff_us for FCFS, SJF,
+% SPJF-E and Guard(600) at level0/level1/level2; prechecks/closed_loop/out/closed_cells.csv,
+% mode=open rows against outputs/dev_tables/main_cells.csv.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Open-loop against think-time-preserving replay on the development overlays:
+deadline-window p99 in seconds, mean over overlays \devnum{0}--\devnum{2}, and the
+fraction of the FCFS-to-SJF gap each policy closes. ``Late kept'' and ``late dropped''
+are the two treatments of submissions that gating pushes past their own assignment's
+end. SPJF-E here is the stored expected-cost score read on the original result clock,
+the variant the main development cells use, and not the conservative-visibility
+headline of Section~8.3 of the manuscript; these rows are therefore a sensitivity and
+not a restatement of that headline.}
+\label{tab:s_closed}
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\begin{tabular}{llrrrrrr}
+\toprule
+$\rho$ & $k$ & Policy & Open p99 & Closed p99, kept & Closed p99, dropped & Gap, open & Gap, closed \\
+\midrule
+\devnum{0.5} & \devnum{8} & FCFS & \devnum{23.405} & \devnum{8.991} & \devnum{9.006} & --- & --- \\
+\devnum{0.5} & \devnum{8} & SJF & \devnum{8.788} & \devnum{4.897} & \devnum{4.914} & \devnum{1.000} & \devnum{1.000} \\
+\devnum{0.5} & \devnum{8} & SPJF-E & \devnum{12.542} & \devnum{5.588} & \devnum{5.564} & \devnum{0.743} & \devnum{0.831} \\
+\devnum{0.5} & \devnum{8} & Guard(\devnum{600}) & \devnum{12.669} & \devnum{5.609} & \devnum{5.595} & \devnum{0.734} & \devnum{0.825} \\
+\midrule
+\devnum{0.8} & \devnum{5} & FCFS & \devnum{113.770} & \devnum{42.149} & \devnum{42.221} & --- & --- \\
+\devnum{0.8} & \devnum{5} & SJF & \devnum{33.251} & \devnum{23.187} & \devnum{23.342} & \devnum{1.000} & \devnum{1.000} \\
+\devnum{0.8} & \devnum{5} & SPJF-E & \devnum{43.007} & \devnum{26.474} & \devnum{26.326} & \devnum{0.879} & \devnum{0.827} \\
+\devnum{0.8} & \devnum{5} & Guard(\devnum{600}) & \devnum{47.153} & \devnum{26.810} & \devnum{26.285} & \devnum{0.827} & \devnum{0.809} \\
+\midrule
+\devnum{1.0} & \devnum{4} & FCFS & \devnum{268.542} & \devnum{71.400} & \devnum{71.674} & --- & --- \\
+\devnum{1.0} & \devnum{4} & SJF & \devnum{43.590} & \devnum{32.884} & \devnum{32.496} & \devnum{1.000} & \devnum{1.000} \\
+\devnum{1.0} & \devnum{4} & SPJF-E & \devnum{62.475} & \devnum{38.775} & \devnum{38.563} & \devnum{0.916} & \devnum{0.847} \\
+\devnum{1.0} & \devnum{4} & Guard(\devnum{600}) & \devnum{88.486} & \devnum{40.200} & \devnum{39.787} & \devnum{0.800} & \devnum{0.810} \\
+\bottomrule
+\end{tabular}
+\end{adjustwidth}
+\end{table}
+% Source of Table~\ref{tab:s_closed}: prechecks/closed_loop/out/open_vs_closed_mean.csv,
+% columns p99_dl_s and gap_closed at mode=open, mode=closed/late_submissions=kept and
+% mode=closed/late_submissions=dropped, for each level and policy; rendered as
+% prechecks/closed_loop/out/report_tables.md table A by
+% prechecks/closed_loop/make_tables.py.
+
+The ordering of the policies survives in all nine cells and under both edge treatments,
+and the scale does not: every wait falls by a factor of \devnum{1.3} to \devnum{3.8}. A
+queue that builds up holds back the submissions that would have deepened it, so the
+realised busiest-hour utilisation under FCFS drops from \devnum{0.505}, \devnum{0.807}
+and \devnum{1.009} to \devnum{0.450}, \devnum{0.745} and \devnum{0.942}, and the heaviest
+level is no longer overloaded. The baseline gains most from this, because its own longer
+waits delay its users more: at the heaviest level the mean arrival drift is
+\devnum{440.0} s under FCFS against \devnum{171.5} s under SPJF-E and \devnum{142.3} s
+under SJF. The absolute gap therefore narrows while the fraction of it a policy closes
+does not, which is why the closed columns of Table~\ref{tab:s_closed} move in both
+directions and stay inside \devnum{0.81}--\devnum{0.85}.
+% Source: prechecks/closed_loop/out/open_vs_closed_mean.csv, rho_busy_hour at
+% mode=open and mode=closed and drift_mean_s, FCFS/SPJF-E/SJF rows at each level,
+% late_submissions=kept.
+
+What changes qualitatively is the price of the promise, not its value. Gating shortens
+the queues, so the guard fires far less often: the queue-weighted firing rate of
+Guard(\devnum{600}) falls from \devnum{0.113\%} to \devnum{0.0025\%} at the lightest
+level, from \devnum{1.314\%} to \devnum{0.134\%} at the middle one and from
+\devnum{7.521\%} to \devnum{0.272\%} at the heaviest. Its deadline-window p99 penalty
+over unguarded SPJF-E falls with it, from \devnum{41.6\%} to \devnum{3.7\%} at the
+heaviest level and from \devnum{9.6\%} to \devnum{1.3\%} at the middle one. The worst
+wait it admits is unchanged in kind: \devnum{1{,}074.3} s under gating, where SPJF-E
+reaches \devnum{5{,}783.2} s and SJF \devnum{4{,}234.3} s, so starvation of long jobs
+remains a property of the ranking and not of the arrival process. The per-job guarantee
+is unaffected. It is checked against FCFS run open-loop on the guarded policy's own
+realised arrival sequence, which is the counterfactual Section~3 of the manuscript
+defines, and it holds on every job of every run: zero violations in \devnum{18} guarded
+runs of \devnum{17{,}634{,}760} jobs each, with the worst job using \devnum{80} to
+\devnum{90}~\% of its bound under gating against \devnum{87} to \devnum{95}~\% without
+it. Refusing the submissions that gating pushes past their own assignment's end removes
+\devnum{0.27} to \devnum{1.93}~\% of the offered work and moves the p99 by at most
+\devnum{1.3}~\%.
+% Source: prechecks/closed_loop/out/open_vs_closed_mean.csv,
+% fired_fraction_queue_weighted, p99_dl_s, max_s, bound_violations,
+% worst_ratio_to_bound, n_dropped and offered_work_s; Guard(600), SPJF-E and SJF rows
+% at each level and mode.
+
+A paired week-block bootstrap on overlay \devnum{0}, \devnum{400} resamples of whole
+weeks with replacement, puts the closed-minus-open difference in the gap closed at
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+$\rho$ & SPJF-E & Guard(\devnum{600}) \\
+\midrule
+\devnum{0.5} & \devnum{$+0.093$} [\devnum{0.000}, \devnum{0.174}] & \devnum{$+0.123$} [\devnum{0.043}, \devnum{0.193}] \\
+\devnum{0.8} & \devnum{$-0.071$} [\devnum{$-0.108$}, \devnum{$-0.025$}] & \devnum{$-0.025$} [\devnum{$-0.077$}, \devnum{0.036}] \\
+\devnum{1.0} & \devnum{$-0.055$} [\devnum{$-0.089$}, \devnum{$-0.007$}] & \devnum{$+0.010$} [\devnum{$-0.037$}, \devnum{0.063}] \\
+\bottomrule
+\end{tabular}
+\end{center}
+% Source: prechecks/closed_loop/out/bootstrap.json, paired closed-minus-open
+% difference in gap_closed, mean and 2.5/97.5 percentiles, overlay 0, 400 resamples,
+% levels 0-2, SPJF-E and Guard(600); rendered as table D of
+% prechecks/closed_loop/out/report_tables.md.
+
+\noindent so the movement is resolved in four of the six comparisons and is small in
+every one. This is a reduction of the scheme Section~S5.3 describes, which uses
+\devnum{2{,}000} resamples over five overlays, and it is a cost decision rather than a
+methodological one.
+
+Four limits stand. The think times were recorded on a platform that gave each student a
+private container, so every $\delta$ in the trace was produced by a student who never
+waited, and the replay assumes $\delta$ is invariant to the wait; nothing in this trace
+separates impatience from disengagement. The model has no abandonment and no content
+feedback, so it does not address the productivity distinction Shmueli and Feitelson draw
+\cite{shmueli2009simulation}, which Section~S6.3 states. The chains are \devnum{44}
+copies of \devnum{1{,}560} real student-terms, so the effective sample for anything
+driven by user behaviour is \devnum{1{,}560} and the week-block bootstrap, which
+resamples time, does not cover that. And the comparison stops being pathwise: each
+policy generates its own arrival sequence, so the closed columns compare different sample
+paths over the same job population, although the per-job theorem, stated against FCFS on
+the realised sequence, still applies job by job.
+
+\subsection{LPC-EGEE per Walltime Class: A Limit Class Where the Guard Fires}
+\label{sec:supp_lpc_queues}
+
+Section~S6.4 pools the six documented walltime classes of the LPC-EGEE log and uses the
+largest limit, \devnum{259{,}200} s, as $L$. Reading each class as its own pool, with
+that class's own limit, changes the promise by two and a half orders of magnitude: on the
+\devnum{900}-second class the work-budget guard fires and comes within \devnum{0.7\%} of
+its bound, where the pooled reading of the same log never fires and spends
+\devnum{0.046} of it. It does not make the first applicability condition robust on this
+trace.
+% Source: prechecks/lpc_egee_queues/bound_checks.csv, queue_name=test
+% policy=Constant-3.5L, worst_ratio = 0.9933; prechecks/lpc_egee/bound_checks.csv,
+% Constant-3.5L worst_ratio = 0.0464, the pooled reading whose guards never fire.
+
+The class pool is a construction of ours, and measurably so. The SWF header names three
+machines, not the two the pooled reading used: separating \texttt{clrglop195}, which owns
+no held-out arrival, leaves CE1 with \devnum{111{,}236} jobs and CE2 with
+\devnum{60{,}519}, and CE2 alone then maxes out at exactly \devnum{56} simultaneous jobs,
+which is its documented processor count and resolves the earlier audit's unexplained
+\devnum{58}. Within each partition the per-class maxima of simultaneously running jobs
+sum to \devnum{337} against \devnum{84} processors on CE1 and to \devnum{203} against
+\devnum{56} on CE2, so the classes demonstrably shared their partition's machines and a
+per-class pool is a constructed pool on the same footing as the others in this paper.
+% Source: prechecks/lpc_egee_queues/tables.md, sections "Partitions" (n, max_concurrent,
+% n_test) and "Queues shared the machines of their partition" (nominal_cpus,
+% sum_of_queue_maxima).
+
+\begin{table}[htbp]
+\centering\small
+\caption{LPC-EGEE by walltime class, both partitions pooled. Recorded p99 is over all
+retained arrivals, as is the pooled row's tail share, which is the figure
+Section~S6.4 reports; the per-class tail shares and the FCFS counterfactual are on the
+held-out part, at the capacity fitted on the earlier part. The \texttt{batch} class has
+no arrival that both submitted and completed before the cutoff, so no capacity can be
+fitted for it; the \texttt{day} class has fewer fitting rows than the pre-set minimum and
+its simulation diverges, so its counterfactual is an artefact and is marked.}
+\label{tab:s_lpc_queues}
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\begin{tabular}{lrrrrrrl}
+\toprule
+Class & $L$ (s) & Jobs & Held-out & Recorded p99$/L$ & FCFS p99$/L$ & Tail share & Cond.~1? \\
+\midrule
+\texttt{test} & \devnum{900} & \devnum{41{,}143} & \devnum{34{,}707} & \devnum{23.885} & \devnum{13.763} & \devnum{0.213} & yes \\
+\texttt{batch} & \devnum{3{,}600} & \devnum{1{,}506} & \devnum{1{,}506} & \devnum{0.795} & --- & --- & --- \\
+\texttt{short} & \devnum{7{,}200} & \devnum{69{,}446} & \devnum{19{,}353} & \devnum{0.653} & \devnum{0.000} & \devnum{0.240} & no \\
+\texttt{long} & \devnum{86{,}400} & \devnum{30{,}602} & \devnum{21{,}235} & \devnum{0.164} & \devnum{0.244} & \devnum{0.274} & no \\
+\texttt{day} & \devnum{129{,}600} & \devnum{18{,}594} & \devnum{18{,}236} & \devnum{0.065} & \devnum{30.970} & \devnum{0.161} & diverged \\
+\texttt{infinite} & \devnum{259{,}200} & \devnum{44{,}931} & \devnum{21{,}773} & \devnum{0.063} & \devnum{0.139} & \devnum{0.180} & no \\
+\midrule
+pooled & \devnum{259{,}200} & \devnum{206{,}222} & \devnum{116{,}810} & \devnum{0.046} & \devnum{0.042} & \devnum{0.407} & no \\
+\bottomrule
+\end{tabular}
+\end{adjustwidth}
+\end{table}
+% Source of Table~\ref{tab:s_lpc_queues}: prechecks/lpc_egee_queues/tables.md, section
+% "Per-queue audit, all retained arrivals" (n, n_test, L, wait_p99, p99/L, top1) and
+% section "Applicability per walltime class, held-out part, both partitions pooled",
+% variant=fit (fcfs_p99_over_L, top1, condition1_3L); the pooled FCFS p99/L row is
+% prechecks/lpc_egee/applicability.csv, test aggregate, which Section S6.4 already uses.
+
+The \devnum{900}-second \texttt{test} class is the one cell that behaves differently. Its
+recorded p99 queue wait is \devnum{23.885} times its own limit over the whole log, and
+\devnum{7.573} and \devnum{18.675} times on CE1 and CE2 over the held-out part; no other
+class approaches it, and pooled over all six the same ratio is \devnum{0.046}. Cost
+concentration inside a capped class is correspondingly weaker than pooled: the longest
+\devnum{1\%} of the class carry \devnum{0.213} of its held-out executed work,
+\devnum{0.167} on CE1 and \devnum{0.350} on CE2, against \devnum{0.407} when the six
+classes are pooled, so part of the heavy tail of a mixed pool is the mixing of limits
+itself. The predictor, refitted per class on the earlier part with the package defaults,
+reaches a held-out AUROC of \devnum{0.746} on the \texttt{test} class, \devnum{0.846} on
+\texttt{short}, \devnum{0.792} on \texttt{infinite} and \devnum{0.737} on \texttt{long}.
+% Source: prechecks/lpc_egee_queues/tables.md, sections "Per-queue audit, by partition"
+% (recorded_p99_over_L, top1 for CE1|test and CE2|test), "Applicability per cell,
+% held-out part" (recorded_p99_over_L 7.57 and 18.68, top1) and "Predictor, held-out
+% part" (AUROC by class).
+
+\begin{table}[htbp]
+\centering\small
+\caption{Replay of the \devnum{900}-second \texttt{test} class at its own limit and its
+fitted capacity $k=\devnum{1}$ on each partition, held-out arrivals only. Mean waits are
+in seconds; intervals are \devnum{2{,}000} paired resamples of \devnum{17} arrival-week
+blocks. The busy-hour p99 gap is not resolved for any policy.}
+\label{tab:s_lpc_replay}
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\begin{tabular}{lrlrlrr}
+\toprule
+Policy & Mean & Mean gap closed & Busy p99 & Busy p99 gap & Max excess (s) & Firing \\
+\midrule
+FCFS & \devnum{410.2} & --- & \devnum{13{,}412.76} & --- & --- & --- \\
+SJF (oracle) & \devnum{245.7} & \devnum{1.000} & \devnum{8{,}340.64} & \devnum{1.000} & \devnum{112{,}805} & --- \\
+SPJF-E & \devnum{298.7} & \devnum{0.678} [\devnum{0.622}, \devnum{0.757}] & \devnum{9{,}967.52} & \devnum{0.679} [\devnum{$-3.109$}, \devnum{0.920}] & \devnum{77{,}467} & --- \\
+Constant-\devnum{3.5}$L$ & \devnum{316.6} & \devnum{0.569} [\devnum{0.534}, \devnum{0.630}] & \devnum{13{,}933.44} & \devnum{$-0.103$} [\devnum{$-0.542$}, \devnum{0.560}] & \devnum{3{,}129} & \devnum{1.42\%} \\
+Age-\devnum{3.5}$L$ & \devnum{314.9} & \devnum{0.579} [\devnum{0.548}, \devnum{0.641}] & \devnum{13{,}933.44} & \devnum{$-0.103$} [\devnum{$-0.542$}, \devnum{0.572}] & \devnum{3{,}082} & \devnum{1.64\%} \\
+Constant-\devnum{5}$L$ & \devnum{310.3} & \devnum{0.607} [\devnum{0.577}, \devnum{0.664}] & \devnum{13{,}478.56} & \devnum{$-0.013$} [\devnum{$-0.593$}, \devnum{0.550}] & \devnum{4{,}444} & \devnum{1.04\%} \\
+Age-\devnum{5}$L$ & \devnum{311.1} & \devnum{0.602} [\devnum{0.575}, \devnum{0.647}] & \devnum{13{,}478.56} & \devnum{$-0.013$} [\devnum{$-0.584$}, \devnum{0.571}] & \devnum{4{,}338} & \devnum{1.46\%} \\
+Constant-\devnum{10}$L$ & \devnum{304.6} & \devnum{0.642} [\devnum{0.591}, \devnum{0.710}] & \devnum{13{,}965.24} & \devnum{$-0.109$} [\devnum{$-2.812$}, \devnum{0.620}] & \devnum{8{,}726} & \devnum{0.67\%} \\
+Age-\devnum{10}$L$ & \devnum{304.1} & \devnum{0.645} [\devnum{0.598}, \devnum{0.711}] & \devnum{13{,}940.20} & \devnum{$-0.104$} [\devnum{$-2.507$}, \devnum{0.622}] & \devnum{8{,}765} & \devnum{0.77\%} \\
+\bottomrule
+\end{tabular}
+\end{adjustwidth}
+\end{table}
+% Source of Table~\ref{tab:s_lpc_replay}: prechecks/lpc_egee_queues/tables.md, section
+% prechecks/lpc_egee_queues/policy_metrics.csv, scope=test queue_name=test: mean,
+% p99_busy, mean_gap with mean_gap_lo/hi, p99_busy_gap with p99_busy_gap_lo/hi and
+% max_excess; firing_rate from guard_dispatches.csv, queue_name=test. The same rows are
+% rendered in prechecks/lpc_egee_queues/tables.md, sections "Replay, test queue
+% (L = 900 s)" and "Guard firing and per-job bound checks".
+
+The guard fires at \devnum{1.42\%} of dispatch epochs at the tightest promise and its
+per-job bound is nearly attained: the largest realised excess over the FCFS wait is
+\devnum{3{,}129} s against an allowance of \devnum{3{,}150} s, a ratio of
+\devnum{0.9933}, where the pooled reading of Section~S6.4 reached \devnum{0.046}. Over
+\devnum{1{,}021{,}494} job-policy checks there is no violation. The trade-off is visible
+in one line: the guard gives up \devnum{0.11} of the mean gap the unguarded score closes
+and cuts the worst excess from \devnum{77{,}467} s to \devnum{3{,}129} s, with harm of
+\devnum{25} s under both. The busy-hour p99 is not improved by any guarded policy, every
+interval spanning zero.
+% Source: prechecks/lpc_egee_queues/bound_checks.csv, queue_name=test
+% policy=Constant-3.5L: max_excess_s, theoretical_max_s, worst_ratio and violations;
+% guard_dispatches.csv, same rows, n_forced over n_dispatch summed across the partitions
+% (585 of 41,143 = 1.42 %); policy_metrics.csv scope=test, mean_gap for SPJF-E and
+% Constant-3.5L and harm; prechecks/lpc_egee_queues/REPORT.md section 7 for the total
+% check count. Both are rendered in tables.md, section "Guard firing and per-job bound
+% checks".
+
+Four things keep this from being evidence of deployment benefit. The capacity that makes
+the first condition pass is the boundary value $k=\devnum{1}$ of the search grid, chosen
+on \devnum{7.6} days of pre-cutoff data on CE1 and \devnum{14.2} on CE2, and at the
+class's own observed concurrency ceiling the held-out FCFS p99 is exactly zero on both
+partitions, so the condition fails there; on CE2 it also fails the rule-of-thumb
+\devnum{3}$L$ form at the fitted capacity, the FCFS p99 being \devnum{2.448}$L$. The
+held-out wait profile is not reproduced: the per-class simulator is \devnum{2.9} times
+high on CE1 and \devnum{7.3} times low on CE2 on the mean, with hourly correlations
+indistinguishable from zero, and for the \devnum{7{,}200}-second class it produces
+identically zero waits against a recorded p99 of \devnum{14{,}288.96} s. The mechanism is
+the one the concurrency sums show: a short-limit job's recorded wait at this site is
+largely time spent behind other classes' long jobs on shared machines, which a per-class
+pool deletes by construction. And the search that found this cell covered eleven cells,
+two capacity readings, three promises and two budget shapes, which the intervals do not
+cover.
+% Source: prechecks/lpc_egee_queues/tables.md, section "Capacity fit and held-out wait
+% profile, primary variant" (recorded mean, sim mean and hourly r for CE1 test, CE2 test
+% and CE1 short) and section "The same, at the observed concurrency ceiling" (fcfs_p99 =
+% 0); section "Applicability per cell, held-out part", CE2 test fcfs_p99_over_L = 2.45;
+% prechecks/lpc_egee_queues/REPORT.md sections 4 and 9 for the fit-window lengths and
+% the multiplicity count.
+
 \input{sections/S_theory_additions}
 
 %=================================================================
