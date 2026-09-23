@@ -52,10 +52,26 @@ def record(source: Path) -> dict:
     }
 
 
-DERIVED = ("outputs/paper_tables/numbers.csv", "outputs/prefreeze/forward_scores.log.csv")
-"""The two snapshotted files that are not measurements: `numbers.csv` is an index of the
-manuscript's figures and changes whenever `paper/` does, and the pre-freeze log is
-appended by every pre-freeze run.  `--refresh` may replace their records and no other."""
+DERIVED = ("outputs/paper_tables/numbers.csv",)
+"""A snapshotted file that is not a measurement: `numbers.csv` indexes the manuscript's
+figures and changes whenever `paper/` does."""
+
+RERUN_DIRECTORY = "outputs/prefreeze/"
+"""The pre-freeze check writes a fresh copy of the selection and the development tables
+here on every run, to compare them with the ones the paper uses; its files are
+replaced by design.  `--refresh` may replace their records only when the file now
+matches, byte for byte, the development table of the same name."""
+
+
+def _refreshable(name: str) -> bool:
+    if name in DERIVED:
+        return True
+    if not name.startswith(RERUN_DIRECTORY):
+        return False
+    if name.endswith(".log.csv"):
+        return True
+    twin = ROOT / "outputs" / name.removeprefix(RERUN_DIRECTORY)
+    return twin.is_file() and digest(twin) == digest(ROOT / name)
 
 
 def refresh(path: Path, names: list[str]) -> int:
@@ -64,7 +80,7 @@ def refresh(path: Path, names: list[str]) -> int:
     A measurement table is never refreshed this way: a changed one is the failure the
     snapshot exists to catch, and the only honest answer is to restore its bytes.
     """
-    stray = [name for name in names if name not in DERIVED]
+    stray = [name for name in names if not _refreshable(name)]
     if stray:
         print("refusing to refresh a measurement table: " + ", ".join(stray))
         return 1

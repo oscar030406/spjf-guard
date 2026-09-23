@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-23T09:18:01-04:00",
+  "written_at": "2026-09-23T09:19:52-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -586,7 +586,7 @@
       },
       {
         "path": "scripts/check_preserved_outputs.py",
-        "sha256": "71afbd4b1615534a3a20e18ee35a5c9242ce657ac016cea5b336c2124622167a"
+        "sha256": "0d423bb4e53a54b62415782896d46c06ba66baf7d31e07d8af192ddd91844467"
       },
       {
         "path": "scripts/check_reproduction.py",
@@ -941,7 +941,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "377c7a9a2dfcd259efe65d68e7934447945c04afc9fae29985e6ed81ae5748ec"
+    "digest": "bf3867c9adf1c4d57b6462c2497640e060b26b37b19382ce78ab73f2323df731"
   },
   "inputs": {
     "artefacts": [
