@@ -23,10 +23,11 @@ classifier stops excusing a number because its line says "sealed": from then on 
 numbers have a producing table and are checked like any other.  Without the option
 nothing changes, which is why it is an option.
 
-`--dev-exact-dir` and `--sealed-exact-dir` add two exact-policy tables and their number
-sources.  They are opt-in so the historical `outputs/paper_tables/` files, including
-`numbers.csv`, stay byte-identical; use `--out-dir outputs/consistent_paper_tables` when
-enabling them.
+`--dev-exact-dir` and `--sealed-exact-dir` add two exact-policy tables, rewrite
+`tab_visibility.tex` from the exact comparison, and give the attribution ladder and the
+class-history sensitivity a source as well.  They are opt-in so the historical
+`outputs/paper_tables/` files, including `numbers.csv`, stay byte-identical; use
+`--out-dir outputs/consistent_paper_tables` when enabling them.
 
 Nothing here writes into `paper/`.
 """
@@ -484,12 +485,21 @@ def visibility_exposure_values(rows: list[dict], out: dict, source: str = "visib
             add(mean(field), 1, where)
 
 
-def exact_values(rows: list[dict], out: dict, source: str = "consistent_visibility") -> None:
-    """Scheduling figures printed by the exact policy-specific comparison."""
+def exact_values(
+    rows: list[dict],
+    out: dict,
+    source: str = "consistent_visibility",
+    filename: str = "exact_comparison.csv",
+) -> None:
+    """Scheduling figures printed by the exact policy-specific comparison.
+
+    The attribution ladder and the class-history sensitivity write the same columns, so
+    they are indexed through this function under their own file name.
+    """
     add = _adder(out)
     for row in rows:
         name = row.get("policy") or f"{row['base_policy']}|{row['variant']}"
-        where = f"{source}/exact_comparison.csv[{name} level {row['level']}]"
+        where = f"{source}/{filename}[{name} level {row['level']}]"
         for field, digits in (
             ("p99_dl_s", 2),
             ("gap_closed", 3),
@@ -597,7 +607,13 @@ def emit_visibility(tables: Path, out_dir: Path, sealed: bool = False) -> list[s
 
 
 def emit_exact(tables: Path, out_dir: Path, sealed: bool = False) -> list[str]:
-    """The policy-specific exact comparison and same-copy exposure decomposition."""
+    """The policy-specific exact comparison and same-copy exposure decomposition.
+
+    `tab_visibility.tex` is rewritten from the exact comparison, which carries the three
+    reference variants as well, so in an exact package that table's four rows have a
+    single source.  It runs after `emit_visibility`, whose three-row copy it replaces;
+    the historical directory never sees it, because the exact source is opt-in.
+    """
     comparison, exposure = read_exact_rows(tables)
     written: list[str] = []
     for stem, text in (
@@ -606,6 +622,7 @@ def emit_exact(tables: Path, out_dir: Path, sealed: bool = False) -> list[str]:
             "tab_same_copy_exposure",
             pt.same_copy_exposure_table(exposure) if exposure else "",
         ),
+        ("tab_visibility", pt.exact_headline_table(comparison) if comparison else ""),
     ):
         if not text:
             continue
@@ -620,6 +637,19 @@ def emit_optional_exact(tables: Path | None, out_dir: Path, sealed: bool = False
     return emit_exact(tables, out_dir, sealed) if tables is not None else []
 
 
+EXACT_EXTRA_FILES = ("attribution_comparison.csv", "exact_sensitivity_comparison.csv")
+"""The exact run's other two comparisons.  They print the same columns as the exact one
+and no table of their own, so they are read only to give their figures a source."""
+
+
+def read_exact_extras(tables: Path | None) -> tuple[list[dict], list[dict]]:
+    """The attribution ladder and the class-history sensitivity, when they are there."""
+    if tables is None:
+        return [], []
+    first, second = (read_rows(tables / name) for name in EXACT_EXTRA_FILES)
+    return first, second
+
+
 def run_values(
     run: dict,
     source: str,
@@ -628,6 +658,8 @@ def run_values(
     visibility_exposure: list[dict] | None = None,
     exact_comparison: list[dict] | None = None,
     exact_exposure: list[dict] | None = None,
+    exact_attribution: list[dict] | None = None,
+    exact_sensitivity: list[dict] | None = None,
 ) -> dict:
     """Every figure one run produces, indexed by the way the paper would print it."""
     values = produced_values(run["table"], run["k1"], run["residuals"], source)
@@ -646,6 +678,16 @@ def run_values(
     exact_exposure_values(
         exact_exposure or [], values, source.replace("tables", "consistent_visibility")
     )
+    for rows, filename in (
+        (exact_attribution, "attribution_comparison.csv"),
+        (exact_sensitivity, "exact_sensitivity_comparison.csv"),
+    ):
+        exact_values(
+            rows or [],
+            values,
+            source.replace("tables", "consistent_visibility"),
+            filename,
+        )
     return values
 
 
@@ -711,6 +753,7 @@ def main() -> int:
         read_rows(args.dev_visibility_dir / "visibility_exposure.csv"),
         dev_exact_rows[0] if dev_exact_rows is not None else [],
         dev_exact_rows[1] if dev_exact_rows is not None else [],
+        *read_exact_extras(args.dev_exact_dir),
     )
     sealed_values = None
     if args.sealed_dir is not None:
@@ -734,6 +777,7 @@ def main() -> int:
             else [],
             sealed_exact_rows[0] if sealed_exact_rows is not None else [],
             sealed_exact_rows[1] if sealed_exact_rows is not None else [],
+            *read_exact_extras(args.sealed_exact_dir),
         )
     numbers = paper_numbers(args.paper, produced, sealed_values)
     with open(args.out_dir / "numbers.csv", "w", newline="", encoding="utf-8") as fh:

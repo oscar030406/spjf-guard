@@ -19,17 +19,20 @@
 \section{Theory}
 \label{sec:theory}
 
-Everything below is pathwise: one arrival sequence, one vector of service times,
-one realisation of whatever randomness the base policy uses. No stationarity, no
-independence and no assumption about score quality enters a proof, and the
-upper bounds hold against a base policy that knows the future. An identity ties a
-job's delay relative to first-come first-served to the work that overtook it; two
-bounds turn that identity into the guarantee of Algorithm~\ref{alg:guard}; and a
-set of constructions shows that each constant in those bounds is an exact
-supremum. Every statement kept here comes with the idea of its argument; Supplementary
-Sections~S4 and~S8 give every deferred proof, every extremal construction and the
-statements this section only summarises, S8 opening with the idea of each construction
-beside it.
+An operator who puts a prediction-driven scheduler in front of students wants to know
+the worst that can happen to one job, not what happens on average. Everything in this
+section is therefore stated for one fixed run: one arrival sequence, one vector of
+service times, one realisation of whatever randomness the base policy uses. We call
+such a statement pathwise. No stationarity, no independence and no assumption about
+score quality enters a proof, and the upper bounds hold even against a base policy
+that knows the future. The section has three parts. An identity ties a job's delay
+relative to first-come first-served to the work that overtook it; two bounds turn that
+identity into the guarantee of Algorithm~\ref{alg:guard}; and a set of constructions
+shows that each constant in those bounds is an exact supremum, so that no smaller
+constant would do. Every statement kept here comes with the idea of its argument;
+Supplementary Sections~S4 and~S8 give every deferred proof, every extremal
+construction and the statements this section only summarises, S8 opening with the idea
+of each construction beside it.
 
 \subsection{Conventions}
 

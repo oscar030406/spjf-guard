@@ -34,6 +34,7 @@ from spjf_guard.sim import Trace, simulate  # noqa: E402
 from spjf_guard.sim.bounds import assert_per_job_bounds  # noqa: E402
 from spjf_guard.sim.policy import Policy, aging, fcfs  # noqa: E402
 
+
 def timing_plan(cfg: cfgmod.Config) -> list[dict[str, Any]]:
     """Twelve uniformly sampled points, stratified before looking at any new outcome."""
     points = grids.grid_points(cfg["scheduling"]["selection"]["grids"], cfg.promises_s)

@@ -22,10 +22,10 @@ instants and the same service times, so the comparison is pathwise.
 Supplementary Table~S4 collects the configuration and the selection protocol; the
 metrics are defined in Section~\ref{sec:model} and the policy names in
 Table~\ref{tab:policies}, extended by the aging comparator below.
-Section~\ref{sec:exp_visibility} gives the conservative-visibility headline. The
-original-score ranking, budget-shape, corrupted-score, residual and single-server
-results retain the source result clock and are optimistic references, not estimates
-of the conservative protocol. The capacity and physical experiments use an archived
+Section~\ref{sec:exp_visibility} gives the headline under the exact protocol, in which
+every score uses only results available in the replay. The original-score ranking,
+budget-shape, corrupted-score, residual and single-server results retain the source
+result clock and are optimistic references, not estimates under the exact protocol. The capacity and physical experiments use an archived
 development fit and are reported separately. We report the fraction of the FCFS-to-SJF gap closed and the
 plain percentage reduction against FCFS side by side throughout, because they are
 different numbers and the first is easy to read as the second.
@@ -63,39 +63,50 @@ source-platform $\mathrm{done}_j$, whereas under policy $P$ the replayed job com
 at $a_j+W_P[j]+C_j$. A feature may therefore be causal in the recorded log and still
 use a result that is not available in the replay, and neither a future-record
 perturbation test nor a brute-force audit of the source-clock features resolves that.
-The conservative score restricts user, exercise and pair history to submission
-outcomes in the same class-term copy, and it admits a result only when
-$\mathrm{done}_j+\devnum{3600}\le a_i$. The static score uses code, course and clock
-information known at submission, without outcome history. Each variant has its own
-fitted models, so the three differ in more than release delay, and their differences
-cannot be attributed to queueing delay alone. Guard parameters remain those selected
-under the original score, and the conservative variant is the empirical headline. The
-lag audit finds \devnum{0} violations in every conservative Guard and FCFS cell, and
-\devnum{336} job occurrences beyond the lag under unguarded conservative SPJF-E.
-Supplementary Section~S3.7 gives it, together with the same-copy exposure
-decomposition, the pending policy-specific exact variant, the aging comparator outside
-the budget family and the package predictor metrics with their splits.
+The exact protocol resolves it by construction. It freezes the fitted model, replays
+a policy, leaves out every same-copy result that the replay says was not complete when
+the job using it arrived, recomputes the affected histories and scores, and replays
+again, until no used result is unavailable. The set of left-out results only grows, so
+the procedure terminates, and every development cell ends with no used result
+unavailable. Two
+references sit beside it. The conservative score restricts user, exercise and pair
+history to submission outcomes in the same class-term copy, admits a result only when
+$\mathrm{done}_j+\devnum{3600}\le a_i$, and refits its models under those
+restrictions, so it leaves out more than the replay requires. The static score uses
+code, course and clock information known at submission, without outcome history.
+Guard parameters remain those selected under the original score in every protocol. A
+lag audit of the conservative reference finds \devnum{0} violations in every
+conservative Guard and FCFS cell, and \devnum{336} job occurrences beyond the lag
+under unguarded conservative SPJF-E. Supplementary Section~S3.7 gives the audit, the
+same-copy exposure decomposition, the aging comparator outside the budget family and
+the package predictor metrics with their splits.
 
-At the busiest load, conservative Guard($\devnum{600}$) gives p99 \devnum{174.71} s
-and closes \devnum{0.429 [0.357, 0.533]} of the reference gap, against
-\devnum{89.24} s and \devnum{0.801 [0.764, 0.842]} under the original score.
-Unguarded SPJF-E under the same conservative score closes \devnum{0.670}. The static
-control closes \devnum{0.349 [0.281, 0.457]}, and the paired
-conservative-minus-static gap is \devnum{0.080 [0.039, 0.124]}. Retained history
-therefore improves on the static control here, but the original-score effect is much
-larger. These intervals condition on the constructed development overlays and do not
-cover semester selection, model refitting or deployment variation.
-% Source of the unguarded conservative figure: outputs/dev_visibility/
-% visibility_comparison.csv, level=2, SPJF-E, gap_closed.
-% Sources: outputs/dev_visibility/visibility_comparison.csv, level=2,
-% Guard(600), Guard(600)-original, Guard(600)-static; and
-% outputs/dev_visibility/visibility_paired_differences.csv, same level,
-% left=Guard(600), right=Guard(600)-static, difference_gap and gap_lo/hi.
+At the busiest load, Guard($\devnum{600}$) under the exact protocol gives p99
+\devnum{118.94} s and closes \devnum{0.672 [0.602, 0.743]} of the reference gap,
+against \devnum{89.24} s and \devnum{0.801 [0.764, 0.842]} under the original score
+and \devnum{174.71} s and \devnum{0.429 [0.357, 0.533]} under the conservative score
+(Table~\ref{tab:visibility}). Unguarded SPJF-E closes \devnum{0.848} under the exact
+protocol and \devnum{0.670} under the conservative one. The static control closes
+\devnum{0.349 [0.281, 0.457]}. The conservative figure can be taken apart: applying
+its three restrictions to the frozen original model gives \devnum{0.536}, and
+refitting the models under them accounts for the rest of the fall to
+\devnum{0.429}, so most of that fall comes from the refit and not from the results
+left out. Leaving out, in addition, the results of other classes in the same term moves the
+exact figure to \devnum{0.655}. These intervals condition on the constructed
+development overlays and do not cover semester selection, model refitting or
+deployment variation.
+% Sources: outputs/dev_consistent_visibility/exact_comparison.csv, level=2,
+% Guard(600)|exact, Guard(600)|original, Guard(600)|conservative, Guard(600)|static,
+% SPJF-E|exact, SPJF-E|conservative: p99_dl_s, gap_closed, gap_closed_lo/hi;
+% outputs/dev_consistent_visibility/attribution_comparison.csv, level=2,
+% Guard(600)|combined_frozen and Guard(600)|conservative, gap_closed;
+% outputs/dev_consistent_visibility/exact_sensitivity_comparison.csv, level=2,
+% Guard(600)|exact_other_class_withheld, gap_closed.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Guard(600) under unchanged parameters and different information protocols. Conservative is the headline; original is an optimistic reference. Gap intervals are paired week-block intervals. Waits, excess and harm are in seconds.}
+\caption{Guard(600) under unchanged parameters and four information protocols. Exact is the headline: every score uses only results available in the replay. Original uses the source platform's own result clock and is an optimistic reference; conservative and static leave out more than the replay requires. Gap intervals are paired week-block intervals. Waits, excess and harm are in seconds.}
 \label{tab:visibility}
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{llrlrrr}
@@ -103,30 +114,33 @@ cover semester selection, model refitting or deployment variation.
 Load & Score history & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm & Fired (\%) \\
 \midrule
 \multicolumn{7}{l}{$\rho = \devnum{0.5}$, $k = \devnum{7.8}$} \\
+ & exact          & \devnum{15.25} & \devnum{0.724 [0.697, 0.747]} & \devnum{498.6} & \devnum{248.1} & \devnum{0.45} \\
  & original       & \devnum{14.97} & \devnum{0.740 [0.713, 0.760]} & \devnum{492.2} & \devnum{237.0} & \devnum{0.17} \\
  & conservative   & \devnum{16.68} & \devnum{0.640 [0.604, 0.671]} & \devnum{499.9} & \devnum{235.2} & \devnum{0.94} \\
  & static         & \devnum{17.95} & \devnum{0.560 [0.519, 0.594]} & \devnum{498.0} & \devnum{225.1} & \devnum{0.38} \\
- & exact (pending) & --- & --- & --- & --- & --- \\
-% EXACT-PENDING: p99, gap interval, maximum excess, harm and firing cells; no measured value.
 \midrule
 \multicolumn{7}{l}{$\rho = \devnum{0.8}$, $k = \devnum{5}$} \\
+ & exact          & \devnum{51.90} & \devnum{0.785 [0.748, 0.807]} & \devnum{509.0} & \devnum{215.6} & \devnum{2.64} \\
  & original       & \devnum{47.47} & \devnum{0.837 [0.815, 0.851]} & \devnum{507.8} & \devnum{319.6} & \devnum{1.31} \\
  & conservative   & \devnum{64.77} & \devnum{0.634 [0.560, 0.688]} & \devnum{509.4} & \devnum{327.7} & \devnum{3.26} \\
  & static         & \devnum{70.18} & \devnum{0.571 [0.504, 0.638]} & \devnum{512.9} & \devnum{341.6} & \devnum{3.89} \\
- & exact (pending) & --- & --- & --- & --- & --- \\
-% EXACT-PENDING: p99, gap interval, maximum excess, harm and firing cells; no measured value.
 \midrule
 \multicolumn{7}{l}{$\rho = \devnum{1}$, $k = \devnum{4}$} \\
+ & exact          & \devnum{118.94} & \devnum{0.672 [0.602, 0.743]} & \devnum{519.9} & \devnum{332.8} & \devnum{7.82} \\
  & original       & \devnum{89.24} & \devnum{0.801 [0.764, 0.842]} & \devnum{523.7} & \devnum{339.9} & \devnum{7.15} \\
  & conservative   & \devnum{174.71} & \devnum{0.429 [0.357, 0.533]} & \devnum{527.8} & \devnum{303.5} & \devnum{7.71} \\
  & static         & \devnum{193.11} & \devnum{0.349 [0.281, 0.457]} & \devnum{528.1} & \devnum{316.1} & \devnum{11.18} \\
- & exact (pending) & --- & --- & --- & --- & --- \\
-% EXACT-PENDING: p99, gap interval, maximum excess, harm and firing cells; no measured value.
 \bottomrule
 \end{tabular}
 \end{table}
 
-% Source: outputs/dev_visibility/visibility_comparison.csv, Guard(600) variants, all levels.
+% Source of Table~\ref{tab:visibility}: outputs/consistent_paper_tables/tab_visibility.tex,
+%   produced by `python scripts/emit_paper_tables.py --out-dir outputs/consistent_paper_tables
+%   --dev-exact-dir outputs/dev_consistent_visibility` (see GENERATED.md), from
+%   outputs/dev_consistent_visibility/exact_comparison.csv, base_policy=Guard(600), all four
+%   variants and all three levels; columns p99_dl_s, gap_closed with gap_closed_lo/hi,
+%   max_excess_s, harm_s, fired_pct.  The three reference rows are byte-identical to the
+%   replayed rows of outputs/dev_visibility/visibility_comparison.csv.
 
 
 
@@ -557,7 +571,7 @@ of the promise falls with the queue, from \devnum{41.6\%} above unguarded SPJF-E
 \devnum{3.7\%}, and the guarantee holds on all \devnum{17{,}634{,}760} jobs of
 each run against first-come first-served on that run's own realised arrivals. These
 runs read the original-clock scores of the main development cells, so they are a
-sensitivity to the arrival process and not a repeat of the conservative headline.
+sensitivity to the arrival process and not a repeat of the exact-protocol headline.
 Supplementary Section~S6.5 gives the table, the bootstrap and the limits, the first
 being that the recorded think times were produced on a platform where no student
 waited.

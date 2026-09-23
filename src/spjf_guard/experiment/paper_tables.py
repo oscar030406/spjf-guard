@@ -430,6 +430,58 @@ def exact_visibility_table(rows: list[dict]) -> str:
     )
 
 
+HEADLINE_VARIANTS = ("exact", "original", "conservative", "static")
+
+
+def exact_headline_table(rows: list[dict], promise: float = 600.0) -> str:
+    """tab:visibility -- one guard under the four information protocols.
+
+    Every row, the references included, is read from the exact comparison, so the table
+    has one source file and the exact row cannot drift from the rows beside it.
+    """
+    base = f"Guard({promise:g})"
+    body: list[str] = []
+    for level in sorted({int(row["level"]) for row in rows}):
+        block = [row for row in rows if int(row["level"]) == level]
+        keyed = {
+            row["variant"]: row
+            for row in block
+            if (row.get("base_policy") or row["policy"].split("|", 1)[0]) == base
+        }
+        if not keyed:
+            continue
+        body.append(rf"\multicolumn{{7}}{{l}}{{{_load_header(next(iter(keyed.values())))}}} \\")
+        for variant in HEADLINE_VARIANTS:
+            row = keyed.get(variant)
+            if row is None:
+                continue
+            body.append(
+                f" & {variant:<14s} & "
+                + " & ".join(
+                    [
+                        _cell(float(row["p99_dl_s"]), 2),
+                        _cell(float(row["gap_closed"]), 3, _interval(row, "gap_closed")),
+                        _cell(float(row["max_excess_s"]), 1),
+                        _cell(float(row["harm_s"]), 1),
+                        _cell(float(row["fired_pct"]), 2),
+                    ]
+                )
+                + r" \\"
+            )
+        body.append(RULE)
+    if body and body[-1] == RULE:
+        body.pop()
+    return _table(
+        "llrlrrr",
+        r"Load & Score history & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm "
+        r"& Fired (\%)",
+        body,
+        "tab:visibility",
+        rf"Guard({promise:g}) at the unchanged selected parameters under four "
+        "information protocols, over five overlays.",
+    )
+
+
 def same_copy_exposure_table(rows: list[dict]) -> str:
     """How often same-copy withholding changes a score and its dispatch-queue rank."""
     body: list[str] = []

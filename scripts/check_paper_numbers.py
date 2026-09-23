@@ -76,8 +76,13 @@ PACKAGE_FILE = {
 EXACT_PACKAGE_FILE = {
     "tab:exact_visibility": "tab_exact_visibility.tex",
     "tab:same_copy_exposure": "tab_same_copy_exposure.tex",
+    "tab:visibility": "tab_visibility.tex",
 }
-"""Optional exact-policy tables.  They are checked only after their CSV directory exists."""
+"""Optional exact-policy tables.  They are checked only after their CSV directory exists.
+
+`tab:visibility` is the manuscript's own four-protocol table.  In an exact package its
+rows, references included, come from `exact_comparison.csv`, so it is checked here rather
+than against the older three-row recipe."""
 
 EXPERIMENTS = "sections/08_experiments.tex"
 LIMITATIONS = "sections/09_limitations.tex"
@@ -925,6 +930,7 @@ def load_exact_source(exact_dir: Path) -> tuple[dict[str, list[dict]], list[str]
     sources = {
         "tab:exact_visibility": exact_dir / "exact_comparison.csv",
         "tab:same_copy_exposure": exact_dir / "same_copy_exposure.csv",
+        "tab:visibility": exact_dir / "exact_comparison.csv",
     }
     for label, path in sources.items():
         if not path.is_file():
@@ -960,6 +966,7 @@ def check_exact_tables(
     builders = {
         "tab:exact_visibility": pt.exact_visibility_table,
         "tab:same_copy_exposure": pt.same_copy_exposure_table,
+        "tab:visibility": pt.exact_headline_table,
     }
     complaints = list(source_complaints)
     cache = {} if cache is None else cache

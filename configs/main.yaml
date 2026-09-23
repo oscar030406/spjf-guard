@@ -75,7 +75,10 @@ features:
   # result by D.  On the development cells max W_FCFS = 1544.602708 s, so the guard
   # theorem requires at most 2744.602708 s for G <= 1200 s; D = 3600 s leaves an
   # 855.397292 s (31.2%) margin.  Every run still reports W > D by policy and cell.
-  headline_variant: conservative
+  # The headline is the exact protocol (ADR 0007 amendment, 2026-09-23): every score
+  # uses only results available in its own policy's replay.  conservative and static
+  # are the two references beside it.
+  headline_variant: exact
   visibility_variants:
     original:
       score_suffix: ""
@@ -159,7 +162,10 @@ scheduling:
   # run_main keeps the original-clock rows as an optimistic reference so every existing
   # row remains bit-identical.  The frozen headline is emitted by run_visibility.py.
   ranking_score: spjf_e
-  headline_ranking_score: spjf_e_conservative
+  # The headline score is policy-specific: run_consistent_visibility.py recomputes it per
+  # policy.  aging_baseline names its own score explicitly, so changing this key moves no
+  # legacy row (tests/test_consistent_protocol.py).
+  headline_ranking_score: policy_specific_exact
   # One mechanism.  budget(q, t) = min(B0 + gam * (waiting at a_q) + eta k (t - a_q), Bmax)
   # and the guarantee depends on the cap Bmax = k(G - (3 - 2/k)L) alone; the shape of the
   # budget under the cap is a design freedom.  The three shapes below are the three

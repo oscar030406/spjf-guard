@@ -136,12 +136,13 @@ process is synthetic, and Supplementary Section~S2.3 reports which quantile of t
 Firefox CI refit does not survive out of sample.
 
 \paragraph{History availability and the recorded-queue counterexample.}
-Original-clock scores may use outcomes that are still pending in the replay. The
-conservative headline is not a clean control for that: it also reduces history and
-refits models, so its difference from the original score does not identify a
-queue-delay effect alone. The pending exact variant certifies availability for its
-final same-copy replay. It does not certify an online fixed point, and it does not
-certify a deployment with globally shared copied-user state
+Original-clock scores may use outcomes that are still pending in the replay. The exact
+protocol certifies that its final replay uses none, cell by cell, and it is the
+headline for that reason. It does not certify an online fixed point, in which a
+deployed predictor is driven by completion events as they happen, and it does not
+certify a deployment in which copied users share state across copies. The conservative
+reference is not a clean control for availability: it also reduces history and refits
+models, and most of its fall from the original figure comes from the refit
 (Section~\ref{sec:exp_visibility}).
 
 LPC-EGEE provides both recorded waits and concentrated costs, but its fitted
@@ -188,15 +189,15 @@ servers, up to a constant multiple of the time limit, and a budget on that quant
 sufficient and necessary for a per-job guarantee. Counting overtakes is not necessary,
 and it gives a guarantee only at the worst-case charge of the time limit per pass. On
 our traces that charge stands for one to two orders of magnitude more work than
-actually passes. Under conservative visibility, Guard($\devnum{600}$) closes
-$\devnum{0.429}$ of the reference gap at the busiest load, against $\devnum{0.670}$
-for unguarded ordering. These are development results, conditional on the constructed
-demand and on the information protocol. Four of the original six workloads have tail
-waits too short relative to $L$ for the uniform certificate to be useful. Concentration
-of job costs is an empirical opportunity for reordering, and we do not claim it is
-necessary.
-% Source: outputs/dev_visibility/visibility_comparison.csv, level=2,
-% Guard(600) and SPJF-E, gap_closed.
+actually passes. With scores that use only results available in the replay,
+Guard($\devnum{600}$) closes $\devnum{0.672}$ of the reference gap at the busiest
+load, against $\devnum{0.848}$ for unguarded ordering. These are development results,
+conditional on the constructed demand and on the information protocol. Four of the
+original six workloads have tail waits too short relative to $L$ for the uniform
+certificate to be useful. Concentration of job costs is an empirical opportunity for
+reordering, and we do not claim it is necessary.
+% Source: outputs/dev_consistent_visibility/exact_comparison.csv, level=2,
+% Guard(600)|exact and SPJF-E|exact, gap_closed.
 
 We have not run the guard in production. The physical service reproduces the dispatch
 rule but not the ideal simulator's waits, the sealed terms are still sealed, and the

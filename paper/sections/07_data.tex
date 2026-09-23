@@ -181,8 +181,9 @@ class-terms to load a pool of four.
 
 \subsection{What the Load Looks Like}
 
-Arrivals follow the course calendar. Under grouped-class cross-validation,
-predicting executions per class \devnum{168} hours ahead gives log-scale RMSE
+Arrivals follow the course calendar, and the calendar predicts them. Under
+grouped-class cross-validation, predicting the number of executions per class
+\devnum{168} hours ahead gives log-scale RMSE
 \devnum{1.243} with lag features alone, \devnum{1.159} with calendar features
 alone, and \devnum{1.112} with both. A paired bootstrap over class-week blocks
 gives a combined-minus-lag-only difference of

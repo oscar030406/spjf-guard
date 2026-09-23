@@ -958,10 +958,10 @@ Skip($\devnum{1200}$), $\kappa=20$ & \devnum{1200} & \devnum{217.64} & \devnum{0
 \subsection{Outcome Visibility: Exposure, Lag and the Variants}
 \label{sec:supp_visibility}
 
-Three things stand behind the conservative-visibility headline of Section~8.3 of the
-manuscript: the same-copy queueing exposure it conditions on, an audit of the release
-lag, and the two controls with the pending exact variant that its table names. All three
-are defined here.
+Three things stand behind the headline of Section~8.3 of the manuscript: the same-copy
+queueing exposure that the exact protocol corrects for, an audit of the release lag of
+the conservative reference, and the two references its table names. All three are
+defined here.
 
 Let $H_i$ be the set of distinct outcome records used by score $i$, counting a record
 only once if it enters several entity aggregates. Separate records from the same
@@ -987,11 +987,11 @@ uses code, course and clock information known at submission, without outcome
 history. Both use their own fitted models; original, conservative and static
 therefore differ in more than release delay. Their differences cannot be attributed
 to queueing delay alone and are not mathematical upper or lower performance bounds.
-Guard parameters remain those selected under the original score. Consistent with
-the committed visibility decision, the conservative variant is the empirical
-headline; the original-score results are optimistic references.
-% Source: outputs/dev_visibility/manifest.json, notes.conservative_lag_s,
-% headline_variant and selected_parameters_unchanged.
+Guard parameters remain those selected under the original score. The exact protocol
+below is the empirical headline; the original-score results are optimistic
+references, and the conservative and static results are controls.
+% Source: outputs/dev_visibility/manifest.json, notes.conservative_lag_s and
+% selected_parameters_unchanged; headline: configs/main.yaml, features.headline_variant.
 
 For a same-copy submission, $W_P[j]\le D$ is a sufficient availability condition
 under a source release lag $D$. The largest development FCFS wait is
@@ -1006,18 +1006,22 @@ the development maximum does not certify it in advance.
 % for FCFS; sum(lag_violations) for conservative SPJF-E=336 and for FCFS/Guard=0;
 % outputs/dev_visibility/manifest.json, promises and conservative_lag_s.
 
-The exact variant freezes the original model weights, replays each policy, withholds
+The exact protocol freezes the original model weights, replays each policy, leaves out
 same-copy outcomes still unavailable at the target arrival, recomputes affected
-histories and scores, and repeats until no used outcome violates availability.
-Withheld sets only grow, so this finite procedure terminates. It certifies
-availability in its final replay; it is not a claim of minimal withholding, a unique
-fixed point, or an online predictor driven by completion events. A full comparison
-and the associated exposure decomposition remain pending. The conservative and static
-results above are the completed controls; no partial exact result is used to select
-parameters or replace the headline.
-% EXACT-VISIBILITY-PENDING: add completed exact_comparison.csv cells at each load
-% beside original/conservative/static in tab:visibility; add same_copy_exposure.csv
-% only after complete coverage and terminal-zero certification. No exact values yet.
+histories and scores, and repeats until no used outcome violates availability. The set
+of left-out outcomes only grows, so this finite procedure terminates. Every development cell,
+five overlays by three loads by five policies, and every sensitivity cell ended its
+final pass with no used outcome unavailable. The procedure certifies availability in
+that final replay; it is not a claim that the left-out set is minimal, of a unique fixed point, or of
+an online predictor driven by completion events. The visibility table of Section~8.3
+of the manuscript prints Guard(600) under all four protocols. The other policies under
+each protocol, the same-copy exposure statistics of each replay, and the attribution
+ladder that separates leaving results out from refitting are in the package output directory
+\texttt{outputs/dev\_consistent\_visibility/}, in \texttt{exact\_comparison.csv},
+\texttt{same\_copy\_exposure.csv} and \texttt{attribution\_comparison.csv}; the
+emitted tables \texttt{tab\_exact\_visibility.tex} and
+\texttt{tab\_same\_copy\_exposure.tex} under \texttt{outputs/consistent\_paper\_tables/}
+typeset the first two.
 
 
 \subsection{Aging Outside the Budget Family}
@@ -2221,7 +2225,7 @@ are not independently trained predictors or independent workload samples.
 % Source: evidence/main_v3/out_main_v31.txt, trace construction table;
 % prechecks/weakness1_attack/REPORT.md, development capacity experiment.
 
-For the pending exact refinement, a copy means the same class-term, replication
+For the exact protocol, a copy means the same class-term, replication
 round and shift. Its own submission outcomes follow policy-specific completions.
 Other classes and terms are exogenous history in that copy's original relative
 clock: when the target copy shifts by $s_i$, an external result is interpreted at
@@ -2403,7 +2407,7 @@ the size of the constructed pool while preserving its complete offered stream. T
 physical experiment checks an executing timed-work service on a selected window.
 Neither identifies a historical queue on CodeBench or a causal deployment effect.
 The scores are the archived embedded Tweedie predictions, not the later package
-refit, conservative score or pending exact visibility variant.
+refit, conservative score or exact protocol.
 
 \subsection{Capacity Sensitivity on Complete Traces}
 

@@ -59,12 +59,16 @@ Section~\ref{sec:prediction} uses the source platform's result clock. In a repla
 queue, an endogenous result instead becomes available at
 $\mathrm{done}^{P}_j=a_j+W_P[j]+C_j$. Source-clock causality therefore does not imply
 availability under policy $P$: a recorded result may already be visible while its
-replayed job is still waiting. The conservative headline restricts history to replayed
-submissions in the same class-term copy and delays its source release; the static
-control uses no outcome history. Section~\ref{sec:exp_visibility} says how we
-check availability, separates external history from queueing exposure inside the same
-copy, and describes the exact variant that is still pending. The guard theorem does not
-depend on which scores these protocols produce.
+replayed job is still waiting. The headline of Section~\ref{sec:exp_visibility}
+therefore uses an exact protocol: each policy's replay is repeated, leaving out every
+result that the replay says was not yet complete when the job that uses it arrived,
+until no score uses an unavailable result. Two references sit beside it. A conservative
+protocol restricts history to replayed submissions in the same class-term copy, one
+class of one term as placed in the overlay, and delays every result by a fixed lag; a
+static control uses no outcome history. Section~\ref{sec:exp_visibility} says how
+availability is checked and separates external history from queueing exposure inside
+the same copy. The guard theorem does not depend on which scores these protocols
+produce.
 
 \subsection{Waiting Time, the FCFS Reference and the Service Guarantee}
 

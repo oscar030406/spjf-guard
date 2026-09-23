@@ -68,7 +68,58 @@ Guard(600) 另做整条删除同学期其他已复制班次历史的精确敏感
 
 ### 实测与 headline 决定
 
-<!-- AMENDMENT_HEADLINE -->
+2026-09-23，开发与验证池上的 exact 运行完成，输出在 `outputs/dev_consistent_visibility/`。
+覆盖是测量前钉死的 5 条 primary overlay × 3 档负载 × 5 条策略，共 75 个细化单元，没有一格缺失，
+也没有按结果挑子集。`exact_passes.csv` 里每个单元的末轮 `terminal_zero` 都是 `True`、
+`offending_records` 都是 `0`；细化用 10–18 轮收敛（含末轮），合计 1,033 轮。另有 15 个
+`exact_other_class_withheld` 单元，同样全部以零违规结束。三条 Guard 的逐 job 边界在 exact 分数下
+仍然成立。`scripts/check_generated.py` 的 consistent visibility 一项报
+`1 run(s) have complete monotone, terminal-zero certificates`。
+
+**决定：exact 成为预测排序的主结果（headline），conservative 与 original 降为两条参照。**
+
+依据本节上文那一句：“现有静态调度核无需改成在线预测引擎，也能计算要求的最终可见性证书……
+最后一轮必须断言零个仍被使用的违规。”这句话把 exact 定义为**要求的**最终可见性证书，并把它可以
+发布的条件写成一个可判定的断言。该断言现在成立，所以 exact 就是 M2 那个问题的直接答案。相反，
+本节前面已经撤回了 conservative 作为主结果的理由：“原 conservative 与 original 同时改变
+namespace、历史支持集、固定释放滞后和模型训练；因此 0.801 → 0.429 本身不能识别 queueing delay
+的效应。”一个被自己的决策记录判定为不可识别的对照，不能继续充当主结果。
+`docs/sealed_run_procedure.md` 第 5 步的两分支写法（“headline 为 exact 时，这个警告不阻断第 6 步；
+若 headline 仍是 conservative，则该情况硬停”）也是按这次决定落到第一支。
+
+数字全部取自 `outputs/dev_consistent_visibility/exact_comparison.csv`，五条 overlay 汇总，
+参数不变（Guard(600) = capped B0=120、eta=.75）。最忙负载（level 2，rho=1.0，k=4）：
+
+| policy | variant | gap_closed [lo, hi] | p99_dl_s | max_excess_s | harm_s | fired_pct |
+|---|---|---|---:|---:|---:|---:|
+| Guard(600) | exact | 0.672 [0.602, 0.743] | 118.94 | 519.871 | 332.841 | 7.82 |
+| Guard(600) | original | 0.801 [0.764, 0.842] | 89.24 | 523.668 | 339.882 | 7.15 |
+| Guard(600) | conservative | 0.429 [0.357, 0.533] | 174.71 | 527.753 | 303.519 | 7.71 |
+| Guard(600) | static | 0.349 [0.281, 0.457] | 193.11 | 528.132 | 316.119 | 11.18 |
+| SPJF-E | exact | 0.848 [0.802, 0.878] | 78.46 | 5830.092 | 1324.288 | 0.00 |
+| SPJF-E | conservative | 0.670 [0.599, 0.733] | 119.20 | 6069.684 | 891.634 | 0.00 |
+| SPJF-E | original | 0.916 [0.892, 0.930] | 62.79 | 5904.525 | 708.755 | 0.00 |
+
+另外两档负载的 Guard(600) exact 是 0.724 [0.697, 0.747]（level 0）与 0.785 [0.748, 0.807]
+（level 1），对应 original 的 0.740 与 0.837、conservative 的 0.640 与 0.634。
+
+两条参照各是什么，一句话：**original** 保留原平台的结果时钟，会让一条结果在产生它的重放 job
+完成之前就可见，因此是乐观参照；**conservative** 比可用性本身更严，它同时把历史限定在同一
+班次—学期拷贝、把每条结果推迟 3600 秒、并重新拟合模型，因此是更严的参照，不是干净对照。
+`attribution_comparison.csv` 在最忙负载上把这三件事分开：只换 namespace 是 0.807，删掉没有重放
+job 的历史是 0.770，固定滞后一档才是移动结果的那一项（60/300/900/3600 秒分别是
+0.573/0.519/0.502/0.518），三项合起来用冻结权重是 0.536，重拟合后才是 0.429。
+
+边界与这个 headline 一起报告，不能省：这是**离线单调 availability certificate**，不是唯一解、
+不是最小删减、不是完成事件驱动的在线预测器；每份班次—学期拷贝当作独立部署实例，其他班次与学期
+按该实例的原相对时钟作为外生输入，所以它不认证“所有拷贝共享同一份学生状态”的部署。
+`exact_sensitivity_comparison.csv` 给出这条语义的敏感性：整条删除同学期其他已复制班次的历史后，
+最忙负载的 gap 从 0.672 [0.602, 0.743] 变成 0.655 [0.583, 0.732]，p99 从 118.94 秒到 122.69 秒，
+方向一致、幅度小于 original 与 exact 之差。参数仍是按 original 选出的那一组，本次不做 exact 重选
+（下一节的成本评估给出理由），因此不声称这组参数在 exact 下最优。
+
+发布闸门按本 ADR 末节执行：exact 的末轮零违规或 Guard 边界失败始终硬停；headline 既然是 exact，
+conservative 的 fixed-lag 证书失败不再阻断发布，但仍然照常打印并写入 manifest。
 
 ### 选择协议
 

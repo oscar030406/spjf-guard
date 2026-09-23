@@ -315,32 +315,36 @@ def _all_complaints(paper):
     return cpn.run(paper, ROOT / "outputs" / "dev_tables", ROOT / "outputs" / "paper_tables")
 
 
-MOVED_SENTENCE = r"gives up \devnum{0.115} of the gap"
+MOVED_SENTENCE = r"gives up \devnum{0.115} of the"
 """A line of section 8 whose figures check B recomputes and whose \\devnum{0.115} the
-paper prints exactly once.  Moving it is what shows the check follows the sentence."""
+paper prints exactly once.  Moving it is what shows the check follows the sentence.
+The sentence wraps after "of the", so the marker stops there."""
 
 
 def _shorten_the_manuscript(paper: Path) -> None:
-    """Move one table and one sentence into the supplementary file.
+    """Move one table and one sentence between the manuscript and the supplement.
 
-    This is the operation the manuscript is being shortened by: the `tab:rank` float goes
-    over whole and is renamed to its supplement spelling, one sentence of running text
-    goes with it, and not a digit of either changes.  Nothing is deleted.
+    The `tab:rank` float went into the supplement for real in the thirteenth pass, as
+    `tab:s_rank`.  The test therefore moves it the other way, back into Section 8 under
+    its manuscript spelling, and moves one sentence of running text into the supplement,
+    so that both directions of the length cuts are exercised.  Not a digit of either
+    changes, and nothing is deleted.
     """
     section = paper / "sections" / "08_experiments.tex"
-    text = section.read_text(encoding="utf-8")
-    at = text.index(r"\label{tab:rank}")
-    start = text.rindex(r"\begin{table}", 0, at)
-    end = text.index(r"\end{table}", at) + len(r"\end{table}")
-    float_ = text[start:end].replace(r"\label{tab:rank}", r"\label{tab:s_rank}")
-    line = next(one for one in text.splitlines() if MOVED_SENTENCE in one)
-    kept = (text[:start] + text[end:]).replace(line + "\n", "", 1)
-    section.write_text(kept, encoding="utf-8")
     supplement = paper / "supplementary.tex"
     body = supplement.read_text(encoding="utf-8")
+    at = body.index(r"\label{tab:s_rank}")
+    start = body.rindex(r"\begin{table}", 0, at)
+    end = body.index(r"\end{table}", at) + len(r"\end{table}")
+    float_ = body[start:end].replace(r"\label{tab:s_rank}", r"\label{tab:rank}")
+    text = section.read_text(encoding="utf-8")
+    line = next(one for one in text.splitlines() if MOVED_SENTENCE in one)
+    anchor = text.rindex(r"\begin{table}", 0, text.index(r"\label{tab:visibility}"))
+    kept = (text[:anchor] + float_ + "\n\n" + text[anchor:]).replace(line + "\n", "", 1)
+    section.write_text(kept, encoding="utf-8")
     ends = body.rindex(r"\end{document}")
     supplement.write_text(
-        body[:ends] + float_ + "\n\n" + line + "\n\n" + body[ends:], encoding="utf-8"
+        body[:start] + body[end:ends] + line + "\n\n" + body[ends:], encoding="utf-8"
     )
 
 
@@ -356,7 +360,9 @@ def test_a_table_and_a_sentence_that_move_into_the_supplement_are_still_checked(
     sources that print it, so that moving either changes nothing here."""
     paper = _paper_copy(tmp_path)
     _shorten_the_manuscript(paper)
-    assert r"\label{tab:s_rank}" in (paper / "supplementary.tex").read_text(encoding="utf-8")
+    section = (paper / "sections" / "08_experiments.tex").read_text(encoding="utf-8")
+    assert r"\label{tab:rank}" in section
+    assert MOVED_SENTENCE not in section
     assert _all_complaints(paper) == []
 
 
@@ -365,7 +371,10 @@ def test_a_digit_edited_in_the_moved_table_still_fails(tmp_path):
     """The move must not cost the comparison: the table is checked where it landed."""
     paper = _paper_copy(tmp_path)
     _shorten_the_manuscript(paper)
-    _edit(paper, r"\devnum{27.64}", r"\devnum{27.65}")
+    section = paper / "sections" / "08_experiments.tex"
+    text = section.read_text(encoding="utf-8")
+    assert r"\devnum{27.64}" in text
+    section.write_text(text.replace(r"\devnum{27.64}", r"\devnum{27.65}", 1), encoding="utf-8")
     assert any("27.64" in c or "27.65" in c for c in _all_complaints(paper))
 
 

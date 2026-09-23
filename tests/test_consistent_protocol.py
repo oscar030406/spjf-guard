@@ -80,11 +80,11 @@ def _exposure_row(policy: str) -> dict:
     }
 
 
-def test_exact_protocol_and_output_names_are_frozen_without_moving_the_headline():
+def test_exact_protocol_and_output_names_are_frozen_with_exact_as_headline():
     cfg = cfgmod.load(ROOT / "configs" / "main.yaml", expand_environment=False)
     exact = cfg["features"]["exact_visibility"]
-    assert cfg["features"]["headline_variant"] == "conservative"
-    assert cfg["scheduling"]["headline_ranking_score"] == "spjf_e_conservative"
+    assert cfg["features"]["headline_variant"] == "exact"
+    assert cfg["scheduling"]["headline_ranking_score"] == "policy_specific_exact"
     assert exact == {
         "algorithm": "monotone_per_job_withholding",
         "base_score": "spjf_e",
@@ -204,8 +204,8 @@ def test_the_sealed_dry_run_lists_the_exact_stage_and_its_own_outputs(capsys):
     assert run_main.sealed_plan(cfg, args) == 0
     text = capsys.readouterr().out
     assert (
-        "[6 exact        scripts/run_consistent_visibility.py --pool sealed --workers 2 --resume]"
-        in text
+        "[6 exact        scripts/run_consistent_visibility.py "
+        "--pool sealed --workers 2 --resume]" in text
     )
     assert "exact_costs.csv" in text
     assert "sealed_consistent_controls.npz" in text
@@ -230,8 +230,13 @@ def test_the_two_exact_tables_are_optional_generated_recipes(tmp_path):
         "the historical table directory stays untouched by default"
     )
     written = ept.emit_exact(exact, package)
-    assert written == ["tab_exact_visibility.tex", "tab_same_copy_exposure.tex"]
+    assert written == [
+        "tab_exact_visibility.tex",
+        "tab_same_copy_exposure.tex",
+        "tab_visibility.tex",
+    ]
     assert r"\label{tab:exact_visibility}" in pt.exact_visibility_table(comparison)
+    assert r"\label{tab:visibility}" in pt.exact_headline_table(comparison)
     assert r"\label{tab:same_copy_exposure}" in pt.same_copy_exposure_table(exposure)
     assert cpn.check_exact_tables(paper, package, exact) == []
 

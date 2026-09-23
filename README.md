@@ -2,162 +2,187 @@
 
 # Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking
 
-This repository holds the code, the derived tables and the run logs behind one paper:
-*Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution
-Services under Deadline-Driven Bursty Load*.
+This is the code, the tables and the run logs behind one paper: *Prediction-Driven
+Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution Services under
+Deadline-Driven Bursty Load*. It rebuilds every number the paper prints from the public
+datasets the paper uses.
 
-The paper is about a kind of queue that many systems share. A service takes jobs from
-many users, runs them on a fixed set of machines, one job per machine at a time, and never
-interrupts a job once it has started; a job is stopped only when it reaches a time limit
-`L`. The automatic grader of a programming course works this way. So do a serverless
-platform, a build farm and a compute cluster.
+## What the paper is about
 
-The problem the paper starts from is concrete. Before an assignment deadline, hundreds of
-students submit at once. One submission that loops until its time limit keeps a grading
-machine busy for the whole limit, and every submission queued behind it waits. Reordering
-the queue by predicted running time shortens most waits, but a wrong prediction can push
-one job to the back again and again: on the log studied here, one job waited close to
-6,000 seconds longer than it would have in arrival order. No operator will deploy a
-scheduler that can do that.
+The automatic grader of a programming course takes submissions from many students and
+runs them on a few machines. Each machine runs one submission at a time. A submission is
+never interrupted once it has started; it is killed only when it reaches a time limit,
+which the paper calls `L`. Serverless platforms, software build farms and compute
+clusters run other people's jobs in the same way.
 
-The paper's answer is a promise to each job. It proves that, on any such service with `k`
-machines, a job's extra wait compared with first-come first-served (arrival order) equals
-the work that overtook it divided by `k`, to within `(2-2/k)L`. It then wraps any
-ordering rule in a guard that limits the work allowed to overtake a waiting job, so that
-no job waits more than `G` seconds longer than it would have in arrival order, whatever
-the predictions do. The claim is tested on real logs from two programming-course graders,
-a serverless platform, two continuous-integration pools and a compute farm.
+Before an assignment deadline, hundreds of students submit at once. A submission that
+loops keeps a machine busy for the whole time limit, and every submission behind it
+waits. The natural fix is to predict how long each submission will run and to run the
+short ones first. That shortens most waits. But a wrong prediction can push one job to
+the back of the queue again and again. On the log studied here, one job waited close to
+6,000 seconds longer than it would have if the queue had simply been served in arrival
+order. No operator will deploy a scheduler that can do that to a user.
 
-This repository is the simulator, the predictor, the experiment driver and the evidence
-behind every number the paper prints. It is a reproduction package, not a deployable
-scheduler.
+The paper gives every job a promise. It first proves that, on any such service with `k`
+machines, the extra time a job waits compared with arrival order equals the amount of
+work that jumped ahead of it divided by `k`, up to an error of at most `(2 - 2/k) L`. It
+then wraps any ordering rule in a *guard*: a small rule that counts how much work has
+jumped ahead of each waiting job and, when the count reaches a budget, makes the oldest
+waiting job run next. The result is that no job waits more than `G` seconds longer than
+it would have in arrival order, however wrong the predictions are. The operator chooses
+`G`; the theorem turns it into a guarantee.
 
-## What is here
+The claim is tested by replaying real logs: two programming-course graders, a serverless
+platform, two pools of machines that build and test Firefox, and a compute cluster.
+
+This repository is a reproduction package. It is not a scheduler that can be installed
+on a server.
+
+## What is in this repository
 
 | path | what it holds |
 | --- | --- |
-| `src/spjf_guard/` | the package. `sim/` the k-server simulator and the per-job assertion of both theorems; `data/` the clock and the sealed-data protection; `features/` causal features; `predict/` the ranking score; `experiment/` overlays, parameter selection, metrics, tables |
+| `src/spjf_guard/` | the Python package that runs the main experiment. `sim/` simulates a queue in front of `k` machines and checks the paper's bound on every simulated job. `data/` reads the datasets, handles their time stamps and refuses to read sealed data. `features/` computes each job's features from what is known when it arrives. `predict/` fits the model that predicts a job's running time. `experiment/` builds the replay traces, chooses the guard's settings, computes the metrics and writes the tables |
 | `tests/` | correctness tests, written before the implementation |
-| `configs/main.yaml` | every choice the protocol lock pins down |
-| `scripts/` | run the main experiment, write the lock draft, check reproduction, check generated files |
-| `evidence/` | one directory per study behind a number the package does not produce: the scripts that were run, their logs, and the tables they wrote. `evidence/README.md` is the index; `evidence/PATHS.md` maps the paths named in the manuscript's source comments onto this folder |
-| `docs/adr/` | decisions that are hard to reverse, one page each |
+| `configs/main.yaml` | every setting of the main experiment, each with a comment saying what it does |
+| `scripts/` | the commands listed below |
+| `evidence/` | the studies behind the numbers the package does not produce, one folder each; see "Where each number comes from" |
+| `docs/adr/` | decisions that are hard to reverse, one page each, with the alternatives that were rejected |
 | `docs/sealed_access_log.md` | every read of a sealed semester, one line per read |
-| `paper/` | the manuscript source. Table numbers are copied from `outputs/`; no script writes into `paper/` |
-| `CONTEXT.md` | the glossary. One word per concept, used identically in the paper, the code, the configuration and the tables (in Chinese) |
-| `GENERATED.md` | every file produced by a script: source, regeneration command, check command (in Chinese) |
+| `paper/` | the manuscript source. Table numbers are copied in from `outputs/`; no script writes into `paper/` |
+| `CONTEXT.md` | the glossary, in Chinese. One word per concept, used identically in the paper, the code, the configuration and the tables |
+| `GENERATED.md` | every file a script produces: its source, the command that regenerates it, the command that checks it (in Chinese) |
 
-`README.zh-CN.md` is the Chinese version of this file, section for section, with the
-same commands.
+`README.zh-CN.md` is this file in Chinese, section for section, with the same commands.
 
-Two directories named in this file are not in the repository. `data/` holds the raw
-datasets and is not redistributed (below). `outputs/` holds the tables the pipeline
-writes; every one of them is regenerated by the commands below, and `GENERATED.md` says
-which command writes which file.
+Two directories named below are not in the repository. `data/` holds the raw datasets,
+which we may not redistribute. `outputs/` holds the tables the pipeline writes; the
+commands below regenerate every one of them.
 
-## Environment
+## Setup
 
-Python 3.12, dependencies locked by [uv](https://docs.astral.sh/uv/) into a project-local
-`.venv`:
+Python 3.12. Dependencies are locked by [uv](https://docs.astral.sh/uv/). This installs
+them into a `.venv` inside the repository:
 
 ```bash
 uv sync --extra dev
 ```
 
-Every command has to clear uv's own `PYTHONHOME`, or a child process loads the wrong
-standard library:
+Every command below calls the interpreter through a shell variable named `$UV`. The
+variable unsets `PYTHONHOME` and `PYTHONPATH` in case your shell exports them (one of our
+machines did, and child processes then loaded the wrong standard library), and it caps
+the thread count, because the simulator is memory-bound and more threads only slow it
+down:
 
 ```bash
 export UV="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
   NUMBA_NUM_THREADS=4 OMP_NUM_THREADS=4 uv run --no-sync"
 ```
 
-**No path variable has to be set.** Every input location is written in the `data` section
-of `configs/main.yaml`, relative to the repository root, and resolved by
-`Config.data_path`:
+No path variable has to be set. Every input location is written in the `data` section of
+`configs/main.yaml`, relative to the repository root:
 
 | configuration key | points at | written by |
 |---|---|---|
-| `archive_dir` | `data/codebench/archives/` | the dataset publisher's per-semester archives |
+| `archive_dir` | `data/codebench/archives/` | you, when you download the publisher's per-semester archives |
 | `raw_parquet_dir` | `data/codebench/parquet/` | `scripts/parse_archive.py` |
 | `cache_dir` | `data/derived/codebench_cache_r4/` | `scripts/build_cache.py` |
 | `overlay_dir` | `data/derived/overlay_traces/` | `scripts/build_overlays.py` |
 | `score_dir` | `data/derived/package_ranking_scores/` | `scripts/fit_scores.py` |
 
-`${NAME}` expansion still works inside those strings, for a machine that has to point one
-input somewhere else; none of the shipped configurations uses it. No file in the
-repository may contain a path that exists on one machine only, and
-`scripts/check_generated.py --only paths` is the gate that enforces it.
+If one input has to live somewhere else on your machine, `${NAME}` inside those strings
+is expanded from the environment. No file in the repository may contain a path that
+exists on one machine only; `scripts/check_generated.py --only paths` fails if one does.
 
 ## Data
 
-**No raw data is redistributed here.** Download each dataset from its publisher into
-`data/<name>/` before running anything. The table gives the source and the terms as the
-publisher states them.
+No raw data is redistributed here. Download each dataset from its publisher into
+`data/<name>/` before running anything. The terms are given as the publisher states them.
 
 | dataset | what it is | source | terms |
 |---|---|---|---|
-| CodeBench v1.81 | introductory programming course at UFAM, 2016–2024, 18 semesters; millisecond IDE events; assessments carry start and end times. The main experiment runs on this | <https://codebench.icomp.ufam.edu.br/dataset/> | the page states no licence. Used for academic research and cited; the raw archives are not redistributed. Write to the dataset authors before publishing |
-| ACcoding v1.0.0 | online-judge submission log, second judging platform | <https://zenodo.org/record/6522395>, doi:10.5281/zenodo.6522395 | the paper says CC BY 4.0, the Zenodo page says other-open; confirm before publishing |
-| OULAD | Open University learning analytics dataset; the falsified original direction | <https://analyse.kmi.open.ac.uk/open_dataset>, doi:10.1038/sdata.2017.171 | CC BY 4.0 |
-| Azure Functions 2021 | serverless invocation trace, two weeks, 1,980,951 invocations | <https://github.com/Azure/AzurePublicDataset> (Zhang et al., SOSP 2021) | CC BY 4.0 |
-| Intel Netbatch 2012 | compute-farm pool D, 9,054,066 jobs, standard workload format | <https://www.cs.huji.ac.il/labs/parallel/workload/l_intel_netbatch/> (Shai, Shmueli & Feitelson, JSSPP 2013) | the archive gives no licence, states that the log is free for researchers, and asks for acknowledgement and citation. Acknowledge Ohad Shai, Edi Shmueli and Nir Antebi (Intel); the file is not redistributed |
-| LPC-EGEE 2004 | grid compute farm, six walltime classes; the study in `evidence/lpc_egee_queues/` | <https://www.cs.huji.ac.il/labs/parallel/workload/l_lpc/> | same archive terms. Acknowledge Emmanuel Medernach for the log, Dan Tsafrir for the SWF conversion, and the Parallel Workloads Archive |
-| Mozilla Firefox CI | two Taskcluster hardware worker pools, 2026-08-24 to 09-14 and 2026-09-07 to 09-14. The only trace here that records the queueing wait itself, so it is what the simulator is validated against | <https://firefox-ci-tc.services.mozilla.com/api/queue/v1> and <https://treeherder.mozilla.org/api>, public and unauthenticated | no licence statement. Taken from a public API, attributed to Mozilla; only the slice collected here is kept and it is not redistributed |
-| UPC Campus Nord Wi-Fi | access-point occupancy, an early direction nothing in the paper rests on | <https://data.mendeley.com/datasets/55vx86j8wf/1>, doi:10.17632/55vx86j8wf.1 | CC BY 4.0 |
+| CodeBench v1.81 | the log of an introductory programming course at the Federal University of Amazonas, Brazil: 18 semesters from 2016 to 2024, every action in the students' online editor with a millisecond time stamp, and the start and deadline of every assignment. The main experiment runs on this | <https://codebench.icomp.ufam.edu.br/dataset/> | the page states no licence. Used for academic research and cited; the raw archives are not redistributed. Write to the dataset authors before publishing |
+| ACcoding v1.0.0 | the submission log of an online judge, the second grading platform | <https://zenodo.org/record/6522395>, doi:10.5281/zenodo.6522395 | the paper says CC BY 4.0, the Zenodo page says other-open; confirm before publishing |
+| OULAD | Open University learning analytics dataset. The project began as a study of this dataset; that direction did not work, and nothing in the paper rests on it | <https://analyse.kmi.open.ac.uk/open_dataset>, doi:10.1038/sdata.2017.171 | CC BY 4.0 |
+| Azure Functions 2021 | two weeks of function calls on Microsoft's serverless platform, 1,980,951 calls | <https://github.com/Azure/AzurePublicDataset> (Zhang et al., SOSP 2021) | CC BY 4.0 |
+| Intel Netbatch 2012 | one pool of Intel's internal compute farm, 9,054,066 jobs, in the standard format of the Parallel Workloads Archive | <https://www.cs.huji.ac.il/labs/parallel/workload/l_intel_netbatch/> (Shai, Shmueli & Feitelson, JSSPP 2013) | the archive gives no licence, states that the log is free for researchers, and asks for acknowledgement and citation. Acknowledge Ohad Shai, Edi Shmueli and Nir Antebi (Intel); the file is not redistributed |
+| LPC-EGEE 2004 | a grid compute farm in France whose jobs fall into six classes by time limit; used in `evidence/lpc_egee_queues/` | <https://www.cs.huji.ac.il/labs/parallel/workload/l_lpc/> | same archive terms. Acknowledge Emmanuel Medernach for the log, Dan Tsafrir for the SWF conversion, and the Parallel Workloads Archive |
+| Mozilla Firefox CI | two pools of machines that build and test Firefox, 2026-08-24 to 09-14 and 2026-09-07 to 09-14. The only log here that records how long each job actually waited, so it is what the simulator is checked against | <https://firefox-ci-tc.services.mozilla.com/api/queue/v1> and <https://treeherder.mozilla.org/api>, public and unauthenticated | no licence statement. Taken from a public API and attributed to Mozilla; only the slice collected here is kept, and it is not redistributed |
+| UPC Campus Nord Wi-Fi | Wi-Fi access-point occupancy on a university campus; an early direction nothing in the paper rests on | <https://data.mendeley.com/datasets/55vx86j8wf/1>, doi:10.17632/55vx86j8wf.1 | CC BY 4.0 |
 
-SHA-256 checksums for the files that have stable bytes are recorded in `data/README.md`
-in the authors' working tree; the Firefox CI slice is not checksummed, because
-Taskcluster expires pages and a refetch is not byte-identical.
+SHA-256 checksums of the downloaded files are kept in `data/README.md` in the authors'
+working tree, which is not committed. The Firefox CI slice has no checksum, because the
+API expires old pages and a fresh download is not byte-identical.
 
-**No dataset row reaches this repository.** What is committed is code, configuration,
-aggregate tables and run logs. The identifier-like columns in the committed tables name a
-configuration — policy, load level, overlay, pool, semester, model, target — not a person.
-No student identifier, user name, e-mail address, IP address or line of student source
-code is committed.
+No dataset row reaches this repository. What is committed is code, configuration,
+aggregate tables and run logs. The identifier-like columns in the committed tables name
+a configuration (policy, load level, overlay, pool, semester, model, target), never a
+person. No student identifier, user name, e-mail address, IP address or line of student
+source code is committed.
 
-## Reproducing the development tables
+## Reproducing the tables
 
-From the repository root, with `$UV` set as above. One process at a time.
+The steps below rebuild every development table in the paper from the raw datasets. Run
+them from the repository root with `$UV` set as above, one process at a time. The whole
+sequence takes about a day on the authors' machine; the slow step is choosing the
+guard's settings.
+
+Step 1 checks the code itself: style, types and the fast tests:
 
 ```bash
-# 1  Gates: lint, types, fast tests
 $UV ruff check src tests scripts
 $UV mypy
 $UV python -m pytest -q -m "not slow and not crosscheck"
+```
 
-# 2  Job-for-job comparison against the study kernels (imports two of them, read-only)
+Step 2 compares this package, job for job, with the two earlier programs the study was
+first run with. They are kept under `evidence/main_v3/` and are imported read-only:
+
+```bash
 $UV python -m pytest -q -m crosscheck
+```
 
-# 3  Parse the publisher's archives into five tables per semester
+Step 3 turns the raw data into the experiment's inputs. One semester of one course
+rarely makes the grader busy enough to show queueing, so the experiment replays several
+semesters laid on top of one another. Each submission keeps its weekday and hour, each
+semester is shifted by a whole number of weeks, and the sum is one trace with a realistic
+deadline rush. The paper calls such a trace an *overlay* and uses five, drawn with five
+different shifts from the same semesters. A *pool* is the set of semesters that goes into
+an overlay: `primary` is six semesters from 2020 to 2022, and `validation` is the same
+set without its last semester. The guard's settings are chosen on the validation
+overlays only, so that the semester they are tested on never influences them. The
+single-server overlay is a separate trace on which the paper's identity holds exactly:
+
+```bash
 $UV python scripts/parse_archive.py --semesters 2022-1 --compare
-
-# 3b Build the parse cache
 $UV python scripts/build_cache.py --pool development
-
-# 3c The three experiment inputs: overlay traces, ranking scores, guard parameters
 $UV python scripts/build_overlays.py --pool primary
 $UV python scripts/build_overlays.py --pool validation
-$UV python scripts/build_overlays.py --single-server          # the k = 1 line
+$UV python scripts/build_overlays.py --single-server
 $UV python scripts/fit_scores.py --repeat
-$UV python scripts/select_parameters.py --workers 2           # validation overlays only
-$UV python scripts/select_aging.py --workers 2                # the unguaranteed aging baseline
+$UV python scripts/select_parameters.py --workers 2
+$UV python scripts/select_aging.py --workers 2
+```
 
-# 4  Main experiment: five overlays x three load levels
+Step 4 is the experiment. Every policy runs on the five overlays at three load levels,
+where the level is how busy the machines are in the busiest hour: 50 %, 80 % or 100 %.
+Then come the single-server line, the accuracy of the running-time predictor, and the
+runs in which the predictor is allowed to see less history:
+
+```bash
 $UV python scripts/run_main.py --selection outputs/selection_v3/selected_parameters.csv \
     --out-dir outputs/dev_tables --workers 2
-
-# 4b The single-server line, where the identity is an equality
 $UV python scripts/run_main.py --prefix k1 --reps 0 --levels 0 \
     --selection outputs/selection_v3/selected_parameters.csv --out-dir outputs/dev_tables/k1
-
-# 4c The ranking score read as a predictor: AUROC, AP, RMSE, Spearman, user-blocked intervals
 $UV python scripts/eval_scores.py --pool primary
-
-# 4d Original-clock exposure, and the conservative and static score variants
 $UV python scripts/run_visibility.py --pool primary --workers 2
+```
 
-# 5  Acceptance
+Step 5 checks the result: the per-job waits against the earlier programs, the overlays
+against their specification, the tables against the committed copies, and the numbers
+the paper prints against the tables:
+
+```bash
 $UV python scripts/check_reproduction.py --overlay-dir data/derived/overlay_traces
 $UV python scripts/check_overlays.py
 $UV python scripts/diff_dev_tables.py
@@ -166,78 +191,100 @@ $UV python scripts/check_paper_numbers.py
 $UV python scripts/check_generated.py
 ```
 
-Parameter selection runs three grids fixed in advance (42 constant-budget points, 162
-wait-relaxed, 54 queue-length-relaxed; ADR 0005), 258 points in all, deduplicated to 243
-schedules per server count. One cell at `--workers 2` took about 29 minutes on the
-authors' machine and the fifteen cells about 7.3 hours. Results are written per cell, so a
-crashed run skips the cells it already has when restarted; `--from-grid` re-derives the
-rule without re-simulating, and `--part i --nparts n` splits a cell. **A command that
-tested only some cells writes a `selected_parameters.csv` that sees only those cells; it
-is not the final selection.** Align the parts with `--from-grid` into one `--out-dir`.
+Three things are worth knowing before you start.
 
-Step 4 asserts the per-job bound on *every* simulated job while the run is in progress,
-not afterwards on the aggregates. Step 5 aligns this package's per-job waits with the
-study kernels' per-job waits and compares the aggregates against
-`evidence/main_v3/v31/table_main_primary.csv`.
+Choosing the guard's settings is slow. `select_parameters.py` tries 258 candidate
+settings fixed in advance (`docs/adr/0005`) on every validation cell. One cell with two
+worker processes took about 29 minutes on the authors' machine, and the fifteen cells
+about 7.3 hours. Results are written per cell, so a crashed run continues where it
+stopped. `--part i --nparts n` splits a cell across machines, and `--from-grid`
+re-derives the choice from saved results without simulating again. A run over only some
+cells writes a `selected_parameters.csv` that is not the final selection; combine the
+parts with `--from-grid` into one output directory.
 
-`check_reproduction.py` exits 1 by design: one unequal per-job wait fails it. The current
-inequality comes from the older kernel's float64 clock, where this package uses exact
-integer microseconds (ADR 0001). It differs on 0.0043 % of 1.59 billion comparisons, and
-after aggregation one printed number moves: the SPJF-E deadline-window p99 at the heaviest
-load, from 62.91 s to 62.92 s. No gap-closed figure changes.
+The bound is checked during the run. Step 4 asserts the paper's per-job bound on each
+simulated job as it is dispatched, not afterwards on averages.
 
-Every number in `outputs/main_table.tex` is wrapped in `\devnum{}`, so development-pool
-numbers and sealed-semester numbers are distinguishable at a glance in the typeset paper.
+`check_reproduction.py` exits 1, and that is expected. It fails on a single unequal
+per-job wait. The earlier programs kept time in floating-point seconds and this package
+keeps it in whole microseconds (`docs/adr/0001`). The two disagree on 0.0043 % of 1.59
+billion comparisons, and after aggregation one printed number moves: the p99 wait of
+the unguarded predicted-order policy at the heaviest load, from 62.91 s to 62.92 s. No
+gap-closed figure changes.
 
-## The sealed-data rule
+Every number in `outputs/main_table.tex` is wrapped in a LaTeX macro, `\devnum{}`, that
+marks it as coming from the development semesters. Numbers from the sealed run are
+wrapped in `\sealednum{}` instead, so the two kinds can be told apart on the printed
+page.
 
-CodeBench 2023-1, 2023-2 and 2024-1, the ACcoding submission-id block 80–100 %, and the
-OULAD 2014 presentations are sealed. Before the protocol is frozen, any call that would
-read them raises `SealedDataError`, and the refusal happens before the file is opened
-(`src/spjf_guard/data/sealed.py`, reasoning in ADR 0004). The point is to prevent the
-method being adjusted after seeing the test result, not to limit how many times a file may
-be opened.
+## The sealed semesters
 
-The procedure is: rehearse with `--dry-run-sealed`, which prints which files would be read
-without opening one; write the protocol lock, which hashes the code, the configuration and
-the input artefacts; commit; freeze with `scripts/freeze_protocol.py`, which refuses a
-dirty tree, an uncommitted state or a failing gate; then run the sealed pool once with
-`--unseal`. Each of those runs appends one line to `docs/sealed_access_log.md` — date,
-script, which sealed semesters were read, what was produced, who saw it, whether it
-affected the design. `docs/sealed_run_procedure.md` has the full command list, the
-per-step prerequisites, the runtime and disk cost, and what to do after a crash.
+Three CodeBench semesters (2023-1, 2023-2 and 2024-1), the last fifth of the ACcoding
+submissions by id, and the OULAD 2014 presentations are *sealed*. Until the method is
+frozen, any code path that would read them raises an error before the file is opened
+(`src/spjf_guard/data/sealed.py`; the reasoning is in `docs/adr/0004`). The point is to
+make it impossible to adjust the method after seeing the test result.
 
-The utilisation actually reached on the sealed semesters is reported as measured; the
-server count is not adjusted afterwards to hit a target, and the single-server copy count
-stays the one chosen on the development pool (ADR 0006).
+Freezing goes in four steps. A rehearsal with `--dry-run-sealed` prints which files would
+be read without opening any. Then the *protocol lock* is written: a file of hashes
+covering the code, the configuration and every input artefact. Then a commit. Then
+`scripts/freeze_protocol.py`, which refuses to run if the working tree is dirty, if
+anything is uncommitted, or if any check fails. Only after that is the sealed pool run,
+once, with `--unseal`. Each such run appends one line to `docs/sealed_access_log.md`:
+the date, the script, which sealed semesters were read, what was produced, who saw it,
+and whether it changed the design. `docs/sealed_run_procedure.md` has the full command
+list, the prerequisites of each step, the running time and disk needed, and what to do
+after a crash.
 
-## Where the evidence tables come from
+The machine load actually reached on the sealed semesters is reported as measured. The
+machine count is not adjusted afterwards to hit a target, and the single-server copy
+count stays the one chosen on the development semesters (`docs/adr/0006`).
 
-Numbers the package does not produce — the second judging platform, the cross-domain
-traces, the CI validation, the theory notes, the closed-loop replay, the compute-farm
-study — come from `evidence/`, one directory per study. Each holds the scripts that were
-run, the `out_*.txt` they wrote, the tables they produced, and a `README.md` giving the
-question, the paper items, the inputs and the status. `evidence/README.md` indexes all of
-them and lists what was left out of the copies and why; `evidence/PATHS.md` maps the paths
-named in the manuscript's source comments onto the folder.
+## Where each number comes from
 
-The copies keep the file names and the directory names the scripts import each other by.
-Machine-specific absolute paths were replaced by `<repo-root>` and `<cache-dir>`; no
-measured value was changed. The `out_*.txt` run logs were not rewritten at all, so they
-still print the working folder name `prechecks/`; read those as `evidence/`.
+The paper prints two kinds of numbers.
+
+The first kind comes from the package in `src/`. The commands above rebuild those tables
+from the raw datasets, and `scripts/check_paper_numbers.py` checks that the manuscript
+prints exactly what the tables contain.
+
+The second kind comes from separate studies, each run once to answer one question.
+`evidence/` keeps one folder per study, 30 in all. Each folder holds the scripts that
+were run, the log they printed (`out_*.txt`), the tables they wrote, and a `README.md`
+that states the question, which part of the paper uses the answer, what the study needs
+as input, and whether it is finished. In plain terms, the studies cover:
+
+- how the main grading log was parsed and checked against its publisher's own counts;
+- the same method applied to the second grader, the serverless platform, the compute
+  cluster and the grid;
+- whether the simulator reproduces the queue waits the two Firefox build pools recorded;
+- the comparison of running-time predictors, including the graph-network model the
+  project started with;
+- independent checks of the theorems, written as referee reports;
+- robustness: replaying the log with users who wait for one result before submitting
+  the next, varying the number of machines, running the guard on a real two-worker
+  service, and a design that was tried and rejected.
+
+`evidence/README.md` lists every folder with its question in one line. The manuscript's
+source comments still name the folder the studies were run in, `prechecks/`;
+`evidence/PATHS.md` maps each of those names onto `evidence/`.
+
+The copies keep the file and directory names the scripts import each other by. Absolute
+paths from the authors' machines were replaced by `<repo-root>` and `<cache-dir>`; no
+measured value was changed. The `out_*.txt` logs were not rewritten. No raw dataset is
+redistributed here, and no study read sealed data.
 
 ## Conventions
 
-- `CONTEXT.md` is the glossary. A term settled in discussion goes in it, and the paper,
-  the code, the configuration and the tables then use that one word.
-- A decision that is hard to reverse, surprising later, and a real trade-off gets a page
-  in `docs/adr/`.
-- Every generated file has a row in `GENERATED.md`: source, regeneration command, check
-  command. A hand edit to a generated file fails `scripts/check_generated.py`, which
-  pre-commit runs.
+`CONTEXT.md` is the glossary. A term settled in discussion goes in it, and the paper,
+the code, the configuration and the tables then use that one word. A decision that is
+hard to reverse, surprising later, and a real trade-off gets a page in `docs/adr/`.
+Every generated file has a row in `GENERATED.md` with its source, its regeneration
+command and its check command; a hand edit to a generated file fails
+`scripts/check_generated.py`, which the pre-commit hook runs.
 
 ## Licence and citation
 
-The code is MIT-licensed; see `LICENSE`. The datasets are not covered by it — each one
-keeps the terms in the data table above. `CITATION.cff` carries the manuscript's title and
-placeholder authors; fill it in before release.
+The code is MIT-licensed; see `LICENSE`. The datasets are not covered by it; each keeps
+the terms in the data table above. `CITATION.cff` carries the manuscript's title and
+placeholder authors, to be filled in before release.

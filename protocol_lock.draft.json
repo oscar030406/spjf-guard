@@ -1,9 +1,9 @@
 {
-  "written_at": "2026-09-23T05:30:29-04:00",
+  "written_at": "2026-09-23T06:32:04-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
-    "sha256": "7f17d392a9d2f9a6dfd60d36ac4204821ebc9d9073badc79fa2ea97cb6cbb08e",
+    "sha256": "bc157a1b49e7f17c151ed1dd36decf2acac5385d5f310a1bde75a61350da1784",
     "document": {
       "name": "main",
       "description": "CodeBench shared judge pool, development terms, five overlays, three loads",
@@ -97,7 +97,7 @@
           "user_exercise_prior",
           "schedule"
         ],
-        "headline_variant": "conservative",
+        "headline_variant": "exact",
         "visibility_variants": {
           "original": {
             "score_suffix": "",
@@ -212,7 +212,7 @@
       },
       "scheduling": {
         "ranking_score": "spjf_e",
-        "headline_ranking_score": "spjf_e_conservative",
+        "headline_ranking_score": "policy_specific_exact",
         "guard_budget": "min(B0 + gam * w_q + eta * k * (t - a_q), Bmax)",
         "promises_s": [
           300.0,
@@ -554,7 +554,7 @@
     "files": [
       {
         "path": "scripts/assess_consistent_selection.py",
-        "sha256": "a5d5f10182b3617c1c5f673530739649c3590f565953c772ec9a1515f66e955a"
+        "sha256": "57903aa93d81cb90b1d7686cd81e03c1e249cc8d031f01839cc72a8442be95c7"
       },
       {
         "path": "scripts/build_cache.py",
@@ -582,7 +582,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "f999d638fe7d03eb03cceb9cf3260b850aaa98aced9fd5f4eb3f289d50c6738e"
+        "sha256": "2baf108c768a43f917d261c9c322db5e5c9b3256d131a31a275c5078bb74fbd6"
       },
       {
         "path": "scripts/check_preserved_outputs.py",
@@ -606,7 +606,7 @@
       },
       {
         "path": "scripts/emit_paper_tables.py",
-        "sha256": "eb6207b83f98b11950cf19d8f970e44995d7b59638951d8a781902ea22a74f0d"
+        "sha256": "2ed9bdfe84a6d780132255720247f6025e1d562d7bce9b091d82be93d44ee56e"
       },
       {
         "path": "scripts/eval_scores.py",
@@ -710,7 +710,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/paper_tables.py",
-        "sha256": "3ffd9a6944d09a032769f143c8b457a74ba4c7c652dc5dfe5a1e4f88bff66084"
+        "sha256": "ecd42b14060516e02bbdb9c3f3d5b92c2d6577eca035ddeb3189e3c0c36364fc"
       },
       {
         "path": "src/spjf_guard/experiment/parallel.py",
@@ -826,7 +826,7 @@
       },
       {
         "path": "tests/test_consistent_protocol.py",
-        "sha256": "e9f38acc847ac588550a6000e1ad0e9da89b1ac793f0124a25068fba70bfd6c0"
+        "sha256": "08b5641b21ddbe8db1de7ea2cbce88c9f731f04305f1c4c9e7fbaea5420157de"
       },
       {
         "path": "tests/test_consistent_runner.py",
@@ -882,7 +882,7 @@
       },
       {
         "path": "tests/test_paper_tables.py",
-        "sha256": "eebf8ad94d066cd1087e37ce46c9ada8ea41150c2d9f4152f44271848dcc2cc7"
+        "sha256": "0c21e6798d989b5729d8d033e31431e32124b216f52d1af18bbcedcc931be2ce"
       },
       {
         "path": "tests/test_predict.py",
@@ -941,7 +941,7 @@
         "sha256": "7d80a03f4ab32976602f6a21a0d816316a1c1fb175faf9b62db7ea2e5ea54e4d"
       }
     ],
-    "digest": "34474b26987c6621179765afcd43c41dd7a4e8d35e713bcc3d74f798b0cf27e2"
+    "digest": "afaae61861db6131d2a3e921f950130dc4c9be2d5527bf03543c558dad8bb907"
   },
   "inputs": {
     "artefacts": [
@@ -1110,7 +1110,7 @@
         "user_exercise_prior",
         "schedule"
       ],
-      "headline_variant": "conservative",
+      "headline_variant": "exact",
       "visibility_variants": {
         "original": {
           "score_suffix": "",
