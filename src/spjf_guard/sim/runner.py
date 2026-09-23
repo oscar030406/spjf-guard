@@ -50,6 +50,11 @@ class Trace:
             raise ValueError("jobs must be given in rank order (arrival, input index)")
         if np.any(self.service_us <= 0):
             raise ValueError("service times must be positive")
+        if np.any(self.service_us > round(self.limit_s * 1_000_000)):
+            raise ValueError(
+                f"a service time exceeds the limit {self.limit_s} s; the bound the guard "
+                "asserts assumes executed work is capped at the limit"
+            )
 
     def __len__(self) -> int:
         return len(self.arrival_us)

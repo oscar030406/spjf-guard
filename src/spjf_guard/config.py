@@ -207,4 +207,56 @@ def load(path: str | Path, expand_environment: bool = True) -> Config:
     missing = [s for s in REQUIRED_SECTIONS if s not in raw]
     if missing:
         raise ConfigError(f"{path} is missing the section(s) {missing}")
+    _check_pinned_constants(path, raw)
     return Config(path=path, raw=_expand(raw) if expand_environment else raw)
+
+
+def _check_pinned_constants(path: Path, raw: dict) -> None:
+    """Five keys the lock hashes are constants of the code, not values it reads.
+
+    The heavy quantile, the class cuts, the reference terms of the heavy label, the
+    extra-week range of an overlay copy and the harm's start-immediately threshold are
+    fixed in the modules that use them.  The configuration states them so that the
+    protocol lock covers them; a file that states a different value would change
+    nothing at run time, so loading it is refused instead.
+    """
+    from spjf_guard.data.events import CLASS_CUT_QUANTILES, HEAVY_QUANTILE
+    from spjf_guard.experiment.metrics import STARTS_IMMEDIATELY_S
+    from spjf_guard.experiment.overlay import SHIFT_WEEKS_MAX
+
+    features, overlay, metrics = raw["features"], raw["overlay"], raw["metrics"]
+    pinned = {
+        "features.heavy_quantile": (features.get("heavy_quantile"), HEAVY_QUANTILE),
+        "features.class_cut_quantiles": (
+            tuple(features.get("class_cut_quantiles", ())),
+            CLASS_CUT_QUANTILES,
+        ),
+        "features.heavy_reference_semesters": (
+            list(features.get("heavy_reference_semesters", [])),
+            list(raw["semesters"]["train"]),
+        ),
+        "overlay.shift_weeks_max": (overlay.get("shift_weeks_max"), SHIFT_WEEKS_MAX),
+        "metrics.starts_immediately_s": (
+            metrics.get("starts_immediately_s"),
+            STARTS_IMMEDIATELY_S,
+        ),
+    }
+    wrong = [
+        f"{key}: file says {stated!r}, code uses {used!r}"
+        for key, (stated, used) in pinned.items()
+        if stated != used and not _close(stated, used)
+    ]
+    if wrong:
+        raise ConfigError(f"{path} disagrees with the code's constants: " + "; ".join(wrong))
+
+
+def _close(stated: Any, used: Any) -> bool:
+    """Equality up to float rounding, element-wise for tuples."""
+    try:
+        if isinstance(used, tuple):
+            return len(stated) == len(used) and all(
+                abs(float(a) - float(b)) < 1e-12 for a, b in zip(stated, used)
+            )
+        return abs(float(stated) - float(used)) < 1e-12
+    except (TypeError, ValueError):
+        return False

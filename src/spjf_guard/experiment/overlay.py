@@ -38,6 +38,11 @@ def base_shift(first_timestamp_s: float) -> float:
     return REFERENCE_MONDAY_S - monday
 
 
+SHIFT_WEEKS_MAX = 12
+"""Each copy is shifted by 0 to 11 extra whole weeks.  `configs/main.yaml` carries the
+same value as `overlay.shift_weeks_max`; `config.load` refuses a file that disagrees."""
+
+
 def overlay_entries(pool, copies: int, overlay: int, seed: int) -> list[tuple[str, int]]:
     """`copies` copies of the pool, copy-major, each with its own 0-11 extra whole weeks.
 
@@ -45,7 +50,9 @@ def overlay_entries(pool, copies: int, overlay: int, seed: int) -> list[tuple[st
     the one with c + 1 and the probe's work is monotone in the count.
     """
     rng = np.random.default_rng(seed * 100 + overlay)
-    return [(term, int(rng.integers(0, 12))) for _ in range(copies) for term in pool]
+    return [
+        (term, int(rng.integers(0, SHIFT_WEEKS_MAX))) for _ in range(copies) for term in pool
+    ]
 
 
 def superpose(entries, per_term: dict, arrival_key: str):
@@ -129,7 +136,12 @@ def copies_probe(
     """
     histogram = hour_histogram(per_term, arrival_key)
     lowest = min(offset for offset, _ in histogram.values())
-    span = max(offset + len(w) for offset, w in histogram.values()) - lowest + 12 * 168 + 1
+    span = (
+        max(offset + len(w) for offset, w in histogram.values())
+        - lowest
+        + SHIFT_WEEKS_MAX * 168
+        + 1
+    )
     totals = {o: np.zeros(span) for o in overlays}
     rngs = {o: np.random.default_rng(seed * 100 + o) for o in overlays}
     work: dict[int, list[float]] = {o: [] for o in overlays}
@@ -138,7 +150,7 @@ def copies_probe(
         for overlay in overlays:
             running = totals[overlay]
             for term in pool:
-                weeks = int(rngs[overlay].integers(0, 12))
+                weeks = int(rngs[overlay].integers(0, SHIFT_WEEKS_MAX))
                 offset, hours = histogram[term]
                 start = offset - lowest + weeks * 168
                 running[start : start + len(hours)] += hours
@@ -190,7 +202,7 @@ def _k1_candidates(pool, seed: int, repeats: int):
     """The pool listed `repeats` times in a drawn order, each copy with its week shift."""
     order = np.random.default_rng(seed).permutation(repeats * len(pool))
     listed = list(pool) * repeats
-    shifts = np.random.default_rng(seed + 1).integers(0, 12, repeats * len(pool))
+    shifts = np.random.default_rng(seed + 1).integers(0, SHIFT_WEEKS_MAX, repeats * len(pool))
     return [(listed[i], int(shifts[n])) for n, i in enumerate(order)]
 
 
@@ -209,7 +221,7 @@ class _SingleServerState:
         span = (
             max(offset + len(w) for offset, w in self.histogram.values())
             - self.lowest
-            + 12 * 168
+            + SHIFT_WEEKS_MAX * 168
             + 1
         )
         self.totals = np.zeros(span)

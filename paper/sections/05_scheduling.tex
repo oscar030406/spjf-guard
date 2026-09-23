@@ -33,7 +33,8 @@ empirically while keeping the features, model size and rolling-origin protocol o
 Section~\ref{sec:prediction} fixed. SPJF-E uses raw seconds with a Tweedie loss of
 power $1.5$, which accommodates mass near zero and a long right tail
 \cite{jorgensen1987edm,yang2018tweedieboost}; SPJF-log uses the same pipeline fitted
-by squared error on $\log(1+C)$ and then inverted.
+by squared error on $\log(1+C)$, and ranks by that fitted value, which orders jobs as
+its inverse would.
 % Source for the fitted Tweedie power and objective comparison:
 % evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1.
 

@@ -52,6 +52,17 @@ def test_a_missing_environment_placeholder_is_an_error(tmp_path, monkeypatch):
         cfgmod.load(copy)
 
 
+def test_a_configuration_that_restates_a_pinned_constant_wrongly_is_refused(tmp_path):
+    """Five keys are hashed by the lock but fixed in the code; a file that disagrees with
+    the code would change nothing at run time, so loading it must fail instead."""
+    text = CONFIG.read_text(encoding="utf-8")
+    assert "heavy_quantile: 0.95" in text
+    edited = tmp_path / "main.yaml"
+    edited.write_text(text.replace("heavy_quantile: 0.95", "heavy_quantile: 0.9"), "utf-8")
+    with pytest.raises(cfgmod.ConfigError, match="heavy_quantile"):
+        cfgmod.load(edited, expand_environment=False)
+
+
 def test_every_path_in_the_shipped_configuration_is_relative(cfg):
     """A path that is absolute, or that points into a temporary directory, would make
     the document describe one machine.  `data_path` anchors them at the repository."""

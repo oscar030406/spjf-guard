@@ -220,13 +220,22 @@ def _permutation(
     return permuted_exercise[exercise_code], permuted_assessment[assessment_code]
 
 
+HEAVY_QUANTILE = 0.95
+CLASS_CUT_QUANTILES = (1 / 3, 2 / 3)
+"""The heavy label's quantile and the class terciles.  `configs/main.yaml` carries the
+same values under `features.heavy_quantile` and `features.class_cut_quantiles`, and
+`config.load` refuses a file that disagrees, so the lock's hash of the configuration
+covers them without the code reading them at run time."""
+
+
 def heavy_threshold_and_cuts(cost_float32: np.ndarray, limit_s: float):
     """p95 of the executed work, and the terciles of its log, on the given rows."""
     capped = np.minimum(cost_float32, limit_s)
     log_capped = np.log1p(capped)
+    low, high = CLASS_CUT_QUANTILES
     return (
-        float(np.quantile(capped, 0.95)),
-        (float(np.quantile(log_capped, 1 / 3)), float(np.quantile(log_capped, 2 / 3))),
+        float(np.quantile(capped, HEAVY_QUANTILE)),
+        (float(np.quantile(log_capped, low)), float(np.quantile(log_capped, high))),
     )
 
 

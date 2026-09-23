@@ -140,10 +140,11 @@ jobs, heavy being the label Section~\ref{sec:prediction} defines.
 
 Improvements are also expressed as the fraction of the gap closed,
 \[
-  \frac{\overline{W}_{\mathrm{FCFS}} - \overline{W}_{P}}
-       {\overline{W}_{\mathrm{FCFS}} - \overline{W}_{\mathrm{SJF}}} ,
+  \frac{M_{\mathrm{FCFS}} - M_{P}}
+       {M_{\mathrm{FCFS}} - M_{\mathrm{SJF}}} ,
 \]
-where SJF sorts waiting jobs by their true service times. SJF on true sizes is a
+where $M_Q$ is the primary metric, $\mathrm{p99}_{\mathrm{dl}}$, under policy $Q$,
+and SJF sorts waiting jobs by their true service times. SJF on true sizes is a
 reference policy and not an optimum. It is not deployable, since $C_i$ is unknown at
 arrival, and it does not minimise any of the metrics above on a non-preemptive
 multiserver system. The ratio is unstable when its denominator is small, so we mark

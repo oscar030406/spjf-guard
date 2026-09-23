@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-23T07:37:52-04:00",
+  "written_at": "2026-09-23T08:43:35-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -654,7 +654,7 @@
       },
       {
         "path": "src/spjf_guard/config.py",
-        "sha256": "b3abfeb8c4afbdf5fc30ba9a0d9669801077c090c87a164c991a55399eab471b"
+        "sha256": "045e70f73df675ef06f20efe7d4c29f2fa6d098cbe63b6704b12dcf9a6c5591c"
       },
       {
         "path": "src/spjf_guard/data/__init__.py",
@@ -674,7 +674,7 @@
       },
       {
         "path": "src/spjf_guard/data/events.py",
-        "sha256": "ecb6976c304b3c6cf4bac01ae71200618c1e9d5cce2a6cffccb418a784ba3457"
+        "sha256": "1e97e13bc4263e5fe2a11506ed8866c34931b4b23371211b6428ebf59415ed63"
       },
       {
         "path": "src/spjf_guard/data/sealed.py",
@@ -706,7 +706,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/overlay.py",
-        "sha256": "3df7d213ec69f7d261891eb9663976ec09319a177f26ca1528386d2363fad9f5"
+        "sha256": "4ea7ac4aff0387ff2c85a957996ef7385c9bd44e700ce20d9c60cc7d23d02f25"
       },
       {
         "path": "src/spjf_guard/experiment/paper_tables.py",
@@ -794,7 +794,7 @@
       },
       {
         "path": "src/spjf_guard/sim/runner.py",
-        "sha256": "e51117e3778547a2cf7a16526ab780c6b7ba2d50256b7afc3dd3f7148ca4910c"
+        "sha256": "ba743787396147525b8ba1aadfa5306cffd564a7934f30d50199e18fa7851745"
       },
       {
         "path": "src/spjf_guard/sim/tightness.py",
@@ -854,7 +854,7 @@
       },
       {
         "path": "tests/test_experiment.py",
-        "sha256": "b332c83027c695bdd275dfd27baabd3c3526819f24548f27489be0f4730f6bff"
+        "sha256": "0dbce0ff763b77b6251e30933ead60f87fbc2e225629e112202228acca7f56a4"
       },
       {
         "path": "tests/test_feature_refine.py",
@@ -941,7 +941,7 @@
         "sha256": "7d80a03f4ab32976602f6a21a0d816316a1c1fb175faf9b62db7ea2e5ea54e4d"
       }
     ],
-    "digest": "58fb8de3d0d9c6f24b0c1da9b78dd67b3204f92052b802f3615edf80b7328d69"
+    "digest": "096ce97dc42d521aa71ea7616b8d3999c002a227af35d7019ecdaf89b594a5c5"
   },
   "inputs": {
     "artefacts": [
