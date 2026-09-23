@@ -1,3 +1,5 @@
+**English** | [简体中文](README.zh-CN.md)
+
 # Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking
 
 Code, derived tables and run logs for the manuscript *Prediction-Driven Non-Preemptive
@@ -36,8 +38,8 @@ The repository is the reproduction package, not a deployable scheduler.
 | `CONTEXT.md` | the glossary. One word per concept, used identically in the paper, the code, the configuration and the tables (in Chinese) |
 | `GENERATED.md` | every file produced by a script: source, regeneration command, check command (in Chinese) |
 
-`README.zh-CN.md` is the authors' working copy of this file, in Chinese, with the same
-commands.
+`README.zh-CN.md` is the Chinese version of this file, section for section, with the
+same commands.
 
 Two directories named in this file are not in the repository. `data/` holds the raw
 datasets and is not redistributed (below). `outputs/` holds the tables the pipeline
@@ -195,7 +197,6 @@ dirty tree, an uncommitted state or a failing gate; then run the sealed pool onc
 script, which sealed semesters were read, what was produced, who saw it, whether it
 affected the design. `docs/sealed_run_procedure.md` has the full command list, the
 per-step prerequisites, the runtime and disk cost, and what to do after a crash.
-`README.zh-CN.md` carries the same commands.
 
 The utilisation actually reached on the sealed semesters is reported as measured; the
 server count is not adjusted afterwards to hit a target, and the single-server copy count
