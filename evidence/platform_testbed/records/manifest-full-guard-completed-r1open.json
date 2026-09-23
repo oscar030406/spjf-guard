@@ -34,7 +34,7 @@
   "mix": null,
   "pattern": "guide,guide,blueprint,blueprint,blueprint,blueprint,blueprint,blueprint",
   "seed": 20260923,
-  "schedule": "D:\\UserData\\Desktop\\挑战杯\\experiments\\scheduling\\arrivals_deadline_burst_100.csv",
+  "schedule": "<platform-repo>\\experiments\\scheduling\\arrivals_deadline_burst_100.csv",
   "startedAtMs": 1790155313233,
   "finishedAtMs": 1790158081946,
   "wallSeconds": 2768.713
