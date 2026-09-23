@@ -1073,3 +1073,62 @@
   note        = {Revised 26 January 1996},
   x-verified  = {Verified and read in FULL TEXT 2026-09-21 from https://people.eecs.berkeley.edu/~istoica/papers/eevdf-tr-95.pdf (Ion Stoica's own page). Report number TR-95-22, Department of Computer Science, Old Dominion University, Norfolk, Virginia 23529-0162; the PDF carries the footnote "Revised January 26, 1996", so the report is 1995 and the posted revision is 1996. No DOI exists. The reference system is a FLUID-FLOW ideal (the resource granted in arbitrarily small intervals, equivalently quantum q to 0), with client i's instantaneous share its weight divided by the total weight of active clients; lag is the ideal entitled service minus the service actually received. THE BOUND: Theorem 1, equation (35), page 18, gives -r_max < lag_k < max(r_max, q) in a steady system, where r_max is the longest request the client issues and q the quantum, and the paper states these are asymptotically tight; Corollary 2, equation (42), page 20, gives -q < lag_k(t) < q at every t when no request of the client exceeds one quantum, and Lemma 5 shows plus or minus q is optimal for any proportional-share algorithm with quantum q. THE SETTING IS PREEMPTIVE: the resource is allocated in quanta and a client is preempted when its quantum expires or its shorter request is fulfilled; the paper names non-preemptible packets as the reason q cannot be driven to zero}
 }
+
+
+@misc{lpc_egee_trace,
+  author       = {Tsafrir, Dan},
+  title        = {The {LPC} Log},
+  howpublished = {\url{https://www.cs.huji.ac.il/labs/parallel/workload/l_lpc/}},
+  note         = {Parallel Workloads Archive; data provided by Emmanuel Medernach; accessed 2026-09-23},
+  x-verified   = {Verified against the official archive page via its 2015-09-14 Internet Archive capture. Page heading: The LPC Log; conversion attributed to Dan Tsafrir; data provided by Emmanuel Medernach. Serial jobs are described as plain FCFS throughout the logged period, with queue concurrency ceilings effective 7 March 2005 and priority bonuses effective only 1 June 2005}
+}
+
+% ========== 2026-09-23 independent-review additions ==========
+
+@article{duan1983smearing,
+  author  = {Duan, Naihua},
+  title   = {Smearing Estimate: A Nonparametric Retransformation Method},
+  journal = {Journal of the American Statistical Association},
+  volume  = {78},
+  number  = {383},
+  pages   = {605--610},
+  year    = {1983},
+  doi     = {10.1080/01621459.1983.10478017},
+  x-verified = {Verified 2026-09-23 from the Taylor and Francis publisher metadata and abstract: single author Naihua Duan, JASA 78(383):605--610, DOI. Reading depth: publisher abstract. The paper proposes a nonparametric smearing estimate for retransformation of a transformed-response regression and states consistency under mild conditions; no claim in the manuscript relies on a theorem number or a variance-only correction}
+}
+
+@article{schwiegelshohn2000fairness,
+  author  = {Schwiegelshohn, Uwe and Yahyapour, Ramin},
+  title   = {Fairness in Parallel Job Scheduling},
+  journal = {Journal of Scheduling},
+  volume  = {3},
+  number  = {5},
+  pages   = {297--320},
+  year    = {2000},
+  doi     = {10.1002/1099-1425(200009/10)3:5<297::AID-JOS50>3.0.CO;2-D},
+  x-verified = {Verified 2026-09-23 from the Wiley publisher page: two authors, Journal of Scheduling 3(5):297--320, first published 9 August 2000, DOI. Reading depth: publisher abstract for the journal article; the exact lambda-fair definition and PFCFS bounds were read in full in the corresponding chapter of Ramin Yahyapour's dissertation at https://eldorado.tu-dortmund.de/server/api/core/bitstreams/6974f397-737b-4646-9ce8-75cd1226ca5c/content . The dissertation labels the corresponding joint result Lemma 4; its numbering is not represented as journal numbering beyond what the independent review specifically checked}
+}
+
+@misc{grosof2019guardrails,
+  author       = {Grosof, Isaac and Scully, Ziv and Harchol-Balter, Mor},
+  title        = {Load Balancing Guardrails: Keeping Your Heavy Traffic on the Road to Low Response Times},
+  year         = {2019},
+  howpublished = {arXiv preprint arXiv:1905.03439},
+  eprint       = {1905.03439},
+  archiveprefix = {arXiv},
+  primaryclass = {cs.PF},
+  doi          = {10.48550/arXiv.1905.03439},
+  x-verified   = {Verified 2026-09-23 from arXiv metadata and full arXiv text: three authors in this order, submitted 9 May 2019, 31 pages, noted as to appear in ACM SIGMETRICS 2019. The abstract states that guardrails are a simple fix applicable to any dispatching policy and yield heavy-traffic optimal mean response time with SRPT at the servers. Cited as an arXiv preprint because a distinct archival proceedings record was not independently verified}
+}
+
+@article{ramadge1987supervisory,
+  author  = {Ramadge, P. J. and Wonham, W. M.},
+  title   = {Supervisory Control of a Class of Discrete Event Processes},
+  journal = {SIAM Journal on Control and Optimization},
+  volume  = {25},
+  number  = {1},
+  pages   = {206--230},
+  year    = {1987},
+  doi     = {10.1137/0325013},
+  x-verified = {Verified 2026-09-23 from the SIAM publisher page: P. J. Ramadge and W. M. Wonham, SIAM Journal on Control and Optimization 25(1):206--230, January 1987, DOI. Reading depth: publisher abstract. The abstract reduces supervisor existence to the largest controllable language contained in a legal language; the manuscript cites only this maximally permissive supervisory-control framing}
+}

@@ -381,3 +381,89 @@ def visibility_audit_table(rows: list[dict]) -> str:
         "Exposure of original-clock outcome histories under replay. Counts are conditional "
         "on an affected job; unreplayed histories have no job in the same replay pool.",
     )
+
+
+EXACT_POLICIES = ("SPJF-E", "Guard(300)", "Guard(600)", "Guard(1200)", "Aging(600)")
+
+
+def exact_visibility_table(rows: list[dict]) -> str:
+    """Original versus converged policy-specific scores under every frozen policy.
+
+    Print the full predeclared family without choosing a policy from its outcomes.
+    """
+    body: list[str] = []
+    for level in sorted({int(row["level"]) for row in rows}):
+        block = [row for row in rows if int(row["level"]) == level]
+        body.append(rf"\multicolumn{{8}}{{l}}{{{_load_header(block[0])}}} \\")
+        keyed = {
+            (row.get("base_policy") or row["policy"].split("|", 1)[0], row["variant"]): row
+            for row in block
+        }
+        for policy in EXACT_POLICIES:
+            for variant in ("original", "exact"):
+                row = keyed.get((policy, variant))
+                if row is None:
+                    continue
+                body.append(
+                    f" & {policy_label(policy):<22s} & {variant:<9s} & "
+                    + " & ".join(
+                        [
+                            _cell(float(row["p99_dl_s"]), 2),
+                            _cell(float(row["gap_closed"]), 3, _interval(row, "gap_closed")),
+                            _cell(float(row["max_excess_s"]), 1),
+                            _cell(float(row["harm_s"]), 1),
+                            _cell(float(row["fired_pct"]), 2),
+                        ]
+                    )
+                    + r" \\"
+                )
+        body.append(RULE)
+    if body and body[-1] == RULE:
+        body.pop()
+    return _table(
+        "lllrlrrr",
+        r"Load & Policy & Score visibility & p99$_{\mathrm{dl}}$ & Gap closed & "
+        r"Max exc. & Harm & Fired (\%)",
+        body,
+        "tab:exact_visibility",
+        "Original-clock and converged policy-specific scores under the frozen policies.",
+    )
+
+
+def same_copy_exposure_table(rows: list[dict]) -> str:
+    """How often same-copy withholding changes a score and its dispatch-queue rank."""
+    body: list[str] = []
+    order = ("FCFS", *EXACT_POLICIES)
+    for level in sorted({int(row["level"]) for row in rows}):
+        block = {row["policy"]: row for row in rows if int(row["level"]) == level}
+        for policy in order:
+            row = block.get(policy)
+            if row is None:
+                continue
+            body.append(
+                f"{_cell(level, 0)} & {policy_label(policy):<22s} & "
+                + " & ".join(
+                    [
+                        _cell(100.0 * float(row["affected_share"]), 2),
+                        _cell(100.0 * float(row["deadline_affected_share"]), 2),
+                        _cell(float(row["records_mean"]), 2),
+                        _cell(float(row["records_p99"]), 1),
+                        _cell(float(row["abs_delta_score_p99"]), 3),
+                        _cell(float(row["abs_rank_displacement_p99"]), 1),
+                        _cell(float(row["abs_rank_displacement_max"]), 0),
+                    ]
+                )
+                + r" \\"
+            )
+        body.append(RULE)
+    if body and body[-1] == RULE:
+        body.pop()
+    return _table(
+        "llrrrrrrr",
+        r"Level & Replay policy & Affected (\%) & Deadline (\%) & Records mean & "
+        r"Records p99 & $|\Delta s|$ p99 & $|\Delta r|$ p99 & $|\Delta r|$ max",
+        body,
+        "tab:same_copy_exposure",
+        "Same-copy outcome withholding and score-rank displacement. Statistics are averaged "
+        "over overlays, except the maximum displacement, which is the largest over overlays.",
+    )

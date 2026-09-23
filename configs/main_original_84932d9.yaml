@@ -98,27 +98,6 @@ features:
       feature_group: STATIC
       history_scope: global
       eligible_results_only: false
-  # Exact replay visibility is a separate, policy-specific experiment.  It starts from
-  # the frozen original SPJF-E model and monotonically withholds only same-copy outcomes
-  # that the current replay says were not complete at the target job's arrival.  Nothing
-  # in this block changes the conservative headline above before the assessment is run.
-  exact_visibility:
-    algorithm: monotone_per_job_withholding
-    base_score: spjf_e
-    model_weights: frozen
-    own_class_term_copy_outcome_rule: "completion_j <= replay_arrival_i"
-    external_history_clock: original_relative
-    same_semester_other_class_history: exogenous
-    alternative_sensitivity: drop_same_semester_other_class_records
-    sensitivity_policies: [Guard(600)]
-    terminal_assertion: no_new_violation
-    policies: [SPJF-E, Guard(300), Guard(600), Guard(1200), Aging(600)]
-    fixed_lags_s: [60.0, 300.0, 900.0, 3600.0]
-    selection_assessment: retained_original_due_cost
-    selection_cost_seed: 20260922
-    reselection_budget_hours: 8.0
-    development_overlays: [0, 1, 2, 3, 4]
-    development_levels: [0, 1, 2]
   # the heavy label and the class cut-offs are refit per target term with no look-ahead
   heavy_quantile: 0.95
   heavy_reference_semesters: ["2018-1", "2018-2", "2019-1", "2019-2"]
@@ -215,9 +194,6 @@ scheduling:
   corrupted_scores: [reversed, random, longest_one_percent_called_shortest]
   aging_baseline:
     label: Aging(600)
-    # Preserve the committed reference rows and the original validation selection.
-    # The policy-specific exact runner explicitly substitutes each comparison score.
-    ranking_score: spjf_e_conservative
     guarantee: none
     priority: "predicted_cost - credit_per_s * current_age_s"
     reference_promise_s: 600.0
@@ -317,20 +293,4 @@ run:
     - visibility_paired_differences.csv
     - visibility_exposure.csv
     - visibility_waits_and_lag.csv
-    - manifest.json
-  # Policy-specific exact visibility.  The number of affected jobs is data-dependent,
-  # so `deltas/*.npz` are named and hashed by exact_delta_manifest.csv rather than being
-  # placed in this exact-name list.
-  sealed_consistent_visibility_tables:
-    - exact_cells.csv
-    - exact_comparison.csv
-    - exact_passes.csv
-    - same_copy_exposure_cells.csv
-    - same_copy_exposure.csv
-    - attribution_cells.csv
-    - attribution_comparison.csv
-    - exact_delta_manifest.csv
-    - exact_costs.csv
-    - exact_sensitivity_cells.csv
-    - exact_sensitivity_comparison.csv
     - manifest.json

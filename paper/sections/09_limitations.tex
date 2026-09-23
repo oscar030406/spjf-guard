@@ -5,15 +5,19 @@
 
 \paragraph{The shared pool is our design.}
 CodeBench gives each logged-in student a private container, so on the real
-platform one job never waits behind another and there is no shared
+platform these logs do not identify a shared
 judging queue \cite{codebench_dataset}. We use its logs as a demand trace: the
-arrival instants and the per-job costs are recorded; the server pool, the
+arrivals are reconstructed and execution durations are recorded; the server pool, the
 queue and the scheduler are ours. Section~\ref{sec:data} sets out what supports
 that design, that a fixed pool of judge hosts on one queue is a standard
 deployment \cite{domjudge_manual,peveler2019sandbox} and that pooling replaces
 \devnum{1{,}636} concurrent containers with \devnum{14} servers on the same
 demand \cite{smith1981pooling}. What it cannot support is any statement about
-waiting on the real platform, the pooled side being simulated throughout. The
+waiting on the real platform. The physical timed-work experiment demonstrates an
+executing queue and guard, but its selected overlay window, empty initial state and
+requested sleep durations do not validate transport of submitted-program costs. Its
+rule-conformance checks coexist with a worse guarded p99 and large per-job deviations
+from the ideal simulator (Supplementary Section~S6). The
 container counts belong to the 44-fold overlay and to no deployment, and
 a container also serves the student's editing session, so the ratio is not a
 cost saving.
@@ -27,9 +31,13 @@ irrespective of system state, so a scheduler is neither rewarded with the work
 it would attract nor punished by the users it would drive away
 \cite{shmueli2009simulation}. We cannot restore that feedback, our logs
 carrying no session boundaries, no think times and no resubmission semantics,
-but its direction is known: a closed loop returns work to a service that
-answers quickly, so the omission suppresses the benefit of the policies that
-shorten waits, and our reported gains are a lower bound. Replaying into a
+and its direction is not identified. Faster replies can induce more submissions,
+change their costs and alter which jobs enter a deadline-window quantile. The results
+are therefore conditional on fixed offered work, rather than lower bounds on
+closed-loop benefit. Shmueli and Feitelson distinguish increased productivity from
+improvement in conventional waiting metrics \cite{shmueli2009simulation}; the exact
+feedback counterexample in Supplementary Section~S6 likewise shows that a scheduling
+advantage can disappear or reverse. Replaying into a
 differently sized pool is established practice
 \cite{harcholbalter2003sizebased}, and the width coupling that distorts
 parallel-job replays does not arise here, a job occupying one server whatever
@@ -64,20 +72,23 @@ routing device and the work is redone on the next host, whereas in a judging que
 kill is terminal.
 
 \paragraph{Two applicability conditions, each with traces that fail it.}
-The first is that $L$ be comparable to the waits that matter, and four of the six
-workloads fail it: the first-come first-served p99 wait, in multiples of $L$, is \devnum{0.021} on ACcoding, \devnum{0.136} on the
+The first asks whether the uniform certificate is informative at the waits that
+matter. Four of the original six workloads fail this usefulness screen: the first-come first-served p99 wait, in multiples of $L$, is \devnum{0.021} on ACcoding, \devnum{0.136} on the
 compute farm, \devnum{0.373} on continuous-integration pool~B and \devnum{1.78} on
-pool~A, against the floor of about
-\devnum{3}$L$ below which no promise can be stated. On the Intel
+pool~A, against the additive term of about
+\devnum{3}$L$ in the uniform certificate. This comparison does not establish
+impossibility below that term for a restricted base policy or workload. On the Intel
 Netbatch compute farm \cite{netbatch2012trace,shai2014netbatch} the service cap
 is \devnum{5.7} days while the first-come first-served p99 wait in the worst
-window we build is \devnum{18.7} hours, so the smallest expressible promise is
-about \devnum{17} days and the guard never fires at any admissible budget;
+window we build is \devnum{18.7} hours, so the uniform additive term is
+about \devnum{17} days and the guard never fires at any of the positive budgets tested;
 predicted-cost ordering also makes the p99 wait worse than first-come
 first-served there under sustained overload. The guard results we report on the
-four say what the ordering mechanism does there; none of them reports a promise.
-The second condition is that the cost
-distribution be heavy-tailed. On the two Firefox CI hardware pools
+four measure the ordering mechanism there; the uniform bound is too coarse to
+provide a useful promise at the reported tail scale.
+The second is an empirical opportunity screen: concentrated service costs can
+make reordering useful. A heavy tail is not a theorem assumption or a necessary
+condition for a benefit. On the two Firefox CI hardware pools
 \cite{taskcluster_docs,treeherder_docs} the longest \devnum{1\%} of jobs carry
 \devnum{3.4\%} and \devnum{5.2\%} of the work, at coefficients of variation
 \devnum{0.61} and \devnum{0.87}, and there even true-size ordering makes the
@@ -85,7 +96,9 @@ p99 wait worse than first-come first-served on three of the four windows we
 ran. Section~\ref{sec:exp_cross} gives both conditions in numbers.
 
 \paragraph{The guarantee is per job, not per quantile.}
-The bound holds for each job separately and says nothing about a percentile. A
+On a fixed job subset, the pointwise bound implies
+$Q_\alpha(W_P)\le Q_\alpha(W_{\mathrm{FCFS}})+G$ by monotonicity of quantiles.
+It does not imply an improvement in that percentile. A
 guarded run can have a worse deadline-window p99 than the baseline its guarantee
 is stated against, by as much as the promise itself, and Table~\ref{tab:adv}
 shows it doing so under two of the three corrupted scores at the busiest load
@@ -103,8 +116,12 @@ different point of the same grid, and five overlays are week-shifts of the
 same class-terms, so they are not five independent tests. We do not describe any of
 these parameters as validated. The guarantee does not depend
 on the parameters being well chosen; only the benefit does. The sealed semesters
-are opened once, after the method, the parameters and the primary metric have
-been frozen, and their numbers are reported separately.
+will be opened once, after the method, the parameters and the primary metric have
+been frozen, and their numbers will be reported separately; that evaluation is not
+completed in the results printed here. The second judging platform's sealed id block
+and the corroborating trace's sealed year are not opened here: the frozen pipeline
+covers the main trace alone, and opening them would need a second pipeline under the
+same lock, which we did not build.
 
 \paragraph{The budget shape is selected on one set of cells, and does not always
 transfer.} The promise holds for any budget under the cap, so nothing about the
@@ -129,12 +146,11 @@ duration for one evaluation that includes interpreter start-up. Runs of the
 same student that overlap stretch one another, and between \devnum{38\%} and
 \devnum{79\%} of jobs longer than a second end in the same second as
 another block of that student, so part of the recorded cost is contention we
-then re-impose inside the pool. How the platform enforces its
-\devnum{60}-second limit is documented nowhere we could find. We wrote to the
+then re-impose inside the pool. The observed \devnum{60}-second regime is not documentation of an enforced timeout;
+how the platform enforces such a limit is undocumented in the sources we found. We wrote to the
 maintainers about both points and had no answer.
 ACcoding \cite{accoding2024} records no submission timestamps, so its arrival
-process is synthetic. The Firefox CI check, the one trace whose queue waits are
-themselves recorded, fits an effective capacity and a setup term, both refitted
+process is synthetic. The Firefox CI checks use recorded queue waits and fit an effective capacity and a setup term, both refitted
 on one chronological part of each window and tested on the other; out of sample
 the mean wait, the per-hour profile and the per-job ordering survive and the
 90th percentile does not, landing up to \devnum{21\%} from the recorded one and
@@ -144,17 +160,37 @@ one \devnum{7}-day window of two pools, not a different cluster, quarter or
 workload, and capacity is held constant over the test part although the real
 machine count varies.
 
+\paragraph{History availability and the recorded-queue counterexample.}
+Original-clock scores may use outcomes that are still pending in the replay.
+The conservative headline reduces history and changes fitted models as well as
+release delay, so its difference from the original score does not identify a
+queue-delay effect alone. The pending exact variant certifies availability for
+its final same-copy replay, not an online fixed point or a deployment with globally
+shared copied-user state (Section~\ref{sec:exp_visibility}).
+
+LPC-EGEE provides both recorded waits and concentrated costs, but the fitted FCFS
+approximation underestimates chronological-test mean waits by \devnum{24\%} and
+\devnum{39\%} on its two physical partitions, with hourly correlations of
+\devnum{0.44} and \devnum{0.40}. We therefore treat its policy replays as
+conditional counterfactuals rather than validated estimates of deployment benefit.
+Its archive describes serial-job FCFS ordering; queue concurrency ceilings and
+middleware omitted by the replay prevent identifying its recorded waits with the
+theoretical FCFS model. The work-budget guards never fire at the tested promises.
+% Sources: prechecks/lpc_egee/validation.csv, fitted/test rows, simulated/recorded
+% mean ratios and hourly_pearson; guard_dispatches.csv, Constant/Age forced_sum=0.
+
 \paragraph{Not studied.}
 Preemption is outside the model, so nothing here applies to a system that can
 checkpoint or suspend. The wrapper applies unchanged to a learned or
 reinforcement-learned base policy, its bound assuming nothing about the base,
-but we did not test one. Capacity is fixed throughout, so this is not a
-capacity-planning study. The reported runs compare policies at a common set of
+but we did not test one. Capacity is fixed within each replay; the capacity sweep is a sensitivity to that
+choice, not an estimate of the original platform's capacity or a capacity-planning study. The reported runs compare policies at a common set of
 enqueue instants and do not charge the cost of computing features and running the
 predictor. Section~\ref{sec:prediction} measures that cost and charges it in a
 sensitivity, where it moves the closed gap by less than \devnum{0.001} at every
 load; what is missing is not the latency but the rest of an end-to-end system.
-Nothing here was deployed. A deployed serverless scheduler of the kind this
+The local timed-work service was executed, but there was no prospective production
+deployment or measurement of user feedback. A deployed serverless scheduler of the kind this
 wrapper is meant for already exists: ALPS learns a per-function rank and a
 time-slice cap from an offline shortest-remaining-processing-time replay and
 leans on the Linux completely fair scheduler to keep any one invocation from
@@ -177,11 +213,15 @@ per-job guarantee. Counting overtakes is not necessary for such a guarantee, and
 buys one only at the worst-case charge of the time limit per pass, which on our
 traces overstates the work that actually passes by one to two orders of
 magnitude. The wrapper built on it holds every job to a promise the
-operator states in seconds, whatever the predictor does, at a cost of about an
-eighth of the gap predicted-cost ordering closes at the busiest load we simulate
-and at a promise of ten time limits. The method needs a time limit comparable to
-the waits at issue and a heavy-tailed cost distribution, and four of our six
-workloads fail the first of those.
+operator states in seconds, whatever the predictor does. Under conservative
+visibility, Guard($\devnum{600}$) closes $\devnum{0.429}$ of the reference gap at the
+busiest load, against $\devnum{0.670}$ for unguarded ordering. These are development
+results conditional on the constructed demand and information protocol.
+Four of the original six workloads have tail waits too short relative to $L$ for the
+uniform certificate to be useful; concentration of job costs is an empirical
+opportunity for reordering, not a necessity claim.
+% Source: outputs/dev_visibility/visibility_comparison.csv, level=2,
+% Guard(600) and SPJF-E, gap_closed.
 
 Two questions are left open. The identity is stated in the dispatch-sequence
 currency, where the constant is exactly determined in both directions; under the

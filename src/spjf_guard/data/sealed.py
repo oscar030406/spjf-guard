@@ -45,6 +45,11 @@ DEVELOPMENT_SEMESTERS = (
 
 LOG_RELATIVE_PATH = Path("docs") / "sealed_access_log.md"
 
+CONFIG_SNAPSHOT_PATHS = (
+    Path("configs") / "main_original_84932d9.yaml",
+    Path("configs") / "visibility_development_20260922.yaml",
+)
+"""Archived ordinary configurations that the frozen protocol must preserve."""
 
 class SealedDataError(RuntimeError):
     """Raised when a sealed term, id block or academic year would be read."""
@@ -85,14 +90,113 @@ def frozen_lock(project_root: Path) -> Path | None:
     return lock if lock.is_file() else None
 
 
+def _valid_sha256(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _code_complaints(document: dict) -> list[str]:
+    recorded = document.get("code")
+    if not isinstance(recorded, dict):
+        return ["the lock has no code manifest"]
+    if not isinstance(recorded.get("files"), list) or not _valid_sha256(recorded.get("digest")):
+        return ["the lock has an incomplete code manifest"]
+    return []
+
+
+def _config_complaints(document: dict) -> list[str]:
+    recorded = document.get("config")
+    if not isinstance(recorded, dict) or recorded.get("path") != "configs/main.yaml":
+        return ["the lock does not name configs/main.yaml"]
+    if not _valid_sha256(recorded.get("sha256")):
+        return ["the lock has no configs/main.yaml digest"]
+    return []
+
+
+def _snapshot_complaints(document: dict) -> list[str]:
+    recorded = document.get("config_snapshots")
+    if not isinstance(recorded, list) or any(not isinstance(entry, dict) for entry in recorded):
+        return ["the lock has no archived-configuration manifest"]
+    by_path = {entry.get("path"): entry for entry in recorded}
+    expected = {str(path).replace("\\", "/") for path in CONFIG_SNAPSHOT_PATHS}
+    if set(by_path) != expected or len(recorded) != len(expected):
+        return ["the archived-configuration manifest has missing or extra paths"]
+    invalid = [
+        path
+        for path, entry in by_path.items()
+        if not isinstance(entry.get("present"), bool)
+        or (entry["present"] and not _valid_sha256(entry.get("sha256")))
+        or (not entry["present"] and entry.get("sha256") is not None)
+    ]
+    return (
+        [f"the archived-configuration manifest has invalid entries {invalid}"]
+        if invalid
+        else []
+    )
+
+
+def _sealed_hash_complaints(document: dict) -> list[str]:
+    entries = document.get("sealed_input_hashes")
+    if not isinstance(entries, list) or not entries:
+        return ["the lock has no sealed input hashes"]
+    invalid = [
+        entry
+        for entry in entries
+        if not isinstance(entry, dict)
+        or not isinstance(entry.get("path"), str)
+        or not _valid_sha256(entry.get("sha256"))
+        or not isinstance(entry.get("bytes"), int)
+        or entry["bytes"] < 0
+    ]
+    if invalid:
+        return ["the lock has an incomplete sealed input hash entry"]
+    return []
+
+
+def frozen_lock_complaints(project_root: Path, document: dict) -> list[str]:
+    """Why a lock cannot release data, without reading or hashing any sealed input."""
+    del project_root
+    complaints = []
+    if document.get("status") != "frozen":
+        complaints.append("protocol_lock.json does not have status=frozen")
+    commit = document.get("commit")
+    valid_commit = (
+        isinstance(commit, str)
+        and len(commit) == 40
+        and all(character in "0123456789abcdef" for character in commit)
+    )
+    if not valid_commit:
+        complaints.append("the lock has no valid frozen commit")
+    complaints += _sealed_hash_complaints(document)
+    complaints += _config_complaints(document)
+    complaints += _snapshot_complaints(document)
+    complaints += _code_complaints(document)
+    return complaints
+
+
 def decide(project_root: Path, unseal: bool) -> AccessDecision:
     """Whether sealed material may be read right now."""
-    lock = frozen_lock(project_root)
+    root = Path(project_root)
+    lock = frozen_lock(root)
     if lock is None:
         return AccessDecision(False, "no frozen protocol_lock.json exists")
     if not unseal:
         return AccessDecision(False, "the --unseal flag was not given", lock)
-    return AccessDecision(True, "frozen protocol lock present and --unseal given", lock)
+    try:
+        document = json.loads(lock.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        return AccessDecision(
+            False, f"protocol_lock.json cannot be read ({type(exc).__name__})", lock
+        )
+    if not isinstance(document, dict):
+        return AccessDecision(False, "protocol_lock.json is not a JSON object", lock)
+    complaints = frozen_lock_complaints(root, document)
+    if complaints:
+        return AccessDecision(False, "; ".join(complaints), lock)
+    return AccessDecision(True, "validated frozen protocol lock and --unseal given", lock)
 
 
 def guard_semesters(semesters, project_root: Path, unseal: bool = False) -> None:
@@ -109,8 +213,8 @@ def guard_semesters(semesters, project_root: Path, unseal: bool = False) -> None
     if not decision.permitted:
         raise SealedDataError(
             f"refusing to read the sealed term(s) {list(sealed)}: {decision.reason}. "
-            "Freeze the protocol first (scripts/make_protocol_lock.py, then move the "
-            "draft to protocol_lock.json) and pass --unseal."
+            "Freeze the protocol with scripts/freeze_protocol.py --dry-run followed by "
+            "scripts/freeze_protocol.py --yes, then pass --unseal."
         )
 
 

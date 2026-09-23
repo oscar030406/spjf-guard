@@ -11,9 +11,11 @@ are described in Section~\ref{sec:data}.
 
 \subsection{Two Targets}
 
-A scheduler and an evaluation want different things from the same model. Waiting time is
-additive in realised service, so the quantity that belongs in a ranking score is the
-conditional mean $\mathbb{E}[C_i \mid x_i]$, and Section~\ref{sec:rank} fits it directly.
+A scheduler and an evaluation want different things from the same model. The conditional
+mean $\mathbb{E}[C_i \mid x_i]$ is the single-server pairwise-interchange target and is
+the candidate score fitted in Section~\ref{sec:rank}; that section also explains why the
+argument does not establish optimality on multiple servers, where we evaluate the order
+empirically.
 For comparing predictors we also need a target that stays interpretable when the mix of
 jobs shifts between periods, so we score each model on a binary label. A job is
 \emph{heavy} when its executed cost $C_i$ exceeds the 95th percentile of the training

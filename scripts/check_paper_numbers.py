@@ -3,7 +3,8 @@
     uv run python scripts/check_paper_numbers.py [--paper paper] \
         [--dev-dir outputs/dev_tables] [--package-dir outputs/paper_tables] \
         [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
-        [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] [--only A]
+        [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] \
+        [--dev-exact-dir <dir>] [--sealed-exact-dir <dir>] [--only A]
 
 `check_generated.py --only paper_numbers` asks a different question: whether every number
 in the paper has *some* stated source.  This script asks whether the numbers that claim
@@ -71,6 +72,12 @@ PACKAGE_FILE = {
     "tab:k1": "tab_k1.tex",
     "tab:resid": "tab_resid.tex",
 }
+
+EXACT_PACKAGE_FILE = {
+    "tab:exact_visibility": "tab_exact_visibility.tex",
+    "tab:same_copy_exposure": "tab_same_copy_exposure.tex",
+}
+"""Optional exact-policy tables.  They are checked only after their CSV directory exists."""
 
 EXPERIMENTS = "sections/08_experiments.tex"
 LIMITATIONS = "sections/09_limitations.tex"
@@ -905,12 +912,95 @@ def check_sealed_tables(paper: Path, package_dir: Path, labels, cache=None) -> l
     return complaints
 
 
+def load_exact_source(exact_dir: Path) -> tuple[dict[str, list[dict]], list[str]]:
+    """Load both required exact CSVs, reporting protocol errors as complaints."""
+    rows: dict[str, list[dict]] = {}
+    complaints: list[str] = []
+    sources = {
+        "tab:exact_visibility": exact_dir / "exact_comparison.csv",
+        "tab:same_copy_exposure": exact_dir / "same_copy_exposure.csv",
+    }
+    for label, path in sources.items():
+        if not path.is_file():
+            complaints.append(f"explicit exact source is missing required file: {path}")
+            rows[label] = []
+            continue
+        rows[label] = read_rows(path, optional=True)
+        if not rows[label]:
+            complaints.append(f"explicit exact source has no data rows: {path}")
+    return rows, complaints
+
+
+def check_exact_tables(
+    paper: Path,
+    package_dir: Path,
+    exact_dir: Path,
+    *,
+    sealed: bool = False,
+    cache=None,
+    source_rows: dict[str, list[dict]] | None = None,
+) -> list[str]:
+    """Exact tables against their CSV recipe and, when pasted, the paper.
+
+    Calling this function means the exact source was explicitly selected, so both source
+    CSVs are mandatory. A paper copy is compared value-for-value when present.
+    """
+    from emit_paper_tables import as_sealed
+    from spjf_guard.experiment import paper_tables as pt
+
+    rows, source_complaints = (
+        load_exact_source(exact_dir) if source_rows is None else (source_rows, [])
+    )
+    builders = {
+        "tab:exact_visibility": pt.exact_visibility_table,
+        "tab:same_copy_exposure": pt.same_copy_exposure_table,
+    }
+    complaints = list(source_complaints)
+    cache = {} if cache is None else cache
+    macro = SEALEDNUM if sealed else DEVNUM
+    suffix = SEALED_SUFFIX if sealed else ""
+    for label, source_rows in rows.items():
+        if not source_rows:
+            continue
+        expected = builders[label](source_rows)
+        if sealed:
+            expected = as_sealed(expected)
+        filename = EXACT_PACKAGE_FILE[label].replace(".tex", f"{suffix}.tex")
+        path = package_dir / filename
+        if not path.is_file():
+            complaints.append(
+                f"{filename} is missing; run emit_paper_tables.py with the exact dir"
+            )
+            continue
+        actual = path.read_text(encoding="utf-8")
+        if actual != expected:
+            complaints.append(f"{filename} does not match the exact CSV recipe")
+            continue
+        paper_label = label + suffix
+        found = _one_body(paper, cache, paper_label)
+        if found is None:
+            print(f"   {paper_label:28s} not in the paper yet, skipped")
+            continue
+        ours = Counter(
+            normalise(value) for value in macro.findall(table_body(actual, paper_label))
+        )
+        theirs = Counter(normalise(value) for value in macro.findall(found[0]))
+        extra, missing = +(ours - theirs), +(theirs - ours)
+        if extra:
+            complaints.append(f"{paper_label}: the paper does not print {dict(extra)}")
+        if missing:
+            complaints.append(f"{paper_label}: the package does not print {dict(missing)}")
+    return complaints
+
+
 def check_sealed_prose(
     paper: Path,
     predictor: list[dict],
     visibility_comparison: list[dict],
     visibility_exposure: list[dict],
     cache=None,
+    exact_comparison: list[dict] | None = None,
+    exact_exposure: list[dict] | None = None,
 ) -> list[str]:
     """D2: every sealed figure in prose comes from a pinned sealed output.
 
@@ -918,17 +1008,27 @@ def check_sealed_prose(
     text, and that text is read wherever it sits.
     """
     from emit_paper_tables import (
+        exact_exposure_values,
+        exact_values,
         predictor_values,
         visibility_exposure_values,
         visibility_values,
     )
 
-    if not (predictor or visibility_comparison or visibility_exposure):
+    if not (
+        predictor
+        or visibility_comparison
+        or visibility_exposure
+        or exact_comparison
+        or exact_exposure
+    ):
         return []
     values: dict[str, str] = {}
     predictor_values(predictor, values)
     visibility_values(visibility_comparison, values, "sealed_visibility")
     visibility_exposure_values(visibility_exposure, values, "sealed_visibility")
+    exact_values(exact_comparison or [], values, "sealed_consistent_visibility")
+    exact_exposure_values(exact_exposure or [], values, "sealed_consistent_visibility")
     known = {normalise(v) for v in values}
     printed, stray = 0, []
     for name, text in _running_text(paper, {} if cache is None else cache).items():
@@ -938,10 +1038,11 @@ def check_sealed_prose(
                 stray.append((name, normalise(value)))
     print(
         f"   sealed prose       {printed - len(stray)} of {printed} sealed figures"
-        f" come from predictor or visibility outputs"
+        f" come from predictor, visibility, or exact outputs"
     )
     return [
-        f"{name}: sealed figure {value} is not in a sealed predictor or visibility output"
+        f"{name}: sealed figure {value} is not in a sealed predictor, visibility, "
+        "or exact output"
         for name, value in stray
     ]
 
@@ -960,34 +1061,65 @@ def run(
     sealed_k1: Path | None = None,
     sealed_predictor: Path | None = None,
     sealed_visibility: Path | None = None,
+    dev_exact: Path | None = None,
+    sealed_exact: Path | None = None,
 ) -> list[str]:
     """Every check that `only` allows; returns the complaints, empty when the paper agrees."""
     cache: dict = {}
     complaints: list[str] = []
+    dev_exact_rows: dict[str, list[dict]] = {}
+    sealed_exact_rows: dict[str, list[dict]] = {}
+    if dev_exact is not None:
+        dev_exact_rows, source_complaints = load_exact_source(dev_exact)
+        complaints += source_complaints
+    if sealed_exact is not None:
+        sealed_exact_rows, source_complaints = load_exact_source(sealed_exact)
+        complaints += source_complaints
     residuals = resid_table_rows(read_rows(dev / "identity_residuals.csv"))
     if only in (None, "A"):
         complaints += check_tables(paper, package_dir, residuals, cache)
+        if dev_exact is not None:
+            complaints += check_exact_tables(
+                paper,
+                package_dir,
+                dev_exact,
+                cache=cache,
+                source_rows=dev_exact_rows,
+            )
     if only in (None, "B"):
         complaints += check_recomputed(paper, expectations(dev), cache)
     if only in (None, "C"):
         complaints += check_sourced(paper, package_dir, cache)
-    if only in (None, "D") and sealed is not None:
-        k1 = read_rows((sealed_k1 or sealed / "k1") / "main_table.csv", optional=True)
-        labels = [t for t in TABLES if t != "tab:k1" or k1]
-        complaints += check_sealed_tables(paper, package_dir, labels, cache)
-        complaints += check_sealed_prose(
-            paper,
-            read_rows(sealed_predictor / "predictor_metrics.csv", optional=True)
-            if sealed_predictor
-            else [],
-            read_rows(sealed_visibility / "visibility_comparison.csv", optional=True)
-            if sealed_visibility
-            else [],
-            read_rows(sealed_visibility / "visibility_exposure.csv", optional=True)
-            if sealed_visibility
-            else [],
-            cache,
-        )
+    if only in (None, "D"):
+        if sealed is not None:
+            k1 = read_rows((sealed_k1 or sealed / "k1") / "main_table.csv", optional=True)
+            labels = [t for t in TABLES if t != "tab:k1" or k1]
+            complaints += check_sealed_tables(paper, package_dir, labels, cache)
+        if sealed_exact is not None:
+            complaints += check_exact_tables(
+                paper,
+                package_dir,
+                sealed_exact,
+                sealed=True,
+                cache=cache,
+                source_rows=sealed_exact_rows,
+            )
+        if any((sealed, sealed_predictor, sealed_visibility, sealed_exact)):
+            complaints += check_sealed_prose(
+                paper,
+                read_rows(sealed_predictor / "predictor_metrics.csv", optional=True)
+                if sealed_predictor
+                else [],
+                read_rows(sealed_visibility / "visibility_comparison.csv", optional=True)
+                if sealed_visibility
+                else [],
+                read_rows(sealed_visibility / "visibility_exposure.csv", optional=True)
+                if sealed_visibility
+                else [],
+                cache=cache,
+                exact_comparison=sealed_exact_rows.get("tab:exact_visibility", []),
+                exact_exposure=sealed_exact_rows.get("tab:same_copy_exposure", []),
+            )
     return complaints
 
 
@@ -1000,6 +1132,8 @@ def main() -> int:
     ap.add_argument("--sealed-k1-dir", type=Path, default=None, help="default: <sealed>/k1")
     ap.add_argument("--sealed-predictor-dir", type=Path, default=None)
     ap.add_argument("--sealed-visibility-dir", type=Path, default=None)
+    ap.add_argument("--dev-exact-dir", type=Path, default=None)
+    ap.add_argument("--sealed-exact-dir", type=Path, default=None)
     ap.add_argument("--only", choices=("A", "B", "C", "D"))
     args = ap.parse_args()
 
@@ -1012,6 +1146,8 @@ def main() -> int:
         args.sealed_k1_dir,
         args.sealed_predictor_dir,
         args.sealed_visibility_dir,
+        args.dev_exact_dir,
+        args.sealed_exact_dir,
     )
     for complaint in complaints:
         print(f"   FAIL {complaint}")

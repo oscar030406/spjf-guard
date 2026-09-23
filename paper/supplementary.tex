@@ -8,6 +8,13 @@
 % revision pass and moved out under the referee's length table (report section G); each
 % carries the source comment it had there, and nothing here was recomputed.
 \documentclass[mathematics,supfile,submit,moreauthors]{Definitions/mdpi}
+\usepackage{xurl}
+
+% Match the lowercase theorem environments used by the included theory section.
+\let\proposition\Proposition
+\let\endproposition\endProposition
+\let\lemma\Lemma
+\let\endlemma\endLemma
 
 % EPS logo under XeTeX: same substitution as main.tex; see the comment there.
 \makeatletter
@@ -59,21 +66,21 @@ $^{2}$ \quad [Second author: department, institution, city and postcode, country
 
 \maketitle
 
-This file holds four kinds of supporting material for the manuscript, in the order the
-manuscript needs them: the visibility audit of the feature pipeline and the predictor
+This file holds supporting material for the manuscript: the visibility audit of the feature pipeline and the predictor
 scores on the four non-judging traces (Section~S1); the field audit of the main judging
 trace and two checks on the continuous-integration refit (Section~S2); five tables of
 experimental detail, the selected budget points, the two budget shapes the main guard
 table no longer prints, the identity residual on all nine cells and the single-server
 configuration (Section~S3); and two deferred proofs, of the workload comparison and of
-the consistency proposition (Section~S4). Section numbers here are S1--S4 and every
+the consistency proposition (Section~S4). Section numbers here carry an S prefix and every
 table is numbered S. A cross-reference without an S --- ``Section~8.2'', ``Table~8'',
 ``Theorem~1'' --- points into the main manuscript, since a \verb|\ref| across the two
 files does not resolve. The traces are the ones the manuscript's Table~3 names: the
 CodeBench judging logs \cite{codebench_dataset}, the Azure Functions invocation trace
 \cite{azure2021trace}, the Intel Netbatch logs \cite{netbatch2012trace} and the two
 Firefox continuous-integration pools collected from Mozilla's public APIs
-\cite{taskcluster_docs,treeherder_docs}. Every figure quoted here is a development
+\cite{taskcluster_docs,treeherder_docs}. The additional reproducibility specification is Section~S5; capacity, physical
+queueing, feedback and LPC-EGEE results are Section~S6. Additional theory is Section~S7. Every empirical figure quoted here is a development
 figure in the sense of Section~8.2 of the manuscript: nothing in this file comes from a
 sealed part of any trace, and nothing here was recomputed for it.
 
@@ -318,7 +325,8 @@ Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max ex
 Table~10 of the manuscript prints the three Guard($\devnum{600}$) cells and one reversed
 score. Table~\ref{tab:s_resid} gives all nine. The reading Section~8.5 takes from them is
 that the residual is a property of the schedule and barely moves with the policy: inside
-each load the three policies agree to the third decimal of the ratio.
+each load the ratios are similar in scale, but are not equal to the third decimal.
+An $R^2$ rounded to unity is likewise not exact equality.
 
 \begin{table}[H]
 \centering
@@ -429,14 +437,12 @@ Skip($\devnum{1200}$), $\kappa=20$ & \devnum{1200} & \devnum{217.64} & \devnum{0
 \section{Deferred Proofs}
 \label{sec:supp_proofs}
 
-Appendices~A.1 and~A.5 of the manuscript give the idea of each argument below and
-point here for the argument itself. Both are continuity-and-left-limit arguments a
-reader will not return to, which is why they sit outside the manuscript; the
-constructions the contribution rests on stay there, in Appendices~A.2--A.4, A.6
-and~A.7. Nothing here was restated or re-derived for this file: the text is the text
-the manuscript carried until the seventh revision pass. The notation is the
-manuscript's, $U_Q(t)$ being the unfinished work at time $t$ under policy $Q$ and
-$N_Q(t)$ the number of jobs present.
+Appendices~A.1 and~A.5 of the manuscript give the ideas behind the arguments
+proved here. The workload comparison uses continuity and left limits, whereas
+consistency is proved by induction. The tightness constructions remain in
+Appendices~A.2--A.4, A.6 and~A.7 of the manuscript. We use the manuscript's notation:
+$U_Q(t)$ is the unfinished work at time $t$ under policy $Q$, and $N_Q(t)$ is the
+number of jobs present.
 
 \subsection{The Workload Comparison}
 \label{sec:supp_gap}
@@ -532,6 +538,463 @@ unbounded in $L$.
 %   Corollary~\ref{cor:necessary} is Corollary 2 and Appendix~\ref{app:cascade} is
 %   Appendix A.2.  Simulated and checked in evidence/guard_theory; nothing was
 %   recomputed for this file.
+
+\section{Reproducibility and Provenance of the Empirical Results}
+\label{sec:supp_repro}
+
+\subsection{Feature Definitions, Targets and Rolling Splits}
+
+The executable feature dictionary is \path{src/spjf_guard/features/sweep.py}:
+\path{HIST_COLS}, \path{CTX_COLS}, \path{GROUPS} and
+\path{feature_frame} specify the entity aggregates, missing values and event
+order; \path{src/spjf_guard/data/events.py} specifies code columns and clock inputs.
+M4 combines static code, assessment/calendar context, exercise history, user history,
+user--exercise history and previous-event history. It excludes the relational
+extensions. Outcome aggregates contain log-cost moments and quantiles, error/heavy
+rates and recent-result summaries; counts and elapsed time since arrival are known
+at arrival and are distinguished from outcome fields. The rolling-history window,
+tie order and update formulas are defined in that dictionary. Static uses only the
+code and context blocks. The independent source-clock audit in Section~S1 verifies
+that dictionary under its original clock, not under an arbitrary replayed policy.
+
+Package scores are fitted by \path{src/spjf_guard/predict/forward.py}. For each
+target term, training includes only terms whose first arrival precedes that target,
+and only records whose result is readable strictly before its first arrival.
+History thresholds and user-slowness cutpoints are refitted from those training
+rows; a model is then frozen for the target term. The targets are
+\devnum{2020-ERE}, \devnum{2020-2}, \devnum{2021-1}, \devnum{2021-2},
+\devnum{2022-1} and \devnum{2022-2}. Starting at \devnum{2018-1}, their training
+periods end respectively at \devnum{2019-2}, \devnum{2020-1}, \devnum{2020-2},
+\devnum{2021-1}, \devnum{2021-2} and \devnum{2022-1}; availability filtering still
+applies at each cutoff. Validation overlays exclude the final development term
+from selection, but that term and the earlier family exploration are development
+data, not sealed testing.
+% Sources: outputs/dev_predictor/manifest.json, arguments.targets;
+% evidence/ranking_score/fit_targets.csv, target and train_sems; outputs/selection_v3/
+% manifest.json, validation pool; prechecks/heldout_scope/heldout_scope.md, Q2.
+
+The score objectives are in \path{src/spjf_guard/predict/scores.py}, and the
+deterministic fit settings in \texttt{lgb\_parameters} and the configuration
+identified by the output manifest. \texttt{spjf\_e} is a Tweedie regression of
+capped seconds; \texttt{spjf\_log} is squared-error regression of log-transformed
+cost. In contrast, the earlier M4 AUROC \devnum{0.9283 [0.9118, 0.9415]} is the
+heavy-class classifier probability, averaged over \devnum{3} seeds, trained on
+\devnum{2018-1}--\devnum{2019-2} and tested only on \devnum{2022-2}. Those
+retrospective classifier predictions never enter scheduling. The package's pooled
+\texttt{spjf\_e} AUROC \devnum{0.9360} combines \devnum{402{,}358} unreplicated
+forward-prediction rows. Its evaluation heavy threshold stays at the core training
+p95, \devnum{1.559043} s; it is not the threshold refitted inside each model's
+history features. Predictor intervals resample users, whereas scheduling intervals
+resample weeks. The two AUROCs compare different fits, targets and pooling and
+must not be read as a measured improvement on a common split.
+% Sources: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1;
+% outputs/dev_predictor/predictor_metrics.csv, pooled/spjf_e; manifest.json,
+% heavy_reference_semesters, heavy_threshold_s and bootstrap_block.
+
+\subsection{Exact Selection Grids and Counts}
+
+The full expanded grid, its definitions, counts and deduplication totals are in
+\path{outputs/selection_v3/selection_protocol.json}; per-cell values, worst-cell
+values and selections are in the adjacent \path{selection_grid.csv},
+\path{selection_worst.csv}, \path{selection_frontier.csv} and
+\path{selected_parameters.csv}. All budget and queue-work bases below scale
+by $k/\devnum{4}$ before dispatch arithmetic. The cap is determined by the promise.
+% Source: outputs/selection_v3/selection_protocol.json and
+% outputs/dev_tables/policy_parameters.csv, k and B0/gamma values.
+
+The constant grid has the following \devnum{39} base budgets (seconds), shared
+across promises:
+\begin{quote}\small
+\devnum{15}, \devnum{17.99}, \devnum{21.576}, \devnum{25.877}, \devnum{30}, \devnum{31.035}, \devnum{37.222}, \devnum{44.641}, \devnum{53.54}, \devnum{60}, \devnum{64.212}, \devnum{77.012}, \devnum{92.363}, \devnum{110.774}, \devnum{120}, \devnum{132.855}, \devnum{159.338}, \devnum{191.099}, \devnum{229.192}, \devnum{240}, \devnum{274.878}, \devnum{329.671}, \devnum{360}, \devnum{395.386}, \devnum{474.201}, \devnum{480}, \devnum{568.726}, \devnum{600}, \devnum{682.093}, \devnum{818.058}, \devnum{981.126}, \devnum{1176.7}, \devnum{1411.26}, \devnum{1692.57}, \devnum{2029.96}, \devnum{2434.6}, \devnum{2919.9}, \devnum{3501.94}, \devnum{4200}.
+\end{quote}
+% Source: outputs/selection_v3/selection_protocol.json, expanded_points, fixed with promise_s=-1.
+
+It is the union of \devnum{32} logarithmically spaced values between
+\devnum{15} and \devnum{4200} s, rounded as recorded, and the anchors
+$\devnum{15},\devnum{30},\devnum{60},\devnum{120},\devnum{240},\devnum{360},
+\devnum{480},\devnum{600}$, with duplicate values removed. A full-cap constant
+point is added at each of $G=\devnum{300},\devnum{600},\devnum{1200}$ s.
+This makes \devnum{42} expanded constant entries.
+% Source: outputs/selection_v3/selection_protocol.json, definition.fixed and expanded_points.
+
+For each promise the age-relative grid is the Cartesian product
+\[
+ B_{0,\mathrm{base}}\in\{\devnum{0},\devnum{15},\devnum{30},\devnum{60},
+ \devnum{120},\devnum{240},\devnum{360},\devnum{480},\devnum{600}\},\qquad
+ \eta\in\{\devnum{0},\devnum{0.25},\devnum{0.5},\devnum{0.75},
+ \devnum{0.9},\devnum{0.95}\},\quad\gamma=0.
+\]
+The queue-length grid is
+\[
+ B_{0,\mathrm{base}}\in\{\devnum{0},\devnum{30},\devnum{120}\},\qquad
+ \eta\in\{\devnum{0},\devnum{0.9}\},\qquad
+ \gamma_{\mathrm{base}}\in\{\devnum{1},\devnum{4},\devnum{16}\}.
+\]
+Thus the family counts over all promises are
+$\devnum{42}+\devnum{162}+\devnum{54}=\devnum{258}$ expanded points.
+Deduplicating identical dispatch rules after scaling and saturation leaves
+\devnum{243} distinct schedules at each evaluated server count. This is a
+computational deduplication, not a reduction of the declared search space.
+% Source: outputs/selection_v3/selection_protocol.json, definition.capped/hybrid,
+% expanded_points and per_server_count.
+
+Candidate counts per promise answer a different question. The constant entries
+shared across promises qualify for a given $G$ only if their worst-cell certified
+promise is at most $G$; an age-relative or queue-length entry belongs to its own
+declared promise. Feasibility then additionally requires harm $\le G/2$ in every
+validation cell. Table~\ref{tab:s_grid_counts} separates these filters, explaining
+why the per-promise totals differ from the expanded search size. The objective is
+the minimum deadline gap over all validation cells, with ties resolved by smaller
+worst harm, then smaller $B_0$, $\eta$ and $\gamma$.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Candidates / feasible points after promise assignment and the harm filter.}
+\label{tab:s_grid_counts}
+\begin{tabular}{rrrrr}
+\toprule
+$G$ (s) & Constant & Age-relative & Queue-length & Joint \\
+\midrule
+\devnum{300} & \devnum{27} / \devnum{22} & \devnum{54} / \devnum{15} & \devnum{18} / \devnum{7} & \devnum{99} / \devnum{44} \\
+% Source: outputs/selection_v3/selection_protocol.json, counts, promise_s=300.
+\devnum{600} & \devnum{35} / \devnum{31} & \devnum{54} / \devnum{30} & \devnum{18} / \devnum{9} & \devnum{107} / \devnum{70} \\
+% Source: outputs/selection_v3/selection_protocol.json, counts, promise_s=600.
+\devnum{1200} & \devnum{39} / \devnum{35} & \devnum{54} / \devnum{43} & \devnum{18} / \devnum{17} & \devnum{111} / \devnum{95} \\
+% Source: outputs/selection_v3/selection_protocol.json, counts, promise_s=1200.
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+The aging comparator has the credit grid
+\devnum{0.00001}, \devnum{0.00003}, \devnum{0.0001}, \devnum{0.0003},
+\devnum{0.001}, \devnum{0.003}, \devnum{0.01}, \devnum{0.03}, \devnum{0.1},
+\devnum{0.3} and \devnum{1}. It uses the same validation pool, harm threshold and
+worst-cell objective, with ties to less harm then larger credit. It uses
+conservative scores; the guard grids used the original package score. The
+selected guard parameters are subsequently held fixed across visibility controls,
+so this is not a claim of reselection under conservative or exact histories.
+The aging label carries no proved guarantee.
+% Sources: outputs/selection_aging/aging_protocol.json and manifest.json;
+% outputs/selection_v3/manifest.json, score_array=tweedie, score_parquet=null;
+% outputs/dev_visibility/manifest.json, selected_parameters_unchanged.
+
+\subsection{Replication, History and Aggregation Order}
+
+Each overlay is built from the same \devnum{40} class-terms replicated
+\devnum{44} times with independent whole-week shifts; each of the five overlays
+therefore reuses the same jobs. Original scores are computed on the source calendar
+and copied with their source jobs. Conservative histories are namespaced within a
+class-term, use only replayed submissions and share the copy's shift. These copies
+are not independently trained predictors or independent workload samples.
+% Source: evidence/main_v3/out_main_v31.txt, trace construction table;
+% prechecks/weakness1_attack/REPORT.md, development capacity experiment.
+
+For the pending exact refinement, a copy means the same class-term, replication
+round and shift. Its own submission outcomes follow policy-specific completions.
+Other classes and terms are exogenous history in that copy's original relative
+clock: when the target copy shifts by $s_i$, an external result is interpreted at
+$\mathrm{done}_j+s_i$, not at another copy's independent shift. This preserves
+earlier completed history without claiming a single platform whose copied users
+share dynamically changing state. A separate sensitivity removes entire records
+from other replayed classes in the same term, including arrival counts and elapsed
+time since arrival; it then repeats same-copy refinement. Ordinary outcome
+withholding preserves already-observed arrivals. The event order releases positive
+duration completions before reads at the same instant, and zero-duration outcomes
+after those reads. These conventions are specified in
+\path{docs/policy_consistent_visibility.md} and implemented by
+\path{src/spjf_guard/features/refine.py}.
+
+In the package main and visibility tables, each overlay's deadline p99 is first
+computed over its eligible jobs; its gap is then computed against that overlay's
+FCFS and SJF. Reported p99 and gap are separate arithmetic means over overlays.
+Consequently the displayed mean waits need not algebraically recover the displayed
+mean gap. Harm and maximum excess are maxima over overlays. Firing is
+queue-weighted within a cell, then averaged across overlays. Each bootstrap draw
+uses the same week multiplicities for every policy and overlay, recomputes weighted
+job quantiles and cell-level ratios, and averages the ratios. No table uses an
+average of weekly p99 values. The capacity-sweep gap instead uses the ratio of
+averaged overlay quantiles, as explicitly identified in Section~S6.
+% Sources: outputs/dev_tables/main_cells.csv and main_table.csv, per-cell/aggregate
+% columns; outputs/dev_visibility/visibility_cells.csv and visibility_comparison.csv;
+% prechecks/weakness1_attack/capacity_curve.csv. Algorithms: scripts/run_main.py,
+% spjf_guard.experiment.metrics and prechecks/weakness1_attack/summarize_capacity.py.
+
+\subsection{Which Results the Package Reproduces}
+
+The package produces the main CodeBench ranking, guard, adversarial and residual
+tables from \path{outputs/dev_tables/}, including its separate single-server
+directory; predictor metrics from \path{outputs/dev_predictor/}; and visibility
+comparisons from \path{outputs/dev_visibility/}. Guard selection and aging selection
+are in \path{outputs/selection_v3/} and \path{outputs/selection_aging/}. Their
+manifests identify inputs, settings and output hashes. The preserved original
+recipe is \path{configs/main_original_84932d9.yaml}; the original outputs are not
+claimed to have been regenerated under an unfinished visibility revision.
+
+\begin{sloppypar}
+Earlier predictor-family comparisons and source-clock feature sensitivities are
+archived under \path{evidence/codebench_service_v2/} and
+\path{evidence/predictor_neural/}. The refit-control and GRU rows in the main
+ranking table come from \path{evidence/main_v3/}; the ranking-loss table uses its
+own fits in \path{evidence/ranking_score/}. Cross-domain rows combine the package
+CodeBench row with \path{evidence/cross_domain/}, \path{evidence/accoding_v2/},
+\path{evidence/firefox_ci/} and the LPC-EGEE study below. CI chronological-refit
+validation is in \path{evidence/firefox_ci_holdout/}. The capacity and physical
+experiments are separate analyses in \path{prechecks/weakness1_attack/}.
+\end{sloppypar}
+
+The trace-construction sensitivity table (Table~12 in the unrevised numbering)
+uses the earlier source-clock M4 log-scale score, overlays
+\devnum{0}--\devnum{2}, and a fixed completed-work budget
+$B=\devnum{600}$ s. This is neither a \devnum{600}-second promise nor the selected
+age-relative Guard(\devnum{600}). It supports the earlier ordering result's
+sensitivity to term inclusion, the alternate timestamp interpretation, and
+merging or dropping co-ending runs. It does not test the final expected-cost
+guard, conservative history or policy-specific refinement under those altered
+inputs. Numerical agreement of the exact-arithmetic package and its independent
+reference is also distinct from the archived earlier-pipeline validation.
+% Source: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 5,
+% primary(0-2), SPJF-M4 and GUARD-M4-B600 rows; evidence/main_v3_verify/out_VERDICT.txt.
+
+The sealed procedure is specified by \path{docs/sealed_run_procedure.md}. It
+produces separate multi-server, single-server, predictor and visibility outputs,
+including the policy-specific exact stage, with unchanged declared selection
+rules and parameters. It does not extend the earlier predictor-family or
+cross-domain studies. No sealed result is present in this supplement.
+
+\section{Capacity, Physical Queueing and Feedback}
+\label{sec:supp_physical}
+
+These development experiments address distinct questions. The capacity sweep changes
+the size of the constructed pool while preserving its complete offered stream. The
+physical experiment checks an executing timed-work service on a selected window.
+Neither identifies a historical queue on CodeBench or a causal deployment effect.
+The scores are the archived embedded Tweedie predictions, not the later package
+refit, conservative score or pending exact visibility variant.
+
+\subsection{Capacity Sensitivity on Complete Traces}
+
+The declared common grid uses every integer $k=\devnum{1},\ldots,\devnum{20}$
+on all five development overlays; overlay~\devnum{0} alone continues through
+$k=\devnum{76}$. This gives \devnum{156} capacity cells. Each replay starts at the
+beginning of its complete trace, keeps queue state across weeks and drains all jobs;
+there is no time compression, window reset or thinning. The same source jobs occur
+in all overlays, so these are alternative constructions rather than independent
+deployments. The grid and comparison family were declared after a pilot on the
+first overlay, before the full sweep, not before inspecting the development demand.
+% Sources: prechecks/weakness1_attack/summary_numbers.json, capacity ranges;
+% prechecks/weakness1_attack/verification.json, complete_cells;
+% prechecks/weakness1_attack/REPORT.md, declaration and state-continuity protocol.
+
+Table~\ref{tab:s_capacity} reports the average of the overlay-specific deadline
+p99 values, with pointwise intervals. Gap closure in this study is the ratio of
+differences of those averaged quantiles. This differs from the package main tables,
+which average overlay-specific gap ratios. Paired calendar-week resampling uses
+\devnum{2{,}000} common draws, recomputing quantiles from the weighted job
+distribution, not averaging weekly quantiles. The declared simultaneous band
+covers \devnum{80} absolute FCFS-minus-policy differences: each capacity and each
+non-oracle policy. It uses a centred coordinate-standardised maximum statistic.
+These intervals resample realised outcomes, not queue trajectories; they omit
+source-term selection, predictor fitting, shared source jobs, model mismatch,
+feedback and cross-week state dependence. Maxima below are trace maxima, not
+population confidence bounds.
+% Sources: prechecks/weakness1_attack/summary_numbers.json, simultaneous_band;
+% prechecks/weakness1_attack/capacity_curve.csv, p99_deadline_s and gap fields.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Capacity sweep with archived scores: mean overlay deadline p99 in seconds,
+with pointwise paired calendar-week intervals. Negative effects are retained.}
+\label{tab:s_capacity}
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\begin{tabular}{rlll}
+\toprule
+$k$ & FCFS & SPJF-E & Guard(600) \\
+\midrule
+\devnum{1} & \devnum{108{,}345.31} [\devnum{92{,}267.38}, \devnum{114{,}125.36}] & \devnum{130{,}231.12} [\devnum{65{,}565.87}, \devnum{155{,}632.22}] & \devnum{108{,}839.10} [\devnum{92{,}739.31}, \devnum{114{,}582.34}] \\
+% Source: prechecks/weakness1_attack/capacity_curve.csv, k=1, p99_deadline_s/lo/hi.
+\devnum{2} & \devnum{10{,}362.62} [\devnum{7{,}565.14}, \devnum{11{,}503.45}] & \devnum{1{,}844.21} [\devnum{766.70}, \devnum{3{,}990.37}] & \devnum{10{,}618.06} [\devnum{7{,}820.32}, \devnum{11{,}755.23}] \\
+% Source: prechecks/weakness1_attack/capacity_curve.csv, k=2, p99_deadline_s/lo/hi.
+\devnum{3} & \devnum{1{,}056.40} [\devnum{688.91}, \devnum{1{,}273.01}] & \devnum{138.86} [\devnum{105.79}, \devnum{169.05}] & \devnum{934.68} [\devnum{452.24}, \devnum{1{,}253.73}] \\
+% Source: prechecks/weakness1_attack/capacity_curve.csv, k=3, p99_deadline_s/lo/hi.
+\devnum{4} & \devnum{273.50} [\devnum{197.09}, \devnum{352.10}] & \devnum{62.92} [\devnum{53.69}, \devnum{72.13}] & \devnum{89.61} [\devnum{65.94}, \devnum{114.14}] \\
+% Source: prechecks/weakness1_attack/capacity_curve.csv, k=4, p99_deadline_s/lo/hi.
+\devnum{5} & \devnum{119.35} [\devnum{92.91}, \devnum{143.43}] & \devnum{43.39} [\devnum{37.94}, \devnum{47.54}] & \devnum{47.44} [\devnum{40.46}, \devnum{53.39}] \\
+% Source: prechecks/weakness1_attack/capacity_curve.csv, k=5, p99_deadline_s/lo/hi.
+\devnum{8} & \devnum{24.43} [\devnum{18.46}, \devnum{29.58}] & \devnum{13.21} [\devnum{9.58}, \devnum{15.80}] & \devnum{13.36} [\devnum{9.67}, \devnum{16.05}] \\
+% Source: prechecks/weakness1_attack/capacity_curve.csv, k=8, p99_deadline_s/lo/hi.
+\devnum{14} & \devnum{0.84} [\devnum{0.45}, \devnum{1.50}] & \devnum{0.47} [\devnum{0.30}, \devnum{0.73}] & \devnum{0.47} [\devnum{0.30}, \devnum{0.73}] \\
+% Source: prechecks/weakness1_attack/capacity_curve.csv, k=14, p99_deadline_s/lo/hi.
+\devnum{20} & \devnum{0.00} [\devnum{0.00}, \devnum{0.04}] & \devnum{0.00} [\devnum{0.00}, \devnum{0.03}] & \devnum{0.00} [\devnum{0.00}, \devnum{0.03}] \\
+% Source: prechecks/weakness1_attack/capacity_curve.csv, k=20, p99_deadline_s/lo/hi.
+\bottomrule
+\end{tabular}
+\end{adjustwidth}
+\end{table}
+
+
+The negative cells are material. At $k=\devnum{1}$, FCFS-minus-Guard p99 differences
+are \devnum{-208.61}, \devnum{-493.79} and \devnum{-1{,}071.72} s for the
+\devnum{300}, \devnum{600} and \devnum{1200} s promises; all simultaneous bands
+are wholly negative. At $k=\devnum{2}$ all guard point estimates remain negative.
+Positive simultaneous lower bounds occur for SPJF-E at $k=\devnum{2}$--\devnum{12},
+Guard(\devnum{300}) and Guard(\devnum{600}) at $k=\devnum{4}$--\devnum{12}, and
+Guard(\devnum{1200}) at $k=\devnum{3}$--\devnum{12}. At $k=\devnum{14}$ the guard
+point improvements are about \devnum{0.37} s but their simultaneous bands cross
+zero; at $k=\devnum{20}$ the point differences are zero. A correct per-job bound
+does not imply positive tail benefit across queueing capacities.
+% Sources: prechecks/weakness1_attack/capacity_curve.csv, Guard rows,
+% absolute_p99_improvement_s, simultaneous_improvement_lo/hi;
+% prechecks/weakness1_attack/summary_numbers.json, support_by_policy.
+
+For Guard(\devnum{600}) at $k=\devnum{4}$ the maximum excess is \devnum{515.84} s
+and harm is \devnum{339.06} s, although it closes
+\devnum{0.8000 [0.7620, 0.8388]} of the reference gap. At $k=\devnum{20}$ that
+ratio is undefined because the reference gap is not positive, while maximum excess
+and harm remain \devnum{124.38} and \devnum{37.37} s. On overlay~\devnum{0}, FCFS
+still has one positive wait at $k=\devnum{75}$; at $k=\devnum{76}$ every policy has
+zero wait. The latter is the exact maximum infinite-server occupancy, hence a
+zero-wait endpoint for this overlay, not a capacity recommendation for a deployment.
+% Sources: prechecks/weakness1_attack/capacity_curve.csv, Guard(600), k=4,20,
+% max_excess_s, harm_s, gap_closed and interval; extension_curve.csv, k=75,76;
+% prechecks/weakness1_attack/pilot.json and summary_numbers.json, endpoint.
+
+\subsection{An Executing Timed-Work Service}
+
+The physical selection rule chooses the complete calendar-aligned
+\devnum{300}-second bin with the greatest offered capped work in development
+overlay~\devnum{0}, breaking ties by earliest time. Its \devnum{2{,}151} jobs carry
+\devnum{4{,}118.215007} s of requested work, \devnum{6.864} times the
+two-worker release-window capacity. Each policy starts empty and drains its own
+queue. Inter-arrival spacing, requested costs and scores are retained; workers hold
+their slots with timed sleeps. This tests queueing and the control rule, not the
+portability of submitted-program execution time. It also discards inherited
+full-trace backlog, so its percentile is not the capacity sweep's percentile.
+% Source: prechecks/weakness1_attack/physical_numbers.json, input.jobs,
+% input.offered_requested_work_s/(input.window_s*input.parameters.workers), protocol.
+
+The nominal payload cap is \devnum{60} s; the measured-service premise
+$L=\devnum{61}$ s was fixed before execution. Guard parameters are
+$B_0=\devnum{30}$ s, $\eta=\devnum{0.5}$, $\gamma=\devnum{0}$ and
+$B_{\max}=\devnum{356}$ s, corresponding to the nominal
+\devnum{300}-second ideal-model promise. A measured holding time above $L$ would
+fail the premise, not be clipped or used to raise $L$ retrospectively. None did.
+Actual enqueue, choice, dispatch, worker start/finish and completion receipt are
+recorded separately; service becomes known only at completion receipt.
+% Source: prechecks/weakness1_attack/physical_numbers.json, input.parameters.guard;
+% prechecks/weakness1_attack/physical_verification.json, service-limit checks.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Physical timed-work runs. The ideal comparator uses each run's own measured
+arrivals and holding costs; all entries are seconds.}
+\label{tab:s_physical}
+\begin{tabular}{lrrr}
+\toprule
+Policy & Mean wait & p99 wait & Max absolute per-job ideal discrepancy \\
+\midrule
+FCFS & \devnum{1{,}337.05} & \devnum{1{,}763.30} & \devnum{0.49} \\
+% Source: prechecks/weakness1_attack/physical_numbers.json, policies.FCFS, wait_s and absolute_physical_minus_ideal_wait_s.
+SPJF-E & \devnum{142.79} & \devnum{1{,}687.47} & \devnum{392.84} \\
+% Source: prechecks/weakness1_attack/physical_numbers.json, policies.SPJF-E, wait_s and absolute_physical_minus_ideal_wait_s.
+Guard(300) & \devnum{480.39} & \devnum{1{,}783.65} & \devnum{1{,}354.10} \\
+% Source: prechecks/weakness1_attack/physical_numbers.json, policies.Guard(300), wait_s and absolute_physical_minus_ideal_wait_s.
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+All \devnum{6{,}453} observed-prefix decisions passed an independent choice audit.
+Physical and ideal measured-input Guard firing counts were \devnum{322} and
+\devnum{372}. The small mean discrepancies do not establish job-level fidelity:
+the maximum absolute per-job error is \devnum{392.84} s for SPJF-E and
+\devnum{1{,}354.10} s for Guard. Guard's physical p99 exceeds the separate physical
+FCFS run by \devnum{20.34} s. Thus the physical window confirms an executing
+queue and rule conformance but does not show a guarded p99 gain. Actual arrivals
+and holding costs differ between physical runs; their comparison is descriptive.
+One selected window supplies no across-window confidence interval.
+% Sources: prechecks/weakness1_attack/physical_numbers.json, policies.*.audit,
+% absolute_physical_minus_ideal_wait_s and wait_s; physical_verification.json,
+% Guard(300) ideal forced_count. Difference=1783.64837275-1763.3048828.
+
+The guard's theorem reference is shadow FCFS on that guard run's measured arrivals
+and service, not the separately timed physical FCFS run. An observed-trace
+certificate augments the ideal bound by cumulative idle worker-time and
+dispatch-to-start delay. Its largest correction is \devnum{1.127} s;
+all \devnum{2{,}151} jobs pass, and the largest uncorrected excess over shadow FCFS
+is \devnum{222.21} s. This is an ex post certificate conditional on the measured
+trace and the \devnum{61} s service premise. It does not bound future operating-system
+stalls and does not restore an advance uncorrected real-time promise.
+% Sources: prechecks/weakness1_attack/stall_bound_check.json, metrics.
+% maximum_additive_correction_twice_ns/2e9=1.1265093, corrected_violations=0;
+% prechecks/weakness1_attack/physical_verification.json, Guard(300).max_exact_excess_s.
+
+\subsection{Why Open-Loop Benefit Has No Known Bias Direction}
+
+The replay compares policies conditional on fixed offered work. In an exact
+single-server feedback construction, jobs of length \devnum{10} and \devnum{1} s
+arrive together, the long job first, and the short job's user submits a second
+unit job \devnum{0.5} s after completion. Replaying the FCFS-induced arrivals
+gives SJF a mean-wait advantage of \devnum{3.00} s; letting each policy generate
+its own successor arrival changes the advantage to \devnum{-0.167} s.
+The corresponding linearly interpolated p99 advantages are \devnum{8.82} and
+\devnum{0.47} s. The job cohort is identical, so this example does not depend on
+comparing different populations.
+% Source: prechecks/weakness1_attack/out_feedback_counterexamples.txt, EXAMPLE 1,
+% exact Fraction schedules and open_loop/closed_loop mean and linear_p99 gains.
+
+The opposite bias direction is possible too. An initial FCFS order with services
+\devnum{20}, \devnum{1}, \devnum{3} and \devnum{10} s, whose unit-job user returns
+after \devnum{2} s with a \devnum{0.1} s successor, gives open- and closed-loop
+mean advantages of \devnum{9.20} and \devnum{11.16} s and p99 advantages of
+\devnum{10.00} and \devnum{10.18} s. These exact recursions falsify a general
+lower-bound interpretation; they are not fitted behavioural models. The pathwise
+theorem still compares a guarded schedule with shadow FCFS on that schedule's
+realised arrivals and services, not independently evolving closed-loop systems
+\cite{shmueli2009simulation}.
+% Source: prechecks/weakness1_attack/out_feedback_counterexamples.txt, EXAMPLE 2,
+% parameters, exact schedules and gains; final assertion status PASS.
+
+\subsection{LPC-EGEE: Recorded Queueing with Weak Counterfactual Validation}
+
+The public LPC-EGEE trace supplies recorded waits and concentrated execution costs
+together \cite{lpc_egee_trace}. After outage exclusion and queue-limit capping,
+the longest \devnum{1\%} of \devnum{206{,}222} retained jobs carries
+\devnum{40.7\%} of work. On the chronological evaluation part the top share is
+\devnum{35.1\%}, which is the value used in the main cross-domain table.
+The physical pools stay disjoint. Effective capacities \devnum{83} and
+\devnum{56} are fitted only on the earlier part, with no test-driven refit.
+Service is the minimum of recorded run time and its documented queue limit;
+the common bound uses the largest pool limit, \devnum{259{,}200} s.
+% Sources: prechecks/lpc_egee/applicability.csv, all/test aggregate rows;
+% prechecks/lpc_egee/capacity.json and policy_parameters.csv.
+
+The fitted FCFS approximation underestimates evaluation-part mean waits by
+\devnum{24\%} and \devnum{39\%}, with hourly correlations of \devnum{0.44} and
+\devnum{0.40}. The archive describes plain FCFS serial-job ordering during the
+logged period, but queue concurrency ceilings, polling and middleware are absent
+from the work-conserving replay. Recorded waits therefore cannot be equated with
+the theoretical FCFS counterfactual. This is weak simulator validation, not
+evidence that the original scheduler was an arbitrary non-FCFS policy.
+% Source: prechecks/lpc_egee/validation.csv, fitted/test rows: mean ratios
+% 0.757708/0.614029 and hourly Pearson 0.439849/0.397983; archive documentation.
+
+In the conditional replay, SPJF-E reduces mean wait by
+\devnum{21.4\% [13.2\%, 38.2\%]}, but its busy-hour p99 reduction of
+\devnum{4.2\% [-11.2\%, 46.0\%]} remains unresolved. Busy hours use frozen
+arrival-count thresholds, not deadlines. All six constant/age work-budget guards
+at the tested multiples of $L$ fire zero times; a small fraction of the numerical
+bound being spent is therefore not evidence of effective protection. Histories
+use recorded completion times, and \devnum{2{,}906} evaluation arrivals
+(\devnum{2.5\%}) have an outcome unavailable under replayed SPJF-E. This row is a
+recorded-feature conditional counterfactual, not a closed-loop deployment result.
+% Sources: prechecks/lpc_egee/pooled_policy_metrics.csv, SPJF-E mean and busy-p99
+% reduction/interval fields; guard_dispatches.csv, all Constant/Age forced_sum=0;
+% history_counterfactual_diagnostic.csv, affected count/share.
+
+
+\input{sections/S_theory_additions}
 
 %=================================================================
 \begin{adjustwidth}{-\extralength}{0cm}

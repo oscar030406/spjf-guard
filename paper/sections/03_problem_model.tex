@@ -12,7 +12,10 @@ Job $i$ arrives at time $a_i \ge 0$ and requires $C_i$ units of service. Service
 server that starts a job keeps it until the job finishes or until it has been running
 for the per-job time limit $L$, at which point the system stops it. Throughout, $C_i$
 denotes executed work, so $0 < C_i \le L$ by construction and a job stopped at the
-limit contributes exactly $L$. One quantity carries three names in this paper: we write
+limit contributes exactly $L$. An enforced timeout terminates such a job without a
+successful result; the waiting-time guarantee does not bound that loss of completion
+quality. Observed maxima and analysis truncations in a trace are distinguished from
+enforced timeouts in Section~\ref{sec:data}. One quantity carries three names in this paper: we write
 \emph{cost} in the application sections, \emph{service} or \emph{service time} in the
 analysis, and \emph{work} when several jobs are summed, and all three denote $C_i$.
 Two further words are fixed here because the application sections need them. A
@@ -49,9 +52,18 @@ Then
   \qquad\Longleftrightarrow\qquad
   \mathrm{done}_j + \delta \le a_i .
 \]
-Every historical feature is recomputed under this rule; none is assembled once and
-masked afterwards. Section~\ref{sec:prediction} gives the procedure and the
-sensitivity to $\delta$.
+Historical features are recomputed under the chosen release rule rather than assembled
+once and masked afterwards. The original prediction study in
+Section~\ref{sec:prediction} uses the source platform's result clock. In a replayed
+queue, an endogenous result instead becomes available at
+$\mathrm{done}^{P}_j=a_j+W_P[j]+C_j$. Source-clock causality therefore does not imply
+availability under policy $P$: a recorded result may already be visible while its
+replayed job is still waiting. The conservative headline restricts history to replayed
+submissions in the same class-term copy and delays its source release; the static
+control uses no outcome history. Section~\ref{sec:exp_visibility} states their
+availability checks, separates external history from same-copy queueing exposure,
+and describes the pending policy-specific refinement. The guard theorem is
+independent of which scores these protocols produce.
 
 \subsection{Waiting Time, the FCFS Reference and the Service Guarantee}
 

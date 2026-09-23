@@ -197,7 +197,11 @@ def main() -> int:
     cfg = cfgmod.load(args.config)
     args.overlay_dir = args.overlay_dir or cfg.data_path("overlay_dir")
     args.scores = args.scores or cfg.data_path("score_dir", "forward_scores.parquet")
-    score_key = str(cfg["scheduling"]["headline_ranking_score"])
+    score_key = str(
+        cfg["scheduling"]["aging_baseline"].get(
+            "ranking_score", cfg["scheduling"]["headline_ranking_score"]
+        )
+    )
     score = None if args.from_cells else _score(args.scores, score_key)
     scratch = args.scratch or Path(tempfile.mkdtemp(prefix="spjf_aging_"))
     started = time.time()

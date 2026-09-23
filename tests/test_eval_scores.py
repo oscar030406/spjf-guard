@@ -140,7 +140,6 @@ def test_the_sealed_pool_is_refused_without_a_frozen_lock(tmp_path):
             str(tmp_path / "absent_scores.parquet"),
             "--out-dir",
             str(tmp_path / "absent_out"),
-            "--unseal",
         ],
         capture_output=True,
         text=True,

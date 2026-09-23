@@ -1,174 +1,211 @@
 # 策略一致的结果可见性
 
-这份说明处理独立审阅的 M2，并顺带记录 M8、M9 的冻结前改动。所有数字只来自 CodeBench 开发池；
-没有打开、解析或哈希任何封存数据。逐 overlay、逐负载、逐策略的原始结果在
-`outputs/dev_visibility/`，下面只把五条 primary overlay 聚合成易读的表。
+本说明修正第一次 M2 审计对“排队暴露”的解释。第一次审计的约 80% 不是同一份班次—学期拷贝
+因排队而产生的暴露；95.39% 的池外历史也不等于不可用信息。旧表保留，不改数字。本次把拷贝语义、
+历史删减、固定滞后和模型重拟分开，并用冻结的原始 M4 权重构造逐策略、逐负载、逐 overlay 的精确
+可见性证书。全部实测只使用开发与验证池；没有读取、解析或哈希封存输入。
 
-## 原管线实际暴露了什么
+## 1. 估计对象与拷贝语义
 
-原分数先在原日历上按 `done_j <= a_i` 做一次特征，再由叠加文件的 `job_row` 把同一个分数挂到每一
-份拷贝。拷贝**没有自己的历史**：它读的是原 job 的全局原日历历史，既不是“只读自己的拷贝”，也
-不是按拷贝移位后的完成顺序重算。用户和题目 id 还跨班次—学期共享，所以历史里可以有另一个独立
-移位的班次—学期，或 primary 池以外的学期。后者在这次 replay 中根本没有 job。
+设原始分数实际使用的历史结果集合为 `H_i`。一条结果同时进入 user、exercise 和 pair 聚合时只
+计一次。干净的初始排队暴露集合是
 
-为了不替旧构造发明一种不存在的语义，审计作了唯一明确的匹配约定：若历史记录也在 primary 池且
-会成为非零服务 job，就把它映到目标 job 所在的同一个 outer overlay round；池外学期、被丢弃的
-零服务提交和非提交事件另列为 `unreplayed`。同一个 outer round 内各班次—学期仍有自己的独立
-shift，这个映射只是可复现的暴露审计，不把旧分数变成策略一致分数。M4 的 `prev_ev_err` 还可能读
-非提交事件结果；它没有调度 job，故未混入“提前提交记录数”，而是属于不可重放通道。
+```text
+V_i(P) = {j in H_i: copy_entry(j) = copy_entry(i),
+          replay_arrival(j) + wait_P(j) + service(j) > replay_arrival(i)}.
+```
 
-下表给出旧 `delta = 0` 分数的 mapped history 暴露。`影响`是至少有一条映射记录到 `a_i` 仍未
-完成的 job 比例；`窗口`只看 deadline window；记录均值和 p99 只在受影响 job 内计算。每一个
-overlay×负载×策略的计数、分位数和最大值均保存在 `visibility_exposure.csv`。
+`copy_entry` 表示同一班次—学期、同一 outer round 和同一 shift；不把同 round 中另一独立移位
+班次的结果算进来。历史还须通过原特征 sweep 的可见性与同时间事件顺序。非零结果在完成时先于
+该时刻的读操作释放；零时长事件不能向同一时刻的读操作泄露。重放阈值在整数微秒时钟上比较。
 
-| 负载档 | replay policy | 影响 | 窗口 | 提前记录均值 | 提前记录 p99 | 有不可重放历史 | mapped∪不可重放 |
-|---:|---|---:|---:|---:|---:|---:|---:|
-| 0 | FCFS | 80.02% | 77.74% | 701.7 | 3954.6 | 95.39% | 98.29% |
-| 0 | SPJF-E | 79.97% | 77.69% | 702.1 | 3954.8 | 95.39% | 98.29% |
-| 0 | Guard(300) | 79.97% | 77.70% | 702.0 | 3954.8 | 95.39% | 98.29% |
-| 0 | Guard(600) | 79.97% | 77.69% | 702.1 | 3954.8 | 95.39% | 98.29% |
-| 0 | Guard(1200) | 79.97% | 77.69% | 702.1 | 3954.8 | 95.39% | 98.29% |
-| 1 | FCFS | 80.45% | 78.41% | 698.1 | 3949.8 | 95.39% | 98.34% |
-| 1 | SPJF-E | 80.21% | 78.13% | 700.1 | 3952.6 | 95.39% | 98.30% |
-| 1 | Guard(300) | 80.26% | 78.18% | 699.7 | 3952.2 | 95.39% | 98.32% |
-| 1 | Guard(600) | 80.23% | 78.15% | 699.9 | 3952.2 | 95.39% | 98.31% |
-| 1 | Guard(1200) | 80.22% | 78.15% | 700.0 | 3952.2 | 95.39% | 98.31% |
-| 2 | FCFS | 80.90% | 79.08% | 694.3 | 3944.0 | 95.39% | 98.39% |
-| 2 | SPJF-E | 80.40% | 78.45% | 698.6 | 3950.0 | 95.39% | 98.32% |
-| 2 | Guard(300) | 80.51% | 78.59% | 697.6 | 3948.8 | 95.39% | 98.35% |
-| 2 | Guard(600) | 80.45% | 78.51% | 698.1 | 3949.8 | 95.39% | 98.33% |
-| 2 | Guard(1200) | 80.43% | 78.50% | 698.2 | 3949.8 | 95.39% | 98.33% |
+历史分为三类：
 
-等待分布本身如下。除 `max` 是五条 overlay 中的最大值外，其余是五条 overlay 相应统计量的算术
-平均；完整逐格数据在 `visibility_waits_and_lag.csv`。
+1. **本拷贝的重放提交。** 完成时间由该策略的重放决定；这是 M2 所问的队列反馈。
+2. **其他班次或学期的历史。** 每份班次拷贝视为独立部署实例，外部历史是原相对时钟下的外生
+   信息。目标实例移位 `s_i` 时，外部记录按 `original_done_j + s_i` 解释，不使用另一实例的
+   独立移位 `s_j`。已经发生的早期学期和 pool 外历史因此保留。我们不声称这等于把所有拷贝
+   放进共享学生状态、相互改变结果时钟的部署系统。
+3. **其他同学期班次的敏感性。** 对也在 pool 中的同学期其他班次，另做整条历史记录删除：既删
+   outcome，也删其 arrival counts 和 time-since-arrival；再对本拷贝运行同样的精确细化。
+   该敏感性覆盖全部 15 格的 Guard(600)，较早学期历史仍保留。
 
-| 档 | policy | mean | p50 | p90 | p99 | p99.9 | max（秒） |
-|---:|---|---:|---:|---:|---:|---:|---:|
-| 0 | FCFS | 0.719 | 0 | 0.032 | 15.187 | 137.918 | 491.725 |
-| 0 | SPJF-E | 0.292 | 0 | 0.027 | 6.598 | 40.782 | 1374.795 |
-| 0 | Guard(300) | 0.344 | 0 | 0.027 | 6.982 | 51.082 | 630.672 |
-| 0 | Guard(600) | 0.309 | 0 | 0.027 | 6.705 | 44.294 | 935.115 |
-| 0 | Guard(1200) | 0.305 | 0 | 0.027 | 6.569 | 43.436 | 1182.836 |
-| 1 | FCFS | 4.160 | 0 | 0.622 | 84.518 | 561.972 | 1023.820 |
-| 1 | SPJF-E | 1.232 | 0 | 0.399 | 29.583 | 99.682 | 3312.793 |
-| 1 | Guard(300) | 2.061 | 0 | 0.401 | 35.713 | 403.039 | 1167.359 |
-| 1 | Guard(600) | 1.532 | 0 | 0.399 | 31.805 | 190.195 | 1467.375 |
-| 1 | Guard(1200) | 1.410 | 0 | 0.399 | 31.081 | 144.511 | 2074.550 |
-| 2 | FCFS | 10.270 | 0 | 8.928 | 230.803 | 984.309 | 1544.603 |
-| 2 | SPJF-E | 2.294 | 0 | 1.112 | 41.710 | 192.443 | 6286.248 |
-| 2 | Guard(300) | 5.552 | 0 | 1.250 | 73.735 | 981.738 | 1694.463 |
-| 2 | Guard(600) | 3.830 | 0 | 1.151 | 50.195 | 717.570 | 1994.473 |
-| 2 | Guard(1200) | 3.134 | 0 | 1.108 | 48.038 | 398.741 | 2603.170 |
+原审计把 pool 内历史映到同 outer round，却让各班次独立移位。这是可复现的**映射暴露统计**，
+不是队列造成的信息泄露率。`outputs/dev_visibility/` 的约 80% 与 `unreplayed = 95.39%` 只
+保留这种含义，不能证明必须丢弃跨学期历史或采用一小时滞后。
 
-## 冻结的修正
+## 2. 冻结权重的精确细化
 
-采用 ADR 0007 的保守充分条件，而不把不完整的在线近似称作 exact：
+每个目标学期按原训练配方确定性重建 M4，断言其原分数与已存 `spjf_e` 逐值相等后冻结权重。
+固定种子的 512 个目标行还逐位核对定向重算与原 sweep。静态代码、课务与到达时已知列不变；仅
+重算受影响目标的 22 列 M4 历史块。withheld outcome 不撤销已经发生的到达，通常保留 arrival
+counts 与 time-since-arrival；只有整条其他班次记录敏感性会改变这些列。
 
-1. `conservative` 用班次—学期独立的 user/exercise namespace，只吸收实际进入 replay 的提交结果，
-   并在 `done_j + 3600 <= a_i` 后才释放结果。开发期 `max W_FCFS = 1544.602708` 秒；由
-   `W^P <= W^FCFS + G` 和 `G <= 1200` 得 2744.602708 秒，余量 855.397292 秒（31.2%）。
-2. 每次运行都逐 policy×cell 输出 `wait` 分布、`W > 3600` 数量和比例。开发期 FCFS 与所有三条
-   Guard 均为 0；没有保证的 conservative SPJF-E 在最忙五格共有 336 条（该档约 0.000381%，
-   十五格总体约 0.000127%），如实留在表里。旧 SPJF-E 对同一检查有 285 条。
-3. `static` 只用代码静态列和提交到达时已知的 assessment、deadline、时钟列；它不读窗口内任何
-   outcome history，是下锚而不是主结果。
+对每个 `(overlay, level, policy)`，从原 `done_j` 释放的分数开始，令 `S_i = empty`：
 
-精确 policy-specific release 没有进入冻结：它要求把静态排序核改成完成事件驱动的特征状态机，并
-在每个完成事件后执行冻结的 LightGBM；同时旧跨班次历史没有唯一拷贝语义。仅在一个 overlay 做它也
-不能验证旧全局特征，因为未进入该 pool 的 95.39% 历史仍无完成事件。固定滞后并不声称等于在线
-重算；它证明的是在 `W <= D` 的 cell 内，保守特征读到的每一个同班次提交结果都已经完成。
+1. 完整模拟该策略，独立计数所有本拷贝且晚于目标到达才完成的原可见记录。
+2. 减去 `S_i` 已 withheld 的记录，得到本轮新增违规。仅重算新增违规目标，用同一冻结模型
+   重评分；令 `S_i` 与新增记录取并集。
+3. 重新模拟，直到一轮没有新增违规。最终轮断言仍被分数使用的违规数严格为零。
 
-## 不重选参数的开发比较
+记录一旦对某个目标被 withheld 就永不恢复。每个非终止轮至少增加一条有限的 `(i,j)` 边，故必然
+终止，不用人为迭代上限。计数与枚举采用两条独立路径核对；后续轮用向量化已 withheld 边计数加速，
+terminal audit 仍对全体 job 重新计数。`exact_passes.csv` 写每轮新增目标、记录、累计集合大小及
+simulation/detection/rescore 时间，包括零违规的末轮。
 
-下面沿用 `configs/main.yaml` 已选的三组 Guard 参数。区间是五条 overlay 的 paired week-block
-bootstrap；`max exc.`、`harm` 和 `fired` 也是主流水线的原定义。
+exact 指**最终重放中每条仍使用的本拷贝 outcome 确实已完成**，不是最大可用历史、唯一不动点或
+完成事件驱动的在线预测器。单调删减可能保留早先轮次不再必要的 withholding；我们不称它为最小
+删减解，也不声称离线构造过程可直接在线部署。Guard 对任意静态排序的逐 job 保证另行核验；
+SPJF-E 与 Aging 不附加该保证。
 
-| 档 | 分数 | policy | p99dl（秒） | gap closed [区间] | max exc. | harm | fired |
-|---:|---|---|---:|---|---:|---:|---:|
-| 0 | original | Guard(300) | 15.58 | .705 [.678,.724] | 192.5 | 132.1 | 1.35% |
-| 0 | conservative | Guard(300) | 17.80 | .576 [.527,.616] | 194.9 | 136.2 | 3.05% |
-| 0 | static | Guard(300) | 18.82 | .514 [.464,.555] | 195.5 | 134.6 | 2.82% |
-| 0 | original | Guard(600) | 14.97 | .740 [.713,.760] | 492.2 | 237.0 | .17% |
-| 0 | conservative | Guard(600) | 16.68 | .640 [.604,.671] | 499.9 | 235.2 | .94% |
-| 0 | static | Guard(600) | 17.95 | .560 [.519,.594] | 498.0 | 225.1 | .38% |
-| 0 | original | Guard(1200) | 14.84 | .746 [.719,.768] | 907.8 | 94.3 | 22.01% |
-| 0 | conservative | Guard(1200) | 16.65 | .642 [.610,.672] | 831.4 | 147.0 | 21.08% |
-| 0 | static | Guard(1200) | 17.97 | .559 [.518,.592] | 1067.0 | 95.6 | 19.76% |
-| 1 | original | Guard(300) | 55.94 | .738 [.697,.761] | 209.7 | 114.1 | 11.57% |
-| 1 | conservative | Guard(300) | 78.46 | .473 [.391,.556] | 221.7 | 151.2 | 12.67% |
-| 1 | static | Guard(300) | 85.90 | .387 [.317,.478] | 214.7 | 168.0 | 15.35% |
-| 1 | original | Guard(600) | 47.47 | .837 [.815,.851] | 507.8 | 319.6 | 1.31% |
-| 1 | conservative | Guard(600) | 64.77 | .634 [.560,.688] | 509.4 | 327.7 | 3.26% |
-| 1 | static | Guard(600) | 70.18 | .571 [.504,.638] | 512.9 | 341.6 | 3.89% |
-| 1 | original | Guard(1200) | 46.85 | .844 [.823,.857] | 1104.9 | 117.6 | 9.93% |
-| 1 | conservative | Guard(1200) | 63.52 | .649 [.591,.690] | 1094.0 | 142.9 | 8.78% |
-| 1 | static | Guard(1200) | 68.75 | .588 [.537,.647] | 1095.0 | 153.0 | 8.13% |
-| 2 | original | Guard(300) | 163.40 | .478 [.387,.602] | 229.1 | 134.8 | 28.64% |
-| 2 | conservative | Guard(300) | 223.31 | .217 [.143,.326] | 230.6 | 142.4 | 28.36% |
-| 2 | static | Guard(300) | 226.80 | .202 [.136,.288] | 224.1 | 146.9 | 30.38% |
-| 2 | original | Guard(600) | 89.24 | .801 [.764,.842] | 523.7 | 339.9 | 7.15% |
-| 2 | conservative | Guard(600) | 174.71 | .429 [.357,.533] | 527.8 | 303.5 | 7.71% |
-| 2 | static | Guard(600) | 193.11 | .349 [.281,.457] | 528.1 | 316.1 | 11.18% |
-| 2 | original | Guard(1200) | 82.67 | .830 [.801,.857] | 1110.4 | 144.8 | 6.21% |
-| 2 | conservative | Guard(1200) | 154.70 | .516 [.448,.593] | 1119.1 | 111.9 | 6.26% |
-| 2 | static | Guard(1200) | 171.39 | .443 [.378,.531] | 1124.3 | 342.4 | 6.42% |
+每格只落盘受影响 job 的索引、delta、精确 corrected score 和 withheld count，不写完整 17.6M
+行分数副本。corrected score 避免浮点减法再加法的舍入误差。NPZ 的相对路径、大小及 SHA-256
+由 `exact_delta_manifest.csv` 钉住。完成的 policy/cell 可按输入、实现和控制缓存哈希恢复，过期
+检查点不能静默复用。
 
-保守版和原版不接近，尤其是最忙档。因此 conservative 是 headline，不是稳健性附录；original 只能
-叫 optimistic reference。以预先选定的 Guard(600) 为例，保守版在三档仍分别关闭 0.640、0.634、
-0.429 的 SJF–FCFS gap，且都高于 static 的 0.560、0.571、0.349，但不能继承原版 0.740、0.837、
-0.801 的效应大小。
+## 3. 干净的初始暴露与分数影响
 
-预测器的 pooled 指标也显示同一梯度：
+逐格结果为 `outputs/dev_consistent_visibility/same_copy_exposure_cells.csv`，汇总为
+`same_copy_exposure.csv`。各策略先在 original 分数下模拟，报告 `|V_i(P)| > 0` 的 job 比例及
+deadline-window 比例。记录数与 `|delta score|` 分布只在受影响 job 中计算；分数差仅删除第一轮
+违规记录，不叠加后续细化。
 
-| score | AUROC [区间] | AP | RMSE log1p | Spearman |
-|---|---|---:|---:|---:|
-| original | .9360 [.9289,.9424] | .309 | .2486 | .405 |
-| conservative | .9116 [.9054,.9173] | .087 | .2785 | .347 |
-| static | .8371 [.8249,.8492] | .052 | .3210 | .295 |
+rank displacement 在**原模拟的实际 dispatch 前队列**上计算：全部第一轮受影响 job 同时换成
+修正分数，对同一队列比较排序名次。同微秒较早 dispatch 的 job 已移除；分数相同按 arrival rank
+打破平局；正值表示排得更后。这不是两次模拟的 dispatch 序号差，也不是 Guard eligibility 名次。
+Aging 使用 `score + beta * relative_arrival` 的等价静态键。CSV 同时给有符号与绝对位移的
+mean、p50、p90、p99、max。
+FCFS 行的名次是其实际 dispatch 队列中预测分数的反事实排序；它不会改变 FCFS 本身的服务次序。
 
-按要求，主比较没有重选参数。额外的 conservative 重选探针只跑了验证 overlay 0、最轻负载这一格；
-它已经说明排序变化足以移动局部最优：G=300 从 capped `(60,.5)` 到 `(120,.5)`，G=600 从
-`(120,.75)` 到 `(600,.5)`，G=1200 从 hybrid `(0,0,16)` 到 `(0,.9,4)`。这不是 15 格
-worst-cell 规则的最终重选，不能替换冻结参数；在本机按该格 1748 秒外推，全量约需 7.3 小时。
+<!-- MEASURED_EXPOSURE -->
 
-## 协议与两个小项
+## 4. 一次只改变一项的归因
 
-- `fit_scores.py` 一次产生 original、conservative、static 的两种目标分数，共六列；`--repeat` 已
-  逐位复现。`eval_scores.py` 为三种变体各写逐学期与 pooled 指标。
-- `run_visibility.py` 用不变参数写五份钉死的 CSV 和 manifest；封存 dry-run 现在列八阶段，封存
-  可见性是独立的第 5 阶段。`protocol_lock.draft.json` 钉住变体、D、headline、aging 网格和四份
-  sealed output lists。
-- M8 加入外部简单基线 `Aging(600)`，priority 是 `predicted_cost - beta * age`，没有证明保证。
-  beta 网格有 11 点，用与 Guard(600) 相同的 validation-only、逐格 harm≤300 秒、worst-cell gap
-  规则选择，得到 `beta=.03`。原有开发表的既有行和列逐位不变。
-- M9 的 `selection_protocol.json` 写出三张网格的定义、258 个展开点、每个 server count 的 243 条
-  去重调度、以及每个 G×family 的候选数和可行数；aging 输出也写完整网格与计数。
+全部对照沿用原 Guard(600) 参数。`class_term_local` 只改 namespace；`drop_unreplayed` 只删除
+未进入 pool 重放的记录；四条 `same_copy_lag*` 只把本拷贝提交 outcome 的释放时间平移
+60、300、900、3600 秒，外生历史与 arrival-known 列不变。滞后不只过滤最近结果，还按新释放时间
+重排 retained outcomes，避免 rolling last-120 特征的顺序错误。
 
-`emit_paper_tables.py` 另写 `tab_visibility.tex` 和 `tab_visibility_audit.tex`；封存时带
-`--sealed-visibility-dir outputs/sealed_visibility` 写 `_sealed` 版本。数字索引与 location-agnostic
-checker 同时把 `visibility_comparison.csv`、`visibility_exposure.csv` 当作合法来源。
+这些单项对照均使用冻结原 M4，不重新训练。`combined_frozen` 另把第一次 conservative 的三种
+特征限制合起来，仍用原权重；与 committed `conservative` 的差别隔离**模型重拟**这一项。单项
+效应不能相加：删减、namespace、顺序与树模型存在交互。`static` 与 committed `conservative`
+仍使用其原来训练好的模型，没有替换成冻结原权重的版本。
 
-## 论文现在可以原样写的句子
+<!-- MEASURED_ATTRIBUTION -->
 
-> We make the policy-consistent, 3600-s-lag predictor the headline and retain the
-> original-clock predictor only as an optimistic reference. The lag was fixed from the
-> development cells: the largest FCFS wait was 1544.603 s, so the guard theorem implies a
-> worst guarded wait of at most 2744.603 s for G at most 1200 s, leaving an 855.397-s
-> margin. No FCFS or guarded development job violated the lag certificate.
+## 5. 全部开发单元的精确结果与 headline
 
-> Under the original-clock construction, 79.97--80.90% of jobs, depending on load and
-> replay policy, used at least one mapped history record that had not completed when the
-> job arrived; 95.39% used at least one history record with no job in the same replay
-> pool. These defects affect the deployability and measured benefit of the predictor, not
-> the guard guarantee, which holds for arbitrary static rankings.
+测量前钉住全部 5 条 primary overlay × 3 档负载，不按性能挑子集。策略为 SPJF-E、Guard(300)、
+Guard(600)、Guard(1200)、Aging(600)。四条主比较分数是 original、exact、committed conservative
+及 static。三条 Guard 参数与 Aging beta 均不因开发结果改变。
 
-> With the previously selected Guard(600) parameters unchanged, the conservative score
-> closed 0.640 [0.604, 0.671], 0.634 [0.560, 0.688], and 0.429 [0.357, 0.533] of the
-> SJF--FCFS deadline-window p99 gap across the three load levels. The corresponding
-> original-clock values were 0.740, 0.837, and 0.801, and the no-outcome-history static
-> controls were 0.560, 0.571, and 0.349.
+`exact_cells.csv` 是逐格结果，`exact_comparison.csv` 是五条 overlay 汇总。p99dl 与 gap closed
+沿用原聚合，区间仍是原 2,000 次 paired week-block bootstrap；max excess、harm 用原 worst-cell
+聚合，firing rate 用原 queue-weighted 定义。分布汇总是五条 overlay 相应统计量的均值，max 取
+最大；不是把全部受影响 job 混成一条池化分布。
 
-> The reduction at the busiest load is material: the original clock overstated the
-> deployable benefit. The conservative result nevertheless remains above the static
-> control, supporting a narrower claim that within-term completed-outcome history adds
-> useful ranking information under the frozen lag certificate.
+<!-- MEASURED_EXACT -->
+
+`exact_sensitivity_comparison.csv` 对照保留外生其他班次历史与整条删除该类历史后再精确细化的
+Guard(600)。这检验拷贝语义，不是同拷贝排队延迟。
+
+<!-- MEASURED_SENSITIVITY -->
+
+headline 的决定与边界见 ADR 0007 的 2026-09-23 Amendment；旧决定与原表保留为历史。original
+是 optimistic reference，conservative/static 是较少历史信息的参照锚，并非数学上的性能上下界。
+原 pooled AUROC 0.9360、conservative 0.9116、static 0.8371 属于原预测器比较；exact 分数随策略
+与 cell 改变，不能把旧 pooled AUROC 的下降归因于排队，也不能用它替代本次 policy-specific 实验。
+
+## 6. 验证池重选的成本与限制
+
+验证 pool、逐格 harm 约束、最大化 worst-cell gap 的规则在本次工作前已固定。若按 exact 分数
+重新选择，每个候选策略需要自己的细化，不能共用最后选中策略的 exact 分数再扫全部参数。
+
+查看新结果前，计时方案按 fixed、capped、hybrid、aging 网格分成 12 层，每层均匀抽取一个候选
+与独立均匀抽取一个验证 cell，种子 20260922。fixed 的 42 个点分三层；capped 与 hybrid 按三个
+G 分层；11 个 aging 点分三层。`outputs/consistent_selection_final/timing_plan.json` 先写方案；
+`timing_cells.csv`、`timing_passes.csv`、`cost_projection.json` 写完整测量与外推。
+
+按层大小加权到全部 15 格，另给 258 个 Guard 展开点降到 243 条不同调度的节省，再按理想两
+worker 加速除以二；不计拟合、读盘及 FCFS/SJF reference。因此是乐观时间估计，不是统计置信下界。
+计时样本的调度指标不参与选参。
+
+12 个计时点全部完成，终止轮均为零违规。细化本身合计 3,329.65 秒，含读盘与 reference 的计时
+循环为 3,427.29 秒；整条命令含冻结模型复现约 58.1 分钟。具体样本如下，cell 写作 overlay/level：
+
+| 层 | 网格权重 | 抽中策略 | cell | 轮数（含零轮） | 细化秒数 |
+|---|---:|---|---|---:|---:|
+| fixed low | 14 | FIX-B60 | 4/2 | 14 | 300.84 |
+| fixed middle | 14 | FIX-B568.726 | 4/1 | 17 | 333.68 |
+| fixed high | 14 | FIX-B2919.9 | 3/2 | 15 | 331.96 |
+| capped 300 | 54 | B240, eta=.75 | 3/2 | 15 | 353.37 |
+| capped 600 | 54 | B30, eta=.9 | 3/2 | 15 | 349.59 |
+| capped 1200 | 54 | B120, eta=.25 | 4/1 | 13 | 279.34 |
+| hybrid 300 | 18 | B0, gamma=4, eta=.9 | 1/2 | 14 | 321.38 |
+| hybrid 600 | 18 | B120, gamma=4, eta=0 | 2/0 | 12 | 207.71 |
+| hybrid 1200 | 18 | B30, gamma=4, eta=0 | 4/1 | 15 | 300.57 |
+| aging low | 4 | beta=.00003 | 0/1 | 14 | 192.77 |
+| aging middle | 4 | beta=.001 | 2/2 | 15 | 227.84 |
+| aging high | 3 | beta=.1 | 2/2 | 8 | 130.60 |
+
+乐观的去重双 worker 全网格外推是 **164.26 小时**，超过约 8 小时预算约 20.5 倍；未去重的
+串行外推是 348.26 小时。因此没有运行 exact 全网格重选，也没有第二套选中参数。我们实际完成
+的是上述预声明成本评估和固定原参数的全部开发比较。读者可以据此比较同一决策规则在不同信息
+协议下的结果，不能据此断言 exact 下的最优参数、验证池可行性或更换参数后的开发性能。
+
+计时清单记录四个核心实现文件的 SHA。计时后补充了首轮绝对分数的内存保存（供队列 rank 的精确平局
+处理）和“其他班次没有重放 job 则保留”的敏感性边界；这些不改变计时用的违规检测、调度或主
+细化语义，后者也未在计时样本中启用。成本外推不包含这两项的独立重测，不视为精确墙钟承诺。
+
+保留的参数如下；frozen-score sensitivity 改变的是信息协议，不是参数选择规则。
+
+| policy | family | B0 base (s) | eta | gamma base (s) | beta |
+|---|---|---:|---:|---:|---:|
+| Guard(300) | capped | 60 | .5 | 0 | — |
+| Guard(600) | capped | 120 | .75 | 0 | — |
+| Guard(1200) | hybrid | 0 | 0 | 16 | — |
+| Aging(600) | linear aging | — | — | — | .03 |
+
+Guard 点原来按 original 选择，Aging 的 .03 按 conservative 选择。固定参数比较可隔离信息协议
+影响，但不等于 exact 下的最优调参结果，不证明 exact 仍满足原验证池选参可行性条件，也不能把
+未运行的全网格称为重选。开发结果不回流选择任何候选。
+`Aging(600)` 保留原比较标签，600 是原验证协议的目标，不是更换分数后仍成立的逐 job 上界；
+它在 exact 下的 max excess 与 harm 必须照实报告。
+
+## 7. 复现、保存旧表与运行成本
+
+测量使用不可变的 `configs/visibility_development_20260922.yaml`；最终决定写回 `configs/main.yaml`，
+不回写测量配置。旧产物清单指向字节完全相同的 `configs/main_original_84932d9.yaml`，保留原配置
+与产物哈希，不声称旧表在新配置下重跑。
+
+```sh
+env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
+  NUMBA_NUM_THREADS=4 OMP_NUM_THREADS=4 uv run --no-sync python \
+  scripts/assess_consistent_selection.py \
+  --config configs/visibility_development_20260922.yaml \
+  --out-dir outputs/consistent_selection_final --workers 2
+
+env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
+  NUMBA_NUM_THREADS=4 OMP_NUM_THREADS=4 uv run --no-sync python \
+  scripts/run_consistent_visibility.py \
+  --config configs/visibility_development_20260922.yaml \
+  --pool primary --out-dir outputs/dev_consistent_visibility --workers 2 --resume
+```
+
+exact runner 最多同时执行两个 cell，每个 worker 内按 policy 顺序细化并复用自己的冻结模型与
+缓存。主进程构造控制分数后释放全量上下文；两个持久 worker 各自重建并逐值验证同一模型配方，
+不共享可变历史状态。汇总按预先固定的 cell 次序，不按完成先后，以保持浮点聚合顺序。每次只有
+一条重计算命令，`--workers 2`、Numba 和 OpenMP 各 4 线程。
+
+<!-- MEASURED_COST_AND_CHECKS -->
+
+`scripts/check_preserved_outputs.py` 对原 75 张 CSV 的 18,627 行与所有原列逐字节核验；
+另有 10 张从未重跑或改写的既有校验/smoke CSV、308 行纳入辅助快照检查。
+`scripts/check_consistent_visibility.py` 检完整覆盖、单调证书和 sparse delta，并把重放的
+original/conservative/static 锚点与旧逐格表核对。新论文衍生表写入独立
+`outputs/consistent_paper_tables/`，不覆盖 `outputs/paper_tables/`。命令、封存顺序与磁盘预算见
+`GENERATED.md` 和 `docs/sealed_run_procedure.md`；这里只更新 draft，不创建正式 lock。
+
+## 8. 论文可使用的陈述
+
+<!-- PAPER_SENTENCES -->

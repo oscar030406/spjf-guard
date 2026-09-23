@@ -1,9 +1,9 @@
 {
-  "written_at": "2026-09-21T12:53:45-04:00",
+  "written_at": "2026-09-23T01:04:26-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
-    "sha256": "94c82eabb1428300a6badc037e6fc795e5e451388af9fad83dcc4e1123f153ee",
+    "sha256": "7f17d392a9d2f9a6dfd60d36ac4204821ebc9d9073badc79fa2ea97cb6cbb08e",
     "document": {
       "name": "main",
       "description": "CodeBench shared judge pool, development terms, five overlays, three loads",
@@ -123,6 +123,47 @@
             "history_scope": "global",
             "eligible_results_only": false
           }
+        },
+        "exact_visibility": {
+          "algorithm": "monotone_per_job_withholding",
+          "base_score": "spjf_e",
+          "model_weights": "frozen",
+          "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+          "external_history_clock": "original_relative",
+          "same_semester_other_class_history": "exogenous",
+          "alternative_sensitivity": "drop_same_semester_other_class_records",
+          "sensitivity_policies": [
+            "Guard(600)"
+          ],
+          "terminal_assertion": "no_new_violation",
+          "policies": [
+            "SPJF-E",
+            "Guard(300)",
+            "Guard(600)",
+            "Guard(1200)",
+            "Aging(600)"
+          ],
+          "fixed_lags_s": [
+            60.0,
+            300.0,
+            900.0,
+            3600.0
+          ],
+          "selection_assessment": "retained_original_due_cost",
+          "selection_cost_seed": 20260922,
+          "reselection_budget_hours": 8.0,
+          "development_overlays": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "development_levels": [
+            0,
+            1,
+            2
+          ]
         },
         "heavy_quantile": 0.95,
         "heavy_reference_semesters": [
@@ -335,6 +376,7 @@
         ],
         "aging_baseline": {
           "label": "Aging(600)",
+          "ranking_score": "spjf_e_conservative",
           "guarantee": "none",
           "priority": "predicted_cost - credit_per_s * current_age_s",
           "reference_promise_s": 600.0,
@@ -478,12 +520,42 @@
           "visibility_exposure.csv",
           "visibility_waits_and_lag.csv",
           "manifest.json"
+        ],
+        "sealed_consistent_visibility_tables": [
+          "exact_cells.csv",
+          "exact_comparison.csv",
+          "exact_passes.csv",
+          "same_copy_exposure_cells.csv",
+          "same_copy_exposure.csv",
+          "attribution_cells.csv",
+          "attribution_comparison.csv",
+          "exact_delta_manifest.csv",
+          "exact_costs.csv",
+          "exact_sensitivity_cells.csv",
+          "exact_sensitivity_comparison.csv",
+          "manifest.json"
         ]
       }
     }
   },
+  "config_snapshots": [
+    {
+      "path": "configs/main_original_84932d9.yaml",
+      "present": true,
+      "sha256": "94c82eabb1428300a6badc037e6fc795e5e451388af9fad83dcc4e1123f153ee"
+    },
+    {
+      "path": "configs/visibility_development_20260922.yaml",
+      "present": true,
+      "sha256": "3ecc81fe448828622088fade31856b9d3f68b8f5163d77f97d0f1f0ac9654bc0"
+    }
+  ],
   "code": {
     "files": [
+      {
+        "path": "scripts/assess_consistent_selection.py",
+        "sha256": "a5d5f10182b3617c1c5f673530739649c3590f565953c772ec9a1515f66e955a"
+      },
       {
         "path": "scripts/build_cache.py",
         "sha256": "4699e82911fe5d12efa203f752fd99b849e5e828b5b8b34643adbdc89efd5d0a"
@@ -493,12 +565,16 @@
         "sha256": "bdd8fed9aaff36d003207df3d58becefe9cd45da4cf36e4afd13095368c4b4c3"
       },
       {
+        "path": "scripts/check_consistent_visibility.py",
+        "sha256": "2c511cb80c08ba80e386bb26b8790053ffb3103fa37b90a33f14b2ba352373b6"
+      },
+      {
         "path": "scripts/check_features.py",
         "sha256": "80a999e8b2848156283b3d84f502431f9f6ba50c180782a288814e2b4945fe7f"
       },
       {
         "path": "scripts/check_generated.py",
-        "sha256": "ff596deb88b91a9f952050875103d86778fab6d3e4b17b524ab6e8f751ff66af"
+        "sha256": "21a6302bfcd27da2459ab1cf70eb3bc92ffb2325df46b2e68c4e2dc3a97f179b"
       },
       {
         "path": "scripts/check_overlays.py",
@@ -506,7 +582,11 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "776235abb1af4e81e846aa6caa1bcb3c08409bdbde79f75afa7a279816ef629c"
+        "sha256": "f2347dd2381a9ef8a20104c451dafb22b28a232661ca9cc10478aa3e017c75a3"
+      },
+      {
+        "path": "scripts/check_preserved_outputs.py",
+        "sha256": "108dd93e5b1ce71146acbd0a93f062fbcc8271d15976a0366846b1377dbc0508"
       },
       {
         "path": "scripts/check_reproduction.py",
@@ -517,12 +597,16 @@
         "sha256": "7d2a99d70b8a74efba25dbe8ab0c3e403e78e7a67e2d92aa1f92fb7efa298d83"
       },
       {
+        "path": "scripts/consistent_cells.py",
+        "sha256": "be44bf402d9d2a18e2acd1d006daabf6c2c9d34cc59a74236bae38fb94b5948d"
+      },
+      {
         "path": "scripts/diff_dev_tables.py",
         "sha256": "462245badf10ec4169cc6368eb33d77bfa16639ef53ed3fc69a8fefb2eeec35f"
       },
       {
         "path": "scripts/emit_paper_tables.py",
-        "sha256": "bde91b971fe89c99bb0ab5d4d9e81a765ea559afa144313258837a2df4235064"
+        "sha256": "eb6207b83f98b11950cf19d8f970e44995d7b59638951d8a781902ea22a74f0d"
       },
       {
         "path": "scripts/eval_scores.py",
@@ -538,23 +622,27 @@
       },
       {
         "path": "scripts/make_protocol_lock.py",
-        "sha256": "92d25705f5c61731013232179839fd6fd508e1b31f5e1caeb2aad8c16975d6bf"
+        "sha256": "8329cab65d2fd4dd7d91cc4dea16b782baefc4955634347087cf0c56cffc8661"
       },
       {
         "path": "scripts/parse_archive.py",
         "sha256": "ea5b01b2142dbac736de4ef0f466fb4b1bd7b98aba2d07d0d3c0672d4aacc40d"
       },
       {
+        "path": "scripts/run_consistent_visibility.py",
+        "sha256": "817248c28ef105f86a9841c8d51f8e0dbf9e316c35668ae20725cace14adbb79"
+      },
+      {
         "path": "scripts/run_main.py",
-        "sha256": "39d50ca54a893edcb7ded75e2a8c7998272b89266b03692f91d108c80696b0f5"
+        "sha256": "2644012141abd09e479b697bcd5e18d6de690a65a991a27396dd2fff3703f87c"
       },
       {
         "path": "scripts/run_visibility.py",
-        "sha256": "2f63e656885bb3eb4be57a0f360314320c4229a1cd7f55c260e7f21ed6e9b612"
+        "sha256": "26b40fb891c848e8de4f18beff460cd210a9a938b9d96bad4762403ea41e8ce2"
       },
       {
         "path": "scripts/select_aging.py",
-        "sha256": "32b12e844202307c9d1437f3dfb2a7bf3c3fbecdd2e19fbf0b5127ebd8654e80"
+        "sha256": "33271dff1e734e5666fc50115f0134955c8c56ba6e8494c16ce22a844b5a9e9d"
       },
       {
         "path": "scripts/select_parameters.py",
@@ -566,7 +654,7 @@
       },
       {
         "path": "src/spjf_guard/config.py",
-        "sha256": "d9f1918acaa34999e001a91b3cc049bd92bb9a425c91b8402c4aa867c0abc522"
+        "sha256": "b3abfeb8c4afbdf5fc30ba9a0d9669801077c090c87a164c991a55399eab471b"
       },
       {
         "path": "src/spjf_guard/data/__init__.py",
@@ -590,7 +678,7 @@
       },
       {
         "path": "src/spjf_guard/data/sealed.py",
-        "sha256": "811fc654f76368d5ccc387a59c4517ef7c0e3bc8e5544a51422b52f0bc34b80d"
+        "sha256": "dd9138521d327ac3c7b2bd8703c2c7ab7ce0b89f2e230a52bf438324f42c9192"
       },
       {
         "path": "src/spjf_guard/experiment/__init__.py",
@@ -603,6 +691,10 @@
       {
         "path": "src/spjf_guard/experiment/bootstrap.py",
         "sha256": "772aa94028db74734ceba150b5023fd409d6b33b934d7fab48c04e4327c6d5df"
+      },
+      {
+        "path": "src/spjf_guard/experiment/consistent.py",
+        "sha256": "0a545296ad69f908a4c42b2f5e8a8f66c6947517fcfda3b8ba7b00aa287ad14d"
       },
       {
         "path": "src/spjf_guard/experiment/grids.py",
@@ -618,7 +710,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/paper_tables.py",
-        "sha256": "cdfd1dea83b9f56f283e30619f630144d9233f78dd9f8b1748ab01d98fe1c9a9"
+        "sha256": "3ffd9a6944d09a032769f143c8b457a74ba4c7c652dc5dfe5a1e4f88bff66084"
       },
       {
         "path": "src/spjf_guard/experiment/parallel.py",
@@ -646,7 +738,11 @@
       },
       {
         "path": "src/spjf_guard/experiment/visibility.py",
-        "sha256": "2b6750f635244216898af2086318d556bc6cb98ba1cf14b4e4b02c6c703c32e6"
+        "sha256": "3850f739a15afd29281e12d54cad44763bd733d411b489daeeac1c220a1e99fa"
+      },
+      {
+        "path": "src/spjf_guard/experiment/visibility_controls.py",
+        "sha256": "68394aba499229e008f41fe8632f71204c168f29eaf9c32b0f291aac4f6f2363"
       },
       {
         "path": "src/spjf_guard/features/__init__.py",
@@ -655,6 +751,10 @@
       {
         "path": "src/spjf_guard/features/causal.py",
         "sha256": "9d2d5c1d03be3acb80c75d4c64c644a787cce81f82a07dd881e2376f01a12eae"
+      },
+      {
+        "path": "src/spjf_guard/features/refine.py",
+        "sha256": "fa74826ddbb81e584ef2576acae85878420d709ca8c9dfe357888f38777374c7"
       },
       {
         "path": "src/spjf_guard/features/sweep.py",
@@ -666,7 +766,7 @@
       },
       {
         "path": "src/spjf_guard/predict/forward.py",
-        "sha256": "8990a34a3ea2bdd8cdbc31699973a7dcaddcc713b0f13383043050415cba86ac"
+        "sha256": "3e4960dfb0e5670dcfe69a4edb7a07d37bbbc87813e92e89a6bcfc5154d979d8"
       },
       {
         "path": "src/spjf_guard/predict/scores.py",
@@ -713,6 +813,34 @@
         "sha256": "7605fcc273e5219067ead38a751b1c71e13f36c4473530ae3d4f50cc52f1fd2a"
       },
       {
+        "path": "tests/test_consistent_cells.py",
+        "sha256": "6447e74c67825d70ea4d8d65c7c2ca7ab1f99947c278ca556de2eccdaf44fd99"
+      },
+      {
+        "path": "tests/test_consistent_certificate.py",
+        "sha256": "ea73cb71d6ba9d4f312ca6ebc3b7d0cbc80524745826ee4069dff3d386f39c73"
+      },
+      {
+        "path": "tests/test_consistent_covered.py",
+        "sha256": "ebe16e12f90233e7f0bf1acd303e150b70411de0d151f372aa5221def9e99bd4"
+      },
+      {
+        "path": "tests/test_consistent_protocol.py",
+        "sha256": "e9f38acc847ac588550a6000e1ad0e9da89b1ac793f0124a25068fba70bfd6c0"
+      },
+      {
+        "path": "tests/test_consistent_runner.py",
+        "sha256": "d07b1edaa6ee568796a76064b305f364f02d242113acb0a8eb3060a4341eeaac"
+      },
+      {
+        "path": "tests/test_consistent_selection_assessment.py",
+        "sha256": "cdf5a3dc6fd2c71f647d9cb0335917e07e19b32b674ba93ad570190e51709d39"
+      },
+      {
+        "path": "tests/test_consistent_visibility.py",
+        "sha256": "c722ddf6529e7fa7aabe7107a1f24b51164cd5284e1296f40de03f73d56a4cdd"
+      },
+      {
         "path": "tests/test_data_cache.py",
         "sha256": "2e42ea1bb94b195493717aeaa2e070e3ba221492340bf046391bd01bb27f51bf"
       },
@@ -722,19 +850,31 @@
       },
       {
         "path": "tests/test_eval_scores.py",
-        "sha256": "b1e4113b1052b5a95501a64a444fdae31e83a73cf62578f309ce29a4fc0c38d2"
+        "sha256": "54053f4a6cc1f832d52a0fb803bb3b381b0ab54b6d3e48dc123b1e6d0f16e03b"
       },
       {
         "path": "tests/test_experiment.py",
         "sha256": "b332c83027c695bdd275dfd27baabd3c3526819f24548f27489be0f4730f6bff"
       },
       {
+        "path": "tests/test_feature_refine.py",
+        "sha256": "097b0f1589d7e658af64f4e758cbe43eaffcc8b19f73aa80f5bafb1a677985d5"
+      },
+      {
         "path": "tests/test_features_causal.py",
         "sha256": "2aa2c36850f94d240bac1a06200901785bd24f2c46b18cd115af60f65aebc5f9"
       },
       {
+        "path": "tests/test_frozen_m4.py",
+        "sha256": "cfd76d736c58f36cb3ce0f504a1a9536e053badb0c70c0c1dcdd311221f2c325"
+      },
+      {
         "path": "tests/test_grids.py",
         "sha256": "6950526db247b27570a35fd5a5a8dc936c5175947080b4b4b5309c001c10e20b"
+      },
+      {
+        "path": "tests/test_legacy_visibility_certificate.py",
+        "sha256": "a14e8d4ea678f8271f2a1a15656ef132f787ba6f1a3eb669e3b66484dd0cad0d"
       },
       {
         "path": "tests/test_overlay_pools.py",
@@ -747,6 +887,10 @@
       {
         "path": "tests/test_predict.py",
         "sha256": "8a56f31b3f076acadc2650c372aacbf33910581657cda5387805977a84682cd5"
+      },
+      {
+        "path": "tests/test_protocol_lock_validation.py",
+        "sha256": "260fb802687983a166f5e84ae4035f01b96cd388a70f8cc79fe0bafca97c2b48"
       },
       {
         "path": "tests/test_provenance.py",
@@ -762,7 +906,7 @@
       },
       {
         "path": "tests/test_sealed_data.py",
-        "sha256": "fd156e625bbd36e4cd9eb4522c317485481192e3a18687f9e5e53a1b81f9f040"
+        "sha256": "d87770454db704cef035fffdc5b1d976a4f4efcd9d0fd12ecbc457f0300449c5"
       },
       {
         "path": "tests/test_sealed_k1.py",
@@ -790,10 +934,14 @@
       },
       {
         "path": "tests/test_visibility.py",
-        "sha256": "5d6fddb8dc0cf91a04e2b76a01519fec390a2c2bdf3fdd5110379de91886d07d"
+        "sha256": "2777d096792d8611522d8feb824b901a7f3b6d745c67f4018ec596aea1199e25"
+      },
+      {
+        "path": "tests/test_visibility_controls.py",
+        "sha256": "7d80a03f4ab32976602f6a21a0d816316a1c1fb175faf9b62db7ea2e5ea54e4d"
       }
     ],
-    "digest": "e5bbd872eb87130fac8ea836c16cb22e4a8288955e54ab3feb00cb1d27a1f23c"
+    "digest": "3e0d24cfa44594e24907ba4104bc9bae8fee0ed67ff99668eff8313b8b20b17f"
   },
   "inputs": {
     "artefacts": [
@@ -909,6 +1057,47 @@
           "2022-1",
           "2022-2"
         ]
+      },
+      "exact": {
+        "algorithm": "monotone_per_job_withholding",
+        "base_score": "spjf_e",
+        "model_weights": "frozen",
+        "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+        "external_history_clock": "original_relative",
+        "same_semester_other_class_history": "exogenous",
+        "alternative_sensitivity": "drop_same_semester_other_class_records",
+        "sensitivity_policies": [
+          "Guard(600)"
+        ],
+        "terminal_assertion": "no_new_violation",
+        "policies": [
+          "SPJF-E",
+          "Guard(300)",
+          "Guard(600)",
+          "Guard(1200)",
+          "Aging(600)"
+        ],
+        "fixed_lags_s": [
+          60.0,
+          300.0,
+          900.0,
+          3600.0
+        ],
+        "selection_assessment": "retained_original_due_cost",
+        "selection_cost_seed": 20260922,
+        "reselection_budget_hours": 8.0,
+        "development_overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "development_levels": [
+          0,
+          1,
+          2
+        ]
       }
     },
     "feature_set": {
@@ -947,6 +1136,47 @@
           "history_scope": "global",
           "eligible_results_only": false
         }
+      },
+      "exact_visibility": {
+        "algorithm": "monotone_per_job_withholding",
+        "base_score": "spjf_e",
+        "model_weights": "frozen",
+        "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+        "external_history_clock": "original_relative",
+        "same_semester_other_class_history": "exogenous",
+        "alternative_sensitivity": "drop_same_semester_other_class_records",
+        "sensitivity_policies": [
+          "Guard(600)"
+        ],
+        "terminal_assertion": "no_new_violation",
+        "policies": [
+          "SPJF-E",
+          "Guard(300)",
+          "Guard(600)",
+          "Guard(1200)",
+          "Aging(600)"
+        ],
+        "fixed_lags_s": [
+          60.0,
+          300.0,
+          900.0,
+          3600.0
+        ],
+        "selection_assessment": "retained_original_due_cost",
+        "selection_cost_seed": 20260922,
+        "reselection_budget_hours": 8.0,
+        "development_overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "development_levels": [
+          0,
+          1,
+          2
+        ]
       },
       "heavy_quantile": 0.95,
       "heavy_reference_semesters": [
@@ -2827,6 +3057,20 @@
       "visibility_paired_differences.csv",
       "visibility_exposure.csv",
       "visibility_waits_and_lag.csv",
+      "manifest.json"
+    ],
+    "sealed_consistent_visibility_tables": [
+      "exact_cells.csv",
+      "exact_comparison.csv",
+      "exact_passes.csv",
+      "same_copy_exposure_cells.csv",
+      "same_copy_exposure.csv",
+      "attribution_cells.csv",
+      "attribution_comparison.csv",
+      "exact_delta_manifest.csv",
+      "exact_costs.csv",
+      "exact_sensitivity_cells.csv",
+      "exact_sensitivity_comparison.csv",
       "manifest.json"
     ],
     "load": {

@@ -108,8 +108,10 @@ $^{2}$ \quad [Second author: department, institution, city and postcode, country
 
 \corres{Correspondence: [corresponding author e-mail]}
 
-\abstract{A shared execution service runs jobs on a fixed pool of servers, without preemption, under a per-job time limit $L$. Reordering by predicted cost shortens most waits and can leave one job far behind. We prove a pathwise identity: for any non-preemptive work-conserving $k$-server policy and input, a job's delay relative to first-come first-served equals its net overtaken work divided by $k$, to within $(2-2/k)L$, an exact supremum. Bounding overtaken work is therefore sufficient for a per-job guarantee, and necessary up to an additive $O(kL)$; a count of overtakes is not necessary, and suffices only by charging $L$ per pass. A wrapper enforcing that budget bounds every wait against first-come first-served under arbitrary arrivals and predictions. It reads the budget only through a cap, so the shape below is free; the additive constant $(3-2/k)L$ is likewise exact, and the cap follows from a promise in seconds. The score should estimate expected cost, not a log-scale point prediction. We evaluate on two judging platforms, a serverless trace, two continuous-integration pools that check the simulator, and a compute farm. The method needs a time limit comparable to the waits at issue and heavy-tailed costs; we report the workloads that fail~each.}
+\abstract{A shared execution service runs jobs on a fixed pool of servers, without preemption, under a per-job time limit $L$. Reordering by predicted cost shortens most waits and can leave one job far behind. We prove a pathwise identity: for any non-preemptive work-conserving $k$-server policy and input, a job's delay relative to first-come first-served equals its net overtaken work divided by $k$, to within $(2-2/k)L$, an exact supremum. Bounding overtaken work is therefore sufficient for a per-job guarantee, and necessary up to an additive $O(kL)$; a count of overtakes is not necessary, and suffices only by charging $L$ per pass. A wrapper enforcing that budget bounds every wait against first-come first-served under arbitrary arrivals and predictions. It reads the budget only through a cap, so the shape below is free; the additive constant $(3-2/k)L$ is likewise exact, and the cap follows from a promise in seconds. Expected-cost ordering is an empirically motivated base policy rather than a multiserver optimality claim. We evaluate on two judging platforms, a serverless trace, two continuous-integration pools that check the simulator, and a compute farm. The empirical headline uses conservative outcome visibility: at the busiest development load, a \devnum{600}-second guard closes \devnum{0.429} of the FCFS-to-SJF tail-wait gap, with interval \devnum{[0.357, 0.533]}. Original-clock results are optimistic references. We report when the uniform certificate is too coarse for the observed waits and when cost concentration offers little benefit.}
 
+% Source of the abstract's empirical values: outputs/dev_visibility/visibility_comparison.csv,
+% level=2, Guard(600), gap_closed and gap_closed_lo/hi.
 \keyword{non-preemptive scheduling; scheduling with predictions; multiserver queues; bounded overtaking; per-job guarantee; first-come first-served; runtime prediction}
 
 % Mathematics prints MSC 2020 codes under the keywords: scheduling theory, performance
@@ -154,7 +156,10 @@ Theorem~\ref{thm:identity} on all nine cells; Table~S5, the single-server
 configuration. Section~S4, the two deferred proofs that
 Appendices~\ref{app:strict} and~\ref{app:consistency} point to: Lemma~\ref{lem:gap}
 with its strictness, and Proposition~\ref{prop:consistency} with the two
-counterexamples to its converse.}
+counterexamples to its converse. Section~S5, the reproducibility specification,
+including exact grids, splits, information clocks and table provenance. Section~S6,
+the capacity sweep, physical timed-work experiment, feedback counterexamples and
+LPC-EGEE counterfactual. Further theoretical additions follow.}
 
 \authorcontributions{[to be completed by the authors]. The template expects the
 CRediT roles (conceptualization, methodology, software, validation, formal
@@ -172,7 +177,7 @@ grant number and the funding body go here.}
 
 \informedconsent{Not applicable.}
 
-\dataavailability{Five of the six workloads used here are public at the
+\dataavailability{The public source datasets used here are available at the
 locations cited, and we redistribute none of them. The CodeBench judging logs
 are published by the Universidade Federal do Amazonas \cite{codebench_dataset};
 the ACcoding dataset is published with its data descriptor \cite{accoding2024};
@@ -182,26 +187,24 @@ Azure Public Dataset repository \cite{azure2021trace}, which asks that
 \cite{zhang2021harvested} be cited; and the Intel Netbatch logs are published in
 the Parallel Workloads Archive \cite{netbatch2012trace}, which asks that
 \cite{shai2014netbatch} be cited and that the logs be acknowledged to their
-depositors. The sixth, the continuous-integration trace of the two Firefox
+depositors. The LPC-EGEE log is also published in the Parallel Workloads Archive
+\cite{lpc_egee_trace}, with acknowledgment requested for its data provider.
+The continuous-integration trace of the two Firefox
 hardware worker pools, was collected by us from Mozilla's public,
 unauthenticated Taskcluster and Treeherder APIs
 \cite{taskcluster_docs,treeherder_docs}; we do not redistribute it, and the
 collection scripts that rebuild it from those APIs are part of the released
-code. No data were obtained under licence or under an access agreement, and no
+code. The Azure invocation trace is distributed under the publisher's Creative Commons
+Attribution licence \cite{azure2021trace}; public availability does not imply an
+absence of licence conditions. No restricted access agreement was used, and no
 personal data were processed beyond the pseudonymous user identifiers the
 published judging datasets already carry. The simulator, the predictors, the
-guard implementation and the configuration files that reproduce every table and
-figure in this paper are to be released with the paper at [repository URL to be
+guard implementation, configurations and archived development analyses are to be
+released with the paper. Supplementary Section~S5 distinguishes the tables reproduced
+by the package from the earlier development evidence. The release will be available at [repository URL to be
 completed by the authors].}
 
-% Generative-AI disclosure, in the wording the journal template prescribes. The authors
-% confirm the tool version and the list of uses before submission.
-\acknowledgments{During the preparation of this manuscript, the authors used Claude
-(Anthropic; accessed through Claude Code, versions available in September 2026) for the
-purposes of drafting and editing text, writing and reviewing the analysis and simulation
-code, searching and summarising the literature, and checking proofs and reported numbers
-for consistency. The authors have reviewed and edited the output and take full
-responsibility for the content of this publication.}
+\acknowledgments{[to be completed by the authors].}
 
 \conflictsofinterest{[to be completed by the authors]. The template asks for
 ``The authors declare no conflicts of interest'' where that holds, and otherwise

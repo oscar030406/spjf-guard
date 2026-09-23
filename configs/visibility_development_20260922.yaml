@@ -114,7 +114,7 @@ features:
     terminal_assertion: no_new_violation
     policies: [SPJF-E, Guard(300), Guard(600), Guard(1200), Aging(600)]
     fixed_lags_s: [60.0, 300.0, 900.0, 3600.0]
-    selection_assessment: retained_original_due_cost
+    selection_assessment: pending
     selection_cost_seed: 20260922
     reselection_budget_hours: 8.0
     development_overlays: [0, 1, 2, 3, 4]
@@ -215,9 +215,6 @@ scheduling:
   corrupted_scores: [reversed, random, longest_one_percent_called_shortest]
   aging_baseline:
     label: Aging(600)
-    # Preserve the committed reference rows and the original validation selection.
-    # The policy-specific exact runner explicitly substitutes each comparison score.
-    ranking_score: spjf_e_conservative
     guarantee: none
     priority: "predicted_cost - credit_per_s * current_age_s"
     reference_promise_s: 600.0

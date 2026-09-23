@@ -8,7 +8,7 @@
 The validation scenario is an educational one: two programming-assignment judging
 platforms supply the demand traces, and four further workloads bound the claim from
 outside that setting. What each trace can be used for is decided by whether its arrival
-times are real, whether the queue wait is recorded, and how long a job may run there
+times are observed or reconstructed, whether the queue wait is recorded, and how long a job may run there
 (Table~\ref{tab:traces}).
 
 % Wider than the MDPI text block, so it is set across the full page with the
@@ -17,7 +17,7 @@ times are real, whether the queue wait is recorded, and how long a job may run t
 \begin{adjustwidth}{-\extralength}{0cm}
 \centering
 \caption{The traces, their role and what they record. ``Arrivals'' says whether the arrival
-instants are recorded rather than drawn; ``Waits'' whether the queue wait of each job is
+instants are recorded, reconstructed proxies, or drawn; ``Waits'' whether the queue wait of each job is
 itself recorded.}
 \label{tab:traces}
 \small
@@ -32,7 +32,7 @@ CodeBench~\cite{codebench_dataset} &
 main demand trace &
 \devnum{4{,}611{,}325} blocks, \devnum{863{,}149} graded submissions in the development pool &
 one stamp per block, the end of the run &
-yes (as end $-$ $C$) & no \\
+start proxy & no \\
 ACcoding~\cite{accoding2024} &
 second judging platform &
 \devnum{4{,}046{,}652} rows, \devnum{3{,}237{,}322} non-sealed &
@@ -41,8 +41,8 @@ no, drawn & no \\
 Serverless invocations \cite{azure2021trace} &
 method applies outside education &
 \devnum{1{,}980{,}951} invocations over \devnum{14.000} d &
-end stamp and duration &
-yes & no \\
+modified end stamp and duration &
+start proxy & no \\
 CI pool A \cite{taskcluster_docs,treeherder_docs} &
 simulator validation, light tail &
 \devnum{191{,}970} runs over \devnum{21} d &
@@ -103,7 +103,8 @@ close by jittering each stamp deterministically: a classifier given only the fra
 part of the gap to the previous record separates heavy from light jobs with AUROC
 \devnum{0.8091} on the whole-second clock and \devnum{0.4499} after the jitter, while
 the forward models of the two clocks stay within \devnum{0.008} of AUROC of each other.
-The platform limit is \devnum{60} s and the last run to reach a longer time ends at
+The observed regime has an upper ceiling of \devnum{60} s; this is not evidence of
+a documented enforced timeout. The last run to reach a longer time ends at
 \devnum{2019-08-28}; the periods before that date stay out of the primary pool, and
 where used at all they carry the later limit, $C^{\mathrm{cap}} = \min(C, 60)$
 (Table~\ref{tab:tails}). Groups of runs by the same user that end in the same second are
@@ -112,13 +113,14 @@ stretched each other, so we neither delete them silently nor treat each as an
 independent arrival, and the scheduling trace is rebuilt twice, once with each group
 collapsed into one job and once with the groups removed (Table~\ref{tab:sens}).
 
-\subsection{The Original Platform Has No Shared Queue}
+\subsection{What the Source Platform Identifies}
 
 The platform that produced the main trace gives each logged-in student a dedicated
-container and runs their code inside it, so submissions there did not queue behind one
-another. We use the log as a demand trace: arrival instants and per-job costs are real;
-the server pool, the queue and the order are our design. Nothing in this paper claims
-that the original platform slowed down before a deadline.
+container and runs their code inside it. Its logs do not identify the waiting times
+of a shared judging queue. We use recorded durations and reconstructed start-time
+proxies as inputs to a hypothetical shared pool; its capacity, queue and service
+order are our design. Neither this construction nor the absence of shared-queue
+fields establishes that all source-platform work experienced no waiting.
 
 Three things support the design. The first is that a fixed pool of judging hosts on one
 queue is a standard deployment. A widely used contest judging
@@ -163,6 +165,9 @@ on the same machine, added to every service because a machine is not reusable th
 a run resolves. Fitting both on the window and then reporting agreement on that same
 window would be circular, so we refit both on one chronological part of each window and
 test on the other, five splits over the two pools.
+This split is internal to the recorded window and is held out of the fit only; it
+is not sealed in the sense of Section~\ref{sec:sealed}, and the whole window has
+been read.
 
 The capacity is stable across splits. On pool~A the three splits choose \devnum{155},
 \devnum{155} and \devnum{157} of \devnum{173} listed machines, and on pool~B the two
@@ -199,11 +204,21 @@ of the original whole-window fit off the two pools directly.
 %   matching Table~\ref{tab:traces}.  The sharpness check and the circularity read-off
 %   moved to supplementary.tex, Supplementary Section~S2 (referee item G9).
 
+\paragraph{Capacity and physical checks.}
+The supplementary capacity sweep retains the complete offered stream and varies
+the number of servers; it uses the archived embedded Tweedie fit without refitting.
+The physical experiment executes FCFS, SPJF-E and a guard on the complete selected
+development window, with timed slot occupancy and recorded enqueue, dispatch and
+completion events. It tests an executing rule but does not transport submitted
+programs to new hardware. The selected empty-start window is distinct from a
+full-trace replay; its guarded p99 is worse and its job-level ideal-simulator
+agreement fails (Section~\ref{sec:exp_physical}, Supplementary Section~S6).
+
 \subsection{Building the Shared Pool}
 \label{sec:overlay}
 
 A single class-term does not load one server, so we overlay several. The pool takes only the development
-terms that ran under the \devnum{60} s limit, \devnum{40} class-terms in all, and
+terms in the observed \devnum{60} s regime, \devnum{40} class-terms in all, and
 replicates them \devnum{44} times, each copy aligned by weekday and hour and shifted by a
 whole number of weeks drawn per copy. Overlaying whole terms rather than compressing
 inter-arrival times preserves the daily and weekly cycle and each job's position relative
@@ -224,37 +239,43 @@ class-terms to load a pool of four.
 
 \subsection{What the Load Looks Like}
 
-Arrivals follow the course calendar. Predicting the number of executions in an hour
-\devnum{168} hours ahead, a model with lag features alone reaches log-scale RMSE
-\devnum{1.243}, one with calendar features alone \devnum{1.159}, and one with both
-\devnum{1.112}; the paired difference between the last two is \devnum{$-0.1476$
-$[-0.1752, -0.1198]$} over class-week blocks. The corroborating trace shows the same shape
+Arrivals follow the course calendar. Under grouped-class cross-validation,
+predicting executions per class \devnum{168} hours ahead gives log-scale RMSE
+\devnum{1.243} with lag features alone, \devnum{1.159} with calendar features
+alone, and \devnum{1.112} with both. A paired bootstrap over class-week blocks
+gives a combined-minus-lag-only difference of
+\devnum{$-0.1307$ $[-0.1395, -0.1213]$}.
+% Source: evidence/codebench/out_codebench.txt, P4 grouped-class-CV h=168
+% (lgbm_lags, lgbm_cal_only, lgbm_lags_cal) and paired CV h=168 rows.
+ The corroborating trace shows the same shape
 elsewhere: clicks in the three days up to an assessment due date are \devnum{1.29} to
 \devnum{2.95} times the other test days across its nine course-presentations, and a
 seven-day-ahead peak warning on distinct active students goes from F1 \devnum{0.000} under
 a moving-average baseline to \devnum{0.593} once calendar features are added.
 
-Costs are heavy-tailed on every workload except the CI pools, which is where the method's
-second applicability condition shows up (Table~\ref{tab:tails}).
+Costs are concentrated in a small fraction of jobs on every workload except the CI
+pools, which motivates the empirical cost-concentration screen (Table~\ref{tab:tails}).
 
 \begin{table}[htbp]
 \centering
-\caption{Share of total executed work carried by the longest jobs.}
+\caption{Share of executed work carried by the longest jobs, and provenance of the
+analysis bound $L$. An analysis cap is applied to the replay, not evidence of a
+platform-enforced timeout.}
 \label{tab:tails}
 \small
-\begin{tabular}{lccc}
+\begin{tabular}{lccp{0.30\textwidth}}
 \hline
-Trace & Top \devnum{1\%} & Top \devnum{5\%} & Per-job limit \\
+Trace & Top \devnum{1\%} & Top \devnum{5\%} & Bound and provenance \\
 \hline
-CodeBench, \devnum{60} s regime & \devnum{0.375} & \devnum{0.432} & \devnum{60} s \\
+CodeBench, \devnum{60} s regime & \devnum{0.375} & \devnum{0.432} & \devnum{60} s, observed regime ceiling; analysis cap \\
 CodeBench, no-limit periods, raw & \devnum{0.941} & \devnum{0.960} & none \\
-CodeBench, no-limit periods, capped & \devnum{0.494} & \devnum{0.658} & \devnum{60} s applied \\
-ACcoding, measured cost & \devnum{0.275} & \devnum{0.628} & \devnum{30.0} s \\
-ACcoding, with the assumed fixed term & \devnum{0.122} & \devnum{0.290} & \devnum{30.5} s \\
-Serverless invocations & \devnum{0.443} & \devnum{0.879} & \devnum{286.8} s \\
-Compute farm & \devnum{0.372} & \devnum{0.628} & \devnum{493{,}857} s \\
-CI pool A & \devnum{0.034} & \devnum{0.107} & \devnum{5{,}066} s \\
-CI pool B & \devnum{0.052} & \devnum{0.159} & \devnum{4{,}140} s \\
+CodeBench, no-limit periods, capped & \devnum{0.494} & \devnum{0.658} & \devnum{60} s, imposed analysis truncation \\
+ACcoding, measured cost & \devnum{0.275} & \devnum{0.628} & \devnum{30.0} s, observed maximum of measured test-cost sum \\
+ACcoding, with the assumed fixed term & \devnum{0.122} & \devnum{0.290} & \devnum{30.5} s, observed maximum after assumed overhead \\
+Serverless invocations & \devnum{0.443} & \devnum{0.879} & \devnum{286.8} s, training p99.9 analysis cap \\
+Compute farm & \devnum{0.372} & \devnum{0.628} & \devnum{493{,}857} s, training p99.9 analysis cap \\
+CI pool A & \devnum{0.034} & \devnum{0.107} & \devnum{5{,}066} s, training p99.9 of run plus setup; clipped \\
+CI pool B & \devnum{0.052} & \devnum{0.159} & \devnum{4{,}140} s, training p99.9 of run plus setup; clipped \\
 \hline
 \end{tabular}
 \end{table}
@@ -268,19 +289,68 @@ CI pool B & \devnum{0.052} & \devnum{0.159} & \devnum{4{,}140} s \\
 %   CI pools: evidence/firefox_ci/out_SUMMARY.txt section A ("share of total work carried
 %     by the top" and "L' (train p99.9 of service)").
 
-The per-job limit in the last column is the unit in which the guarantee of
-Section~\ref{sec:theory} is denominated; Section~\ref{sec:exp_cross} compares it with the
-waits each operator cares about and decides on that basis which of the six workloads the
-method applies to.
+\paragraph{Arrival and service provenance across traces.}
+CodeBench's jittered result stamp minus the recorded duration is an execution-start
+proxy, not a measured receipt time. ACcoding has no submission clock: arrivals are
+drawn, including the Poisson comparison and the deadline-shaped construction; its
+submission ids determine ordering, not elapsed time. Its measured cost sums test
+case execution times, each subject to its problem limit, and the replay adds an
+assumed \devnum{0.5} s overhead. Thus neither the observed \devnum{30.0} s sum nor
+the resulting \devnum{30.5} s maximum is a verified whole-job timeout.
+% Source: evidence/accoding_v2/out_accoding_v2.txt, field audit and compare section B.
+
+For Azure, the replay arrival is the documented end timestamp minus duration,
+again a start proxy; the publisher explicitly states that invocation timestamps
+were modified from the production trace \cite{azure2021trace}. The Netbatch replay
+uses the recorded SWF submission time and run duration. Their bounds in
+Table~\ref{tab:tails} are training p99.9 truncations, not observed platform timeouts.
+Both FCFS and every reordered policy receive the same truncated service sequence.
+The truncation affects \devnum{1{,}187} Azure jobs and \devnum{7{,}696} Netbatch jobs
+in the analysed pools; it removes \devnum{3.18\%} and \devnum{2.16\%} of raw work.
+% Sources: evidence/cross_domain/meta_azure.csv and meta_netbatch.csv;
+% evidence/cross_domain/out_leaktest_azure.txt and out_leaktest_netbatch.txt,
+% clipped counts; out_audit_azure.txt and out_audit_netbatch.txt, work removed.
+
+In the CI pools, arrival is the recorded scheduled instant, when dependencies have
+cleared and a worker may claim the run; recorded wait is started minus scheduled.
+Service is resolved minus started plus a fitted same-worker setup term. The analysis
+first adds setup and then clips this occupancy at the training p99.9 $L$;
+longer jobs are retained with truncated service, not excluded. This clips
+\devnum{227} runs in pool~A and \devnum{27} in pool~B. FCFS and all comparison
+policies use exactly that same capped occupancy sequence. The source scheduler's
+priority-then-FIFO rule and operational capacity are distinct from the counterfactual
+FCFS model used for the guarantee.
+% Sources: evidence/firefox_ci/out_leaktest_releng-hardware__gecko-t-osx-1500-m4.txt and
+% out_leaktest_releng-hardware__gecko-t-linux-talos-2404.txt;
+% evidence/firefox_ci/meta_releng-hardware__gecko-t-osx-1500-m4.csv and
+% meta_releng-hardware__gecko-t-linux-talos-2404.csv; fci_build.py and fci_sim.py.
+
+An enforced $L$ in a deployed service would instead kill an unfinished job at the
+limit and charge that executed work to the same-input FCFS comparison. The killed
+job would not yield its intended result; these replays do not estimate the resulting
+completion-quality cost or users' resubmission response. The table therefore
+supports finite-input bounds under its stated transformations, not a future
+operational timeout claim.
 
 \subsection{Sealed Data}
+\label{sec:sealed}
 
-Part of every trace was sealed before the method was designed, and is opened once after
-the method, its parameters and the primary metric are frozen. On the main trace the sealed
-part is three terms, \devnum{2023-1}, \devnum{2023-2} and \devnum{2024-1}; on the second
-judging platform it is the last \devnum{20\%} of the submission-id range,
-\devnum{809{,}330} rows, of which only the row count and the first id have been read; on
-the corroborating trace it is the \devnum{2014} academic year. No cost distribution,
-prediction or scheduling result has been computed on any sealed part, and every access to
-one is entered in a ledger in the repository. Every number in this section and in
-Sections~\ref{sec:prediction} and \ref{sec:scheduling} is a development number.
+Three of the traces carry a part that was sealed before the method was designed.
+On the main trace it is three terms, \devnum{2023-1}, \devnum{2023-2} and
+\devnum{2024-1}; on the second judging platform it is the last \devnum{20\%} of
+the submission-id range, \devnum{809{,}330} rows, of which only the row count and
+the first id have been read; on the corroborating trace it is the \devnum{2014}
+academic year. Only the main trace's sealed terms will be opened for this paper, once,
+after the method, its parameters and the primary metric have been frozen; the frozen
+pipeline covers those three terms and nothing else, and the sealed parts of the
+other two traces stay shut and are reported on by neither. The serverless trace,
+the compute farm and the two continuous-integration pools have no sealed part,
+so every figure we give for them is development data. No cost distribution,
+prediction or scheduling result has been computed on any sealed part, and every
+access to one is entered in a ledger in the repository. Every number in this
+section and in Sections~\ref{sec:prediction} and~\ref{sec:scheduling} is a
+development number. The sealed evaluation remains pending in this manuscript;
+Section~\ref{sec:exp_prov} states the current output scope.
+% Source: prechecks/heldout_scope/heldout_scope.md, G1--G6; evidence/accoding_v2/
+% out_accoding_v2.txt, audit/selftest; evidence/codebench_service_v2/out_service_v2.txt,
+% sealed-term exclusions; evidence/oulad/out_load.txt, development presentations.

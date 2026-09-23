@@ -12,23 +12,34 @@ depend on that policy behaving well.
 \label{sec:rank}
 
 When a server frees, the base policy takes the waiting job with the smallest score.
-Since service is non-preemptive, a dispatched job holds its server for its entire
-service time, and the delay it imposes on every job still queued is $C_i$ itself
-rather than a monotone transform of $C_i$. Waiting times add in the units in which
-service is measured, so the score should estimate the conditional mean
-$\mathbb{E}[C_i \mid x_i]$.
+For a batch on one server, the pairwise-interchange argument orders jobs by their
+conditional mean service times. The same conclusion does not hold in general on
+$k\geq2$ servers. For example, on two servers let $A=2$, $C=3$, and let $B$ be
+$0.1$ with probability $0.9$ and $100$ with probability $0.1$. Ordering the three
+conditional means starts $A$ and $C$ and has expected mean wait $2/3$; starting
+$A$ and $B$ instead has expected mean wait $0.096667$. Thus expected-cost ordering
+is an empirically motivated base policy here, not a multi-server optimality claim.
+% Source for the two-server calculation and its independent script check:
+% docs/referee_readthrough/independent_review/checks_output.txt, CHECK 1
+% (script: docs/referee_readthrough/independent_review/checks.ps1).
 
-This is not what a log-scale regression produces. Fitting squared error on
-$\log(1+C)$ and inverting gives a conditional geometric mean, which differs from the
-conditional mean by a term that grows with the conditional variance, and in a
-heavy-tailed cost distribution that term sits on the small fraction of jobs the
-scheduler most needs to push back. We change the training objective and nothing else,
-keeping the features, the model size and the rolling-origin protocol of
-Section~\ref{sec:prediction} as they are, with the target taken in raw seconds under a
-Tweedie loss of power $1.5$, which accommodates a distribution with most of its mass
-near zero and a long right tail \cite{jorgensen1987edm,yang2018tweedieboost}. We write
-SPJF-E for the policy that ranks the queue by this estimate of expected cost, and
-SPJF-log for the same pipeline fitted on $\log(1+C)$ and inverted.
+Both raw-scale squared error and the Tweedie mean deviance have the conditional mean
+$\mathbb{E}[C_i\mid x_i]$ as their unrestricted population optimum. Their fitted
+orders can nevertheless differ with finite model capacity, the link function,
+regularisation, sample weighting and optimisation. We therefore compare objectives
+empirically while keeping the features, model size and rolling-origin protocol of
+Section~\ref{sec:prediction} fixed. SPJF-E uses raw seconds with a Tweedie loss of
+power $1.5$, which accommodates mass near zero and a long right tail
+\cite{jorgensen1987edm,yang2018tweedieboost}; SPJF-log uses the same pipeline fitted
+by squared error on $\log(1+C)$ and then inverted.
+% Source for the fitted Tweedie power and objective comparison:
+% evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1.
+
+The literal inverse $\exp(\mathbb{E}[\log(1+C)\mid x])-1$ is no larger than the
+conditional arithmetic mean, with equality only in the degenerate case. The gap is
+not determined by the conditional variance alone. A residual-distribution correction,
+such as the smearing estimator of Duan~\cite{duan1983smearing}, is required to use a
+log-scale regression as a mean estimator under its stated conditions.
 
 Only the order of the fitted score is used. Its level does not transfer across
 periods, since the share of heavy jobs in the training periods differs from the target
@@ -36,12 +47,12 @@ period by a factor of several, so we never read the score as a quantity, neither
 estimated finish time nor as a threshold. The scheduler is therefore invariant to a
 monotone recalibration of the score.
 
-Section~\ref{sec:exp_rank} measures what the change of estimand is worth, together with
+Section~\ref{sec:exp_rank} measures what the fitted objective is worth, together with
 the alternatives we tried and rejected: a predicted quantile, a two-class rule, and
-squared error on raw seconds. It also measures the asymmetry of the errors, which is
-what makes the estimand matter: treating a heavy job as light and putting it in front
-costs about an order of magnitude more than the reverse mistake, so a score fitted for
-symmetric accuracy optimises the wrong thing.
+squared error on raw seconds. Its partial-oracle repair replaces selected scores with
+truth and is not invariant to an arbitrary monotone rescoring of the original output.
+It therefore diagnoses the errors of this fitted predictor; it does not establish a
+universal asymmetry of prediction errors or a different population estimand.
 
 No choice of ranking function bounds the worst case. A job the score misjudges can still
 be passed indefinitely, whatever the score is and however it was fitted;
@@ -138,11 +149,12 @@ $\gamma > 0$ we claim the additive bound alone.
 \paragraph{Parameters from a service promise.}
 The operator states $G$, the number of seconds by which any job may exceed its FCFS
 waiting time, and reads off $B_{\max} = k\bigl(G - (3 - 2/k)\,L\bigr)$, the inversion
-of the bound proved in Section~\ref{sec:theory}. No data are needed for this step. The rule requires $G > (3 - 2/k)L$; below that threshold no
-positive budget is admissible, which is not an artefact of the wrapper but a floor of
-order $L$ that Section~\ref{sec:theory} shows to be unavoidable for any wrapper of
-this family that overtakes at all, if its promise is to hold whatever base policy it
-is given. The promise $G$ follows from $B_{\max}$ alone.
+of the uniform certificate proved in Section~\ref{sec:theory}. No data are needed for
+this step. Corollary~\ref{cor:params} issues no positive budget below
+$(3-2/k)L$; the zero budget remains admissible and reproduces FCFS exactly.
+Proposition~\ref{prop:floor} separately gives an $L$-scale floor only for this wrapper
+family when it must protect against every opaque base-policy proposal sequence. The
+promise $G$ follows from $B_{\max}$ alone.
 The shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of the base policy's
 benefit survives and which jobs pay for it, so we choose them on a validation trace
 that excludes the test period; that pool is held out of the selection and not of the

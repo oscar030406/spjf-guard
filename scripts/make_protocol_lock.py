@@ -9,9 +9,9 @@ feature list and visibility protocol, the predictor and its seeds, the ranking s
 guard family and the selection rule, the selected parameters, the load levels and how the
 integer server count is derived, the primary metric, and the bootstrap settings.
 
-Freezing is a deliberate act and this script does not perform it: rename the draft to
-`protocol_lock.json` by hand.  Until that file exists, the data loader refuses every
-sealed term (src/spjf_guard/data/sealed.py).
+Freezing is a deliberate act and this script does not perform it.  Use
+`scripts/freeze_protocol.py --dry-run` and then `--yes`; a renamed draft is not a valid
+frozen lock and cannot release any sealed term (src/spjf_guard/data/sealed.py).
 """
 
 from __future__ import annotations
@@ -82,6 +82,22 @@ def input_manifest(cfg, root: Path) -> list[dict]:
                 "present": path.is_file(),
                 "sha256": sha256_file(path) if path.is_file() else None,
                 "bytes": path.stat().st_size if path.is_file() else None,
+            }
+        )
+    return out
+
+
+def config_snapshot_manifest(root: Path) -> list[dict]:
+    """Hashes of archived ordinary configurations; missing fixtures stay explicit."""
+    out = []
+    for relative in sealed.CONFIG_SNAPSHOT_PATHS:
+        path = root / relative
+        present = path.is_file()
+        out.append(
+            {
+                "path": str(relative).replace("\\", "/"),
+                "present": present,
+                "sha256": sha256_file(path) if present else None,
             }
         )
     return out
@@ -164,6 +180,7 @@ def build(cfg_path: Path, root: Path) -> dict:
             "sha256": sha256_file(cfg_path),
             "document": cfgmod.load(cfg_path, expand_environment=False).raw,
         },
+        "config_snapshots": config_snapshot_manifest(root),
         "code": {"files": code, "digest": _digest_of(code)},
         "inputs": {"artefacts": inputs, "digest": _digest_of(inputs)},
         "pinned": {
@@ -176,6 +193,7 @@ def build(cfg_path: Path, root: Path) -> dict:
             "visibility_protocol": {
                 "rule": cfg["features"]["visibility_rule"],
                 "clock": cfg["clock"],
+                "exact": cfg["features"]["exact_visibility"],
             },
             "feature_set": cfg["features"],
             "predictor": cfg["predictor"],
@@ -193,6 +211,9 @@ def build(cfg_path: Path, root: Path) -> dict:
             "sealed_k1_tables": list(cfg["run"]["sealed_k1_tables"]),
             "sealed_predictor_tables": list(cfg["run"]["sealed_predictor_tables"]),
             "sealed_visibility_tables": list(cfg["run"]["sealed_visibility_tables"]),
+            "sealed_consistent_visibility_tables": list(
+                cfg["run"]["sealed_consistent_visibility_tables"]
+            ),
             "load": {
                 "target_busy_hour_utilisation": cfg["overlay"]["target_busy_hour_utilisation"],
                 "server_count_rule": cfg["overlay"]["server_count_rule"],
@@ -223,7 +244,7 @@ def main() -> int:
         f"  inputs digest {lock['inputs']['digest']}"
         + (f"; NOT ON DISK: {missing}" if missing else "")
     )
-    print("  freeze by renaming the draft to protocol_lock.json, deliberately")
+    print("  freeze only with scripts/freeze_protocol.py --dry-run, then --yes")
     return 0
 
 

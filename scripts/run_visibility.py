@@ -147,6 +147,28 @@ def conservative_lag(cfg) -> float:
     return float(cfg["features"]["visibility_variants"]["conservative"]["delta_s"])
 
 
+def lag_certificate_status(diagnostics: list[dict]) -> str:
+    """Observed fixed-lag sufficiency is separate from the exact certificate."""
+    eligible = [
+        row
+        for row in diagnostics
+        if (row["variant"] == "conservative" or row["policy"] == "FCFS")
+    ]
+    if not eligible:
+        return "legacy conservative certificate unavailable: no eligible policy/cell"
+    failed = [row for row in eligible if int(row["lag_violations"]) > 0]
+    if failed:
+        return f"legacy conservative certificate invalid: {len(failed)} policy/cell(s)"
+    return "legacy conservative certificate valid on the observed cells"
+
+
+def report_lag_certificate(diagnostics: list[dict], headline: str) -> None:
+    status = lag_certificate_status(diagnostics)
+    print(status, flush=True)
+    if headline == "conservative" and " valid on " not in status:
+        raise RuntimeError("conservative headline requires a valid fixed-lag certificate")
+
+
 def _extra_arrays(store, history: visibility.HistoryIndex) -> dict[str, np.ndarray]:
     if "copy_round" not in store:
         raise SystemExit("overlay has no copy_round; rebuild it with scripts/build_overlays.py")
@@ -310,6 +332,7 @@ def _write_outputs(cfg, args, rows, replicate_cells, exposure, diagnostics) -> l
         notes={
             "headline_variant": cfg["features"]["headline_variant"],
             "conservative_lag_s": conservative_lag(cfg),
+            "conservative_certificate": lag_certificate_status(diagnostics),
             "selected_parameters_unchanged": cfg["scheduling"]["selected"],
             "exposure_mapping": "same outer overlay round; unreplayed histories separate",
         },
@@ -356,6 +379,7 @@ def produce(cfg, args, terms, outcome) -> int:
         shutil.rmtree(scratch, ignore_errors=True)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     written = _write_outputs(cfg, args, rows, replicate_cells, exposure, diagnostics)
+    report_lag_certificate(diagnostics, str(cfg["features"]["headline_variant"]))
     outcome.done(
         f"策略一致可见性比较写到 {provenance.relative_path(args.out_dir)}，"
         f"耗时 {time.time() - started:.0f} 秒"

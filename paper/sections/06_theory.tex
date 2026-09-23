@@ -177,9 +177,12 @@ extremal instances are geometric cascades needing hundreds of jobs.
 
 \begin{theorem}[Tightness of Theorem~\ref{thm:identity}]
 \label{thm:tight1}
-For every $k \ge 2$ and every $\varepsilon > 0$ there are inputs, work-conserving
-policies $P$ and jobs $i$ with $\Delta_i > 2(k-1)L - \varepsilon$, and there are
-others with $\Delta_i < -2(k-1)L + \varepsilon$. Hence
+For every fixed $k \ge 2$, service bound $L>0$, and $\varepsilon > 0$ there are
+inputs, work-conserving policies $P$ and jobs $i$ with
+$\Delta_i > 2(k-1)L - \varepsilon$, and there are others with
+$\Delta_i < -2(k-1)L + \varepsilon$. The construction is first given at scale
+$\widehat L=k^m$ and then every arrival time and service time is multiplied by
+$L/\widehat L$; thus the limiting sequence keeps the stated $L$ fixed. Hence
 $\sup |\Delta_i| = 2(k-1)L$, a supremum that is never attained.
 \end{theorem}
 
@@ -273,10 +276,11 @@ victim immediately, a policy that takes the last job instead fills every server,
 and the victim waits $X$ with an overtake count of $1$. That instance steps
 outside Section~\ref{sec:model}, which fixes $C_i \le L$; inside the model the
 same accounting is what makes a count bound work, with $L$ charged per pass.
-Necessity fails with no such caveat: with $k = 1$, $L = 2M$, a victim of service $L$ arriving first
-and $M$ jobs of service $1$ arriving with it, running the short jobs first gives
-every job an excess of at most $M = L/2$, using $\mathrm{In}_i = kG$ exactly at
-the guarantee $G = L/2$, while the overtake count $M$ exceeds any fixed limit.
+Necessity fails with no such caveat: normalise to $k=1$, $L=1$ and $G=1/2$.
+Let a victim of service $1$ arrive first together with $M$ short jobs, each of
+service $1/(2M)$. Running the short jobs first gives every job excess at most
+$1/2$, uses $\mathrm{In}_i=kG$ exactly, and lets the overtake count $M$ exceed
+any fixed limit.
 How the count is charged decides which guarantee. Charge it when an overtaker is
 \emph{dispatched}, the reading a position counter in the prior art implements.
 Every overtaker of $i$ is dispatched at an instant at which no job fires, since a
@@ -431,8 +435,9 @@ respect the cap $B$ is the same number. Then
 \begin{enumerate}
 \item the term $B/k$ is attained: on an explicit family the excess is exactly
 $\lceil B/k \rceil$, hence $B/k$ whenever $k$ divides $B$;
-\item $c(k) = 3k-2$ exactly, for every $k \ge 1$, as a supremum that is never
-attained. Equivalently, the additive constant $(3 - 2/k)L$ of
+\item every finite instance satisfies
+$(k\,\mathrm{excess}_P[i]-B)/L<3k-2$, while its supremum is exactly $3k-2$
+for every $k \ge 1$. Equivalently, the additive constant $(3 - 2/k)L$ of
 \eqref{eq:guardadd} cannot be lowered for any $k$.
 \end{enumerate}
 \end{theorem}
@@ -548,28 +553,27 @@ service time only at its completion, and an input, such that
 Algorithm~\ref{alg:guard} run around $A$ with that rule leaves some job with
 $\mathrm{excess} \ge L$. For a base policy that ranks by predictions, such as
 SPJF-E, the predictions in the input are enough and $A$ need not be chosen.
-Consequently no promise $G < L$ can be made that holds for every base policy, or
+Consequently no promise $G < L$ can be made by a wrapper of this family that
+holds for every base policy, or
 for one prediction-ranked base policy under arbitrary predictions, which is the
-generality in which Theorem~\ref{thm:guard} is stated; and at $k = 1$ the bound $B + L$ of
-Theorem~\ref{thm:guard} is the exact supremum of the excess, approached and not
-attained.
+generality in which Theorem~\ref{thm:guard} is stated. At $k=1$ and constant
+budget $B>0$, the bound $B+L$ of Theorem~\ref{thm:guard} is the exact supremum
+of the excess, approached and not attained; at $B=0$ the wrapper is FCFS and
+the excess is exactly zero.
 \end{proposition}
 
 \begin{proof}
-Into an empty system, at $t = 0$, let the victim $i$ of rank $0$ and $k$ further
-jobs arrive together, all of service $L$. First-come first-served starts $i$ at
-once. Nothing has completed, so $\mathrm{over}[q](0) = 0$ for every waiting $q$
-and in particular $\mathrm{over}[i](0) = 0 < \mathrm{budget}(i,0)$ at each of
-the $k$ dispatches made there: the guard
-does not release $i$ at $t = 0$. Take $A$ to be a policy that prefers the $k$
-higher-ranked jobs; a prediction-ranked policy does so as soon as $i$ carries the
-largest prediction, work conservation permits it, and $A$ has observed no service
-time that could tell it the $k+1$ jobs are alike. All $k$ servers are filled, so
-$i$ waits until the first completion and $\mathrm{excess} = L$. (If instead the
-guard fires at $t = 0$ on some job other than $i$, that job has rank above $i$
-and the same $k$ dispatches follow.) At $k = 1$, \eqref{eq:guardin} gives
-$\mathrm{excess} < B + L$ strictly, and a family approaching it is in
-Appendix~\ref{app:floor}.
+Into an empty system, at $t=0$, let $k+1$ jobs arrive together, all of service
+$L$. The first $k$ ranks are precisely the jobs FCFS starts at once. Nothing has
+completed, so every waiting job has $\mathrm{over}=0$; because its first-epoch
+budget is positive, no waiting job fires and the wrapper accepts the base
+policy's choices. At the first choice of a job beyond the first $k$ ranks, that
+job displaces one of FCFS's first $k$ equal-length jobs. The displaced job waits
+until a completion under the wrapper but starts at zero under FCFS, and hence has
+excess $L$. A prediction-ranked base produces the same choice when one of the
+later ranks receives the preferred score. At $k=1$ and $B>0$,
+\eqref{eq:guardin} gives $\mathrm{excess}<B+L$ strictly, and a family approaching
+it is in Appendix~\ref{app:floor}; $B=0$ is FCFS.
 \end{proof}
 
 Two remarks on the hypothesis, because the proposition is easy to state too
@@ -612,16 +616,20 @@ it may cost a single job.
 \label{thm:price}
 Take $m$ jobs of service $L$ and $n$ jobs of service $\sigma < L$, the long ones
 ranked first, all arriving at $t = 0$, and let $P$ be any non-preemptive
-work-conserving policy with $\mathrm{excess}_P[j] \le G$ for every job. Then
+work-conserving policy with $\mathrm{excess}_P[j] \le G$ for every job. Define
+$D_0=mn(L-\sigma)/k$, $E=2(1-1/k)L(m+n)$ and
+$A=(kG+(3k-2)L)/(n\sigma)$. If
+$D_0>E$, equivalently
+$mn(L-\sigma)>2(k-1)L(m+n)$, then
 \[
   \frac{\overline{W}_{\mathrm{FCFS}} - \overline{W}_{P}}
        {\overline{W}_{\mathrm{FCFS}} - \overline{W}_{\mathrm{SJF}}}
-  \;\le\; \frac{kG + (3k-2)L}{n \sigma} \;+\; \varepsilon ,
+  \;\le\; A+\varepsilon_+,
+  \qquad
+  \varepsilon_+=\frac{E(1+A)}{D_0-E}.
 \]
-with $\varepsilon = O\bigl((m+n)/(mn)\bigr) \to 0$ as $m, n$ grow; explicitly,
-$\varepsilon\,mn/(m+n)$ stays above
-$2(k-1)L\bigl(1 + (kG + (3k-2)L)/(n\sigma)\bigr)/(L-\sigma)$ and tends to
-$2(k-1)L/(L-\sigma)$ (Appendix~\ref{app:price}).
+For fixed $k,L,\sigma,G$, the finite-sample term is
+$O((m+n)/(mn))$.
 \end{theorem}
 
 The proof is in Appendix~\ref{app:price}. The right-hand side is capacity times
@@ -636,8 +644,98 @@ Appendix~\ref{app:price} removes it. There the achievable fraction is known
 exactly: it is $\lfloor G/\sigma \rfloor / n$, capped at $1$
 (Proposition~\ref{prop:k1frac}).
 
-Every constant above is a multiple of $L$, and Proposition~\ref{prop:floor} says
-no mechanism of this kind can do better, so the guarantee is informative when $L$
-is small relative to the waits an operator cares about and says nothing when it is not.
-Section~\ref{sec:exp_cross} makes that boundary quantitative on six workloads,
-four of which fall outside it.
+\subsection{Achievability and maximal permission}
+
+The preceding results could otherwise be read only as a conjunction of a robust
+wrapper and a necessary budget. The next theorem matches the price bound, up to
+its stated finite-sample band, on the two-size batch family; the theorem after it
+identifies the pointwise-maximal permission rule in a precisely restricted
+single-server class. Neither result gives instance optimality on arbitrary
+inputs, and the exact value of the optimum below remains open for $k\geq2$.
+
+\begin{theorem}[Achievability on the two-size batch family]
+\label{thm:two_size_achievability}
+In the family of Theorem~\ref{thm:price}, define
+\[
+  \Delta(Q)=\sum_i\bigl(W_{\mathrm{FCFS}}[i]-W_Q[i]\bigr),\qquad
+  F(Q)=\frac{\Delta(Q)}{\Delta(\mathrm{SJF})},
+\]
+and let $F^*(G)$ be the maximum of $F(P)$ over all non-preemptive,
+work-conserving policies satisfying $\mathrm{excess}_P[i]\leq G$ for every job.
+Let the guard use exact SJF as its base and the constant budget
+$B=kG-(3k-2)L\geq0$. Put
+\[
+ D_0=\frac{mn(L-\sigma)}{k},\quad
+ E=2(1-1/k)L(m+n),\quad
+ q=\min\!\left(1,\frac{B}{n\sigma}\right),\quad
+ A=\frac{kG+(3k-2)L}{n\sigma}.
+\]
+If $D_0>E$, then
+\[
+ q-\varepsilon_-\ \leq\ F(\mathrm{guard})\ \leq\ F^*(G)
+ \ \leq\ \min(1,A+\varepsilon_+),
+\]
+where
+\[
+ \varepsilon_- = \frac{E(1+q)}{D_0-E},
+ \qquad
+ \varepsilon_+ = \frac{E(1+A)}{D_0-E}.
+\]
+Thus the leading terms are separated by at most
+$2(3k-2)L/(n\sigma)$, in addition to the two displayed finite-sample
+errors. For $k\geq2$, this sandwich does not determine the exact $F^*(G)$.
+\end{theorem}
+
+\begin{definition}[Opaque-base, size-oblivious wrapper]
+\label{def:opaque_wrapper}
+At a dispatch epoch, the wrapper may use arrivals and ranks, its own dispatch and
+completion history, the revealed sizes of completed jobs, the public bound $L$,
+fixed random coins, and the sequence of proposals made so far by an opaque base
+policy. It may not inspect unfinished job sizes or the base policy's internal
+state. A deterministic pathwise promise $G$ means that every job has excess at
+most $G$ for every finite input and every possible base-proposal transcript.
+\end{definition}
+
+\begin{theorem}[Pointwise maximality at one server]
+\label{thm:k1_maximal}
+Assume $k=1$, sizes and budgets are nonnegative integer time units bounded by the
+positive integer $L$, and $G\geq L$ is an integer. Within
+Definition~\ref{def:opaque_wrapper}:
+\begin{enumerate}
+\item for constant budget $B\geq1$, the guard's worst pathwise excess is exactly
+$B+L-1$; at $B=0$ it is FCFS and the excess is zero;
+\item the largest positive integer constant budget with promise $G$ is
+$B^*=G-L+1$;
+\item at any reachable history, if the queue head $h$ satisfies
+$\mathrm{over}[h]>G-L$, every wrapper with promise $G$ must dispatch $h$.
+If $\mathrm{over}[h]\leq G-L$, permitting any currently waiting later-ranked
+job for this dispatch is safe against the worst unrevealed size $L$.
+Consequently the guard triggered by $\mathrm{over}\geq B^*$ is pointwise maximal
+in its permitted action set.
+\end{enumerate}
+\end{theorem}
+
+\begin{corollary}[The single-server consistency--robustness frontier]
+\label{cor:k1_frontier}
+On the integer two-size batch family, for $G\geq L$ the pointwise-maximal guard
+around the exact-SJF proposal sequence closes the fraction
+\[
+ \min\!\left(1,\frac{\lfloor(G-L)/\sigma\rfloor+1}{n}\right)
+\]
+of the FCFS-to-SJF total-wait gap, and no opaque-base wrapper with the pathwise
+promise can permit a larger fraction of those short-before-long moves. Exact SJF
+itself reads unfinished true sizes, so the composed exact-SJF-plus-guard scheduler
+is not size-oblivious; the frontier concerns the wrapper's permissions under an
+externally supplied proposal transcript.
+\end{corollary}
+
+Appendix~\ref{app:achievability} proves these statements. Supplementary theory
+material records an unbounded instance-optimality counterexample and the limits
+of instance-dependent refinements.
+
+Every uniform constant above is on the scale of $L$. Proposition~\ref{prop:floor}
+establishes such a floor for the wrapper family under arbitrary opaque base
+proposals, not for all scheduling mechanisms. Empirically, usefulness depends on
+size dispersion, score predictability and the arrival structure; the CI pools
+are negative cases rather than evidence of a necessary distributional condition.
+Section~\ref{sec:exp_cross} quantifies that boundary on the evaluated workloads.

@@ -49,6 +49,9 @@ jobs in service, each with remaining service
 \]
 so that $U_P(T_m) - U_{\mathrm{FCFS}}(T_m) = \rho_m \to (k-1)L$ as
 $m \to \infty$. Every $\rho_j$ and every intermediate time is an integer.
+For any prescribed service bound $L_0>0$, multiplying every arrival time and
+service time in the construction by $L_0/k^m$ gives the same ratios with bound
+$L_0$; integrality is used only before this final rescaling.
 \end{lemma}
 
 \begin{proof}
@@ -59,34 +62,32 @@ that the long jobs carry the lower ranks. Let $P$ be the static-priority policy
 that dispatches a waiting short job whenever one exists and a long job
 otherwise; it is work-conserving.
 
-We show by induction that at $T_j$ first-come first-served has completed
-everything and idles, while $P$ has exactly $k-1$ jobs in service with total
-remaining $\rho_j$, where $\rho_0 = 0$.
+The empty-system base round must be treated separately. At $T_0=0$ both systems
+are empty. First-come first-served dispatches the $k-1$ long jobs and one short
+job; its remaining server completes all $L$ short jobs by $T_1=L$, when the long
+jobs also complete. Policy $P$ first processes the $L$ short jobs across all
+$k$ servers, finishing them at $L/k$, and then dispatches the $k-1$ long jobs.
+At $T_1$ each has $L/k$ remaining, so
+$\rho_1=(k-1)L/k=(k-1)(\rho_0+L)/k$ with $\rho_0=0$.
 
-\emph{First-come first-served in round $j$.} All $k$ servers are free at $T_j$,
-so it dispatches the $k-1$ long jobs and one short job. Its remaining server
-takes the $L$ short jobs back to back and finishes at $T_j + L$; the long jobs
-also finish at $T_j + L$. So all $k$ servers are busy on $(T_j, T_{j+1})$ and
-the system is empty and idle again at $T_{j+1}$.
+For the induction step, fix $1\le j<m$ and suppose that at $T_j$ FCFS is empty,
+whereas $P$ has exactly $k-1$ carried-over jobs with equal remaining service and
+total $\rho_j$. FCFS again dispatches the new $k-1$ long jobs and one short job;
+one server processes the $L$ short jobs and all work finishes at $T_{j+1}$.
+Under $P$, the one free server takes a short job. The carried-over jobs complete
+at $T_j+\rho_j/(k-1)$ and their servers then take short jobs. All $k$ servers are
+busy until the short work runs out at $T_j+\tau_j$, where
+$k\tau_j=\rho_j+L$. Indeed, $\rho_j/(k-1)\leq\tau_j$ is equivalent to
+$\rho_j\leq(k-1)L$, which follows from the induction hypothesis. At that instant
+$P$ dispatches the round's $k-1$ long jobs and leaves one server idle.
 
-\emph{$P$ in round $j$.} At $T_j$, $P$ has one free server, which takes a short
-job. Its $k-1$ carried-over jobs all complete at $T_j + \rho_j/(k-1)$ and their
-servers take short jobs as well, and $P$ never touches a long job while a short
-one waits. So all $k$ servers are busy from $T_j$ until the short jobs run out,
-at $T_j + \tau_j$ with $k\tau_j = \rho_j + L$. ($P$ is indeed busy throughout:
-the carried-over jobs end at $\rho_j/(k-1) \le \tau_j$, which is
-$k\rho_j \le (k-1)(\rho_j + L)$, that is $\rho_j \le (k-1)L$, true by
-induction.) At $T_j + \tau_j$ the policy $P$ holds only the $k-1$ long jobs of
-the round; it dispatches them and leaves one server idle.
-
-\emph{The gain.} On $(T_j + \tau_j, T_{j+1}]$, first-come first-served has $k$
-busy servers and $P$ has $k-1$, so the gap grows at rate $1$ over a window of
-length $L - \tau_j$. At $T_{j+1}$ the reference system is empty, and each of
-$P$'s $k-1$ long jobs has run for $L - \tau_j$ and has $\tau_j$ left. The
-hypothesis is reproduced with $\rho_{j+1} = (k-1)\tau_j = (k-1)(\rho_j + L)/k$,
-whose solution with $\rho_0 = 0$ is
-$\rho_j = (k-1)L\,(1 - ((k-1)/k)^j)$. With $L = k^m$ every $\rho_j$ and $\tau_j$
-for $j \le m$ is an integer.
+On $(T_j+\tau_j,T_{j+1}]$, FCFS has $k$ busy servers and $P$ has $k-1$.
+At $T_{j+1}$ each of those long jobs has $\tau_j$ left, reproducing the
+hypothesis with
+$\rho_{j+1}=(k-1)\tau_j=(k-1)(\rho_j+L)/k$. Together with the base round this
+solves to $\rho_j=(k-1)L(1-((k-1)/k)^j)$. With $L=k^m$, every raw $\rho_j$ and
+$\tau_j$ for $j\leq m$ is an integer; the rescaling in the statement is then
+applied to the whole input, including its arrival times.
 \end{proof}
 
 \subsection{Tightness of the net-overtake identity}
@@ -152,6 +153,14 @@ $i$, is dispatched after $i$, so $\mathrm{Out}_i = f$. Therefore
            \;&=\; -\rho_m - (k-1)L \;\longrightarrow\; -2(k-1)L .
 \end{align*}
 
+These calculations use the raw normalisation $L=k^m$. Given a fixed target
+bound $L_0$ and tolerance $\varepsilon$, multiply the entire upward or downward
+instance by $L_0/k^m$. The service bound is then exactly $L_0$, all waiting
+times and every term in $\Delta_i$ scale by the same factor, and the upward
+error becomes
+$(k-1)L_0((k-1)/k)^m+(k-1)L_0/k^m$, while the downward error tends to zero.
+Choosing $m$ large proves the statement with $L_0$ fixed.
+
 \emph{Non-attainment.} For $k \ge 2$, Lemma~\ref{lem:gap} gives
 $|R^P_i - R^{\mathrm{FCFS}}_i| < (k-1)L$ strictly, and the \emph{Bounding
 $\rho$} step of the proof of
@@ -211,7 +220,8 @@ $\mathrm{excess}_P[i] = \lceil B/k \rceil$.
 \end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:tight2}(ii)]
-The upper bound $c(k) < 3k-2$ is Theorem~\ref{thm:guard}: for a constant budget,
+For every finite instance, Theorem~\ref{thm:guard} gives
+$c_{\mathrm{inst}}(k)<3k-2$: for a constant budget,
 $k\,\mathrm{excess}_P[i] \le \mathrm{In}_i - \mathrm{Out}_i + 2(k-1)L
  \le \mathrm{In}_i + 2(k-1)L < B + kL + 2(k-1)L = B + (3k-2)L$, the last step
 being the strict inequality \eqref{eq:guardin}. When $i$ has no overtaker the
@@ -272,7 +282,8 @@ $\mathrm{Out}_i = 0$, and
   \;=\; \frac{(k-1)f + (2k-1)L - 1}{L} .
 \]
 As $m \to \infty$ with $L = k^m$ we have $f/L \to 1$ and $1/L \to 0$, so the
-ratio tends to $(k-1) + (2k-1) = 3k-2$.
+ratio tends to $(k-1) + (2k-1) = 3k-2$. Hence the supremum, although no finite
+instance attains it, equals $3k-2$.
 
 The same instance also has $\Delta_i = \rho_m + (k-1)L \to 2(k-1)L$, so the two
 sources of slack in Theorem~\ref{thm:guard} are saturated together.
@@ -312,7 +323,7 @@ Supplementary Section~S4.2 gives the induction and the two counterexamples in fu
 \label{app:floor}
 
 \begin{proof}[Proof of the second claim of Proposition~\ref{prop:floor}]
-Fix $L$, a budget $B$, and a granularity $g$ dividing $B$ with $0 < g \le L$.
+Fix $L$, a budget $B>0$, and a granularity $g$ dividing $B$ with $0 < g \le L$.
 Take $k = 1$ and, at $t = 0$, the victim $i$ of rank $0$, then $B/g - 1$ jobs of
 service $g$, then one job of service $L$; let the base policy dispatch the jobs
 of service $g$ first, then the one of service $L$, and never the victim.
@@ -398,8 +409,9 @@ $\mathcal{N}/\mathcal{D} = (kG+(3k-2)L)/(n\sigma)$, the product $\varepsilon\,mn
   \Bigl(1 + \frac{kG + (3k-2)L}{n\sigma}\Bigr)
   \Big/ \Bigl(1 - \frac{\mathcal{E}}{\mathcal{D}}\Bigr) ,
 \]
-which exceeds the same expression without the last factor, approaches it as
-$m, n$ grow, tends with it to $2(k-1)L/(L-\sigma)$, and vanishes at $k = 1$.
+which exceeds the same expression without the last factor and approaches it as
+$m,n$ grow. With $k,L,\sigma,G$ fixed it tends to
+$2(k-1)L/(L-\sigma)$, and it vanishes at $k=1$.
 Dividing numerator and denominator by $m+n$ turns the two total savings into the
 two mean savings and leaves the ratio unchanged.
 \end{proof}
@@ -453,3 +465,90 @@ $G \le 3L$, agrees with Proposition~\ref{prop:k1frac} in every case.
 % PROVENANCE: evidence/guard_theory/rev5_items.py, section RR-4, logged in
 % evidence/guard_theory/out_rev5_items.txt.  Not an outputs/ table: this is a
 % theory precheck, and the count is of enumerated (m,n,L,sigma,G) settings.
+
+\subsection{Achievability and maximal permission}
+\label{app:achievability}
+
+\begin{proof}[Proof of Theorem~\ref{thm:two_size_achievability}]
+For a policy $Q$, let
+\[
+ I(Q)=\sum_{(u,v)\in\mathcal I(Q)}(C_u-C_v).
+\]
+The summed identity \eqref{eq:sumbound} gives
+$|\Delta(Q)-I(Q)/k|\leq E$ and, because SJF inverts all $mn$ long--short
+pairs, $D_0-E\leq\Delta(\mathrm{SJF})\leq D_0+E$.
+
+If $B=0$, the guard is FCFS and the lower bound is immediate because $q=0$.
+Suppose $B>0$. Until the first long job is dispatched, every completed
+overtaker is short and exact SJF continues to propose short jobs. They complete
+in waves of at most $k$, so the number dispatched before that first long job is
+\[
+ r_g=\min\!\left(n,k\left\lceil\frac{B}{k\sigma}\right\rceil\right),
+ \qquad \frac{r_g}{n}\geq q.
+\]
+Those $r_g$ short jobs precede every long job, and hence contribute at least
+$m r_g(L-\sigma)$ to $I(\mathrm{guard})$. It follows that
+$\Delta(\mathrm{guard})\geq qD_0-E$. Therefore
+\[
+ \Delta(\mathrm{guard})-q\Delta(\mathrm{SJF})\geq-E(1+q),
+\]
+and division by the positive lower bound $D_0-E$ gives
+$F(\mathrm{guard})\geq q-\varepsilon_-$.
+
+For any feasible $P$, Corollary~\ref{cor:necessary} bounds the number of short
+jobs inverted ahead of each long job by
+$(kG+(3k-2)L)/\sigma$. Consequently its positive inversion sum is at most
+$A kD_0$, and \eqref{eq:sumbound} gives
+$\Delta(P)\leq A D_0+E$. Dividing by
+$\Delta(\mathrm{SJF})\geq D_0-E$ yields
+\[
+ F(P)\leq\frac{A D_0+E}{D_0-E}
+      =A+\frac{E(1+A)}{D_0-E}=A+\varepsilon_+.
+\]
+SJF minimises total waiting time for a simultaneous batch on identical servers,
+so $F(P)\leq1$. The guarded policy is itself feasible by
+Corollary~\ref{cor:params}, which places it below $F^*(G)$ and completes the
+sandwich.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:k1_maximal}]
+At one server Theorem~\ref{thm:identity} is the exact relation
+$\mathrm{excess}_P[i]=\mathrm{In}_i-\mathrm{Out}_i$. If $B=0$, the queue head
+always fires and the guard is FCFS. Let $B\geq1$. Immediately before the last
+overtaker of a job is dispatched, completed overtaking work is an integer
+strictly below $B$, hence at most $B-1$; the last unrevealed job has size at most
+$L$. Thus every excess is at most $B+L-1$. Equality is attained by putting a
+queue-head victim before $B-1$ unit overtakers and then one overtaker of size
+$L$, and having the opaque base propose them in that order. This proves the first
+claim and shows that a positive constant budget has promise $G$ exactly when
+$B\leq G-L+1$.
+
+For pointwise maximality, consider the minimum-rank waiting job $h$ at a
+reachable dispatch history and write $w=\mathrm{over}[h]$. All lower-ranked jobs
+have already been dispatched, so eventually $\mathrm{Out}_h=0$. If a wrapper
+permits a later-ranked job $j$ when $w>G-L$, relabel the still-unfinished $j$ to
+have size $L$ and replay the same opaque proposal transcript. The wrapper has
+seen the same arrivals, dispatches, completions, revealed sizes and proposals,
+so determinism makes it take the same action. The FCFS start of $h$ is unchanged
+because $j$ has later rank, whereas
+$\mathrm{excess}[h]=\mathrm{In}_h\geq w+L>G$, contradicting the promise.
+Conversely, if $w\leq G-L$, permitting one later-ranked waiting job can add at
+most $L$ to the head's overtaking work, so dispatching the head next remains
+within $G$. On the integer grid, $w>G-L$ is equivalent to
+$w\geq B^*=G-L+1$, exactly the guard's trigger.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:k1_frontier}]
+With $B^*=G-L+1$, exact SJF proposes short jobs until the guard fires. The number
+that can pass every long job is
+\[
+ r=\min\!\left(n,\left\lceil\frac{B^*}{\sigma}\right\rceil\right)
+  =\min\!\left(n,\left\lfloor\frac{G-L}{\sigma}\right\rfloor+1\right).
+\]
+Each of the $m$ long jobs is inverted with exactly these $r$ short jobs, so the
+closed fraction is $r/n$. Once their completed work exceeds $G-L$, the next long
+job is the queue head and Theorem~\ref{thm:k1_maximal} forces every opaque-base
+wrapper with promise $G$ to dispatch it; the same applies successively to the
+remaining long jobs. No such wrapper can therefore permit more of the
+short-before-long moves on this transcript.
+\end{proof}

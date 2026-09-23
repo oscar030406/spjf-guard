@@ -43,7 +43,7 @@ def test_a_frozen_lock_alone_does_not_release_a_sealed_term(tmp_path, term):
 
 @pytest.mark.parametrize("term", sealed.SEALED_SEMESTERS)
 def test_both_conditions_together_release_a_sealed_term(tmp_path, term):
-    (tmp_path / "protocol_lock.json").write_text(json.dumps({"frozen": True}), encoding="utf-8")
+    _frozen_tree(tmp_path)
     sealed.guard_semesters([term], tmp_path, unseal=True)
 
 
@@ -101,7 +101,12 @@ def lock_complaints(root) -> list[str]:
     import sys
 
     sys.path.insert(0, str(root / "scripts"))
-    from make_protocol_lock import _digest_of, code_manifest, sha256_file
+    from make_protocol_lock import (
+        _digest_of,
+        code_manifest,
+        config_snapshot_manifest,
+        sha256_file,
+    )
 
     lock = sealed.frozen_lock(root)
     path = lock or root / "protocol_lock.draft.json"
@@ -120,6 +125,8 @@ def lock_complaints(root) -> list[str]:
         )
     if document["config"]["sha256"] != sha256_file(root / "configs" / "main.yaml"):
         out.append(f"{path.name} was written for another configs/main.yaml")
+    if document.get("config_snapshots") != config_snapshot_manifest(root):
+        out.append(f"{path.name} was written for other archived configurations")
     if lock is None:
         return out + ([] if document["status"] == "draft" else ["the draft says frozen"])
     if not document.get("commit"):
@@ -153,7 +160,18 @@ def _frozen_tree(tmp_path, inputs: int = 2):
                 "commit": "0" * 40,
                 "code": {"files": [], "digest": empty},
                 "config": {"path": "configs/main.yaml", "sha256": config},
-                "sealed_input_hashes": [{"path": f"data/{i}.parquet"} for i in range(inputs)],
+                "config_snapshots": [
+                    {"path": str(path).replace("\\", "/"), "present": False, "sha256": None}
+                    for path in sealed.CONFIG_SNAPSHOT_PATHS
+                ],
+                "sealed_input_hashes": [
+                    {
+                        "path": f"data/{i}.parquet",
+                        "sha256": f"{i:064x}",
+                        "bytes": i,
+                    }
+                    for i in range(inputs)
+                ],
             }
         ),
         encoding="utf-8",
@@ -179,31 +197,35 @@ def test_a_locked_file_that_changed_after_the_freeze_is_caught(tmp_path):
 
 
 def test_a_freeze_the_ledger_does_not_record_is_caught(tmp_path):
-    _frozen_tree(tmp_path, inputs=0)
+    _frozen_tree(tmp_path, inputs=1)
     assert lock_complaints(tmp_path) == []
-    (tmp_path / "protocol_lock.json").write_text(
-        (tmp_path / "protocol_lock.json")
-        .read_text(encoding="utf-8")
-        .replace('"sealed_input_hashes": []', '"sealed_input_hashes": [{"path": "x"}]'),
-        encoding="utf-8",
+    path = tmp_path / "protocol_lock.json"
+    document = json.loads(path.read_text(encoding="utf-8"))
+    document["sealed_input_hashes"].append(
+        {"path": "data/extra.parquet", "sha256": "f" * 64, "bytes": 1}
     )
+    path.write_text(json.dumps(document), encoding="utf-8")
     assert any("ledger" in c for c in lock_complaints(tmp_path))
 
 
 def refusal_for(root) -> tuple[list[str], str]:
     """The refusal a sealed pool must produce, in whichever state the repository is in.
 
-    Before the freeze the flag is not enough and `--unseal` is refused by the missing
-    lock.  After the freeze that refusal is gone, so the test withholds the flag instead
-    and the missing `--unseal` is what refuses -- the one refusal left that can be
-    exercised without opening a sealed term, which a test must never do.
+    Entry-point tests never supply the release flag. Before freezing, the missing lock
+    is the first refusal; afterwards, the absent flag is the remaining refusal. The
+    lock-plus-flag combinations are tested separately with synthetic temporary roots.
     """
     if sealed.frozen_lock(root) is None:
-        return ["--unseal"], "no frozen protocol_lock.json"
+        return [], "no frozen protocol_lock.json"
     return [], "the --unseal flag was not given"
 
 
-def test_the_run_script_refuses_a_sealed_pool_it_may_not_open(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    "entrypoint", ["run_main.py", "run_visibility.py", "run_consistent_visibility.py"]
+)
+def test_the_run_script_refuses_a_sealed_pool_it_may_not_open(
+    tmp_path, monkeypatch, entrypoint
+):
     """The protection is wired into the entry point, not only into the module."""
     import subprocess
     import sys
@@ -216,7 +238,7 @@ def test_the_run_script_refuses_a_sealed_pool_it_may_not_open(tmp_path, monkeypa
     result = subprocess.run(
         [
             sys.executable,
-            str(root / "scripts" / "run_main.py"),
+            str(root / "scripts" / entrypoint),
             "--pool",
             "sealed",
             "--overlay-dir",
@@ -275,7 +297,8 @@ def test_the_dry_run_prints_the_plan_and_opens_nothing(tmp_path, monkeypatch):
     assert "would read" in out
     assert "sealed_rep0.npz" in out
     assert "[5 visibility" in out
-    assert "[8 predictor" in out
+    assert "[6 exact" in out
+    assert "[9 predictor" in out
     assert "visibility_waits_and_lag.csv" in out
     assert str(sealed.LOG_RELATIVE_PATH) in out.replace("/", "\\")
     assert ("NOT FROZEN" in out) == (not (root / "protocol_lock.json").is_file())

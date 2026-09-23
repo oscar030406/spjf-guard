@@ -4,6 +4,7 @@
         [--k1-dir outputs/dev_tables/k1] [--selection outputs/selection_v3] \
         [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
         [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] \
+        [--dev-exact-dir <dir>] [--sealed-exact-dir <dir>] \
         [--out-dir outputs/paper_tables] [--paper paper]
 
 Two products.  `outputs/paper_tables/*.tex` holds the six development tables with every
@@ -21,6 +22,11 @@ also carries the paper's `\\sealednum{}` figures, under keys prefixed `sealed.`,
 classifier stops excusing a number because its line says "sealed": from then on those
 numbers have a producing table and are checked like any other.  Without the option
 nothing changes, which is why it is an option.
+
+`--dev-exact-dir` and `--sealed-exact-dir` add two exact-policy tables and their number
+sources.  They are opt-in so the historical `outputs/paper_tables/` files, including
+`numbers.csv`, stay byte-identical; use `--out-dir outputs/consistent_paper_tables` when
+enabling them.
 
 Nothing here writes into `paper/`.
 """
@@ -100,6 +106,8 @@ OURS_TABLES = (
     "tab:resid",
     "tab:k1",
     "tab:setup",
+    "tab:exact_visibility",
+    "tab:same_copy_exposure",
 )
 """Tables whose rows this package produces.  A value of theirs that matches nothing is
 this package printing something else, so it is counted as `package-differs` rather than
@@ -136,6 +144,23 @@ def read_rows(path: Path) -> list[dict]:
         return []
     with open(path, encoding="utf-8") as fh:
         return list(csv.DictReader(fh))
+
+
+EXACT_SOURCE_FILES = ("exact_comparison.csv", "same_copy_exposure.csv")
+
+
+def read_exact_rows(tables: Path) -> tuple[list[dict], list[dict]]:
+    """Read a caller-supplied exact source, rejecting incomplete inputs."""
+    loaded: list[list[dict]] = []
+    for filename in EXACT_SOURCE_FILES:
+        path = tables / filename
+        if not path.is_file():
+            raise SystemExit(f"explicit exact source is missing required file: {path}")
+        rows = read_rows(path)
+        if not rows:
+            raise SystemExit(f"explicit exact source has no data rows: {path}")
+        loaded.append(rows)
+    return loaded[0], loaded[1]
 
 
 def parameter_map(rows: list[dict], promises) -> dict:
@@ -459,6 +484,44 @@ def visibility_exposure_values(rows: list[dict], out: dict, source: str = "visib
             add(mean(field), 1, where)
 
 
+def exact_values(rows: list[dict], out: dict, source: str = "consistent_visibility") -> None:
+    """Scheduling figures printed by the exact policy-specific comparison."""
+    add = _adder(out)
+    for row in rows:
+        name = row.get("policy") or f"{row['base_policy']}|{row['variant']}"
+        where = f"{source}/exact_comparison.csv[{name} level {row['level']}]"
+        for field, digits in (
+            ("p99_dl_s", 2),
+            ("gap_closed", 3),
+            ("gap_closed_lo", 3),
+            ("gap_closed_hi", 3),
+            ("max_excess_s", 1),
+            ("harm_s", 1),
+            ("fired_pct", 2),
+        ):
+            add(row.get(field), digits, where)
+
+
+def exact_exposure_values(
+    rows: list[dict], out: dict, source: str = "consistent_visibility"
+) -> None:
+    """Affected-share and displacement figures printed by the exact audit table."""
+    add = _adder(out)
+    for row in rows:
+        where = f"{source}/same_copy_exposure.csv[{row['policy']} level {row['level']}]"
+        for field in ("affected_share", "deadline_affected_share"):
+            value = row.get(field)
+            add(100.0 * float(value) if value not in (None, "") else value, 2, where)
+        for field, digits in (
+            ("records_mean", 2),
+            ("records_p99", 1),
+            ("abs_delta_score_p99", 3),
+            ("abs_rank_displacement_p99", 1),
+            ("abs_rank_displacement_max", 0),
+        ):
+            add(row.get(field), digits, where)
+
+
 RESIDUAL_POLICIES = ("SPJF-E", "Guard(600)", "SPJF-reversed")
 """The three policies `tab:resid` prints, on the first overlay."""
 
@@ -533,12 +596,38 @@ def emit_visibility(tables: Path, out_dir: Path, sealed: bool = False) -> list[s
     return written
 
 
+def emit_exact(tables: Path, out_dir: Path, sealed: bool = False) -> list[str]:
+    """The policy-specific exact comparison and same-copy exposure decomposition."""
+    comparison, exposure = read_exact_rows(tables)
+    written: list[str] = []
+    for stem, text in (
+        ("tab_exact_visibility", pt.exact_visibility_table(comparison) if comparison else ""),
+        (
+            "tab_same_copy_exposure",
+            pt.same_copy_exposure_table(exposure) if exposure else "",
+        ),
+    ):
+        if not text:
+            continue
+        name = f"{stem}_sealed.tex" if sealed else f"{stem}.tex"
+        (out_dir / name).write_text(as_sealed(text) if sealed else text, encoding="utf-8")
+        written.append(name)
+    return written
+
+
+def emit_optional_exact(tables: Path | None, out_dir: Path, sealed: bool = False) -> list[str]:
+    """Emit nothing until an exact directory is explicitly supplied."""
+    return emit_exact(tables, out_dir, sealed) if tables is not None else []
+
+
 def run_values(
     run: dict,
     source: str,
     predictor: list[dict],
     visibility_comparison: list[dict] | None = None,
     visibility_exposure: list[dict] | None = None,
+    exact_comparison: list[dict] | None = None,
+    exact_exposure: list[dict] | None = None,
 ) -> dict:
     """Every figure one run produces, indexed by the way the paper would print it."""
     values = produced_values(run["table"], run["k1"], run["residuals"], source)
@@ -550,6 +639,12 @@ def run_values(
     )
     visibility_exposure_values(
         visibility_exposure or [], values, source.replace("tables", "visibility")
+    )
+    exact_values(
+        exact_comparison or [], values, source.replace("tables", "consistent_visibility")
+    )
+    exact_exposure_values(
+        exact_exposure or [], values, source.replace("tables", "consistent_visibility")
     )
     return values
 
@@ -572,9 +667,25 @@ def main() -> int:
         "--dev-visibility-dir", type=Path, default=ROOT / "outputs" / "dev_visibility"
     )
     ap.add_argument("--sealed-visibility-dir", type=Path, default=None)
+    ap.add_argument(
+        "--dev-exact-dir",
+        type=Path,
+        default=None,
+        help="optional exact-policy CSVs; use a separate --out-dir to preserve old tables",
+    )
+    ap.add_argument("--sealed-exact-dir", type=Path, default=None)
     ap.add_argument("--out-dir", type=Path, default=ROOT / "outputs" / "paper_tables")
     ap.add_argument("--paper", type=Path, default=ROOT / "paper")
     args = ap.parse_args()
+
+    dev_exact_rows = (
+        read_exact_rows(args.dev_exact_dir) if args.dev_exact_dir is not None else None
+    )
+    sealed_exact_rows = (
+        read_exact_rows(args.sealed_exact_dir)
+        if args.sealed_exact_dir is not None
+        else None
+    )
 
     cfg = cfgmod.load(args.config, expand_environment=False)
     k1_dir = args.k1_dir or args.dev_dir / "k1"
@@ -584,6 +695,7 @@ def main() -> int:
     args.out_dir.mkdir(parents=True, exist_ok=True)
     written = emit_tables(cfg, development, args.out_dir)
     written += emit_visibility(args.dev_visibility_dir, args.out_dir)
+    written += emit_optional_exact(args.dev_exact_dir, args.out_dir)
     if development["table"]:
         items = setup_items(
             cfg, development["table"], selection_rows, development["parameters"]
@@ -597,6 +709,8 @@ def main() -> int:
         [],
         read_rows(args.dev_visibility_dir / "visibility_comparison.csv"),
         read_rows(args.dev_visibility_dir / "visibility_exposure.csv"),
+        dev_exact_rows[0] if dev_exact_rows is not None else [],
+        dev_exact_rows[1] if dev_exact_rows is not None else [],
     )
     sealed_values = None
     if args.sealed_dir is not None:
@@ -605,6 +719,7 @@ def main() -> int:
         written += emit_tables(cfg, sealed_run, args.out_dir, sealed=True)
         if args.sealed_visibility_dir is not None:
             written += emit_visibility(args.sealed_visibility_dir, args.out_dir, sealed=True)
+        written += emit_optional_exact(args.sealed_exact_dir, args.out_dir, sealed=True)
         sealed_values = run_values(
             sealed_run,
             "sealed_tables",
@@ -617,6 +732,8 @@ def main() -> int:
             read_rows(args.sealed_visibility_dir / "visibility_exposure.csv")
             if args.sealed_visibility_dir
             else [],
+            sealed_exact_rows[0] if sealed_exact_rows is not None else [],
+            sealed_exact_rows[1] if sealed_exact_rows is not None else [],
         )
     numbers = paper_numbers(args.paper, produced, sealed_values)
     with open(args.out_dir / "numbers.csv", "w", newline="", encoding="utf-8") as fh:

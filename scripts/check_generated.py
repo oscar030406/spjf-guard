@@ -67,6 +67,49 @@ def check_outputs() -> tuple[bool, str]:
     return True, f"outputs: {len(manifests)} manifest(s) match the files on disk"
 
 
+def check_preserved_development() -> tuple[bool, str]:
+    """The amendment must leave every pre-existing development CSV byte-identical."""
+    from check_preserved_outputs import check
+
+    paths = [
+        ROOT / "outputs" / name
+        for name in ("consistent_original_tables.json", "consistent_ancillary_tables.json")
+        if (ROOT / "outputs" / name).is_file()
+    ]
+    if not paths:
+        return True, "preserved development: no original snapshot on disk, skipped"
+    results = [check(path, ROOT) for path in paths]
+    return all(ok for ok, _ in results), "preserved development: " + "; ".join(
+        message for _, message in results
+    )
+
+
+def check_consistent_certificates() -> tuple[bool, str]:
+    """Exact-visibility outputs carry a complete, terminal-zero refinement certificate."""
+    from check_consistent_visibility import check
+    from spjf_guard import config as cfgmod
+
+    directories = [
+        ROOT / "outputs" / name
+        for name in ("dev_consistent_visibility", "sealed_consistent_visibility")
+        if (ROOT / "outputs" / name / "manifest.json").is_file()
+    ]
+    if not directories:
+        return True, "consistent visibility: no manifest on disk, skipped"
+    cfg = cfgmod.load(ROOT / "configs" / "main.yaml", expand_environment=False)
+    complaints = [
+        f"{directory.relative_to(ROOT)}/{complaint}"
+        for directory in directories
+        for complaint in check(directory, cfg, require_full=True)
+    ]
+    if complaints:
+        return False, "consistent visibility: " + "; ".join(complaints)
+    return True, (
+        f"consistent visibility: {len(directories)} run(s) have complete monotone, "
+        "terminal-zero certificates"
+    )
+
+
 def check_paper_numbers() -> tuple[bool, str]:
     """Every `\\devnum{}` in the paper has a producing artefact or a stated reason.
 
@@ -99,6 +142,9 @@ def check_paper_numbers() -> tuple[bool, str]:
 SEALED_TABLES = Path("outputs") / "sealed_tables"
 SEALED_PREDICTOR = Path("outputs") / "sealed_predictor"
 SEALED_VISIBILITY = Path("outputs") / "sealed_visibility"
+DEV_EXACT = Path("outputs") / "dev_consistent_visibility"
+SEALED_EXACT = Path("outputs") / "sealed_consistent_visibility"
+EXACT_PACKAGE = Path("outputs") / "consistent_paper_tables"
 """Where the sealed run writes.  They are looked for rather than asked for: before the
 sealed run nothing is there and the check is the development one, after it the sealed
 tables are checked too, and neither state needs a flag to be remembered."""
@@ -135,6 +181,60 @@ def check_paper_prints() -> tuple[bool, str]:
             f" (and {len(complaints) - 4} more)" if len(complaints) > 4 else ""
         )
     return True, "paper prints: the paper agrees with the package, value for value"
+
+
+def _complaint_result(label: str, complaints: list[str]) -> tuple[bool, str]:
+    detail = "; ".join(complaints[:4])
+    more = f" (and {len(complaints) - 4} more)" if len(complaints) > 4 else ""
+    return False, f"{label}: {detail}{more}"
+
+
+def check_exact_paper_prints() -> tuple[bool, str]:
+    """Validate the separate exact package once an exact run or package exists."""
+    from check_paper_numbers import run
+
+    paper = ROOT / "paper"
+    dev = ROOT / "outputs" / "dev_tables"
+    package = ROOT / EXACT_PACKAGE
+    dev_exact = ROOT / DEV_EXACT
+    sealed_exact = ROOT / SEALED_EXACT
+    dev_manifest = dev_exact / "manifest.json"
+    sealed_manifest = sealed_exact / "manifest.json"
+    triggered = dev_manifest.is_file() or sealed_manifest.is_file() or package.exists()
+    if not triggered:
+        return True, "exact paper prints: no exact source or package on disk, skipped"
+
+    missing = []
+    if not package.is_dir():
+        missing.append(f"{EXACT_PACKAGE} is missing")
+    if not (dev_manifest.is_file() or sealed_manifest.is_file()):
+        missing.append("an exact source manifest is missing")
+    if not paper.is_dir():
+        missing.append("paper/ is missing")
+    for filename in ("main_table.csv", "identity_residuals.csv"):
+        if not (dev / filename).is_file():
+            missing.append(f"outputs/dev_tables/{filename} is missing")
+    if missing:
+        return _complaint_result("exact paper prints", missing)
+
+    sealed = ROOT / SEALED_TABLES
+    predictor = ROOT / SEALED_PREDICTOR
+    visibility = ROOT / SEALED_VISIBILITY
+    complaints = run(
+        paper,
+        dev,
+        package,
+        sealed=sealed if (sealed / "main_table.csv").is_file() else None,
+        sealed_predictor=predictor if (predictor / "predictor_metrics.csv").is_file() else None,
+        sealed_visibility=(
+            visibility if (visibility / "visibility_comparison.csv").is_file() else None
+        ),
+        dev_exact=dev_exact if dev_manifest.is_file() else None,
+        sealed_exact=sealed_exact if sealed_manifest.is_file() else None,
+    )
+    if complaints:
+        return _complaint_result("exact paper prints", complaints)
+    return True, "exact paper prints: the paper agrees with the exact package"
 
 
 MACHINE_PATHS = (
@@ -236,6 +336,9 @@ def check_paths() -> tuple[bool, str]:
 
 
 CHECKS = {
+    "consistent_visibility": check_consistent_certificates,
+    "exact_paper_prints": check_exact_paper_prints,
+    "preserved_development": check_preserved_development,
     "outputs": check_outputs,
     "paper_numbers": check_paper_numbers,
     "paper_prints": check_paper_prints,

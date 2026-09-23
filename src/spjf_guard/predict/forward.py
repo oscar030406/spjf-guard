@@ -13,14 +13,18 @@ Only the induced order of a score reaches the scheduler, never its level.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 import pandas as pd
 
-from spjf_guard.data.events import arrival_and_availability, heavy_threshold_and_cuts
+from spjf_guard.data.clock import Clock
+from spjf_guard.data.events import Prepared, arrival_and_availability, heavy_threshold_and_cuts
 from spjf_guard.features.sweep import (
     GROUPS,
+    HIST_COLS,
     class_term_scoped,
     column_index,
     design_matrix,
@@ -39,6 +43,29 @@ class ForwardRun:
 
     scores: dict[str, np.ndarray]
     log: list[dict]
+
+
+@dataclass
+class FrozenM4Models:
+    """Original-score models and design rows used by exact visibility refinement."""
+
+    models: dict[str, Any]
+    design: np.ndarray
+    semester: np.ndarray
+
+    def predict(self, submission_rows: np.ndarray, histories: np.ndarray) -> np.ndarray:
+        indices = np.asarray(submission_rows, np.int64)
+        if len(indices) != len(histories):
+            raise ValueError("submission rows and replacement histories differ in length")
+        block = self.design[indices].copy()
+        history_start = block.shape[1] - len(HIST_COLS)
+        block[:, history_start:] = np.asarray(histories, np.float32)
+        out = np.empty(len(indices), np.float64)
+        terms = self.semester[indices]
+        for term in np.unique(terms):
+            selected = np.flatnonzero(terms == term)
+            out[selected] = self.models[str(term)].predict(block[selected])
+        return out
 
 
 def lgb_parameters(cfg_predictor: dict, spec: ScoreSpec) -> dict:
@@ -69,12 +96,85 @@ def lgb_parameters(cfg_predictor: dict, spec: ScoreSpec) -> dict:
 
 
 def _fit_predict(params: dict, train_x, train_y, test_x):
+    model = _fit_model(params, train_x, train_y)
+    return model.predict(test_x)
+
+
+def _fit_model(params: dict, train_x, train_y):
     import lightgbm as lgb
 
     settings = dict(params)
     rounds = settings.pop("n_estimators")
-    model = lgb.train(settings, lgb.Dataset(train_x, label=train_y), num_boost_round=rounds)
-    return model.predict(test_x)
+    return lgb.train(settings, lgb.Dataset(train_x, label=train_y), num_boost_round=rounds)
+
+
+def fit_frozen_m4_models(
+    prepared: Prepared,
+    static: pd.DataFrame,
+    clock: Clock,
+    cfg_predictor: dict,
+    limit_s: float,
+    targets: Sequence[str],
+    all_terms: Sequence[str],
+    expected_scores: np.ndarray | None = None,
+) -> tuple[FrozenM4Models, np.ndarray, np.ndarray, np.ndarray]:
+    """Refit the original M4 weights once and verify their stored predictions.
+
+    Returns the frozen models, the authoritative M4 history rows, and the original
+    arrival/availability arrays.  The current protocol uses fixed cut-offs for all
+    development targets; refusing a target-specific cut-off here prevents refinement
+    from silently scoring with a different design than the fitted model.
+    """
+    arrival, availability = arrival_and_availability(prepared, clock)
+    features = feature_frame(prepared, arrival, availability)
+    rows = prepared.submission_rows
+    design = design_matrix(static, features, arrival[rows])
+    columns = column_index(GROUPS["M4"])
+    selected_design = np.ascontiguousarray(design[:, columns], np.float32)
+    semester = prepared.semester[rows]
+    first, order = term_order(prepared.semester, arrival, all_terms)
+    available = availability[rows]
+    executed = np.minimum(prepared.cost_s[rows], limit_s)
+    spec = SCORE_SPECS["spjf_e"]
+    label = spec.target_of(executed)
+    settings = lgb_parameters(cfg_predictor, spec)
+    models: dict[str, Any] = {}
+    reproduced = np.full(len(rows), np.nan, np.float64)
+    fixed_terms = list(cfg_predictor["fixed_cutoff_terms"])
+    core = np.isin(semester, fixed_terms)
+    for target in [str(term) for term in order if term in targets]:
+        prior = [term for term in order if first[term] < first[target]]
+        train = np.isin(semester, prior) & (available < first[target])
+        if not train[core].all():
+            raise ValueError(
+                f"{target} needs target-specific cut-offs; exact refinement requires "
+                "the matching frozen target design"
+            )
+        test = semester == target
+        model = _fit_model(settings, selected_design[train], label[train])
+        models[target] = model
+        reproduced[test] = model.predict(selected_design[test])
+        if expected_scores is not None:
+            np.testing.assert_array_equal(reproduced[test], expected_scores[test])
+        print(f"  frozen M4 {target}: {int(test.sum()):,} scores reproduced", flush=True)
+    target_rows = np.isin(semester, list(targets))
+    if expected_scores is not None and not np.array_equal(
+        reproduced[target_rows],
+        np.asarray(expected_scores, np.float64)[target_rows],
+        equal_nan=True,
+    ):
+        delta = np.abs(reproduced[target_rows] - expected_scores[target_rows])
+        raise AssertionError(
+            "refitted frozen M4 weights do not reproduce the stored original scores; "
+            f"{int((delta > 0).sum()):,} rows differ, worst {float(delta.max()):.3e}"
+        )
+    history = features[list(HIST_COLS)].to_numpy(np.float32)
+    return (
+        FrozenM4Models(models=models, design=selected_design, semester=semester),
+        history,
+        arrival,
+        availability,
+    )
 
 
 def term_order(semester: np.ndarray, arrival_s: np.ndarray, terms) -> tuple[dict, list]:

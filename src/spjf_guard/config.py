@@ -173,7 +173,10 @@ class Config:
         if aging_section:
             out.append(
                 aging(
-                    self["scheduling"].get("headline_ranking_score", score_key),
+                    aging_section.get(
+                        "ranking_score",
+                        self["scheduling"].get("headline_ranking_score", score_key),
+                    ),
                     float(aging_section["selected_credit_per_s"]),
                     str(aging_section["label"]),
                 )

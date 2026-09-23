@@ -51,8 +51,8 @@
 (above) and the accounting it runs for one waiting job (below). Only completed
 work is charged, because $C_j$ is unknown until $j$ finishes, so
 $\mathrm{over}[q]$ is a step function with a step at each completion of a
-higher-ranked job; the first dispatch epoch at which the step function reaches
-the budget sends $q$ next. The budget drawn is the age-relative shape, rising at
+higher-ranked job; at a dispatch decision, $q$ is eligible if its account reaches its current budget.
+The guard dispatches the smallest-ranked eligible job, which need not be $q$. The budget drawn is the age-relative shape, rising at
 rate $\eta k$ from $B_0$ and capped at $B_{\max}$; the guarantee depends on the
 cap alone, so any curve under the dashed ceiling carries the same promise. The
 lower panel is schematic. Sources: the definitions in Section~\ref{sec:guard};

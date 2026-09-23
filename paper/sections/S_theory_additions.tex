@@ -1,0 +1,240 @@
+\providecommand{\devnum}[1]{#1}
+
+\section{Additional theory: scope, accounting, and instance-dependent bounds}
+\label{sec:supp_theory_additions}
+
+This section records results that delimit, rather than enlarge, the main-text
+claims. The first example rules out instance optimality for the uniform guard.
+The exact identity that follows is a useful job-level accounting decomposition;
+its core is standard sample-path workload balance, and we do not treat it as a
+new conservation law. The final bounds replace the global timeout by realised
+order statistics, but in their actual-size form they are retrospective
+certificates under completion-only observation.
+
+\subsection{Comparison with the nearest guarantee disciplines}
+
+\begin{table*}[htbp]
+\centering
+\caption{Scope of the nearest per-job guarantees and wrapper precedent.}
+\label{tab:supp_related_comparison}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.11\textwidth}p{0.13\textwidth}p{0.10\textwidth}p{0.08\textwidth}p{0.15\textwidth}p{0.12\textwidth}p{0.18\textwidth}}
+\hline
+Method & Reference discipline & Arrival assumptions & Preemption & Information needed & Server model & Guarantee \\
+\hline
+This work & Same-input FCFS & Arbitrary finite path & No & Ranks, completions, public $L$, opaque base proposal & $k$ identical servers & Deterministic per-job additive waiting excess; wrapper around any base \\
+PFCFS \cite{schwiegelshohn2000fairness} & Flow time without later submissions & Online releases & Gang preemption & Processor demand; service time need not be known; preemption penalty & Rigid parallel jobs & $\lambda$-fairness; PFCFS is $(2+2\bar s)$-fair with competitive efficiency bounds \\
+Conservative backfilling \cite{lindsay2013backfilling} & Submission-time reservation & Online submissions & No & Requested wall time and resources & Rigid parallel jobs & Later backfills do not delay any reserved start \\
+PV-EASY \cite{yuan2010pveasy,yuan2014strictfairness} & Priority reservation & Online submissions; prediction error allowed & Kill and restart & Runtime estimates and resources & Rigid parallel jobs & Zero lower-priority delay to the protected reservation \\
+Nudge \cite{grosof2021nudge} & FCFS & Stationary Poisson & No & Size class at arrival & One server & Response-time stochastic dominance for its model; at most one swap per job \\
+Load Balancing Guardrails \cite{grosof2019guardrails} & Unconstrained dispatcher & Stochastic heavy-traffic regime & SRPT at servers & Size class and dispatch state & Parallel server pools & Any dispatcher becomes mean-response-time optimal in heavy traffic \\
+\hline
+\end{tabular}
+\end{table*}
+% Source for the PFCFS definition and constants, and reading-depth notes for all
+% rows: prechecks/guard_optimality_verify/literature_check.md and
+% prechecks/guard_optimality_verify/verification.md, Section 9.
+
+\subsection{No uniform instance-optimality ratio}
+
+\begin{proposition}[An unbounded instance-optimality ratio]
+\label{prop:supp_unbounded_instance}
+At $k=1$, let three batch jobs have rank-order service times $(L,1,1)$, with
+$L\geq2$, and set $G=L$. The cap of the parameter rule of the main text (its Corollary on parameters from a promise, $B_{\max} = k(G-(3-2/k)L)$) is $B=0$, so the
+guard is FCFS and has total waiting time $2L+1$. The order $(1,1,L)$ has total
+waiting time $3$ and satisfies the per-job promise $G$. Consequently the ratio
+between the guard's total wait and that of a feasible policy is at least
+$(2L+1)/3$, which is unbounded as $L\to\infty$.
+\end{proposition}
+% Source and direct checks at L=10,100,1000,10000:
+% prechecks/guard_optimality_verify/out_t1.txt; derivation and scope in
+% prechecks/guard_optimality_verify/verification.md, Section 4.
+
+\begin{proof}
+FCFS produces waits $0,L,L+1$. Under the competing order the two short jobs wait
+$0$ and $1$, and the long job waits $2$. The long job's excess is therefore $2$
+and both short jobs have nonpositive excess, so $L\geq2$ makes the order
+$G$-feasible. The comparison allows a clairvoyant feasible policy; restricting
+the comparator to completion-only policies would be a different question.
+\end{proof}
+
+\subsection{Idle-capacity accounting}
+
+Let $t_0$ be the first arrival time, let $b_Q(u)$ be the number of busy servers
+under policy $Q$ at time $u$, and define the cumulative unused capacity
+\[
+ \Gamma_Q(t)=\int_{t_0}^{t}\bigl(k-b_Q(u)\bigr)\,du.
+\]
+This includes idle capacity caused by having fewer than $k$ jobs in the system;
+work conservation excludes only deliberate idling while a job waits.
+
+\begin{lemma}[Exact accounting with idle-capacity correction]
+\label{lem:supp_gamma_identity}
+For every finite input, every non-preemptive work-conserving policy $P$, and
+every job $i$,
+\[
+ k\bigl(W_P[i]-W_{\mathrm{FCFS}}[i]\bigr)
+ =\mathrm{In}_i-\mathrm{Out}_i
+  +\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i)
+  -\rho_i^P+\rho_i^{\mathrm{FCFS}}.
+\]
+The identity was checked on \devnum{214{,}735} job-instances, including tied
+events, non-batch arrivals, and same-phase overtakers.
+\end{lemma}
+% Source for the 214,735 checks and their decomposition:
+% prechecks/guard_optimality_verify/out_t2.txt and
+% prechecks/guard_optimality_verify/verification.md, Sections 7.1--7.2.
+
+\begin{proof}
+Let $A(t)$ be cumulative arrived work and $E_Q(t)$ cumulative executed work.
+Then
+\[
+ U_Q(t)=A(t)-E_Q(t)
+       =A(t)-k(t-t_0)+\Gamma_Q(t).
+\]
+At $a_i$, after simultaneous arrivals and before that phase's dispatches, work
+from jobs not ranked below $i$ is identical in the two runs. Hence
+\[
+ R_i^P-R_i^{\mathrm{FCFS}}
+ =U_P(a_i)-U_{\mathrm{FCFS}}(a_i)
+ =\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i).
+\]
+Substitution into the two busy-period equalities of the main text (the displayed equality $k\,W_P[i] = R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \rho^P_i$ in the proof of the identity), one for $P$
+and one for FCFS, proves the formula. A same-phase overtaker enters both
+$\mathrm{In}_i$ and $\rho_i^P$ with its full size and therefore cancels.
+\end{proof}
+
+Writing $D_i=\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i)$, the arrival-frozen
+budget
+\[
+ b_i=\max\{0,\ k(G-L)-(k-1)L-D_i\}
+\]
+has the mathematical promise $G$ in the standard range
+$G\geq(3-2/k)L$: combine
+$\mathrm{In}_i<b_i+kL$ with Lemma~\ref{lem:supp_gamma_identity} and
+$\rho_i^{\mathrm{FCFS}}\leq(k-1)L$. This is not a deployable rule under the
+paper's completion-only observation model. In general
+$\Gamma_{\mathrm{FCFS}}(a_i)$ depends on when an FCFS-shadow job completes
+before its size has been revealed in the realised run; simulating the shadow
+does not supply that missing completion time.
+
+\subsection{Instance-dependent order-statistic bounds}
+
+For a set of jobs $S$, let $\Lambda_r(S)$ be the sum of its largest at most $r$
+original service times, with missing terms replaced by zero. We abbreviate
+\[
+ \Lambda_{k-1}(t)=\Lambda_{k-1}(\{j:a_j\leq t\}),\quad
+ \Lambda^{<i}_{k-1}=\Lambda_{k-1}(\{j:j<i\}),
+\]
+and
+\[
+ \Lambda^{>i}_{k}(t)=\Lambda_k(\{j:j>i,\ a_j\leq t\}).
+\]
+
+\begin{proposition}[Instance-dependent workload gap]
+\label{prop:supp_lambda_gap}
+For any two non-preemptive work-conserving policies $Q_1,Q_2$,
+\[
+ |U_{Q_1}(t)-U_{Q_2}(t)|\leq\Lambda_{k-1}(t)
+ \qquad\text{for every }t.
+\]
+\end{proposition}
+
+\begin{proof}
+The workload difference is continuous across arrivals, whereas
+$\Lambda_{k-1}(t)$ can only increase. If
+$U_{Q_1}(t)>\Lambda_{k-1}(t)$, policy $Q_1$ must have at least $k$ jobs present:
+otherwise their remaining work is no larger than the sum of their at most
+$k-1$ original sizes. All its servers are therefore busy, so the difference
+cannot increase. It cannot cross the nondecreasing barrier from below; exchange
+$Q_1$ and $Q_2$ for the other direction.
+\end{proof}
+
+\begin{proposition}[Instance-dependent excess accounting]
+\label{prop:supp_lambda_excess}
+For every policy $P$ and job $i$,
+\[
+ k\,\mathrm{excess}_P[i]
+ \leq \mathrm{In}_i-\mathrm{Out}_i
+ +\Lambda_{k-1}(a_i)+\Lambda^{<i}_{k-1}.
+\]
+\end{proposition}
+
+\begin{proof}
+In Lemma~\ref{lem:supp_gamma_identity}, Proposition~\ref{prop:supp_lambda_gap}
+bounds the idle-capacity difference, equivalently the workload difference at
+$a_i$, by $\Lambda_{k-1}(a_i)$. Drop $-\rho_i^P\leq0$. The at most $k-1$ FCFS
+jobs still running when $i$ starts all have rank below $i$, so
+$\rho_i^{\mathrm{FCFS}}\leq\Lambda^{<i}_{k-1}$.
+\end{proof}
+
+\begin{proposition}[Instance-dependent overtaking under the guard]
+\label{prop:supp_lambda_in}
+If job $i$ has an overtaker and $\tau$ is the dispatch time of its last
+overtaker, then
+\[
+ \mathrm{In}_i
+ <\mathrm{budget}(i,\tau)+\Lambda^{>i}_k(s_i^P).
+\]
+If the budget is nondecreasing in time, the first term may be replaced by
+$\mathrm{budget}(i,s_i^P)$; with only a uniform cap it may be replaced by
+$B_{\max}$.
+\end{proposition}
+
+\begin{proof}
+Completed overtaking work before the last overtaker is dispatched is strictly
+below $\mathrm{budget}(i,\tau)$. At $\tau$, at most $k$ dispatched overtakers
+remain unfinished: the newly dispatched job and at most one on each other
+server. Their total original size is at most
+$\Lambda^{>i}_k(s_i^P)$.
+\end{proof}
+
+\begin{proposition}[Combined instance-dependent guard bound]
+\label{prop:supp_lambda_guard}
+Under a cap $B_{\max}$, every job satisfies
+\[
+ k\,\mathrm{excess}_P[i]
+ \leq B_{\max}+\Lambda^{>i}_k(s_i^P)
+ +\Lambda_{k-1}(a_i)+\Lambda^{<i}_{k-1},
+\]
+and the inequality is strict when $i$ has an overtaker. When it has none, the
+sharper weak bound omits the first two terms.
+\end{proposition}
+
+\begin{proof}
+Combine Propositions~\ref{prop:supp_lambda_excess} and
+\ref{prop:supp_lambda_in}, use $\mathrm{Out}_i\geq0$, and apply the cap. If no
+job overtakes $i$, then $\mathrm{In}_i=0$ and
+Proposition~\ref{prop:supp_lambda_excess} gives the stated sharper form.
+\end{proof}
+
+These $\Lambda$ quantities use actual sizes, including sizes of unfinished
+jobs, and hence are offline instance certificates in the completion-only model.
+Replacing each unknown size by a public class-specific upper bound gives a
+deployable but generally looser inequality. The homogeneous substitution recovers
+the main text's aggregate worst-case constant; it does not prove that each
+order-statistic term is separately minimal.
+
+As an illustration, consider independently sampled truncated-Pareto sizes with
+$\alpha=1.5$, $x_{\min}=1$, hard cap $1000$, sample size $N=200$, and
+\devnum{5{,}000} samples drawn with seed \devnum{73621}. The first ratio below
+sets $L$ after the fact to the maximum of each finite sample; the second uses the
+fixed hard cap as the denominator.
+% Source for all parameters and values in this paragraph and table:
+% prechecks/guard_optimality_verify/out_t3.txt and
+% prechecks/guard_optimality_verify/verification.md, Section 8.3.
+\begin{center}
+\begin{tabular}{rcc}
+\hline
+$k$ & $\mathbb{E}[\Lambda_{k-1}/((k-1)L_{\mathrm{sample}})]$
+    & $\mathbb{E}[\Lambda_{k-1}/((k-1)L_{\mathrm{cap}})]$ \\
+\hline
+$4$  & $0.6825$ & $0.0444$ \\
+$8$  & $0.4648$ & $0.0263$ \\
+$16$ & $0.3139$ & $0.0161$ \\
+\hline
+\end{tabular}
+\end{center}
+Thus the larger ratios use $L=L_{\mathrm{sample}}=\max_j C_j$, not the published
+timeout $L_{\mathrm{cap}}=1000$.
