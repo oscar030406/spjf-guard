@@ -315,10 +315,9 @@ def _all_complaints(paper):
     return cpn.run(paper, ROOT / "outputs" / "dev_tables", ROOT / "outputs" / "paper_tables")
 
 
-MOVED_SENTENCE = r"gives up \devnum{0.115} of the"
+MOVED_SENTENCE = r"costs \devnum{0.115} of the gap."
 """A line of section 8 whose figures check B recomputes and whose \\devnum{0.115} the
-paper prints exactly once.  Moving it is what shows the check follows the sentence.
-The sentence wraps after "of the", so the marker stops there."""
+paper prints exactly once.  Moving it is what shows the check follows the sentence."""
 
 
 def _shorten_the_manuscript(paper: Path) -> None:

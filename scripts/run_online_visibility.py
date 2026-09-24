@@ -486,6 +486,12 @@ def run(cfg, args, pool_terms, outcome) -> int:
         "online_costs.csv": [r for cell in cells for r in cell["costs"]],
     }
     written = [_write_csv(tables[name], args.out_dir / name, ("policy",)) for name in TABLES]
+    if args.pool == "sealed":
+        complaint = provenance.pinned_outputs_complaint(
+            cfg["run"]["sealed_online_visibility_tables"], written
+        )
+        if complaint:
+            raise SystemExit(complaint)
     provenance.write(
         args.out_dir,
         produced_by="scripts/run_online_visibility.py",
@@ -529,19 +535,27 @@ def main() -> int:
     parser.add_argument("--out-dir", type=Path, default=None)
     parser.add_argument("--reps", default="0,1,2,3,4")
     parser.add_argument("--levels", default="0,1,2")
-    parser.add_argument("--policies", default="SPJF-E,Guard(300),Guard(600),Guard(1200)")
+    parser.add_argument("--policies", default=None, help="default: the configured list")
     parser.add_argument("--candidates", type=Path, default=None)
-    parser.add_argument("--variants", default="online")
-    parser.add_argument("--audit", type=int, default=2000)
+    parser.add_argument("--variants", default=None, help="default: the configured list")
+    parser.add_argument("--audit", type=int, default=None)
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--unseal", action="store_true")
     args = parser.parse_args()
+    cfg = cfgmod.load(args.config)
+    section = cfg["features"]["online_visibility"]
+    pinned = (",".join(section["policies"]), ",".join(section["variants"]))
+    args.policies = args.policies or pinned[0]
+    args.variants = args.variants or pinned[1]
+    args.audit = int(section["audit_sample"]) if args.audit is None else args.audit
     args.policy_names = args.policies.split(",")
     args.variant_names = args.variants.split(",")
     if not set(args.variant_names) <= set(VARIANTS):
         parser.error(f"variants are {VARIANTS}")
-    cfg = cfgmod.load(args.config)
+    chosen = (args.policies, args.variants, args.audit, args.candidates)
+    if args.pool == "sealed" and chosen != (*pinned, int(section["audit_sample"]), None):
+        parser.error("the sealed run replays exactly the configured policies and variants")
     pool_terms = list(cfg["overlay"]["pools"][args.pool])
     sealed.guard_semesters(pool_terms, ROOT, unseal=args.unseal)
     args.overlay_dir = args.overlay_dir or cfg.data_path("overlay_dir")

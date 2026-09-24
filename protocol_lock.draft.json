@@ -1,9 +1,9 @@
 {
-  "written_at": "2026-09-24T06:23:56-04:00",
+  "written_at": "2026-09-24T08:45:29-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
-    "sha256": "bc157a1b49e7f17c151ed1dd36decf2acac5385d5f310a1bde75a61350da1784",
+    "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe",
     "document": {
       "name": "main",
       "description": "CodeBench shared judge pool, development terms, five overlays, three loads",
@@ -97,7 +97,7 @@
           "user_exercise_prior",
           "schedule"
         ],
-        "headline_variant": "exact",
+        "headline_variant": "online",
         "visibility_variants": {
           "original": {
             "score_suffix": "",
@@ -165,6 +165,41 @@
             2
           ]
         },
+        "online_visibility": {
+          "algorithm": "event_driven_pausing_replay",
+          "base_score": "spjf_e",
+          "model_weights": "frozen",
+          "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+          "release_clock": "replay_completion_plus_copy_offset",
+          "rolling_window_order": "release",
+          "external_history_clock": "original_relative",
+          "cross_check": "fixed_point_iteration",
+          "audit_sample": 2000,
+          "policies": [
+            "SPJF-E",
+            "Guard(300)",
+            "Guard(600)",
+            "Guard(1200)",
+            "Aging(600)"
+          ],
+          "variants": [
+            "online"
+          ],
+          "selection": "retained_selection_of_record",
+          "reselection_candidates_per_family": 4,
+          "development_overlays": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "development_levels": [
+            0,
+            1,
+            2
+          ]
+        },
         "heavy_quantile": 0.95,
         "heavy_reference_semesters": [
           "2018-1",
@@ -212,7 +247,7 @@
       },
       "scheduling": {
         "ranking_score": "spjf_e",
-        "headline_ranking_score": "policy_specific_exact",
+        "headline_ranking_score": "policy_specific_online",
         "guard_budget": "min(B0 + gam * w_q + eta * k * (t - a_q), Bmax)",
         "promises_s": [
           300.0,
@@ -307,7 +342,7 @@
           },
           "1200.0": {
             "family": "hybrid",
-            "b0_base_s": 0.0,
+            "b0_base_s": 120.0,
             "eta": 0.0,
             "gam_base_s": 16.0
           }
@@ -325,9 +360,9 @@
               "gam_base_s": 0.0
             },
             "hybrid": {
-              "b0_base_s": 0.0,
+              "b0_base_s": 120.0,
               "eta": 0.0,
-              "gam_base_s": 16.0
+              "gam_base_s": 4.0
             }
           },
           "600.0": {
@@ -359,7 +394,7 @@
               "gam_base_s": 0.0
             },
             "hybrid": {
-              "b0_base_s": 0.0,
+              "b0_base_s": 120.0,
               "eta": 0.0,
               "gam_base_s": 16.0
             }
@@ -534,6 +569,15 @@
           "exact_sensitivity_cells.csv",
           "exact_sensitivity_comparison.csv",
           "manifest.json"
+        ],
+        "sealed_online_visibility_tables": [
+          "online_cells.csv",
+          "online_comparison.csv",
+          "online_passes.csv",
+          "online_audit.csv",
+          "online_delta_manifest.csv",
+          "online_costs.csv",
+          "manifest.json"
         ]
       }
     }
@@ -548,6 +592,11 @@
       "path": "configs/visibility_development_20260922.yaml",
       "present": true,
       "sha256": "3ecc81fe448828622088fade31856b9d3f68b8f5163d77f97d0f1f0ac9654bc0"
+    },
+    {
+      "path": "configs/visibility_development_20260924.yaml",
+      "present": true,
+      "sha256": "4f54bd492aa4817afde4d9c994001396a0364d850699be31ef715da4f55ca704"
     }
   ],
   "code": {
@@ -586,7 +635,7 @@
       },
       {
         "path": "scripts/check_preserved_outputs.py",
-        "sha256": "0d423bb4e53a54b62415782896d46c06ba66baf7d31e07d8af192ddd91844467"
+        "sha256": "8a11f3c69106a5503382de4299534b8474264ca97f172c57075e0ef7aad73304"
       },
       {
         "path": "scripts/check_reproduction.py",
@@ -605,8 +654,12 @@
         "sha256": "462245badf10ec4169cc6368eb33d77bfa16639ef53ed3fc69a8fefb2eeec35f"
       },
       {
+        "path": "scripts/emit_gap_harm_figure.py",
+        "sha256": "94b681ebddc6f2d4b9186a169b8f3140d35d7ed5651f064d9bf48d18420de6ee"
+      },
+      {
         "path": "scripts/emit_paper_tables.py",
-        "sha256": "ae06d837ffe182f75286faec9c63ec09e56e73b7c8849ea3ca6396571a8ae065"
+        "sha256": "c225c4ce89a43c2cf1ed4803b07a24ff4eceea6a904252ad16241c8a75c21e05"
       },
       {
         "path": "scripts/eval_scores.py",
@@ -622,19 +675,27 @@
       },
       {
         "path": "scripts/make_protocol_lock.py",
-        "sha256": "be6bbf33ee24f09bef1afe4722ce602c337684fdd70d39cffeddb80cdff1c7a5"
+        "sha256": "0741bf93a5f1aacb942b54013b05bb35d260dd87a18c4c1fe28baaffb92cdc86"
       },
       {
         "path": "scripts/parse_archive.py",
         "sha256": "ea5b01b2142dbac736de4ef0f466fb4b1bd7b98aba2d07d0d3c0672d4aacc40d"
       },
       {
+        "path": "scripts/run_cluster_bootstrap.py",
+        "sha256": "0eca93e6959c0ced374623c1c7c74887bca62332d046a575e05cc3d25ebeeefd"
+      },
+      {
         "path": "scripts/run_consistent_visibility.py",
-        "sha256": "817248c28ef105f86a9841c8d51f8e0dbf9e316c35668ae20725cace14adbb79"
+        "sha256": "976c4634ce7e15a006a17480bc4019496b1806de97f3d1d1f4558cb8b9d510c9"
       },
       {
         "path": "scripts/run_main.py",
-        "sha256": "c4e453095052e4eb6dd68a1f14b6d8e46d4ddacb7eb19c2c65e19643d22ba46a"
+        "sha256": "2402a35bb0db5cc3959891c206e2a7767626e01e82532f144a2f8c96f1867f26"
+      },
+      {
+        "path": "scripts/run_online_visibility.py",
+        "sha256": "911ef06834bb7d48bddd417c55d438eccfc2d9ea84b15ea27b52457ef738c7da"
       },
       {
         "path": "scripts/run_visibility.py",
@@ -643,6 +704,10 @@
       {
         "path": "scripts/select_aging.py",
         "sha256": "33271dff1e734e5666fc50115f0134955c8c56ba6e8494c16ce22a844b5a9e9d"
+      },
+      {
+        "path": "scripts/select_online.py",
+        "sha256": "5e15136989615cc8da9f1194e232ce4ce296108dae1feca51798aee454b0c163"
       },
       {
         "path": "scripts/select_parameters.py",
@@ -678,7 +743,7 @@
       },
       {
         "path": "src/spjf_guard/data/sealed.py",
-        "sha256": "d0417e9ab4fed942059e27418f687c5bcdaf59fe52890b472e172ed760cb909e"
+        "sha256": "da39f87f81013e106b565823762c660b84254d2a8b82792ca01dd84119f2a43c"
       },
       {
         "path": "src/spjf_guard/experiment/__init__.py",
@@ -703,6 +768,14 @@
       {
         "path": "src/spjf_guard/experiment/metrics.py",
         "sha256": "704fa09765c860bd4ba5b12395bef7f0f04e7445fc35abdec9988151146f552a"
+      },
+      {
+        "path": "src/spjf_guard/experiment/online.py",
+        "sha256": "92e6f00a163c38b2b4ef4e3f0704f607c135908b77d900f87df5ae5a9beb1605"
+      },
+      {
+        "path": "src/spjf_guard/experiment/online_replay.py",
+        "sha256": "fcea26fdc48c3d95c4055d13ccfbcc1eab9ef65534fe49e68c0c660938cf4f74"
       },
       {
         "path": "src/spjf_guard/experiment/overlay.py",
@@ -754,7 +827,7 @@
       },
       {
         "path": "src/spjf_guard/features/refine.py",
-        "sha256": "fa74826ddbb81e584ef2576acae85878420d709ca8c9dfe357888f38777374c7"
+        "sha256": "b1f033070d2a70841c80d0d3a50a8b50214d703ecd170d796bfa44badf380561"
       },
       {
         "path": "src/spjf_guard/features/sweep.py",
@@ -766,7 +839,7 @@
       },
       {
         "path": "src/spjf_guard/predict/forward.py",
-        "sha256": "3e4960dfb0e5670dcfe69a4edb7a07d37bbbc87813e92e89a6bcfc5154d979d8"
+        "sha256": "2ab7cb24a8186b89d523aba4c50ddb98c2d287d289aacad16b0d05d65f7aff64"
       },
       {
         "path": "src/spjf_guard/predict/scores.py",
@@ -826,7 +899,7 @@
       },
       {
         "path": "tests/test_consistent_protocol.py",
-        "sha256": "08b5641b21ddbe8db1de7ea2cbce88c9f731f04305f1c4c9e7fbaea5420157de"
+        "sha256": "b3b94e42a4da4f527c88a7bd569aaa26c80849c17d847f86b5767eb7de334514"
       },
       {
         "path": "tests/test_consistent_runner.py",
@@ -877,12 +950,16 @@
         "sha256": "a14e8d4ea678f8271f2a1a15656ef132f787ba6f1a3eb669e3b66484dd0cad0d"
       },
       {
+        "path": "tests/test_online_visibility.py",
+        "sha256": "349ad97f74be47cc6f8432290b7cdf572ac470e6c70408d47354ea51db13f81c"
+      },
+      {
         "path": "tests/test_overlay_pools.py",
         "sha256": "8eca720a54471a4f9bfc4498149f0fd182d7c9f0b73082d1ae237521c39607ee"
       },
       {
         "path": "tests/test_paper_tables.py",
-        "sha256": "0c21e6798d989b5729d8d033e31431e32124b216f52d1af18bbcedcc931be2ce"
+        "sha256": "36e5f296b904f07c28cf4e1e19f51007ba719767f8952591d55669b96863dfa7"
       },
       {
         "path": "tests/test_predict.py",
@@ -906,7 +983,7 @@
       },
       {
         "path": "tests/test_sealed_data.py",
-        "sha256": "d87770454db704cef035fffdc5b1d976a4f4efcd9d0fd12ecbc457f0300449c5"
+        "sha256": "ec9f46e0b0d8dac51db985f537bd4734de8c65623e40f439d5b3094fcf7a1416"
       },
       {
         "path": "tests/test_sealed_k1.py",
@@ -941,7 +1018,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "5f133bcea419dd4db4d71672ca0448b93c59e6b830a27f0e330c7fad267388f3"
+    "digest": "90e24e92faa0159de44ab02f10523c9f8e2793fdc31731fa66866f4dca0ae7a1"
   },
   "inputs": {
     "artefacts": [
@@ -1098,6 +1175,41 @@
           1,
           2
         ]
+      },
+      "online": {
+        "algorithm": "event_driven_pausing_replay",
+        "base_score": "spjf_e",
+        "model_weights": "frozen",
+        "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+        "release_clock": "replay_completion_plus_copy_offset",
+        "rolling_window_order": "release",
+        "external_history_clock": "original_relative",
+        "cross_check": "fixed_point_iteration",
+        "audit_sample": 2000,
+        "policies": [
+          "SPJF-E",
+          "Guard(300)",
+          "Guard(600)",
+          "Guard(1200)",
+          "Aging(600)"
+        ],
+        "variants": [
+          "online"
+        ],
+        "selection": "retained_selection_of_record",
+        "reselection_candidates_per_family": 4,
+        "development_overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "development_levels": [
+          0,
+          1,
+          2
+        ]
       }
     },
     "feature_set": {
@@ -1110,7 +1222,7 @@
         "user_exercise_prior",
         "schedule"
       ],
-      "headline_variant": "exact",
+      "headline_variant": "online",
       "visibility_variants": {
         "original": {
           "score_suffix": "",
@@ -1165,6 +1277,41 @@
         "selection_assessment": "retained_original_due_cost",
         "selection_cost_seed": 20260922,
         "reselection_budget_hours": 8.0,
+        "development_overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "development_levels": [
+          0,
+          1,
+          2
+        ]
+      },
+      "online_visibility": {
+        "algorithm": "event_driven_pausing_replay",
+        "base_score": "spjf_e",
+        "model_weights": "frozen",
+        "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+        "release_clock": "replay_completion_plus_copy_offset",
+        "rolling_window_order": "release",
+        "external_history_clock": "original_relative",
+        "cross_check": "fixed_point_iteration",
+        "audit_sample": 2000,
+        "policies": [
+          "SPJF-E",
+          "Guard(300)",
+          "Guard(600)",
+          "Guard(1200)",
+          "Aging(600)"
+        ],
+        "variants": [
+          "online"
+        ],
+        "selection": "retained_selection_of_record",
+        "reselection_candidates_per_family": 4,
         "development_overlays": [
           0,
           1,
@@ -2937,7 +3084,7 @@
       },
       "1200.0": {
         "family": "hybrid",
-        "b0_base_s": 0.0,
+        "b0_base_s": 120.0,
         "eta": 0.0,
         "gam_base_s": 16.0
       }
@@ -2955,9 +3102,9 @@
           "gam_base_s": 0.0
         },
         "hybrid": {
-          "b0_base_s": 0.0,
+          "b0_base_s": 120.0,
           "eta": 0.0,
-          "gam_base_s": 16.0
+          "gam_base_s": 4.0
         }
       },
       "600.0": {
@@ -2989,7 +3136,7 @@
           "gam_base_s": 0.0
         },
         "hybrid": {
-          "b0_base_s": 0.0,
+          "b0_base_s": 120.0,
           "eta": 0.0,
           "gam_base_s": 16.0
         }
@@ -3071,6 +3218,15 @@
       "exact_costs.csv",
       "exact_sensitivity_cells.csv",
       "exact_sensitivity_comparison.csv",
+      "manifest.json"
+    ],
+    "sealed_online_visibility_tables": [
+      "online_cells.csv",
+      "online_comparison.csv",
+      "online_passes.csv",
+      "online_audit.csv",
+      "online_delta_manifest.csv",
+      "online_costs.csv",
       "manifest.json"
     ],
     "load": {

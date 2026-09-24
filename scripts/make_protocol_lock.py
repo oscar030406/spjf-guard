@@ -194,6 +194,7 @@ def build(cfg_path: Path, root: Path) -> dict:
                 "rule": cfg["features"]["visibility_rule"],
                 "clock": cfg["clock"],
                 "exact": cfg["features"]["exact_visibility"],
+                "online": cfg["features"]["online_visibility"],
             },
             "feature_set": cfg["features"],
             "predictor": cfg["predictor"],
@@ -213,6 +214,9 @@ def build(cfg_path: Path, root: Path) -> dict:
             "sealed_visibility_tables": list(cfg["run"]["sealed_visibility_tables"]),
             "sealed_consistent_visibility_tables": list(
                 cfg["run"]["sealed_consistent_visibility_tables"]
+            ),
+            "sealed_online_visibility_tables": list(
+                cfg["run"]["sealed_online_visibility_tables"]
             ),
             "load": {
                 "target_busy_hour_utilisation": cfg["overlay"]["target_busy_hour_utilisation"],

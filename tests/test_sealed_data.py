@@ -298,7 +298,8 @@ def test_the_dry_run_prints_the_plan_and_opens_nothing(tmp_path, monkeypatch):
     assert "sealed_rep0.npz" in out
     assert "[5 visibility" in out
     assert "[6 exact" in out
-    assert "[9 predictor" in out
+    assert "[7 online" in out
+    assert "[10 predictor" in out
     assert "visibility_waits_and_lag.csv" in out
     assert str(sealed.LOG_RELATIVE_PATH) in out.replace("/", "\\")
     assert ("NOT FROZEN" in out) == (not (root / "protocol_lock.json").is_file())

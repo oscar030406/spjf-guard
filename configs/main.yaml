@@ -75,10 +75,11 @@ features:
   # result by D.  On the development cells max W_FCFS = 1544.602708 s, so the guard
   # theorem requires at most 2744.602708 s for G <= 1200 s; D = 3600 s leaves an
   # 855.397292 s (31.2%) margin.  Every run still reports W > D by policy and cell.
-  # The headline is the exact protocol (ADR 0007 amendment, 2026-09-23): every score
-  # uses only results available in its own policy's replay.  conservative and static
-  # are the two references beside it.
-  headline_variant: exact
+  # The headline is the online protocol (ADR 0008, 2026-09-24): the scheduler runs once
+  # and every score is computed at the job's arrival from exactly the own-copy outcomes
+  # its own replay has completed by then.  exact (ADR 0007 amendment) is the monotone
+  # certificate beside it; original, conservative and static are references.
+  headline_variant: online
   visibility_variants:
     original:
       score_suffix: ""
@@ -122,6 +123,26 @@ features:
     reselection_budget_hours: 8.0
     development_overlays: [0, 1, 2, 3, 4]
     development_levels: [0, 1, 2]
+  # Online replay (ADR 0008).  The package kernel pauses at every arrival whose visible
+  # own-copy history differs from the one its current score was computed on, and the
+  # frozen model rescores that job at that instant.  The parameters are the selection of
+  # record; the restricted online reselection is reported beside it, never substituted.
+  online_visibility:
+    algorithm: event_driven_pausing_replay
+    base_score: spjf_e
+    model_weights: frozen
+    own_class_term_copy_outcome_rule: "completion_j <= replay_arrival_i"
+    release_clock: replay_completion_plus_copy_offset
+    rolling_window_order: release
+    external_history_clock: original_relative
+    cross_check: fixed_point_iteration
+    audit_sample: 2000
+    policies: [SPJF-E, Guard(300), Guard(600), Guard(1200), Aging(600)]
+    variants: [online]
+    selection: retained_selection_of_record
+    reselection_candidates_per_family: 4
+    development_overlays: [0, 1, 2, 3, 4]
+    development_levels: [0, 1, 2]
   # the heavy label and the class cut-offs are refit per target term with no look-ahead
   heavy_quantile: 0.95
   heavy_reference_semesters: ["2018-1", "2018-2", "2019-1", "2019-2"]
@@ -162,10 +183,10 @@ scheduling:
   # run_main keeps the original-clock rows as an optimistic reference so every existing
   # row remains bit-identical.  The frozen headline is emitted by run_visibility.py.
   ranking_score: spjf_e
-  # The headline score is policy-specific: run_consistent_visibility.py recomputes it per
-  # policy.  aging_baseline names its own score explicitly, so changing this key moves no
-  # legacy row (tests/test_consistent_protocol.py).
-  headline_ranking_score: policy_specific_exact
+  # The headline score is policy-specific: run_online_visibility.py recomputes it at each
+  # arrival of each policy's replay.  aging_baseline names its own score explicitly, so
+  # changing this key moves no legacy row (tests/test_consistent_protocol.py).
+  headline_ranking_score: policy_specific_online
   # One mechanism.  budget(q, t) = min(B0 + gam * (waiting at a_q) + eta k (t - a_q), Bmax)
   # and the guarantee depends on the cap Bmax = k(G - (3 - 2/k)L) alone; the shape of the
   # budget under the cap is a design freedom.  The three shapes below are the three
@@ -343,4 +364,15 @@ run:
     - exact_costs.csv
     - exact_sensitivity_cells.csv
     - exact_sensitivity_comparison.csv
+    - manifest.json
+  # Online replay, a sealed command of its own.  The rescored jobs of every policy and
+  # cell are data-dependent, so `deltas/*.npz` are named and hashed by
+  # online_delta_manifest.csv rather than being placed in this list.
+  sealed_online_visibility_tables:
+    - online_cells.csv
+    - online_comparison.csv
+    - online_passes.csv
+    - online_audit.csv
+    - online_delta_manifest.csv
+    - online_costs.csv
     - manifest.json

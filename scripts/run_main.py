@@ -499,10 +499,10 @@ def check_sealed_tables(cfg, pool: str, prefix: str | None, written: list) -> No
 def sealed_plan(cfg, args) -> int:
     """Print every stage of the sealed run, what each would read, and the lock state.
 
-    Nine stages, in order, each needing `--unseal` of its own: the event cache, the
+    Ten stages, in order, each needing `--unseal` of its own: the event cache, the
     overlays, the ranking scores, this run, the conservative visibility comparison, the
-    exact policy-specific comparison, the single-server trace and its run, and the
-    predictor metrics.  Nothing here opens a file.
+    exact policy-specific comparison, the online replay, the single-server trace and its
+    run, and the predictor metrics.  Nothing here opens a file.
     """
     from spjf_guard.data.cache import files_for
 
@@ -535,14 +535,20 @@ def sealed_plan(cfg, args) -> int:
             + [args.overlay_dir / f"sealed_rep{o}.npz" for o in cfg["overlay"]["overlays"]],
         ),
         (
-            "7 k = 1 trace  scripts/build_overlays.py --pool sealed --single-server",
+            "7 online       scripts/run_online_visibility.py --pool sealed --workers 2",
+            events
+            + scores
+            + [args.overlay_dir / f"sealed_rep{o}.npz" for o in cfg["overlay"]["overlays"]],
+        ),
+        (
+            "8 k = 1 trace  scripts/build_overlays.py --pool sealed --single-server",
             events,
         ),
         (
-            "8 k = 1 run    scripts/run_main.py --pool sealed --prefix sealed_k1",
+            "9 k = 1 run    scripts/run_main.py --pool sealed --prefix sealed_k1",
             [args.overlay_dir / "sealed_k1_rep0.npz"] + scores,
         ),
-        ("9 predictor    scripts/eval_scores.py --pool sealed", events + scores),
+        ("10 predictor   scripts/eval_scores.py --pool sealed", events + scores),
     ]
     decision = sealed.decide(ROOT, unseal=True)
     print("sealed run plan (nothing is opened by this command)")
@@ -573,6 +579,8 @@ def sealed_plan(cfg, args) -> int:
     print(f"  predictor      {list(cfg['run']['sealed_predictor_tables'])}")
     print(f"  visibility     {list(cfg['run']['sealed_visibility_tables'])}")
     print(f"  exact          {list(cfg['run']['sealed_consistent_visibility_tables'])}")
+    print(f"  online         {list(cfg['run']['sealed_online_visibility_tables'])}")
+    print(f"  online policy  {cfg['features']['online_visibility']['policies']}")
     print(
         f"  k = 1 copies   {cfg['overlay']['single_server']['copies']} reused from pool "
         f"{cfg['overlay']['single_server']['pool']}; the utilisation reached is reported"

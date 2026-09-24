@@ -80,11 +80,11 @@ def _exposure_row(policy: str) -> dict:
     }
 
 
-def test_exact_protocol_and_output_names_are_frozen_with_exact_as_headline():
+def test_exact_protocol_and_output_names_are_frozen_beside_the_online_headline():
     cfg = cfgmod.load(ROOT / "configs" / "main.yaml", expand_environment=False)
     exact = cfg["features"]["exact_visibility"]
-    assert cfg["features"]["headline_variant"] == "exact"
-    assert cfg["scheduling"]["headline_ranking_score"] == "policy_specific_exact"
+    assert cfg["features"]["headline_variant"] == "online"
+    assert cfg["scheduling"]["headline_ranking_score"] == "policy_specific_online"
     assert exact == {
         "algorithm": "monotone_per_job_withholding",
         "base_score": "spjf_e",
@@ -121,6 +121,19 @@ def test_exact_protocol_and_output_names_are_frozen_with_exact_as_headline():
     assert not any(name.endswith(".npz") for name in pinned)
 
 
+def test_the_sealed_online_run_pins_the_tables_the_runner_writes():
+    import run_online_visibility as online
+
+    cfg = cfgmod.load(ROOT / "configs" / "main.yaml", expand_environment=False)
+    section = cfg["features"]["online_visibility"]
+    assert section["algorithm"] == "event_driven_pausing_replay"
+    assert section["own_class_term_copy_outcome_rule"] == "completion_j <= replay_arrival_i"
+    assert section["selection"] == "retained_selection_of_record"
+    assert set(section["variants"]) <= set(online.VARIANTS)
+    pinned = cfg["run"]["sealed_online_visibility_tables"]
+    assert set(pinned) == {*online.TABLES, "manifest.json"}
+
+
 def test_the_protocol_lock_carries_exact_choices_and_their_own_output_list(monkeypatch):
     import make_protocol_lock as lock
 
@@ -138,14 +151,24 @@ def test_the_protocol_lock_carries_exact_choices_and_their_own_output_list(monke
         built["pinned"]["sealed_consistent_visibility_tables"]
         == cfg["run"]["sealed_consistent_visibility_tables"]
     )
+    assert (
+        built["pinned"]["visibility_protocol"]["online"] == cfg["features"]["online_visibility"]
+    )
+    assert (
+        built["pinned"]["sealed_online_visibility_tables"]
+        == cfg["run"]["sealed_online_visibility_tables"]
+    )
 
 
 def test_changing_the_headline_does_not_change_any_legacy_reported_policy():
     historical = cfgmod.load(ROOT / "configs/main_original_84932d9.yaml")
     current = cfgmod.load(ROOT / "configs/main.yaml")
-    current.raw["scheduling"]["headline_ranking_score"] = "policy_specific_exact"
+    moved = cfgmod.load(ROOT / "configs/main.yaml")
+    moved.raw["scheduling"]["headline_ranking_score"] = historical["scheduling"][
+        "headline_ranking_score"
+    ]
     for servers in (1, 4, 5, 7):
-        assert current.policies(servers) == historical.policies(servers)
+        assert current.policies(servers) == moved.policies(servers)
 
 
 def test_archived_recipes_remain_the_original_byte_sequences():
@@ -155,6 +178,9 @@ def test_archived_recipes_remain_the_original_byte_sequences():
         ),
         "visibility_development_20260922.yaml": (
             "3ecc81fe448828622088fade31856b9d3f68b8f5163d77f97d0f1f0ac9654bc0"
+        ),
+        "visibility_development_20260924.yaml": (
+            "4f54bd492aa4817afde4d9c994001396a0364d850699be31ef715da4f55ca704"
         ),
     }
     for name, digest in expected.items():
@@ -211,7 +237,9 @@ def test_the_sealed_dry_run_lists_the_exact_stage_and_its_own_outputs(capsys):
     assert "sealed_consistent_controls.npz" in text
     assert "monotone_per_job_withholding" in text
     assert "original_relative" in text
-    assert "[9 predictor" in text
+    assert "[7 online       scripts/run_online_visibility.py --pool sealed --workers 2]" in text
+    assert "online_audit.csv" in text
+    assert "[10 predictor" in text
 
 
 def test_the_two_exact_tables_are_optional_generated_recipes(tmp_path):
