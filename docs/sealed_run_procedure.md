@@ -1,6 +1,6 @@
-# 封存学期那一次：怎么跑（2026-09-23 修订）
+# 封存学期那一次：怎么跑（2026-09-24 修订）
 
-这份文件只讲操作：冻结之前要检查什么，冻结怎么做，那一次运行是哪几条命令，台账写什么，要多久、占多少盘，中途崩了怎么办。为什么这么设计见 ADR 0003（选参规则）与 ADR 0004（封存保护）；每个产物的来源见 `GENERATED.md`。
+这份文件只讲操作：冻结之前要检查什么，冻结怎么做，那一次运行是哪几条命令，台账写什么，要多久、占多少盘，中途崩了怎么办。为什么这么设计见 ADR 0003（选参规则）、ADR 0004（封存保护）与 ADR 0008（online 主结果）；每个产物的来源见 `GENERATED.md`。
 
 范围：**只有 CodeBench 的三个封存学期 2023-1 / 2023-2 / 2024-1**。ACcoding 编号 80%–100% 与 OULAD 2014 不在这一次里（代码还没搬进包，见 README「不在这个包里的东西」）。
 
@@ -25,17 +25,19 @@ export UV="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
 | 5 | `$UV python scripts/run_main.py --selection outputs/selection_v4/selected_parameters.csv --out-dir outputs/dev_tables --workers 2` | 开发期全表出齐，开头没有 `selection mismatch`；除新增 Aging 行外，既有行列逐位不变 |
 | 5b | `$UV python scripts/eval_scores.py --pool primary` | 六个目标学期 × 六个分数 + 六个 pooled 行，共 42 行；heavy 阈值仍为 1.559043 s，2022-2 仍是 40,844 行、536 个重任务。约 11 分钟 |
 | 5d | `$UV python scripts/run_visibility.py --pool primary --workers 2` | 十五格写 `outputs/dev_visibility/` 五张 CSV；FCFS 与 Guard 的 3600 秒 lag violation 都是 0，SPJF-E 如实报告；约 35 分钟 |
-| 5e | `$UV python scripts/run_consistent_visibility.py --config configs/visibility_development_20260922.yaml --pool primary --workers 2 --resume` | 十五格写 `outputs/dev_consistent_visibility/`；五条冻结策略和 Guard(600) 的另一拷贝语义每格末轮都必须零违规；稀疏分数按 manifest 校验 |
+| 5e | `$UV python scripts/run_consistent_visibility.py --config configs/visibility_development_20260924.yaml --pool primary --workers 2 --resume` | 十五格写 `outputs/dev_consistent_visibility/`；五条冻结策略和 Guard(600) 的另一拷贝语义每格末轮都必须零违规；稀疏分数按 manifest 校验 |
 | 5f | `$UV python scripts/assess_consistent_selection.py --config configs/visibility_development_20260922.yaml --out-dir outputs/consistent_selection_final --workers 2` | 固定 12 层的验证池计时，外推完整 15 格重选；计时点不能用于选择参数 |
+| 5h | `$UV python scripts/run_online_visibility.py --pool primary --workers 2 --resume` | 十五格 × 五条冻结策略写 `outputs/dev_online_visibility/`；每个 policy-cell 的抽样审计 `mismatches` 为 0，三条 Guard 的逐 job 边界成立；original 行与 5e 的 original 行点估计逐位相同（出表时核对） |
+| 5i | `$UV python scripts/select_online.py candidates`，再 `$UV python scripts/run_online_visibility.py --pool validation --variants online --candidates outputs/online_selection/candidates.csv --out-dir outputs/online_selection/validation --workers 2 --resume`，再 `$UV python scripts/select_online.py choose` | 36 个候选在验证池 15 格上的 online 重放；`online_choices.csv` 里 original 那一组必须等于 selection_v4 的九个选点；online 那一组只报告，不写回配置 |
 | 5g | `$UV python scripts/check_preserved_outputs.py` | 原 75 张 CSV、18,627 行及全部既有列零字节差异；快照不得覆盖 |
 | 5c | `$UV python scripts/build_overlays.py --pool validation --single-server --no-scores --out-dir <临时目录>` | 印 `321 copies (321 copies reused from pool primary)` 与实际忙时利用率（验证池上是 1.0043）。这一步彩排的是沿用拷贝数那条路径，产物不要写进 `data/derived/overlay_traces/` |
 | 6 | `$UV python scripts/emit_paper_tables.py` | 既有表与 `outputs/paper_tables/numbers.csv` 逐字节保持原样 |
-| 6e | `$UV python scripts/emit_paper_tables.py --dev-exact-dir outputs/dev_consistent_visibility --out-dir outputs/consistent_paper_tables` | 在独立目录生成既有表的副本、两张 exact 表和追加 exact 来源的数字索引；不覆盖旧目录 |
-| 7 | `$UV python scripts/check_paper_numbers.py`，再跑 `$UV python scripts/check_paper_numbers.py --package-dir outputs/consistent_paper_tables --dev-exact-dir outputs/dev_consistent_visibility` | 旧论文表/数字仍与旧包一致；新目录的两张 exact 表逐字节符合 CSV recipe，若已贴入论文则逐值相同 |
+| 6e | `$UV python scripts/emit_paper_tables.py --dev-exact-dir outputs/dev_consistent_visibility --dev-online-dir outputs/dev_online_visibility --out-dir outputs/consistent_paper_tables` | 在独立目录生成既有表的副本、两张带 online 行的 exact 表和追加 exact/online 来源的数字索引；不覆盖旧目录；online 目录的 original 行与 exact 的不一致会直接退出 |
+| 7 | `$UV python scripts/check_paper_numbers.py`，再跑 `$UV python scripts/check_paper_numbers.py --package-dir outputs/consistent_paper_tables --dev-exact-dir outputs/dev_consistent_visibility --dev-online-dir outputs/dev_online_visibility` | 旧论文表/数字仍与旧包一致；新目录的两张 exact 表逐字节符合 CSV recipe，若已贴入论文则逐值相同 |
 | 8 | `$UV python scripts/check_generated.py` | exact 证书、旧表保存、产物清单、论文数字、论文印值、机器路径、draft 七项都过 |
-| 9 | `$UV python scripts/run_main.py --config configs/main.yaml --dry-run-sealed` | 打印计划；九个阶段、五份产物清单、两个缓存文件名；末行 `verdict REFUSED: no frozen protocol_lock.json exists` |
+| 9 | `$UV python scripts/run_main.py --config configs/main.yaml --dry-run-sealed` | 打印计划；十个阶段、六份产物清单、两个缓存文件名；末行 `verdict REFUSED: no frozen protocol_lock.json exists` |
 
-第 9 步是彩排：它打印封存学期名单、五条叠加 × 三档负载、策略、三个静态 score variant、exact 可见性协议、每个承诺 G 对应的 B0、**会读哪些文件**、五份输出清单、台账路径与锁的状态，然后退出。它一个文件都不打开，可以随便跑。
+第 9 步是彩排：它打印封存学期名单、五条叠加 × 三档负载、策略、三个静态 score variant、exact 可见性协议、online 策略名单、每个承诺 G 对应的 B0、**会读哪些文件**、六份输出清单、台账路径与锁的状态，然后退出。它一个文件都不打开，可以随便跑。
 
 封存学期的解析缓存现在由本包的 `scripts/build_cache.py` 从 `data/codebench/parquet/` 建（第三轮搬进来的），在开发学期上与旧缓存 58 列逐列相等。封存那一次的第 1 步就是它。
 
@@ -67,7 +69,7 @@ data/codebench/parquet/assessments/2023-1.parquet   data/codebench/archives/cb_d
 $UV python scripts/make_protocol_lock.py
 
 # 2 人读一遍草稿：学期划分、可见性协议、预测器与种子、排序分数、护栏家族与选择规则、
-#   exact 单调 withholding 与五条策略、选好的三组参数、三档负载与 k 的取法、主指标、bootstrap 设置
+#   exact 单调 withholding 与五条策略、online 暂停重放与五条策略、选好的三组参数、三档负载与 k 的取法、主指标、bootstrap 设置
 less protocol_lock.draft.json
 
 # 3 先提交。锁里要记 commit，工作区脏或者一个 commit 都没有，冻结会被拒绝
@@ -92,7 +94,7 @@ git commit -m "Freeze the protocol"
 
 - `$UV python -m pytest -q`：`tests/test_sealed_data.py` 里那条锁的检查这时改查 `protocol_lock.json`，两条「入口点拒绝封存池」的用例这时靠的是没给 `--unseal`（冻结之前靠的是没有锁），`tests/test_repo_hygiene.py` 检查锁要哈希的每个代码文件 git 都跟踪着；
 - `$UV python scripts/check_generated.py --only protocol_lock`：锁记的输入哈希与盘上一致；
-- `$UV python scripts/check_paper_numbers.py` 与 `$UV python scripts/check_paper_numbers.py --package-dir outputs/consistent_paper_tables --dev-exact-dir outputs/dev_consistent_visibility`：旧数字包保持原样，独立 exact 数字包此时也只来自开发数据；封存那一部分要等运行阶段 4、5、6、8、9 跑完才有。
+- `$UV python scripts/check_paper_numbers.py` 与 `$UV python scripts/check_paper_numbers.py --package-dir outputs/consistent_paper_tables --dev-exact-dir outputs/dev_consistent_visibility`：旧数字包保持原样，独立 exact 数字包此时也只来自开发数据；封存那一部分要等运行阶段 4、5、6、7、9、10 跑完才有。
 
 第 5 步做四件事，顺序固定，任何一件不过就停下：工作区必须是干净的且有 commit；`ruff` / `ruff format --check` / `mypy` / `pytest` / `check_generated.py` / `check_paper_numbers.py` 六个闸门必须全绿；十二个封存文件按字节求 sha256，每个写一行台账；然后把草稿加上 commit id 和这十二个哈希写成 `protocol_lock.json`，草稿原样留着。脚本本身在一个临时克隆里连同假的封存目录测过：干净树上写出锁与十二行台账，脏树被拒，已经冻结的仓库上再跑一次会直接说「已经冻结」。
 
@@ -102,7 +104,7 @@ git commit -m "Freeze the protocol"
 
 ## 三 那一次运行
 
-九条命令，按顺序，每条都要 `--unseal`：
+十条命令，按顺序，每条都要 `--unseal`：
 
 ```bash
 # 1 解析缓存：三个封存学期的事件表，从盘上已有的 parquet 建（不重新解析归档）。
@@ -135,17 +137,23 @@ $UV python scripts/run_consistent_visibility.py --config configs/main.yaml --poo
     --scores data/derived/package_ranking_scores/sealed_scores.parquet \
     --out-dir outputs/sealed_consistent_visibility --workers 2 --resume --unseal
 
-# 7 单机轨迹：拷贝数沿用开发池选出的 321 份，利用率如实报告（ADR 0006）。
+# 7 online 重放（ADR 0008）：策略、变体与审计样本数只能是配置里钉死的那组，
+#   命令行给别的会被拒；--resume 只接受签名一致的检查点。
+$UV python scripts/run_online_visibility.py --config configs/main.yaml --pool sealed \
+    --scores data/derived/package_ranking_scores/sealed_scores.parquet \
+    --out-dir outputs/sealed_online_visibility --workers 2 --resume --unseal
+
+# 8 单机轨迹：拷贝数沿用开发池选出的 321 份，利用率如实报告（ADR 0006）。
 #   文件叫 sealed_k1_rep0.npz，不会盖掉开发期的 k1_rep0.npz
 $UV python scripts/build_overlays.py --pool sealed --single-server --no-scores --unseal
 
-# 8 单机那一次的表：产物清单是 run.sealed_k1_tables，与第 4 步各查各的
+# 9 单机那一次的表：产物清单是 run.sealed_k1_tables，与第 4 步各查各的
 $UV python scripts/run_main.py --config configs/main.yaml --pool sealed \
     --prefix sealed_k1 --reps 0 --levels 0 \
     --score-parquet data/derived/package_ranking_scores/sealed_scores.parquet \
     --out-dir outputs/sealed_tables/k1 --workers 2 --unseal
 
-# 9 封存学期的预测器指标：逐学期与合并，六个分数各四个指标加区间
+# 10 封存学期的预测器指标：逐学期与合并，六个分数各四个指标加区间
 $UV python scripts/eval_scores.py --pool sealed \
     --scores data/derived/package_ranking_scores/sealed_scores.parquet \
     --out-dir outputs/sealed_predictor --unseal
@@ -153,35 +161,39 @@ $UV python scripts/eval_scores.py --pool sealed \
 
 第 5 步把 fixed-lag 证书状态打印并写入 manifest。若 conservative 的观测 `W > 3600`，该锚必须
 标成 `legacy conservative certificate invalid`，不能继续称为已认证的可见性方案。headline 为
-exact 时，这个警告不阻断第 6 步；若 headline 仍是 conservative，则该情况硬停。第 6 步的
-末轮零违规断言、逐 job Guard 边界或 sparse delta 检查失败始终硬停。
+online（ADR 0008）时，这个警告不阻断后面的步骤；若 headline 是 conservative，则该情况硬停。第 6 步的
+末轮零违规断言、第 7 步的抽样审计不一致、两步的逐 job Guard 边界或 sparse delta 检查失败始终硬停。
 
 跑完之后出表与核对（这几条只读 `outputs/`，不读封存数据，也不需要 `--unseal`）：
 
 ```bash
 $UV python scripts/emit_paper_tables.py --out-dir outputs/consistent_paper_tables \
     --dev-exact-dir outputs/dev_consistent_visibility \
+    --dev-online-dir outputs/dev_online_visibility \
     --sealed-dir outputs/sealed_tables \
     --sealed-predictor-dir outputs/sealed_predictor \
     --sealed-visibility-dir outputs/sealed_visibility \
-    --sealed-exact-dir outputs/sealed_consistent_visibility
+    --sealed-exact-dir outputs/sealed_consistent_visibility \
+    --sealed-online-dir outputs/sealed_online_visibility
 $UV python scripts/check_paper_numbers.py --package-dir outputs/consistent_paper_tables \
     --dev-exact-dir outputs/dev_consistent_visibility \
+    --dev-online-dir outputs/dev_online_visibility \
     --sealed-dir outputs/sealed_tables \
     --sealed-predictor-dir outputs/sealed_predictor \
     --sealed-visibility-dir outputs/sealed_visibility \
-    --sealed-exact-dir outputs/sealed_consistent_visibility
+    --sealed-exact-dir outputs/sealed_consistent_visibility \
+    --sealed-online-dir outputs/sealed_online_visibility
 $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自动把封存那部分带上
 ```
 
-出表写的是 `outputs/consistent_paper_tables/tab_*_sealed.tex`：五张原结果表、两张 visibility 表和两张 exact 表的标签都加 `_sealed` 后缀，
+出表写的是 `outputs/consistent_paper_tables/tab_*_sealed.tex`：五张原结果表、两张 visibility 表和两张 exact 表（带 online 行）的标签都加 `_sealed` 后缀，
 每个数字包在 `\sealednum{}` 里而不是 `\devnum{}` 里——`\devnum` 的含义就是「这个数来自开发数据，
-不是封存学期」，封存的数字不能走它。第 4、8 步自己写的 `main_table.tex` 也一样用 `\sealednum{}`。
+不是封存学期」，封存的数字不能走它。第 4、9 步自己写的 `main_table.tex` 也一样用 `\sealednum{}`。
 **把这些表贴进论文之前，论文要先定义 `\sealednum`**：`\newcommand{\sealednum}[1]{#1}`，
 放在已有的 `\newcommand{\devnum}[1]{#1}` 旁边，三个文件都要加——`paper/main.tex`、
 `paper/main_article.tex`、`paper/supplementary.tex`。检查脚本认的就是这个宏。
 
-九条命令每条跑完自己往 `docs/sealed_access_log.md` 追加一行，格式是那张表已有的六列：
+十条命令每条跑完自己往 `docs/sealed_access_log.md` 追加一行，格式是那张表已有的六列：
 
 ```text
 | 2026-09-24 | `scripts/run_main.py` | 封存学期 2023-1, 2023-2, 2024-1 | <产出了什么> | 运行者 | 否 |
@@ -189,17 +201,18 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 
 「是否影响设计」默认写「否」。如果看了这次结果之后真的改了方法，那一行要改成「是」，并且在论文里说明——这才是台账存在的意义。
 
-产物是配置锁里钉死的**五份**清单，每份都一个不多一个不少，各查各的：
+产物是配置锁里钉死的**六份**清单，每份都一个不多一个不少，各查各的：
 
 | 命令 | 清单 | 内容 |
 |---|---|---|
 | 第 4 步 → `outputs/sealed_tables/` | `run.sealed_tables` | `main_cells.csv`（逐格）、`main_table.csv`（按叠加聚合）、`main_table.tex`、`paired_differences.csv`（成对差与区间）、`bound_checks.csv`（逐任务断言查了多少个任务、最坏用掉允许量的几成）、`identity_residuals.csv`（第一条叠加上的恒等残差）、`policy_parameters.csv`（每格每条策略实际用的 B0、η、γ、上限、N）、`manifest.json` |
 | 第 5 步 → `outputs/sealed_visibility/` | `run.sealed_visibility_tables` | `visibility_cells.csv`、`visibility_comparison.csv`、`visibility_paired_differences.csv`、`visibility_exposure.csv`、`visibility_waits_and_lag.csv`、`manifest.json` |
 | 第 6 步 → `outputs/sealed_consistent_visibility/` | `run.sealed_consistent_visibility_tables` | 十一张固定 CSV：`exact_cells`、`exact_comparison`、`exact_passes`、`same_copy_exposure_cells`、`same_copy_exposure`、`attribution_cells`、`attribution_comparison`、`exact_delta_manifest`、`exact_costs`、`exact_sensitivity_cells`、`exact_sensitivity_comparison`，外加 `manifest.json`；数据依赖的 `deltas/*.npz` 只由 `exact_delta_manifest.csv` 逐个记录路径、字节数和 sha256，不进固定名单 |
-| 第 8 步 → `outputs/sealed_tables/k1/` | `run.sealed_k1_tables` | 同上八个文件名，写在子目录里 |
-| 第 9 步 → `outputs/sealed_predictor/` | `run.sealed_predictor_tables` | `predictor_metrics.csv`、`manifest.json` |
+| 第 7 步 → `outputs/sealed_online_visibility/` | `run.sealed_online_visibility_tables` | 六张固定 CSV：`online_cells`、`online_comparison`、`online_passes`（每个 policy-cell 的暂停数、内核与重打分耗时）、`online_audit`、`online_delta_manifest`、`online_costs`，外加 `manifest.json`；`deltas/*.npz` 由 delta manifest 记录，不进固定名单 |
+| 第 9 步 → `outputs/sealed_tables/k1/` | `run.sealed_k1_tables` | 同上八个文件名，写在子目录里 |
+| 第 10 步 → `outputs/sealed_predictor/` | `run.sealed_predictor_tables` | `predictor_metrics.csv`、`manifest.json` |
 
-「一个不多一个不少」不是口头约定：`--pool sealed` 的运行在写完之后自己比对写出的固定文件名集合与对应的那份清单，对不上就报错退出。五份清单不能并成一份，并了每条命令都会不匹配。开发期的表在 `outputs/dev_tables/`、`outputs/dev_visibility/`、`outputs/dev_consistent_visibility/`、`outputs/dev_predictor/`，两边不覆盖。
+「一个不多一个不少」不是口头约定：`--pool sealed` 的运行在写完之后自己比对写出的固定文件名集合与对应的那份清单，对不上就报错退出。六份清单不能并成一份，并了每条命令都会不匹配。开发期的表在 `outputs/dev_tables/`、`outputs/dev_visibility/`、`outputs/dev_consistent_visibility/`、`outputs/dev_online_visibility/`、`outputs/dev_predictor/`，两边不覆盖。
 
 报告口径：封存学期上实际达到的利用率如实报告，**不回头调 k 去凑目标值**。`main_cells.csv` 与 `main_table.csv` 里 `rho_target` 旁边多一列 `rho_realised`：前者是这一格按哪一档负载建的、论文印的那个数，后者是这条叠加在这个 k 上忙时真正跑到的利用率（忙时工作量 ÷ 3600k）。两者的差来自 k 取整，只有后者说得清一个数字是在多满的系统上测出来的。承诺 G 与选好的 (B0, η) 是冻结的，不因为封存学期上的结果重选。
 
@@ -218,15 +231,16 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 | 排序分数 | 开发池六个目标学期、六列约 3.5 分钟；`--repeat` 约 7 分钟。封存池只有 3 个目标学期 | 约 90 MB |
 | 主运行 15 格 | 29 条策略、2,000 次成对 bootstrap、2 个工作进程，开发池约 48 分钟 | 表格 < 5 MB；每格临时约 750 MB，跑完即删 |
 | 可见性比较（第 5 步） | 15 格、14 条比较策略，加旧历史逐 job 暴露扫描，开发池约 35 分钟 | 五张 CSV + manifest < 20 MB；临时峰值与主运行相近 |
-| exact policy-specific 可见性（第 6 步） | **待主线程完成开发池实测后填写；这是冻结前必填项** | 固定 CSV 很小；affected-job 压缩 delta 与运行峰值均待实测后填写 |
-| 单机轨迹（第 7 步） | 开发池上实测 3 分钟（321 份拷贝、320 万个 job） | 约 145 MB |
-| 单机那一次（第 8 步） | 一格约 60 s（2 个工作进程） | 表格 < 1 MB |
-| 预测器指标（第 9 步） | 开发池 42 行实测约 11 分钟；封存池三个目标学期约一半 | < 1 MB |
-| 合计 | 原八步封存池预期约 1.5–2 小时；加入 exact 后待开发实测更新 | 原峰值约 5 GB；加入 exact 后待开发实测更新 |
+| exact policy-specific 可见性（第 6 步） | 开发池 15 格、2 个工作进程：计算合计 16,690 秒，墙钟 15,593 秒（约 4.3 小时，2026-09-23 实测） | 固定 CSV 很小；90 个 affected-job 压缩 delta 合计 211 MB（开发池） |
+| online 重放（第 7 步） | ONLINE_TIMING | ONLINE_DISK |
+| 单机轨迹（第 8 步） | 开发池上实测 3 分钟（321 份拷贝、320 万个 job） | 约 145 MB |
+| 单机那一次（第 9 步） | 一格约 60 s（2 个工作进程） | 表格 < 1 MB |
+| 预测器指标（第 10 步） | 开发池 42 行实测约 11 分钟；封存池三个目标学期约一半 | < 1 MB |
+| 合计 | ONLINE_TOTAL | ONLINE_PEAK |
 
 这些是开发池（17.6 M job／条）上的实测值，封存池规模未知，故这里只给冻结前的量级估计，不用封存数据校准。Guard 原网格与 aging 的选择都在冻结之前完成，不属于封存那一次。
 
-临时文件默认落在系统临时目录（`spjf_main_*` / `spjf_visibility_*`），每格约 750 MB，跑完即删——但只在正常结束时删，崩一次就留一份。建议九条命令里支持 `--scratch` 的命令都指到一个自己清得动的目录；重跑前先核对并清理对应残留。`--workers` 固定用 2。
+临时文件默认落在系统临时目录（`spjf_main_*` / `spjf_visibility_*`），每格约 750 MB，跑完即删——但只在正常结束时删，崩一次就留一份。建议十条命令里支持 `--scratch` 的命令都指到一个自己清得动的目录；重跑前先核对并清理对应残留。`--workers` 固定用 2。
 
 ## 五 中途崩了怎么办
 
@@ -234,7 +248,7 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 
 1. **锁没变。** 重跑前核对 `sha256sum protocol_lock.json` 与第二节记下的指纹一致。不一致就不是同一份方法，停下来。
 2. **代码与配置没变。** 崩了不要「顺手修一下再跑」。真发现必须改的 bug，那就是新的一份方法：说明情况、重新冻结、在台账里写清楚前一次读过什么。
-3. **每一次都记台账。** 崩掉的那一次也有一行：九条命令都在 `finally` 里写台账，输出栏写的是「运行中断于<哪一步>，未产出汇总表」加异常类型，重跑再添一行，旧行不改。只有一种情况要手写——进程被整个杀掉（内存不足、机器断电），那时 Python 没有机会写。那一行照上面的六列格式补上，输出栏写清楚跑到哪一步。
+3. **每一次都记台账。** 崩掉的那一次也有一行：十条命令都在 `finally` 里写台账，输出栏写的是「运行中断于<哪一步>，未产出汇总表」加异常类型，重跑再添一行，旧行不改。只有一种情况要手写——进程被整个杀掉（内存不足、机器断电），那时 Python 没有机会写。那一行照上面的六列格式补上，输出栏写清楚跑到哪一步。
 
 具体怎么重跑：
 
