@@ -252,11 +252,33 @@ def build_online_index(recomputer: M4HistoryRecomputer) -> OnlineIndex:
 
 @dataclass(frozen=True)
 class _CellLayout:
-    """Per-cell static layout: each job's own-copy segments and the clock slack."""
+    """Per-cell static layout: own-copy segments, clock offsets and the clock slack."""
 
     segments: tuple[np.ndarray, np.ndarray]  # per history: segment of every job
     n_segments: tuple[int, int]
+    offset: np.ndarray  # original minus replay clock of each job's copy, whole seconds
     slack_s: float
+
+
+def copy_offsets(index: OnlineIndex, arrays: dict[str, np.ndarray]) -> tuple[np.ndarray, float]:
+    """Original-clock minus replay-clock instant of each job's copy, and the rounding.
+
+    Copies are shifted by whole weeks and rebased by whole days, so within a copy the two
+    clocks differ by one integer number of seconds up to microsecond rounding.  An
+    outcome is released at ``completion + offset``, which keeps release order equal to
+    completion order inside a copy.
+    """
+    raw = index.arrival[arrays["job_row"]] - arrays["arrival_us"] / MICROS
+    entry = arrays["copy_entry"]
+    order = np.argsort(entry, kind="stable")
+    bounds = np.r_[0, np.flatnonzero(entry[order][1:] != entry[order][:-1]) + 1, len(order)]
+    offset = np.empty(len(raw))
+    for a, b in zip(bounds[:-1], bounds[1:]):
+        offset[order[a:b]] = np.rint(np.median(raw[order[a:b]]))
+    rounding = float(np.abs(raw - offset).max())
+    if rounding > 2e-6:
+        raise AssertionError(f"a copy's clocks differ by more than rounding: {rounding:.3e} s")
+    return offset, rounding
 
 
 def cell_layout(index: OnlineIndex, arrays: dict[str, np.ndarray]) -> _CellLayout:
@@ -270,16 +292,10 @@ def cell_layout(index: OnlineIndex, arrays: dict[str, np.ndarray]) -> _CellLayou
             raise AssertionError("a replayed job has no own-copy scope")
         segments.append(scope * n_rounds + rounds)
         sizes.append(history.n_scopes * n_rounds)
-    # Replay and original clocks differ by one constant per copy up to quantisation;
-    # the slack bounds how far a job's release can sit from the done rule's boundary.
-    offset = index.arrival[rows] - arrays["arrival_us"] / MICROS
-    order = np.argsort(arrays["copy_entry"], kind="stable")
-    entries = arrays["copy_entry"][order]
-    starts = np.r_[0, np.flatnonzero(entries[1:] != entries[:-1]) + 1]
-    spread = np.maximum.reduceat(offset[order], starts) - np.minimum.reduceat(
-        offset[order], starts
-    )
-    return _CellLayout(tuple(segments), tuple(sizes), float(spread.max()) + 1e-6)
+    # A release within the rounding of a job's own arrival instant may fall either side
+    # of the done rule on the original clock; the slack covers that band.
+    offset, rounding = copy_offsets(index, arrays)
+    return _CellLayout(tuple(segments), tuple(sizes), offset, rounding + 1e-6)
 
 
 @dataclass(frozen=True)
@@ -293,11 +309,9 @@ class _PassView:
     hashes: tuple[np.ndarray, np.ndarray]
 
 
-def release_times(
-    index: OnlineIndex, arrays: dict[str, np.ndarray], completion: np.ndarray
-) -> np.ndarray:
+def release_times(layout: _CellLayout, completion: np.ndarray) -> np.ndarray:
     """Original-clock instant at which each job's outcome is released in the replay."""
-    return index.arrival[arrays["job_row"]] + (completion - arrays["arrival_us"]) / MICROS
+    return completion / MICROS + layout.offset
 
 
 def pass_view(
@@ -306,7 +320,7 @@ def pass_view(
     arrays: dict[str, np.ndarray],
     completion: np.ndarray,
 ) -> _PassView:
-    release = release_times(index, arrays, completion)
+    release = release_times(layout, completion)
     rows = arrays["job_row"]
     orders, offsets, hashes = [], [], []
     for segment, size in zip(layout.segments, layout.n_segments):
@@ -707,7 +721,7 @@ def audit_online(
     the replay used is the baseline score unless the job was rescored.
     """
     completion = arrays["arrival_us"] + result.outcome.wait_us + arrays["service_us"]
-    release = release_times(index, arrays, completion)
+    release = release_times(cell_layout(index, arrays), completion)
     by_copy = np.lexsort((arrays["job_row"], arrays["copy_entry"]))
     entries = arrays["copy_entry"][by_copy]
     copy_rows = arrays["job_row"][by_copy]

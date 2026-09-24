@@ -3,11 +3,13 @@
     uv run python scripts/run_online_visibility.py --pool primary --variants online
     uv run python scripts/run_online_visibility.py --variants exact,online --policies all
 
-``online`` is experiment.online.refine_policy_online: every score is computed at the
-job's arrival from exactly the own-copy outcomes completed by then, with rolling
-windows ordered by replay completion.  ``exact`` is the monotone withholding of
-experiment.consistent.refine_policy.  The ``original`` row of each policy is the first
-pass, on source-clock scores.  FCFS and SJF read no score and are the references.
+``online`` is experiment.online_replay.replay_online: the scheduler runs once and
+every score is computed at the job's arrival from exactly the own-copy outcomes
+completed by then, with rolling windows ordered by replay completion.  ``fixed_point``
+reaches the same replay by iteration (experiment.online) and is kept as a cross-check.
+``exact`` is the monotone withholding of experiment.consistent.refine_policy.  The
+``original`` row of each policy is the replay on source-clock scores.  FCFS and SJF
+read no score and are the references.
 
 A policy is named as in the paper: SPJF-E, SPJF-log, Aging(600), Guard(G) and its
 family rows Guard-fixed(G), Guard-age(G), Guard-queue(G), Fixed(G), Skip(G) and
@@ -68,6 +70,7 @@ from spjf_guard.experiment.online import (  # noqa: E402
     build_online_index,
     refine_policy_online,
 )
+from spjf_guard.experiment.online_replay import replay_online  # noqa: E402
 from spjf_guard.experiment.reproduce import load_overlay  # noqa: E402
 from spjf_guard.predict.forward import fit_frozen_m4_models  # noqa: E402
 from spjf_guard.sim import JobResults, Trace, simulate  # noqa: E402
@@ -75,7 +78,7 @@ from spjf_guard.sim.bounds import assert_per_job_bounds  # noqa: E402
 from spjf_guard.sim.policy import MICROS, Policy, aging, fcfs, sjf, spjf  # noqa: E402
 
 ORIGINAL = "original"
-VARIANTS = ("online", "exact")
+VARIANTS = ("online", "fixed_point", "exact")
 LOG_POLICY = "SPJF-log"
 TABLES = (
     "online_cells.csv",
@@ -173,11 +176,42 @@ def _initialize(config_path: Path, args, pool_terms: list[str], run_signature: s
     }
 
 
-def _refine(variant, trace, policy, servers, cfg, arrays, context, base, simulator):
+def _theta_s(policy: Policy, servers: int, limit_s: float) -> float | None:
+    if not policy.name.startswith("Timeout("):
+        return None
+    return float(policy.name[8:-1]) - (3.0 - 2.0 / servers) * limit_s
+
+
+def _refine(variant, trace, policy, servers, cfg, arrays, context, base):
+    """(original-clock outcome, refined result, pass rows) of one policy in one cell."""
     window = int(cfg["run"]["segment_tree_window_ranks"])
     models = context["log_models"] if policy.name == LOG_POLICY else context["models"]
+    theta = _theta_s(policy, servers, cfg.limit_s)
+    promise = None if theta is None else float(policy.name[8:-1])
+    simulator = None if theta is None else _timeout_simulator(promise, servers, cfg.limit_s)
     if variant == "online":
-        return refine_policy_online(
+        original = (
+            simulate(trace, policy, servers, window=window)
+            if simulator is None
+            else simulator(trace)
+        )
+        result = replay_online(
+            trace,
+            policy,
+            servers,
+            window,
+            arrays,
+            context["online_index"],
+            context["recomputer"],
+            models,
+            context["baseline_history"],
+            base,
+            timeout_s=theta,
+        )
+        cost = {"pauses": result.pauses, "kernel_s": result.kernel_s}
+        return original, result, [cost | {"rescore_s": result.rescore_s}]
+    if variant == "fixed_point":
+        result = refine_policy_online(
             trace,
             policy,
             servers,
@@ -191,9 +225,10 @@ def _refine(variant, trace, policy, servers, cfg, arrays, context, base, simulat
             variant,
             simulator=simulator,
         )
+        return result.initial_outcome, result, [vars(item) for item in result.passes]
     if simulator is not None:
         raise ValueError(f"{policy.name} has no exact refinement: it needs its own kernel")
-    return refine_policy(
+    result = refine_policy(
         trace,
         policy,
         servers,
@@ -207,15 +242,7 @@ def _refine(variant, trace, policy, servers, cfg, arrays, context, base, simulat
         variant,
         pool_terms=context["pool_terms"],
     )
-
-
-def _pass_rows(overlay, level, policy, variant, result) -> list[dict[str, Any]]:
-    rows = []
-    for item in result.passes:
-        row = {"overlay": overlay, "level": level, "policy": policy, "variant": variant}
-        row.update(vars(item))
-        rows.append(row)
-    return rows
+    return result.initial_outcome, result, [vars(item) for item in result.passes]
 
 
 def _run_policy(cell: dict[str, Any], policy: Policy, variant: str) -> dict[str, Any]:
@@ -231,17 +258,12 @@ def _run_policy(cell: dict[str, Any], policy: Policy, variant: str) -> dict[str,
     trace = Trace(
         cell["trace"].arrival_us, cell["trace"].service_us, {variant: base}, cfg.limit_s
     )
-    simulator = (
-        _timeout_simulator(float(policy.name[8:-1]), servers, cfg.limit_s)
-        if policy.name.startswith("Timeout(")
-        else None
-    )
     refined = replace(policy, score_key=variant)
-    result = _refine(
-        variant, trace, refined, servers, cfg, cell["arrays"], context, base, simulator
+    original, result, costs = _refine(
+        variant, trace, refined, servers, cfg, cell["arrays"], context, base
     )
     rows, replicates = [], {}
-    for label, outcome in ((ORIGINAL, result.initial_outcome), (variant, result.outcome)):
+    for label, outcome in ((ORIGINAL, original), (variant, result.outcome)):
         outcome = replace(outcome, policy=policy.name)
         _check_bound(outcome, cell["fcfs"].wait_us, policy, servers, cfg.limit_s)
         rows.append(
@@ -262,7 +284,7 @@ def _run_policy(cell: dict[str, Any], policy: Policy, variant: str) -> dict[str,
             outcome, cell["labels"], _STATE["multiplicities"]
         )
     audit = {"overlay": overlay, "level": level, "policy": policy.name, "variant": variant}
-    if variant == "online" and args.audit:
+    if variant in ("online", "fixed_point") and args.audit:
         sample = np.random.default_rng(overlay * 100 + level).choice(
             len(base), args.audit, replace=False
         )
@@ -301,7 +323,11 @@ def _run_policy(cell: dict[str, Any], policy: Policy, variant: str) -> dict[str,
     )
     payload = {
         "metric_rows": rows,
-        "pass_rows": _pass_rows(overlay, level, policy.name, variant, result),
+        "pass_rows": [
+            {"overlay": overlay, "level": level, "policy": policy.name, "variant": variant}
+            | row
+            for row in costs
+        ],
         "replicates": _pack_replicates(replicates),
         "audit": audit,
         "delta": delta,

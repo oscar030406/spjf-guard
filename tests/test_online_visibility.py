@@ -8,10 +8,11 @@ import numpy as np
 import pytest
 
 from spjf_guard.experiment.online import build_online_index, refine_policy_online
+from spjf_guard.experiment.online_replay import replay_online
 from spjf_guard.features.refine import M4HistoryRecomputer
 from spjf_guard.features.sweep import HIST_COLS, feature_frame
-from spjf_guard.sim import Trace
-from spjf_guard.sim.policy import MICROS, spjf
+from spjf_guard.sim import Trace, simulate
+from spjf_guard.sim.policy import MICROS, aging, fixed, guard, skip, spjf
 
 CAP_S = 10.0
 _P50 = HIST_COLS.index("ex_p50_log")
@@ -94,7 +95,11 @@ def _history_at(prepared, arrival, availability, row, visible_release):
 
 
 def _event_driven(prepared, arrival, availability, arrays, model):
-    """One server, shortest score first, each score computed once at arrival."""
+    """One server, shortest score first, each score computed once at arrival.
+
+    The toy's one copy has replay and original clocks equal, so an outcome is released
+    at its completion instant.
+    """
     rows = arrays["job_row"]
     arrival_us, service_us = arrays["arrival_us"], arrays["service_us"]
     n = len(rows)
@@ -107,7 +112,7 @@ def _event_driven(prepared, arrival, availability, arrays, model):
         while admitted < n and arrival_us[admitted] <= free_at:
             i = admitted
             visible = {
-                int(rows[j]): arrival[rows[j]] + (completion[j] - arrival_us[j]) / MICROS
+                int(rows[j]): completion[j] / MICROS
                 for j in range(n)
                 if completion[j] <= arrival_us[i]
             }
@@ -215,3 +220,153 @@ def test_visible_rebuild_matches_the_full_sweep_on_a_shifted_clock():
         done = candidates[shifted[candidates] <= arrival[row]]
         rebuilt = recomputer.recompute_visible(int(row), baseline[row], done, shifted[done])
         np.testing.assert_allclose(rebuilt, swept[row], rtol=0.0, atol=1e-6, equal_nan=True)
+
+
+def _prepared_case(seed: int, own_span_s: float = 300.0):
+    prepared, arrival, availability, trace, arrays = _case(seed, own_span_s=own_span_s)
+    model = _Reader()
+    history = feature_frame(prepared, arrival, availability)[list(HIST_COLS)].to_numpy(
+        np.float32
+    )
+    baseline = model.predict(arrays["job_row"], history[arrays["job_row"]])
+    recomputer = M4HistoryRecomputer(prepared, arrival, availability)
+    trace = Trace(trace.arrival_us, trace.service_us, {"online": baseline}, CAP_S)
+    return prepared, arrival, availability, trace, arrays, model, history, baseline, recomputer
+
+
+@pytest.mark.parametrize("seed", [3, 11, 29])
+def test_event_driven_replay_is_the_brute_force_online_replay(seed):
+    prepared, arrival, availability, trace, arrays, model, history, baseline, recomputer = (
+        _prepared_case(seed)
+    )
+    result = replay_online(
+        trace,
+        spjf("online"),
+        1,
+        16,
+        arrays,
+        build_online_index(recomputer),
+        recomputer,
+        model,
+        history,
+        baseline,
+    )
+    expected_completion, expected_score = _event_driven(
+        prepared, arrival, availability, arrays, model
+    )
+    completion = arrays["arrival_us"] + result.outcome.wait_us + arrays["service_us"]
+    np.testing.assert_array_equal(completion, expected_completion)
+    used = baseline.copy()
+    used[result.changed_jobs] = result.corrected_score
+    np.testing.assert_allclose(used, expected_score, rtol=0.0, atol=1e-6)
+    assert result.pauses > 0
+
+
+@pytest.mark.parametrize("seed", [3, 11, 29])
+@pytest.mark.parametrize("servers", [1, 2])
+def test_event_driven_and_fixed_point_replays_are_identical(seed, servers):
+    _, _, _, trace, arrays, model, history, baseline, recomputer = _prepared_case(seed)
+    index = build_online_index(recomputer)
+    promise = 3.0 * CAP_S
+    policies = [
+        spjf("online"),
+        guard(promise, servers, CAP_S, 2.0 * servers, 0.5, "online", name="Guard"),
+        aging("online", 0.01, "Aging"),
+    ]
+    for policy in policies:
+        direct = replay_online(
+            trace, policy, servers, 16, arrays, index, recomputer, model, history, baseline
+        )
+        iterated = refine_policy_online(
+            trace,
+            policy,
+            servers,
+            16,
+            arrays,
+            index,
+            recomputer,
+            model,
+            history,
+            baseline,
+            "online",
+        )
+        np.testing.assert_array_equal(direct.outcome.wait_us, iterated.outcome.wait_us)
+        np.testing.assert_array_equal(direct.changed_jobs, iterated.changed_jobs)
+        np.testing.assert_array_equal(direct.corrected_score, iterated.corrected_score)
+
+
+class _Unchanged:
+    """Returns every job's original score, whatever history it is shown."""
+
+    def __init__(self, baseline, rows):
+        self.by_row = dict(zip(map(int, rows), baseline))
+
+    def predict(self, submission_rows, histories):
+        return np.array([self.by_row[int(r)] for r in submission_rows])
+
+
+@pytest.mark.parametrize("servers", [1, 2, 3])
+def test_pausing_kernel_schedules_exactly_as_the_package_kernel(servers):
+    _, _, _, trace, arrays, _, history, baseline, recomputer = _prepared_case(
+        17, own_span_s=120.0
+    )
+    model = _Unchanged(baseline, arrays["job_row"])
+    index = build_online_index(recomputer)
+    promise = 3.0 * CAP_S
+    policies = [
+        spjf("online"),
+        guard(promise, servers, CAP_S, 1.0 * servers, 0.25, "online", name="Guard"),
+        guard(promise, servers, CAP_S, 0.0, 0.0, "online", name="Queue", gam_s=0.5),
+        fixed(promise, servers, CAP_S, "online"),
+        skip(promise, servers, CAP_S, "online"),
+        aging("online", 0.05, "Aging"),
+    ]
+    paused = 0
+    for policy in policies:
+        direct = replay_online(
+            trace, policy, servers, 4096, arrays, index, recomputer, model, history, baseline
+        )
+        package = simulate(trace, policy, servers, window=4096)
+        np.testing.assert_array_equal(direct.outcome.wait_us, package.wait_us)
+        np.testing.assert_array_equal(direct.outcome.dispatch_index, package.dispatch_index)
+        assert direct.outcome.n_forced == package.n_forced
+        assert len(direct.changed_jobs) == 0
+        paused += direct.pauses
+    assert paused > 0
+
+
+@pytest.mark.parametrize("servers", [1, 2, 3])
+def test_pausing_timeout_schedules_exactly_as_the_reference_timeout_kernel(servers):
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "prechecks" / "timeout_rule"))
+    from timeout_overlays import timeout_kernel
+
+    _, _, _, trace, arrays, _, history, baseline, recomputer = _prepared_case(
+        17, own_span_s=120.0
+    )
+    model = _Unchanged(baseline, arrays["job_row"])
+    index = build_online_index(recomputer)
+    for theta_s in (0.0, 5.0, 20.0, 1e6):
+        direct = replay_online(
+            trace,
+            spjf("online", "Timeout"),
+            servers,
+            4096,
+            arrays,
+            index,
+            recomputer,
+            model,
+            history,
+            baseline,
+            timeout_s=theta_s,
+        )
+        reference = timeout_kernel(
+            trace.arrival_us,
+            trace.service_us,
+            baseline,
+            servers,
+            np.int64(round(theta_s * 1e6)),
+        )
+        np.testing.assert_array_equal(direct.outcome.wait_us, reference)
