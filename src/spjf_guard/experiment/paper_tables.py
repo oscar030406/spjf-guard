@@ -554,3 +554,34 @@ def online_suite_table(rows: list[dict]) -> str:
         "Every compared policy on the original clock and under the online replay, at the "
         "selected parameters, over five overlays. Largest excess and harm are online.",
     )
+
+
+def cluster_table(summary: list[dict]) -> str:
+    """tab:s_cluster -- the week-block interval beside the class-term interval.
+
+    `summary` is bootstrap_summary.csv, which carries the development run's own
+    week-block interval of each quantity beside the class-term one.
+    """
+    body: list[str] = []
+    for level in _levels(summary):
+        for row in _at_level(summary, level):
+            week = (float(row["week_lo"]), float(row["week_hi"]))
+            term = (float(row["lo"]), float(row["hi"]))
+            cells = [
+                _cell(float(row["point"]), 3),
+                _cell(week[1] - week[0], 3, week),
+                _cell(term[1] - term[0], 3, term),
+            ]
+            label = policy_label(row["quantity"]).replace(" - ", " $-$ ")
+            body.append(f"{_cell(level, 0)} & {label:<30s} & " + " & ".join(cells) + r" \\")
+        body.append(RULE)
+    return _table(
+        "llrll",
+        r"Level & Gap closed of & Point & Week blocks: width [95\%] & "
+        r"Class-terms: width [95\%]",
+        _without_trailing_rule(body),
+        "tab:s_cluster",
+        "Two sampling units for the development comparison, original clock: whole weeks "
+        "(the intervals of the main tables) and whole class-terms, redrawn with "
+        "replacement and rebuilt into five overlays each time.",
+    )

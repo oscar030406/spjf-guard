@@ -79,6 +79,7 @@ EXACT_PACKAGE_FILE = {
     "tab:same_copy_exposure": "tab_same_copy_exposure.tex",
     "tab:visibility": "tab_visibility.tex",
     "tab:s_online_suite": "tab_online_suite.tex",
+    "tab:s_cluster": "tab_cluster.tex",
 }
 """Optional exact-policy tables.  They are checked only after their CSV directory exists.
 
@@ -990,6 +991,7 @@ def check_exact_tables(
         "tab:same_copy_exposure": pt.same_copy_exposure_table,
         "tab:visibility": pt.exact_headline_table,
         "tab:s_online_suite": pt.online_suite_table,
+        "tab:s_cluster": pt.cluster_table,
     }
     complaints = list(source_complaints)
     cache = {} if cache is None else cache
@@ -1103,6 +1105,7 @@ def run(
     sealed_exact: Path | None = None,
     dev_online: Path | None = None,
     sealed_online: Path | None = None,
+    dev_cluster: Path | None = None,
 ) -> list[str]:
     """Every check that `only` allows; returns the complaints, empty when the paper agrees."""
     cache: dict = {}
@@ -1111,6 +1114,10 @@ def run(
     sealed_exact_rows: dict[str, list[dict]] = {}
     if dev_exact is not None:
         dev_exact_rows, source_complaints = load_exact_source(dev_exact, dev_online)
+        if dev_cluster is not None:
+            from emit_paper_tables import read_cluster_rows
+
+            dev_exact_rows["tab:s_cluster"] = read_cluster_rows(dev_cluster)
         complaints += source_complaints
     if sealed_exact is not None:
         sealed_exact_rows, source_complaints = load_exact_source(sealed_exact, sealed_online)
@@ -1204,6 +1211,7 @@ def main() -> int:
     ap.add_argument("--sealed-exact-dir", type=Path, default=None)
     ap.add_argument("--dev-online-dir", type=Path, default=None)
     ap.add_argument("--sealed-online-dir", type=Path, default=None)
+    ap.add_argument("--dev-cluster-dir", type=Path, default=None)
     ap.add_argument("--only", choices=("A", "B", "C", "D"))
     args = ap.parse_args()
 
@@ -1220,6 +1228,7 @@ def main() -> int:
         args.sealed_exact_dir,
         args.dev_online_dir,
         args.sealed_online_dir,
+        args.dev_cluster_dir,
     )
     for complaint in complaints:
         print(f"   FAIL {complaint}")

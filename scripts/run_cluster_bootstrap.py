@@ -177,6 +177,38 @@ def _summary(rows: list[dict[str, Any]], promises: list[float]) -> list[dict[str
     return out
 
 
+def _read(path: Path) -> list[dict[str, str]]:
+    with open(path, encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def _beside_weeks(summary: list[dict[str, Any]], dev_tables: Path) -> list[dict[str, Any]]:
+    """Each summary row with the development run's own week-block interval beside it.
+
+    A policy's interval is its main-table row; a guard minus SPJF-E is its paired
+    difference.  The class-term point is resample -1, the development pool itself, so
+    it must equal the development figure.
+    """
+    table = {(int(r["level"]), r["policy"]): r for r in _read(dev_tables / "main_table.csv")}
+    paired = {
+        (int(r["level"]), f"{r['left']} - {r['right']}"): r
+        for r in _read(dev_tables / "paired_differences.csv")
+    }
+    out = []
+    for row in summary:
+        key = (row["level"], row["quantity"])
+        if key in table:
+            week = table[key]
+            point, lo, hi = week["gap_closed"], week["gap_closed_lo"], week["gap_closed_hi"]
+        else:
+            week = paired[key]
+            point, lo, hi = week["difference_gap"], week["gap_lo"], week["gap_hi"]
+        if abs(float(point) - row["point"]) > 1e-12:
+            raise AssertionError(f"{key}: resample -1 gives {row['point']}, the table {point}")
+        out.append(row | {"week_lo": float(lo), "week_hi": float(hi)})
+    return out
+
+
 def _check_identity(rows: list[dict[str, Any]], dev_cells: Path) -> int:
     with open(dev_cells, encoding="utf-8", newline="") as handle:
         dev = {
@@ -231,7 +263,10 @@ def main() -> int:
         checked = _check_identity(rows, args.dev_cells)
         written = [
             _write(rows, args.out_dir / "bootstrap_cells.csv"),
-            _write(_summary(rows, cfg.promises_s), args.out_dir / "bootstrap_summary.csv"),
+            _write(
+                _beside_weeks(_summary(rows, cfg.promises_s), args.dev_cells.parent),
+                args.out_dir / "bootstrap_summary.csv",
+            ),
             _write(
                 [
                     {"resample": d["resample"], "copies": d["copies"], "seed": d["seed"]}
@@ -246,7 +281,12 @@ def main() -> int:
             produced_by="scripts/run_cluster_bootstrap.py",
             config_path=args.config,
             outputs=written,
-            inputs=[scores, args.dev_cells],
+            inputs=[
+                scores,
+                args.dev_cells,
+                args.dev_cells.parent / "main_table.csv",
+                args.dev_cells.parent / "paired_differences.csv",
+            ],
             arguments={"resamples": args.resamples, "workers": args.workers},
             notes={
                 "unit": "class-term of the primary pool, drawn with replacement",

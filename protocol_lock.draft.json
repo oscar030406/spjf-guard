@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-24T09:42:16-04:00",
+  "written_at": "2026-09-24T10:06:25-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -623,7 +623,7 @@
       },
       {
         "path": "scripts/check_generated.py",
-        "sha256": "727765d69612145da821f127373a4fc88f750bf8bc321a968d6725b7b95a9603"
+        "sha256": "b42ece8e6a5ccbb0ac4caa8d437642af707e7672bc3efde91dc1949d086092b7"
       },
       {
         "path": "scripts/check_overlays.py",
@@ -631,7 +631,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "c6ad74efedd0ec7f2885b767b322cb0baf1e28bd9fdaaed082f97cf66404df0f"
+        "sha256": "3a1eceb2da677308443d07042aa9506270f22b98e5e08f68301a7e54cd6ff966"
       },
       {
         "path": "scripts/check_preserved_outputs.py",
@@ -659,7 +659,7 @@
       },
       {
         "path": "scripts/emit_paper_tables.py",
-        "sha256": "c4911fa9932c80908f2967ac986309d15e3547c7b6bc27389704ce9e20730a2a"
+        "sha256": "dbb5ac6111ee6febfb37a851b1a9d05ee888ebda3cf8ad9d644a3827954a6bca"
       },
       {
         "path": "scripts/eval_scores.py",
@@ -683,7 +683,7 @@
       },
       {
         "path": "scripts/run_cluster_bootstrap.py",
-        "sha256": "0eca93e6959c0ced374623c1c7c74887bca62332d046a575e05cc3d25ebeeefd"
+        "sha256": "bf73ceca138d8059ee34562ddfa9532a655ac71d473117cd27626edab7dfd52b"
       },
       {
         "path": "scripts/run_consistent_visibility.py",
@@ -783,7 +783,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/paper_tables.py",
-        "sha256": "0d752af96cec0b7cf6874f9e3ad013158b08ccba7a75026f4f0d05cb7f522727"
+        "sha256": "bf56301777908b3d15184268fff4775bdd078e9a313dfee955a48bc6c7f6e3d4"
       },
       {
         "path": "src/spjf_guard/experiment/parallel.py",
@@ -884,6 +884,10 @@
       {
         "path": "tests/test_archive_parse.py",
         "sha256": "7605fcc273e5219067ead38a751b1c71e13f36c4473530ae3d4f50cc52f1fd2a"
+      },
+      {
+        "path": "tests/test_cluster_bootstrap.py",
+        "sha256": "0b5cf4c632cb72ec9a0ca4cd0446faa2ccdb14465c29d021ed329a74af1e334a"
       },
       {
         "path": "tests/test_consistent_cells.py",
@@ -1018,7 +1022,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "5711942abc02f640734d70eee1b3b5466fbca599e1fdf2b3b8f5b06b11cac6bc"
+    "digest": "94568a6cb0522092d69020fbc31ebd053404457344a8a9c74bde238b87b8b4c8"
   },
   "inputs": {
     "artefacts": [

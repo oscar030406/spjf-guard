@@ -5,7 +5,7 @@
         [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
         [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] \
         [--dev-exact-dir <dir>] [--sealed-exact-dir <dir>] \
-        [--dev-online-dir <dir>] [--sealed-online-dir <dir>] \
+        [--dev-online-dir <dir>] [--sealed-online-dir <dir>] [--dev-cluster-dir <dir>] \
         [--out-dir outputs/paper_tables] [--paper paper]
 
 Two products.  `outputs/paper_tables/*.tex` holds the six development tables with every
@@ -31,6 +31,7 @@ class-history sensitivity a source as well.  They are opt-in so the historical
 `--out-dir outputs/consistent_paper_tables` when enabling them.  `--dev-online-dir` and
 `--sealed-online-dir` add the online replay's rows to those tables; each needs the exact
 directory of the same pool, whose original-clock rows it must reproduce.
+`--dev-cluster-dir` adds the class-term bootstrap table (`tab_cluster.tex`).
 
 Nothing here writes into `paper/`.
 """
@@ -597,6 +598,30 @@ def exact_values(
             add(row.get(field), digits, where)
 
 
+CLUSTER_SOURCE_FILE = "bootstrap_summary.csv"
+
+
+def read_cluster_rows(tables: Path | None) -> list[dict]:
+    """The class-term bootstrap summary, when its directory was given."""
+    if tables is None:
+        return []
+    rows = read_rows(tables / CLUSTER_SOURCE_FILE)
+    if not rows:
+        raise SystemExit(f"explicit cluster source is missing or empty: {tables}")
+    return rows
+
+
+def cluster_values(rows: list[dict], out: dict, source: str = "cluster_bootstrap") -> None:
+    """Figures of the class-term table: the point, both intervals and their widths."""
+    add = _adder(out)
+    for row in rows:
+        where = f"{source}/{CLUSTER_SOURCE_FILE}[{row['quantity']} level {row['level']}]"
+        for field in ("point", "lo", "hi", "week_lo", "week_hi"):
+            add(row[field], 3, where)
+        add(float(row["hi"]) - float(row["lo"]), 3, where)
+        add(float(row["week_hi"]) - float(row["week_lo"]), 3, where)
+
+
 def exact_exposure_values(
     rows: list[dict], out: dict, source: str = "consistent_visibility"
 ) -> None:
@@ -790,6 +815,12 @@ def emit_development(cfg, args, development: dict, selection_rows: list[dict]) -
     written = emit_tables(cfg, development, args.out_dir)
     written += emit_visibility(args.dev_visibility_dir, args.out_dir)
     written += emit_optional_exact(args.dev_exact_dir, args.out_dir, online=args.dev_online_dir)
+    cluster = read_cluster_rows(args.dev_cluster_dir)
+    if cluster:
+        (args.out_dir / "tab_cluster.tex").write_text(
+            pt.cluster_table(cluster), encoding="utf-8"
+        )
+        written.append("tab_cluster.tex")
     if development["table"]:
         items = setup_items(
             cfg, development["table"], selection_rows, development["parameters"]
@@ -801,7 +832,7 @@ def emit_development(cfg, args, development: dict, selection_rows: list[dict]) -
 
 def development_run_values(args, development: dict, exact_rows) -> dict:
     """Every figure the development run produces, indexed as the paper prints it."""
-    return run_values(
+    values = run_values(
         development,
         "dev_tables",
         [],
@@ -810,6 +841,8 @@ def development_run_values(args, development: dict, exact_rows) -> dict:
         *exact_pair(exact_rows),
         *read_exact_extras(args.dev_exact_dir),
     )
+    cluster_values(read_cluster_rows(args.dev_cluster_dir), values)
+    return values
 
 
 def emit_sealed(cfg, args, sealed_run: dict) -> list[str]:
@@ -908,6 +941,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--sealed-exact-dir", type=Path, default=None)
     ap.add_argument("--dev-online-dir", type=Path, default=None)
     ap.add_argument("--sealed-online-dir", type=Path, default=None)
+    ap.add_argument("--dev-cluster-dir", type=Path, default=None)
     ap.add_argument("--out-dir", type=Path, default=ROOT / "outputs" / "paper_tables")
     ap.add_argument("--paper", type=Path, default=ROOT / "paper")
     return ap.parse_args()

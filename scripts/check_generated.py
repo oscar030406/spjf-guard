@@ -154,6 +154,7 @@ DEV_EXACT = Path("outputs") / "dev_consistent_visibility"
 SEALED_EXACT = Path("outputs") / "sealed_consistent_visibility"
 DEV_ONLINE = Path("outputs") / "dev_online_visibility"
 SEALED_ONLINE = Path("outputs") / "sealed_online_visibility"
+DEV_CLUSTER = Path("outputs") / "cluster_bootstrap"
 EXACT_PACKAGE = Path("outputs") / "consistent_paper_tables"
 """Where the sealed run writes.  They are looked for rather than asked for: before the
 sealed run nothing is there and the check is the development one, after it the sealed
@@ -245,6 +246,9 @@ def check_exact_paper_prints() -> tuple[bool, str]:
         sealed_exact=sealed_exact if sealed_manifest.is_file() else None,
         dev_online=dev_online if (dev_online / "manifest.json").is_file() else None,
         sealed_online=sealed_online if (sealed_online / "manifest.json").is_file() else None,
+        dev_cluster=ROOT / DEV_CLUSTER
+        if (ROOT / DEV_CLUSTER / "manifest.json").is_file()
+        else None,
     )
     if complaints:
         return _complaint_result("exact paper prints", complaints)
