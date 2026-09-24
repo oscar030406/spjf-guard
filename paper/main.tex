@@ -30,21 +30,51 @@
 \makeatother
 % --------------------------------------------------------------------------
 
-% --- Journal logo on the title page ---------------------------------------
-% In `submit' status mdpi.cls prints only the MDPI logo, at the right. The
-% journal's own Word template (mathematics-template.dot, MDPI, 2025) prints
-% the MDPI logo at the left and the Mathematics logo at the right, and that is
-% the look the class itself uses once the status is `accept'. The patch below
-% gives the submission build the same header. It rewrites one line of the
-% title macro at load time; mdpi.cls is not edited. Definitions/
-% mathematics-logo.png is the logo image taken from that Word template.
+% --- The look of the journal's Word template ------------------------------
+% The journal's Word template (mathematics-template.dot, MDPI, 2025) and
+% mdpi.cls in `submit' status differ on the first page and in the running
+% heads. The patches below give this build the Word template's look; mdpi.cls
+% is not edited. What the Word template shows, and what each patch sets:
+%   title page   Mathematics logo at the top left, MDPI logo at the top right;
+%   left column  Academic Editor, the four dates, a Citation line and the
+%                submission copyright notice with the licence URL;
+%   page 1 foot  "Mathematics 2026, 14, x" at the left, the DOI at the right;
+%   later pages  head "Mathematics 2026, 14, x FOR PEER REVIEW" and "n of N",
+%                no foot;
+%   line numbers at the far left of every page, the title block included.
+% Definitions/mathematics-logo.png is the logo image taken from that template.
 \makeatletter
 \patchcmd{\@maketitle}%
   {\hfill \href{https://www.mdpi.com}{\includegraphics[height=1cm]{Definitions/logo-mdpi.eps}}}%
-  {\href{https://www.mdpi.com}{\includegraphics[height=1cm]{Definitions/logo-mdpi.eps}}%
+  {\nolinenumbers
+   \href{https://www.mdpi.com/journal/mathematics}{\includegraphics[height=1.2cm]{Definitions/mathematics-logo.png}}%
    \hfill
-   \href{https://www.mdpi.com/journal/mathematics}{\includegraphics[height=1.2cm]{Definitions/mathematics-logo.png}}}%
+   \href{https://www.mdpi.com}{\includegraphics[height=1cm]{Definitions/logo-mdpi.eps}}}%
   {}{\ClassWarning{main}{title-page logo patch did not apply}}
+\newcommand{\wordcitation}{{\em\journalname\ }{\bfseries 2026}, {\em 14}, x}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \renewcommand{\footrulewidth}{0.4pt}%
+  \fancyhead{\null\vspace{8pt}}%
+  \fancyfoot[L]{\fontsize{8}{8}\selectfont\wordcitation}%
+  \fancyfoot[R]{\fontsize{8}{8}\selectfont https://doi.org/10.3390/xxxxx}}
+\lhead{\fontsize{8}{8}\selectfont\vspace{2pt}\wordcitation\ FOR PEER REVIEW\\%
+  \rule{\fulllength}{0.4pt}}
+\rfoot{}
+\renewcommand{\cright}{%
+  \fontdimen2\font=1.2pt
+  \raggedright\textbf{Citation:} To be added by editorial staff during production.\par
+  \vspace{6pt}%
+  \textbf{Copyright:} \copyright{} 2026 by the authors. Submitted for possible open
+  access publication under the terms and conditions of the Creative Commons
+  Attribution (CC BY) license (\url{https://creativecommons.org/licenses/by/4.0/}).}
+\leftlinenumbers
+\setlength{\linenumbersep}{4.95cm}
+\renewcommand{\linenumberfont}{\normalfont\small}
+% Numbering runs from the start of the document; the \nolinenumbers in the logo
+% patch above is local to the class's logo group, so the logos and their rule
+% stay unnumbered and the article-type line is line 1.
+\AtBeginDocument{\linenumbers}
 \makeatother
 % --------------------------------------------------------------------------
 
@@ -98,10 +128,11 @@
 \articlenumber{0}
 \pubyear{2026}
 \copyrightyear{2026}
-\datereceived{ }
-\daterevised{ }
-\dateaccepted{ }
-\datepublished{ }
+\externaleditor{Firstname Lastname}
+\datereceived{date}
+\daterevised{date}
+\dateaccepted{date}
+\datepublished{date}
 
 %=================================================================
 % Front matter. Everything only the authors can supply is marked
@@ -183,7 +214,8 @@ policies, five overlays; Table S17: Candidates and feasible points after promise
 assignment and the harm filter; Table S18: Capacity sweep with archived scores; Table
 S19: Physical timed-work runs; Table S20: Open-loop against think-time-preserving replay;
 Table S21: LPC-EGEE by walltime class, both partitions pooled; Table S22: Replay of the
-900-second test class at its own limit; Table S23: Scope of the nearest per-job
+900-second test class at its own limit; Table S23: Six cells on the platform back end;
+Table S24: Scope of the nearest per-job
 guarantees and wrapper precedent; Figure S1: Gap--harm trade-offs for every selected
 budget shape and Fixed($G$); Figure S2: What each budget shape keeps of the FCFS-to-SJF
 gap as the promise varies; Figure S3: Original-score reference and its corrupted-score
@@ -195,7 +227,8 @@ what supports the shared-pool design; Section S3, experiments; Section S4, the d
 proofs, including Lemma~\ref{lem:gap}, Theorem~\ref{thm:identity} with the two directions
 of its extremes, the consistency proposition with the two counterexamples to its
 converse, the multiplicative bound for the age-relative shape, the count-of-overtakes
-remark, and the relaxations of the assumptions behind
+remark, the bound for a maximum waiting time, the absolute bound from the arrival log,
+the bound when completion reports arrive late, and the relaxations of the assumptions behind
 Section~\ref{sec:theory}; Section S5, the reproducibility specification, with exact
 grids, splits, information clocks and table provenance; Section S6, the capacity sweep,
 the physical timed-work experiment, the feedback counterexamples, the closed-loop replay,
@@ -236,8 +269,8 @@ the Open University Learning Analytics dataset is published with its own
 Azure Public Dataset repository \cite{azure2021trace}, which asks that
 \cite{zhang2021harvested} be cited; and the Intel Netbatch logs are published in
 the Parallel Workloads Archive \cite{netbatch2012trace}, which asks that
-\cite{shai2014netbatch} be cited and that the logs be acknowledged to their
-depositors. The LPC-EGEE log is also published in the Parallel Workloads Archive
+the logs be acknowledged to their depositors and suggests citing
+\cite{shai2014netbatch}. The LPC-EGEE log is also published in the Parallel Workloads Archive
 \cite{lpc_egee_trace}, with acknowledgment requested for its data provider.
 The continuous-integration trace of the two Firefox
 hardware worker pools, was collected by us from Mozilla's public,

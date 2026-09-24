@@ -104,10 +104,13 @@ is any good. Packet scheduling states per-individual additive bounds against a
 reference discipline~\cite{parekh1993gps}, and batch schedulers measure the same
 difference after the fact as a fairness
 diagnostic~\cite{sabin2004fairness,sabin2005unfairness}. Those authors define the fair
-start time in two variants; we use the relaxed one, first-come first-served with no
-backfilling. The scheduling-with-predictions literature does something different: it
-compares against an optimal policy in an average sense, under a bound on the prediction
-error~\cite{purohit2018predictions,scully2022uniform}.
+start time by re-simulating the scheduler under test without the later arrivals, in two
+variants, and in the relaxed one the job may not start before any job queued ahead of it.
+Our reference runs first-come first-served for every job instead, so the two coincide
+when the scheduler under test is first-come first-served. The scheduling-with-predictions literature does something different: it
+compares against an optimal policy, with a competitive ratio that degrades with the
+prediction error~\cite{purohit2018predictions} or an average-case ratio under a bound on
+that error~\cite{scully2022uniform}.
 
 We take FCFS as the reference because it is what these services deploy by default, so
 the excess is a quantity an operator can be held to. It also has a known extremal
@@ -155,7 +158,7 @@ it as one.
 \subsection{Steady-State Models and This Load}
 
 Stationary queueing models give closed forms for the mean wait of a non-preemptive
-priority class~\cite{harcholbalter2013} and would let class thresholds be placed
+priority class~\cite[pp.~499--507]{harcholbalter2013} and would let class thresholds be placed
 analytically. They need a stationary arrival process, which deadline-driven load does
 not supply. On a synthetic Poisson stream the formula agrees with simulation to
 \devnum{0.4\%}, but on the same workload at its recorded timestamps the measured wait is

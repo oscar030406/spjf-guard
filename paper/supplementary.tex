@@ -15,6 +15,19 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
+% Running heads in the form of the journal's Word template (mathematics-template.dot),
+% as in main.tex; the class's own S-page numbering is kept, the DOI footer dropped.
+\makeatletter
+\newcommand{\wordcitation}{{\em\journalname\ }{\bfseries 2026}, {\em 14}, x}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[R]{\footnotesize S\thepage{} of S\pageref*{LastPage}\\\rule{\fulllength}{0.4pt}}%
+  \fancyhead[L]{\footnotesize\wordcitation\ FOR PEER REVIEW\\\vspace{-2pt}\rule{\fulllength}{0.4pt}}}
+\lhead{\fontsize{8}{8}\selectfont\vspace{2pt}\wordcitation\ FOR PEER REVIEW\\%
+  \rule{\fulllength}{0.4pt}}
+\rfoot{}
+\makeatother
+
 % Match the lowercase theorem environments used by the included theory section.
 \let\proposition\Proposition
 \let\endproposition\endProposition
@@ -136,7 +149,7 @@ the later ones.
 
 Table~\ref{tab:s_pred_cross} is the cross-trace counterpart of
 Table~\ref{tab:s_pred_edu}. The three figures Section~4.3 of the manuscript quotes from it are the serverless STATIC
-Spearman correlation and the two CI pools' ENT AUROC; the AUROC column of Table~6 of
+Spearman correlation and the two CI pools' ENT AUROC; the AUROC column of Table~7 of
 the manuscript carries the figure the scheduling results there are read against, which
 is the ALL row of each trace.
 
@@ -1258,7 +1271,7 @@ against the wrapper, and nothing in a replayed workload arranges them.
 % Ninth pass: this paragraph stood in Section 6.4 of the manuscript.
 
 The net-overtake identity had been tested on small synthetic instances and never measured on
-the trace this paper runs on, so we measured it. Table~5 of the manuscript reports the residual
+the trace this paper runs on, so we measured it. Table~6 of the manuscript reports the residual
 $D_i = k(W_P[i] - W_{\mathrm{FCFS}}[i]) - (\mathrm{In}_i - \mathrm{Out}_i)$ on overlay~0 at
 the three load levels under Guard($\devnum{600}$), with the reversed score at the busiest
 load beside it and the other five cells, SPJF-E among them, in Table~\ref{tab:s_resid}, and
@@ -3140,7 +3153,7 @@ cover.
 \subsection{Footnotes to the Cross-Trace Table}
 \label{sec:supp_crossnotes}
 
-Three cells of Table~6 of the manuscript carry a marker that points here. Each names
+Three cells of Table~7 of the manuscript carry a marker that points here. Each names
 what the row does and does not support.
 
 \paragraph{The two continuous-integration capacities (marker c).}

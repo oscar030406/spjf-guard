@@ -223,7 +223,8 @@ budget. Neither says that Algorithm~\ref{alg:guard} is the least restrictive
 rule with its guarantee, and we do not claim it.
 
 Bounded-overtaking mechanisms in the literature limit instead how many times a job may
-be passed~\cite{grosof2021nudge,vanhoudt2022nudgek,grosof2022wcfs}. Inside the model of
+be passed~\cite{grosof2021nudge,vanhoudt2022nudgek}, or how far down the queue service
+may reach~\cite{grosof2022wcfs}. Inside the model of
 Section~\ref{sec:model} such a count is not necessary for a per-job guarantee, and it
 gives one only at the worst-case charge of $L$ per pass. That charge makes it loose
 against a work budget by the ratio $L/\bar{C}$, \devnum{one to two orders of magnitude}
@@ -327,8 +328,9 @@ counterexamples that make consistency one-sided.
 \label{sec:clock}
 
 Deployed schedulers guard against starvation with a maximum waiting time. Recent
-inference servers promote a request once it has waited past a threshold, and state no
-bound on the wait~\cite{wu2023fastserve,luo2025autellix}. In the simplest form, once the
+inference servers promote a request once its wait passes a fixed
+threshold~\cite{wu2023fastserve} or a multiple of its service time~\cite{luo2025autellix},
+and state no bound on the wait. In the simplest form, once the
 oldest waiting job has waited $\theta$ it is served next, and until then the base
 policy decides. Call this Timeout($\theta$), and read ``oldest'' as the waiting job of
 minimum rank, so that ties in arrival time are broken by input order and not by the
@@ -411,8 +413,9 @@ $\mathrm{In}_i$. Supplementary Section~S4.11 gives the proof in full.
 \end{proof}
 
 The comparison with the fluid server is the argument Grosof, Scully and Harchol-Balter
-use for multiserver shortest-remaining-processing-time, where it bounds the work of jobs
-below a size cutoff by $kx$~\cite{grosof2018srpt}. Here it covers every non-preemptive
+use for multiserver shortest-remaining-processing-time, where it bounds by $kx$ the difference
+between the $k$-server system and the fast single server in the work of jobs below a
+size cutoff $x$~\cite{grosof2018srpt}. Here it covers every non-preemptive
 work-conserving policy and all the work, and the constant is $(k-1)L$.
 
 At $k = 1$ the fluid server is the queue, $V_i^- = W_{\mathrm{FCFS}}[i]$, and the
@@ -424,9 +427,9 @@ sets $B_{\max} = kD - \sigma - (2k-1)L$: the capacity over the deadline, less th
 burst, less $2k-1$ job-limits. The clock obeys the same bound with $B_{\max}$ replaced by
 $k\theta$. The comparison with a single fast server has a history of false sample-path
 claims. Wolff~\cite{wolff1987work} showed that earlier sample-path orderings between a
-multichannel queue and single-channel comparison systems fail. The statement here is not
-an ordering. It is an additive envelope around the fluid server that uses the service
-cap $L$, and it is proved directly. Section~\ref{sec:exp_bound} measures how close the
+multichannel queue and single-channel comparison systems fail. The statement here also
+holds on every sample path. What separates it from the refuted orderings is the additive
+$(k-1)L$, which the service cap $L$ makes finite, and it is proved directly. Section~\ref{sec:exp_bound} measures how close the
 bound comes on the traces, and how well one period's $\sigma$ predicts the next.
 
 \subsection{Completion Reports That Arrive Late}

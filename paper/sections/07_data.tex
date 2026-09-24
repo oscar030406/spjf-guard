@@ -38,7 +38,7 @@ start proxy & no \\
 ACcoding~\cite{accoding2024} &
 second judging platform &
 \devnum{4{,}046{,}652} rows, \devnum{3{,}237{,}322} non-sealed &
-none; submission id only &
+none in the release; submission id only &
 no, drawn & no \\
 Serverless invocations \cite{azure2021trace} &
 method applies outside education &
@@ -81,8 +81,8 @@ day &
 
 Both CI pools and the compute farm carry a recorded queue wait. We validate the simulator
 against the CI pools, whose capacity is a countable set of physical machines that changes
-only on reimaging or quarantine. The second judging platform has no timestamp
-column, only a submission id, so job order inside a group and job sizes are real while
+only on reimaging or quarantine. The released tables of the second judging platform have no
+timestamp column, only a submission id, so job order inside a group and job sizes are real while
 every arrival instant is drawn. The correlation between a group's first id and its
 recorded start time is \devnum{0.9995} over \devnum{469} groups, but in \devnum{207} of
 \devnum{468} consecutive transitions the id ranges overlap, so the id is an ordering and
@@ -119,8 +119,8 @@ collapsed into one job and once with the groups removed (Supplementary Table~S15
 
 \subsection{What the Source Platform Identifies}
 
-The platform that produced the main trace gives each logged-in student a dedicated
-container and runs their code inside it. Its logs do not identify the waiting times
+The platform that produced the main trace creates a separate container for each
+student and runs their code inside it~\cite{codebench_home}. Its logs do not identify the waiting times
 of a shared judging queue. We use recorded durations and reconstructed start-time
 proxies as inputs to an assumed shared pool; its capacity, queue and service
 order are our design. Neither this construction nor the absence of shared-queue
