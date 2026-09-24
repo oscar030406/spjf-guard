@@ -14,3 +14,7 @@ outputs/
 
 # data stays out of the repository (anchored: src/spjf_guard/data/ is code)
 /data/
+
+# LaTeX build logs and bibliography logs (tectonic --keep-logs)
+paper/*.log
+paper/*.blg
