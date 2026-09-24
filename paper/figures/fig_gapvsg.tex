@@ -19,14 +19,14 @@
 }
 \begin{axis}[gapaxis, ylabel={fraction of gap closed},
              title={$\rho = 0.5$, $k = 7.8$}, name=p1]
-  \addplot[mark=*,thick]            coordinates {(300,0.705) (600,0.740) (1200,0.746)};
+  \addplot[mark=*,thick]            coordinates {(300,0.705) (600,0.740) (1200,0.750)};
   \addplot[mark=o,dash dot]         coordinates {(300,0.697) (600,0.733) (1200,0.747)};
   \addplot[mark=square,densely dashed] coordinates {(300,0.721) (600,0.742) (1200,0.753)};
   \addplot[mark=triangle,dotted,thick] coordinates {(300,0.078) (600,0.184) (1200,0.367)};
 \end{axis}
 \begin{axis}[gapaxis, title={$\rho = 0.8$, $k = 5$},
              at={(p1.east)}, anchor=west, xshift=8mm, name=p2, yticklabels={}]
-  \addplot[mark=*,thick]            coordinates {(300,0.738) (600,0.837) (1200,0.844)};
+  \addplot[mark=*,thick]            coordinates {(300,0.738) (600,0.837) (1200,0.850)};
   \addplot[mark=o,dash dot]         coordinates {(300,0.640) (600,0.809) (1200,0.845)};
   \addplot[mark=square,densely dashed] coordinates {(300,0.763) (600,0.842) (1200,0.862)};
   \addplot[mark=triangle,dotted,thick] coordinates {(300,0.002) (600,0.008) (1200,0.022)};
@@ -35,7 +35,7 @@
              at={(p2.east)}, anchor=west, xshift=8mm, yticklabels={},
              legend style={font=\scriptsize, at={(1.03,1.0)}, anchor=north west,
                            draw=black!30, row sep=-1pt}]
-  \addplot[mark=*,thick]            coordinates {(300,0.478) (600,0.801) (1200,0.830)};
+  \addplot[mark=*,thick]            coordinates {(300,0.478) (600,0.801) (1200,0.844)};
   \addlegendentry{Guard($G$)}
   \addplot[mark=o,dash dot]         coordinates {(300,0.217) (600,0.682) (1200,0.827)};
   \addlegendentry{Guard-fixed($G$)}

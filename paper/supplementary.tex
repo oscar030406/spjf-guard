@@ -685,10 +685,10 @@ rule. ``Feasible'' counts the grid points that met it in all \devnum{15} validat
 \toprule
 Item & Value \\
 \midrule
-Selected, $G = \devnum{300}$ s & age-relative: $B_0 = \devnum{60}k/4$ s, $\eta = \devnum{0.50}$, $\gamma = \devnum{0}$; worst-cell gap \devnum{0.4251}, worst-cell harm \devnum{122.8} s against a \devnum{150} s limit, \devnum{44} of \devnum{99} candidate points feasible \\
-Selected, $G = \devnum{600}$ s & age-relative: $B_0 = \devnum{120}k/4$ s, $\eta = \devnum{0.75}$, $\gamma = \devnum{0}$; worst-cell gap \devnum{0.7216}, worst-cell harm \devnum{293.3} s against \devnum{300} s, \devnum{70} of \devnum{107} feasible \\
-Selected, $G = \devnum{1200}$ s & queue-length: $B_0 = \devnum{0}$, $\eta = \devnum{0}$, $\gamma = \devnum{16}k/4$ s; worst-cell gap \devnum{0.7283}, worst-cell harm \devnum{145.3} s against \devnum{600} s, \devnum{95} of \devnum{111} feasible \\
-Per-shape winners & constant: $B_0 = \devnum{329.671}$, \devnum{981.126}, \devnum{2{,}029.958}\,$k/4$ s at the three promises; age-relative: $(\devnum{60}, \devnum{0.50})$, $(\devnum{120}, \devnum{0.75})$, $(\devnum{360}, \devnum{0.75})$; queue-length: $\gamma = \devnum{16}k/4$ s with $B_0 = \devnum{0}$, \devnum{120}$k/4$ s, \devnum{0} \\
+Selected, $G = \devnum{300}$ s & age-relative: $B_0 = \devnum{60}k/4$ s, $\eta = \devnum{0.50}$, $\gamma = \devnum{0}$; worst-cell gap \devnum{0.4243}, worst-cell harm \devnum{122.8} s against a \devnum{150} s limit, \devnum{44} of \devnum{99} candidate points feasible \\
+Selected, $G = \devnum{600}$ s & age-relative: $B_0 = \devnum{120}k/4$ s, $\eta = \devnum{0.75}$, $\gamma = \devnum{0}$; worst-cell gap \devnum{0.7216}, worst-cell harm \devnum{293.5} s against \devnum{300} s, \devnum{70} of \devnum{107} feasible \\
+Selected, $G = \devnum{1200}$ s & queue-length: $B_0 = \devnum{120}k/4$ s, $\eta = \devnum{0}$, $\gamma = \devnum{16}k/4$ s; worst-cell gap \devnum{0.7275}, worst-cell harm \devnum{152.2} s against \devnum{600} s, \devnum{95} of \devnum{111} feasible \\
+Per-shape winners & constant: $B_0 = \devnum{329.671}$, \devnum{981.126}, \devnum{2{,}029.958}\,$k/4$ s at the three promises; age-relative: $(\devnum{60}, \devnum{0.50})$, $(\devnum{120}, \devnum{0.75})$, $(\devnum{360}, \devnum{0.75})$; queue-length: $(B_0, \gamma) = (\devnum{120}, \devnum{4})$, $(\devnum{120}, \devnum{16})$, $(\devnum{120}, \devnum{16})$\,$k/4$ s \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -737,7 +737,7 @@ Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max ex
  & Guard-fixed($\devnum{600}$) & \devnum{600} & \devnum{15.09} & \devnum{0.733 [0.706, 0.752]} & \devnum{45.4} & \devnum{298.7} & \devnum{237.0} & \devnum{0.36} \\
  & Fixed($\devnum{600}$)      & \devnum{600} & \devnum{14.91} & \devnum{0.742 [0.715, 0.763]} & \devnum{46.0} & \devnum{493.3} & \devnum{237.0} & \devnum{0.11} \\
  & Skip($\devnum{600}$), $\kappa=58$ & \devnum{600} & \devnum{24.64} & \devnum{0.184 [0.135, 0.233]} & \devnum{11.5} & \devnum{100.2} & \devnum{63.3} & \devnum{37.26} \\
- & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{14.84} & \devnum{0.746 [0.719, 0.768]} & \devnum{46.2} & \devnum{907.8} & \devnum{94.3} & \devnum{22.01} \\
+ & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{14.78} & \devnum{0.750 [0.723, 0.772]} & \devnum{46.4} & \devnum{996.7} & \devnum{106.0} & \devnum{0.09} \\
  & Guard-fixed($\devnum{1200}$) & \devnum{1200} & \devnum{14.83} & \devnum{0.747 [0.719, 0.768]} & \devnum{46.2} & \devnum{557.8} & \devnum{237.0} & \devnum{0.06} \\
  & Fixed($\devnum{1200}$)     & \devnum{1200} & \devnum{14.70} & \devnum{0.753 [0.724, 0.775]} & \devnum{46.6} & \devnum{1{,}077.0} & \devnum{237.0} & \devnum{0.00} \\
  & Skip($\devnum{1200}$), $\kappa=128$ & \devnum{1200} & \devnum{21.62} & \devnum{0.367 [0.288, 0.432]} & \devnum{22.8} & \devnum{102.3} & \devnum{67.6} & \devnum{28.80} \\
@@ -751,7 +751,7 @@ Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max ex
  & Guard-fixed($\devnum{600}$) & \devnum{600} & \devnum{49.85} & \devnum{0.809 [0.786, 0.824]} & \devnum{58.1} & \devnum{315.4} & \devnum{285.7} & \devnum{4.72} \\
  & Fixed($\devnum{600}$)      & \devnum{600} & \devnum{47.03} & \devnum{0.842 [0.824, 0.853]} & \devnum{60.5} & \devnum{502.6} & \devnum{447.1} & \devnum{1.16} \\
  & Skip($\devnum{600}$), $\kappa=42$ & \devnum{600} & \devnum{118.69} & \devnum{0.008 [-0.002, 0.026]} & \devnum{0.6} & \devnum{97.5} & \devnum{63.5} & \devnum{74.02} \\
- & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{46.85} & \devnum{0.844 [0.823, 0.857]} & \devnum{60.6} & \devnum{1{,}104.9} & \devnum{117.6} & \devnum{9.93} \\
+ & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{46.31} & \devnum{0.850 [0.829, 0.865]} & \devnum{61.1} & \devnum{1{,}096.1} & \devnum{117.7} & \devnum{0.41} \\
  & Guard-fixed($\devnum{1200}$) & \devnum{1200} & \devnum{46.76} & \devnum{0.845 [0.826, 0.857]} & \devnum{60.7} & \devnum{581.8} & \devnum{469.2} & \devnum{0.86} \\
  & Fixed($\devnum{1200}$)     & \devnum{1200} & \devnum{45.32} & \devnum{0.862 [0.842, 0.874]} & \devnum{61.9} & \devnum{1{,}106.3} & \devnum{469.2} & \devnum{0.22} \\
  & Skip($\devnum{1200}$), $\kappa=92$ & \devnum{1200} & \devnum{117.48} & \devnum{0.022 [0.004, 0.074]} & \devnum{1.6} & \devnum{162.5} & \devnum{83.6} & \devnum{66.10} \\
@@ -765,7 +765,7 @@ Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max ex
  & Guard-fixed($\devnum{600}$) & \devnum{600} & \devnum{116.75} & \devnum{0.682 [0.601, 0.764]} & \devnum{57.3} & \devnum{325.4} & \devnum{292.9} & \devnum{17.50} \\
  & Fixed($\devnum{600}$)      & \devnum{600} & \devnum{86.53} & \devnum{0.813 [0.778, 0.851]} & \devnum{68.3} & \devnum{515.8} & \devnum{465.5} & \devnum{7.23} \\
  & Skip($\devnum{600}$), $\kappa=34$ & \devnum{600} & \devnum{272.98} & \devnum{0.002 [-0.004, 0.006]} & \devnum{0.2} & \devnum{112.4} & \devnum{82.4} & \devnum{86.25} \\
- & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{82.67} & \devnum{0.830 [0.801, 0.857]} & \devnum{69.7} & \devnum{1{,}110.4} & \devnum{144.8} & \devnum{6.21} \\
+ & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{79.32} & \devnum{0.844 [0.817, 0.870]} & \devnum{70.9} & \devnum{1{,}110.4} & \devnum{123.4} & \devnum{1.40} \\
  & Guard-fixed($\devnum{1200}$) & \devnum{1200} & \devnum{83.32} & \devnum{0.827 [0.798, 0.860]} & \devnum{69.5} & \devnum{576.5} & \devnum{522.7} & \devnum{5.76} \\
  & Fixed($\devnum{1200}$)     & \devnum{1200} & \devnum{72.94} & \devnum{0.872 [0.846, 0.893]} & \devnum{73.3} & \devnum{1{,}112.9} & \devnum{708.8} & \devnum{0.73} \\
  & Skip($\devnum{1200}$), $\kappa=74$ & \devnum{1200} & \devnum{273.08} & \devnum{0.002 [-0.009, 0.013]} & \devnum{0.1} & \devnum{169.7} & \devnum{105.0} & \devnum{80.69} \\
@@ -811,27 +811,27 @@ Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max ex
 \midrule
 \multicolumn{9}{l}{$\rho = 0.5$, $k = 7.8$} \\
  & Guard-age($\devnum{300}$)  & \devnum{300} & \devnum{15.58} & \devnum{0.705 [0.678, 0.724]} & \devnum{43.7} & \devnum{192.5} & \devnum{132.1} & \devnum{1.35} \\
- & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{15.27} & \devnum{0.723 [0.697, 0.742]} & \devnum{44.8} & \devnum{193.4} & \devnum{94.3} & \devnum{21.60} \\
+ & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{15.43} & \devnum{0.714 [0.688, 0.733]} & \devnum{44.2} & \devnum{189.4} & \devnum{75.1} & \devnum{0.92} \\
  & Guard-age($\devnum{600}$)  & \devnum{600} & \devnum{14.97} & \devnum{0.740 [0.713, 0.760]} & \devnum{45.8} & \devnum{492.2} & \devnum{237.0} & \devnum{0.17} \\
  & Guard-queue($\devnum{600}$) & \devnum{600} & \devnum{14.88} & \devnum{0.744 [0.718, 0.765]} & \devnum{46.1} & \devnum{504.5} & \devnum{106.0} & \devnum{0.16} \\
  & Guard-age($\devnum{1200}$) & \devnum{1200} & \devnum{14.73} & \devnum{0.751 [0.723, 0.773]} & \devnum{46.5} & \devnum{1{,}049.1} & \devnum{237.0} & \devnum{0.01} \\
- & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{14.84} & \devnum{0.746 [0.719, 0.768]} & \devnum{46.2} & \devnum{907.8} & \devnum{94.3} & \devnum{22.01} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{14.78} & \devnum{0.750 [0.723, 0.772]} & \devnum{46.4} & \devnum{996.7} & \devnum{106.0} & \devnum{0.09} \\
 \midrule
 \multicolumn{9}{l}{$\rho = 0.8$, $k = 5$} \\
  & Guard-age($\devnum{300}$)  & \devnum{300} & \devnum{55.94} & \devnum{0.738 [0.697, 0.761]} & \devnum{53.0} & \devnum{209.7} & \devnum{114.1} & \devnum{11.57} \\
- & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{54.69} & \devnum{0.753 [0.713, 0.777]} & \devnum{54.0} & \devnum{210.7} & \devnum{117.6} & \devnum{17.53} \\
+ & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{56.13} & \devnum{0.736 [0.694, 0.761]} & \devnum{52.8} & \devnum{210.7} & \devnum{109.5} & \devnum{10.95} \\
  & Guard-age($\devnum{600}$)  & \devnum{600} & \devnum{47.47} & \devnum{0.837 [0.815, 0.851]} & \devnum{60.1} & \devnum{507.8} & \devnum{319.6} & \devnum{1.31} \\
  & Guard-queue($\devnum{600}$) & \devnum{600} & \devnum{47.69} & \devnum{0.834 [0.814, 0.847]} & \devnum{59.9} & \devnum{508.5} & \devnum{117.7} & \devnum{1.35} \\
  & Guard-age($\devnum{1200}$) & \devnum{1200} & \devnum{45.16} & \devnum{0.864 [0.844, 0.876]} & \devnum{62.0} & \devnum{1{,}102.9} & \devnum{370.5} & \devnum{0.29} \\
- & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{46.85} & \devnum{0.844 [0.823, 0.857]} & \devnum{60.6} & \devnum{1{,}104.9} & \devnum{117.6} & \devnum{9.93} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{46.31} & \devnum{0.850 [0.829, 0.865]} & \devnum{61.1} & \devnum{1{,}096.1} & \devnum{117.7} & \devnum{0.41} \\
 \midrule
 \multicolumn{9}{l}{$\rho = 1.0$, $k = 4$} \\
  & Guard-age($\devnum{300}$)  & \devnum{300} & \devnum{163.40} & \devnum{0.478 [0.387, 0.602]} & \devnum{40.2} & \devnum{229.1} & \devnum{134.8} & \devnum{28.64} \\
- & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{169.22} & \devnum{0.453 [0.368, 0.607]} & \devnum{38.1} & \devnum{231.4} & \devnum{144.8} & \devnum{30.99} \\
+ & Guard-queue($\devnum{300}$) & \devnum{300} & \devnum{171.79} & \devnum{0.442 [0.357, 0.576]} & \devnum{37.2} & \devnum{220.0} & \devnum{102.2} & \devnum{28.14} \\
  & Guard-age($\devnum{600}$)  & \devnum{600} & \devnum{89.24} & \devnum{0.801 [0.764, 0.842]} & \devnum{67.3} & \devnum{523.7} & \devnum{339.9} & \devnum{7.15} \\
  & Guard-queue($\devnum{600}$) & \devnum{600} & \devnum{91.09} & \devnum{0.793 [0.758, 0.833]} & \devnum{66.6} & \devnum{515.8} & \devnum{123.4} & \devnum{7.08} \\
  & Guard-age($\devnum{1200}$) & \devnum{1200} & \devnum{72.52} & \devnum{0.874 [0.851, 0.893]} & \devnum{73.4} & \devnum{1{,}117.3} & \devnum{453.3} & \devnum{0.81} \\
- & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{82.67} & \devnum{0.830 [0.801, 0.857]} & \devnum{69.7} & \devnum{1{,}110.4} & \devnum{144.8} & \devnum{6.21} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{79.32} & \devnum{0.844 [0.817, 0.870]} & \devnum{70.9} & \devnum{1{,}110.4} & \devnum{123.4} & \devnum{1.40} \\
 \bottomrule
 \end{tabular}
 \end{adjustwidth}
@@ -974,7 +974,7 @@ SPJF-E                       & ---           & \devnum{60.91} & \devnum{0.911 [0
 Guard($\devnum{300}$)        & \devnum{300} & \devnum{89.96} & \devnum{0.746 [0.571, 0.829]} & \devnum{297.9} & \devnum{81.8} & \devnum{8.17} \\
 Guard-fixed($\devnum{300}$)  & \devnum{300} & \devnum{125.68} & \devnum{0.543 [0.207, 0.718]} & \devnum{140.3} & \devnum{119.5} & \devnum{17.09} \\
 Guard-age($\devnum{300}$)    & \devnum{300} & \devnum{89.96} & \devnum{0.746 [0.571, 0.829]} & \devnum{297.9} & \devnum{81.8} & \devnum{8.17} \\
-Guard-queue($\devnum{300}$)  & \devnum{300} & \devnum{105.15} & \devnum{0.660 [0.532, 0.715]} & \devnum{297.9} & \devnum{53.9} & \devnum{29.15} \\
+Guard-queue($\devnum{300}$)  & \devnum{300} & \devnum{117.01} & \devnum{0.593 [0.376, 0.685]} & \devnum{286.9} & \devnum{81.8} & \devnum{8.79} \\
 Fixed($\devnum{300}$)        & \devnum{300} & \devnum{83.18} & \devnum{0.785 [0.584, 0.865]} & \devnum{297.9} & \devnum{246.3} & \devnum{6.33} \\
 Skip($\devnum{300}$), $\kappa=5$  & \devnum{300} & \devnum{220.39} & \devnum{0.005 [-0.002, 0.019]} & \devnum{95.1} & \devnum{81.8} & \devnum{73.17} \\
 Guard($\devnum{600}$)        & \devnum{600} & \devnum{71.07} & \devnum{0.854 [0.780, 0.895]} & \devnum{595.5} & \devnum{165.5} & \devnum{2.53} \\
@@ -983,10 +983,10 @@ Guard-age($\devnum{600}$)    & \devnum{600} & \devnum{71.07} & \devnum{0.854 [0.
 Guard-queue($\devnum{600}$)  & \devnum{600} & \devnum{91.52} & \devnum{0.737 [0.640, 0.812]} & \devnum{582.0} & \devnum{81.8} & \devnum{3.43} \\
 Fixed($\devnum{600}$)        & \devnum{600} & \devnum{68.48} & \devnum{0.868 [0.783, 0.906]} & \devnum{593.4} & \devnum{563.6} & \devnum{2.29} \\
 Skip($\devnum{600}$), $\kappa=10$ & \devnum{600} & \devnum{219.89} & \devnum{0.008 [-0.004, 0.037]} & \devnum{100.9} & \devnum{83.2} & \devnum{66.98} \\
-Guard($\devnum{1200}$)       & \devnum{1200} & \devnum{98.00} & \devnum{0.701 [0.640, 0.742]} & \devnum{1{,}157.4} & \devnum{53.9} & \devnum{26.15} \\
+Guard($\devnum{1200}$)       & \devnum{1200} & \devnum{89.73} & \devnum{0.748 [0.661, 0.819]} & \devnum{1{,}165.1} & \devnum{81.8} & \devnum{2.13} \\
 Guard-fixed($\devnum{1200}$) & \devnum{1200} & \devnum{69.03} & \devnum{0.865 [0.789, 0.905]} & \devnum{564.2} & \devnum{509.3} & \devnum{2.57} \\
 Guard-age($\devnum{1200}$)   & \devnum{1200} & \devnum{63.80} & \devnum{0.895 [0.835, 0.920]} & \devnum{1{,}182.3} & \devnum{366.4} & \devnum{0.68} \\
-Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{98.00} & \devnum{0.701 [0.640, 0.742]} & \devnum{1{,}157.4} & \devnum{53.9} & \devnum{26.15} \\
+Guard-queue($\devnum{1200}$) & \devnum{1200} & \devnum{89.73} & \devnum{0.748 [0.661, 0.819]} & \devnum{1{,}165.1} & \devnum{81.8} & \devnum{2.13} \\
 Fixed($\devnum{1200}$)       & \devnum{1200} & \devnum{63.19} & \devnum{0.898 [0.837, 0.923]} & \devnum{1{,}180.4} & \devnum{656.4} & \devnum{0.45} \\
 Skip($\devnum{1200}$), $\kappa=20$ & \devnum{1200} & \devnum{217.64} & \devnum{0.021 [-0.008, 0.084]} & \devnum{168.0} & \devnum{97.7} & \devnum{58.67} \\
 \bottomrule
@@ -1253,8 +1253,9 @@ $G = \devnum{600}$ s the constant shape trails the joint winner by
 of the gap as the load rises through the three levels, each interval clear of zero; at
 $G = \devnum{300}$ s the same three differences are \devnum{0.008 [-0.002, 0.015]},
 \devnum{0.099 [0.056, 0.157]} and \devnum{0.262 [0.202, 0.288]}; and at $G = \devnum{1200}$ s
-they are \devnum{$-0.001$}, \devnum{$-0.001$} and \devnum{0.003}, none of the three intervals
-excluding zero. At a loose promise and a light load the shape is not doing measurable work.
+they are \devnum{0.003 [-0.000, 0.008]}, \devnum{0.005 [-0.001, 0.011]} and
+\devnum{0.017 [0.002, 0.031]}; only the last, at the busiest load, clears zero, and barely. At
+a loose promise and a light load the shape is not doing measurable work.
 
 The other axis is harm. At $G = \devnum{600}$ s the queue-length shape reaches within
 \devnum{0.009} of the joint winner's gap at every load while its worst-overlay harm is
@@ -1273,7 +1274,7 @@ $G = \devnum{300}$ s against a \devnum{150} s limit, \devnum{237.0}, \devnum{447
 \devnum{469.2} and \devnum{708.8} s at $G = \devnum{1200}$ s against \devnum{600} s.
 Thus the evaluation cells also exceed the corresponding limits at each promise.
 It is ahead of the joint winner on the gap
-closed in eight of the nine cells, by up to \devnum{0.042}, so it buys its extra gap with harm
+closed in eight of the nine cells, by up to \devnum{0.028}, so it buys its extra gap with harm
 above the declared limit in some cells; we make no claim that any shape beats it on
 the gap at equal promise.
 % Sources: outputs/selection_v3/selection_worst.csv, family=fixed full-cap candidates,
@@ -1284,7 +1285,8 @@ the gap at equal promise.
 %   left = Guard(G), right = Guard-fixed(G) / Guard-queue(G) at levels 0, 1, 2; columns
 %   difference_gap, gap_lo, gap_hi, excludes_zero_gap) and the Harm and Gap-closed columns of
 %   Table~4 of the manuscript.  The worst-cell validation objectives of the three shapes at
-%   G = 1200 s (0.7257 / 0.7273 / 0.7283) are docs/repo_build_status.md third pass, section 3.
+%   G = 1200 s (0.7256 / 0.7272 / 0.7275) are outputs/selection_v4/selected_parameters.csv,
+%   rows fixed / capped / hybrid at promise 1200, worst_gap_closed.
 
 \input{figures/fig_gap_harm}
 
@@ -1361,7 +1363,7 @@ The parameters were selected on the \devnum{15} multiserver validation cells, an
 not among them. At $G = \devnum{300}$ and $\devnum{600}$ s the joint winner transfers: it closes
 \devnum{0.746} and \devnum{0.854} of the gap, against \devnum{0.543} and \devnum{0.791} for the
 constant shape. At $G = \devnum{1200}$ s it does not: the queue-length shape that wins the
-joint comparison on the multiserver cells closes \devnum{0.701} here, while the age-relative
+joint comparison on the multiserver cells closes \devnum{0.748} here, while the age-relative
 shape closes \devnum{0.895} and the constant shape \devnum{0.865}. Section~\ref*{M-sec:exp_k1} of the
 manuscript says what we do with that and Section~\ref*{M-sec:limits} there says what it means.
 
@@ -2627,8 +2629,8 @@ trace-construction sensitivities remain archived development evidence, with thei
 different fits and configurations identified in the captions and this section. They are not all regenerated by the package. Two properties of the outcome belong here. The winning shape is not the same at
 every promise: the age-relative
 shape wins the joint comparison at $G = \devnum{300}$ and $\devnum{600}$ s and the queue-length
-shape at $G = \devnum{1200}$ s, where it reaches worst-cell gap \devnum{0.7283} at worst-cell
-harm \devnum{145.3} s against \devnum{483.9} s for the best age-relative point. And a worst-cell
+shape at $G = \devnum{1200}$ s, where it reaches worst-cell gap \devnum{0.7275} at worst-cell
+harm \devnum{152.2} s against \devnum{482.2} s for the best age-relative point. And a worst-cell
 rule can be decided by a single cell: dropping the one validation cell that decides
 the $G = \devnum{600}$ choice moves that choice to $B_0 = \devnum{15}k/4$ s, $\eta =
 \devnum{0.90}$, with worst-cell gap \devnum{0.7237}. The sealed terms will be opened

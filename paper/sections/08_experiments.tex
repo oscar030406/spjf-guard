@@ -113,9 +113,9 @@ describes our fitted predictor and not prediction errors in general.
 Table~\ref{tab:guard} gives the guard at three bounds and three loads. At $\rho =
 \devnum{1.0}$, Guard($\devnum{600}$) closes \devnum{0.801} of the gap and the unguarded
 policy \devnum{0.916}. A bound of ten time limits therefore costs \devnum{0.115} of the gap.
-The cost is \devnum{0.087} at $G = \devnum{1200}$ s and \devnum{0.438} at $G =
+The cost is \devnum{0.072} at $G = \devnum{1200}$ s and \devnum{0.438} at $G =
 \devnum{300}$ s. The paired intervals of these three differences are
-\devnum{[-0.142, -0.077]}, \devnum{[-0.098, -0.064]} and \devnum{[-0.526, -0.314]}, and none
+\devnum{[-0.142, -0.077]}, \devnum{[-0.083, -0.052]} and \devnum{[-0.526, -0.314]}, and none
 contains zero, so the guarantee has a cost at every $G$ we tested. What the guarantee buys
 is protection of the worst job. The unguarded policy delays one job at the busiest load by
 \devnum{5{,}904.5} s beyond its FCFS wait, \devnum{98.4} times the \devnum{60}-second limit.
@@ -149,17 +149,17 @@ Load & Policy & $G$ (s) & p99$_{\mathrm{dl}}$ & Gap closed & Reduction (\%) & Ma
 \multicolumn{9}{l}{$\rho = \devnum{0.5}$, $k = \devnum{7.8}$; FCFS p99$_{\mathrm{dl}} = \devnum{27.64}$ s, SPJF-E \devnum{14.68} s with max excess \devnum{1{,}241.4} s} \\
  & Guard($\devnum{300}$)      & \devnum{300} & \devnum{15.58} & \devnum{0.705 [0.678, 0.724]} & \devnum{43.7} & \devnum{192.5} & \devnum{132.1} & \devnum{1.35} \\
  & Guard($\devnum{600}$)      & \devnum{600} & \devnum{14.97} & \devnum{0.740 [0.713, 0.760]} & \devnum{45.8} & \devnum{492.2} & \devnum{237.0} & \devnum{0.17} \\
- & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{14.84} & \devnum{0.746 [0.719, 0.768]} & \devnum{46.2} & \devnum{907.8} & \devnum{94.3} & \devnum{22.01} \\
+ & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{14.78} & \devnum{0.750 [0.723, 0.772]} & \devnum{46.4} & \devnum{996.7} & \devnum{106.0} & \devnum{0.09} \\
 \midrule
 \multicolumn{9}{l}{$\rho = \devnum{0.8}$, $k = \devnum{5}$; FCFS p99$_{\mathrm{dl}} = \devnum{119.35}$ s, SPJF-E \devnum{43.33} s with max excess \devnum{3{,}044.5} s} \\
  & Guard($\devnum{300}$)      & \devnum{300} & \devnum{55.94} & \devnum{0.738 [0.697, 0.761]} & \devnum{53.0} & \devnum{209.7} & \devnum{114.1} & \devnum{11.57} \\
  & Guard($\devnum{600}$)      & \devnum{600} & \devnum{47.47} & \devnum{0.837 [0.815, 0.851]} & \devnum{60.1} & \devnum{507.8} & \devnum{319.6} & \devnum{1.31} \\
- & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{46.85} & \devnum{0.844 [0.823, 0.857]} & \devnum{60.6} & \devnum{1{,}104.9} & \devnum{117.6} & \devnum{9.93} \\
+ & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{46.31} & \devnum{0.850 [0.829, 0.865]} & \devnum{61.1} & \devnum{1{,}096.1} & \devnum{117.7} & \devnum{0.41} \\
 \midrule
 \multicolumn{9}{l}{$\rho = \devnum{1.0}$, $k = \devnum{4}$; FCFS p99$_{\mathrm{dl}} = \devnum{273.50}$ s, SPJF-E \devnum{62.79} s with max excess \devnum{5{,}904.5} s} \\
  & Guard($\devnum{300}$)      & \devnum{300} & \devnum{163.40} & \devnum{0.478 [0.387, 0.602]} & \devnum{40.2} & \devnum{229.1} & \devnum{134.8} & \devnum{28.64} \\
  & Guard($\devnum{600}$)      & \devnum{600} & \devnum{89.24} & \devnum{0.801 [0.764, 0.842]} & \devnum{67.3} & \devnum{523.7} & \devnum{339.9} & \devnum{7.15} \\
- & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{82.67} & \devnum{0.830 [0.801, 0.857]} & \devnum{69.7} & \devnum{1{,}110.4} & \devnum{144.8} & \devnum{6.21} \\
+ & Guard($\devnum{1200}$)     & \devnum{1200} & \devnum{79.32} & \devnum{0.844 [0.817, 0.870]} & \devnum{70.9} & \devnum{1{,}110.4} & \devnum{123.4} & \devnum{1.40} \\
 \bottomrule
 \end{tabular}
 \end{adjustwidth}
