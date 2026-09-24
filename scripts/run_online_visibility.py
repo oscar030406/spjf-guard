@@ -434,9 +434,21 @@ def _worker(task: tuple[int, int]) -> dict[str, Any]:
     return out
 
 
+PRESENTATION = ("experiment/paper_tables.py",)
+"""Package files that format results for the paper and compute none.  Editing one leaves
+the checkpoints of a run valid, so the paper can be revised while a long run resumes."""
+
+
 def _run_signature(cfg, args, pool_terms) -> tuple[str, str]:
-    paths = [Path(__file__).resolve(), ROOT / "scripts" / "run_consistent_visibility.py"]
-    paths += sorted((ROOT / "src" / "spjf_guard").rglob("*.py"))
+    package = ROOT / "src" / "spjf_guard"
+    scripts = ("run_consistent_visibility.py", "consistent_cells.py", "build_overlays.py")
+    paths = [Path(__file__).resolve()]
+    paths += [ROOT / "scripts" / name for name in (*scripts, "run_main.py", "select_online.py")]
+    paths += sorted(
+        path
+        for path in package.rglob("*.py")
+        if path.relative_to(package).as_posix() not in PRESENTATION
+    )
     paths.append(ROOT / "prechecks" / "timeout_rule" / "timeout_overlays.py")
     implementation = combined_hash(paths, ROOT)
     document = {
@@ -449,6 +461,13 @@ def _run_signature(cfg, args, pool_terms) -> tuple[str, str]:
         "audit": args.audit,
     }
     return signature(document), implementation
+
+
+def _uniform(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Rows of the passes table under one header: an online replay records pauses and a
+    fixed-point pass records a frontier, so each leaves the other's columns empty."""
+    fields = list(dict.fromkeys(key for row in rows for key in row))
+    return [{key: row.get(key, "") for key in fields} for row in rows]
 
 
 def run(cfg, args, pool_terms, outcome) -> int:
@@ -480,7 +499,7 @@ def run(cfg, args, pool_terms, outcome) -> int:
     tables = {
         "online_cells.csv": rows,
         "online_comparison.csv": _aggregate_metrics(rows, replicate_cells),
-        "online_passes.csv": [r for cell in cells for r in cell["passes"]],
+        "online_passes.csv": _uniform([r for cell in cells for r in cell["passes"]]),
         "online_audit.csv": [r for cell in cells for r in cell["audit"]],
         "online_delta_manifest.csv": deltas,
         "online_costs.csv": [r for cell in cells for r in cell["costs"]],

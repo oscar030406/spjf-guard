@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-24T09:06:22-04:00",
+  "written_at": "2026-09-24T09:42:16-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -695,7 +695,7 @@
       },
       {
         "path": "scripts/run_online_visibility.py",
-        "sha256": "e4bdcd2bac4739d3a6e4274ad68da80e09145f34a0ac54c3b05bb83ae21d3713"
+        "sha256": "e19a241d25d3eb394d1b1aa2f1051e72cfae5bd18ec11998c290dee63154f1e4"
       },
       {
         "path": "scripts/run_visibility.py",
@@ -1018,7 +1018,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "f5fb8f05eb485b42dc65feab69f90e9dbe206aa3dd75ae7b092c133f03f4c1c4"
+    "digest": "5711942abc02f640734d70eee1b3b5466fbca599e1fdf2b3b8f5b06b11cac6bc"
   },
   "inputs": {
     "artefacts": [
