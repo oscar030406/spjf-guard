@@ -68,12 +68,20 @@ def check_outputs() -> tuple[bool, str]:
 
 
 def check_preserved_development() -> tuple[bool, str]:
-    """The amendment must leave every pre-existing development CSV byte-identical."""
+    """The amendment must leave every pre-existing development CSV byte-identical.
+
+    The selection_v4 rerun's tables have a snapshot of their own; the tables they replaced
+    are guarded at the copies the original snapshot was relocated to.
+    """
     from check_preserved_outputs import check
 
     paths = [
         ROOT / "outputs" / name
-        for name in ("consistent_original_tables.json", "consistent_ancillary_tables.json")
+        for name in (
+            "consistent_original_tables.json",
+            "consistent_ancillary_tables.json",
+            "selection_v4_tables.json",
+        )
         if (ROOT / "outputs" / name).is_file()
     ]
     if not paths:

@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-24T08:51:16-04:00",
+  "written_at": "2026-09-24T09:03:45-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -623,7 +623,7 @@
       },
       {
         "path": "scripts/check_generated.py",
-        "sha256": "e24fb10a3541de8f225f1582eecd7db4395fb10f2b40c0e21ccc5c1b23694e7e"
+        "sha256": "727765d69612145da821f127373a4fc88f750bf8bc321a968d6725b7b95a9603"
       },
       {
         "path": "scripts/check_overlays.py",
@@ -635,7 +635,7 @@
       },
       {
         "path": "scripts/check_preserved_outputs.py",
-        "sha256": "8a11f3c69106a5503382de4299534b8474264ca97f172c57075e0ef7aad73304"
+        "sha256": "a9387ead049673a2baf551076db618bc6bc944befdaeb0143e9bbb6c20ac1103"
       },
       {
         "path": "scripts/check_reproduction.py",
@@ -899,7 +899,7 @@
       },
       {
         "path": "tests/test_consistent_protocol.py",
-        "sha256": "ed9c8052cd393958bcb3292c1d728d59db59b0414d1fb9f660e92f43d06149a9"
+        "sha256": "dfb8d3bb43096fa63fca2b473008c5df976a4556d389ca303879e2f670f6364d"
       },
       {
         "path": "tests/test_consistent_runner.py",
@@ -1018,7 +1018,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "7728d31d7af69b164b155d6c35d29c58ee2654c11e14a33904cbe154876f6595"
+    "digest": "f8710dbc99f8249059e3aa2bced41251c60200ab2a4af859d72a43312df5132f"
   },
   "inputs": {
     "artefacts": [

@@ -222,6 +222,28 @@ def test_preservation_gate_detects_a_change_to_an_existing_column(tmp_path, monk
     assert not check_generated.check_preserved_development()[0]
 
 
+def test_a_rerun_table_is_guarded_at_its_preserved_copy_and_nowhere_else(tmp_path):
+    import check_preserved_outputs as cpo
+
+    old = tmp_path / "outputs/dev_tables/example.csv"
+    kept = tmp_path / "outputs/dev_tables_v3sel/example.csv"
+    for path in (old, kept):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"original_column\n1.0\n")
+    snapshot = tmp_path / "outputs/consistent_original_tables.json"
+    entry = {"path": "outputs/dev_tables/example.csv", "rows": 1, "sha256": cpo.digest(old)}
+    snapshot.write_text(json.dumps([entry]), encoding="utf-8")
+    old.write_bytes(b"original_column\n1.1\n")
+    kept.write_bytes(b"original_column\n1.2\n")
+    with pytest.raises(ValueError, match="is not the table"):
+        cpo.relocate(snapshot, "outputs/dev_tables/", "outputs/dev_tables_v3sel/", tmp_path)
+    kept.write_bytes(b"original_column\n1.0\n")
+    assert cpo.relocate(snapshot, "outputs/dev_tables/", "outputs/dev_tables_v3sel/", tmp_path)
+    assert cpo.check(snapshot, tmp_path)[0]
+    kept.write_bytes(b"original_column\n1.3\n")
+    assert not cpo.check(snapshot, tmp_path)[0]
+
+
 def test_the_sealed_dry_run_lists_the_exact_stage_and_its_own_outputs(capsys):
     cfg = cfgmod.load(ROOT / "configs" / "main.yaml", expand_environment=False)
     args = SimpleNamespace(

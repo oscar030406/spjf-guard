@@ -80,6 +80,13 @@ _Avoid_: CAP / FIX / SKIP（`prechecks/` 的旧标签，新代码不用）
 把多个班次—学期按各自真实的星期几与钟点对齐、整周平移后叠加成的一条轨迹。五次叠加是同一批数据的不同构造，不是五个独立平台。
 _Avoid_: replica, trace（trace 指仿真器的输入对象）, 副本
 
+**online / exact / original**（分数可见性协议）：
+一个 job 的分数允许用哪些历史结果。online：调度器只跑一次，job 到达那一刻，用这次重放里已经完成的
+同班次—学期拷贝结果重算历史、冻结模型打分（主结果，ADR 0008）。exact：离线单调扣留，反复重放直到
+没有分数用到未完成的结果，是一个保守解（ADR 0007）。original：原平台的记录时钟，乐观参照。
+conservative 与 static 是另外两条更严的参照。
+_Avoid_: 用「exact」指 online；把 original 叫「无泄露」
+
 **sealed**（封存）：
 冻结前不可读的部分：CodeBench 2023-1 / 2023-2 / 2024-1、ACcoding 编号 80%–100%、OULAD 2014。路径级拒绝，见 `src/spjf_guard/data/sealed.py`。
 _Avoid_: holdout, test set, 留出集

@@ -163,6 +163,32 @@ def pin_historical_config(snapshot_path: Path) -> int:
     return 0
 
 
+def relocate(snapshot_path: Path, old: str, new: str, root: Path = ROOT) -> int:
+    """Point the records of tables that a deliberate rerun replaced at their preserved copy.
+
+    A record moves only when its table no longer matches at `old` and the file at `new`
+    is byte for byte the one it recorded, so what the snapshot guards is unchanged; the
+    rerun's tables are guarded by a snapshot of their own.
+    """
+    records = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    moved = []
+    for entry in records:
+        here = root / entry["path"]
+        if not entry["path"].startswith(old) or (
+            here.is_file() and digest(here) == entry["sha256"]
+        ):
+            continue
+        target = new + entry["path"].removeprefix(old)
+        if not (root / target).is_file() or digest(root / target) != entry["sha256"]:
+            raise ValueError(f"{target} is not the table {entry['path']} recorded")
+        entry["relocated_from"] = entry["path"]
+        entry["path"] = target
+        moved.append(target)
+    snapshot_path.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    print(f"relocated {len(moved)} records from {old} to {new}")
+    return len(moved)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--snapshot", action="store_true")
@@ -172,10 +198,14 @@ def main() -> int:
         "--file", type=Path, default=ROOT / "outputs/consistent_original_tables.json"
     )
     parser.add_argument("--refresh", nargs="+", metavar="PATH", help="derived files only")
+    parser.add_argument("--relocate", nargs=2, metavar=("OLD", "NEW"))
     args = parser.parse_args()
     if args.snapshot:
         snapshot(args.file, args.ancillary)
         return 0
+    if args.relocate:
+        relocate(args.file, *args.relocate)
+        return verify(args.file)
     if args.refresh:
         return refresh(args.file, args.refresh)
     if args.pin_historical_config:
