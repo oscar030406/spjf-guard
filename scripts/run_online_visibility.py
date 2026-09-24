@@ -39,7 +39,7 @@ sys.path.insert(0, str(ROOT / "prechecks" / "timeout_rule"))
 from timeout_overlays import timeout_kernel  # noqa: E402
 
 from build_overlays import clock_from  # noqa: E402
-from consistent_cells import (  # noqa: E402  # noqa: E402
+from consistent_cells import (  # noqa: E402
     artifact_entry,
     artifacts_valid,
     combined_hash,
@@ -63,7 +63,7 @@ from run_main import level_utilisation  # noqa: E402
 from spjf_guard import config as cfgmod  # noqa: E402
 from spjf_guard.data import sealed  # noqa: E402
 from spjf_guard.data.events import static_submission_columns  # noqa: E402
-from spjf_guard.experiment import provenance  # noqa: E402
+from spjf_guard.experiment import grids, provenance  # noqa: E402
 from spjf_guard.experiment.consistent import refine_policy  # noqa: E402
 from spjf_guard.experiment.online import (  # noqa: E402
     audit_online,
@@ -381,15 +381,28 @@ def _load_cell(overlay: int, level: int) -> dict[str, Any]:
     }
 
 
+def _suite(cfg: cfgmod.Config, args, servers: int) -> list[Policy]:
+    """The named comparators, or every grid point listed in ``--candidates``."""
+    if args.candidates is None:
+        wanted = args.policy_names
+        return [
+            policy
+            for policy in comparator_suite(cfg, servers)
+            if wanted == ["all"] or policy.name in wanted
+        ]
+    from select_online import _rows, grid_point
+
+    points = [grid_point(row) for row in _rows(args.candidates)]
+    return [
+        grids.policy_for(point, servers, cfg.limit_s, "spjf_e", cfg.promises_s)
+        for point in points
+    ]
+
+
 def _worker(task: tuple[int, int]) -> dict[str, Any]:
     overlay, level = task
     cell = _load_cell(overlay, level)
-    wanted = _STATE["args"].policy_names
-    suite = [
-        policy
-        for policy in comparator_suite(_STATE["cfg"], cell["servers"])
-        if wanted == ["all"] or policy.name in wanted
-    ]
+    suite = _suite(_STATE["cfg"], _STATE["args"], cell["servers"])
     out = {"rows": [], "passes": [], "audit": [], "deltas": [], "costs": [], "replicates": {}}
     out["replicates"].update(cell["references"])
     for policy in suite:
@@ -488,6 +501,7 @@ def run(cfg, args, pool_terms, outcome) -> int:
             "reps": args.reps,
             "levels": args.levels,
             "policies": args.policies,
+            "candidates": None if args.candidates is None else str(args.candidates),
             "variants": args.variants,
             "audit": args.audit,
             "workers": args.workers,
@@ -516,6 +530,7 @@ def main() -> int:
     parser.add_argument("--reps", default="0,1,2,3,4")
     parser.add_argument("--levels", default="0,1,2")
     parser.add_argument("--policies", default="SPJF-E,Guard(300),Guard(600),Guard(1200)")
+    parser.add_argument("--candidates", type=Path, default=None)
     parser.add_argument("--variants", default="online")
     parser.add_argument("--audit", type=int, default=2000)
     parser.add_argument("--workers", type=int, default=2)
