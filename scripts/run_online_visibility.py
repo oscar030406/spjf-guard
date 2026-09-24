@@ -561,7 +561,8 @@ def main() -> int:
     args.overlay_dir = args.overlay_dir or cfg.data_path("overlay_dir")
     score_name = "sealed_scores.parquet" if args.pool == "sealed" else "forward_scores.parquet"
     args.scores = args.scores or cfg.data_path("score_dir", score_name)
-    args.out_dir = args.out_dir or ROOT / "outputs" / f"{args.pool}_online_visibility"
+    prefix = "dev" if args.pool == "primary" else args.pool
+    args.out_dir = args.out_dir or ROOT / "outputs" / f"{prefix}_online_visibility"
     args.skip_controls = True
     with sealed.recording(
         ROOT, "scripts/run_online_visibility.py", pool_terms, args.unseal

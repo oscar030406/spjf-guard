@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-24T08:45:29-04:00",
+  "written_at": "2026-09-24T08:51:16-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -623,7 +623,7 @@
       },
       {
         "path": "scripts/check_generated.py",
-        "sha256": "21a6302bfcd27da2459ab1cf70eb3bc92ffb2325df46b2e68c4e2dc3a97f179b"
+        "sha256": "e24fb10a3541de8f225f1582eecd7db4395fb10f2b40c0e21ccc5c1b23694e7e"
       },
       {
         "path": "scripts/check_overlays.py",
@@ -631,7 +631,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "f6e41c126aff12b4686d6fed6468e1b178f5bbb9f7128e82347217b51bef3cd1"
+        "sha256": "268b53952df64c5a7c1c557454aaec5b7538cca343a8b0cc8d04fd20274f2149"
       },
       {
         "path": "scripts/check_preserved_outputs.py",
@@ -659,7 +659,7 @@
       },
       {
         "path": "scripts/emit_paper_tables.py",
-        "sha256": "c225c4ce89a43c2cf1ed4803b07a24ff4eceea6a904252ad16241c8a75c21e05"
+        "sha256": "b507b7846f66321739b0d7e46b3ff68e5b3ce454e1b99954ff073ec059de7546"
       },
       {
         "path": "scripts/eval_scores.py",
@@ -695,7 +695,7 @@
       },
       {
         "path": "scripts/run_online_visibility.py",
-        "sha256": "911ef06834bb7d48bddd417c55d438eccfc2d9ea84b15ea27b52457ef738c7da"
+        "sha256": "e4bdcd2bac4739d3a6e4274ad68da80e09145f34a0ac54c3b05bb83ae21d3713"
       },
       {
         "path": "scripts/run_visibility.py",
@@ -783,7 +783,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/paper_tables.py",
-        "sha256": "fba5e4506591de5928a9954ff911abbde0ef421af0a2cecc7a5f5f562a39a9e8"
+        "sha256": "e1209beb20dfe7dba899e347cc6cca869f2455e50f05af85d26d99b7c12f481f"
       },
       {
         "path": "src/spjf_guard/experiment/parallel.py",
@@ -899,7 +899,7 @@
       },
       {
         "path": "tests/test_consistent_protocol.py",
-        "sha256": "b3b94e42a4da4f527c88a7bd569aaa26c80849c17d847f86b5767eb7de334514"
+        "sha256": "ed9c8052cd393958bcb3292c1d728d59db59b0414d1fb9f660e92f43d06149a9"
       },
       {
         "path": "tests/test_consistent_runner.py",
@@ -1018,7 +1018,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "90e24e92faa0159de44ab02f10523c9f8e2793fdc31731fa66866f4dca0ae7a1"
+    "digest": "7728d31d7af69b164b155d6c35d29c58ee2654c11e14a33904cbe154876f6595"
   },
   "inputs": {
     "artefacts": [

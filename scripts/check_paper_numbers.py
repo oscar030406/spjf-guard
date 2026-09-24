@@ -4,7 +4,8 @@
         [--dev-dir outputs/dev_tables] [--package-dir outputs/paper_tables] \
         [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
         [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] \
-        [--dev-exact-dir <dir>] [--sealed-exact-dir <dir>] [--only A]
+        [--dev-exact-dir <dir>] [--sealed-exact-dir <dir>]
+        [--dev-online-dir <dir>] [--sealed-online-dir <dir>] [--only A]
 
 `check_generated.py --only paper_numbers` asks a different question: whether every number
 in the paper has *some* stated source.  This script asks whether the numbers that claim
@@ -930,8 +931,14 @@ def check_sealed_tables(paper: Path, package_dir: Path, labels, cache=None) -> l
     return complaints
 
 
-def load_exact_source(exact_dir: Path) -> tuple[dict[str, list[dict]], list[str]]:
-    """Load both required exact CSVs, reporting protocol errors as complaints."""
+def load_exact_source(
+    exact_dir: Path, online_dir: Path | None = None
+) -> tuple[dict[str, list[dict]], list[str]]:
+    """Load both required exact CSVs, reporting protocol errors as complaints.
+
+    An online directory adds its online rows to the two comparison tables, as the
+    emitter does.
+    """
     rows: dict[str, list[dict]] = {}
     complaints: list[str] = []
     sources = {
@@ -947,6 +954,12 @@ def load_exact_source(exact_dir: Path) -> tuple[dict[str, list[dict]], list[str]
         rows[label] = read_rows(path, optional=True)
         if not rows[label]:
             complaints.append(f"explicit exact source has no data rows: {path}")
+    if online_dir is not None:
+        from emit_paper_tables import read_online_rows
+
+        online = read_online_rows(online_dir, rows["tab:exact_visibility"])
+        for label in ("tab:exact_visibility", "tab:visibility"):
+            rows[label] = rows[label] + online
     return rows, complaints
 
 
@@ -1083,6 +1096,8 @@ def run(
     sealed_visibility: Path | None = None,
     dev_exact: Path | None = None,
     sealed_exact: Path | None = None,
+    dev_online: Path | None = None,
+    sealed_online: Path | None = None,
 ) -> list[str]:
     """Every check that `only` allows; returns the complaints, empty when the paper agrees."""
     cache: dict = {}
@@ -1090,10 +1105,10 @@ def run(
     dev_exact_rows: dict[str, list[dict]] = {}
     sealed_exact_rows: dict[str, list[dict]] = {}
     if dev_exact is not None:
-        dev_exact_rows, source_complaints = load_exact_source(dev_exact)
+        dev_exact_rows, source_complaints = load_exact_source(dev_exact, dev_online)
         complaints += source_complaints
     if sealed_exact is not None:
-        sealed_exact_rows, source_complaints = load_exact_source(sealed_exact)
+        sealed_exact_rows, source_complaints = load_exact_source(sealed_exact, sealed_online)
         complaints += source_complaints
     residuals = resid_table_rows(read_rows(dev / "identity_residuals.csv"))
     if only in (None, "A"):
@@ -1182,6 +1197,8 @@ def main() -> int:
     ap.add_argument("--sealed-visibility-dir", type=Path, default=None)
     ap.add_argument("--dev-exact-dir", type=Path, default=None)
     ap.add_argument("--sealed-exact-dir", type=Path, default=None)
+    ap.add_argument("--dev-online-dir", type=Path, default=None)
+    ap.add_argument("--sealed-online-dir", type=Path, default=None)
     ap.add_argument("--only", choices=("A", "B", "C", "D"))
     args = ap.parse_args()
 
@@ -1196,6 +1213,8 @@ def main() -> int:
         args.sealed_visibility_dir,
         args.dev_exact_dir,
         args.sealed_exact_dir,
+        args.dev_online_dir,
+        args.sealed_online_dir,
     )
     for complaint in complaints:
         print(f"   FAIL {complaint}")

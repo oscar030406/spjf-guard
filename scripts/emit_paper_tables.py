@@ -5,6 +5,7 @@
         [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
         [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] \
         [--dev-exact-dir <dir>] [--sealed-exact-dir <dir>] \
+        [--dev-online-dir <dir>] [--sealed-online-dir <dir>] \
         [--out-dir outputs/paper_tables] [--paper paper]
 
 Two products.  `outputs/paper_tables/*.tex` holds the six development tables with every
@@ -27,7 +28,9 @@ nothing changes, which is why it is an option.
 `tab_visibility.tex` from the exact comparison, and give the attribution ladder and the
 class-history sensitivity a source as well.  They are opt-in so the historical
 `outputs/paper_tables/` files, including `numbers.csv`, stay byte-identical; use
-`--out-dir outputs/consistent_paper_tables` when enabling them.
+`--out-dir outputs/consistent_paper_tables` when enabling them.  `--dev-online-dir` and
+`--sealed-online-dir` add the online replay's rows to those tables; each needs the exact
+directory of the same pool, whose original-clock rows it must reproduce.
 
 Nothing here writes into `paper/`.
 """
@@ -149,6 +152,34 @@ def read_rows(path: Path) -> list[dict]:
 
 
 EXACT_SOURCE_FILES = ("exact_comparison.csv", "same_copy_exposure.csv")
+ONLINE_SOURCE_FILE = "online_comparison.csv"
+POINT_FIELDS = ("p99_dl_s", "gap_closed", "max_excess_s", "harm_s", "fired_pct")
+"""The figures of a comparison row that follow from its cells alone; the intervals also
+depend on which policies shared the bootstrap, so two runs are compared on these."""
+
+
+def read_online_rows(tables: Path, exact_comparison: list[dict]) -> list[dict]:
+    """The online replay's own rows, once its original-clock rows match the exact run's.
+
+    Both runners replay the same policies on the same overlays and scores before either
+    changes a score, so their original rows must agree; a difference means the two
+    directories came from different configurations or inputs.
+    """
+    path = tables / ONLINE_SOURCE_FILE
+    rows = read_rows(path)
+    if not rows:
+        raise SystemExit(f"explicit online source is missing or empty: {path}")
+    exact = {(r["policy"], r["level"]): r for r in exact_comparison}
+    for row in rows:
+        twin = exact.get((row["policy"], row["level"]))
+        if row["variant"] != "original" or twin is None:
+            continue
+        if any(float(row[f]) != float(twin[f]) for f in POINT_FIELDS):
+            raise SystemExit(
+                f"{path}: {row['policy']} level {row['level']} differs from the exact "
+                "run's original row; the two directories do not share their inputs"
+            )
+    return [row for row in rows if row["variant"] == "online"]
 
 
 def read_exact_rows(tables: Path) -> tuple[list[dict], list[dict]]:
@@ -165,9 +196,21 @@ def read_exact_rows(tables: Path) -> tuple[list[dict], list[dict]]:
     return loaded[0], loaded[1]
 
 
-def read_optional_exact(tables: Path | None) -> tuple[list[dict], list[dict]] | None:
-    """The exact source when a directory was given, and nothing at all when none was."""
-    return read_exact_rows(tables) if tables is not None else None
+def read_optional_exact(
+    tables: Path | None, online: Path | None = None
+) -> tuple[list[dict], list[dict]] | None:
+    """The exact source when a directory was given, and nothing at all when none was.
+
+    An online directory adds its online rows to the exact comparison.
+    """
+    if tables is None:
+        if online is not None:
+            raise SystemExit("an online directory needs the exact directory of its pool")
+        return None
+    comparison, exposure = read_exact_rows(tables)
+    if online is not None:
+        comparison = comparison + read_online_rows(online, comparison)
+    return comparison, exposure
 
 
 def exact_pair(rows: tuple[list[dict], list[dict]] | None) -> tuple[list[dict], list[dict]]:
@@ -538,6 +581,11 @@ def exact_values(
     for row in rows:
         name = row.get("policy") or f"{row['base_policy']}|{row['variant']}"
         where = f"{source}/{filename}[{name} level {row['level']}]"
+        if row.get("variant") == "online":
+            where = (
+                f"{source.replace('consistent', 'online')}/{ONLINE_SOURCE_FILE}"
+                f"[{name} level {row['level']}]"
+            )
         for field, digits in (
             ("p99_dl_s", 2),
             ("gap_closed", 3),
@@ -644,7 +692,9 @@ def emit_visibility(tables: Path, out_dir: Path, sealed: bool = False) -> list[s
     return written
 
 
-def emit_exact(tables: Path, out_dir: Path, sealed: bool = False) -> list[str]:
+def emit_exact(
+    tables: Path, out_dir: Path, sealed: bool = False, online: Path | None = None
+) -> list[str]:
     """The policy-specific exact comparison and same-copy exposure decomposition.
 
     `tab_visibility.tex` is rewritten from the exact comparison, which carries the three
@@ -652,7 +702,7 @@ def emit_exact(tables: Path, out_dir: Path, sealed: bool = False) -> list[str]:
     single source.  It runs after `emit_visibility`, whose three-row copy it replaces;
     the historical directory never sees it, because the exact source is opt-in.
     """
-    comparison, exposure = read_exact_rows(tables)
+    comparison, exposure = read_optional_exact(tables, online)
     written: list[str] = []
     for stem, text in (
         ("tab_exact_visibility", pt.exact_visibility_table(comparison) if comparison else ""),
@@ -670,9 +720,11 @@ def emit_exact(tables: Path, out_dir: Path, sealed: bool = False) -> list[str]:
     return written
 
 
-def emit_optional_exact(tables: Path | None, out_dir: Path, sealed: bool = False) -> list[str]:
+def emit_optional_exact(
+    tables: Path | None, out_dir: Path, sealed: bool = False, online: Path | None = None
+) -> list[str]:
     """Emit nothing until an exact directory is explicitly supplied."""
-    return emit_exact(tables, out_dir, sealed) if tables is not None else []
+    return emit_exact(tables, out_dir, sealed, online) if tables is not None else []
 
 
 EXACT_EXTRA_FILES = ("attribution_comparison.csv", "exact_sensitivity_comparison.csv")
@@ -737,7 +789,7 @@ def emit_development(cfg, args, development: dict, selection_rows: list[dict]) -
     """
     written = emit_tables(cfg, development, args.out_dir)
     written += emit_visibility(args.dev_visibility_dir, args.out_dir)
-    written += emit_optional_exact(args.dev_exact_dir, args.out_dir)
+    written += emit_optional_exact(args.dev_exact_dir, args.out_dir, online=args.dev_online_dir)
     if development["table"]:
         items = setup_items(
             cfg, development["table"], selection_rows, development["parameters"]
@@ -765,7 +817,9 @@ def emit_sealed(cfg, args, sealed_run: dict) -> list[str]:
     written = emit_tables(cfg, sealed_run, args.out_dir, sealed=True)
     if args.sealed_visibility_dir is not None:
         written += emit_visibility(args.sealed_visibility_dir, args.out_dir, sealed=True)
-    written += emit_optional_exact(args.sealed_exact_dir, args.out_dir, sealed=True)
+    written += emit_optional_exact(
+        args.sealed_exact_dir, args.out_dir, sealed=True, online=args.sealed_online_dir
+    )
     return written
 
 
@@ -852,6 +906,8 @@ def parse_args() -> argparse.Namespace:
         help="optional exact-policy CSVs; use a separate --out-dir to preserve old tables",
     )
     ap.add_argument("--sealed-exact-dir", type=Path, default=None)
+    ap.add_argument("--dev-online-dir", type=Path, default=None)
+    ap.add_argument("--sealed-online-dir", type=Path, default=None)
     ap.add_argument("--out-dir", type=Path, default=ROOT / "outputs" / "paper_tables")
     ap.add_argument("--paper", type=Path, default=ROOT / "paper")
     return ap.parse_args()
@@ -859,8 +915,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    dev_exact_rows = read_optional_exact(args.dev_exact_dir)
-    sealed_exact_rows = read_optional_exact(args.sealed_exact_dir)
+    dev_exact_rows = read_optional_exact(args.dev_exact_dir, args.dev_online_dir)
+    sealed_exact_rows = read_optional_exact(args.sealed_exact_dir, args.sealed_online_dir)
 
     cfg = cfgmod.load(args.config, expand_environment=False)
     k1_dir = args.k1_dir or args.dev_dir / "k1"

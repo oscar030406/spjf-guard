@@ -9,6 +9,8 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
@@ -240,6 +242,33 @@ def test_the_sealed_dry_run_lists_the_exact_stage_and_its_own_outputs(capsys):
     assert "[7 online       scripts/run_online_visibility.py --pool sealed --workers 2]" in text
     assert "online_audit.csv" in text
     assert "[10 predictor" in text
+
+
+def test_the_online_row_joins_the_headline_only_beside_matching_original_rows(tmp_path):
+    exact, online, package = tmp_path / "exact", tmp_path / "online", tmp_path / "package"
+    package.mkdir()
+    _write(
+        exact / "exact_comparison.csv",
+        [_metric_row("Guard(600)", variant) for variant in ("original", "exact")],
+    )
+    _write(exact / "same_copy_exposure.csv", [_exposure_row("Guard(600)")])
+    replayed = {**_metric_row("Guard(600)", "online"), "gap_closed": 0.321}
+    _write(online / "online_comparison.csv", [_metric_row("Guard(600)", "original"), replayed])
+
+    ept.emit_exact(exact, package, online=online)
+    headline = (package / "tab_visibility.tex").read_text(encoding="utf-8")
+    assert "0.321" in headline and "three information protocols" in headline
+    assert "0.321" in (package / "tab_exact_visibility.tex").read_text(encoding="utf-8")
+    rows, complaints = cpn.load_exact_source(exact, online)
+    assert (
+        complaints == []
+        and cpn.check_exact_tables(tmp_path, package, exact, source_rows=rows) == []
+    )
+
+    drifted = {**_metric_row("Guard(600)", "original"), "p99_dl_s": 99.0}
+    _write(online / "online_comparison.csv", [drifted, replayed])
+    with pytest.raises(SystemExit, match="do not share their inputs"):
+        ept.emit_exact(exact, package, online=online)
 
 
 def test_the_two_exact_tables_are_optional_generated_recipes(tmp_path):

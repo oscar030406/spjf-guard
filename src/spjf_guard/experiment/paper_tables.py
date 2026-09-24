@@ -399,9 +399,10 @@ def _base_policy(row: dict) -> str:
 
 
 def exact_visibility_table(rows: list[dict]) -> str:
-    """Original versus converged policy-specific scores under every frozen policy.
+    """Original versus policy-specific scores under every frozen policy.
 
-    Print the full predeclared family without choosing a policy from its outcomes.
+    Print the full predeclared family without choosing a policy from its outcomes.  The
+    online rows appear when the online replay's rows were merged into the comparison.
     """
     body: list[str] = []
     for level in _levels(rows):
@@ -409,7 +410,7 @@ def exact_visibility_table(rows: list[dict]) -> str:
         body.append(rf"\multicolumn{{8}}{{l}}{{{_load_header(block[0])}}} \\")
         keyed = {(_base_policy(row), row["variant"]): row for row in block}
         for policy in EXACT_POLICIES:
-            for variant in ("original", "exact"):
+            for variant in ("original", "exact", "online"):
                 row = keyed.get((policy, variant))
                 if row is None:
                     continue
@@ -425,11 +426,12 @@ def exact_visibility_table(rows: list[dict]) -> str:
         r"Max exc. & Harm & Fired (\%)",
         _without_trailing_rule(body),
         "tab:exact_visibility",
-        "Original-clock and converged policy-specific scores under the frozen policies.",
+        "Original-clock and policy-specific scores under the frozen policies.",
     )
 
 
-HEADLINE_VARIANTS = ("exact", "original", "conservative", "static")
+HEADLINE_VARIANTS = ("online", "exact", "original", "conservative", "static")
+COUNT_WORDS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five"}
 
 
 def _variants_of(block: list[dict], base: str) -> dict:
@@ -438,12 +440,14 @@ def _variants_of(block: list[dict], base: str) -> dict:
 
 
 def exact_headline_table(rows: list[dict], promise: float = 600.0) -> str:
-    """tab:visibility -- one guard under the four information protocols.
+    """tab:visibility -- one guard under every information protocol it was replayed in.
 
-    Every row, the references included, is read from the exact comparison, so the table
-    has one source file and the exact row cannot drift from the rows beside it.
+    The references are read from the exact comparison and the online row from the online
+    replay's, so each figure has the one source that computed it.
     """
     base = f"Guard({promise:g})"
+    shown = {row["variant"] for row in rows if _base_policy(row) == base}
+    count = COUNT_WORDS[len(shown & set(HEADLINE_VARIANTS))]
     body: list[str] = []
     for level in _levels(rows):
         keyed = _variants_of(_at_level(rows, level), base)
@@ -462,7 +466,7 @@ def exact_headline_table(rows: list[dict], promise: float = 600.0) -> str:
         r"& Fired (\%)",
         _without_trailing_rule(body),
         "tab:visibility",
-        rf"Guard({promise:g}) at the unchanged selected parameters under four "
+        rf"Guard({promise:g}) at the unchanged selected parameters under {count} "
         "information protocols, over five overlays.",
     )
 
