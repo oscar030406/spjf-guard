@@ -41,6 +41,14 @@ waiting job run next. The result is that no job waits more than `G` seconds long
 it would have in arrival order, however wrong the predictions are. The operator chooses
 `G`; the theorem turns it into a guarantee.
 
+Three further results sit beside the guard. First, a maximum waiting time, the rule
+deployed schedulers use against starvation, makes the same kind of promise, and the
+paper proves it. Near full load, though, it keeps much less of the benefit, because it
+charges a waiting job for the whole backlog ahead of it and not only for the work that
+jumped ahead. Second, the arrival log alone bounds how long any job can wait in absolute
+terms, so an operator can promise a number of seconds. Third, the paper says what the
+guard still promises when machines report finished jobs late.
+
 The claim is tested by replaying real logs: two programming-course graders, a serverless
 platform, two pools of machines that build and test Firefox, and a compute cluster.
 
