@@ -144,18 +144,20 @@ Shared Execution Services under Deadline-Driven Bursty Load}
 % \AuthorCitation; if the journal's current template adds them, the running-head
 % forms go here.
 
-% Two authors. Replace the bracketed fields; if both authors share one
-% affiliation, delete address 2 and change the second author's mark to $^{1}$.
+% Authors as supplied on 2026-09-23; Zexin Lin's affiliation and e-mail are still to come.
+% If it is the College of Automation at NJUPT, delete address 2, renumber address 3
+% to 2 and give Lin the mark $^{1}$.
 % ORCID (optional): add \orcidA{} / \orcidB{} after a name and define
 % \newcommand{\orcidauthorA}{0000-0000-0000-0000} in the preamble.
-\Author{[First Author Name] $^{1}$ and [Second Author Name] $^{2,}$*}
-\AuthorNames{[First Author Name] and [Second Author Name]}
+\Author{Yazhou Guo $^{1,}$*, Zexin Lin $^{2}$, Chengyang Huo $^{3}$ and Yurong Song $^{1}$}
+\AuthorNames{Yazhou Guo, Zexin Lin, Chengyang Huo and Yurong Song}
 
 \address{%
-$^{1}$ \quad [First author: department, institution, city and postcode, country]; [first author e-mail]\\
-$^{2}$ \quad [Second author: department, institution, city and postcode, country]; [second author e-mail]}
+$^{1}$ \quad College of Automation, Nanjing University of Posts and Telecommunications, Nanjing 210023, China; gyz@njupt.edu.cn (Y.G.); songyr@njupt.edu.cn (Y.S.)\\
+$^{2}$ \quad [Zexin Lin: department, institution, city and postcode, country]; [e-mail] (Z.L.)\\
+$^{3}$ \quad Division of Logistics and Transportation, Shenzhen International Graduate School, Tsinghua University, Shenzhen 518055, China; huocy24@mails.tsinghua.edu.cn (C.H.)}
 
-\corres{Correspondence: [corresponding author e-mail]}
+\corres{Correspondence: gyz@njupt.edu.cn}
 
 \abstract{Automatic graders for programming courses, build farms and serverless platforms run other people's jobs on $k$ servers without interruption, each job under a time limit $L$. Ordering the queue by predicted running time shortens most waits, but one wrong prediction can leave one job far behind. We ask what such a service can promise to every job when the predictions are arbitrary. We prove that under any non-preemptive work-conserving policy, on every arrival sequence, a job's delay relative to first-come first-served (FCFS) equals the net work that overtook it divided by $k$, to within $(2-2/k)L$, and the constant is exact. A budget on overtaken work is therefore sufficient for a per-job guarantee and necessary up to an additive $O(kL)$; a count of overtakes is not. A wrapper that enforces the budget bounds every job's wait against FCFS for arbitrary arrivals, predictions and base policies, with the exact constant $(3-2/k)L$. We evaluate on logs from two judging platforms, a serverless trace, two continuous-integration pools and a compute farm. With scores that use only results available in the replay, a \devnum{600}-second guard closes \devnum{0.672} of the FCFS-to-shortest-job-first tail-wait gap at the busiest development load, interval \devnum{[0.602, 0.743]}.}
 
