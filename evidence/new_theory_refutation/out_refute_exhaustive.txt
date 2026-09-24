@@ -1,0 +1,55 @@
+exhaustive k=1: 112152 instances, 55,691,949 runs, 37.6 s
+  PABS   worst 1.0000  violations 0
+  L1UP   worst 0.0000  violations 0
+  L1LO   worst 0.0000  violations 0
+  FABS   worst 1.0000  violations 0
+  CIN    worst 0.8889  violations 0
+  CEX    worst 0.8889  violations 0
+  CABS   worst 0.9677  violations 0
+  GIN    worst 0.8889  violations 0
+  GEX    worst 0.8889  violations 0
+  GABS   worst 0.9375  violations 0
+  TIEEX  worst 5.0000  violations 6398019
+  GFEX   worst 0.7500  violations 0
+  DGEX   worst 0.8333  violations 0
+  DGIN   worst 0.8333  violations 0
+  IDENT  worst 0.0000  violations 0
+  GFIN   worst 0.7500  violations 0
+  TIEIN  worst 5.0000  violations 7552215
+exhaustive k=2: 112152 instances, 54,399,297 runs, 28.1 s
+  PABS   worst 0.8571  violations 0
+  L1UP   worst 0.8333  violations 0
+  L1LO   worst 0.0000  violations 0
+  FABS   worst 0.8571  violations 0
+  CIN    worst 0.8889  violations 0
+  CEX    worst 0.6000  violations 0
+  CABS   worst 0.7500  violations 0
+  GIN    worst 0.9167  violations 0
+  GEX    worst 0.6667  violations 0
+  GABS   worst 0.8000  violations 0
+  TIEEX  worst 1.0000  violations 28512
+  GFEX   worst 0.4444  violations 0
+  DGEX   worst 0.6667  violations 0
+  DGIN   worst 1.1111  violations 40200
+  IDENT  worst 0.0000  violations 0
+  GFIN   worst 0.7500  violations 0
+  TIEIN  worst 2.5000  violations 1538106
+exhaustive k=3: 112152 instances, 52,985,289 runs, 27.4 s
+  PABS   worst 0.7500  violations 0
+  L1UP   worst 0.6667  violations 0
+  L1LO   worst 0.0000  violations 0
+  FABS   worst 0.7500  violations 0
+  CIN    worst 0.8571  violations 0
+  CEX    worst 0.4000  violations 0
+  CABS   worst 0.5455  violations 0
+  GIN    worst 0.9167  violations 0
+  GEX    worst 0.4091  violations 0
+  GABS   worst 0.5625  violations 0
+  TIEEX  worst 0.4286  violations 0
+  GFEX   worst 0.3750  violations 0
+  DGEX   worst 0.4091  violations 0
+  DGIN   worst 1.0833  violations 11340
+  IDENT  worst 0.0000  violations 0
+  GFIN   worst 0.7500  violations 0
+  TIEIN  worst 1.6667  violations 251208
+wrote prechecks/new_theory_refutation/out_refute_exhaustive.json

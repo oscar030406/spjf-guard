@@ -1,0 +1,120 @@
+sim_stale.py: guard with late charges (derivation.md)
+bounds checked:  U  k*excess < B + (3k-2)L + k(L+delta)       In < B + kL + k(L+delta)
+                 A1 k*excess < B + (3k-2)L                    In < B + kL
+                 A2 k*excess < B + (3k-2)L + (k-1)(L+delta)   In < B + kL + (k-1)(L+delta)
+                 UN k*excess < k*theta + (3k-2)L              In < k(theta+L), every delta incl. INF
+                    (and the U bounds as well when delta is finite)
+                 every model at delta = 0: Theorem 3 of the paper
+
+== LOWER-BOUND INSTANCES (victim = the job singled out by the construction)
+-- reproduction of the paper's Proposition S8.3(ii), delta = 0 (Theorem 3 bound)
+   paper S8.3 m=6               k=2 L=  64 delta=   0 B=  128 U  n=  396 | victim excess   191  bound    192.00  ratio 0.9948 | In 255 = charged 127 + stale [0, 0] + in-service [64, 0] + last 64 (server 1, age 127); Out 0 | worst job ratio 0.9948 | violations 0 | expected excess 191: OK
+   paper S8.3 m=7               k=2 L= 128 delta=   0 B=  256 U  n=  909 | victim excess   383  bound    384.00  ratio 0.9974 | In 511 = charged 255 + stale [0, 0] + in-service [128, 0] + last 128 (server 1, age 255); Out 0 | worst job ratio 0.9974 | violations 0 | expected excess 383: OK
+   paper S8.3 m=4               k=3 L=  81 delta=   0 B=  147 U  n=  340 | victim excess   227  bound    238.00  ratio 0.9538 | In 389 = charged 146 + stale [0, 0, 0] + in-service [81, 81, 0] + last 81 (server 2, age 146); Out 0 | worst job ratio 0.9538 | violations 0 | expected excess 227: OK
+   paper S8.3 m=3               k=4 L=  64 delta=   0 B=  102 U  n=  211 | victim excess   165  bound    185.50  ratio 0.8895 | In 357 = charged 101 + stale [0, 0, 0, 0] + in-service [64, 64, 64, 0] + last 64 (server 3, age 101); Out 0 | worst job ratio 0.8895 | violations 0 | expected excess 165: OK
+-- k = 1, model U: expect excess B + 2L + delta - 2 against the bound B + 2L + delta
+   k1 stale                     k=1 L=   3 delta=   1 B=    1 U  n=    3 | victim excess     6  bound      8.00  ratio 0.7500 | In 6 = charged 0 + stale [3] + in-service [0] + last 3 (server 0, age 3); Out 0 | worst job ratio 0.7500 | violations 0 | expected excess 6: OK
+   k1 stale                     k=1 L=   3 delta=   2 B=    1 U  n=    4 | victim excess     7  bound      9.00  ratio 0.7778 | In 7 = charged 0 + stale [4] + in-service [0] + last 3 (server 0, age 4); Out 0 | worst job ratio 0.7778 | violations 0 | expected excess 7: OK
+   k1 stale                     k=1 L=   3 delta=   2 B=    3 U  n=    6 | victim excess     9  bound     11.00  ratio 0.8182 | In 9 = charged 2 + stale [4] + in-service [0] + last 3 (server 0, age 6); Out 0 | worst job ratio 0.8182 | violations 0 | expected excess 9: OK
+   k1 stale                     k=1 L=  30 delta=   1 B=   30 U  n=   32 | victim excess    89  bound     91.00  ratio 0.9780 | In 89 = charged 29 + stale [30] + in-service [0] + last 30 (server 0, age 59); Out 0 | worst job ratio 0.9780 | violations 0 | expected excess 89: OK
+   k1 stale                     k=1 L=  30 delta=  30 B=   30 U  n=   61 | victim excess   118  bound    120.00  ratio 0.9833 | In 118 = charged 29 + stale [59] + in-service [0] + last 30 (server 0, age 88); Out 0 | worst job ratio 0.9833 | violations 0 | expected excess 118: OK
+   k1 stale                     k=1 L= 300 delta=   1 B=  300 U  n=  302 | victim excess   899  bound    901.00  ratio 0.9978 | In 899 = charged 299 + stale [300] + in-service [0] + last 300 (server 0, age 599); Out 0 | worst job ratio 0.9978 | violations 0 | expected excess 899: OK
+   k1 stale                     k=1 L= 300 delta= 300 B=  300 U  n=  601 | victim excess  1198  bound   1200.00  ratio 0.9983 | In 1198 = charged 299 + stale [599] + in-service [0] + last 300 (server 0, age 898); Out 0 | worst job ratio 0.9983 | violations 0 | expected excess 1198: OK
+   k1 stale                     k=1 L= 300 delta= 600 B=  300 U  n=  901 | victim excess  1498  bound   1500.00  ratio 0.9987 | In 1498 = charged 299 + stale [899] + in-service [0] + last 300 (server 0, age 1198); Out 0 | worst job ratio 0.9987 | violations 0 | expected excess 1498: OK
+-- the same k = 1 instances under A1 and A2 (expect the Theorem 3 value B - 1 + L)
+   k1 stale                     k=1 L=  30 delta=  30 B=   30 A1 n=   61 | victim excess    59  bound     60.00  ratio 0.9833 | In 59 = charged 29 + stale [0] + in-service [0] + last 30 (server 0, age 29); Out 0 | worst job ratio 0.9833 | violations 0 | expected excess 59: OK
+   k1 stale                     k=1 L=  30 delta=  30 B=   30 A2 n=   61 | victim excess    59  bound     60.00  ratio 0.9833 | In 59 = charged 29 + stale [0] + in-service [0] + last 30 (server 0, age 29); Out 0 | worst job ratio 0.9833 | violations 0 | expected excess 59: OK
+   k1 stale                     k=1 L= 300 delta= 300 B=  300 A1 n=  601 | victim excess   599  bound    600.00  ratio 0.9983 | In 599 = charged 299 + stale [0] + in-service [0] + last 300 (server 0, age 299); Out 0 | worst job ratio 0.9983 | violations 0 | expected excess 599: OK
+   k1 stale                     k=1 L= 300 delta= 300 B=  300 A2 n=  601 | victim excess   599  bound    600.00  ratio 0.9983 | In 599 = charged 299 + stale [0] + in-service [0] + last 300 (server 0, age 299); Out 0 | worst job ratio 0.9983 | violations 0 | expected excess 599: OK
+-- k >= 2, model U, cascade + stale finale: expect excess f + 3L + delta - 1, bound B/k + (4-2/k)L + delta
+   cascade-stale U m=4          k=2 L=  16 delta=   1 B=   32 U  n=   76 | victim excess    63  bound     65.00  ratio 0.9692 | In 95 = charged 31 + stale [16, 16] + in-service [16, 0] + last 16 (server 1, age 47); Out 0 | worst job ratio 0.9692 | violations 0 | expected excess 63: OK
+   cascade-stale U m=4          k=2 L=  16 delta=   8 B=   32 U  n=   90 | victim excess    70  bound     72.00  ratio 0.9722 | In 109 = charged 31 + stale [23, 23] + in-service [16, 0] + last 16 (server 1, age 54); Out 0 | worst job ratio 0.9722 | violations 0 | expected excess 70: OK
+   cascade-stale U m=4          k=2 L=  16 delta=  16 B=   32 U  n=  106 | victim excess    78  bound     80.00  ratio 0.9750 | In 125 = charged 31 + stale [31, 31] + in-service [16, 0] + last 16 (server 1, age 62); Out 0 | worst job ratio 0.9750 | violations 0 | expected excess 78: OK
+   cascade-stale U m=6          k=2 L=  64 delta=   1 B=  128 U  n=  398 | victim excess   255  bound    257.00  ratio 0.9922 | In 383 = charged 127 + stale [64, 64] + in-service [64, 0] + last 64 (server 1, age 191); Out 0 | worst job ratio 0.9922 | violations 0 | expected excess 255: OK
+   cascade-stale U m=6          k=2 L=  64 delta=  32 B=  128 U  n=  460 | victim excess   286  bound    288.00  ratio 0.9931 | In 445 = charged 127 + stale [95, 95] + in-service [64, 0] + last 64 (server 1, age 222); Out 0 | worst job ratio 0.9931 | violations 0 | expected excess 286: OK
+   cascade-stale U m=6          k=2 L=  64 delta=  64 B=  128 U  n=  524 | victim excess   318  bound    320.00  ratio 0.9938 | In 509 = charged 127 + stale [127, 127] + in-service [64, 0] + last 64 (server 1, age 254); Out 0 | worst job ratio 0.9938 | violations 0 | expected excess 318: OK
+   cascade-stale U m=6          k=2 L=  64 delta= 128 B=  128 U  n=  652 | victim excess   382  bound    384.00  ratio 0.9948 | In 637 = charged 127 + stale [191, 191] + in-service [64, 0] + last 64 (server 1, age 318); Out 0 | worst job ratio 0.9948 | violations 0 | expected excess 382: OK
+   cascade-stale U m=8          k=2 L= 256 delta=   1 B=  512 U  n= 2064 | victim excess  1023  bound   1025.00  ratio 0.9980 | In 1535 = charged 511 + stale [256, 256] + in-service [256, 0] + last 256 (server 1, age 767); Out 0 | worst job ratio 0.9980 | violations 0 | expected excess 1023: OK
+   cascade-stale U m=8          k=2 L= 256 delta= 128 B=  512 U  n= 2318 | victim excess  1150  bound   1152.00  ratio 0.9983 | In 1789 = charged 511 + stale [383, 383] + in-service [256, 0] + last 256 (server 1, age 894); Out 0 | worst job ratio 0.9983 | violations 0 | expected excess 1150: OK
+   cascade-stale U m=8          k=2 L= 256 delta= 256 B=  512 U  n= 2574 | victim excess  1278  bound   1280.00  ratio 0.9984 | In 2045 = charged 511 + stale [511, 511] + in-service [256, 0] + last 256 (server 1, age 1022); Out 0 | worst job ratio 0.9984 | violations 0 | expected excess 1278: OK
+   cascade-stale U m=8          k=2 L= 256 delta= 512 B=  512 U  n= 3086 | victim excess  1534  bound   1536.00  ratio 0.9987 | In 2557 = charged 511 + stale [767, 767] + in-service [256, 0] + last 256 (server 1, age 1278); Out 0 | worst job ratio 0.9987 | violations 0 | expected excess 1534: OK
+   cascade-stale U m=4          k=3 L=  81 delta=   1 B=  147 U  n=  343 | victim excess   308  bound    320.00  ratio 0.9625 | In 632 = charged 146 + stale [81, 81, 81] + in-service [81, 81, 0] + last 81 (server 2, age 227); Out 0 | worst job ratio 0.9625 | violations 0 | expected excess 308: OK
+   cascade-stale U m=4          k=3 L=  81 delta=  81 B=  147 U  n=  583 | victim excess   388  bound    400.00  ratio 0.9700 | In 872 = charged 146 + stale [161, 161, 161] + in-service [81, 81, 0] + last 81 (server 2, age 307); Out 0 | worst job ratio 0.9700 | violations 0 | expected excess 388: OK
+   cascade-stale U m=5          k=3 L= 243 delta=   1 B=  455 U  n= 1236 | victim excess   940  bound    962.67  ratio 0.9765 | In 1912 = charged 454 + stale [243, 243, 243] + in-service [243, 243, 0] + last 243 (server 2, age 697); Out 0 | worst job ratio 0.9765 | violations 0 | expected excess 940: OK
+   cascade-stale U m=5          k=3 L= 243 delta= 243 B=  455 U  n= 1962 | victim excess  1182  bound   1204.67  ratio 0.9812 | In 2638 = charged 454 + stale [485, 485, 485] + in-service [243, 243, 0] + last 243 (server 2, age 939); Out 0 | worst job ratio 0.9812 | violations 0 | expected excess 1182: OK
+   cascade-stale U m=4          k=4 L= 256 delta=   1 B=  432 U  n= 1050 | victim excess   943  bound   1005.00  ratio 0.9383 | In 2479 = charged 431 + stale [256, 256, 256, 256] + in-service [256, 256, 256, 0] + last 256 (server 3, age 687); Out 0 | worst job ratio 0.9383 | violations 0 | expected excess 943: OK
+   cascade-stale U m=4          k=4 L= 256 delta= 256 B=  432 U  n= 2070 | victim excess  1198  bound   1260.00  ratio 0.9508 | In 3499 = charged 431 + stale [511, 511, 511, 511] + in-service [256, 256, 256, 0] + last 256 (server 3, age 942); Out 0 | worst job ratio 0.9508 | violations 0 | expected excess 1198: OK
+-- the U instances under A1 (expect the Theorem 3 value f + 2L: the stale jobs are reported on pull)
+   cascade-stale U m=6          k=2 L=  64 delta=  64 B=  128 A1 n=  524 | victim excess   191  bound    192.00  ratio 0.9948 | In 255 = charged 127 + stale [0, 0] + in-service [64, 0] + last 64 (server 1, age 127); Out 0 | worst job ratio 0.9948 | violations 0 | expected excess 191: OK
+   cascade-stale U m=8          k=2 L= 256 delta= 256 B=  512 A1 n= 2574 | victim excess   767  bound    768.00  ratio 0.9987 | In 1023 = charged 511 + stale [0, 0] + in-service [256, 0] + last 256 (server 1, age 511); Out 0 | worst job ratio 0.9987 | violations 0 | expected excess 767: OK
+   cascade-stale U m=5          k=3 L= 243 delta= 243 B=  455 A1 n= 1962 | victim excess   697  bound    718.67  ratio 0.9699 | In 1183 = charged 454 + stale [0, 0, 0] + in-service [243, 243, 0] + last 243 (server 2, age 454); Out 0 | worst job ratio 0.9699 | violations 0 | expected excess 697: OK
+-- k >= 2, model A2, cascade + symmetric stale finale: expect excess f + 3L + delta - 1,
+   bound B/k + (3-2/k)L + (1-1/k)(L+delta) with B = f + 2L + delta
+   cascade-stale A2 m=4         k=2 L=  16 delta=   1 B=   48 A2 n=   76 | victim excess    63  bound     64.50  ratio 0.9767 | In 95 = charged 47 + stale [16, 0] + in-service [16, 0] + last 16 (server 1, age 47); Out 0 | worst job ratio 0.9767 | violations 0 | expected excess 63: OK
+   cascade-stale A2 m=4         k=2 L=  16 delta=   8 B=   55 A2 n=   90 | victim excess    70  bound     71.50  ratio 0.9790 | In 109 = charged 54 + stale [23, 0] + in-service [16, 0] + last 16 (server 1, age 54); Out 0 | worst job ratio 0.9790 | violations 0 | expected excess 70: OK
+   cascade-stale A2 m=4         k=2 L=  16 delta=  16 B=   63 A2 n=  106 | victim excess    78  bound     79.50  ratio 0.9811 | In 125 = charged 62 + stale [31, 0] + in-service [16, 0] + last 16 (server 1, age 62); Out 0 | worst job ratio 0.9811 | violations 0 | expected excess 78: OK
+   cascade-stale A2 m=6         k=2 L=  64 delta=   1 B=  192 A2 n=  398 | victim excess   255  bound    256.50  ratio 0.9942 | In 383 = charged 191 + stale [64, 0] + in-service [64, 0] + last 64 (server 1, age 191); Out 0 | worst job ratio 0.9942 | violations 0 | expected excess 255: OK
+   cascade-stale A2 m=6         k=2 L=  64 delta=  32 B=  223 A2 n=  460 | victim excess   286  bound    287.50  ratio 0.9948 | In 445 = charged 222 + stale [95, 0] + in-service [64, 0] + last 64 (server 1, age 222); Out 0 | worst job ratio 0.9948 | violations 0 | expected excess 286: OK
+   cascade-stale A2 m=6         k=2 L=  64 delta=  64 B=  255 A2 n=  524 | victim excess   318  bound    319.50  ratio 0.9953 | In 509 = charged 254 + stale [127, 0] + in-service [64, 0] + last 64 (server 1, age 254); Out 0 | worst job ratio 0.9953 | violations 0 | expected excess 318: OK
+   cascade-stale A2 m=6         k=2 L=  64 delta= 128 B=  319 A2 n=  652 | victim excess   382  bound    383.50  ratio 0.9961 | In 637 = charged 318 + stale [191, 0] + in-service [64, 0] + last 64 (server 1, age 318); Out 0 | worst job ratio 0.9961 | violations 0 | expected excess 382: OK
+   cascade-stale A2 m=8         k=2 L= 256 delta=   1 B=  768 A2 n= 2064 | victim excess  1023  bound   1024.50  ratio 0.9985 | In 1535 = charged 767 + stale [256, 0] + in-service [256, 0] + last 256 (server 1, age 767); Out 0 | worst job ratio 0.9985 | violations 0 | expected excess 1023: OK
+   cascade-stale A2 m=8         k=2 L= 256 delta= 128 B=  895 A2 n= 2318 | victim excess  1150  bound   1151.50  ratio 0.9987 | In 1789 = charged 894 + stale [383, 0] + in-service [256, 0] + last 256 (server 1, age 894); Out 0 | worst job ratio 0.9987 | violations 0 | expected excess 1150: OK
+   cascade-stale A2 m=8         k=2 L= 256 delta= 256 B= 1023 A2 n= 2574 | victim excess  1278  bound   1279.50  ratio 0.9988 | In 2045 = charged 1022 + stale [511, 0] + in-service [256, 0] + last 256 (server 1, age 1022); Out 0 | worst job ratio 0.9988 | violations 0 | expected excess 1278: OK
+   cascade-stale A2 m=8         k=2 L= 256 delta= 512 B= 1279 A2 n= 3086 | victim excess  1534  bound   1535.50  ratio 0.9990 | In 2557 = charged 1278 + stale [767, 0] + in-service [256, 0] + last 256 (server 1, age 1278); Out 0 | worst job ratio 0.9990 | violations 0 | expected excess 1534: OK
+   cascade-stale A2 m=5         k=3 L= 243 delta=   1 B=  698 A2 n= 1236 | victim excess   940  bound    962.33  ratio 0.9768 | In 1912 = charged 697 + stale [243, 243, 0] + in-service [243, 243, 0] + last 243 (server 2, age 697); Out 0 | worst job ratio 0.9768 | violations 0 | expected excess 940: OK
+   cascade-stale A2 m=5         k=3 L= 243 delta= 243 B=  940 A2 n= 1962 | victim excess  1182  bound   1204.33  ratio 0.9815 | In 2638 = charged 939 + stale [485, 485, 0] + in-service [243, 243, 0] + last 243 (server 2, age 939); Out 0 | worst job ratio 0.9815 | violations 0 | expected excess 1182: OK
+   cascade-stale A2 m=4         k=4 L= 256 delta=   1 B=  688 A2 n= 1050 | victim excess   943  bound   1004.75  ratio 0.9385 | In 2479 = charged 687 + stale [256, 256, 256, 0] + in-service [256, 256, 256, 0] + last 256 (server 3, age 687); Out 0 | worst job ratio 0.9385 | violations 0 | expected excess 943: OK
+   cascade-stale A2 m=4         k=4 L= 256 delta= 256 B=  943 A2 n= 2070 | victim excess  1198  bound   1259.75  ratio 0.9510 | In 3499 = charged 942 + stale [511, 511, 511, 0] + in-service [256, 256, 256, 0] + last 256 (server 3, age 942); Out 0 | worst job ratio 0.9510 | violations 0 | expected excess 1198: OK
+-- UN with every report lost (delta = INF), flat instance: expect excess theta + L - 1,
+   bound theta + (3-2/k)L
+   clock flat                   k=1 L=   3 delta= INF B=    1 theta=3 UN n=    4 | victim excess     5  bound      6.00  ratio 0.8333 | In 5 = charged 0 + stale [2] + in-service [0] + last 3 (server 0, age 2); Out 0 | worst job ratio 0.8333 | violations 0 | expected excess 5: OK
+   clock flat                   k=1 L=  30 delta= INF B=    1 theta=30 UN n=   31 | victim excess    59  bound     60.00  ratio 0.9833 | In 59 = charged 0 + stale [29] + in-service [0] + last 30 (server 0, age 29); Out 0 | worst job ratio 0.9833 | violations 0 | expected excess 59: OK
+   clock flat                   k=1 L=  30 delta= INF B=    1 theta=3000 UN n= 3001 | victim excess  3029  bound   3030.00  ratio 0.9997 | In 3029 = charged 0 + stale [2999] + in-service [0] + last 30 (server 0, age 2999); Out 0 | worst job ratio 0.9997 | violations 0 | expected excess 3029: OK
+   clock flat                   k=2 L=   3 delta= INF B=    1 theta=3 UN n=    7 | victim excess     5  bound      9.00  ratio 0.5556 | In 10 = charged 0 + stale [2, 2] + in-service [3, 0] + last 3 (server 1, age 2); Out 0 | worst job ratio 0.5556 | violations 0 | expected excess 5: OK
+   clock flat                   k=2 L=  30 delta= INF B=    1 theta=30 UN n=   61 | victim excess    59  bound     90.00  ratio 0.6556 | In 118 = charged 0 + stale [29, 29] + in-service [30, 0] + last 30 (server 1, age 29); Out 0 | worst job ratio 0.6556 | violations 0 | expected excess 59: OK
+   clock flat                   k=2 L=  30 delta= INF B=    1 theta=3000 UN n= 6001 | victim excess  3029  bound   3060.00  ratio 0.9899 | In 6058 = charged 0 + stale [2999, 2999] + in-service [30, 0] + last 30 (server 1, age 2999); Out 0 | worst job ratio 0.9899 | violations 0 | expected excess 3029: OK
+   clock flat                   k=4 L=  30 delta= INF B=    1 theta=3000 UN n=12001 | victim excess  3029  bound   3075.00  ratio 0.9850 | In 12116 = charged 0 + stale [2999, 2999, 2999, 2999] + in-service [30, 30, 30, 0] + last 30 (server 3, age 2999); Out 0 | worst job ratio 0.9850 | violations 0 | expected excess 3029: OK
+-- UN, delta = INF, on the paper's S8.3 cascade: theta = (victim age at its last overtaker's
+   dispatch when the clock is off) + 1, so the clock does not change the victim's overtakers
+   S8.3 clock off m=6           k=2 L=  64 delta= INF B=  128 UN n=  396 | victim excess   191  bound 1099511627904.00  ratio 0.0000 | In 255 = charged 0 + stale [0, 127] + in-service [64, 0] + last 64 (server 1, age 127); Out 0 | worst job ratio 0.0000 | violations 0
+   S8.3 clock on m=6            k=2 L=  64 delta= INF B=  128 theta=128 UN n=  396 | victim excess   191  bound    256.00  ratio 0.7461 | In 255 = charged 0 + stale [0, 127] + in-service [64, 0] + last 64 (server 1, age 127); Out 0 | worst job ratio 0.7461 | violations 0
+   S8.3 clock off m=8           k=2 L= 256 delta= INF B=  512 UN n= 2062 | victim excess   767  bound 1099511628288.00  ratio 0.0000 | In 1023 = charged 0 + stale [0, 511] + in-service [256, 0] + last 256 (server 1, age 511); Out 0 | worst job ratio 0.0000 | violations 0
+   S8.3 clock on m=8            k=2 L= 256 delta= INF B=  512 theta=512 UN n= 2062 | victim excess   767  bound   1024.00  ratio 0.7490 | In 1023 = charged 0 + stale [0, 511] + in-service [256, 0] + last 256 (server 1, age 511); Out 0 | worst job ratio 0.7490 | violations 0
+   S8.3 clock off m=5           k=3 L= 243 delta= INF B=  455 UN n= 1233 | victim excess   697  bound 1099511628343.00  ratio 0.0000 | In 1183 = charged 0 + stale [0, 0, 454] + in-service [243, 243, 0] + last 243 (server 2, age 454); Out 0 | worst job ratio 0.0000 | violations 0
+   S8.3 clock on m=5            k=3 L= 243 delta= INF B=  455 theta=455 UN n= 1233 | victim excess   697  bound   1022.00  ratio 0.6820 | In 1183 = charged 0 + stale [0, 0, 454] + in-service [243, 243, 0] + last 243 (server 2, age 454); Out 0 | worst job ratio 0.6820 | violations 0
+   lower-bound instances: total violations 0
+
+== RANDOM instances: 200000 runs, seed 20260923, k in 1..4, n in 2..40, L in {3,4,6,10},
+   delta in 0..2L, constant or shaped budget (B0 + gam*n_q + eta*k*age, capped), 6 key rules,
+   3 delay rules, 2 server orders; model drawn per run; UN: theta in 0..3L, delta = INF in 1/4 of runs
+   ratio column: excess over the model's guard bound; for UN over the clock bound
+   model  k      runs  worst ratio  violations(by check)
+   U      1     12505       0.9828  none
+   U      2     12497       0.8571  none
+   U      3     12548       0.7941  none
+   U      4     12475       0.7529  none
+   A1     1     12451       0.9855  none
+   A1     2     12448       0.8791  none
+   A1     3     12412       0.8108  none
+   A1     4     12278       0.7947  none
+   A2     1     12501       0.9853  none
+   A2     2     12714       0.8696  none
+   A2     3     12558       0.7606  none
+   A2     4     12574       0.7179  none
+   UN     1     12565       0.9744  none
+   UN     2     12523       0.7551  none
+   UN     3     12486       0.7031  none
+   UN     4     12465       0.6818  none
+   TOTAL runs 200000, TOTAL violations 0, 1.8 s
+
+== EXHAUSTIVE small instances: sizes {1,2,3}, L = 3, arrivals 0..4 (first at 0), B in {1,2,3},
+   delta in {0,1,2} and INF (UN only), theta in {0,1,2,4,6} (UN only), both server orders at k = 2
+   n <= 4: all key orders x all delay vectors {0..delta}^n
+   n = 5 : all key orders x delay patterns {all delta, hashed per job}
+   n = 6,7: 4n+4 adversarial key orders (victim-last families) x the same two patterns
+   n=1: 3 size vectors x 1 arrival vectors, 1377 runs, 0.0 s, violations 0
+   n=2: 9 size vectors x 5 arrival vectors, 93150 runs, 0.0 s, violations 0
+   n=3: 27 size vectors x 15 arrival vectors, 6364170 runs, 1.3 s, violations 0
+   n=4: 81 size vectors x 35 arrival vectors, 481927320 runs, 122.2 s, violations 0
+   n=5: 243 size vectors x 70 arrival vectors, 789944400 runs, 169.5 s, violations 0
+   n=6: 729 size vectors x 126 arrival vectors, 995329944 runs, 243.5 s, violations 0

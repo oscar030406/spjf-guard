@@ -1,0 +1,80 @@
+== 10.2307/3214279
+  type: journal-article
+  title: ['Upper bounds on work in system for multichannel queues']
+  container-title: ['Journal of Applied Probability']
+  volume: 24
+  issue: 2
+  page: 547-551
+  publisher: Cambridge University Press (CUP)
+  authors: ['Wolff, Ronald W.']
+  published-print: [[1987, 6]]
+  published-online: [[2016, 7, 14]]
+  issued: [[1987, 6]]
+== 10.1017/S0021900200031193
+  type: journal-article
+  title: ['Upper bounds on work in system for multichannel queues']
+  container-title: ['Journal of Applied Probability']
+  volume: 24
+  issue: 02
+  page: 547-551
+  publisher: Cambridge University Press (CUP)
+  authors: ['Wolff, Ronald W.']
+  published-print: [[1987, 6]]
+  published-online: [[2016, 7, 14]]
+  issued: [[1987, 6]]
+== 10.1017/S0021900200105431
+  type: journal-article
+  title: ['An upper bound for multi-channel queues']
+  container-title: ['Journal of Applied Probability']
+  volume: 14
+  issue: 4
+  page: 884-888
+  publisher: Cambridge University Press (CUP)
+  authors: ['Wolff, Ronald W.']
+  published-print: [[1977, 12]]
+  published-online: [[2016, 7, 14]]
+  issued: [[1977, 12]]
+== 10.1287/opre.19.2.402
+  type: journal-article
+  title: ['Some Inequalities for Parallel-Server Queues']
+  container-title: ['Operations Research']
+  volume: 19
+  issue: 2
+  page: 402-413
+  publisher: Institute for Operations Research and the Management Sciences (INFORMS)
+  authors: ['Brumelle, Shelby L.']
+  published-print: [[1971, 4]]
+  issued: [[1971, 4]]
+== 10.1145/3656011
+  type: journal-article
+  title: ['Strongly Tail-Optimal Scheduling in the Light-Tailed M/G/1']
+  container-title: ['Proceedings of the ACM on Measurement and Analysis of Computing Systems']
+  volume: 8
+  issue: 2
+  page: 1-33
+  publisher: Association for Computing Machinery (ACM)
+  authors: ['Yu, George', 'Scully, Ziv']
+  published-print: [[2024, 5, 21]]
+  published-online: [[2024, 5, 29]]
+  issued: [[2024, 5, 21]]
+== 10.1016/j.peva.2018.10.001
+  type: journal-article
+  title: ['SRPT for multiserver systems']
+  container-title: ['Performance Evaluation']
+  volume: 127-128
+  page: 154-175
+  publisher: Elsevier BV
+  authors: ['Grosof, Isaac', 'Scully, Ziv', 'Harchol-Balter, Mor']
+  published-print: [[2018, 11]]
+  issued: [[2018, 11]]
+== 10.1016/0196-6774(84)90035-X
+  type: journal-article
+  title: ['Bounds for naive multiple machine scheduling with release times and deadlines']
+  container-title: ['Journal of Algorithms']
+  volume: 5
+  issue: 1
+  page: 1-6
+  publisher: Elsevier BV
+  authors: ['Gusfield, Dan']
+  published-print: [[1984, 3]]
+  issued: [[1984, 3]]

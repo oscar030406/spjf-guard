@@ -1,0 +1,5 @@
+A(B=600s, d=1000000us): k=2, n=601, last wait 329.000000 s (hand 329.000000 s, equal True); sigma/k 330.000000 s; wait - sigma/k -1.000000 s; (1-1/k)L 30.000 s; per-job violations 0
+A(B=600s, d=1000000us): k=4, n=603, last wait 194.000000 s (hand 194.000000 s, equal True); sigma/k 195.000000 s; wait - sigma/k -1.000000 s; (1-1/k)L 45.000 s; per-job violations 0
+A(B=600s, d=1000000us): k=8, n=607, last wait 127.000000 s (hand 127.000000 s, equal True); sigma/k 127.500000 s; wait - sigma/k -0.500000 s; (1-1/k)L 52.500 s; per-job violations 0
+B(B=600s, d=1000000us): k=2, n=602, last wait 344.000000 s (hand 344.000000 s, equal True); sigma/k 330.000000 s; wait - sigma/k +14.000000 s; (1-1/k)L 30.000 s; per-job violations 0
+B(B=600s, d=100000us): k=2, n=6002, last wait 344.900000 s (hand 344.900000 s, equal True); sigma/k 330.000000 s; wait - sigma/k +14.900000 s; (1-1/k)L 30.000 s; per-job violations 0

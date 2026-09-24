@@ -1,0 +1,2208 @@
+{
+ "witness_replay": {
+  "GFEX k=1": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 2,
+   "excess": 7,
+   "bound": "13/2",
+   "bound_kind": "clock excess bound theta+(3-2/k)L",
+   "violated": true,
+   "In_victim": 7,
+   "ratio": 1.0769230769230769
+  },
+  "DGEX k=1": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 1,
+   "excess": 11,
+   "bound": "11",
+   "bound_kind": "guard excess bound B/k+(3-2/k)L",
+   "violated": true,
+   "In_victim": 11,
+   "ratio": 1.0
+  },
+  "TIEEX k=1": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 0,
+   "excess": 3,
+   "bound": "3",
+   "bound_kind": "clock excess bound theta+(3-2/k)L",
+   "violated": true,
+   "In_victim": 3,
+   "ratio": 1.0
+  },
+  "DGEX k=2": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 1,
+   "excess": 49,
+   "bound": "49",
+   "bound_kind": "guard excess bound B/k+(3-2/k)L",
+   "violated": true,
+   "In_victim": 83,
+   "ratio": 1.0
+  },
+  "TIEEX k=2": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 0,
+   "excess": 20,
+   "bound": "20",
+   "bound_kind": "clock excess bound theta+(3-2/k)L",
+   "violated": true,
+   "In_victim": 40,
+   "ratio": 1.0
+  },
+  "DGEX k=3": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 0,
+   "excess": 27,
+   "bound": "80/3",
+   "bound_kind": "guard excess bound B/k+(3-2/k)L",
+   "violated": true,
+   "In_victim": 81,
+   "ratio": 1.0125
+  },
+  "TIEEX k=3": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 0,
+   "excess": 7,
+   "bound": "7",
+   "bound_kind": "clock excess bound theta+(3-2/k)L",
+   "violated": true,
+   "In_victim": 21,
+   "ratio": 1.0
+  },
+  "DGEX k=4": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 3,
+   "excess": 66,
+   "bound": "66",
+   "bound_kind": "guard excess bound B/k+(3-2/k)L",
+   "violated": true,
+   "In_victim": 204,
+   "ratio": 1.0
+  },
+  "TIEEX k=4": {
+   "feasible": true,
+   "W_FCFS_matches": true,
+   "V_matches": true,
+   "victim": 0,
+   "excess": 61,
+   "bound": "121/2",
+   "bound_kind": "clock excess bound theta+(3-2/k)L",
+   "violated": true,
+   "In_victim": 244,
+   "ratio": 1.0082644628099173
+  }
+ },
+ "gfex_readings": {
+  "union_guard": {
+   "starts": [
+    0,
+    1,
+    9,
+    6,
+    2,
+    3
+   ],
+   "order": [
+    0,
+    1,
+    4,
+    5,
+    3,
+    2
+   ],
+   "max_excess": 7,
+   "clock_bound": "13/2",
+   "guard_bound": "8"
+  },
+  "union_head": {
+   "starts": [
+    0,
+    1,
+    6,
+    7,
+    2,
+    3
+   ],
+   "order": [
+    0,
+    1,
+    4,
+    5,
+    2,
+    3
+   ],
+   "max_excess": 4,
+   "clock_bound": "13/2",
+   "guard_bound": "8"
+  }
+ },
+ "random": {
+  "instances": 20000,
+  "seed": 20260923,
+  "l1": {
+   "1": {
+    "worst_hi_ratio": 0.0,
+    "upper_viol": 0,
+    "lower_viol": 0
+   },
+   "2": {
+    "worst_hi_ratio": 0.75,
+    "upper_viol": 0,
+    "lower_viol": 0
+   },
+   "3": {
+    "worst_hi_ratio": 0.5555555555555556,
+    "upper_viol": 0,
+    "lower_viol": 0
+   },
+   "4": {
+    "worst_hi_ratio": 0.48333333333333334,
+    "upper_viol": 0,
+    "lower_viol": 0
+   }
+  },
+  "checks": {
+   "k=1 clock/const": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9922,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    }
+   },
+   "k=1 clock/eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9811,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9811,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.995,
+     "violations": 0
+    }
+   },
+   "k=1 clock/gamma": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9831,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9949,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9831,
+     "violations": 0
+    }
+   },
+   "k=1 clock/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9767,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9933,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9767,
+     "violations": 0
+    }
+   },
+   "k=1 free": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    }
+   },
+   "k=1 guard/const": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9355,
+     "violations": 0
+    }
+   },
+   "k=1 guard/eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.98,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9929,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.98,
+     "violations": 0
+    }
+   },
+   "k=1 guard/gamma": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.973,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9926,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.973,
+     "violations": 0
+    }
+   },
+   "k=1 guard/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9787,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.9787,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9917,
+     "violations": 0
+    }
+   },
+   "k=1 union_guard/const": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9355,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9355,
+     "violations": 0
+    }
+   },
+   "k=1 union_guard/eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 1.8,
+     "violations": 1055
+    },
+    "CABS": {
+     "worst_ratio": 1.3636,
+     "violations": 1055
+    },
+    "GEX": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9898,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 1.8,
+     "violations": 1056
+    },
+    "GIN": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    }
+   },
+   "k=1 union_guard/gamma": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.85,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9577,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.9,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9556,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.85,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9,
+     "violations": 0
+    }
+   },
+   "k=1 union_guard/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9933,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9917,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    }
+   },
+   "k=1 union_head/const": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9355,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9355,
+     "violations": 0
+    }
+   },
+   "k=1 union_head/eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9908,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9898,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    }
+   },
+   "k=1 union_head/gamma": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.85,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9577,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.9444,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9737,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.85,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9444,
+     "violations": 0
+    }
+   },
+   "k=1 union_head/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9933,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9917,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    }
+   },
+   "k=1 union_head_delta7/const": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9355,
+     "violations": 0
+    }
+   },
+   "k=1 union_head_delta7/eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9908,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=1 union_head_delta7/gamma": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9091,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9577,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9091,
+     "violations": 0
+    }
+   },
+   "k=1 union_head_delta7/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9796,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9933,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9796,
+     "violations": 0
+    }
+   },
+   "k=1 union_head_deltainf/const": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9355,
+     "violations": 0
+    }
+   },
+   "k=1 union_head_deltainf/eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9908,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    }
+   },
+   "k=1 union_head_deltainf/gamma": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9333,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9577,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9333,
+     "violations": 0
+    }
+   },
+   "k=1 union_head_deltainf/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 1.0,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.9706,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9933,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9706,
+     "violations": 0
+    }
+   },
+   "k=2 clock/const": {
+    "PABS": {
+     "worst_ratio": 0.9474,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7931,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8855,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    }
+   },
+   "k=2 clock/eta": {
+    "PABS": {
+     "worst_ratio": 0.9474,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9565,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7917,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8889,
+     "violations": 0
+    }
+   },
+   "k=2 clock/gamma": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7917,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8976,
+     "violations": 0
+    }
+   },
+   "k=2 clock/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9333,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.78,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8889,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    }
+   },
+   "k=2 free": {
+    "PABS": {
+     "worst_ratio": 0.9635,
+     "violations": 0
+    }
+   },
+   "k=2 guard/const": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    }
+   },
+   "k=2 guard/eta": {
+    "PABS": {
+     "worst_ratio": 0.9474,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9091,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.975,
+     "violations": 0
+    }
+   },
+   "k=2 guard/gamma": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.8108,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.918,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    }
+   },
+   "k=2 guard/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9333,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9855,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.8571,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.9091,
+     "violations": 0
+    }
+   },
+   "k=2 union_guard/const": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    }
+   },
+   "k=2 union_guard/eta": {
+    "PABS": {
+     "worst_ratio": 0.9474,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 1.1111,
+     "violations": 4
+    },
+    "CABS": {
+     "worst_ratio": 1.0833,
+     "violations": 8
+    },
+    "GEX": {
+     "worst_ratio": 0.7692,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8649,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 1.8,
+     "violations": 269
+    },
+    "GIN": {
+     "worst_ratio": 0.95,
+     "violations": 0
+    }
+   },
+   "k=2 union_guard/gamma": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.55,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8136,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.7333,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8667,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.7,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9375,
+     "violations": 0
+    }
+   },
+   "k=2 union_guard/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9333,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.725,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8889,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.7368,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8594,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.973,
+     "violations": 0
+    }
+   },
+   "k=2 union_head/const": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    }
+   },
+   "k=2 union_head/eta": {
+    "PABS": {
+     "worst_ratio": 0.9474,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6875,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8636,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.7692,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8649,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9375,
+     "violations": 0
+    }
+   },
+   "k=2 union_head/gamma": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.5333,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8136,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6667,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8966,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.7353,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9375,
+     "violations": 0
+    }
+   },
+   "k=2 union_head/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9333,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.725,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8889,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.7368,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8594,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9667,
+     "violations": 0
+    }
+   },
+   "k=2 union_head_delta7/const": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    }
+   },
+   "k=2 union_head_delta7/eta": {
+    "PABS": {
+     "worst_ratio": 0.9474,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6875,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8636,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=2 union_head_delta7/gamma": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7059,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8136,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.875,
+     "violations": 0
+    }
+   },
+   "k=2 union_head_delta7/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9333,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.75,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8889,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=2 union_head_deltainf/const": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    }
+   },
+   "k=2 union_head_deltainf/eta": {
+    "PABS": {
+     "worst_ratio": 0.9474,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7391,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8636,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=2 union_head_deltainf/gamma": {
+    "PABS": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7647,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8136,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.875,
+     "violations": 0
+    }
+   },
+   "k=2 union_head_deltainf/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9391,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.78,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8889,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9634,
+     "violations": 0
+    }
+   },
+   "k=3 clock/const": {
+    "PABS": {
+     "worst_ratio": 0.8919,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9565,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.707,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.809,
+     "violations": 0
+    }
+   },
+   "k=3 clock/eta": {
+    "PABS": {
+     "worst_ratio": 0.878,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6875,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8276,
+     "violations": 0
+    }
+   },
+   "k=3 clock/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8824,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6867,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7952,
+     "violations": 0
+    }
+   },
+   "k=3 clock/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7013,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8428,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=3 free": {
+    "PABS": {
+     "worst_ratio": 0.9231,
+     "violations": 0
+    }
+   },
+   "k=3 guard/const": {
+    "PABS": {
+     "worst_ratio": 0.875,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7091,
+     "violations": 0
+    }
+   },
+   "k=3 guard/eta": {
+    "PABS": {
+     "worst_ratio": 0.9,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.7333,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8462,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9853,
+     "violations": 0
+    }
+   },
+   "k=3 guard/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8824,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.7,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8333,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9833,
+     "violations": 0
+    }
+   },
+   "k=3 guard/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8824,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9833,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8421,
+     "violations": 0
+    }
+   },
+   "k=3 union_guard/const": {
+    "PABS": {
+     "worst_ratio": 0.875,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7091,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7091,
+     "violations": 0
+    }
+   },
+   "k=3 union_guard/eta": {
+    "PABS": {
+     "worst_ratio": 0.907,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8684,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.7,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8182,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 1.0,
+     "violations": 80
+    },
+    "GIN": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    }
+   },
+   "k=3 union_guard/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8889,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.4706,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7365,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.7407,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    }
+   },
+   "k=3 union_guard/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8824,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6346,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8428,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8095,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9833,
+     "violations": 0
+    }
+   },
+   "k=3 union_head/const": {
+    "PABS": {
+     "worst_ratio": 0.875,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7091,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7091,
+     "violations": 0
+    }
+   },
+   "k=3 union_head/eta": {
+    "PABS": {
+     "worst_ratio": 0.8824,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.525,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8276,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8182,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    }
+   },
+   "k=3 union_head/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8889,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.4706,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7365,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6562,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.7407,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9677,
+     "violations": 0
+    }
+   },
+   "k=3 union_head/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6346,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8428,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.8095,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9833,
+     "violations": 0
+    }
+   },
+   "k=3 union_head_delta7/const": {
+    "PABS": {
+     "worst_ratio": 0.875,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7091,
+     "violations": 0
+    }
+   },
+   "k=3 union_head_delta7/eta": {
+    "PABS": {
+     "worst_ratio": 0.878,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6545,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8276,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=3 union_head_delta7/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8824,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6346,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7365,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.8611,
+     "violations": 0
+    }
+   },
+   "k=3 union_head_delta7/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.9091,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6885,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8428,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=3 union_head_deltainf/const": {
+    "PABS": {
+     "worst_ratio": 0.875,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7091,
+     "violations": 0
+    }
+   },
+   "k=3 union_head_deltainf/eta": {
+    "PABS": {
+     "worst_ratio": 0.875,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6545,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8276,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=3 union_head_deltainf/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8824,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6867,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7365,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.8667,
+     "violations": 0
+    }
+   },
+   "k=3 union_head_deltainf/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8824,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.7013,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.8428,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=4 clock/const": {
+    "PABS": {
+     "worst_ratio": 0.8136,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6111,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7682,
+     "violations": 0
+    }
+   },
+   "k=4 clock/eta": {
+    "PABS": {
+     "worst_ratio": 0.8182,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6222,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7442,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=4 clock/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8163,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6207,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.75,
+     "violations": 0
+    }
+   },
+   "k=4 clock/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8302,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6207,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7347,
+     "violations": 0
+    }
+   },
+   "k=4 free": {
+    "PABS": {
+     "worst_ratio": 0.8571,
+     "violations": 0
+    }
+   },
+   "k=4 guard/const": {
+    "PABS": {
+     "worst_ratio": 0.8125,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.6197,
+     "violations": 0
+    }
+   },
+   "k=4 guard/eta": {
+    "PABS": {
+     "worst_ratio": 0.8219,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6429,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7719,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9875,
+     "violations": 0
+    }
+   },
+   "k=4 guard/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8302,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6061,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7547,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.96,
+     "violations": 0
+    }
+   },
+   "k=4 guard/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8421,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6667,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7797,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9875,
+     "violations": 0
+    }
+   },
+   "k=4 union_guard/const": {
+    "PABS": {
+     "worst_ratio": 0.8125,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.6349,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.6197,
+     "violations": 0
+    }
+   },
+   "k=4 union_guard/eta": {
+    "PABS": {
+     "worst_ratio": 0.8148,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.75,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.9231,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6087,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7719,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 1.4286,
+     "violations": 4
+    },
+    "GIN": {
+     "worst_ratio": 0.96,
+     "violations": 0
+    }
+   },
+   "k=4 union_guard/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.4444,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7059,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.5429,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7543,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.7143,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    }
+   },
+   "k=4 union_guard/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8193,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.5676,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7347,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6061,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7333,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    }
+   },
+   "k=4 union_head/const": {
+    "PABS": {
+     "worst_ratio": 0.8125,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.6349,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.6197,
+     "violations": 0
+    }
+   },
+   "k=4 union_head/eta": {
+    "PABS": {
+     "worst_ratio": 0.8148,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.5,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.6957,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6087,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7719,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.96,
+     "violations": 0
+    }
+   },
+   "k=4 union_head/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.4444,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7059,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.5455,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7543,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.7143,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9412,
+     "violations": 0
+    }
+   },
+   "k=4 union_head/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8193,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.5676,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7347,
+     "violations": 0
+    },
+    "GEX": {
+     "worst_ratio": 0.6061,
+     "violations": 0
+    },
+    "GABS": {
+     "worst_ratio": 0.7333,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    },
+    "GIN": {
+     "worst_ratio": 0.9756,
+     "violations": 0
+    }
+   },
+   "k=4 union_head_delta7/const": {
+    "PABS": {
+     "worst_ratio": 0.8125,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.6349,
+     "violations": 0
+    }
+   },
+   "k=4 union_head_delta7/eta": {
+    "PABS": {
+     "worst_ratio": 0.8108,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.56,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.6957,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=4 union_head_delta7/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8163,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6111,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7059,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.8333,
+     "violations": 0
+    }
+   },
+   "k=4 union_head_delta7/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8193,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6118,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7347,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=4 union_head_deltainf/const": {
+    "PABS": {
+     "worst_ratio": 0.8125,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.0,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.6349,
+     "violations": 0
+    }
+   },
+   "k=4 union_head_deltainf/eta": {
+    "PABS": {
+     "worst_ratio": 0.8108,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.56,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.6957,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   },
+   "k=4 union_head_deltainf/gamma": {
+    "PABS": {
+     "worst_ratio": 0.8163,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6111,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7059,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.8833,
+     "violations": 0
+    }
+   },
+   "k=4 union_head_deltainf/gamma+eta": {
+    "PABS": {
+     "worst_ratio": 0.8193,
+     "violations": 0
+    },
+    "CEX": {
+     "worst_ratio": 0.6118,
+     "violations": 0
+    },
+    "CABS": {
+     "worst_ratio": 0.7347,
+     "violations": 0
+    },
+    "CIN": {
+     "worst_ratio": 0.9524,
+     "violations": 0
+    }
+   }
+  }
+ }
+}

@@ -1768,6 +1768,7 @@ $\kappa = \lfloor Gk/L \rfloor - (2k-2)$ passes, the largest integer with
 $(\kappa + 2k-2)L/k \le G$. Either accounting charges every overtaker the worst
 case $L$, so the rule is loose against a work budget by the ratio $L/\bar{C}$,
 \devnum{150} on the main trace ($L = 60$ s against a mean cost of \devnum{0.40} s).
+% Source: prechecks/cost_ratio/out_mean_cost_ratio.txt (L / mean cost = 150.1, mean 0.3997 s).
 \end{remark}
 
 How the count is charged decides which guarantee. Charged when an overtaker is
@@ -1996,6 +1997,7 @@ the worst-case charge of $L$ per overtake, since every overtaker is bounded by t
 limit; a count of $\kappa$ therefore buys a promise of $(\kappa + 2k-2)L/k$
 (Remark~\ref{rem:counts} and \eqref{eq:skip}). That is the bound a count can give, and it
 is loose by the ratio $L/\bar{C}$, \devnum{150} on the main trace. Ten
+% Source: prechecks/cost_ratio/out_mean_cost_ratio.txt (L / mean cost = 150.1, mean 0.3997 s).
 overtakers that each run for the full limit $L$ and ten that run for ten milliseconds
 carry the same count and delays that differ by three orders of magnitude, so the charge
 is paid on every dispatch whether or not the work is there.

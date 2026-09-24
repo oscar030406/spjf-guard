@@ -1,0 +1,26 @@
+sigma check {'trials': 20000, 'mismatches': 0}
+counterexample delay k=2 {'arrivals': [0, 0, 0, 0], 'sizes': [2, 1, 1, 1], 't_or_job': 3, 'fcfs': 2, 'other': 1}
+counterexample work_in_queue k=2 {'arrivals': [0, 0, 0, 0], 'sizes': [2, 1, 1, 2], 't_or_job': 1, 'fcfs': 2, 'other': 1}
+counterexample work_in_system k=2 {'arrivals': [0, 0, 0, 0], 'sizes': [2, 1, 1, 2], 't_or_job': 3, 'fcfs': 1, 'other': 0}
+counterexample delay k=3 {'arrivals': [0, 0, 0, 0, 0], 'sizes': [2, 1, 2, 1, 1], 't_or_job': 4, 'fcfs': 2, 'other': 1}
+counterexample work_in_queue k=3 {'arrivals': [0, 0, 0, 0, 0], 'sizes': [2, 1, 2, 1, 2], 't_or_job': 1, 'fcfs': 2, 'other': 1}
+counterexample work_in_system k=3 {'arrivals': [0, 0, 0, 0, 0], 'sizes': [2, 1, 2, 1, 2], 't_or_job': 3, 'fcfs': 1, 'other': 0}
+{'k': 1, 'theta': 1, 'L': 3, 'm': 1, 'In': 3.0, 'In_ratio': 0.75, 'W': 3.0, 'W_FCFS': 0.0, 'excess_ratio': 0.75}
+{'k': 1, 'theta': 1, 'L': 3, 'm': 4, 'In': 3.75, 'In_ratio': 0.9375, 'W': 3.75, 'W_FCFS': 0.0, 'excess_ratio': 0.9375}
+{'k': 1, 'theta': 1, 'L': 3, 'm': 16, 'In': 3.9375, 'In_ratio': 0.984375, 'W': 3.9375, 'W_FCFS': 0.0, 'excess_ratio': 0.984375}
+{'k': 1, 'theta': 3, 'L': 3, 'm': 1, 'In': 5.0, 'In_ratio': 0.8333333333333334, 'W': 5.0, 'W_FCFS': 0.0, 'excess_ratio': 0.8333333333333334}
+{'k': 1, 'theta': 3, 'L': 3, 'm': 4, 'In': 5.75, 'In_ratio': 0.9583333333333334, 'W': 5.75, 'W_FCFS': 0.0, 'excess_ratio': 0.9583333333333334}
+{'k': 1, 'theta': 3, 'L': 3, 'm': 16, 'In': 5.9375, 'In_ratio': 0.9895833333333334, 'W': 5.9375, 'W_FCFS': 0.0, 'excess_ratio': 0.9895833333333334}
+{'k': 2, 'theta': 1, 'L': 3, 'm': 1, 'In': 6.0, 'In_ratio': 0.75, 'W': 3.0, 'W_FCFS': 0.0}
+{'k': 2, 'theta': 1, 'L': 3, 'm': 4, 'In': 7.5, 'In_ratio': 0.9375, 'W': 3.75, 'W_FCFS': 0.0}
+{'k': 2, 'theta': 1, 'L': 3, 'm': 16, 'In': 7.875, 'In_ratio': 0.984375, 'W': 3.9375, 'W_FCFS': 0.0}
+{'k': 2, 'theta': 3, 'L': 3, 'm': 1, 'In': 10.0, 'In_ratio': 0.8333333333333334, 'W': 5.0, 'W_FCFS': 0.0}
+{'k': 2, 'theta': 3, 'L': 3, 'm': 4, 'In': 11.5, 'In_ratio': 0.9583333333333334, 'W': 5.75, 'W_FCFS': 0.0}
+{'k': 2, 'theta': 3, 'L': 3, 'm': 16, 'In': 11.875, 'In_ratio': 0.9895833333333334, 'W': 5.9375, 'W_FCFS': 0.0}
+{'k': 3, 'theta': 1, 'L': 3, 'm': 1, 'In': 9.0, 'In_ratio': 0.75, 'W': 3.0, 'W_FCFS': 0.0}
+{'k': 3, 'theta': 1, 'L': 3, 'm': 4, 'In': 11.25, 'In_ratio': 0.9375, 'W': 3.75, 'W_FCFS': 0.0}
+{'k': 3, 'theta': 1, 'L': 3, 'm': 16, 'In': 11.8125, 'In_ratio': 0.984375, 'W': 3.9375, 'W_FCFS': 0.0}
+{'k': 3, 'theta': 3, 'L': 3, 'm': 1, 'In': 15.0, 'In_ratio': 0.8333333333333334, 'W': 5.0, 'W_FCFS': 0.0}
+{'k': 3, 'theta': 3, 'L': 3, 'm': 4, 'In': 17.25, 'In_ratio': 0.9583333333333334, 'W': 5.75, 'W_FCFS': 0.0}
+{'k': 3, 'theta': 3, 'L': 3, 'm': 16, 'In': 17.8125, 'In_ratio': 0.9895833333333334, 'W': 5.9375, 'W_FCFS': 0.0}
+wrote prechecks/new_theory_refutation/out_refute_extras.json

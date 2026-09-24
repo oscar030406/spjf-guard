@@ -63,8 +63,15 @@ any run recorded in this folder.
 | `lpc_egee` | the recorded-wait grid log, pooled by partition: a real queue, a weak replay validation, and a promise too coarse to fire | §8 and §9 cross-domain rows; supplement LPC sections | 3.36 MB |
 | `guard_optimality_verify` | independent re-check of the optimality note's T1, T2 and T3 | supplementary theory section | 0.10 MB |
 | `heldout_scope` | what the paper promises about sealed data against what can be run | §1 and §7 sealed-scope sentences; supplement Q2 | 0.04 MB |
+| `platform_testbed` | the guard run on a course platform's own two-worker back end, with an enforced per-job limit and scripted accounts that wait for each result: six cells, the enforced-limit check, the simulator comparison and the dispatch overhead | §8.5 second physical run; supplement section on the platform back end | 1.2 MB |
+| `timeout_rule` | does a maximum waiting time keep the guard's promise, and what does it give up at the same promise | §6.7 `prop:clock`; §2 and §1 clock sentences; §8.4 `tab:clock`; supplement S4.11 | 0.08 MB |
+| `envelope_bound` | an absolute per-job bound from the arrival log, its tightness on the traces, and how well one period's burst predicts the next | §6.8 `prop:absolute`; §8.6 absolute-bound paragraph and sigma forecast | 0.29 MB |
+| `new_theory_refutation` | independent refutation of the fluid lemma, the absolute bound, the clock bound and the combined rule | §6.7-6.8 wording; supplement S4.11 counterexamples and check summary | 0.20 MB |
+| `stale_charging` | what the guard promises when completion reports arrive late, and which protocol restores Theorem 3 | §6.9 `prop:late`; supplement S4.12 | 0.10 MB |
+| `referee_round4` | a maximum waiting time and fixed-window ordering run as baselines beside the guard | §8.4 fixed-window (Block) paragraph | 0.06 MB |
+| `cost_ratio` | L over the mean job cost, the factor by which a count of overtakes is loose | the ratio 150 in §5, §6.4, §9 and supplement S4.4 | 0.00 MB |
 
-1,114 files, 18.8 MB.
+1,260 files, 20.6 MB.
 
 ## What is not here
 
@@ -79,7 +86,6 @@ folder, not deleted.
 | `upc_wifi`, `upc_wifi_gnn` | an early direction — access-point load on a campus Wi-Fi trace, and a heterogeneous graph network against hand-built neighbour features. Nothing in the paper rests on either |
 | `guard_optimality` | the optimality note that `guard_optimality_verify` checks. The re-check restates every theorem it rules on, and governs where the two disagree |
 | `recorded_queue_hunt` | the search for a trace that records queue waits, which ended at LPC-EGEE. Its conclusion is carried in `weakness1_attack/AUDIT_A.md`, which also records where that conclusion was wrong |
-| `platform_testbed` | the guard run on a course platform's own two-worker back end, with an enforced per-job limit and scripted accounts that wait for each result: six cells, the enforced-limit check, the simulator comparison and the dispatch overhead | §8.5 second physical run; supplement section on the platform back end | 1.2 MB |
 
 Some included studies still point at those directories, because that is where their own
 history is: `accoding_v2/accoding_v2.py` at `accoding` (the SQL parse it inherits),

@@ -1,0 +1,113 @@
+witness GFEX k=1 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 2, "excess": 7, "bound": "13/2", "bound_kind": "clock excess bound theta+(3-2/k)L", "violated": true, "In_victim": 7, "ratio": 1.0769230769230769}
+witness DGEX k=1 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 1, "excess": 11, "bound": "11", "bound_kind": "guard excess bound B/k+(3-2/k)L", "violated": true, "In_victim": 11, "ratio": 1.0}
+witness TIEEX k=1 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 0, "excess": 3, "bound": "3", "bound_kind": "clock excess bound theta+(3-2/k)L", "violated": true, "In_victim": 3, "ratio": 1.0}
+witness DGEX k=2 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 1, "excess": 49, "bound": "49", "bound_kind": "guard excess bound B/k+(3-2/k)L", "violated": true, "In_victim": 83, "ratio": 1.0}
+witness TIEEX k=2 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 0, "excess": 20, "bound": "20", "bound_kind": "clock excess bound theta+(3-2/k)L", "violated": true, "In_victim": 40, "ratio": 1.0}
+witness DGEX k=3 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 0, "excess": 27, "bound": "80/3", "bound_kind": "guard excess bound B/k+(3-2/k)L", "violated": true, "In_victim": 81, "ratio": 1.0125}
+witness TIEEX k=3 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 0, "excess": 7, "bound": "7", "bound_kind": "clock excess bound theta+(3-2/k)L", "violated": true, "In_victim": 21, "ratio": 1.0}
+witness DGEX k=4 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 3, "excess": 66, "bound": "66", "bound_kind": "guard excess bound B/k+(3-2/k)L", "violated": true, "In_victim": 204, "ratio": 1.0}
+witness TIEEX k=4 {"feasible": true, "W_FCFS_matches": true, "V_matches": true, "victim": 0, "excess": 61, "bound": "121/2", "bound_kind": "clock excess bound theta+(3-2/k)L", "violated": true, "In_victim": 244, "ratio": 1.0082644628099173}
+GFEX k=1 under union_guard {"starts": [0, 1, 9, 6, 2, 3], "order": [0, 1, 4, 5, 3, 2], "max_excess": 7, "clock_bound": "13/2", "guard_bound": "8"}
+GFEX k=1 under union_head {"starts": [0, 1, 6, 7, 2, 3], "order": [0, 1, 4, 5, 2, 3], "max_excess": 4, "clock_bound": "13/2", "guard_bound": "8"}
+L1 {"1": {"worst_hi_ratio": 0.0, "upper_viol": 0, "lower_viol": 0}, "2": {"worst_hi_ratio": 0.75, "upper_viol": 0, "lower_viol": 0}, "3": {"worst_hi_ratio": 0.5555555555555556, "upper_viol": 0, "lower_viol": 0}, "4": {"worst_hi_ratio": 0.48333333333333334, "upper_viol": 0, "lower_viol": 0}}
+k=1 clock/const PABS=1.0/0 CEX=0.9756/0 CABS=0.9922/0 CIN=0.9756/0
+k=1 clock/eta PABS=1.0/0 CIN=0.9811/0 CEX=0.9811/0 CABS=0.995/0
+k=1 clock/gamma PABS=1.0/0 CEX=0.9831/0 CABS=0.9949/0 CIN=0.9831/0
+k=1 clock/gamma+eta PABS=1.0/0 CEX=0.9767/0 CABS=0.9933/0 CIN=0.9767/0
+k=1 free PABS=1.0/0
+k=1 guard/const PABS=1.0/0 GEX=0.0/0 GABS=0.9355/0
+k=1 guard/eta PABS=1.0/0 GEX=0.98/0 GABS=0.9929/0 GIN=0.98/0
+k=1 guard/gamma PABS=1.0/0 GEX=0.973/0 GABS=0.9926/0 GIN=0.973/0
+k=1 guard/gamma+eta PABS=1.0/0 GIN=0.9787/0 GEX=0.9787/0 GABS=0.9917/0
+k=1 union_guard/const PABS=1.0/0 CEX=0.0/0 CABS=0.9355/0 GEX=0.0/0 GABS=0.9355/0
+k=1 union_guard/eta PABS=1.0/0 CEX=1.8/1055 CABS=1.3636/1055 GEX=0.95/0 GABS=0.9898/0 CIN=1.8/1056 GIN=0.95/0
+k=1 union_guard/gamma PABS=1.0/0 CEX=0.85/0 CABS=0.9577/0 GEX=0.9/0 GABS=0.9556/0 CIN=0.85/0 GIN=0.9/0
+k=1 union_guard/gamma+eta PABS=1.0/0 CEX=0.9677/0 CABS=0.9933/0 GEX=0.95/0 GABS=0.9917/0 CIN=0.9677/0 GIN=0.95/0
+k=1 union_head/const PABS=1.0/0 CEX=0.0/0 CABS=0.9355/0 GEX=0.0/0 GABS=0.9355/0
+k=1 union_head/eta PABS=1.0/0 CEX=0.9524/0 CABS=0.9908/0 GEX=0.95/0 GABS=0.9898/0 CIN=0.9524/0 GIN=0.95/0
+k=1 union_head/gamma PABS=1.0/0 CEX=0.85/0 CABS=0.9577/0 GEX=0.9444/0 GABS=0.9737/0 CIN=0.85/0 GIN=0.9444/0
+k=1 union_head/gamma+eta PABS=1.0/0 CEX=0.9677/0 CABS=0.9933/0 GEX=0.95/0 GABS=0.9917/0 CIN=0.9677/0 GIN=0.95/0
+k=1 union_head_delta7/const PABS=1.0/0 CEX=0.0/0 CABS=0.9355/0
+k=1 union_head_delta7/eta PABS=1.0/0 CEX=0.9524/0 CABS=0.9908/0 CIN=0.9524/0
+k=1 union_head_delta7/gamma PABS=1.0/0 CEX=0.9091/0 CABS=0.9577/0 CIN=0.9091/0
+k=1 union_head_delta7/gamma+eta PABS=1.0/0 CEX=0.9796/0 CABS=0.9933/0 CIN=0.9796/0
+k=1 union_head_deltainf/const PABS=1.0/0 CEX=0.0/0 CABS=0.9355/0
+k=1 union_head_deltainf/eta PABS=1.0/0 CEX=0.9756/0 CABS=0.9908/0 CIN=0.9756/0
+k=1 union_head_deltainf/gamma PABS=1.0/0 CEX=0.9333/0 CABS=0.9577/0 CIN=0.9333/0
+k=1 union_head_deltainf/gamma+eta PABS=1.0/0 CEX=0.9706/0 CABS=0.9933/0 CIN=0.9706/0
+k=2 clock/const PABS=0.9474/0 CEX=0.7931/0 CABS=0.8855/0 CIN=0.9756/0
+k=2 clock/eta PABS=0.9474/0 CIN=0.9565/0 CEX=0.7917/0 CABS=0.8889/0
+k=2 clock/gamma PABS=0.9412/0 CIN=0.9524/0 CEX=0.7917/0 CABS=0.8976/0
+k=2 clock/gamma+eta PABS=0.9333/0 CEX=0.78/0 CABS=0.8889/0 CIN=0.9677/0
+k=2 free PABS=0.9635/0
+k=2 guard/const PABS=0.9412/0 GEX=0.0/0 GABS=0.8/0
+k=2 guard/eta PABS=0.9474/0 GEX=0.8/0 GABS=0.9091/0 GIN=0.975/0
+k=2 guard/gamma PABS=0.9412/0 GEX=0.8108/0 GABS=0.918/0 GIN=0.9756/0
+k=2 guard/gamma+eta PABS=0.9333/0 GIN=0.9855/0 GEX=0.8571/0 GABS=0.9091/0
+k=2 union_guard/const PABS=0.9412/0 CEX=0.0/0 CABS=0.8/0 GEX=0.0/0 GABS=0.8/0
+k=2 union_guard/eta PABS=0.9474/0 CEX=1.1111/4 CABS=1.0833/8 GEX=0.7692/0 GABS=0.8649/0 CIN=1.8/269 GIN=0.95/0
+k=2 union_guard/gamma PABS=0.9412/0 CEX=0.55/0 CABS=0.8136/0 GEX=0.7333/0 GABS=0.8667/0 CIN=0.7/0 GIN=0.9375/0
+k=2 union_guard/gamma+eta PABS=0.9333/0 CEX=0.725/0 CABS=0.8889/0 GEX=0.7368/0 GABS=0.8594/0 CIN=0.9524/0 GIN=0.973/0
+k=2 union_head/const PABS=0.9412/0 CEX=0.0/0 CABS=0.8/0 GEX=0.0/0 GABS=0.8/0
+k=2 union_head/eta PABS=0.9474/0 CEX=0.6875/0 CABS=0.8636/0 GEX=0.7692/0 GABS=0.8649/0 CIN=0.9524/0 GIN=0.9375/0
+k=2 union_head/gamma PABS=0.9412/0 CEX=0.5333/0 CABS=0.8136/0 GEX=0.6667/0 GABS=0.8966/0 CIN=0.7353/0 GIN=0.9375/0
+k=2 union_head/gamma+eta PABS=0.9333/0 CEX=0.725/0 CABS=0.8889/0 GEX=0.7368/0 GABS=0.8594/0 CIN=0.9524/0 GIN=0.9667/0
+k=2 union_head_delta7/const PABS=0.9412/0 CEX=0.0/0 CABS=0.8/0
+k=2 union_head_delta7/eta PABS=0.9474/0 CEX=0.6875/0 CABS=0.8636/0 CIN=0.9524/0
+k=2 union_head_delta7/gamma PABS=0.9412/0 CEX=0.7059/0 CABS=0.8136/0 CIN=0.875/0
+k=2 union_head_delta7/gamma+eta PABS=0.9333/0 CEX=0.75/0 CABS=0.8889/0 CIN=0.9524/0
+k=2 union_head_deltainf/const PABS=0.9412/0 CEX=0.0/0 CABS=0.8/0
+k=2 union_head_deltainf/eta PABS=0.9474/0 CEX=0.7391/0 CABS=0.8636/0 CIN=0.9524/0
+k=2 union_head_deltainf/gamma PABS=0.9412/0 CEX=0.7647/0 CABS=0.8136/0 CIN=0.875/0
+k=2 union_head_deltainf/gamma+eta PABS=0.9391/0 CEX=0.78/0 CABS=0.8889/0 CIN=0.9634/0
+k=3 clock/const PABS=0.8919/0 CIN=0.9565/0 CEX=0.707/0 CABS=0.809/0
+k=3 clock/eta PABS=0.878/0 CIN=0.9524/0 CEX=0.6875/0 CABS=0.8276/0
+k=3 clock/gamma PABS=0.8824/0 CIN=0.9756/0 CEX=0.6867/0 CABS=0.7952/0
+k=3 clock/gamma+eta PABS=0.9/0 CEX=0.7013/0 CABS=0.8428/0 CIN=0.9524/0
+k=3 free PABS=0.9231/0
+k=3 guard/const PABS=0.875/0 GEX=0.0/0 GABS=0.7091/0
+k=3 guard/eta PABS=0.9/0 GEX=0.7333/0 GABS=0.8462/0 GIN=0.9853/0
+k=3 guard/gamma PABS=0.8824/0 GEX=0.7/0 GABS=0.8333/0 GIN=0.9833/0
+k=3 guard/gamma+eta PABS=0.8824/0 GIN=0.9833/0 GEX=0.8/0 GABS=0.8421/0
+k=3 union_guard/const PABS=0.875/0 CEX=0.0/0 CABS=0.7091/0 GEX=0.0/0 GABS=0.7091/0
+k=3 union_guard/eta PABS=0.907/0 CEX=0.7/0 CABS=0.8684/0 GEX=0.7/0 GABS=0.8182/0 CIN=1.0/80 GIN=0.9677/0
+k=3 union_guard/gamma PABS=0.8889/0 CEX=0.4706/0 CABS=0.7365/0 GEX=0.6/0 GABS=0.8/0 CIN=0.7407/0 GIN=0.9677/0
+k=3 union_guard/gamma+eta PABS=0.8824/0 CEX=0.6346/0 CABS=0.8428/0 GEX=0.8/0 GABS=0.8095/0 CIN=0.9524/0 GIN=0.9833/0
+k=3 union_head/const PABS=0.875/0 CEX=0.0/0 CABS=0.7091/0 GEX=0.0/0 GABS=0.7091/0
+k=3 union_head/eta PABS=0.8824/0 CEX=0.525/0 CABS=0.8276/0 GEX=0.6/0 GABS=0.8182/0 CIN=0.9524/0 GIN=0.9677/0
+k=3 union_head/gamma PABS=0.8889/0 CEX=0.4706/0 CABS=0.7365/0 GEX=0.6562/0 GABS=0.8/0 CIN=0.7407/0 GIN=0.9677/0
+k=3 union_head/gamma+eta PABS=0.9/0 CEX=0.6346/0 CABS=0.8428/0 GEX=0.8/0 GABS=0.8095/0 CIN=0.9524/0 GIN=0.9833/0
+k=3 union_head_delta7/const PABS=0.875/0 CEX=0.0/0 CABS=0.7091/0
+k=3 union_head_delta7/eta PABS=0.878/0 CEX=0.6545/0 CABS=0.8276/0 CIN=0.9524/0
+k=3 union_head_delta7/gamma PABS=0.8824/0 CEX=0.6346/0 CABS=0.7365/0 CIN=0.8611/0
+k=3 union_head_delta7/gamma+eta PABS=0.9091/0 CEX=0.6885/0 CABS=0.8428/0 CIN=0.9524/0
+k=3 union_head_deltainf/const PABS=0.875/0 CEX=0.0/0 CABS=0.7091/0
+k=3 union_head_deltainf/eta PABS=0.875/0 CEX=0.6545/0 CABS=0.8276/0 CIN=0.9524/0
+k=3 union_head_deltainf/gamma PABS=0.8824/0 CEX=0.6867/0 CABS=0.7365/0 CIN=0.8667/0
+k=3 union_head_deltainf/gamma+eta PABS=0.8824/0 CEX=0.7013/0 CABS=0.8428/0 CIN=0.9524/0
+k=4 clock/const PABS=0.8136/0 CIN=0.9524/0 CEX=0.6111/0 CABS=0.7682/0
+k=4 clock/eta PABS=0.8182/0 CEX=0.6222/0 CABS=0.7442/0 CIN=0.9524/0
+k=4 clock/gamma PABS=0.8163/0 CIN=0.9524/0 CEX=0.6207/0 CABS=0.75/0
+k=4 clock/gamma+eta PABS=0.8302/0 CIN=0.9524/0 CEX=0.6207/0 CABS=0.7347/0
+k=4 free PABS=0.8571/0
+k=4 guard/const PABS=0.8125/0 GEX=0.0/0 GABS=0.6197/0
+k=4 guard/eta PABS=0.8219/0 GEX=0.6429/0 GABS=0.7719/0 GIN=0.9875/0
+k=4 guard/gamma PABS=0.8302/0 GEX=0.6061/0 GABS=0.7547/0 GIN=0.96/0
+k=4 guard/gamma+eta PABS=0.8421/0 GEX=0.6667/0 GABS=0.7797/0 GIN=0.9875/0
+k=4 union_guard/const PABS=0.8125/0 CEX=0.0/0 CABS=0.6349/0 GEX=0.0/0 GABS=0.6197/0
+k=4 union_guard/eta PABS=0.8148/0 CEX=0.75/0 CABS=0.9231/0 GEX=0.6087/0 GABS=0.7719/0 CIN=1.4286/4 GIN=0.96/0
+k=4 union_guard/gamma PABS=0.8/0 CEX=0.4444/0 CABS=0.7059/0 GEX=0.5429/0 GABS=0.7543/0 CIN=0.7143/0 GIN=0.9412/0
+k=4 union_guard/gamma+eta PABS=0.8193/0 CEX=0.5676/0 CABS=0.7347/0 GEX=0.6061/0 GABS=0.7333/0 CIN=0.9524/0 GIN=0.9756/0
+k=4 union_head/const PABS=0.8125/0 CEX=0.0/0 CABS=0.6349/0 GEX=0.0/0 GABS=0.6197/0
+k=4 union_head/eta PABS=0.8148/0 CEX=0.5/0 CABS=0.6957/0 GEX=0.6087/0 GABS=0.7719/0 CIN=0.9524/0 GIN=0.96/0
+k=4 union_head/gamma PABS=0.8/0 CEX=0.4444/0 CABS=0.7059/0 GEX=0.5455/0 GABS=0.7543/0 CIN=0.7143/0 GIN=0.9412/0
+k=4 union_head/gamma+eta PABS=0.8193/0 CEX=0.5676/0 CABS=0.7347/0 GEX=0.6061/0 GABS=0.7333/0 CIN=0.9524/0 GIN=0.9756/0
+k=4 union_head_delta7/const PABS=0.8125/0 CEX=0.0/0 CABS=0.6349/0
+k=4 union_head_delta7/eta PABS=0.8108/0 CEX=0.56/0 CABS=0.6957/0 CIN=0.9524/0
+k=4 union_head_delta7/gamma PABS=0.8163/0 CEX=0.6111/0 CABS=0.7059/0 CIN=0.8333/0
+k=4 union_head_delta7/gamma+eta PABS=0.8193/0 CEX=0.6118/0 CABS=0.7347/0 CIN=0.9524/0
+k=4 union_head_deltainf/const PABS=0.8125/0 CEX=0.0/0 CABS=0.6349/0
+k=4 union_head_deltainf/eta PABS=0.8108/0 CEX=0.56/0 CABS=0.6957/0 CIN=0.9524/0
+k=4 union_head_deltainf/gamma PABS=0.8163/0 CEX=0.6111/0 CABS=0.7059/0 CIN=0.8833/0
+k=4 union_head_deltainf/gamma+eta PABS=0.8193/0 CEX=0.6118/0 CABS=0.7347/0 CIN=0.9524/0
+wrote prechecks/new_theory_refutation/out_refute_crosscheck.json

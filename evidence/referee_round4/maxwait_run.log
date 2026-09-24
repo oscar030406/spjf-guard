@@ -1,0 +1,84 @@
+level 0: k = 8, 17,634,760 jobs
+  tool check: FCFS differing 0, SPJF-E differing 0
+  MaxWait(30) done
+  MaxWait(60) done
+  MaxWait(120) done
+  MaxWait(300) done
+  MaxWait(600) done
+  MaxWait(1200) done
+  MaxWait(2400) done
+  Block(8) done
+  Block(32) done
+  Block(128) done
+  Block(512) done
+level 1: k = 5, 17,634,760 jobs
+  tool check: FCFS differing 0, SPJF-E differing 0
+  MaxWait(30) done
+  MaxWait(60) done
+  MaxWait(120) done
+  MaxWait(300) done
+  MaxWait(600) done
+  MaxWait(1200) done
+  MaxWait(2400) done
+  Block(8) done
+  Block(32) done
+  Block(128) done
+  Block(512) done
+level 2: k = 4, 17,634,760 jobs
+  tool check: FCFS differing 0, SPJF-E differing 0
+  MaxWait(30) done
+  MaxWait(60) done
+  MaxWait(120) done
+  MaxWait(300) done
+  MaxWait(600) done
+  MaxWait(1200) done
+  MaxWait(2400) done
+  Block(8) done
+  Block(32) done
+  Block(128) done
+  Block(512) done
+{
+  "script": "prechecks\\referee_round4\\maxwait_baseline.py",
+  "script_sha256": "521caed1237c1f1fc35766df8610c0bd943b75261bb771f5f250ec3dbf1681ed",
+  "input": "data\\derived\\overlay_traces\\primary_rep0.npz",
+  "input_sha256": "78d063485a4281f6fd07560a717ee3d9440a93ac11912e8f74f934d8009061c8",
+  "output": "prechecks\\referee_round4\\maxwait_overlay0.csv",
+  "output_sha256": "1242d435cde86602e4acb5247f04a02ec69d78aed80e2ba3cb9351ed627dcb59",
+  "tool_checks": [
+    {
+      "level": 0,
+      "k": 8,
+      "fcfs_jobs_differing": 0,
+      "spjf_jobs_differing": 0
+    },
+    {
+      "level": 1,
+      "k": 5,
+      "fcfs_jobs_differing": 0,
+      "spjf_jobs_differing": 0
+    },
+    {
+      "level": 2,
+      "k": 4,
+      "fcfs_jobs_differing": 0,
+      "spjf_jobs_differing": 0
+    }
+  ],
+  "maxwait_T_s": [
+    30,
+    60,
+    120,
+    300,
+    600,
+    1200,
+    2400
+  ],
+  "block_W": [
+    8,
+    32,
+    128,
+    512
+  ],
+  "score": "tweedie",
+  "elapsed_s": 129.9
+}

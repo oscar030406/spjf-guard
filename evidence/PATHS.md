@@ -188,3 +188,16 @@ them. The row in `GENERATED.md` should say so.
 cross-references rewritten to `evidence/…`, so the studies point at each other correctly. The `out_*.txt`
 run logs were **not** touched — they are run output and still print `prechecks/<study>/`.
 Read those as `evidence/<study>/`.
+
+## Paths added with the clock, absolute-bound and late-report sections (2026-09-23)
+
+| paper location | current path | new path |
+| --- | --- | --- |
+| `08_experiments.tex` (`tab:clock` source comment) | `prechecks/timeout_rule/timeout_intervals.csv` | `evidence/timeout_rule/timeout_intervals.csv` |
+| `08_experiments.tex` (fixed-window paragraph) | `prechecks/referee_round4/maxwait_overlay0.csv` | `evidence/referee_round4/maxwait_overlay0.csv` |
+| `08_experiments.tex` (fixed-window paragraph) | `prechecks/timeout_rule/timeout_overlays.csv` | `evidence/timeout_rule/timeout_overlays.csv` |
+| `08_experiments.tex` (absolute-bound paragraph) | `prechecks/envelope_bound/out_summarise_tight.txt` | `evidence/envelope_bound/out_summarise_tight.txt` |
+| `supplementary.tex` (S4.11 check summary) | `prechecks/new_theory_refutation/refutation.md` | `evidence/new_theory_refutation/refutation.md` |
+| `supplementary.tex` (S4.11 check summary) | `prechecks/timeout_rule/out_theory_check.txt` | `evidence/timeout_rule/out_theory_check.txt` |
+| `supplementary.tex` (S4.12 sources) | `prechecks/stale_charging/derivation.md` | `evidence/stale_charging/derivation.md` |
+| `05`, `06`, `09`, `supplementary.tex` (the ratio 150) | `prechecks/cost_ratio/out_mean_cost_ratio.txt` | `evidence/cost_ratio/out_mean_cost_ratio.txt` |

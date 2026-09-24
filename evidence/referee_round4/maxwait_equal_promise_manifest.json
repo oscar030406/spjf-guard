@@ -1,0 +1,20 @@
+{
+  "script": "prechecks\\referee_round4\\maxwait_equal_promise.py",
+  "script_sha256": "8eef6b34502c3188aee5fa6b9e2dc6a031b2918718a9c4539e03b9d627d662ad",
+  "kernel_script_sha256": "521caed1237c1f1fc35766df8610c0bd943b75261bb771f5f250ec3dbf1681ed",
+  "inputs": {
+    "primary_rep0.npz": "78d063485a4281f6fd07560a717ee3d9440a93ac11912e8f74f934d8009061c8",
+    "primary_rep1.npz": "71a75d2b6df5c46912e00898c55f6e20cf56350f46c61db3fc40d309e622c81d",
+    "primary_rep2.npz": "8f021068e70ef21ec6b1a8b1ca1ae327ac6fb7811f61a4cffa6d1697c74d07eb",
+    "primary_rep3.npz": "f59edee819e5e3a87c5d012171b197f2e7239f9e74ea44a4514507cc5040eea8",
+    "primary_rep4.npz": "8fd652d5874ef30bb7675e56f6360768e368c47cd67b674567c83e7a10a4a8be"
+  },
+  "guard_rows_sha256": "ee776d6b49f6bb795046f63b6de785f9ea12b11a4ea248a3560d4aba046df129",
+  "outputs": {
+    "maxwait_equal_promise_cells.csv": "ee8b1e24304cd40cd52f26a22922cffcb434c23afd3805fe71c1dad28a8bc5b8",
+    "maxwait_equal_promise_vs_guard.csv": "3ef97a8b5b71fb2acb994194e1b29c000b279e74dee55f95a769318205fa0dce"
+  },
+  "limit_s": 60.0,
+  "score": "tweedie",
+  "elapsed_s": 165.0
+}

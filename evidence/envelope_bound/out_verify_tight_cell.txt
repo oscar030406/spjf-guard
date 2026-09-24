@@ -1,0 +1,2 @@
+overlay 3 level 2 k=4 Guard(300): B_max 600.0 s, n=17,634,760, violations 0, min slack 44.005647 s at job 13834201 (wait 808.738 s), max wait 1328.390 s
+overlay 3 level 2 k=4 Fixed(300): B_max 600.0 s, n=17,634,760, violations 0, min slack 44.004822 s at job 13834201 (wait 808.738 s), max wait 1328.359 s

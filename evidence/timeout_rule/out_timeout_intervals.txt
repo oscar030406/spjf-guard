@@ -1,0 +1,26 @@
+level 0 overlay 0 [58 s]
+level 0 overlay 1 [57 s]
+level 0 overlay 2 [56 s]
+level 0 overlay 3 [58 s]
+level 0 overlay 4 [60 s]
+  level=0  promise_s=300.0  guard_gap=0.705158  guard_gap_lo=0.678  guard_gap_hi=0.724399  timeout_gap=0.652488  timeout_gap_lo=0.618988  timeout_gap_hi=0.679446  gap_difference=0.05267  gap_difference_lo=0.029968  gap_difference_hi=0.076609  p99_timeout_minus_guard_s=1.015505  p99_diff_lo=0.471478  p99_diff_hi=1.881002
+  level=0  promise_s=600.0  guard_gap=0.739757  guard_gap_lo=0.71302  guard_gap_hi=0.759941  timeout_gap=0.734006  timeout_gap_lo=0.706622  timeout_gap_hi=0.753029  gap_difference=0.005751  gap_difference_lo=0.001131  gap_difference_hi=0.011872  p99_timeout_minus_guard_s=0.097877  p99_diff_lo=0.012269  p99_diff_hi=0.221675
+  level=0  promise_s=1200.0  guard_gap=0.746023  guard_gap_lo=0.719493  guard_gap_hi=0.767843  timeout_gap=0.752065  timeout_gap_lo=0.723847  timeout_gap_hi=0.773988  gap_difference=-0.006042  gap_difference_lo=-0.008603  gap_difference_hi=-0.00056  p99_timeout_minus_guard_s=-0.121275  p99_diff_lo=-0.208759  p99_diff_hi=-0.015849
+level 1 overlay 0 [59 s]
+level 1 overlay 1 [61 s]
+level 1 overlay 2 [61 s]
+level 1 overlay 3 [63 s]
+level 1 overlay 4 [63 s]
+  level=1  promise_s=300.0  guard_gap=0.73815  guard_gap_lo=0.696544  guard_gap_hi=0.760725  timeout_gap=0.244065  timeout_gap_lo=0.016724  timeout_gap_hi=0.508323  gap_difference=0.494085  gap_difference_lo=0.240655  gap_difference_hi=0.690858  p99_timeout_minus_guard_s=42.817194  p99_diff_lo=15.852595  p99_diff_hi=73.572844
+  level=1  promise_s=600.0  guard_gap=0.836835  guard_gap_lo=0.815235  guard_gap_hi=0.850796  timeout_gap=0.789072  timeout_gap_lo=0.754156  timeout_gap_hi=0.807418  gap_difference=0.047763  gap_difference_lo=0.029594  gap_difference_hi=0.079559  p99_timeout_minus_guard_s=4.079064  p99_diff_lo=2.014169  p99_diff_hi=9.208254
+  level=1  promise_s=1200.0  guard_gap=0.844016  guard_gap_lo=0.823486  guard_gap_hi=0.856832  timeout_gap=0.85676  timeout_gap_lo=0.837092  timeout_gap_hi=0.868961  gap_difference=-0.012744  gap_difference_lo=-0.017476  gap_difference_hi=-0.008736  p99_timeout_minus_guard_s=-1.084228  p99_diff_lo=-1.473201  p99_diff_hi=-0.709909
+level 2 overlay 0 [66 s]
+level 2 overlay 1 [61 s]
+level 2 overlay 2 [63 s]
+level 2 overlay 3 [63 s]
+level 2 overlay 4 [62 s]
+  level=2  promise_s=300.0  guard_gap=0.478471  guard_gap_lo=0.38743  guard_gap_hi=0.601728  timeout_gap=0.031001  timeout_gap_lo=0.011893  timeout_gap_hi=0.05548  gap_difference=0.44747  gap_difference_lo=0.369333  gap_difference_hi=0.550044  p99_timeout_minus_guard_s=103.013305  p99_diff_lo=81.788708  p99_diff_hi=126.186319
+  level=2  promise_s=600.0  guard_gap=0.801314  guard_gap_lo=0.764307  guard_gap_hi=0.841812  timeout_gap=0.41996  timeout_gap_lo=0.13103  timeout_gap_hi=0.672685  gap_difference=0.381354  gap_difference_lo=0.157794  gap_difference_hi=0.650397  p99_timeout_minus_guard_s=87.841574  p99_diff_lo=26.877573  p99_diff_hi=207.92727
+  level=2  promise_s=1200.0  guard_gap=0.829761  guard_gap_lo=0.80087  guard_gap_hi=0.857466  timeout_gap=0.827235  timeout_gap_lo=0.785513  timeout_gap_hi=0.865261  gap_difference=0.002526  gap_difference_lo=-0.015135  gap_difference_hi=0.03074  p99_timeout_minus_guard_s=0.61569  p99_diff_lo=-2.442479  p99_diff_hi=10.860571
+EXIT 0
+EXIT 0

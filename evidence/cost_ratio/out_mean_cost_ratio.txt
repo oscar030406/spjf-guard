@@ -1,0 +1,2 @@
+primary_rep0.npz: n=17,634,760 mean=0.3997 s median=0.2136 s max=59.974 s  L/mean=150.1  share<1s=0.9865
+k1_rep0.npz: n=3,209,347 mean=0.3997 s median=0.2136 s max=59.974 s  L/mean=150.1  share<1s=0.9865
