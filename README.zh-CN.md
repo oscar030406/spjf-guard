@@ -6,9 +6,11 @@
 Scheduling with Bounded Overtaking for Shared Execution Services under Deadline-Driven
 Bursty Load*。论文印出的每个数字，都能用这个仓库从论文所用的公开数据集重新算出来。
 
-论文 PDF 是 [paper/main.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/main.pdf)，补充材料是
-[paper/supplementary.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/supplementary.pdf)。两个链接都是直接下载；
-GitHub 的文件页面显示不了这两个 PDF。
+在浏览器里直接看论文：[paper/main.pdf](https://cdn.jsdelivr.net/gh/oscar030406/spjf-guard@main/paper/main.pdf)，
+补充材料：[paper/supplementary.pdf](https://cdn.jsdelivr.net/gh/oscar030406/spjf-guard@main/paper/supplementary.pdf)。
+这两个链接走的是 jsDelivr 对本仓库的镜像，推送后最多可能晚一天更新。GitHub 自己的文件页面
+显示不了这两个 PDF；要从 GitHub 下载，用 [main.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/main.pdf)
+和 [supplementary.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/supplementary.pdf)。
 
 ## 论文在讲什么
 

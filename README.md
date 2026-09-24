@@ -7,9 +7,13 @@ Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution Services 
 Deadline-Driven Bursty Load*. It rebuilds every number the paper prints from the public
 datasets the paper uses.
 
-The paper is [paper/main.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/main.pdf), and its supplementary material is
-[paper/supplementary.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/supplementary.pdf). Both links download the
-PDF; GitHub's own file view does not display these two files.
+Read the paper in the browser: [paper/main.pdf](https://cdn.jsdelivr.net/gh/oscar030406/spjf-guard@main/paper/main.pdf),
+and its supplementary material,
+[paper/supplementary.pdf](https://cdn.jsdelivr.net/gh/oscar030406/spjf-guard@main/paper/supplementary.pdf).
+These links go through the jsDelivr mirror of this repository, which may lag a push by up
+to a day. GitHub's own file view does not display the two PDFs; to download them from
+GitHub instead, use [main.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/main.pdf)
+and [supplementary.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/supplementary.pdf).
 
 ## What the paper is about
 
