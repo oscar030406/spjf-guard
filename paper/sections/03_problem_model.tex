@@ -30,11 +30,11 @@ A job's cost is hidden when it arrives, and the scheduler learns $C_i$ only when
 completes. At arrival it sees a feature vector $x_i$, built from the history of earlier
 jobs, and a score $\hat C_i$ computed from $x_i$. This history must be causal. Write
 $\mathrm{done}_j$ for the instant at which the result of job $j$ becomes readable, and
-$\delta \ge 0$ for the delay before it reaches the store the features are read from. Then
+$d \ge 0$ for the delay before it reaches the store the features are read from. Then
 \begin{equation}
   \text{information about } j \text{ may enter } x_i
   \quad\Longleftrightarrow\quad
-  \mathrm{done}_j + \delta \le a_i .
+  \mathrm{done}_j + d \le a_i .
   \label{eq:visibility}
 \end{equation}
 In a simulation driven by a log, $\mathrm{done}_j$ can be read in two ways. One of the two

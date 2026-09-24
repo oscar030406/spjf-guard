@@ -52,7 +52,9 @@ and that evaluation is not part of this paper (Section~\ref{sec:sealed}).
 
 \textbf{Information, costs, and what was not studied.} The exact protocol certifies that its
 final replay uses no unavailable result. It does not certify an online predictor driven by
-completions as they happen. The recorded costs are wall-clock durations that already
+completions as they happen, and only the headline cells were run under it, so the
+comparisons of Sections~\ref{sec:exp_rank} to~\ref{sec:exp_physical} rest on the
+optimistic original protocol. The recorded costs are wall-clock durations that already
 contain some contention, and the \devnum{60}-second limit is inferred from the data rather
 than documented. ACcoding arrival times are drawn because the released tables omit them
 (Supplementary Section~S2.1). Preemption is outside the model. The wrapper applies

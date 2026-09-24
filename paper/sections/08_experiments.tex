@@ -296,7 +296,8 @@ control that keeps the arrivals within the quoted burst.
 \label{sec:exp_cross}
 
 Table~\ref{tab:cross} places the main log beside the other workloads. Excesses are in units
-of each log's time limit $L$, the unit in which the guarantee is written. Two screens say
+of each log's $L$, the unit in which the guarantee is written. For the grading logs $L$ is
+the time limit, and for the others it is the analysis cap of Section~\ref{sec:fields}. Two screens say
 where the guard is useful. The first compares the FCFS tail with the guarantee's additive
 term $(3-2/k)L$, which is close to $3L$. If the FCFS p99 is below this term, the guarantee
 is coarser than the waits themselves. CodeBench, at \devnum{4.56}$L$, and the cloud-function

@@ -19,8 +19,8 @@ Four logs come from outside education. The Azure Functions trace of 2021 covers 
 calls to functions that run on demand \cite{azure2021trace,zhang2021harvested}. Two pools of
 test machines that Mozilla uses for the Firefox browser, which we call CI pools A and B,
 recorded the waits we use to check our simulator \cite{taskcluster_docs,treeherder_docs}.
-In Intel's Netbatch compute farm \cite{netbatch2012trace,shai2014netbatch}, jobs may run for
-up to \devnum{5.7} days, and this farm is the case where our method does not apply.
+In Intel's Netbatch compute farm \cite{netbatch2012trace,shai2014netbatch}, single jobs run
+for days, and this farm is the case where our method does not apply.
 
 Finally, the Open University Learning Analytics Dataset (OULAD) records the daily activity
 of students in online courses \cite{oulad2017}. Because it contains no jobs, we use it only
@@ -90,7 +90,10 @@ jittered deterministically, and the forward models move by less than \devnum{0.0
 No run after \devnum{2019-08-28} lasts longer than \devnum{60} s, although the platform
 documents no timeout. Hence we take the periods after that date, cap each duration at the
 observed ceiling, $C^{\mathrm{cap}} = \min(C, 60)$, and impose $L = \devnum{60}$ s in our
-pool, as a shared service would (Supplementary Table~S3).
+pool, as a shared service would (Supplementary Table~S3). The logs from outside education
+document no time limit. For them we take $L$ to be the 99.9th percentile of running times
+in the log's training period and cap longer jobs at it, an analysis choice that a
+deployment would have to enforce by stopping those jobs (Supplementary Table~S3).
 
 \subsection{A Shared Pool Built from the Log}
 \label{sec:overlay}

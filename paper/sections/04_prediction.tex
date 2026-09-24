@@ -37,7 +37,12 @@ arrival, and the heavy cut-off is refitted on that model's own training rows. De
 before they may enter the features leaves the ranking intact and worsens only the
 calibration. Supplementary Section~S1 gives these audits.
 
-The three kinds of model are listed in Table~\ref{tab:predictors}.
+The three kinds of model are listed in Table~\ref{tab:predictors}, which compares what each
+representation knows. Every model in that table is a classifier for the heavy label,
+trained on the terms \devnum{2018-1} to \devnum{2019-2}, tested on \devnum{2022-2} and
+averaged over \devnum{3} seeds. The scheduler uses a different fit on M4's features, the
+expected-cost regressor of Section~\ref{sec:rank}, refitted on rolling forward periods
+(Supplementary Section~S3.9).
 \begin{itemize}
   \item Gradient-boosted trees \cite{ke2017lightgbm} over five feature groups, namely the
   task's history (M1), the user's history (M2), static features of the submitted code (M3), all
@@ -109,7 +114,8 @@ record, a neighbourhood adds little except for an entity with no record yet.
 \begin{sloppypar}
 Prediction scores and queueing outcomes do not rank the models the same way. R1S has the
 highest AUROC, \devnum{0.9366}. Its difference from M4's \devnum{0.9283} is
-\devnum{$+0.0083$ $[+0.0038, +0.0131]$}. In the queue, however, R1S gains
+\devnum{$+0.0083$ $[+0.0038, +0.0131]$}. Run through the queue with the same ranking
+objective as M4, however, R1S gains
 \devnum{$+0.007$ $[0.003, 0.011]$} of the gap at utilisation \devnum{0.8}, loses
 \devnum{$-0.010$ $[-0.022, -0.002]$} at \devnum{0.5}, and is unresolved at \devnum{1.0}
 (Section~\ref{sec:overlay} defines the three loads). M5 has the higher AUROC of the two full

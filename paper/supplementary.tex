@@ -223,10 +223,10 @@ Compute farm           & ENT    & \devnum{0.8903} & \devnum{0.265} & \devnum{1.4
 \subsection{The Release Delay as a Sensitivity}
 \label{sec:supp_lag}
 
-The delay $\delta$ with which results reach the feature store is treated as a
-sensitivity and not as an assumption, which is the third of the three commitments
-Section~\ref*{M-sec:pred_visibility} of the manuscript makes. At $\delta = 0$ the full tabular model reaches
-AUROC \devnum{0.9283} and at $\delta = \devnum{600}$ s it reaches \devnum{0.9066}. On the second judging
+The delay $d$ with which results reach the feature store (the rule of
+Section~\ref*{M-sec:pred_visibility} of the manuscript) is treated as a sensitivity and not as
+an assumption. At $d = 0$ the full tabular model reaches
+AUROC \devnum{0.9283} and at $d = \devnum{600}$ s it reaches \devnum{0.9066}. On the second judging
 platform, where the log carries no clock and lag has to be expressed in records, the same
 model moves from \devnum{0.9266} at lag \devnum{0} to \devnum{0.8902} at lag
 \devnum{1{,}000}. Ranking survives a ten-minute feedback delay at the top of the
@@ -1150,9 +1150,10 @@ Load & Policy & p99$_{\mathrm{dl}}$ & Gap closed & Max excess & Harm \\
 \subsection{Package Predictor Metrics and Their Splits}
 \label{sec:supp_devpred}
 
-Two AUROC figures in Section~\ref*{M-sec:exp_visibility} of the manuscript are not the same measurement: one
-belongs to the earlier retrospective classifier comparison, the other to the deployed
-expected-cost score. This is what separates them.
+The AUROC of Table~\ref*{M-tab:predictors} of the manuscript and the AUROC of the deployed
+expected-cost score are not the same measurement. The first belongs to the retrospective
+classifier comparison, the second to the score the scheduler uses. This is what separates
+them.
 
 The AUROC \devnum{0.928} in the earlier predictor comparison is M4 under the
 source-clock I-res protocol, using heavy-class classifier probabilities averaged
@@ -3374,7 +3375,9 @@ simulator fed the same inputs; the reservation cell is not comparable because th
 simulator has no reservation-and-refund wrapper.}
 \label{tab:s_platform}
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{llrrrrrrr}
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\begin{tabular}{l>{\raggedright\arraybackslash}p{0.27\fulllength}rrrrrrr}
 \toprule
 Cell & Policy, demand rule & $\rho$ & Mean wait & p90 wait & Max excess & Excess$/G$ & Fired & Simulator \\
 \midrule
@@ -3386,6 +3389,7 @@ Cell & Policy, demand rule & $\rho$ & Mean wait & p90 wait & Max excess & Excess
 6 & Guard, completed-work charging, closed with slower resubmission & \devnum{0.993} & \devnum{205.7} & \devnum{433.8} & \devnum{184.8} & \devnum{0.462} & \devnum{21} & \devnum{132.8} ms \\
 \bottomrule
 \end{tabular}
+\end{adjustwidth}
 \end{table}
 % Source: prechecks/platform_testbed/records/summary.json, cells full-fcfs-r2,
 % full-spjf-r2, full-guard-completed-r2, full-guard-reservation-r2,
