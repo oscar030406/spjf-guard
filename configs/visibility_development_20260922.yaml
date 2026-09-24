@@ -192,15 +192,19 @@ scheduling:
     trace: validation_only                 # overlays built without the test term
     joint_winner: "best worst-cell gap over the three families; this is the paper's Guard(G)"
     family_names: {fixed: Guard-fixed, capped: Guard-age, hybrid: Guard-queue}
+  # outputs/selection_v4: the rule rerun on the validation overlays that embed the
+  # package's spjf_e scores, the scores every evaluation reads.  selection_v3 had read
+  # overlays built 2026-09-20 with an earlier fit (rs_pred_ires0); it reproduces from
+  # the archived copies in data/derived/overlay_traces_0920 (SHA256SUMS there).
   selected:                                # chosen on the validation overlays only
     "300.0": {family: capped, b0_base_s: 60.0, eta: 0.5, gam_base_s: 0.0}
     "600.0": {family: capped, b0_base_s: 120.0, eta: 0.75, gam_base_s: 0.0}
-    "1200.0": {family: hybrid, b0_base_s: 0.0, eta: 0.0, gam_base_s: 16.0}
+    "1200.0": {family: hybrid, b0_base_s: 120.0, eta: 0.0, gam_base_s: 16.0}
   family_best:                             # the ablation rows, same rule inside one family
     "300.0":
       fixed: {b0_base_s: 329.671, eta: 0.0, gam_base_s: 0.0}
       capped: {b0_base_s: 60.0, eta: 0.5, gam_base_s: 0.0}
-      hybrid: {b0_base_s: 0.0, eta: 0.0, gam_base_s: 16.0}
+      hybrid: {b0_base_s: 120.0, eta: 0.0, gam_base_s: 4.0}
     "600.0":
       fixed: {b0_base_s: 981.126, eta: 0.0, gam_base_s: 0.0}
       capped: {b0_base_s: 120.0, eta: 0.75, gam_base_s: 0.0}
@@ -208,7 +212,7 @@ scheduling:
     "1200.0":
       fixed: {b0_base_s: 2029.958, eta: 0.0, gam_base_s: 0.0}
       capped: {b0_base_s: 360.0, eta: 0.75, gam_base_s: 0.0}
-      hybrid: {b0_base_s: 0.0, eta: 0.0, gam_base_s: 16.0}
+      hybrid: {b0_base_s: 120.0, eta: 0.0, gam_base_s: 16.0}
   comparators:
     fixed_equal_promise: true              # eta = 0, B0 = Bmax; infeasible under the rule
     skip_charge: dispatch                  # N = floor(G k / L - (2k - 2))

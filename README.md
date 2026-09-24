@@ -177,7 +177,7 @@ $UV python scripts/build_overlays.py --pool primary
 $UV python scripts/build_overlays.py --pool validation
 $UV python scripts/build_overlays.py --single-server
 $UV python scripts/fit_scores.py --repeat
-$UV python scripts/select_parameters.py --workers 2
+$UV python scripts/select_parameters.py --workers 2 --out-dir outputs/selection_v4
 $UV python scripts/select_aging.py --workers 2
 ```
 
@@ -187,10 +187,10 @@ Then come the single-server line, the accuracy of the running-time predictor, an
 runs in which the predictor is allowed to see less history:
 
 ```bash
-$UV python scripts/run_main.py --selection outputs/selection_v3/selected_parameters.csv \
+$UV python scripts/run_main.py --selection outputs/selection_v4/selected_parameters.csv \
     --out-dir outputs/dev_tables --workers 2
 $UV python scripts/run_main.py --prefix k1 --reps 0 --levels 0 \
-    --selection outputs/selection_v3/selected_parameters.csv --out-dir outputs/dev_tables/k1
+    --selection outputs/selection_v4/selected_parameters.csv --out-dir outputs/dev_tables/k1
 $UV python scripts/eval_scores.py --pool primary
 $UV python scripts/run_visibility.py --pool primary --workers 2
 ```

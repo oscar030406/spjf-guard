@@ -14,6 +14,7 @@ DIRECTORIES = (
     "dev_predictor",
     "dev_visibility",
     "selection_v3",
+    "selection_v4",
     "selection_aging",
     "selection_conservative",
     "prefreeze",

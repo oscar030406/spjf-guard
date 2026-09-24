@@ -20,9 +20,9 @@ export UV="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
 | 1 | `$UV ruff check src tests scripts` / `$UV mypy` / `$UV python -m pytest -q` | 全绿 |
 | 2 | `$UV python scripts/check_overlays.py` | 本包产的叠加与 v3.1 逐数组相等 |
 | 3 | `$UV python scripts/fit_scores.py --repeat` | original / conservative / static 各两列，共六列；两遍逐位相同 |
-| 4 | `$UV python scripts/select_parameters.py --workers 2`，十五格齐了再 `--from-grid` | 九个原 Guard 选点不变；`selection_protocol.json` 写出网格、展开点和候选/可行数 |
+| 4 | `$UV python scripts/select_parameters.py --workers 2 --out-dir outputs/selection_v4`，十五格齐了再 `--from-grid` | 九个 Guard 选点与 `configs/main.yaml` 的 selected/family_best 一致（2026-09-24 起为 selection_v4；v3 读的是嵌入早期预测的旧 overlay，见配置注释）；`selection_protocol.json` 写出网格、展开点和候选/可行数 |
 | 4b | `$UV python scripts/select_aging.py --workers 2` | 11 点网格按同一 validation-only harm 规则选出 `credit_per_s = 0.03`，并写完整候选计数；该基线没有证明保证 |
-| 5 | `$UV python scripts/run_main.py --selection outputs/selection_v3/selected_parameters.csv --out-dir outputs/dev_tables --workers 2` | 开发期全表出齐，开头没有 `selection mismatch`；除新增 Aging 行外，既有行列逐位不变 |
+| 5 | `$UV python scripts/run_main.py --selection outputs/selection_v4/selected_parameters.csv --out-dir outputs/dev_tables --workers 2` | 开发期全表出齐，开头没有 `selection mismatch`；除新增 Aging 行外，既有行列逐位不变 |
 | 5b | `$UV python scripts/eval_scores.py --pool primary` | 六个目标学期 × 六个分数 + 六个 pooled 行，共 42 行；heavy 阈值仍为 1.559043 s，2022-2 仍是 40,844 行、536 个重任务。约 11 分钟 |
 | 5d | `$UV python scripts/run_visibility.py --pool primary --workers 2` | 十五格写 `outputs/dev_visibility/` 五张 CSV；FCFS 与 Guard 的 3600 秒 lag violation 都是 0，SPJF-E 如实报告；约 35 分钟 |
 | 5e | `$UV python scripts/run_consistent_visibility.py --config configs/visibility_development_20260922.yaml --pool primary --workers 2 --resume` | 十五格写 `outputs/dev_consistent_visibility/`；五条冻结策略和 Guard(600) 的另一拷贝语义每格末轮都必须零违规；稀疏分数按 manifest 校验 |
@@ -205,7 +205,7 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 
 拷贝数与 k 是另一回事：第 2 步的拷贝数探针在封存池上重跑，k 由 `server_count_rule` 逐条叠加算出——冻结的是规则，不是它在新数据上算出的数。探针停在多少份只印在屏幕上和台账那一行里，写论文时这个数要说清楚是从封存池的忙时工作量推出来的。k = 1 那条轨迹例外，拷贝数沿用开发池的 321 份（ADR 0006）。
 
-封存那几条命令都不带 `--selection`，所以 `read_selection` 退回默认路径（本仓库的选参结果在 `outputs/selection_v3/`，默认路径没有这个文件），`selection` 为空，参数全部来自冻结的配置——这是要的效果。连带的后果是开头那行 `selection mismatch` 检查在封存运行里不会响，**别把它当成封存运行的保护**：它保护的是第一节第 5 步那次开发期运行。
+封存那几条命令都不带 `--selection`，所以 `read_selection` 退回默认路径（本仓库的选参结果在 `outputs/selection_v4/`，默认路径没有这个文件），`selection` 为空，参数全部来自冻结的配置——这是要的效果。连带的后果是开头那行 `selection mismatch` 检查在封存运行里不会响，**别把它当成封存运行的保护**：它保护的是第一节第 5 步那次开发期运行。
 
 ## 四 要多久、占多少盘
 

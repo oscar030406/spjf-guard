@@ -1,7 +1,7 @@
 """Write the paper's tables and the map of every number the paper quotes.
 
     uv run python scripts/emit_paper_tables.py [--dev-dir outputs/dev_tables] \
-        [--k1-dir outputs/dev_tables/k1] [--selection outputs/selection_v3] \
+        [--k1-dir outputs/dev_tables/k1] [--selection outputs/selection_v4] \
         [--sealed-dir outputs/sealed_tables] [--sealed-k1-dir <dir>] \
         [--sealed-predictor-dir <dir>] [--sealed-visibility-dir <dir>] \
         [--dev-exact-dir <dir>] [--sealed-exact-dir <dir>] \
@@ -832,7 +832,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--config", type=Path, default=ROOT / "configs" / "main.yaml")
     ap.add_argument("--dev-dir", type=Path, default=ROOT / "outputs" / "dev_tables")
     ap.add_argument("--k1-dir", type=Path, default=None)
-    ap.add_argument("--selection", type=Path, default=ROOT / "outputs" / "selection_v3")
+    ap.add_argument("--selection", type=Path, default=ROOT / "outputs" / "selection_v4")
     ap.add_argument(
         "--sealed-dir",
         type=Path,
