@@ -7,6 +7,9 @@ Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution Services 
 Deadline-Driven Bursty Load*. It rebuilds every number the paper prints from the public
 datasets the paper uses.
 
+The paper is [paper/main.pdf](paper/main.pdf), and its supplementary material is
+[paper/supplementary.pdf](paper/supplementary.pdf).
+
 ## What the paper is about
 
 The automatic grader of a programming course takes submissions from many students and

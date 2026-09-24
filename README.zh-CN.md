@@ -6,6 +6,9 @@
 Scheduling with Bounded Overtaking for Shared Execution Services under Deadline-Driven
 Bursty Load*。论文印出的每个数字，都能用这个仓库从论文所用的公开数据集重新算出来。
 
+论文 PDF 是 [paper/main.pdf](paper/main.pdf)，补充材料是
+[paper/supplementary.pdf](paper/supplementary.pdf)。
+
 ## 论文在讲什么
 
 编程课的自动评测机收下许多学生的提交，放到几台机器上跑。每台机器一次跑一份提交。提交一旦
