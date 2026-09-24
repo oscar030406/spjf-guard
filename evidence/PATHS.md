@@ -200,4 +200,5 @@ Read those as `evidence/<study>/`.
 | `supplementary.tex` (S4.11 check summary) | `prechecks/new_theory_refutation/refutation.md` | `evidence/new_theory_refutation/refutation.md` |
 | `supplementary.tex` (S4.11 check summary) | `prechecks/timeout_rule/out_theory_check.txt` | `evidence/timeout_rule/out_theory_check.txt` |
 | `supplementary.tex` (S4.12 sources) | `prechecks/stale_charging/derivation.md` | `evidence/stale_charging/derivation.md` |
+| `supplementary.tex` (S4.12 sources) | `prechecks/stale_charging/maximal_adversary/` | `evidence/stale_charging/maximal_adversary/` |
 | `05`, `06`, `09`, `supplementary.tex` (the ratio 150) | `prechecks/cost_ratio/out_mean_cost_ratio.txt` | `evidence/cost_ratio/out_mean_cost_ratio.txt` |

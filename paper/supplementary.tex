@@ -2246,10 +2246,16 @@ at $0$. The victim has rank~1, size $L$ and the worst score. Then come $B - 1$ u
 charged at once, one job of size $L$ and $\delta - 1$ unit jobs all charged after
 $\delta$, and a last job of size $L$, scored in that order. When the last unit
 finishes, $\mathrm{over} = B - 1 < B$, the last job starts, and the victim starts
-$B + 2L + \delta - 2$ after its FCFS start. The cascade of Section~S8.1 with
-one stale job of size $L$ per server gives the $k = 2$ instance. At $L = 256$ it
-reaches at least $0.998$ of the bound for each of $\delta = 1, 128, 256, 512$, and it
-exceeds Theorem~3's bound by $L + \delta - 2$.
+$B + 2L + \delta - 2$ after its FCFS start. For $k \ge 2$ we start from the cascade of Section~S8.1 with $L = k^m$, delay the charges
+of its final jobs by $\delta$, let each server run $\delta - 1$ unit jobs charged late, add
+a second batch of $k$ jobs of size $L$, and set $B = f + L + 1$. At $k = 2$ the victim's
+excess is then $f + 3L + \delta - 1$, two units below the bound at every depth $m$, so the
+bound is attained in the limit. At $m = 12$ the ratio is at least $0.99988$ for
+$\delta = 1, 2048, 4096$, and at $m = 8$ the excess exceeds Theorem~3's bound by
+$L + \delta - 2$. On the same family at $k = 3$ and $k = 4$, every instance we built
+falls short of the bound by $(1 - 1/k)L((k-1)/k)^m + 1 + 1/k$, a vanishing fraction of
+$L$ as $m$ grows; we have no proof of that formula. At $\delta = 0$ the rule is
+Algorithm~1 and Theorem~3 gives the smaller bound, so attainment needs $\delta > 0$.
 
 \begin{proof}[Proof of the second part]
 Suppose every server applies its own completion report in the same step as its next
@@ -2268,17 +2274,31 @@ server's report, so it holds for every $\delta$, and for reports that never arri
 
 A third arrangement keeps one view of the counter per server, in which a server sees
 its own completions at once and other servers' within $\delta$. The same argument then
-gives $\mathrm{excess} < B_{\max}/k + (3 - 2/k)L + (1 - 1/k)(L + \delta)$, which the
-cascade approaches at $k = 2$.
+gives $\mathrm{excess} < B_{\max}/k + (3 - 2/k)L + (1 - 1/k)(L + \delta)$. At $k = 2$ a
+variant of the cascade falls short of it by $3/2$ at every depth, so this bound too is
+attained in the limit.
 
-We checked all three statements by exhaustive enumeration over up to six jobs,
-$2{,}273{,}660{,}361$ schedules in all, and on $200{,}000$ random instances with
-$k \le 4$, with no violation. The combined rule of Section~\ref{sec:supp_clock}, run
+We checked the three statements in two ways, with no violation in either. The first
+enumeration fixed static priority keys, constant budgets $B \in \{1, 2, 3\}$ and
+$\delta \in \{0, 1, 2\}$ at $k = 1, 2$, and took every key order and delay vector for up
+to four jobs and a sample of them for five and six: $720{,}894{,}276$ schedules, plus
+$200{,}000$ random instances with $k \le 4$. The second, written independently, lets the
+adversary take any dispatch the budget allows, which covers dynamic and clairvoyant
+base policies. It also chooses when each charge arrives within $\delta$, the order in
+which servers pull at one instant, and, under report-before-pull, whether a report
+arrives at all. It enumerated every such schedule for $k = 1, 2, 3$ and up to six jobs,
+about $1.4$ billion in all, and a hill-climbing search over up to $40$ jobs and $k \le 4$
+added $15.4$ million instances. The combined rule of Section~\ref{sec:supp_clock}, run
 with lost reports, had no violation either.
 % Sources: prechecks/stale_charging/derivation.md, Sections 1-7 (proofs and the
 %   lower-bound instances); out_sim_stale.txt:10-85 (instances, ratios 0.9980-0.9987 at
 %   k = 2, m = 8, L = 256) and :87-108 (200,000 random instances);
-%   out_sim_stale_exhaustive_n6.txt:14-36 (2,273,660,361 schedules, 0 violations);
+%   out_sim_stale_exhaustive_n6.txt:14-36 (2,273,660,361 schedules, 0 violations, of which
+%   720,894,276 are models U, A1, A2 and the rest the clock-union model UN);
+%   maximal_adversary/out_exhaustive.txt (shared 1.03e9, report-before-pull 5.06e7,
+%   per-server 3.49e8 decision paths), out_hill_a.txt and out_hill_b.txt (5.58e6 + 5.20e6
+%   + 4.58e6 evaluations), out_construct.txt (k = 2, m = 12 ratios 0.99988-0.99990; k = 3,
+%   4 gaps) and out_construct_pserv.txt (per-server gap 3/2);
 %   out_check_union_rule.txt.
 
 

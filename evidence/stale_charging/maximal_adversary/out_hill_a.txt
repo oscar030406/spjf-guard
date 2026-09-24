@@ -1,0 +1,24 @@
+shared 1 restarts 3483 evals 1396683 viol 0
+  best W 0.9796 n 16 B 50 d 24 max
+  best In 0.9796 n 16 B 50 d 24 max
+pserv 1 restarts 3273 evals 1312473 viol 0
+  best W 0.9885 n 37 B 75 d 24 max
+  best In 0.9885 n 37 B 75 d 24 max
+shared 2 restarts 3362 evals 1348162 viol 0
+  best W 0.8831 n 22 B 34 d 24 const
+  best In 0.9688 n 29 B 46 d 1 const
+pserv 2 restarts 2895 evals 1160895 viol 0
+  best W 0.8288 n 31 B 48 d 3 max
+  best In 0.9722 n 12 B 24 d 12 const
+shared 3 restarts 3548 evals 1422748 viol 0
+  best W 0.7403 n 35 B 39 d 24 const
+  best In 0.9633 n 23 B 1 d 12 max
+pserv 3 restarts 2735 evals 1096735 viol 0
+  best W 0.7303 n 20 B 32 d 6 const
+  best In 0.9600 n 13 B 13 d 1 const
+shared 4 restarts 3516 evals 1409916 viol 0
+  best W 0.6775 n 30 B 43 d 24 const
+  best In 0.9505 n 31 B 1 d 1 const
+pserv 4 restarts 2512 evals 1007312 viol 0
+  best W 0.6617 n 25 B 38 d 24 max
+  best In 0.9600 n 17 B 13 d 1 max
