@@ -3,10 +3,10 @@
 \section{Scheduling Algorithm}
 \label{sec:scheduling}
 
-The scheduler has two layers, because the ranking that shortens the queue is also what
+We build the scheduler in two layers, because the ranking that shortens the queue is also what
 can leave one submission behind without end. A base policy orders the queue by a score
 computed at arrival, and a wrapper limits how much work may overtake any waiting job.
-The two are independent: the wrapper accepts any base policy, and its guarantee does
+Because the two are independent, the wrapper accepts any base policy, and its guarantee does
 not depend on that policy behaving well.
 
 \subsection{Ranking by Expected Cost}
@@ -14,108 +14,91 @@ not depend on that policy behaving well.
 
 When a server frees, the base policy takes the waiting job with the smallest score.
 For a batch on one server, the pairwise-interchange argument orders jobs by their
-conditional mean service times. The same conclusion does not hold in general on
-$k\geq2$ servers. For example, on two servers let $A=2$, $C=3$, and let $B$ be
+conditional mean service times. However, the same conclusion does not hold in general on $k\geq2$ servers. For example, on two servers let $A=2$, $C=3$, and let $B$ be
 $0.1$ with probability $0.9$ and $100$ with probability $0.1$. Ordering the three
-conditional means starts $A$ and $C$ and has expected mean wait $2/3$; starting
-$A$ and $B$ instead has expected mean wait $0.096667$. Expected-cost ordering is
-therefore an empirically motivated base policy here, not a multiserver optimality
+conditional means starts $A$ and $C$ and has expected mean wait $2/3$, while starting $A$ and $B$ instead has expected mean wait $0.096667$. Hence expected-cost ordering is an empirically motivated base policy here, not a multiserver optimality
 claim.
 % Source for the two-server calculation and its independent script check:
 % docs/referee_readthrough/independent_review/checks_output.txt, CHECK 1
 % (script: docs/referee_readthrough/independent_review/checks.ps1).
 
 Both raw-scale squared error and the Tweedie mean deviance have the conditional mean
-$\mathbb{E}[C_i\mid x_i]$ as their unrestricted population optimum. Their fitted
-orders can nevertheless differ with finite model capacity, the link function,
+$\mathbb{E}[C_i\mid x_i]$ as their unrestricted population optimum. Their fitted orders can nevertheless differ with finite model capacity, the link function,
 regularisation, sample weighting and optimisation. We therefore compare objectives
 empirically while keeping the features, model size and rolling-origin protocol of
-Section~\ref{sec:prediction} fixed. SPJF-E uses raw seconds with a Tweedie loss of
-power $1.5$, which accommodates mass near zero and a long right tail
-\cite{jorgensen1987edm,yang2018tweedieboost}; SPJF-log uses the same pipeline fitted
+Section~\ref{sec:prediction} fixed. For SPJF-E we use raw seconds with a Tweedie loss of power $1.5$, which accommodates mass near zero and a long right tail
+\cite{jorgensen1987edm,yang2018tweedieboost}. SPJF-log uses the same pipeline fitted
 by squared error on $\log(1+C)$, and ranks by that fitted value, which orders jobs as
 its inverse would.
 % Source for the fitted Tweedie power and objective comparison:
 % evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1.
 
-The literal inverse $\exp(\mathbb{E}[\log(1+C)\mid x])-1$ is no larger than the
-conditional arithmetic mean, with equality only in the degenerate case. The gap is
-not determined by the conditional variance alone. To use a log-scale regression as a
+The literal inverse $\exp(\mathbb{E}[\log(1+C)\mid x])-1$ is, by Jensen's inequality, no
+larger than the conditional arithmetic mean, with equality only in the degenerate case. The gap is not determined by the conditional variance alone, and to use a log-scale
+regression as a
 mean estimator under its stated conditions, one needs a residual-distribution
 correction such as the smearing estimator of Duan~\cite{duan1983smearing}.
 
-Only the order of the fitted score is used. Its level does not transfer across
-periods, since the share of heavy jobs in the training periods differs from the target
+We use only the order of the fitted score. Its level does not transfer across periods, since the share of heavy jobs in the training periods differs from the target
 period by a factor of several, so we never read the score as a quantity, neither as an
-estimated finish time nor as a threshold. The scheduler is therefore invariant to a
-monotone recalibration of the score.
+estimated finish time nor as a threshold. Hence the scheduler is invariant to a monotone recalibration of the score.
 
 Section~\ref{sec:exp_rank} measures what the fitted objective gains, together with
 the alternatives we tried and rejected: a predicted quantile, a two-class rule, and
-squared error on raw seconds. Its partial-oracle repair replaces selected scores with
-truth and is not invariant to an arbitrary monotone rescoring of the original output.
-It therefore identifies the errors of this fitted predictor; it does not establish a
+squared error on raw seconds. Its partial-oracle repair replaces selected scores with truth and is not invariant to an arbitrary monotone rescoring of the original output.
+Thus it identifies the errors of this fitted predictor and does not establish a
 universal asymmetry of prediction errors or a different population estimand.
 
-No choice of ranking function bounds the worst case. A job the score gets wrong can still
-be passed without end, whatever the score is and however it was fitted;
-Section~\ref{sec:guard} is what bounds it.
+No choice of ranking function bounds the worst case. Whatever the score is and however it was fitted, a job the score gets wrong can still be passed without end, and only the guard of Section~\ref{sec:guard} bounds it.
 
 \subsection{The Overtake-Budget Guard}
 \label{sec:guard}
 
-Fix a base policy $A$. For every waiting job $q$ and every time $t$ define
+We fix a base policy $A$, and for every waiting job $q$ and every time $t$ we define
 \[
   \mathrm{over}[q](t) \;=\;
   \sum \{\, C_j \;:\; j > q \text{ in rank, } j \text{ has completed by } t \,\},
 \]
 the total true service of the higher-ranked jobs that have finished by $t$. Such a job
-arrived at or after $a_q$, so it necessarily ran while $q$ waited. Job $q$ is allowed a
-budget $\mathrm{budget}(q,t)$ on that quantity, and the fired set at a
+arrived at or after $a_q$, so it necessarily ran while $q$ waited. We allow job $q$ a budget $\mathrm{budget}(q,t)$ on that quantity, and the fired set at a
 dispatch epoch is
 $E(t) = \{\, q \text{ waiting} : \mathrm{over}[q](t) \ge \mathrm{budget}(q,t) \,\}$.
 At every dispatch epoch, that is, at every instant at which a server is free and the
 queue is non-empty, the wrapper serves the minimum-rank member of $E(t)$ when $E(t)$
 is non-empty and otherwise serves whatever $A$ chooses (Figure~\ref{fig:guard}).
 
-Serving the minimum-rank member matters when budgets differ between jobs. It
-guarantees that whenever a job $j$ is dispatched ahead of a lower-ranked waiting job
+Serving the minimum-rank member matters when budgets differ between jobs, because it guarantees that whenever a job $j$ is dispatched ahead of a lower-ranked waiting job
 $i$, the job $i$ was not in $E(t)$, hence $\mathrm{over}[i](t) < \mathrm{budget}(i,t)$
 at that very instant. The per-job bound of Section~\ref{sec:theory} rests on that
 step. With a constant budget $\mathrm{budget}(q,t) \equiv B$ the quantity
 $\mathrm{over}[q](t)$ is non-increasing in rank, so $E(t)$ is non-empty exactly when
-the queue head belongs to it and the rule degenerates to a test on the head. Setting
-$B = 0$ recovers FCFS.
+the queue head belongs to it and the rule degenerates to a test on the head, and setting $B = 0$ recovers FCFS.
 
 \paragraph{The cap carries the promise; the shape does not.}
-The guarantee of Section~\ref{sec:theory} reads the budget only through an upper
-bound on it. If $0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job and
+As Section~\ref{sec:theory} shows, the guarantee reads the budget only through an
+upper bound on it. If $0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job and
 every instant, then every job waits at most
 $W_{\mathrm{FCFS}} + B_{\max}/k + (3-2/k)L$, for every base policy, every arrival
-sequence and every set of predictions. Everything below the cap is a design freedom:
-it decides how much of the base policy's benefit survives and which jobs bear the harm,
-and it changes the promise not at all. We study the one-line family
+sequence and every set of predictions. The budget below the cap is a design freedom, which decides how much of the base
+policy's benefit survives and which jobs bear the harm and does not change the promise. We study the one-line family
 \[
   \mathrm{budget}(q,t) \;=\;
   \min\bigl(\,B_0 + \gamma\,n_q + \eta\,k\,(t - a_q),\ B_{\max}\,\bigr),
 \]
 with $B_0, \gamma \ge 0$, $0 \le \eta < 1$ and $n_q$ the number of jobs waiting when
-$q$ arrives, and read three shapes off it: \emph{constant} ($\gamma = \eta = 0$),
+$q$ arrives, and we read three shapes off it, \emph{constant} ($\gamma = \eta = 0$),
 \emph{age-relative} ($\eta > 0$), and \emph{queue-length} ($\gamma > 0$). The
 coefficient $\eta$ says how much of the system's capacity, over a job's own waiting
 time, may go to jobs that arrived after it. In other words, the allowance grows
 with the wait a job has already had. We chose a fraction of capacity rather than a
-number of seconds because it is dimensionless: it needs no retuning when $k$ or the
-load changes. The term $\gamma n_q$ instead widens the allowance only for jobs that
-arrive into a queue that is already long, and it is flat in the wait. The quantities
-$B_0$, $\gamma$ and $B_{\max}$ are measured in work and scale with $k$.
+number of seconds because it is dimensionless, so it needs no retuning when $k$ or the
+load changes. The term $\gamma n_q$, by contrast, widens the allowance only for jobs that
+arrive into a queue that is already long, and it is flat in the wait. All three of $B_0$, $\gamma$ and $B_{\max}$ are measured in work and scale with $k$.
 
 Only the age-relative shape carries a second, multiplicative bound, and only when
 $\gamma = 0$: $W < (W_{\mathrm{FCFS}} + B_0/k + (3-2/k)L)/(1-\eta)$. With
-$\gamma > 0$ the constant part of the budget differs from job to job. The
-multiplicative form then holds per job, with that job's own constant, and the operator
-has no single number to state in advance (Supplementary Section~S4.6). For
-$\gamma > 0$ we claim the additive bound alone.
+$\gamma > 0$ the constant part of the budget differs from job to job. Hence the multiplicative form holds per job, with that job's own constant, and the operator
+has no single number to state in advance (Supplementary Section~S4.6), so for $\gamma > 0$ we claim the additive bound alone.
 
 \begin{algorithm}
 \caption{Overtake-budget guard wrapped around a base policy $A$}
@@ -151,58 +134,51 @@ $\gamma > 0$ we claim the additive bound alone.
 \paragraph{Parameters from a service promise.}
 The operator states $G$, the number of seconds by which any job may exceed its FCFS
 waiting time, and reads off $B_{\max} = k\bigl(G - (3 - 2/k)\,L\bigr)$, the inversion
-of the uniform certificate proved in Section~\ref{sec:theory}. No data are needed for
-this step. The rule issues no positive budget below $(3-2/k)L$; the zero budget
-remains admissible and reproduces FCFS exactly. Section~\ref{sec:theory} separately
-gives an $L$-scale floor, but only for this wrapper family when it must protect
-against every opaque base-policy proposal sequence. The promise $G$ follows from
-$B_{\max}$ alone. The shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of
+of the uniform certificate proved in Section~\ref{sec:theory}, and no data are needed for this step. The rule issues no positive budget below $(3-2/k)L$, while the zero budget remains
+admissible and reproduces FCFS exactly. In Section~\ref{sec:theory} we also give an $L$-scale floor, but only for this wrapper family when it must protect
+against every opaque base-policy proposal sequence. The promise $G$ follows from $B_{\max}$ alone, while the shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of
 the base policy's benefit survives and which jobs pay for it, so we choose them on a
 validation trace that excludes the test period. That pool is held out of the selection
 and not of the development process, and Section~\ref{sec:exp_prov} states what the
-selection therefore does and does not establish. The rule is fixed before the grids
-are run. Supplementary Section~S5 states it in full, and Supplementary Table~S4 gives
-the grids and what they selected.
+selection therefore does and does not establish. We fix the rule before the grids are run, state it in full in Supplementary
+Section~S5, and give the grids and what they selected in Supplementary Table~S4.
 
 
 \paragraph{What is charged, and why no service time is needed at dispatch.}
-The budget is charged the true executed work of overtakers, and only when they
+We charge the budget with the true executed work of overtakers, and only when they
 complete. At the instant the guard decides, it has read $C_j$ only for jobs that have
-already finished, and a job still in service contributes nothing. That is what makes
-the wrapper implementable in a system that learns a job's cost at its completion, and
+already finished, and a job still in service contributes nothing. That is what makes our wrapper implementable in a system that learns a job's cost at its completion, and
 it is also why the bound carries an additive term in place of an exact
 accounting. When the last overtaker of $i$ is dispatched, up to $k-1$ further
 overtakers may be in service with their work not yet charged, and the overtaker being
 dispatched is not charged either, so the work that actually passes $i$ can exceed the
-budget by at most $kL$. Under the timeout at $L$, executed work means $\min(C_j, L)$;
-the log records that quantity and the guard charges it, so no assumption on raw
+budget by at most $kL$. Under the timeout at $L$, executed work means $\min(C_j, L)$, and because the log records that quantity and the guard
+charges it, no assumption on raw
 sizes enters.
 
 
 \paragraph{Cost per event.}
-Algorithm~\ref{alg:guard} is written for readability rather than for execution, since
-its inner loop over waiting jobs at each completion is linear. A Fenwick tree over
-completed work and a segment tree over the window of waiting ranks make each event cost
-$O(\log n)$. All budget arithmetic is carried in integer microseconds, so the firing
-test is exact and no floating-point clock enters the schedule. Supplementary
-Section~S5 gives the two structures and the rewriting of the firing test. A promise in
-seconds thus becomes a number the dispatcher can check, and the dispatcher never reads
+We write Algorithm~\ref{alg:guard} for readability rather than for execution, since
+its inner loop over waiting jobs at each completion is linear. With a Fenwick tree over completed work and a segment tree over the window of waiting
+ranks, we make each event cost $O(\log n)$. We carry all budget arithmetic in integer microseconds, so the firing
+test is exact and no floating-point clock enters the schedule. We give the two structures and the rewriting of the firing test in Supplementary
+Section~S5. Thus a promise in seconds becomes a number the dispatcher can check, and the dispatcher never reads
 a prediction to check it.
 
 \paragraph{Why the budget is measured in work and not in positions.}
 Earlier bounded-overtaking mechanisms count passes~\cite{grosof2021nudge,vanhoudt2022nudgek}
 or limit service to the oldest jobs~\cite{grosof2022wcfs} instead. A count is loose
 against a work budget by the ratio $L/\bar{C}$, \devnum{150} on the main trace ($L = 60$ s
-against a mean cost of \devnum{0.40} s); Supplementary Sections~S4.4 and~S4.9 give the argument, and
-% Source: prechecks/cost_ratio/out_mean_cost_ratio.txt (L / mean cost = 150.1, mean 0.3997 s).
+against a mean cost of \devnum{0.40} s). We give the argument in Supplementary
+Sections~S4.4 and~S4.9, and
 Section~\ref{sec:experiments} measures what the looseness costs on a real load.
+% Source: prechecks/cost_ratio/out_mean_cost_ratio.txt (L / mean cost = 150.1, mean 0.3997 s).
 
 \subsection{Compared Policies}
 
-Table~\ref{tab:policies} names the policies evaluated in
-Section~\ref{sec:experiments} and fixes the names used in every table of this
-paper; Supplementary Section~S5.7 states what each one is for at length.
-Guard($G$) wrapped around SPJF-E is the method; the others separate its parts and
+In Table~\ref{tab:policies} we name the policies evaluated in
+Section~\ref{sec:experiments} and fix the names used in every table of this paper, and Supplementary Section~S5.7 states what each one is for at length.
+Our method is Guard($G$) wrapped around SPJF-E, and the others separate its parts and
 test it.
 
 \begin{table}[htbp]
@@ -228,6 +204,6 @@ Counterexamples & Retained traces from two audits and adversarial review, checke
 \end{tabular}
 \end{table}
 
-Every simulation that includes the guard asserts the per-job bound of
+In every simulation that includes the guard we assert the per-job bound of
 Section~\ref{sec:theory} job by job inside the run
 (Section~\ref{sec:exp_bound}).
