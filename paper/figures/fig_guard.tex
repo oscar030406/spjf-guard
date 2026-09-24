@@ -9,11 +9,11 @@
    dec/.style={draw, align=center, inner sep=3pt},
    ar/.style={-{Latex[length=4pt]}}]
 
-  \node[box]           (queue) at (0,0)    {waiting queue $Q$\\[-1pt]\scriptsize ranks, scores $\hat{C}$};
+  \node[box]           (queue) at (0,0)    {waiting queue $Q$\\[-1pt]\scriptsize arrival order, scores $\hat{C}$};
   \node[dec, anchor=west] (test)  at (3.0,0)  {$E(t)=\emptyset$?\\[-1pt]
         \scriptsize $E(t)=\{q:\mathrm{over}[q]\ge\mathrm{budget}(q,t)\}$};
   \node[box, anchor=west] (base)  at (9.3,1.25) {base policy $A$\\[-1pt]\scriptsize any ranking, learned or not};
-  \node[box, anchor=west] (fire)  at (9.3,-1.25){guard fires\\[-1pt]\scriptsize min-rank member of $E(t)$};
+  \node[box, anchor=west] (fire)  at (9.3,-1.25){guard fires\\[-1pt]\scriptsize earliest-arrived member of $E(t)$};
   \node[box, anchor=west] (disp)  at (13.9,0) {dispatch on\\the free server};
   \node[box, anchor=east] (comp)  at (2.4,-2.6) {completion of $j$\\[-1pt]\scriptsize $C_j$ learned here, not earlier};
 
@@ -24,7 +24,7 @@
   \draw[ar] (fire.east) -- ++(0.35,0) |- (disp.west);
   \draw[ar] (comp.east) -- (test.south |- comp.east) -- (test.south);
   \node[anchor=west,font=\scriptsize] at ([xshift=3mm]test.south |- comp.east)
-        {$\mathrm{over}[q] \mathrel{+}= C_j$ for every waiting $q$ of lower rank};
+        {$\mathrm{over}[q] \mathrel{+}= C_j$ for every waiting $q$ that arrived before $j$};
 \end{tikzpicture}}
 
 % Referee item G11 asked for Figures 1 and 2 to be set side by side.  They sit in
@@ -47,15 +47,13 @@
   \draw[ar] (5.6,1.75) -- (4.68,2.72);
   \node[anchor=west] at (5.5,1.55) {guard fires};
 \end{tikzpicture}}
-\caption{The guard of Algorithm~\ref{alg:guard} wrapped around a base policy
-(above) and the accounting it runs for one waiting job (below). Only completed
-work is charged, because $C_j$ is unknown until $j$ finishes, so
-$\mathrm{over}[q]$ is a step function with a step at each completion of a
-higher-ranked job; at a dispatch decision, $q$ is eligible if its account reaches its current budget.
-The guard dispatches the smallest-ranked eligible job, which need not be $q$. The budget drawn is the age-relative shape, rising at
-rate $\eta k$ from $B_0$ and capped at $B_{\max}$; the guarantee depends on the
-cap alone, so any curve under the dashed ceiling carries the same promise. The
-lower panel is schematic. Sources: the definitions in Section~\ref{sec:guard};
-$B_{\max} = k(G - (3-2/k)L)$ is Corollary~\ref{cor:params}.}
+\caption{The guard of Algorithm~\ref{alg:guard} wrapped around a base policy (above), and
+the account it keeps for one waiting job $q$ (below). Only completed work is charged, because
+a job's cost is unknown until it finishes, so $\mathrm{over}[q]$ rises by one step at each
+completion of a job that arrived after $q$. When the account reaches the budget, $q$ becomes
+eligible, and the guard starts the earliest-arrived eligible job, which need not be $q$. The
+budget drawn is the age-relative shape, rising from $B_0$ at rate $\eta k$ and capped at
+$B_{\max}$; the bound depends on the cap alone, so any budget below the dashed ceiling
+carries the same guarantee. The lower panel is a schematic.}
 \label{fig:guard}
 \end{figure}

@@ -99,6 +99,12 @@
 \let\definition\Definition           \let\enddefinition\endDefinition
 \let\remark\Remark                   \let\endremark\endRemark
 \let\example\Example                 \let\endexample\endExample
+% The template numbers theorem-type statements in one sequence ("Proposition 2 follows
+% Theorem 1"); mdpi.cls v6.5a declares a counter per type, so three of them are tied to
+% the theorem counter here.
+\let\c@lemma\c@theorem
+\let\c@corollary\c@theorem
+\let\c@proposition\c@theorem
 \makeatother
 
 % Marks a figure that comes from development data rather than from the sealed
@@ -144,24 +150,26 @@ Shared Execution Services under Deadline-Driven Bursty Load}
 % \AuthorCitation; if the journal's current template adds them, the running-head
 % forms go here.
 
-% Authors as supplied on 2026-09-23. Address 1 uses NJUPT's official English name for the
-% joint unit (njupt.edu.cn/en/schoolsanddepartments), which covers all three NJUPT authors.
+% Authors as supplied on 2026-09-23. Address 1 is the form Yazhou Guo uses in print
+% (Mathematics 2026, 14, 3362); Zexin Lin is in the College of Artificial Intelligence.
 % ORCID (optional): add \orcidA{} / \orcidB{} after a name and define
 % \newcommand{\orcidauthorA}{0000-0000-0000-0000} in the preamble.
-\Author{Yazhou Guo $^{1,}$*, Zexin Lin $^{1}$, Chengyang Huo $^{2}$ and Yurong Song $^{1}$}
+\Author{Yazhou Guo $^{1,}$*, Zexin Lin $^{2}$, Chengyang Huo $^{3}$ and Yurong Song $^{1}$}
 \AuthorNames{Yazhou Guo, Zexin Lin, Chengyang Huo and Yurong Song}
 
 \address{%
-$^{1}$ \quad College of Automation \& College of Artificial Intelligence, Nanjing University of Posts and Telecommunications, Nanjing 210023, China; gyz@njupt.edu.cn (Y.G.); b25060222@njupt.edu.cn (Z.L.); songyr@njupt.edu.cn (Y.S.)\\
-$^{2}$ \quad Division of Logistics and Transportation, Shenzhen International Graduate School, Tsinghua University, Shenzhen 518055, China; huocy24@mails.tsinghua.edu.cn (C.H.)}
+$^{1}$ \quad College of Automation, Nanjing University of Posts and Telecommunications, Nanjing 210023, China; gyz@njupt.edu.cn (Y.G.); songyr@njupt.edu.cn (Y.S.)\\
+$^{2}$ \quad College of Artificial Intelligence, Nanjing University of Posts and Telecommunications, Nanjing 210023, China; b25060222@njupt.edu.cn (Z.L.)\\
+$^{3}$ \quad Division of Logistics and Transportation, Shenzhen International Graduate School, Tsinghua University, Shenzhen 518055, China; huocy24@mails.tsinghua.edu.cn (C.H.)}
 
 \corres{Correspondence: gyz@njupt.edu.cn}
 
-\abstract{Automatic graders for programming courses, build farms and serverless platforms run other people's jobs on $k$ servers without interruption, each job under a time limit $L$. Ordering the queue by predicted running time shortens most waits, but one wrong prediction can leave one job far behind. We ask what such a service can promise to every job when the predictions are arbitrary. We prove that under any non-preemptive work-conserving policy, on every arrival sequence, a job's delay relative to first-come first-served (FCFS) equals the net work that overtook it divided by $k$, to within $(2-2/k)L$, and the constant is exact. A budget on overtaken work is therefore sufficient for a per-job guarantee and necessary up to an additive $O(kL)$; a count of overtakes is not. A wrapper that enforces the budget bounds every job's wait against FCFS for arbitrary arrivals, predictions and base policies, with the exact constant $(3-2/k)L$. We evaluate on logs from two judging platforms, a serverless trace, two continuous-integration pools and a compute farm. With scores that use only results available in the replay, a \devnum{600}-second guard closes \devnum{0.672} of the FCFS-to-shortest-job-first tail-wait gap at the busiest development load, interval \devnum{[0.602, 0.743]}.}
+\abstract{Services that grade students' programs, run cloud functions or test software run many users' jobs on $k$ shared servers without interruption, each under a time limit $L$, with bursty arrivals. Ordering the queue by predicted running time shortens most waits, but one wrong prediction can hold a job back for a long time. What can such a service promise every job when predictions may be arbitrarily wrong? Under any rule that never idles a server while jobs wait and never interrupts a job, a job's extra wait relative to first-come first-served (FCFS) equals the net running time of the jobs that overtook it, divided by $k$, up to an error of $(2-2/k)L$ that cannot be improved. Limiting that running time is therefore sufficient for a per-job promise and, up to an additive $O(kL)$, necessary. A guard enforcing such a limit bounds every job's wait against FCFS for any arrivals, predictions and underlying policy, with exact constant $(3-2/k)L$; if completion reports arrive up to $\delta$ late over a network, the bound grows by $L+\delta$. On a university grading log at peak load, a guard promising 600 seconds keeps \devnum{0.672} of the reduction in 99th-percentile wait that shortest-job-first achieves over FCFS.}
 
 % Source of the abstract's empirical values: outputs/dev_consistent_visibility/exact_comparison.csv,
-% level=2, policy Guard(600)|exact, gap_closed and gap_closed_lo/hi.
-\keyword{non-preemptive scheduling; scheduling with predictions; multiserver queues; bounded overtaking; per-job guarantee; first-come first-served; runtime prediction}
+% level=2, policy Guard(600)|exact, gap_closed. The abstract names the main grading log
+% (CodeBench) and its busiest load (rho = 1.0) as "a university grading log at peak load".
+\keyword{non-preemptive scheduling; scheduling with predictions; multiserver queues; bounded overtaking; per-job guarantee; first-come first-served; runtime prediction; cluster scheduling; heterogeneous graph neural network}
 
 % Mathematics prints MSC 2020 codes under the keywords: scheduling theory, performance
 % evaluation and scheduling in computer systems, queueing theory, online algorithms.
@@ -190,54 +198,30 @@ $^{2}$ \quad Division of Logistics and Transportation, Shenzhen International Gr
 % [to be completed by the authors] and is not invented.
 
 % The supplementary file is paper/supplementary.tex, built on its own with the same class
-% under the `supfile' article type and the same bibliography.  Eleventh pass: the S-items
-% are listed in MDPI's named-element form, "Table S1: title; ...", in the order they are
-% numbered there, with the nine supplementary sections named after them.  The numbers were
-% read off the built supplementary.pdf; a table added to the supplement shifts every later
-% number here.
+% under the `supfile' article type and the same bibliography. The items are listed in
+% MDPI's named-element form, "Table S1: title; ...", with short titles; the numbers are
+% checked against the built supplement with local_tools/supp_list_0924.py, since a table
+% added there shifts every later number here.
 \supplementary{The following supporting information can be downloaded at
-\linksupplementary{s1}: Table S1: Predictors on the four non-judging traces, by feature
-group; Table S2: Predictors on the two judging traces under one visibility protocol and
-one split; Table S3: Share of executed work carried by the longest jobs, with the
-provenance of the analysis bound on every trace; Table S4: Experimental configuration and
-the selection protocol for the guard parameters; Table S5: The three selected budget
-points and the nine per-shape grid winners; Table S6: The guard at three promises and
-the comparators, in full; Table S7: The age-relative and queue-length
-winners at three promises and three loads; Table S8: Deliberately corrupted scores,
-unguarded and under the guard; Table S9: The residual of
-Theorem~\ref{thm:identity} on all nine cells; Table S10: The single-server configuration;
-Table S11: Additional policy definition for linear aging; Table S12: Conservative-score
-comparison with the selected aging baseline; Table S13: Package development AUROC with
-user-block intervals; Table S14: Ranking scores fitted on one feature set and run through
-one simulator; Table S15: Trace-construction sensitivities; Table S16: Unguarded
-policies, five overlays; Table S17: Candidates and feasible points after promise
-assignment and the harm filter; Table S18: Capacity sweep with archived scores; Table
-S19: Physical timed-work runs; Table S20: Open-loop against think-time-preserving replay;
-Table S21: LPC-EGEE by walltime class, both partitions pooled; Table S22: Replay of the
-900-second test class at its own limit; Table S23: Six cells on the platform back end;
-Table S24: Scope of the nearest per-job
-guarantees and wrapper precedent; Figure S1: Gap--harm trade-offs for every selected
-budget shape and Fixed($G$); Figure S2: What each budget shape keeps of the FCFS-to-SJF
-gap as the promise varies; Figure S3: Original-score reference and its corrupted-score
-controls. The nine supplementary sections that carry them are Section S1, cost
-prediction, with the visibility audit in full, the release delay as a sensitivity, the
-predictor families and the measured cost of predicting; Section S2, traces, with the
-field audit of the main judging trace, the checks on the continuous-integration refit and
-what supports the shared-pool design; Section S3, experiments; Section S4, the deferred
-proofs, including Lemma~\ref{lem:gap}, Theorem~\ref{thm:identity} with the two directions
-of its extremes, the consistency proposition with the two counterexamples to its
-converse, the multiplicative bound for the age-relative shape, the count-of-overtakes
-remark, the bound for a maximum waiting time, the absolute bound from the arrival log,
-the bound when completion reports arrive late, and the relaxations of the assumptions behind
-Section~\ref{sec:theory}; Section S5, the reproducibility specification, with exact
-grids, splits, information clocks and table provenance; Section S6, the capacity sweep,
-the physical timed-work experiment, the feedback counterexamples, the closed-loop replay,
-the LPC-EGEE counterfactual and the footnotes to
-Table~\ref{tab:cross}; Section S7, additional theory, with
-reservation-and-refund charging under enforced run-time caps; Section S8, the extremal
-constructions, together with the tightness of the guard bound, achievability and the
-maximal permission rule at one server;
-and Section S9, the extended related work behind Section~\ref{sec:related}.}
+\linksupplementary{s1}: Table S1: Predictors on the non-judging logs, by feature group;
+Table S2: Predictors on the two grading logs under one protocol; Table S3: Share of work
+carried by the longest jobs, and the provenance of $L$; Table S4: Experimental
+configuration and selection protocol; Table S5: Selected budget points and per-shape
+grid winners; Table S6: The guard at three bounds, with the comparators; Table S7: The
+age-relative and queue-length winners; Table S8: Deliberately corrupted scores; Table S9:
+The residual of Theorem~\ref{thm:identity} on nine cells; Table S10: The single-server
+configuration; Table S11: Definition of linear aging; Table S12: Comparison with the aging
+baseline; Table S13: Predictor AUROC with user-block intervals; Table S14: Alternative
+ranking scores; Table S15: Trace-construction sensitivities; Table S16: Unguarded
+policies; Table S17: Candidates and feasible points of the selection; Table S18: Capacity
+sweep; Table S19: Physical timed-work runs; Table S20: Replay with recorded think times;
+Table S21: A grid log by walltime class; Table S22: The grid log's 900-second class at its
+own limit; Table S23: The grid-log rows of the cross-log comparison; Table S24: Six cells on
+a course platform's back end; Table S25: Scope of the nearest per-job guarantees; Figure
+S1: Gap--harm trade-offs of the budget shapes; Figure S2: What each budget shape keeps as
+the bound is relaxed; Figure S3: Original-score reference and corrupted-score controls.
+The Supplementary Materials also give the proofs deferred from
+Section~\ref{sec:theory} (Sections S4, S7 and S8) and extended related work (Section S9).}
 
 % CRediT, in the template's own sentence form.  Every initial below is a placeholder:
 % replace [A.B.] and [C.D.] with the authors' initials and delete any role that does not
@@ -263,7 +247,7 @@ pseudonymised logs and involved no human participants and no animals.}
 locations cited, and we redistribute none of them. The CodeBench judging logs
 are published by the Universidade Federal do Amazonas \cite{codebench_dataset};
 the ACcoding dataset is published with its data descriptor \cite{accoding2024};
-the Open University Learning Analytics dataset is published with its own
+the OULAD is published with its own
 \cite{oulad2017}; the Azure Functions 2021 invocation trace is published in the
 Azure Public Dataset repository \cite{azure2021trace}, which asks that
 \cite{zhang2021harvested} be cited; and the Intel Netbatch logs are published in
@@ -271,22 +255,28 @@ the Parallel Workloads Archive \cite{netbatch2012trace}, which asks that
 the logs be acknowledged to their depositors and suggests citing
 \cite{shai2014netbatch}. The LPC-EGEE log is also published in the Parallel Workloads Archive
 \cite{lpc_egee_trace}, with acknowledgment requested for its data provider.
-The continuous-integration trace of the two Firefox
+The CI trace of the two Firefox
 hardware worker pools, was collected by us from Mozilla's public,
-unauthenticated Taskcluster and Treeherder APIs
+unauthenticated Taskcluster and Treeherder application programming interfaces
 \cite{taskcluster_docs,treeherder_docs}; we do not redistribute it, and the
-collection scripts that rebuild it from those APIs are part of the released
+collection scripts that rebuild it from those interfaces are part of the released
 code. The Azure invocation trace is distributed under the publisher's Creative Commons
 Attribution licence \cite{azure2021trace}; public availability does not imply an
 absence of licence conditions. No restricted access agreement was used, and no
 personal data were processed beyond the pseudonymous user identifiers the
 published judging datasets already carry. The simulator, the predictors, the
-guard implementation, configurations and archived development analyses are to be
-released with the paper. Supplementary Section~S5 distinguishes the tables reproduced
-by the package from the earlier development evidence. The release will be available at [repository URL to be
-completed by the authors].}
+guard implementation, configurations and archived development analyses are available at
+\url{https://github.com/oscar030406/spjf-guard}. Supplementary Section~S5 distinguishes
+the tables reproduced by the package from the earlier development evidence.}
 
-\acknowledgments{[to be completed by the authors].}
+% GenAI statement in the template's wording (MDPI Mathematics template, Acknowledgments);
+% text approved by the authors on 2026-09-24.
+\acknowledgments{During the preparation of this manuscript, the authors used Claude
+(Anthropic; Claude Code with Claude Opus models) and Codex (OpenAI) for drafting and
+editing text, writing and reviewing the simulation and analysis code, searching the
+literature, and searching for counterexamples to the stated propositions. The authors
+have reviewed and edited the output and take full responsibility for the content of this
+publication.}
 
 % Keep the first sentence if it holds.  Otherwise replace it with the competing interest
 % and keep the second, which the template requires whenever there is a funder.
@@ -300,16 +290,20 @@ The following abbreviations are used in this manuscript:\\
 
 \noindent
 \begin{tabular}{@{}ll}
-AUPRC & Area under the precision--recall curve\\
 AUROC & Area under the receiver operating characteristic curve\\
 CI & Continuous integration\\
+EASY & Extensible Argonne Scheduling sYstem\\
 FCFS & First-come first-served\\
+GNN & Graph neural network\\
 GRU & Gated recurrent unit\\
-MLP & Multilayer perceptron\\
 OULAD & Open University Learning Analytics Dataset\\
+p99 & 99th percentile\\
+R-GCN & Relational graph convolutional network\\
 RMSE & Root mean squared error\\
 SJF & Shortest job first\\
-SPJF & Shortest predicted job first\\
+SOAP & Schedule Ordered by Age-based Priority\\
+SPJF-E & Shortest predicted job first on the expected-cost score\\
+SPJF-log & Shortest predicted job first on the log-scale score\\
 SRPT & Shortest remaining processing time
 \end{tabular}
 }

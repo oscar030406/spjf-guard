@@ -18,3 +18,8 @@ outputs/
 # LaTeX build logs and bibliography logs (tectonic --keep-logs)
 paper/*.log
 paper/*.blg
+
+# LaTeX intermediates (tectonic --keep-intermediates); supplementary.tex reads main.aux
+paper/*.aux
+paper/*.bbl
+paper/*.out

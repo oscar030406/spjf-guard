@@ -3,117 +3,128 @@
 \section{Cost Prediction}
 \label{sec:prediction}
 
-Before the looping submission of the introduction starts, something has to decide that
-it will be long, from history alone and at the instant it arrives. That decision is a number, which the scheduler of Section~\ref{sec:scheduling} reads. We say here what
-the number estimates, how its inputs stay causally visible, which model families we compared under one
-protocol, and which model enters the queue. All figures are development figures, from the traces of Section~\ref{sec:data}.
+The scheduler needs, for every arriving job, a number that says how long the job will run,
+computed from history alone. Users and tasks form a graph, because many users attempt the
+same task and each user attempts many tasks. A natural question is therefore whether a
+model that reads this graph predicts better than one that reads each job's own history.
+This section compares three kinds of model on the two grading logs of
+Section~\ref{sec:data} and chooses the one the scheduler uses.
 
-\subsection{Two Targets}
+\subsection{Targets and Measures}
 
-A scheduler and an evaluation want different things from the same model. The scheduler
-wants the conditional mean $\mathbb{E}[C_i \mid x_i]$, which is the single-server
-pairwise-interchange target and the candidate score fitted in Section~\ref{sec:rank}.
-In addition, that section explains why the interchange argument does not establish optimality
-on several servers, where we evaluate the order empirically. For comparing predictors we
-also need a target that stays interpretable when the mix of jobs shifts between
-periods, so we score each model on a binary label. A job is \emph{heavy} when its
-executed cost $C_i$ exceeds the 95th percentile of the training rows. This one definition of heavy serves the whole paper, including the worst heavy-job wait
-of Section~\ref{sec:model}. On the main judging trace
-the cut-off is \devnum{1.559} s and heavy jobs are \devnum{1.31\%} of the test period, and on the second judging trace they are \devnum{1{,}314} ms and
-\devnum{5.07\%}. The label is
-fixed on training rows and never refit on the period being scored. On the main trace its
-rate in the test period is about a quarter of its training rate, \devnum{1.31\%} against
-\devnum{5.00\%}, while on the second it stays at about the training rate. Because the positive class is small
-we report average precision next to AUROC. For the regression output we report RMSE on
-$\log(1+C)$ and Spearman correlation, since a ranking policy consumes order rather than
-level.
+For ranking, the target is the conditional mean $\mathbb{E}[C_i \mid x_i]$. This mean
+orders a batch optimally on one server, by the pairwise-interchange argument of
+Section~\ref{sec:rank}. The mix of jobs shifts between periods, so to compare predictors
+across periods we also score each model on a binary label. A job is \emph{heavy} when its
+cost exceeds the 95th percentile of the training rows. On the main grading log this cut-off
+is \devnum{1.559} s, and heavy jobs are \devnum{1.31\%} of the test period against
+\devnum{5.00\%} of the training period. On the second log the cut-off is \devnum{1{,}314}
+ms and heavy jobs are \devnum{5.07\%}. For the heavy label we report the area under the
+receiver operating characteristic curve (AUROC). For the predicted cost we report the root
+mean squared error (RMSE) of $\log(1+C)$ and the Spearman rank correlation, since a ranking
+policy uses the order of the scores and not their level.
 
-\subsection{The Visibility Protocol, Made Operational}
+\subsection{Protocol}
+\label{sec:pred_visibility}
 
-Section~\ref{sec:model} defines visibility by result availability, so information about job $j$ may enter $x_i$ exactly when $\mathrm{done}_j + \delta \le a_i$. Turning that
-into a feature pipeline takes three commitments.
+Every model sees the same rows, the same split into training and test periods, and the
+same visibility rule~\eqref{eq:visibility}. Historical features are computed by streaming
+the log in the order in which results became available and reading each user's and each
+task's state at the query instant. Recomputing these features from scratch gives
+\devnum{0} disagreeing rows in all eight configurations we tested. Each test period is
+predicted by a model fitted only on earlier periods and frozen before the period's first
+arrival, and the heavy cut-off is refitted on that model's own training rows. Delaying the results by up to ten minutes
+before they may enter the features leaves the ranking intact and worsens only the
+calibration. Supplementary Section~S1 gives these audits.
 
-First, every historical feature is recomputed by streaming the log in availability
-order and reading each entity's state as of the query instant. No feature is assembled
-over the whole period and masked afterwards. We test this by recomputing the features
-from scratch and comparing, and \devnum{0} rows disagree in any of the eight
-configurations. Supplementary Section~S1 gives the audit in full, including the same
-test applied to the natural but wrong construction and the separate checks on the
-graph pipeline.
+The three kinds of model are listed in Table~\ref{tab:predictors}.
+\begin{itemize}
+  \item Gradient-boosted trees \cite{ke2017lightgbm} over five feature groups, namely the
+  task's history (M1), the user's history (M2), static features of the submitted code (M3), all
+  of these together (M4), and M4 with one-hop aggregates over related users and tasks
+  (M5).
+  \item A GRU over the user's earlier jobs, used alone (R1) and as a
+  state vector added to M4's features inside the trees (R1S).
+  \item A heterogeneous GNN of the R-GCN type \cite{schlichtkrull2018rgcn}, over users, tasks, the assignments
+  that group tasks and the class cohorts that group users. It is tested as a ladder of
+  five models. The first is a multilayer perceptron on M4's features (N0). The others are
+  the graph architecture with every neighbour set empty and no group nodes (G0U), with the
+  group nodes but no edges (G0), with the real edges (G1), and with the edges shuffled
+  within each period (G2). G2 keeps each node's
+  number of neighbours and changes only who they are, so if the edges carry information,
+  G2 must lose it.
+\end{itemize}
 
-Second, thresholds are refit per target period. We recompute the heavy cut-off and the
-class boundaries used inside the models from the training rows of that target, and we
-predict each target period with a model fitted only on periods before it and frozen
-before the target's first arrival. Training rows whose results would not have been
-available by that instant are dropped, and on the primary configuration the rule binds on
-\devnum{0} rows. We report the zero because a rule that never binds is easily mistaken for an absent rule.
-
-Third, we treat the delay $\delta$ with which results reach the feature store as a
-sensitivity, not as an assumption. Supplementary Section~S1 gives the two clocks in
-full. Under them, ranking survives a ten-minute feedback delay while the probability
-calibration gets worse.
-
-All families see the same rows, the same split and the same availability rule.
-Supplementary Section~S1 defines the three families and their ablation ladders. The
-gradient-boosted tabular groups M1 to M5 add task history, user history, static
-features of the submitted artefact and one-hop relational aggregates in turn. The
-sequence family R1 and R1S is a GRU over the user's own earlier jobs, used alone and as
-a state vector inside the boosted model. The relational ladder N0, G0U, G0, G1 and G2 is
-a heterogeneous network that starts from a multilayer perceptron on M4's columns
-and adds empty neighbour slots, then the real edges, then edges permuted inside a
-period and time block. Two entries are controls rather than models. M6 scrambles each
-job's neighbourhood, and G2 permutes the edges. If the relational structure carries
-signal, these two must lose it.
+\begin{table}[htbp]
+\centering
+\caption{Predictors on the main grading log (CodeBench), \devnum{40{,}844} test rows. AUROC
+is for the heavy label, and Spearman is on the predicted cost. The second grading log and the
+remaining measures are in Supplementary Table~S2.}
+\label{tab:predictors}
+\small
+\begin{tabular}{lll cc}
+\toprule
+Kind & Model & Information & AUROC & Spearman \\
+\midrule
+Trees & M1 & task history & \devnum{0.7960} & \devnum{0.219} \\
+ & M2 & user history & \devnum{0.8591} & \devnum{0.302} \\
+ & M3 & static features & \devnum{0.8632} & \devnum{0.290} \\
+ & M4 & all of the above & \devnum{0.9283} & \devnum{0.312} \\
+ & M5 & M4 and one-hop aggregates & \devnum{0.9302} & \devnum{0.344} \\
+GRU & R1 & user's earlier jobs & \devnum{0.9239} & \devnum{0.313} \\
+ & R1S & M4 and the GRU state & \devnum{0.9366} & \devnum{0.329} \\
+GNN & N0 & M4, no graph & \devnum{0.9209} & \devnum{0.278} \\
+ & G0U & graph model, no edges or group nodes & \devnum{0.9348} & \devnum{0.321} \\
+ & G0 & graph model, no edges & \devnum{0.9325} & \devnum{0.324} \\
+ & G1 & graph model, real edges & \devnum{0.9324} & \devnum{0.329} \\
+ & G2 & graph model, shuffled edges & \devnum{0.9305} & \devnum{0.323} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: the CodeBench block of Supplementary Table S2 (tab:s_pred_edu), which carries the
+% source comment (evidence/predictor_neural/out_evaluate_core.txt, test 2022-2, group
+% "all", mean over seeds 3/4/5).
 
 \subsection{What the Comparison Shows}
+\label{sec:pred_comparison}
 
-Supplementary Table~S2 gives the two judging traces. One-hop relational aggregates add nothing on either, since M5 $-$ M4 is \devnum{$+0.0019$} of AUROC on the first and
-\devnum{$-0.0002$} on the second. Similarly, the ladder gives the same result with a trained model
-in place of hand-built aggregates. Deleting every edge (G0) and permuting the edges
-(G2) leave AUROC within \devnum{0.002} of G1, and the paired intervals for G1 $-$ G0
-(\devnum{$-0.0001$ $[-0.0019, 0.0018]$}) and G1 $-$ G2 (\devnum{$+0.0019$ $[-0.0000,
-0.0042]$}) cover zero. The one step of the ladder that resolves is N0 $\rightarrow$
-G0U, \devnum{$+0.0139$ $[+0.0090, +0.0195]$} of AUROC at identical information. What
-moves there is the encoder, with the edge set held empty in both.
+The graph does not help on average. One-hop aggregates barely change the trees' AUROC,
+since M5 $-$ M4 is \devnum{$+0.0019$} of AUROC on the main log and \devnum{$-0.0002$} on
+the second. In the GNN ladder, removing every edge (G0) or shuffling them (G2) leaves AUROC
+within \devnum{0.002} of G1. The paired intervals for G1 $-$ G0,
+\devnum{$-0.0001$ $[-0.0019, 0.0018]$}, and for G1 $-$ G2, \devnum{$+0.0019$ $[-0.0000,
+0.0042]$}, both contain zero. The one step in the ladder that matters is N0 to G0U,
+\devnum{$+0.0139$ $[+0.0090, +0.0195]$} of AUROC, and this step changes the encoder while
+the edges stay empty.
 
-Edges do carry something, confined to cold-start tasks. On the
-\devnum{1{,}092} test rows whose task has fewer than five visible prior results, G1
-beats M4 by \devnum{$+0.1464$ $[+0.0997, +0.1887]$} of Spearman correlation, and beats
-its own permuted-edge control by \devnum{$+0.0282$ $[+0.0130, +0.0432]$}. Over all rows
-the G1 $-$ G2 Spearman difference is \devnum{$+0.0063$ $[+0.0014, +0.0111]$}, small and resolved, while the corresponding AUROC and AUPRC differences are not. Thus we
-read this as a task property rather than a verdict on relational models. When each entity's own recent
-record is visible and rich, a neighbourhood adds little except for an entity with no record yet.
+The edges help only for tasks with little history of their own. On the \devnum{1{,}092}
+test rows whose task has fewer than five visible earlier results, G1 beats M4 by
+\devnum{$+0.1464$ $[+0.0997, +0.1887]$} in Spearman correlation. On these rows G1 also beats
+its own shuffled-edge control by \devnum{$+0.0282$ $[+0.0130, +0.0432]$}, whereas over all
+rows G1 $-$ G2 is \devnum{$+0.0063$ $[+0.0014, +0.0111]$}. We read this as a property of
+the task and not of relational models. When each user and each task already has a rich
+record, a neighbourhood adds little except for an entity with no record yet.
 
-The sequence state has the best prediction scores of anything we fitted, and no
-consistent effect in the queue. R1S reaches AUROC \devnum{0.9366} against M4's
-\devnum{0.9283}, a difference of \devnum{$+0.0083$ $[+0.0038, +0.0131]$}, and it also
-wins on RMSE and Spearman. Inside the queue we find no consistent improvement. Against
-the same ranking objective it gains \devnum{$+0.007$ $[0.003, 0.011]$} of the
-deadline-window gap at busy-hour utilisation \devnum{0.8}, loses
-\devnum{$-0.010$ $[-0.022, -0.002]$} at \devnum{0.5}, and is open at
-\devnum{1.0}. A control fitted on the same \devnum{90\%} of rows that the GRU's early
-stopping left available moves the same way, so the smaller training set does not
-explain it.
+% sloppypar: the unbreakable interval below otherwise overruns the margin by about 10 pt.
+\begin{sloppypar}
+Prediction scores and queueing outcomes do not rank the models the same way. R1S has the
+highest AUROC, \devnum{0.9366}. Its difference from M4's \devnum{0.9283} is
+\devnum{$+0.0083$ $[+0.0038, +0.0131]$}. In the queue, however, R1S gains
+\devnum{$+0.007$ $[0.003, 0.011]$} of the gap at utilisation \devnum{0.8}, loses
+\devnum{$-0.010$ $[-0.022, -0.002]$} at \devnum{0.5}, and is unresolved at \devnum{1.0}
+(Section~\ref{sec:overlay} defines the three loads). M5 has the higher AUROC of the two full
+tree models, and M5 loses in the queue at all three loads, by \devnum{0.012},
+\devnum{0.008} and \devnum{0.010} of the gap, each interval excluding zero. The scheduler
+therefore uses M4, chosen on the queueing outcome of validation periods rather than on
+prediction scores.
+\end{sloppypar}
 
-Which information matters is not a constant across platforms. The user's own history leads on the first judging trace, and the task's history leads on the second by \devnum{0.11} of AUROC (Supplementary Table~S2). The four non-judging traces spread wider still, and Supplementary Section~S1.2 reads them by feature group, the AUROC column of Table~\ref{tab:cross} carrying the figure the scheduling results are read against.
+Which history matters varies by platform. The user's history leads on the main log, and the
+task's history leads on the second by \devnum{0.11} of AUROC (Supplementary Table~S2).
+Supplementary Section~S1.2 compares the feature groups on the four logs from outside
+education.
 
-\subsection{Cost of Predicting, and What Enters the Scheduler}
-
-Prediction has to be cheap enough to sit in front of a queue whose median job is
-\devnum{204} ms. It is. Charging the measured per-job cost of each family to the
-predictive policies before they enqueue changes the closed gap by less than
-\devnum{0.001} at every load we ran (Supplementary Section~S1).
-
-Which model enters the queue is a queueing decision, not a prediction decision. M5
-has the higher AUROC of the two tabular candidates and loses in the queue at all three
-loads, by \devnum{0.012}, \devnum{0.008} and \devnum{0.010} of the deadline-window
-gap, with intervals excluding zero in each case. R1S has the higher AUROC of
-everything we fitted and does not win consistently. Therefore we take M4, the full tabular model, into Section~\ref{sec:scheduling}. We selected it on the queueing
-outcome on validation periods, not on prediction quality. Thus the best predictor was not the best scheduler, and the two orderings do not agree.
-
-% The table of predictor scores on the non-judging traces (label tab:pred_cross) moved to
-% supplementary.tex as Supplementary Table S1 in the sixth revision pass, referee item G5.
-% Its source comment moved with it.
-%   The identity variance shares (0.867 serverless, 0.638 compute farm) quoted in the text
-%     are the eta^2 column of evidence/cross_domain/out_cross_domain_table.txt; the
-%     Spearman 0.021 and the two CI AUROCs 0.9968 / 0.6334 are Supplementary Table S1.
+Prediction is cheap next to the queue. The median job on the main log runs for
+\devnum{204} ms, and charging each model's measured cost per job to the predictive
+policies changes the gap closed by less than \devnum{0.001} at every load (Supplementary
+Section~S1).

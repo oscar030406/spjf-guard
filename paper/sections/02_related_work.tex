@@ -1,40 +1,93 @@
 \section{Related Work}
 \label{sec:related}
 
-What an operator would need to quote to a student is a bound on one submission's wait. Four lines of work come close to stating one, and each stops short in a different place.
-
 \subsection{Scheduling with Predictions}
 
-Purohit, Svitkina and Kumar \cite{purohit2018predictions} frame predictions in online algorithms as a trade-off between consistency and robustness. Predicted-size scheduling has since been studied through queueing models in which the prediction is a random variable \cite{mitzenmacher2020misprediction}, bounded multiplicative error \cite{scully2022uniform}, worst-case distortion \cite{azar2021flowtime,azar2022distortion}, many-server limits \cite{dong2025sjf}, prediction acquisition \cite{shahout2024skippredict} and per-job stretch on a preemptive machine \cite{zhao2025fairpredictions}. The survey of Mitzenmacher and Shahout \cite{mitzenmacher2025queueing} brings this line together. Our reference is FCFS rather than an optimum, our scope is one job rather than a mean, arrivals and prediction errors are arbitrary, and service is non-preemptive. The bound we get is limited in the same measure: it controls extra waiting relative to FCFS and does not assert an improvement. Whether the guard is useful is an empirical question. It depends jointly on size dispersion, predictability and arrival structure, not on membership in a heavy-tail class.
+Algorithms with predictions are judged by consistency, how well they do when the
+predictions are exact, and robustness, how well they do when the predictions are
+arbitrarily wrong \cite{lykouris2021caching,purohit2018predictions}. In scheduling,
+predicted sizes have been used to minimise the total completion time of jobs whose sizes
+are unknown \cite{im2021nonclairvoyant}, learned machine weights to assign jobs online
+\cite{lattanzi2020learnedweights}, and a predicted order of the jobs in place of their
+sizes \cite{lindermayr2022permutation}. Queueing models treat the prediction as a random
+variable \cite{mitzenmacher2020misprediction}, bound its error multiplicatively
+\cite{scully2022uniform} or measure it as a distortion
+\cite{azar2021flowtime,azar2022distortion}, and further work covers many-server limits
+\cite{dong2025sjf}, the cost of obtaining predictions \cite{shahout2024skippredict} and
+the worst slowdown of any job on a machine that may interrupt jobs
+\cite{zhao2025fairpredictions}; Mitzenmacher and Shahout survey this line
+\cite{mitzenmacher2025queueing}. These results bound a mean or a competitive ratio against
+an optimal schedule, and the bound degrades with a measure of the prediction error. In
+their terms, our guarantee is a robustness statement made for each job and on every
+sample path: it holds for any predictions, but it bounds the loss against FCFS and does
+not by itself promise a gain, which Section~\ref{sec:experiments} measures.
 
-\subsection{Fairness Relative to FCFS, and Bounded Overtaking}
+\subsection{Per-Job Guarantees and Bounded Overtaking}
 
-Worst-case per-job fairness is older than fair-start-time metrics. Schwiegelshohn and Yahyapour \cite{schwiegelshohn2000fairness} call a schedule $\lambda$-fair when jobs submitted after job $i$ cannot increase $i$'s flow time by more than a factor $\lambda$, and they bound fairness and efficiency together for a preemptive gang policy. Their bound is multiplicative, and for a short job it is tighter than one measured in $L$; gang preemption is what makes it possible. Our guarantee is additive, non-preemptive and referenced to the same input under FCFS. Section~\ref{sec:theory} shows only that a wrapper of our family, one that protects against every opaque base proposal sequence, cannot promise less than order $L$ once it permits overtaking; that is not an impossibility for all scheduling mechanisms. Supplementary Section~S9 gives their constants and the per-paper detail this section compresses.
-% Source for the constants of this paragraph: they are stated in full in Supplementary
-% Section S9, which carries the same source comment.
+Schwiegelshohn and Yahyapour call a schedule $\lambda$-fair when later submissions cannot
+increase a job's flow time by more than a factor $\lambda$, and bound fairness and
+efficiency together for a policy that interrupts whole groups of processors
+\cite{schwiegelshohn2000fairness}. Batch schedulers measure a job's delay against a fair
+start time, obtained by simulating the schedule again without the later arrivals
+\cite{sabin2004fairness,sabin2005unfairness}. Conservative backfilling gives every queued
+job a reservation that later jobs cannot delay \cite{mualem2001backfilling,lindsay2013backfilling},
+slack-based backfilling lets later jobs delay a job only within a slack fixed at
+submission \cite{talby1999slack}, and a preemptive variant of the Extensible Argonne
+Scheduling sYstem (EASY) backfilling \cite{lifka1995easy} kills and restarts the backfilled
+jobs that would delay a higher-priority one \cite{yuan2010pveasy}. These guarantees rest on
+reservations or on interrupting jobs; ours is additive, needs no interruption and is
+measured against FCFS on the same input.
 
-Fair-start-time work gives a closer reference. A job is compared with a re-simulation that excludes later arrivals \cite{sabin2004fairness}, and the excess is then used as a job-level metric \cite{sabin2005unfairness,rajbhandary2013fairness}. Conservative backfilling instead fixes a reservation for every queued job, so later backfills cannot delay that promised start \cite{mualem2001backfilling,lindsay2013backfilling}; it is a $G=0$ endpoint relative to the reservation, not relative to same-input FCFS. Slack-based backfilling gives each job a slack at submission and lets later jobs delay it only within that slack, which bounds every job's wait against its own reservation \cite{talby1999slack}. PV-EASY \cite{yuan2010pveasy,yuan2014strictfairness} enforces zero lower-priority delay by killing and restarting the backfilled jobs that stand in the way. These guarantees are online, but they use different references or preemption. Ours limits the additive FCFS excess of a non-preemptive wrapper.
+Bounded overtaking has been studied in two units. The first is a count: Nudge lets a small
+arriving job swap past the job at the tail of the queue \cite{grosof2021nudge}, Nudge-$K$
+lets it pass up to $K$ others while no job is passed more than once
+\cite{vanhoudt2022nudgek}, with later refinements \cite{charlet2026nudgestarm}, and finite-skip models serve only among
+the oldest $n$ waiting jobs \cite{grosof2022wcfs}. The second is work: $\gamma$-Boost
+measures the work of later arrivals that are served ahead of a tagged job
+\cite{yu2024boost,yu2025twotraffics}. These analyses assume stationary Poisson arrivals and
+target means or tail asymptotics, not a cap enforced on every sample path. Our wrapper has
+the architecture of Load Balancing Guardrails \cite{grosof2019guardrails}, which leaves an
+arbitrary dispatching policy free except where a constraint must be enforced, although
+that work optimises mean response time in heavy traffic. Additive bounds against a
+reference discipline are standard in packet scheduling
+\cite{demers1989fq,parekh1993gps,bennett1996wf2q,stoica1995eevdf}, and the coefficient of
+Graham's list-scheduling bound \cite{graham1969bounds} has the same shape as the $(2-2/k)$
+of Section~\ref{sec:theory}. Supplementary Section~S9 compares these guarantees in detail.
 
-The closest architectural precedent for a wrapper around an arbitrary policy is Load Balancing Guardrails \cite{grosof2019guardrails}. It augments any dispatching policy so that a load-balancing system with SRPT at each server is optimal for mean response time in heavy traffic. Its reference, its stochastic objective, its preemptive server policy and its dispatch-level constraints all differ from our per-job additive promise, but the separation between an unrestricted base decision and a protective wrapper is the same. At one server our ``pointwise maximal'' statement uses the supervisory-control meaning of a maximally permissive supervisor, which turns off only the actions needed to keep behaviour within the specification \cite{ramadge1987supervisory}; we claim that property only for the opaque-base, integer-time class defined in Supplementary Section~S8, not as a general least-restrictive result. Supplementary Table~S24 compares the reference discipline, arrivals, preemption, information, server model and guarantee across these nearest mechanisms.
-% Reading depth for this section is recorded with the extended detail in Supplementary
-% Section S9.
+\subsection{Prediction-Driven Scheduling in Deployed Systems}
 
-Bounded overtaking has a history in queueing theory, in two units. Counting came first. Nudge lets a small arriving job swap past the job at the tail of the queue \cite{grosof2021nudge}, and Nudge-$K$ lets it pass up to $K$ others while no job is passed more than once \cite{vanhoudt2022nudgek}; the line continues with Nudge*(M) \cite{charlet2026nudgestarm}. The finite-skip models of WCFS restrict service to the oldest $n$ jobs and add work conservation and non-idling \cite{grosof2022wcfs}. Work is the second unit: $\gamma$-Boost measures the \emph{crossing work} of later arrivals that precede a tagged job \cite{yu2024boost}, and that line extends to $k$ servers \cite{yu2025twotraffics}. All of these are analysed in steady state, under Poisson arrivals with light-tailed or phase-type sizes, and they target stationary means or tail constants rather than a deterministic per-job cap enforced on every sample path. That Nudge implies, on every sample path, a per-job additive bound of one small-job length is our own reading and not a claim of \cite{grosof2021nudge}, whose analysis is stochastic by design. We do not claim bounded overtaking at one server as new.
+Backfilling schedulers for high-performance computing replace users' runtime estimates by
+predictions learned from past jobs, and report mean slowdown or mean wait
+\cite{tsafrir2007backfilling,gaussier2015backfilling,gaussier2018easytuning}. Closest to our
+first case, Zhang, Wu and Lu predict the running time of submitted programs in a judging
+queue and order the jobs by prediction inside fixed-size windows
+\cite{zhang2024ojscheduling}, which limits overtaking by position; they report no per-job
+bound. Servers for large language models, which cannot cheaply interrupt a request, learn a
+relative order of the requests \cite{fu2024ltr} or target the latency tail, because
+prediction-driven policies are fragile when the workload shifts \cite{li2026tailaware};
+others promote a request once its wait passes a threshold \cite{wu2023fastserve} or a
+multiple of its service time \cite{luo2025autellix}. Serverless platforms approximate
+shortest remaining time first from user space \cite{fu2022sfs} or learn a priority for
+each function \cite{fu2024alps}. None of these states a bound for individual jobs. A
+maximum waiting time does carry one, of the same form as ours
+(Section~\ref{sec:clock}), and our guard can be placed around any of these schedulers.
 
-The additive shape and the constants are familiar on their own. Additive bounds against a fluid or ideal reference are the standard form in packet scheduling, one-sided in most analyses \cite{parekh1993gps,parekh1994gps,bennett2002psrg} and two-sided in WF$^2$Q and EEVDF \cite{bennett1996wf2q,stoica1995eevdf}, and the coefficient $2-1/k$ of Graham's list-scheduling bound has the shape of the $(2-2/k)$ and $(3-2/k)$ above \cite{graham1969bounds}. What we prove is not a conservation law in the sense of Kleinrock \cite{kleinrock1965conservation}. Supplementary Section~S9 states each of these bounds in the form its source gives it, and carries the rest of this line.
+\subsection{Deadline-Driven Load}
 
-\subsection{Runtime Prediction and Scheduling in Deployed Systems}
+People concentrate their actions before a cutoff \cite{konig2005deadline} and register in
+bursts before a deadline \cite{alfi2007deadline,alfi2009deadline}. When the arrival rate
+changes as fast as jobs are served, congestion peaks after the arrivals do
+\cite{massey1997peak}, and staffing rules need time-varying approximations
+\cite{jennings1996staffing}. These results size the capacity; they give no bound for an
+individual job once a queue has formed, and we keep the capacity fixed.
 
-Backfilling schedulers on high-performance computing systems have used predicted runtimes in place of user estimates for two decades \cite{tsafrir2007backfilling}, with predictions learned from past jobs and queue reordering tuned online \cite{gaussier2015backfilling,gaussier2018easytuning}. Their jobs each hold several processors for a requested time, and the metrics they report are means, of bounded slowdown \cite{gaussier2015backfilling} and of waiting time \cite{gaussier2018easytuning}. Closest to our setting, Zhang, Wu and Lu \cite{zhang2024ojscheduling} predict the running time of submitted code in a judging queue and dispatch in increasing predicted runtime inside fixed-size windows, so we are not the first to schedule a judging queue by predicted cost. A fixed window does limit overtaking, but by position, and its abstract reports no per-job bound and no test under adversarial predictions. In inference serving, where non-preemption is close to a hard constraint, recent systems learn a relative order instead of a length \cite{fu2024ltr} or target the tail because prediction-driven policies are fragile under distribution shift \cite{li2026tailaware}. Production systems otherwise avoid starvation with aging counters and maximum waiting times, and recent inference servers promote a request once its wait passes a fixed threshold \cite{wu2023fastserve} or a multiple of its service time \cite{luo2025autellix}, none of them with a stated bound. A maximum waiting time that serves the earliest-arrived waiting job once it has waited a fixed time does carry a per-job bound against FCFS of the same form as ours (Section~\ref{sec:clock}); at the busiest load and tight promises it keeps much less of the benefit (Section~\ref{sec:exp_guard}). Serverless platforms are in the same position: SFS approximates shortest-remaining-time-first from user space \cite{fu2022sfs}, and ALPS learns a per-function rank and time-slice cap from an offline replay \cite{fu2024alps}, neither with a bound. Our guard is a wrapper rather than a policy, so it can be placed around any of these schedulers, and its bound does not depend on which one is underneath.
+\subsection{Relational Models for Cost Prediction}
 
-\subsection{Time-Varying and Deadline-Driven Load}
-
-That people concentrate their actions near a cutoff has been measured directly, in time-management research \cite{konig2005deadline} and in conference registration data \cite{alfi2007deadline,alfi2009deadline}. The queueing consequences of an arrival rate that varies on the timescale of the service time are also well studied. Peak congestion in a multiserver system lags the peak of the arrival rate \cite{massey1997peak}, and staffing rules that follow a time-varying rate rest on offered-load approximations \cite{jennings1996staffing,green2007coping} or on simulation \cite{feldman2008staffing} rather than on stationary formulas. These results say how many servers to provide. They give no waiting bound for an individual job and no guidance for a queue that has already formed, and we leave capacity fixed. The steady-state classified-priority formula that motivates ranking by predicted cost \cite{mitzenmacher2020misprediction,harcholbalter2013} does not hold up under this load either; Section~\ref{sec:model} measures the mismatch, which is why we state the guarantee on sample paths and assume nothing about arrivals.
-
-\subsection{Relational and Tabular Models for Cost Prediction}
-
-Our comparison includes a heterogeneous graph neural network over users, tasks and assignments, in the relational graph convolution family \cite{schlichtkrull2018rgcn}, with the neighbour aggregation chosen on validation between the mean and the sum \cite{xu2019gin}. Two features of the published benchmarks make them a poor argument either way. In RelBench \cite{robinson2024relbench} and its successor \cite{gu2026relbenchv2} the gradient-boosted baseline is fitted on the raw columns of the entity table alone, without hand-built aggregates over related tables, so the margin reported there is not a comparison against a tabular model that carries engineered history features. The same paper's study against a human data scientist, which is the closer comparison, records regression as the region where the relational model struggles. Cost prediction is a regression task on entities with long individual histories, which places it in that region, and the evidence that tree ensembles remain strong on tabular data concerns single tables \cite{grinsztajn2022tabular}. We therefore settle the question inside our own protocol instead of importing a conclusion: a tabular baseline that carries engineered causal history features \cite{ke2017lightgbm}, an ablation ladder that removes and then permutes the edges, and a comparison made on queueing outcomes rather than on AUROC alone. The negative result we report is about this task on these traces, where each user and each task already has enough history of its own. The relational signal we find is small overall and concentrated on tasks with fewer than five prior results.
-
-\subsection{What Is Missing}
-
-Our contribution is therefore a combination and not a new unit. The identity is two-sided and holds on an arbitrary arrival sequence with arbitrary service times, under no distributional assumption. The constant $(2-2/k)L$ is exact for $k$ non-preemptive servers, and so is the $(3-2/k)L$ of the wrapper. The converse makes a work budget necessary and not merely sufficient, up to an additive $O(kL)$. And Algorithm~\ref{alg:guard} enforces the bound online around any base policy, learned ones included, under predictions that may be arbitrarily wrong. On a specified batch family the bound is also achievable, and at one server the wrapper is pointwise maximal within an opaque-base class (Supplementary Section~S8); neither result claims global instance optimality or a least-restrictive wrapper for $k\geq2$.
+A job's cost may depend on its user, its task and the relations between them, which is the
+setting of relational deep learning. On the RelBench benchmarks, graph models over linked
+tables beat gradient-boosted trees fitted on the columns of a single table
+\cite{robinson2024relbench}, while on single tables tree ensembles still outperform deep
+models \cite{grinsztajn2022tabular}. We therefore compare a heterogeneous graph neural
+network over users, tasks and assignments \cite{schlichtkrull2018rgcn,xu2019gin} with
+gradient-boosted trees \cite{ke2017lightgbm} that carry engineered history features, and we
+judge them by the waits they produce in the queue as well as by their prediction scores.

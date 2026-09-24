@@ -5,154 +5,114 @@
 
 \subsection{Jobs, Servers and Dispatch}
 
-The judging queue of the introduction becomes a finite set of $n$ jobs served by $k$
-identical servers. We use \emph{server}
-throughout for what a deployment would call an executor, a judge host or a worker, and
-\emph{job} for what a platform would call a submission, an invocation or a run.
-Job $i$ arrives at time $a_i \ge 0$ and requires $C_i$ units of service. Service is non-preemptive, so a
-server that starts a job keeps it until the job finishes or until it has been running
-for the per-job time limit $L$, at which point the system stops it. Throughout, $C_i$
-denotes executed work, so $0 < C_i \le L$ by construction and a job stopped at the
-limit contributes exactly $L$. An enforced timeout ends such a job without a successful result, and the waiting-time guarantee does not bound that loss of completion
-quality. In Section~\ref{sec:data} we distinguish observed maxima and analysis truncations in a
-trace from enforced timeouts. One quantity carries three names, \emph{cost} in the application sections, \emph{service}
-or \emph{service time} in the analysis, and \emph{work} when several jobs are summed, all
-three denoting $C_i$.
-Two further words are fixed here because the application sections need them. A
-\emph{task} is the exercise or problem a job is an attempt at, so many jobs share one task. Similarly, a \emph{run} is the unit of work of a continuous-integration pool, and is a job in
-the sense above.
+A finite set of $n$ jobs is served by $k$ identical servers. We say \emph{server} for what a
+deployment calls an executor, a judging machine or a worker, and \emph{job} for a
+submission, a function call or a test run. Job $i$ arrives at time $a_i \ge 0$ and needs
+$C_i$ units of service, which we also call its \emph{cost} or its \emph{work}. Service is
+non-preemptive. A server that starts a job keeps it until the job finishes or has run for
+the time limit $L$, at which point the system stops it. Since $C_i$ is the work actually
+executed, $0 < C_i \le L$, and a job stopped at the limit contributes exactly $L$. For a
+stopped job, the waiting-time guarantee says nothing about the lost result. A \emph{task}
+is the programming exercise a job attempts, so many jobs share one task.
 
-Servers are work-conserving, meaning that no server idles at an instant at which some
-job waits. Jobs carry a rank, the total order induced by the pair (arrival time, input index), and we write $j < i$ for ``$j$ has the smaller rank'', which implies
-$a_j \le a_i$. At a common instant, events are processed as completions, then arrivals, then
-dispatches. A policy is any rule that names one waiting job and
-dispatches it, whenever a server is free and at least one job waits. In particular, it may be randomised, learned, priority-driven, or fed by predictions of arbitrary quality, and we assume nothing else about it.
-
-Arrival times are arbitrary, and we place no stochastic assumption on $a_i$, on $C_i$, or
-on the dependence between them, because an external calendar generates the load we care
-about and that load is neither stationary nor Poisson.
+Servers are work-conserving, which means that no server is idle while a job waits. Jobs are
+numbered in arrival order, with ties broken by input order, and we write $j < i$ when $j$
+comes first in this order, so $j < i$ implies $a_j \le a_i$. At a common instant,
+completions are processed first, then arrivals, then dispatches. A \emph{policy} is any
+rule that, whenever a server is free and a job waits, picks one waiting job and starts it.
+Such a rule may be randomised, learned, priority-driven or driven by predictions of any
+quality. We make no stochastic assumption about the arrival times, the costs or their
+dependence, because the load we care about follows a calendar and is not stationary.
 
 \subsection{What the Scheduler Knows}
 
-At arrival the service time $C_i$ is hidden, and the scheduler reads it at the instant
-$i$ completes and not before. Any service that runs submitted work without looking inside it
-first is in that position. Available at $a_i$ are a feature vector $x_i$ and a
-score $\hat{C}_i$ computed from it.
-
-Visibility is causal, and we define it by result availability instead of timestamp
-order. Write $\mathrm{done}_j$ for the instant at which the outcome of job $j$ became
-readable and $\delta \ge 0$ for the delay with which outcomes reach the feature store.
-Then
-\[
+A job's cost is hidden when it arrives, and the scheduler learns $C_i$ only when $i$
+completes. At arrival it sees a feature vector $x_i$, built from the history of earlier
+jobs, and a score $\hat C_i$ computed from $x_i$. This history must be causal. Write
+$\mathrm{done}_j$ for the instant at which the result of job $j$ becomes readable, and
+$\delta \ge 0$ for the delay before it reaches the store the features are read from. Then
+\begin{equation}
   \text{information about } j \text{ may enter } x_i
-  \qquad\Longleftrightarrow\qquad
+  \quad\Longleftrightarrow\quad
   \mathrm{done}_j + \delta \le a_i .
-\]
-Historical features are recomputed under the chosen release rule rather than assembled
-once and masked afterwards. In Section~\ref{sec:prediction}, the original prediction study uses the source platform's
-result clock. In a replayed
-queue, an endogenous result instead becomes available at
-$\mathrm{done}^{P}_j=a_j+W_P[j]+C_j$. Hence source-clock causality does not imply availability under policy $P$, since a
-recorded result may already be visible while its
-replayed job is still waiting. The headline of Section~\ref{sec:exp_visibility} therefore uses an exact protocol,
-in which each policy's replay is repeated, leaving out every
-result that the replay says was not yet complete when the job that uses it arrived,
-until no score uses an unavailable result. Beside it sit two references, a conservative protocol that restricts history to replayed submissions in the same class-term copy, one
-class of one term as placed in the overlay, and delays every result by a fixed lag, and a static control that uses no outcome history. Section~\ref{sec:exp_visibility} says how
-availability is checked and separates external history from queueing exposure inside
-the same copy. The guard theorem does not depend on which scores these protocols produce.
+  \label{eq:visibility}
+\end{equation}
+In a simulation driven by a log, $\mathrm{done}_j$ can be read in two ways. One of the two
+ways takes the time at which the result appeared on the original platform, as the log
+records it. However, in the simulated queue the job completes at a time that depends on the
+policy being simulated. A feature that is
+causal on the original platform's clock may therefore use a result that the simulated
+queue has not produced yet. On the original clock we run the prediction study of
+Section~\ref{sec:prediction}, and on the simulated one the headline scheduling results
+(Section~\ref{sec:exp_visibility}). The guarantees of Section~\ref{sec:theory} hold under
+either reading, since they assume nothing about the scores.
 
 \subsection{Waiting Time, the FCFS Reference and the Service Guarantee}
 
-Let $s^P_i$ be the start time of job $i$ under policy $P$ and
-$W_P[i] = s^P_i - a_i$ its waiting time, which excludes service. FCFS is the policy
-that always dispatches the waiting job of smallest rank, and that dispatches in
-increasing rank when several servers become free at the same instant. We run it on the
-same arrival sequence, with the same service times and the same $k$, so that the
-comparison is pathwise rather than distributional. For each job $i$ we define the excess
-\[
+Let $s^P_i$ be the start time of job $i$ under policy $P$ and $W_P[i] = s^P_i - a_i$ its
+waiting time. FCFS always starts the earliest-arrived waiting job, and when several
+servers become free at one instant it starts jobs in arrival order. We run FCFS on the same
+arrivals, costs and $k$ as $P$, so that the two are compared job by job on one sample path.
+The \emph{excess} of job $i$ is
+\begin{equation}
   \mathrm{excess}_P[i] \;=\; W_P[i] - W_{\mathrm{FCFS}}[i] .
-\]
-
-Writing $j \prec i$ for ``$j$ is dispatched before $i$'' in the dispatch sequence, we
-define two further quantities that carry the analysis,
-\[
+  \label{eq:excess}
+\end{equation}
+Writing $j \prec i$ when $j$ is started before $i$, the work that overtook $i$ and the
+work that $i$ overtook are
+\begin{equation}
   \mathrm{In}_i \;=\; \sum_{j > i,\; j \prec i} C_j ,
   \qquad
-  \mathrm{Out}_i \;=\; \sum_{j < i,\; i \prec j} C_j ,
-\]
-the work that overtook $i$ and the work that $i$ overtook, which
-Section~\ref{sec:theory} relates to $\mathrm{excess}_P[i]$.
+  \mathrm{Out}_i \;=\; \sum_{j < i,\; i \prec j} C_j .
+  \label{eq:inout}
+\end{equation}
 
-We say that a policy $P$ offers a service guarantee $G$ if
-$\mathrm{excess}_P[i] \le G$ for every job $i$, on every arrival sequence, for every
-vector of service times bounded by $L$, and for every score, adversarial scores
-included. From here on the \emph{promise} is the number $G$
-the operator states, and the \emph{guarantee} is the proved statement that
-$\mathrm{excess}_P[i] \le G$ holds for every job, so an operator chooses a promise and a theorem supplies a
-guarantee. Thus the statement is
-per job and holds on the realised sample
-path, in no sense in distribution or on average, and it does not assume that the score
-is any good. Packet scheduling states per-individual additive bounds against a reference
-discipline~\cite{parekh1993gps}, and batch schedulers measure the same
-difference after the fact as a fairness
-diagnostic~\cite{sabin2004fairness,sabin2005unfairness}. Those authors define the fair
-start time by re-simulating the scheduler under test without the later arrivals, in two
-variants, and in the relaxed one the job may not start before any job queued ahead of it.
-Our reference runs first-come first-served for every job instead, so the two coincide
-when the scheduler under test is first-come first-served. By contrast, the scheduling-with-predictions literature compares against an optimal
-policy, with a competitive ratio that degrades with the
-prediction error~\cite{purohit2018predictions} or an average-case ratio under a bound on
-that error~\cite{scully2022uniform}.
-
-We take FCFS as the reference because it is what these services deploy by default, so
-the excess is a quantity an operator can be held to. In addition, it has a known extremal property for the unfinished-work vector in a
-multiserver system, since the FCFS workload vector is minimal in the weak-majorisation order among
-systems whose assignment of arrivals to servers does not depend on service
-times~\cite{daley1987fcfs}, a hypothesis narrower than work conservation alone. Single-server arguments therefore do not transfer unchanged to $k > 1$.
+A policy $P$ offers a \emph{service guarantee} $G$ if $\mathrm{excess}_P[i] \le G$ for every
+job $i$, on every arrival sequence, for all costs bounded by $L$ and for every score,
+adversarial scores included. An operator states $G$ in advance, and the guarantee is the
+proved statement that every job stays within it. This guarantee
+holds for each job on the realised sample path, not on average, and it assumes nothing about
+the quality of the score. Packet schedulers state additive per-flow bounds of this kind
+against a reference discipline \cite{parekh1993gps}. Batch schedulers measure the same
+difference after the fact, against a fair start time \cite{sabin2004fairness}. However,
+the scheduling-with-predictions literature compares with an optimal policy
+\cite{purohit2018predictions,scully2022uniform}. We take FCFS as the reference because
+these services run it by default, so the excess is a quantity an operator can be held
+accountable for.
 
 \subsection{Metrics}
 
-The primary metric is the 99th percentile of waiting time inside deadline windows, and
-we write $\mathrm{p99}_{\mathrm{dl}}$ for it, the symbol the tables carry as a column
-head. A
-deadline window is the 24 hours before a deadline. Membership is decided by arrival, so a job that arrives
-inside the window but completes after it closes is still counted. We fix this choice before any sealed part of
-a trace is opened.
+The primary metric is the 99th percentile (p99) of the waiting time of the jobs that
+arrive in the 24 hours before a deadline, written $\mathrm{p99}_{\mathrm{dl}}$. This metric
+was fixed before any sealed part of a log was opened. With it we report the mean wait over
+all jobs and the largest excess, which is what a guarantee bounds. We also report the
+\emph{harm}, the largest excess among the jobs that FCFS would have started within 1 s, that
+is, among jobs FCFS would not have delayed. A fourth quantity, the \emph{firing rate}, is
+the share of dispatch decisions at which the guard of Section~\ref{sec:scheduling} overrides
+the base policy, weighted by queue length. Finally, we report the worst wait among heavy
+jobs, defined in Section~\ref{sec:prediction}.
 
-Four secondary quantities go with it, the first being the mean wait over all jobs. The
-second is the maximum of $\mathrm{excess}_P[i]$, the quantity a service guarantee
-bounds. The third is the \emph{harm}, the largest excess over FCFS among the jobs FCFS
-would have started within $1$ s, that is, among the jobs FCFS would not have delayed at
-all. A guarantee $G$ says nothing about how that excess is distributed, and the harm is
-what an operator's users complain about. The fourth is the \emph{firing rate}, the
-share of dispatch epochs at which the guard of Section~\ref{sec:scheduling} overrides
-the base policy, weighted by queue length. We also report the worst wait among heavy
-jobs, heavy being the label Section~\ref{sec:prediction} defines.
-
-We also express improvements as the fraction of the gap closed,
-\[
-  \frac{M_{\mathrm{FCFS}} - M_{P}}
-       {M_{\mathrm{FCFS}} - M_{\mathrm{SJF}}} ,
-\]
-where $M_Q$ is the primary metric, $\mathrm{p99}_{\mathrm{dl}}$, under policy $Q$,
-and SJF sorts waiting jobs by their true service times. SJF on true sizes is a
-reference policy and not an optimum. In particular, it is not deployable, since $C_i$ is unknown at arrival, and it does not minimise any of the metrics above on a non-preemptive
-multiserver system. When its denominator is small the ratio is unstable, so we mark
-such configurations and print the two absolute waits next to every ratio. The fraction
-of the gap closed is not a percentage reduction in waiting time and we do not report
-it as one.
+Improvements are expressed as the fraction of the gap closed,
+\begin{equation}
+  \mathrm{gap\ closed}(P) \;=\;
+  \frac{M_{\mathrm{FCFS}} - M_{P}}{M_{\mathrm{FCFS}} - M_{\mathrm{SJF}}} ,
+  \label{eq:gapclosed}
+\end{equation}
+where $M_Q$ is $\mathrm{p99}_{\mathrm{dl}}$ under policy $Q$ and SJF orders the waiting
+jobs by their true costs. SJF cannot be deployed, since costs are unknown at arrival. On
+several non-preemptive servers SJF also minimises none of our metrics, so it is a reference
+and not an optimum. A gap closed of 1 means that $P$ matches the p99 of SJF, and 0 that it
+matches FCFS. Gap closed is not a percentage reduction in waiting time, and the tables
+print the absolute waits beside it.
 
 \subsection{Steady-State Models and This Load}
 
-Stationary queueing models give closed forms for the mean wait of a non-preemptive
-priority class~\cite[pp.~499--507]{harcholbalter2013} and would let class thresholds be placed analytically, but they need a stationary arrival
-process, which deadline-driven load does
-not supply. On a synthetic Poisson stream the formula agrees with simulation to
-\devnum{0.4\%}, but on the same workload at its recorded timestamps the measured wait is
-\devnum{10.7}--\devnum{13.7} times what it predicts (Supplementary Section~S2.5). We
-therefore use steady-state expressions as motivation only, and every promise here is a
-per-job statement on the realised sample path (Section~\ref{sec:theory}). The mechanism
-that makes reordering useful is the three-job arithmetic of the introduction, where
-total work is unchanged while one long job moves back a little and several short ones
-move forward a lot.
+Stationary models give closed forms for the mean wait of each class of a non-preemptive
+priority queue \cite[pp.~499--507]{harcholbalter2013}. The Schedule Ordered by Age-based
+Priority (SOAP) framework analyses every policy that ranks jobs by a function of their size
+class and age \cite{scully2018soap}, a family that contains ranking by predicted cost. Both
+analyses need stationary arrivals, which deadline-driven load does not supply. On a synthetic Poisson
+stream the priority formula agrees with simulation to \devnum{0.4\%}, but on the same jobs
+at their recorded arrival times the measured mean wait is \devnum{10.7} to \devnum{13.7}
+times what the formula predicts (Supplementary Section~S2.5). Thus, we use steady-state
+results as motivation only, and state every guarantee on the realised sample path.

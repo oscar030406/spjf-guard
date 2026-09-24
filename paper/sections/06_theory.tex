@@ -1,206 +1,158 @@
 \providecommand{\devnum}[1]{#1}
 
-% The preamble is expected to load amsthm.  The declarations below are made only
-% if main.tex has not already made them.
-\makeatletter
-\@ifundefined{theorem}{%
-  \theoremstyle{plain}%
-  \newtheorem{theorem}{Theorem}[section]%
-  \newtheorem{lemma}[theorem]{Lemma}%
-  \newtheorem{corollary}[theorem]{Corollary}%
-  \newtheorem{proposition}[theorem]{Proposition}%
-  \theoremstyle{definition}%
-  \newtheorem{definition}[theorem]{Definition}%
-  \theoremstyle{remark}%
-  \newtheorem{remark}[theorem]{Remark}%
-}{}
-\makeatother
-
 \section{Theory}
 \label{sec:theory}
 
-An operator who puts a prediction-driven scheduler in front of students wants to know
-the worst that can happen to one job, not what happens on average. Everything in this
-section is therefore stated for one fixed run, that is, one arrival sequence, one vector of
-service times, one realisation of whatever randomness the base policy uses. We call
-such a statement pathwise. No stationarity, no independence and no assumption about
-score quality enters a proof, and the upper bounds hold even against a base policy
-that knows the future. The section has three parts. An identity ties a job's delay
-relative to first-come first-served to the work that overtook it. Two bounds turn that
-identity into the guarantee of Algorithm~\ref{alg:guard}. A set of constructions then
-shows that each constant in those bounds is an exact supremum, so that no smaller
-constant would do. Every statement kept here comes with the idea of its argument.
-We give every deferred proof, every extremal construction and the statements this
-section only summarises in Supplementary Sections~S4 and~S8, S8 opening with the idea
-of each construction beside it. We then add, in Sections~\ref{sec:clock}
-to~\ref{sec:late}, a clock rule, an absolute bound and late completion reports. Of
-their constants only the late-report term is shown to be attained.
+Everything in this section is stated for one fixed run: one arrival sequence, one vector of
+costs and one realisation of whatever randomness the base policy uses. No stationarity, no
+independence and no assumption about the scores enters a proof, and the upper bounds hold
+even against a base policy that knows the future. An identity ties a job's delay relative
+to FCFS to the work that overtook it (Sections~\ref{sec:th_gap}--\ref{sec:th_necessity}),
+two bounds turn it into the guarantee of Algorithm~\ref{alg:guard}
+(Section~\ref{sec:th_guard}), and three further results cover a maximum waiting time, an
+absolute bound and completion reports that arrive late
+(Sections~\ref{sec:clock}--\ref{sec:late}). Full proofs and the extremal constructions are
+in Supplementary Sections~S4 and~S8.
 
 \subsection{Conventions}
+\label{sec:conventions}
 
-We use the model of Section~\ref{sec:model} throughout, and fix three readings
-the proofs depend on. The dispatches at one instant form a \emph{phase}, ordered
-as the policy performs them, and the dispatch sequence behind $j \prec i$ is the concatenation of the phases. First-come first-served dispatches in increasing
-rank inside a phase. A job dispatched in the same phase as $i$ executes no work
-during $[a_i, s^P_i)$, that interval ending at the instant of the phase, yet
-contributes its whole $C_j$ to $\mathrm{In}_i$. Remaining work at $a_i$ is read
-\emph{after} the arrivals at $a_i$, so a job of rank below $i$ arriving at
-exactly $a_i$ counts with its full service time.
+We use the model of Section~\ref{sec:model} and fix three readings the proofs depend on.
+The jobs started at one instant form a \emph{phase}, ordered as the policy starts them, and
+$j \prec i$ refers to the concatenation of the phases. Within a phase, FCFS starts the jobs
+in arrival order. A later-arriving job started in the same phase as $i$ but ahead of it counts
+as overtaking $i$ and contributes its whole $C_j$ to $\mathrm{In}_i$, although it executes
+nothing while $i$ waits. Remaining work at $a_i$ is read after the arrivals at $a_i$.
 
 \subsection{The Workload Gap between Two Policies}
+\label{sec:th_gap}
 
-Write $U_Q(t)$ for the unfinished work at time $t$ under policy $Q$, counting
-every job with $a_j \le t$, and $N_Q(t)$ for the number of jobs present. The
-unfinished-work vector of a $k$-server queue obeys the Kiefer--Wolfowitz
-recursion~\cite{kiefer1955queues}, and first-come first-served minimises that
-vector in the weak-majorisation order for systems in which arrivals are
-allocated to servers in a manner that does not depend on their service
-times~\cite{daley1987fcfs}. The policies compared below are not restricted that way. Hence what carries the single-server argument to $k > 1$ here is a two-sided bound between two arbitrary
-policies rather than an ordering.
+Write $U_Q(t)$ for the unfinished work at time $t$ under policy $Q$, counting every job
+with $a_j \le t$.
 
 \begin{lemma}[Workload comparison]
 \label{lem:gap}
-Let $Q_1$ and $Q_2$ be non-preemptive work-conserving $k$-server policies run on
-the same input. Then $|U_{Q_1}(t) - U_{Q_2}(t)| \le (k-1)L$ for every $t$. For
-$k \ge 2$ the inequality is strict, $|U_{Q_1}(t) - U_{Q_2}(t)| < (k-1)L$, and
-the constant is the exact supremum, approached but never attained. At $k = 1$
-both sides vanish, because one server executes work at rate $1$ whenever at least one job
-is present, so every work-conserving policy has the same unfinished work at every
-instant.
+Let $Q_1$ and $Q_2$ be non-preemptive work-conserving $k$-server policies run on the same
+input. Then $|U_{Q_1}(t) - U_{Q_2}(t)| \le (k-1)L$ for every $t$. For $k \ge 2$ the
+inequality is strict, $|U_{Q_1}(t) - U_{Q_2}(t)| < (k-1)L$, and the constant is the exact
+supremum, approached but never attained. At $k = 1$ both sides vanish, because one server
+executes work at rate $1$ whenever at least one job is present, so every work-conserving
+policy has the same unfinished work at every instant.
 \end{lemma}
 
-\begin{proof}[Proof idea]
-The difference $D = U_{Q_1} - U_{Q_2}$ is continuous and piecewise linear. At
-every instant at which $U_{Q_1}$ exceeds $(k-1)L$ it cannot increase, since more
-than $k-1$ jobs are then present under $Q_1$ and every server of $Q_1$ is busy.
-Tracking $D$ back to the last instant at which $U_{Q_1}$ was below the threshold
-gives the bound. The proof, the strictness, and the cascade that shows the
-constant cannot be lowered are in Supplementary Sections~S4.1 and~S8.1.
+\begin{proof}[Proof sketch of Lemma~\ref{lem:gap}]
+The difference $D = U_{Q_1} - U_{Q_2}$ is continuous and piecewise linear. Whenever
+$U_{Q_1}$ exceeds $(k-1)L$, more than $k-1$ jobs are present under $Q_1$, every server of
+$Q_1$ is busy, and $D$ cannot increase. Tracking $D$ back to the last instant at which
+$U_{Q_1}$ was at most $(k-1)L$ gives the bound. Supplementary Sections~S4.1 and~S8.1 give
+the proof, the strictness and the construction that shows the constant cannot be lowered.
 \end{proof}
 
-Thus two work-conserving policies can drift apart in unfinished work, but
-only by what $k-1$ servers can hold. At one server they never drift at all.
+The argument that a work-conserving $k$-server system can fall behind only by what $k-1$
+servers hold is the one used to compare a multiserver system with a single fast server in
+the analysis of shortest remaining processing time (SRPT)
+\cite{schrage1966srpt,grosof2018srpt}, where it bounds the work below a size cutoff. Here
+we use it to compare any two non-preemptive work-conserving policies over all of the
+work. FCFS also minimises the unfinished-work
+vector in a stronger order, but only among policies whose assignment of jobs to servers
+ignores their costs \cite{daley1987fcfs}, which the policies compared here do not.
 
 \subsection{The Net-Overtake Identity}
 
-For a job $i$ and a policy $Q$, let $R^Q_i$ be the remaining work at time $a_i$,
-under $Q$, of the jobs of rank below $i$, read after the arrivals at $a_i$; and
-let $\rho^Q_i$ be the remaining work at $s^Q_i$ of the jobs dispatched strictly
-before $i$ in $Q$'s dispatch sequence that are still in service then. Write
-\[
+For a job $i$ and a policy $Q$, let $R^Q_i$ be the remaining work at time $a_i$, under $Q$,
+of the jobs that arrived before $i$, and let $\beta^Q_i$ be the remaining work at $s^Q_i$
+of the jobs started before $i$ that are still running then. Write
+\begin{equation}
   \Delta_i \;=\; k\bigl(W_P[i] - W_{\mathrm{FCFS}}[i]\bigr)
               \;-\; \bigl(\mathrm{In}_i - \mathrm{Out}_i\bigr).
-\]
+  \label{eq:delta}
+\end{equation}
 
 \begin{theorem}[Net-overtake identity]
 \label{thm:identity}
-For every non-preemptive work-conserving $k$-server policy $P$, every input and
-every job $i$,
-\[
-  \Delta_i \;=\; \bigl(R^P_i - R^{\mathrm{FCFS}}_i\bigr) - \rho^P_i
-                 + \rho^{\mathrm{FCFS}}_i ,
+For every non-preemptive work-conserving $k$-server policy $P$, every input and every job
+$i$,
+\begin{equation}
+  \Delta_i \;=\; \bigl(R^P_i - R^{\mathrm{FCFS}}_i\bigr) - \beta^P_i + \beta^{\mathrm{FCFS}}_i ,
   \qquad
   \bigl|\Delta_i\bigr| \;\le\; 2(k-1)L ,
-\]
-with strict inequality for $k \ge 2$; equivalently
-$\bigl|\,W_P[i] - W_{\mathrm{FCFS}}[i] - (\mathrm{In}_i - \mathrm{Out}_i)/k\,\bigr|
- \le (2 - 2/k)L$. At $k = 1$ the error term vanishes and
-$W_P[i] - W_{\mathrm{FCFS}}[i] = \mathrm{In}_i - \mathrm{Out}_i$ exactly.
+  \label{eq:identity}
+\end{equation}
+with strict inequality for $k \ge 2$. Equivalently,
+$\bigl|\,W_P[i] - W_{\mathrm{FCFS}}[i] - (\mathrm{In}_i - \mathrm{Out}_i)/k\,\bigr| \le (2 - 2/k)L$.
+At $k = 1$ the error term vanishes and $W_P[i] - W_{\mathrm{FCFS}}[i] = \mathrm{In}_i -
+\mathrm{Out}_i$ exactly.
 \end{theorem}
 
-\begin{proof}[Proof idea]
+\begin{proof}[Proof sketch of Theorem~\ref{thm:identity}]
 Job $i$ waits throughout $[a_i, s^P_i)$, so every server is busy there and exactly
-$k\,W_P[i]$ units of work are executed, none of it on $i$. Splitting that work by rank
-gives the busy-period accounting
+$k\,W_P[i]$ units of work are executed, none of it on $i$. Splitting that work by arrival
+order gives
 \begin{equation}
-  k\,W_P[i] \;=\; R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \rho^P_i ,
-  \qquad \rho^P_i := \rho^{\mathrm{old}} + \rho^{\mathrm{new}} ,
+  k\,W_P[i] \;=\; R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \beta^P_i .
   \label{eq:busy}
 \end{equation}
-where $\rho^{\mathrm{old}}$ and $\rho^{\mathrm{new}}$ are the work still unfinished at
-$s^P_i$ of, respectively, the jobs dispatched strictly before $i$ and the overtakers,
-and a same-phase overtaker contributes $C_j$ to both $\mathrm{In}_i$ and
-$\rho^{\mathrm{new}}$ and nothing to the executed work. The jobs counted in $\rho^P_i$
-occupy distinct servers and none of them occupies the server that takes $i$, so
-$0 \le \rho^P_i \le (k-1)L$. Under first-come first-served
-$\mathrm{In}_i = \mathrm{Out}_i = 0$, and Lemma~\ref{lem:gap} applied at $a_i$ bounds
-$|R^P_i - R^{\mathrm{FCFS}}_i|$ by $(k-1)L$, strictly for $k \ge 2$. Subtracting the two instances of \eqref{eq:busy} gives the identity. Each direction uses only two of the
-three ranges, which is why the slack is $2(k-1)L$ and not $3(k-1)L$, and at $k = 1$ all
-three terms vanish. We give the proof in full in Supplementary Section~S4.3.
+The jobs counted in $\beta^P_i$ run on distinct servers other than the one that takes $i$,
+so $0 \le \beta^P_i \le (k-1)L$. Under FCFS, $\mathrm{In}_i = \mathrm{Out}_i = 0$, and
+Lemma~\ref{lem:gap} applied at $a_i$ bounds $|R^P_i - R^{\mathrm{FCFS}}_i|$ by $(k-1)L$.
+Subtracting the two instances of \eqref{eq:busy} gives the identity. Each direction uses
+only two of the three ranges, which is why the slack is $2(k-1)L$ and not $3(k-1)L$.
+Supplementary Section~S4.3 gives the proof in full.
 \end{proof}
-
-Read from right to left, the identity turns a bound on overtaken work into a
-bound on delay, with nothing else assumed about the policy.
 
 \begin{corollary}[A work budget is sufficient]
 \label{cor:sufficient}
-If a policy keeps $\mathrm{In}_i - \mathrm{Out}_i \le Z$ for every job, in
-particular if it keeps $\mathrm{In}_i \le Z$, then
-$\mathrm{excess}_P[i] \le Z/k + (2 - 2/k)L$ for every job.
+If a policy keeps $\mathrm{In}_i - \mathrm{Out}_i \le Z$ for every job, in particular if it
+keeps $\mathrm{In}_i \le Z$, then $\mathrm{excess}_P[i] \le Z/k + (2 - 2/k)L$ for every job.
 \end{corollary}
 
-Hence a scheduler that never lets more than $Z$ units of work pass a waiting job
-holds every wait within $Z/k + (2-2/k)L$ of arrival order, whatever it
-ranks by. That is the whole mechanism of Algorithm~\ref{alg:guard}.
+\begin{proof}[Proof of Corollary~\ref{cor:sufficient}]
+By Theorem~\ref{thm:identity}, $k\,\mathrm{excess}_P[i] \le \mathrm{In}_i - \mathrm{Out}_i +
+2(k-1)L \le Z + 2(k-1)L$. Dividing by $k$ gives the claim.
+\end{proof}
 
-\subsection{The Constant \texorpdfstring{$2(k-1)L$}{2(k-1)L} Is Exact}
-
-The error term of Theorem~\ref{thm:identity} is not an artefact of the proof, although
-neither search nor real input reaches it. The extremal instances are geometric cascades
-needing hundreds of jobs, which nothing in a replayed workload arranges.
-Section~\ref{sec:exp_bound} and Supplementary Section~S3.13 report how far below the
-constant the measured residual stays, on small instances and on the trace alike.
+So a scheduler that never lets more than $Z$ units of work pass a waiting job holds every
+wait within $Z/k + (2-2/k)L$ of its FCFS wait, whatever it ranks by. The constant cannot be
+improved.
 
 \begin{theorem}[Tightness of Theorem~\ref{thm:identity}]
 \label{thm:tight1}
-For every fixed $k \ge 2$, service bound $L>0$, and $\varepsilon > 0$ there are
-inputs, work-conserving policies $P$ and jobs $i$ with
-$\Delta_i > 2(k-1)L - \varepsilon$, and there are others with
-$\Delta_i < -2(k-1)L + \varepsilon$. Hence
-$\sup |\Delta_i| = 2(k-1)L$, a supremum that is never attained.
+For every fixed $k \ge 2$, service bound $L>0$ and $\varepsilon > 0$ there are inputs,
+work-conserving policies $P$ and jobs $i$ with $\Delta_i > 2(k-1)L - \varepsilon$, and there
+are others with $\Delta_i < -2(k-1)L + \varepsilon$. Hence $\sup |\Delta_i| = 2(k-1)L$, a
+supremum that is never attained.
 \end{theorem}
 
-\begin{proof}[Proof idea]
-Both witnesses start from the cascade of Supplementary Section~S8.1, which drives
-$U_P - U_{\mathrm{FCFS}}$ to $(k-1)L\,(1 - ((k-1)/k)^m)$ in $m$ rounds. The
-upward witness then injects $k-1$ long jobs, the victim, and a stream of unit
-jobs the base policy prefers, so that first-come first-served starts the victim
-at once with $\rho^{\mathrm{FCFS}}_i = (k-1)L$ while $P$ holds it until the
-stream runs out. Similarly, the downward witness is the mirror image, with $P$ dispatching
-$k-1$ jobs of service $L$ in the victim's own phase. The construction is first
-given at scale $\widehat L = k^m$, and every arrival time and service time is
-then multiplied by $L/\widehat L$, so the limiting sequence keeps the stated $L$
-fixed. We give both witnesses in full in Supplementary Section~S8.2, with the exact
-values they attain. Non-attainment follows from Lemma~\ref{lem:gap}.
+\begin{proof}[Proof sketch of Theorem~\ref{thm:tight1}]
+Both witnesses start from a geometric cascade that drives $U_P - U_{\mathrm{FCFS}}$ to
+$(k-1)L\,(1 - ((k-1)/k)^m)$ in $m$ rounds and then place a victim so that FCFS starts it
+at once while $P$ holds it back (upward), or the mirror image (downward). The instances
+need hundreds of jobs and are rescaled to keep $L$ fixed. Supplementary Section~S8.2 gives
+both in full. Non-attainment follows from Lemma~\ref{lem:gap}.
 \end{proof}
 
-The two directions do not have the same content. Upward, the extremal value is a
-statement about delay. Downward, half of it is the bookkeeping convention that
-charges an overtaker dispatched in the victim's own phase, which executes nothing
-while the victim waits. We give the remark in full in Supplementary Section~S4.3, with the same-phase shares, the executed-work variant under which the upward supremum
-is unchanged and the best downward witness falls to $(k-1)L$, and the two reasons
-we keep the dispatch-sequence convention.
+In the downward direction, half of the extremal value comes from the convention of
+Section~\ref{sec:conventions} that charges a same-phase overtaker in full. Supplementary
+Section~S4.3 gives the variant that charges executed work only.
 
-\subsection{Necessity, and What a Count of Overtakes Costs}
+\subsection{A Work Budget Is Also Necessary}
+\label{sec:th_necessity}
 
-We now prove a converse to Theorem~\ref{thm:identity}. A policy that promises anything
-about individual jobs is forced to bound overtaken work.
+A policy that guarantees anything about individual jobs is forced to bound the work that
+overtakes them.
 
-\begin{lemma}[Outbound work under a promise]
+\begin{lemma}[Outbound work under a guarantee]
 \label{lem:outbound}
-Let $i$ be a job, and suppose $\mathrm{excess}_P[i] \le G$ and
-$\mathrm{excess}_P[j] \le G$ for every job $j$ counted in $\mathrm{Out}_i$. Then
-$\mathrm{Out}_i \le k\,(G - \mathrm{excess}_P[i] + L)$.
+Let $i$ be a job, and suppose $\mathrm{excess}_P[i] \le G$ and $\mathrm{excess}_P[j] \le
+G$ for every job $j$ counted in $\mathrm{Out}_i$. Then $\mathrm{Out}_i \le k\,(G -
+\mathrm{excess}_P[i] + L)$.
 \end{lemma}
 
-\begin{proof}[Proof idea]
-Every job counted in $\mathrm{Out}_i$ starts inside a window of length
-$G - \mathrm{excess}_P[i]$, and of the jobs one server starts inside such a
-window all but the last complete inside it. We give the proof in Supplementary Section~S4.7.
+\begin{proof}[Proof sketch of Lemma~\ref{lem:outbound}]
+Every job counted in $\mathrm{Out}_i$ starts inside a window of length $G -
+\mathrm{excess}_P[i]$, and of the jobs one server starts inside such a window all but the
+last complete inside it (Supplementary Section~S4.7).
 \end{proof}
-
-Thus a promise limits not only the work that may pass a job but also the work
-that job may itself pass. That second limit is what makes the converse work.
 
 \begin{corollary}[A work budget is necessary]
 \label{cor:necessary}
@@ -208,378 +160,272 @@ If $P$ satisfies $\mathrm{excess}_P[j] \le G$ for every job on some input, then
 $\mathrm{In}_i \le kG + (3k-2)L$ for every job $i$.
 \end{corollary}
 
-\begin{proof}[Proof idea]
-Add Lemma~\ref{lem:outbound} to Theorem~\ref{thm:identity}, where the terms in
-$\mathrm{excess}_P[i]$ cancel. We give both proofs in Supplementary Section~S4.7.
+\begin{proof}[Proof of Corollary~\ref{cor:necessary}]
+Theorem~\ref{thm:identity} gives $\mathrm{In}_i \le k\,\mathrm{excess}_P[i] +
+\mathrm{Out}_i + 2(k-1)L$. Lemma~\ref{lem:outbound} bounds $\mathrm{Out}_i$, and the terms
+in $\mathrm{excess}_P[i]$ cancel.
 \end{proof}
 
-Therefore the two corollaries together say that bounding $\mathrm{In}_i$ and offering a
-per-job guarantee are the same requirement, up to an additive $O(kL)$ in the
-budget. Neither says that Algorithm~\ref{alg:guard} is the least restrictive
-rule with its guarantee, and we do not claim it.
-
-Bounded-overtaking mechanisms in the literature limit instead how many times a job may
-be passed~\cite{grosof2021nudge,vanhoudt2022nudgek}, or how far down the queue service
-may reach~\cite{grosof2022wcfs}. Inside the model of
-Section~\ref{sec:model} such a count is not necessary for a per-job guarantee, and it
-gives one only at the worst-case charge of $L$ per pass. That charge makes it loose
-against a work budget by the ratio $L/\bar{C}$, \devnum{150} on the main trace ($L = 60$ s
-against a mean cost of \devnum{0.40} s). We state this as a remark in Supplementary Section~S4.4 and prove both halves there,
+The two corollaries say that bounding $\mathrm{In}_i$ and offering a per-job guarantee are
+the same requirement, up to an additive $O(kL)$. A bound on the number of overtakes, as in
+the mechanisms of Section~\ref{sec:related}, is not necessary for a guarantee, and it gives
+one only by charging each pass the worst case $L$. That charge makes it looser than a work
+budget by the ratio of $L$ to the mean cost, \devnum{150} on the main grading log ($L =
+60$ s against a mean cost of \devnum{0.40} s). Supplementary Section~S4.4 proves both
+halves and gives the conversion from a count to a bound.
 % Source: prechecks/cost_ratio/out_mean_cost_ratio.txt (L / mean cost = 150.1, mean 0.3997 s).
-together with the conversion from a count to a promise that the Skip baseline of
-Section~\ref{sec:scheduling} uses.
 
 \subsection{The Guarantee of the Guard}
+\label{sec:th_guard}
 
-We now bound what Algorithm~\ref{alg:guard} does. Nothing below restricts the
-base policy, which may be randomised, learned, or clairvoyant. Nothing restricts
-the budget rule either, beyond the cap. It may depend on the job, may decrease
-over time, and may take different values at two dispatches made at the same
-instant.
+Nothing below restricts the base policy, which may be randomised, learned or clairvoyant,
+and nothing restricts the budget rule beyond the cap: it may depend on the job, decrease
+over time, and take different values at two decisions made at the same instant.
 
 \begin{theorem}[Guard bound]
 \label{thm:guard}
-Fix a base policy $A$, a cap $B_{\max} \ge 0$, and a budget rule that respects
-the cap, that is, a function $\mathrm{budget}(q,t)$ satisfying
-$0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job $q$ and every
-dispatch epoch $t$; run Algorithm~\ref{alg:guard} with that rule. For every
-input and every job $i$, writing $W = W_P[i]$ for the wait under the wrapper,
+Fix a base policy $A$, a cap $B_{\max} \ge 0$, and a budget rule that respects the cap,
+that is, $0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job $q$ and every
+dispatch decision at time $t$, and run Algorithm~\ref{alg:guard} with that rule. For every
+input and every job $i$, writing $W = W_P[i]$ for the wait under the guard,
+\begin{linenomath}
 \begin{align}
   \mathrm{In}_i &\;<\; B_{\max} + kL ,
   \label{eq:guardin}\\
   W &\;<\; W_{\mathrm{FCFS}}[i] + B_{\max}/k + (3 - 2/k)L ,
   \label{eq:guardadd}
 \end{align}
+\end{linenomath}
 where \eqref{eq:guardin} is asserted whenever $i$ has at least one overtaker.
 \end{theorem}
 
-\begin{proof}[Proof idea]
-Read the last overtaker of $i$: at the instant it is dispatched, $i$ is
-waiting and is not in the fired set, so $\mathrm{over}[i]$ is below its budget there.
-The overtakers dispatched earlier and not yet finished occupy at most $k-1$ distinct
-servers, and the last one adds a further $L$, which is the $kL$ of
-\eqref{eq:guardin}. Theorem~\ref{thm:identity} with $\mathrm{Out}_i \ge 0$ turns that
-into \eqref{eq:guardadd}. We give the proof in full in Supplementary Section~S4.5.
+\begin{proof}[Proof sketch of Theorem~\ref{thm:guard}]
+When the last overtaker of $i$ starts, $i$ is waiting and not eligible, so
+$\mathrm{over}[i]$ is below its budget there. The overtakers started earlier and not yet
+finished occupy at most $k-1$ servers, and the last one adds a further $L$, which gives
+\eqref{eq:guardin}. Theorem~\ref{thm:identity} with $\mathrm{Out}_i \ge 0$ turns it into
+\eqref{eq:guardadd}. Supplementary Section~S4.5 gives the proof in full.
 \end{proof}
 
-Nothing in the proof reads the budget rule except through the cap, so the shape
-of the budget below the cap is a free choice and the promise is unaffected by
-it. One shape carries a second bound, in which the allowance grows with the wait
-the job has already had rather than being flat in it. For the age-relative budget
-$\mathrm{budget}(q,t) = \min\bigl(B_0 + \eta k (t - a_q),\ B_{\max}\bigr)$, with one
-constant $B_0 \ge 0$ for every job and $\eta \in [0,1)$, the wait obeys
-$(1 - \eta)\,W < W_{\mathrm{FCFS}}[i] + B_0/k + (3 - 2/k)L$. We state that as a proposition in Supplementary Section~S4.5 and prove it
-there. The same bound written with a
-common $B_0$ is false for the queue-length shape of Section~\ref{sec:scheduling}, by a
-margin that grows with $\gamma$, so for $\gamma > 0$ we claim Theorem~\ref{thm:guard}
-alone and Supplementary Section~S4.6 gives the counterexample. The cap, and with it the
-promise, is unaffected either way.
-
-A scheduler that learns $C_j$ at completion cannot charge work in progress, so
-only completed work is charged. The $kL$ in \eqref{eq:guardin} comes from that, and it
-is what forces the additive term. Inverting \eqref{eq:guardadd} gives
-the parameter rule of Section~\ref{sec:scheduling}:
-
-\begin{corollary}[The cap that offers a promise]
+\begin{corollary}[The cap for a given bound]
 \label{cor:params}
-Setting $B_{\max} = k\bigl(G - (3 - 2/k)L\bigr)$ makes Algorithm~\ref{alg:guard} offer
-the service guarantee $G$, whatever the budget shape below the cap and whatever
-the base policy $A$. The choice is available when $G \ge (3 - 2/k)L$, and gives a positive budget only when
-the inequality is strict. At equality $B_{\max} = 0$ and the wrapper is first-come
-first-served.
+Setting $B_{\max} = k\bigl(G - (3 - 2/k)L\bigr)$ makes Algorithm~\ref{alg:guard} offer the
+service guarantee $G$, whatever the budget shape below the cap and whatever the base policy
+$A$. The choice is available when $G \ge (3 - 2/k)L$, and gives a positive budget only when
+the inequality is strict. At equality $B_{\max} = 0$ and the guard is FCFS.
 \end{corollary}
 
-This is the line an operator uses. A promise in seconds goes in, a budget in
-units of work comes out, and nothing about the base policy has to be known.
+\begin{proof}[Proof of Corollary~\ref{cor:params}]
+Substitute $B_{\max}$ into \eqref{eq:guardadd}.
+\end{proof}
 
-One assumption can be traded for a smaller constant. If the service enforces a per-job
-run-time cap $\ell_j \le L$ known at arrival, charging it at dispatch and refunding it at
-completion keeps $\mathrm{In}_i$ within the budget, so the $kL$ of \eqref{eq:guardin}
-goes and the additive constant falls from $(3-2/k)L$ to $(2-2/k)L$, a drop of exactly
-$L$, the promise at $k = 1$ becoming $\mathrm{excess} \le B$ exactly. The information
-model is then not the completion-only one of Section~\ref{sec:scheduling} and the
-mechanism is conservative
-backfilling's \cite{mualem2001backfilling,lindsay2013backfilling}, so Supplementary
-Section~S7.6 carries it, with the single-server maximality and the counterexample that
-rules maximality out for $k \ge 2$.
+The proof reads the budget only through the cap, so the shape below the cap is free. The
+age-relative shape with one constant $B_0$ for every job also gives a multiplicative bound,
+$(1 - \eta)\,W < W_{\mathrm{FCFS}}[i] + B_0/k + (3 - 2/k)L$. The queue-length shape does
+not, by a margin that grows with $\gamma$ (Supplementary Sections~S4.5 and~S4.6). Neither
+constant of Theorem~\ref{thm:guard} can be improved: with a constant budget the term
+$B_{\max}/k$ is reached exactly, and $(3-2/k)L$ is the exact supremum at every $k$,
+approached by a cascade (Supplementary Section~S8.3). If the service enforces a run-time cap
+known at arrival, charging it at the start and refunding the difference at completion
+removes $L$ from the constant (Supplementary Section~S7.6). Finally, a guard that never
+fires leaves the base policy's run unchanged, which can be checked on that run before the
+guard is deployed (Supplementary Section~S4.2).
 
-We next show that neither constant in Theorem~\ref{thm:guard} can be improved. Under a constant budget
-$B$ the term $B/k$ is reached exactly, on a queue of $k$ jobs of service $L$ followed
-by a stream of unit jobs. The additive constant $(3 - 2/k)L$ of \eqref{eq:guardadd} is
-the exact supremum at every $k$, approached by a cascade that has to be run for enough
-rounds. Both sources of slack, the constant of Theorem~\ref{thm:identity} and
-the $kL$ of \eqref{eq:guardin}, are saturated on that one instance, where the excess is
-real waiting time rather than bookkeeping. We state this as a proposition in Supplementary Section~S8.3, give both constructions
-there, and report what a hill-climb over small
-instances suggests instead, beside the size the witness actually needs.
-
-A guard that never fires leaves the base policy alone, and the condition is checkable
-on the base policy's own run, before the wrapper is placed around it. If
-$\mathrm{over}[q](t)$ stays below $\mathrm{budget}(q,t)$ for every waiting job at every
-dispatch epoch of that run, the wrapped run is that run, with the same dispatch
-sequence and the same waits. We state this as a proposition in Supplementary Section~S4.2, with the two conditions under which a constant budget meets its hypothesis and the two
-counterexamples that make consistency one-sided.
-
-\subsection{A Clock Keeps the Same Promise}
+\subsection{A Maximum Waiting Time Gives the Same Guarantee}
 \label{sec:clock}
 
-Deployed schedulers guard against starvation with a maximum waiting time. Recent
-inference servers promote a request once its wait passes a fixed
-threshold~\cite{wu2023fastserve} or a multiple of its service time~\cite{luo2025autellix},
-and state no bound on the wait. In the simplest form, once the
-oldest waiting job has waited $\theta$ it is served next, and until then the base
-policy decides. Call this Timeout($\theta$), and read ``oldest'' as the waiting job of
-minimum rank, so that ties in arrival time are broken by input order and not by the
-base policy. The rule reads arrival times and a clock, and never a service time. It
-carries the same kind of promise as the guard.
+Deployed schedulers guard against starvation with a maximum waiting time, and recent
+inference servers promote a request once its wait passes a threshold
+\cite{wu2023fastserve,luo2025autellix}, with no stated bound. In the simplest form, once
+the earliest-arrived waiting job has waited $\theta$ it is started next, and until then the
+base policy decides. We call this rule Timeout($\theta$). It reads arrival times and a
+clock, never a cost.
 
 \begin{proposition}[Timeout bound]
 \label{prop:clock}
-Fix a base policy and $\theta \ge 0$. For every input and every job $i$ with at least
-one overtaker, Timeout($\theta$) gives $\mathrm{In}_i < k(\theta + L)$, and every job
-waits
-\[
+Fix a base policy and $\theta \ge 0$. For every input and every job $i$ with at least one
+overtaker, Timeout($\theta$) gives $\mathrm{In}_i < k(\theta + L)$, and every job waits
+\begin{equation}
   W \;<\; W_{\mathrm{FCFS}}[i] + \theta + (3 - 2/k)L .
-\]
+  \label{eq:clock}
+\end{equation}
 \end{proposition}
 
-\begin{proof}[Proof idea]
-From $a_i + \theta$ on, the minimum-rank waiting job has waited at least $\theta$, so
-every dispatch until $s_i$ serves a job of rank below $i$. Hence each overtaker of $i$ starts before $a_i + \theta$ and ends no later than $L$ after its start. The
-overtakers that share a server run one after another inside $[a_i, a_i + \theta + L)$,
-and summing over the $k$ servers bounds $\mathrm{In}_i$. Theorem~\ref{thm:identity}
-with $\mathrm{Out}_i \ge 0$ turns that into the bound on the wait. We give the proof in full in Supplementary
-Section~S4.11.
+\begin{proof}[Proof sketch of Proposition~\ref{prop:clock}]
+From $a_i + \theta$ on, the earliest-arrived waiting job has waited at least $\theta$, so
+every job started before $s_i$ arrived before $i$. Each overtaker of $i$ therefore starts
+before $a_i + \theta$ and runs at most $L$, and on each server the overtakers fit in
+$[a_i, a_i + \theta + L)$. Theorem~\ref{thm:identity} with $\mathrm{Out}_i \ge 0$ gives the
+bound (Supplementary Section~S4.11).
 \end{proof}
 
-At $\theta = G - (3-2/k)L$ the clock makes the promise that the guard makes at
-$B_{\max} = k\theta$. The two rules differ in what they charge a waiting job for. The
-clock charges it for all the work the servers do while it waits, $k(t - a_q)$. The
-guard charges it only for the completed work of jobs that arrived after it. The
-difference is mostly the work of older jobs, which first-come first-served would have
-done anyway, plus the work of overtakers still in service. Near saturation that work is large. A job that arrives behind a backlog is
-charged for the backlog, the clock fires for most of the queue, and the schedule falls
-back to arrival order at the loads where ordering by cost pays most.
-Section~\ref{sec:exp_guard} measures the difference.
+At $\theta = G - (3-2/k)L$ the clock gives the bound that the guard gives at $B_{\max} =
+k\theta$. Unlike Theorem~\ref{thm:guard}, the constant of Proposition~\ref{prop:clock} is
+not shown to be tight: the worst ratio of excess to bound found by search is \devnum{0.996}
+at $k = 1$ and \devnum{0.756} to \devnum{0.829} for $k = 2$ to $4$ (Supplementary
+Section~S4.11), so Section~\ref{sec:exp_guard} also compares the two rules at equal
+realised worst excess. The rules differ in what they charge a waiting job for. The clock
+charges it for all the work the servers do while it waits, the guard only for completed
+work of jobs that arrived after it. Near saturation, a job that arrives behind a backlog is
+charged for the backlog, the clock fires for most of the queue, and the schedule falls back
+to arrival order at the loads where ordering by cost pays most.
 
-We can also combine the two rules. Serve the minimum-rank waiting job if it has waited
-$\theta$, and otherwise run Algorithm~\ref{alg:guard}. When a job is served ahead of a
-waiting job $i$ of lower rank, $i$ is then outside the guard's fired set, which is all
-Theorem~\ref{thm:guard} uses. Similarly, every overtaker of $i$ still starts before
-$a_i + \theta$, which is all Proposition~\ref{prop:clock} uses. Both bounds hold at
-once. The order matters, because a rule that serves the guard's fired job first can pass over
-an aged head when budgets differ between jobs, and it breaks the clock's bound for the
-queue-length and age-relative shapes (Supplementary Section~S4.11 gives the
-instances). The clock's half reads no completion report, so the combined rule keeps
-$W < W_{\mathrm{FCFS}} + \theta + (3-2/k)L$ when reports arrive late or not at all.
+The two rules can be combined: start the earliest-arrived job if it has waited $\theta$,
+and otherwise run Algorithm~\ref{alg:guard}. Both bounds then hold at once. The order
+matters, since serving the guard's eligible job first can pass over a job that has
+already waited $\theta$ (Supplementary Section~S4.11). The clock's half reads no completion
+report, so the combined rule keeps \eqref{eq:clock} when reports arrive late or never.
 
 \subsection{An Absolute Bound from the Arrival Log}
 \label{sec:absolute}
 
-A promise relative to first-come first-served is a margin over a queue that nobody runs.
-The arrival log alone gives an absolute one, which an operator can state as a number of
-seconds. Let
-$V_i^-$ be the work that a single server of rate $k$, fed the same jobs, would still
-hold at $a_i$ from the jobs of rank below $i$:
-$V_1^- = 0$ and
+A bound relative to FCFS is a margin over a schedule that is not run. The arrival log
+alone gives an absolute bound, which an operator can state as a number of seconds. Let
+$V_i^-$ be the work that a single server of rate $k$, fed the same jobs, would still hold
+at $a_i$ from the jobs that arrived before $i$: $V_1^- = 0$ and
 $V_i^- = \max\bigl(0,\ V_{i-1}^- + C_{i-1} - k(a_i - a_{i-1})\bigr)$. The largest value
-$\sigma = \max_i (V_i^- + C_i)$ is the depth of the smallest token bucket of rate $k$
-that the arrivals, counted in work, conform to, which is the burst parameter of network
-calculus~\cite{cruz1991calculus,leboudec2001network}.
+$\sigma = \max_i (V_i^- + C_i)$ is the depth of the smallest token bucket of rate $k$ that
+the arrivals, counted in work, conform to, which is the burst parameter of network
+calculus \cite{cruz1991calculus,leboudec2001network}.
 
 \begin{proposition}[Absolute bound]
 \label{prop:absolute}
-For every non-preemptive work-conserving policy and every job $i$,
-$k\,W[i] \le V_i^- + (k-1)L + \mathrm{In}_i$. Hence
-$W_{\mathrm{FCFS}}[i] \le (V_i^- + (k-1)L)/k$, and under Algorithm~\ref{alg:guard} with
-cap $B_{\max}$
-\[
+For every non-preemptive work-conserving policy and every job $i$, $k\,W[i] \le V_i^- +
+(k-1)L + \mathrm{In}_i$. Hence $W_{\mathrm{FCFS}}[i] \le (V_i^- + (k-1)L)/k$, and under
+Algorithm~\ref{alg:guard} with cap $B_{\max}$
+\begin{equation}
   W \;<\; \frac{V_i^- + B_{\max}}{k} + \Bigl(2 - \frac{1}{k}\Bigr)L
     \;\le\; \frac{\sigma + B_{\max}}{k} + \Bigl(2 - \frac{1}{k}\Bigr)L .
-\]
+  \label{eq:absolute}
+\end{equation}
 \end{proposition}
 
-\begin{proof}[Proof idea]
-The accounting \eqref{eq:busy} gives $k\,W[i] \le R_i + \mathrm{In}_i$. A
-work-conserving $k$-server queue never holds more than $(k-1)L$ above the fluid
-server. Whenever it does, all $k$ servers are busy, since otherwise the queue is empty
-and at most $k-1$ jobs in service hold at most $(k-1)L$, and then it drains at the
-fluid rate. Hence $R_i \le V_i^- + (k-1)L$, and Theorem~\ref{thm:guard} bounds
-$\mathrm{In}_i$. We give the proof in full in Supplementary
-Section~S4.11.
+\begin{proof}[Proof sketch of Proposition~\ref{prop:absolute}]
+Equation~\eqref{eq:busy} gives $k\,W[i] \le R_i + \mathrm{In}_i$. A work-conserving
+$k$-server queue never holds more than $(k-1)L$ above the single fast server: whenever it
+does, all $k$ servers are busy and it drains at the same rate. Hence $R_i \le V_i^- +
+(k-1)L$, and Theorem~\ref{thm:guard} bounds $\mathrm{In}_i$ (Supplementary
+Section~S4.11).
 \end{proof}
 
-The comparison with the fluid server is the argument Grosof, Scully and Harchol-Balter
-use for multiserver shortest-remaining-processing-time, where it bounds by $kx$ the difference
-between the $k$-server system and the fast single server in the work of jobs below a
-size cutoff $x$~\cite{grosof2018srpt}. Here it covers every non-preemptive
-work-conserving policy and all the work, and the constant is $(k-1)L$.
-
-At $k = 1$ the fluid server is the queue, $V_i^- = W_{\mathrm{FCFS}}[i]$, and the
-proposition is Theorem~\ref{thm:guard} again. For $k \ge 2$ it is sharper than a bound
-that goes through $W_{\mathrm{FCFS}}$, which would pay the $2(k-1)L$ of
-Theorem~\ref{thm:identity} a second time. An operator who promises that no job waits
-longer than $D$, over a period whose arrivals conform to a bucket of depth $\sigma$,
-sets $B_{\max} = kD - \sigma - (2k-1)L$: the capacity over the deadline, less the
-burst, less $2k-1$ job-limits. The clock obeys the same bound with $B_{\max}$ replaced by
-$k\theta$. The comparison with a single fast server has a history of false sample-path
-claims. Wolff~\cite{wolff1987work} showed that previously derived sample-path upper bounds on
-the work in a multichannel queue are false. The statement here also
-holds on every sample path. What separates it from the refuted bounds is the additive
-$(k-1)L$, which the service cap $L$ makes finite, and it is proved directly. Section~\ref{sec:exp_bound} measures how close the
-bound comes on the traces, and how well one period's $\sigma$ predicts the next.
+At $k = 1$ the fast server is the queue itself, $V_i^- = W_{\mathrm{FCFS}}[i]$, and the
+proposition is Theorem~\ref{thm:guard} again. An operator who guarantees that no job waits
+longer than $D$, over a period whose arrivals fit a bucket of depth $\sigma$, sets
+$B_{\max} = kD - \sigma - (2k-1)L$: the capacity over the deadline, less the burst, less
+$2k-1$ time limits. The clock obeys the same bound with $k\theta$ in place of $B_{\max}$.
+Supplementary Section~S4.11 relates the statement to earlier sample-path comparisons with a
+fast server, some of which were shown to be false \cite{wolff1987work}.
 
 \subsection{Completion Reports That Arrive Late}
 \label{sec:late}
 
-Theorem~\ref{thm:guard} assumes that a completion is charged before the next dispatch.
-In a distributed service the workers report completions over a network, and a server
-may pull its next job before its report has reached the counter. Suppose every charge
-reaches the counter within $\delta$ of the completion, while servers still pull the
-instant they free.
+Theorem~\ref{thm:guard} assumes that a completion is charged before the next dispatch
+decision. In a distributed service the servers are separate machines that report their
+completions to the scheduler over a network, and a server may take its next job before its
+report has been counted. Suppose every report reaches the scheduler's counter within
+$\delta$ of the completion, while servers still take a job the instant they free.
 
 \begin{proposition}[Late charges]
 \label{prop:late}
 Under Algorithm~\ref{alg:guard} with a shared counter and charges delayed by at most
-$\delta$, every job $i$ with an overtaker has
-$\mathrm{In}_i < B_{\max} + kL + k(L + \delta)$, and
-\[
+$\delta$, every job $i$ with an overtaker has $\mathrm{In}_i < B_{\max} + kL + k(L + \delta)$,
+and
+\begin{equation}
   W \;<\; W_{\mathrm{FCFS}}[i] + B_{\max}/k + (4 - 2/k)L + \delta .
-\]
-For $\delta > 0$ the bound is attained in the limit at $k = 1$ and at $k = 2$. If each server
-applies its own completion report in the same step as its next pull, and only other
-servers' reports travel late, Theorem~\ref{thm:guard} holds unchanged for every
-$\delta$, lost reports included.
+  \label{eq:late}
+\end{equation}
+For $\delta > 0$ the bound is attained in the limit at $k = 1$ and at $k = 2$. If each
+server applies its own completion report in the same step as its next pull, and only other
+servers' reports travel late, Theorem~\ref{thm:guard} holds unchanged for every $\delta$,
+lost reports included.
 \end{proposition}
 
-\begin{proof}[Proof idea]
-At the last overtaker's dispatch the charged part is below the budget, as before. The
-uncharged overtakers are those in service, as in Theorem~\ref{thm:guard}, and those
-that finished in the last $\delta$ and whose charge has not arrived. On one server the
-latter are at most one job that started before that window and jobs that fit inside
-it, so they hold less than $L + \delta$. When a server reports before it pulls, any
-stale completion must belong to a server that finished at the dispatch instant itself
-and has not yet pulled. Hence that server holds no job in service, so the per-server
-uncharged work is at most one job, as in Theorem~\ref{thm:guard}. We give both proofs and the instances that attain the extra term in
-Supplementary Section~S4.12.
+\begin{proof}[Proof sketch of Proposition~\ref{prop:late}]
+When the last overtaker starts, the charged part is below the budget as before. The
+uncharged overtakers are those still running, as in Theorem~\ref{thm:guard}, and those that
+finished within the last $\delta$ and whose report has not arrived. On one server the
+latter are at most one job that started before that window and jobs that fit inside it, so
+they hold less than $L + \delta$. When a server reports before it takes its next job, an
+uncounted completion can belong only to a server that finished at the decision instant
+itself and has not yet taken a job, so it holds nothing in service. Supplementary
+Section~S4.12 gives both proofs and the instances that attain the bound.
 \end{proof}
 
-At $k = 1$ any $\delta > 0$ already costs a whole $L$, because the single server pulls its next job at the instant it finishes one, before that job's charge can arrive. Thus pulling ahead of the report changes the promise, and reporting on the pull removes the change. The combined rule of
-Section~\ref{sec:clock} gives a second remedy that needs no protocol at all, since its
-clock half keeps $W < W_{\mathrm{FCFS}} + \theta + (3-2/k)L$ for any delay.
+At $k = 1$ any $\delta > 0$ already costs a whole $L$, because the single server takes its
+next job the instant it finishes one, before that job's report can arrive. The remedy is a
+protocol change rather than a smaller budget: a server that counts its own completion
+before taking the next job restores Theorem~\ref{thm:guard}, and the combined rule of
+Section~\ref{sec:clock} keeps its clock bound for any delay.
 
 \subsection{Which Assumptions Can Be Dropped}
 
-We can drop four of the standing assumptions, but not the fifth. The global service
-bound $L$ may be replaced by the prefix maximum of the service times seen so
-far, provided it is read at the right instant, and the right instant is not the
-same for every statement. Similarly, servers may run at different speeds, the budget then
-being divided by total capacity rather than by the server count. The per-job
-time limit is already inside the model, because $C_j$ counts executed work. A
-fixed setup paid before every service is absorbed into the job. Work
-conservation is the assumption that cannot go. If a server may idle while jobs
-wait, the identity fails by exactly the forced idle time, and release
-constraints are the same phenomenon. We state all five as two propositions in Supplementary Section~S4.10, with the sharp forms and the counterexample that fixes
-where the prefix maximum is read.
+We may replace the global bound $L$ by the largest cost seen so far, read at the right
+instant. Servers may run at different speeds, with the budget divided by total capacity,
+and a fixed setup paid before every job is absorbed into its cost. Work conservation cannot
+be dropped. If a server may idle while jobs wait, the identity fails by exactly the forced
+idle time. Supplementary Section~S4.10 states these relaxations with their sharp forms.
 
 \subsection{A Floor of Order \texorpdfstring{$L$}{L}, and What a Guarantee Costs}
+\label{sec:achievability}
 
-No choice of budget removes the last $L$ of the additive constant. A job can be
-displaced before anything at all has completed, and at that instant a wrapper
-that charges completed work has nothing to charge.
+No budget removes the last $L$ of the additive constant, because a job can be displaced
+before anything has completed, and at that instant a guard that charges completed work has
+nothing to charge.
 
-\begin{proposition}[Impossibility]
+\begin{proposition}[Floor]
 \label{prop:floor}
-Fix a budget rule that assigns a positive budget to every waiting job at the
-first dispatch epoch. Then there are a base policy $A$ that observes a job's
-service time only at its completion, and an input, such that
-Algorithm~\ref{alg:guard} run around $A$ with that rule leaves some job with
-$\mathrm{excess} \ge L$. Consequently no promise $G < L$ can be made by a
-wrapper of this family that holds for every base policy, or
-for one prediction-ranked base policy under arbitrary predictions, which is the
-generality in which Theorem~\ref{thm:guard} is stated.
+Fix a budget rule that assigns a positive budget to every waiting job at the first dispatch
+decision. Then there are a base policy $A$ that observes a job's cost only at its
+completion, and an input, such that Algorithm~\ref{alg:guard} run around $A$ with that rule
+leaves some job with $\mathrm{excess} \ge L$. Consequently no bound $G < L$ can be guaranteed by
+a wrapper of this family that holds for every base policy, or for one prediction-ranked
+base policy under arbitrary predictions, which is the generality in which
+Theorem~\ref{thm:guard} is stated.
 \end{proposition}
 
-\begin{proof}[Proof idea]
-Put $k+1$ jobs of service $L$ into an empty system at $t = 0$. Since nothing has completed, no waiting job fires, the wrapper accepts the base policy's choices, and
-the first choice beyond the first $k$ ranks pushes back a job that first-come
-first-served starts at once, leaving it with excess $L$. For a base policy that ranks
-by predictions, such as SPJF-E, the predictions in the input already force this and
-$A$ need not be chosen. The hypothesis can be neither
-dropped nor tightened. As a claim about policies the statement is false, since
-first-come first-served itself has excess $0$ on every input, and a rule that is $0$ at
-the first dispatch epoch and positive later falls to the same instance placed behind a
-saturating prefix. We give the proof in Supplementary Section~S4.8, with the case analysis that makes those cases exhaustive for the budget of Algorithm~\ref{alg:guard}, which
-either makes the wrapper first-come first-served around every base policy or admits a
-base policy and an input with excess at least $L$.
+\begin{proof}[Proof sketch of Proposition~\ref{prop:floor}]
+Put $k+1$ jobs of cost $L$ into an empty system at $t = 0$. Nothing has completed, so no
+job is eligible, the guard accepts the base policy's choices, and a base policy that starts
+the last-arrived job in the first phase pushes back a job that FCFS starts at once, by $L$. Supplementary
+Section~S4.8 gives the proof and shows that the hypothesis can be neither dropped nor
+weakened.
 \end{proof}
 
-At one server the floor is the whole story. With a constant budget $B>0$ the
-bound $B+L$ of Theorem~\ref{thm:guard} is the exact supremum of the excess,
-approached and not attained. In particular, at $B=0$ the wrapper is first-come first-served and
-the excess is exactly zero. We give the single-server family that approaches $B+L$ without reaching it in
-Supplementary Section~S8.4.
-
-In addition, the guarantee caps how much reordering can gain at all, and not only how much
-it may cost a single job.
+At one server the floor is the whole story: with a constant budget $B > 0$ the bound $B+L$
+of Theorem~\ref{thm:guard} is the exact supremum of the excess (Supplementary
+Section~S8.4). The guarantee also caps how much reordering can gain at all.
 
 \begin{theorem}[Price of the guarantee]
 \label{thm:price}
-Take $m$ jobs of service $L$ and $n$ jobs of service $\sigma < L$, the long ones
-ranked first, all arriving at $t = 0$, and let $P$ be a non-preemptive
-work-conserving policy with $\mathrm{excess}_P[j] \le G$ for every job. Define
-$D_0=mn(L-\sigma)/k$, $E=2(1-1/k)L(m+n)$ and
-$A=(kG+(3k-2)L)/(n\sigma)$. If
-$D_0>E$, equivalently
-$mn(L-\sigma)>2(k-1)L(m+n)$, then
-\[
+Take $m$ jobs of cost $L$ and $n$ jobs of cost $c < L$, the long ones arriving first, all
+at $t = 0$, and let $P$ be a non-preemptive work-conserving policy with
+$\mathrm{excess}_P[j] \le G$ for every job. Define $D_0 = mn(L-c)/k$,
+$H = 2(1-1/k)L(m+n)$ and $\alpha = (kG + (3k-2)L)/(nc)$. If $D_0 > H$, equivalently
+$mn(L-c) > 2(k-1)L(m+n)$, then
+\begin{equation}
   \frac{\overline{W}_{\mathrm{FCFS}} - \overline{W}_{P}}
        {\overline{W}_{\mathrm{FCFS}} - \overline{W}_{\mathrm{SJF}}}
-  \;\le\; A+\varepsilon_+,
+  \;\le\; \alpha + \varepsilon_+,
   \qquad
-  \varepsilon_+=\frac{E(1+A)}{D_0-E}.
-\]
-For fixed $k,L,\sigma,G$, the finite-sample term is
-$O((m+n)/(mn))$.
+  \varepsilon_+ = \frac{H(1+\alpha)}{D_0 - H}.
+  \label{eq:price}
+\end{equation}
+For fixed $k$, $L$, $c$ and $G$, the finite-sample term is $O((m+n)/(mn))$.
 \end{theorem}
 
-We give the proof in Supplementary Section~S8.5, which counts inverted pairs in two ways
-and so reads the pairwise-interchange argument behind Smith's rule~\cite{smith1956} on
-an arbitrary arrival sequence. The right-hand side is capacity times
-guarantee, divided by the work that wants to overtake. It is linear in $G$ and
-saturates at $1$ when $kG$ reaches the total service of the impatient class.
-Because it applies to every policy with the guarantee and not only to
-Algorithm~\ref{alg:guard}, it describes the trade-off an operator faces rather
-than a weakness of this wrapper. The additive $(3k-2)L$ in it is slack. It comes
-from applying Corollary~\ref{cor:necessary} to each long job separately, where
-the long jobs can be charged together, and at $k = 1$ the aggregate argument in the same
-place removes it. There the achievable fraction is known exactly. It is
-$\lfloor G/\sigma \rfloor / n$, capped at $1$, which Supplementary Section~S8.5 states
-as its own proposition and checks exhaustively over \devnum{1161} parameter
-settings.
+\begin{proof}[Proof sketch of Theorem~\ref{thm:price}]
+Count the inverted pairs of long and short jobs in two ways, once through the mean waits,
+which reads the interchange argument behind Smith's rule \cite{smith1956} on this input,
+and once through Corollary~\ref{cor:necessary} applied to each long job. Supplementary
+Section~S8.5 gives the proof.
+\end{proof}
 
-\subsection{Achievability and Maximal Permission}
-
-Two further results say how far the guarantee can be pushed, so that the
-earlier ones are not read only as a robust wrapper beside a necessary budget.
-On the two-size batch family of Theorem~\ref{thm:price}, the guard around exact
-shortest-job-first closes a fraction of the first-come-first-served-to-SJF gap
-that meets the upper bound of that theorem, up to $2(3k-2)L/(n\sigma)$ and two
-finite-sample terms. At one server, with integer sizes and budgets, the guard
-that fires at $\mathrm{over} \ge G-L+1$ permits every action a wrapper with the
-promise $G$ could safely permit, in a class that sees ranks, completions,
-revealed sizes and the base policy's proposals but never an unfinished size.
-Neither result gives instance optimality on arbitrary inputs, and for $k \ge 2$
-the exact optimum stays open. We state both in Supplementary Section~S8.6, with the
-definition of the wrapper class, the single-server frontier they imply and the
-proofs. The supplementary theory material also records an unbounded instance-optimality
-counterexample and the limits of instance-dependent refinements.
-
-Every uniform constant above is a multiple of $L$, apart from the report delay $\delta$ of
-Proposition~\ref{prop:late} and the arrival burst $\sigma$ of
-Proposition~\ref{prop:absolute}. Proposition~\ref{prop:floor}
-establishes such a floor for the wrapper family under arbitrary opaque base
-proposals, not for all scheduling mechanisms. Empirically, usefulness depends on
-size dispersion, score predictability and the arrival structure. The CI pools
-are negative cases rather than evidence of a necessary distributional condition.
-Section~\ref{sec:exp_cross} quantifies that boundary on the evaluated workloads.
+The bound is capacity times $G$, divided by the work that wants to overtake. It is
+linear in $G$ and reaches $1$ when $kG$ covers the total cost of the short jobs, and
+because it applies to every policy with the guarantee, it describes the trade-off an
+operator faces rather than a weakness of this guard. At $k = 1$ the achievable fraction is
+known exactly, $\lfloor G/c \rfloor / n$ capped at $1$, and the guard around exact SJF
+meets the bound of Theorem~\ref{thm:price} on this family up to $2(3k-2)L/(nc)$ and
+finite-sample terms
+(Supplementary Sections~S8.5 and~S8.6, with an exhaustive check over \devnum{1{,}161}
+parameter settings).

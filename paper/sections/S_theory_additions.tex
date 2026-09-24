@@ -42,7 +42,7 @@ Load Balancing Guardrails \cite{grosof2019guardrails} & Unconstrained dispatcher
 \label{prop:supp_unbounded_instance}
 At $k=1$, let three batch jobs have rank-order service times $(L,1,1)$, with
 $L\geq2$, and set $G=L$. The cap of the parameter rule of the manuscript
-(Corollary~3 there, $B_{\max} = k(G-(3-2/k)L)$) is $B=0$, so the
+(Corollary~\ref*{M-cor:params} there, $B_{\max} = k(G-(3-2/k)L)$) is $B=0$, so the
 guard is FCFS and has total waiting time $2L+1$. The order $(1,1,L)$ has total
 waiting time $3$ and satisfies the per-job promise $G$. Consequently the ratio
 between the guard's total wait and that of a feasible policy is at least
@@ -247,7 +247,7 @@ timeout $L_{\mathrm{cap}}=1000$.
 \subsection{Why Kill-and-Restart Tiering Does Not Escape the Floor}
 \label{sec:supp_tiering}
 
-Section~9 of the manuscript states that the obvious escape from the $\Omega(L)$ floor
+Section~\ref*{M-sec:limits} of the manuscript states that the obvious escape from the $\Omega(L)$ floor
 fails. Kill-and-restart tiering runs every job for a short first quantum $\tau$ and
 restarts the survivors, discarding the killed attempt; on $n$ jobs of length $L$ arriving
 together it leaves some job with an excess of $n\tau/k - L$ over first-come first-served,
@@ -266,10 +266,10 @@ the work is redone on the next host, whereas in a judging queue the kill is term
 
 Everything below assumes an information model the manuscript does not. Each job $j$
 carries a cap $\ell_j$ with $C_j \le \ell_j \le L$ that is known when the job arrives and
-that the service enforces, whereas Sections~5 and~6 of the manuscript assume a service
+that the service enforces, whereas Sections~\ref*{M-sec:scheduling} and~\ref*{M-sec:theory} of the manuscript assume a service
 that learns a job's cost only at its completion. That is why this is a supplementary
 subsection and not a
-theorem of Section~6: admitting it into the main line would put two information models
+theorem of Section~\ref*{M-sec:theory}: admitting it into the main line would put two information models
 side by side.
 
 The mechanism itself is older than the guard, and we claim none of it. Conservative
@@ -343,9 +343,9 @@ not known.
 Two consequences are worth separating, because they are easy to confuse. The
 \emph{entry threshold} does not drop by $L$. An admitted overtaker always has
 $\ell_j \le Z_q$, so at $k=1$ an overtaker of cap $L$ becomes admissible as soon as
-$G \ge L$, which meets the $L$-scale floor of Proposition~4 of the manuscript with
+$G \ge L$, which meets the $L$-scale floor of Proposition~\ref*{M-prop:floor} of the manuscript with
 equality, and for general $k$ the condition is $G \ge (2-1/k)L$ against
-$G > (3-2/k)L$ for Algorithm~1 of the manuscript, a difference of $(1-1/k)L$, which is
+$G > (3-2/k)L$ for Algorithm~\ref*{M-alg:guard} of the manuscript, a difference of $(1-1/k)L$, which is
 zero at one server. It is the additive constant of the promise, not the threshold, that
 falls by exactly $L$.
 
@@ -356,7 +356,7 @@ against \devnum{8{,}277} differences in \devnum{110{,}503} readings at $k \ge 2$
 single-server gain comes entirely from the forward-looking $\ell_j$ term in the admission
 test. For a constant allowance only the queue head has to be tested, because
 $\mathrm{over}_R[q]$ is non-increasing in rank, so the implementation cost of
-Section~5 of the manuscript is unchanged.
+Section~\ref*{M-sec:scheduling} of the manuscript is unchanged.
 % Source: prechecks/reservation_guard_verify/out_overR_eq_overC_k1.txt (reading counts
 % and mismatches at k = 1 and k >= 2) and out_c1b_indep.txt part 0 (19,381 head-only
 % decisions, no divergence).

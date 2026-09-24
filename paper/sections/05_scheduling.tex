@@ -3,102 +3,85 @@
 \section{Scheduling Algorithm}
 \label{sec:scheduling}
 
-We build the scheduler in two layers, because the ranking that shortens the queue is also what
-can leave one submission behind without end. A base policy orders the queue by a score
-computed at arrival, and a wrapper limits how much work may overtake any waiting job.
-Because the two are independent, the wrapper accepts any base policy, and its guarantee does
-not depend on that policy behaving well.
+The scheduler has two layers. A base policy orders the queue by a score computed at
+arrival, and a guard limits how much work may overtake any waiting job. The guard accepts
+any base policy, and its guarantee does not depend on that policy behaving well.
 
 \subsection{Ranking by Expected Cost}
 \label{sec:rank}
 
-When a server frees, the base policy takes the waiting job with the smallest score.
-For a batch on one server, the pairwise-interchange argument orders jobs by their
-conditional mean service times. However, the same conclusion does not hold in general on $k\geq2$ servers. For example, on two servers let $A=2$, $C=3$, and let $B$ be
-$0.1$ with probability $0.9$ and $100$ with probability $0.1$. Ordering the three
-conditional means starts $A$ and $C$ and has expected mean wait $2/3$, while starting $A$ and $B$ instead has expected mean wait $0.096667$. Hence expected-cost ordering is an empirically motivated base policy here, not a multiserver optimality
-claim.
+When a server frees, the base policy starts the waiting job with the smallest score. For a
+batch on one server, the pairwise-interchange argument orders jobs by their conditional
+mean costs. However, this conclusion does not carry over to $k \ge 2$ servers. On two
+servers, let job $u$ cost $2$ and job $w$ cost $3$, and let job $v$ cost $0.1$ with
+probability $0.9$ and $100$ with probability $0.1$. Ordering by conditional mean starts $u$
+and $w$ and gives an expected mean wait of $2/3$, whereas starting $u$ and $v$ gives
+$0.096667$. We therefore treat expected-cost ordering as an empirically motivated base
+policy, not as a claim of optimality.
 % Source for the two-server calculation and its independent script check:
 % docs/referee_readthrough/independent_review/checks_output.txt, CHECK 1
 % (script: docs/referee_readthrough/independent_review/checks.ps1).
 
-Both raw-scale squared error and the Tweedie mean deviance have the conditional mean
-$\mathbb{E}[C_i\mid x_i]$ as their unrestricted population optimum. Their fitted orders can nevertheless differ with finite model capacity, the link function,
-regularisation, sample weighting and optimisation. We therefore compare objectives
-empirically while keeping the features, model size and rolling-origin protocol of
-Section~\ref{sec:prediction} fixed. For SPJF-E we use raw seconds with a Tweedie loss of power $1.5$, which accommodates mass near zero and a long right tail
-\cite{jorgensen1987edm,yang2018tweedieboost}. SPJF-log uses the same pipeline fitted
-by squared error on $\log(1+C)$, and ranks by that fitted value, which orders jobs as
-its inverse would.
+Squared error on raw seconds and the Tweedie deviance both have the conditional mean as
+their population optimum. Their fitted orders can nevertheless differ with finite model
+capacity, link function and regularisation, so we compare the objectives empirically, with
+the features and model of Section~\ref{sec:prediction} held fixed. We fit the expected-cost
+policy, shortest predicted job first on the expected-cost score (SPJF-E), on raw seconds
+with a Tweedie loss of power $1.5$, which accommodates mass near zero and a long right tail
+\cite{jorgensen1987edm,yang2018tweedieboost}. For the log-scale policy, shortest predicted
+job first on the log-scale score (SPJF-log), we fit the same pipeline by squared error on
+$\log(1+C)$. By Jensen's inequality, the back-transform of this fit is no larger than the
+conditional mean.
+
+We use only the order of a score. Its level does not transfer between periods, because the
+share of heavy jobs differs between training and test periods by a factor of several, so
+the scheduler never reads a score as a time or a threshold. Section~\ref{sec:exp_rank}
+compares these and other objectives in the queue. No choice of score bounds the worst case.
+Whatever the score, a job it underestimates can be passed again and again, and only the
+guard below bounds that.
 % Source for the fitted Tweedie power and objective comparison:
 % evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1.
-
-The literal inverse $\exp(\mathbb{E}[\log(1+C)\mid x])-1$ is, by Jensen's inequality, no
-larger than the conditional arithmetic mean, with equality only in the degenerate case. The gap is not determined by the conditional variance alone, and to use a log-scale
-regression as a
-mean estimator under its stated conditions, one needs a residual-distribution
-correction such as the smearing estimator of Duan~\cite{duan1983smearing}.
-
-We use only the order of the fitted score. Its level does not transfer across periods, since the share of heavy jobs in the training periods differs from the target
-period by a factor of several, so we never read the score as a quantity, neither as an
-estimated finish time nor as a threshold. Hence the scheduler is invariant to a monotone recalibration of the score.
-
-Section~\ref{sec:exp_rank} measures what the fitted objective gains, together with
-the alternatives we tried and rejected: a predicted quantile, a two-class rule, and
-squared error on raw seconds. Its partial-oracle repair replaces selected scores with truth and is not invariant to an arbitrary monotone rescoring of the original output.
-Thus it identifies the errors of this fitted predictor and does not establish a
-universal asymmetry of prediction errors or a different population estimand.
-
-No choice of ranking function bounds the worst case. Whatever the score is and however it was fitted, a job the score gets wrong can still be passed without end, and only the guard of Section~\ref{sec:guard} bounds it.
 
 \subsection{The Overtake-Budget Guard}
 \label{sec:guard}
 
-We fix a base policy $A$, and for every waiting job $q$ and every time $t$ we define
-\[
+Fix a base policy $A$. For every waiting job $q$ and every time $t$ let
+\begin{equation}
   \mathrm{over}[q](t) \;=\;
-  \sum \{\, C_j \;:\; j > q \text{ in rank, } j \text{ has completed by } t \,\},
-\]
-the total true service of the higher-ranked jobs that have finished by $t$. Such a job
-arrived at or after $a_q$, so it necessarily ran while $q$ waited. We allow job $q$ a budget $\mathrm{budget}(q,t)$ on that quantity, and the fired set at a
-dispatch epoch is
-$E(t) = \{\, q \text{ waiting} : \mathrm{over}[q](t) \ge \mathrm{budget}(q,t) \,\}$.
-At every dispatch epoch, that is, at every instant at which a server is free and the
-queue is non-empty, the wrapper serves the minimum-rank member of $E(t)$ when $E(t)$
-is non-empty and otherwise serves whatever $A$ chooses (Figure~\ref{fig:guard}).
+  \sum \{\, C_j \;:\; j > q,\ j \text{ has completed by } t \,\},
+  \label{eq:over}
+\end{equation}
+the total cost of the jobs that arrived after $q$ and have finished by $t$. Such a job ran
+while $q$ waited, so it overtook $q$. Each waiting job has a budget $\mathrm{budget}(q,t)$
+on this quantity, and the job is \emph{eligible} when its account has reached its budget,
+$\mathrm{over}[q](t) \ge \mathrm{budget}(q,t)$. Whenever a server is free and the queue is
+not empty, the guard starts the earliest-arrived eligible job if there is one, and
+otherwise lets $A$ choose (Algorithm~\ref{alg:guard} and Figure~\ref{fig:guard}). Serving
+the earliest-arrived eligible job matters when budgets differ between jobs. It ensures that
+whenever a job $j$ starts ahead of an earlier-arrived waiting job $i$, the job $i$ was not
+eligible at that instant, and the per-job bound of Section~\ref{sec:theory} rests on this
+step. With a constant budget $B$ the account is non-increasing in arrival order, so the
+rule reduces to a test on the head of the queue, and $B = 0$ gives FCFS.
 
-Serving the minimum-rank member matters when budgets differ between jobs, because it guarantees that whenever a job $j$ is dispatched ahead of a lower-ranked waiting job
-$i$, the job $i$ was not in $E(t)$, hence $\mathrm{over}[i](t) < \mathrm{budget}(i,t)$
-at that very instant. The per-job bound of Section~\ref{sec:theory} rests on that
-step. With a constant budget $\mathrm{budget}(q,t) \equiv B$ the quantity
-$\mathrm{over}[q](t)$ is non-increasing in rank, so $E(t)$ is non-empty exactly when
-the queue head belongs to it and the rule degenerates to a test on the head, and setting $B = 0$ recovers FCFS.
-
-\paragraph{The cap carries the promise; the shape does not.}
-As Section~\ref{sec:theory} shows, the guarantee reads the budget only through an
-upper bound on it. If $0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job and
-every instant, then every job waits at most
-$W_{\mathrm{FCFS}} + B_{\max}/k + (3-2/k)L$, for every base policy, every arrival
-sequence and every set of predictions. The budget below the cap is a design freedom, which decides how much of the base
-policy's benefit survives and which jobs bear the harm and does not change the promise. We study the one-line family
-\[
+The guarantee reads the budget only through an upper bound on it. If
+$0 \le \mathrm{budget}(q,t) \le B_{\max}$ for every waiting job at every instant, then every
+job waits at most $W_{\mathrm{FCFS}} + B_{\max}/k + (3-2/k)L$, whatever the base policy,
+the arrivals and the predictions (Theorem~\ref{thm:guard}). Below the cap, the budget decides
+how much of the base policy's benefit survives and which jobs pay for it. We study the
+family
+\begin{equation}
   \mathrm{budget}(q,t) \;=\;
   \min\bigl(\,B_0 + \gamma\,n_q + \eta\,k\,(t - a_q),\ B_{\max}\,\bigr),
-\]
-with $B_0, \gamma \ge 0$, $0 \le \eta < 1$ and $n_q$ the number of jobs waiting when
-$q$ arrives, and we read three shapes off it, \emph{constant} ($\gamma = \eta = 0$),
-\emph{age-relative} ($\eta > 0$), and \emph{queue-length} ($\gamma > 0$). The
-coefficient $\eta$ says how much of the system's capacity, over a job's own waiting
-time, may go to jobs that arrived after it. In other words, the allowance grows
-with the wait a job has already had. We chose a fraction of capacity rather than a
-number of seconds because it is dimensionless, so it needs no retuning when $k$ or the
-load changes. The term $\gamma n_q$, by contrast, widens the allowance only for jobs that
-arrive into a queue that is already long, and it is flat in the wait. All three of $B_0$, $\gamma$ and $B_{\max}$ are measured in work and scale with $k$.
-
-Only the age-relative shape carries a second, multiplicative bound, and only when
-$\gamma = 0$: $W < (W_{\mathrm{FCFS}} + B_0/k + (3-2/k)L)/(1-\eta)$. With
-$\gamma > 0$ the constant part of the budget differs from job to job. Hence the multiplicative form holds per job, with that job's own constant, and the operator
-has no single number to state in advance (Supplementary Section~S4.6), so for $\gamma > 0$ we claim the additive bound alone.
+  \label{eq:budget}
+\end{equation}
+with $B_0, \gamma \ge 0$, $0 \le \eta < 1$ and $n_q$ the number of jobs waiting when $q$
+arrives. We study three shapes in this family, namely \emph{constant} ($\gamma = \eta = 0$),
+\emph{age-relative} ($\eta > 0$) and \emph{queue-length} ($\gamma > 0$). In the
+age-relative shape, $\eta$ is the share of the system's capacity, over a job's own wait,
+that may go to jobs that arrived after it, so the allowance grows with the wait the job has
+already had. The term $\gamma n_q$ widens the
+allowance only for jobs that arrive into a long queue. All of $B_0$, $\gamma$ and
+$B_{\max}$ are measured in work and scale with $k$.
 
 \begin{algorithm}
 \caption{Overtake-budget guard wrapped around a base policy $A$}
@@ -109,21 +92,21 @@ has no single number to state in advance (Supplementary Section~S4.6), so for $\
 \While{some job has not started}
   \State $t \gets$ next event time
   \ForAll{jobs $c$ completing at $t$} \Comment{$C_c$ becomes known here and nowhere earlier}
-    \ForAll{$q \in Q$ with $q < c$ in rank}
+    \ForAll{$q \in Q$ that arrived before $c$}
       \State $\mathrm{over}[q] \gets \mathrm{over}[q] + C_c$
     \EndFor
   \EndFor
   \ForAll{jobs $i$ arriving at $t$}
-    \State $n_i \gets |Q|$; \ $Q \gets Q \cup \{i\}$; \ $\mathrm{over}[i] \gets 0$ \Comment{$n_i$ fixes $i$'s constant part}
+    \State $n_i \gets |Q|$; \ $Q \gets Q \cup \{i\}$; \ $\mathrm{over}[i] \gets 0$
   \EndFor
-  \While{a server is free \textbf{and} $Q \neq \emptyset$} \Comment{dispatch epoch}
+  \While{a server is free \textbf{and} $Q \neq \emptyset$} \Comment{dispatch decision}
     \State $E \gets \{\, q \in Q : \mathrm{over}[q] \ge \min(B_0 + \gamma n_q + \eta k (t - a_q),\, B_{\max}) \,\}$
     \If{$E \neq \emptyset$}
-      \State $j \gets$ the minimum-rank member of $E$ \Comment{guard fires}
+      \State $j \gets$ the earliest-arrived member of $E$ \Comment{guard fires}
     \Else
       \State $j \gets A(Q, t)$ \Comment{base policy decides}
     \EndIf
-    \State dispatch $j$ on the free server; \ $W[j] \gets t - a_j$; \ $Q \gets Q \setminus \{j\}$
+    \State start $j$ on the free server; \ $W[j] \gets t - a_j$; \ $Q \gets Q \setminus \{j\}$
   \EndWhile
 \EndWhile
 \end{algorithmic}
@@ -131,79 +114,55 @@ has no single number to state in advance (Supplementary Section~S4.6), so for $\
 
 \input{figures/fig_guard}
 
-\paragraph{Parameters from a service promise.}
-The operator states $G$, the number of seconds by which any job may exceed its FCFS
-waiting time, and reads off $B_{\max} = k\bigl(G - (3 - 2/k)\,L\bigr)$, the inversion
-of the uniform certificate proved in Section~\ref{sec:theory}, and no data are needed for this step. The rule issues no positive budget below $(3-2/k)L$, while the zero budget remains
-admissible and reproduces FCFS exactly. In Section~\ref{sec:theory} we also give an $L$-scale floor, but only for this wrapper family when it must protect
-against every opaque base-policy proposal sequence. The promise $G$ follows from $B_{\max}$ alone, while the shape parameters $B_0$, $\gamma$ and $\eta$ decide how much of
-the base policy's benefit survives and which jobs pay for it, so we choose them on a
-validation trace that excludes the test period. That pool is held out of the selection
-and not of the development process, and Section~\ref{sec:exp_prov} states what the
-selection therefore does and does not establish. We fix the rule before the grids are run, state it in full in Supplementary
-Section~S5, and give the grids and what they selected in Supplementary Table~S4.
+\subsection{Setting the Guard}
 
+An operator states a bound $G$, the number of seconds by which any job may exceed its FCFS
+wait, and sets $B_{\max} = k\bigl(G - (3 - 2/k)L\bigr)$ (Corollary~\ref{cor:params}). No
+data are needed for this step. A bound of at most $(3-2/k)L$ can be guaranteed this way only
+with $B_{\max} = 0$, which is FCFS. The shape parameters $B_0$, $\gamma$ and $\eta$ do not
+affect the bound, and we choose them on validation data by a rule fixed in advance
+(Section~\ref{sec:exp_prov}). At $G = \devnum{600}$ s this rule selects the age-relative
+shape with $B_0 = \devnum{30}k$ s of work and $\eta = \devnum{0.75}$ (Supplementary
+Table~S5).
 
-\paragraph{What is charged, and why no service time is needed at dispatch.}
-We charge the budget with the true executed work of overtakers, and only when they
-complete. At the instant the guard decides, it has read $C_j$ only for jobs that have
-already finished, and a job still in service contributes nothing. That is what makes our wrapper implementable in a system that learns a job's cost at its completion, and
-it is also why the bound carries an additive term in place of an exact
-accounting. When the last overtaker of $i$ is dispatched, up to $k-1$ further
-overtakers may be in service with their work not yet charged, and the overtaker being
-dispatched is not charged either, so the work that actually passes $i$ can exceed the
-budget by at most $kL$. Under the timeout at $L$, executed work means $\min(C_j, L)$, and because the log records that quantity and the guard
-charges it, no assumption on raw
-sizes enters.
-
-
-\paragraph{Cost per event.}
-We write Algorithm~\ref{alg:guard} for readability rather than for execution, since
-its inner loop over waiting jobs at each completion is linear. With a Fenwick tree over completed work and a segment tree over the window of waiting
-ranks, we make each event cost $O(\log n)$. We carry all budget arithmetic in integer microseconds, so the firing
-test is exact and no floating-point clock enters the schedule. We give the two structures and the rewriting of the firing test in Supplementary
-Section~S5. Thus a promise in seconds becomes a number the dispatcher can check, and the dispatcher never reads
-a prediction to check it.
-
-\paragraph{Why the budget is measured in work and not in positions.}
-Earlier bounded-overtaking mechanisms count passes~\cite{grosof2021nudge,vanhoudt2022nudgek}
-or limit service to the oldest jobs~\cite{grosof2022wcfs} instead. A count is loose
-against a work budget by the ratio $L/\bar{C}$, \devnum{150} on the main trace ($L = 60$ s
-against a mean cost of \devnum{0.40} s). We give the argument in Supplementary
-Sections~S4.4 and~S4.9, and
-Section~\ref{sec:experiments} measures what the looseness costs on a real load.
-% Source: prechecks/cost_ratio/out_mean_cost_ratio.txt (L / mean cost = 150.1, mean 0.3997 s).
+The guard charges the executed cost of an overtaker when it completes, because a job's cost
+is known only then. A job still running contributes nothing yet. When the last overtaker of
+a job $i$ starts, up to $k-1$ earlier overtakers may still be running, and the one starting
+is not charged either. The work that actually passes $i$ can therefore exceed the budget by
+at most $kL$. This is what the additive term of the guarantee pays for, and it is why
+the guard needs no prediction to enforce its bound. With a Fenwick tree over completed work
+and a segment tree over the waiting jobs, each event costs $O(\log n)$, and all budget
+arithmetic is done in integer microseconds, so the eligibility test is exact
+(Supplementary Section~S5).
 
 \subsection{Compared Policies}
 
-In Table~\ref{tab:policies} we name the policies evaluated in
-Section~\ref{sec:experiments} and fix the names used in every table of this paper, and Supplementary Section~S5.7 states what each one is for at length.
-Our method is Guard($G$) wrapped around SPJF-E, and the others separate its parts and
-test it.
+Table~\ref{tab:policies} names the policies compared in Section~\ref{sec:experiments}. Our
+method is Guard($G$), the guard with bound $G$ wrapped around SPJF-E. The other rows
+separate its parts or test it.
 
 \begin{table}[htbp]
 \centering
-\caption{Policies compared in the experiments, and the name each carries throughout.}
+\caption{Policies compared in the experiments.}
 \label{tab:policies}
 \small
-\begin{tabular}{p{0.19\textwidth}p{0.71\textwidth}}
-\hline
+\begin{tabular}{p{0.24\textwidth}p{0.66\textwidth}}
+\toprule
 Name & Role \\
-\hline
-FCFS & Deployed baseline, and the reference the guarantee is stated against \\
-SJF & Undeployable reference that sorts by true service time; the denominator of the gap closed \\
-SPJF-E & Ranks by the expected-cost score of Section~\ref{sec:rank}, unguarded \\
-SPJF-log & The same pipeline on the log scale, and the other candidate scores of Section~\ref{sec:rank} \\
-Guard($G$) & SPJF-E wrapped in the overtake-budget guard at the promise $G$. This is the method \\
-Guard-fixed($G$), Guard-age($G$), Guard-queue($G$) & The same wrapper with the shape the rule picks inside one grid. Ablation rows \\
-Fixed($G$) & The same wrapper at the equal-promise budget $\mathrm{budget} \equiv B_{\max}$; infeasible under the harm rule \\
-Skip($G$) & Position-count guard, finite-skip family, counted at dispatch (Supplementary Section~S4.4) \\
-Corrupted scores & SPJF-E and Guard($G$) under a reversed order, a random order and an inverted-tail score \\
-Counterexamples & Retained traces from two audits and adversarial review, checked against the bounds \\
-\hline
+\midrule
+FCFS & Deployed baseline and the reference of the guarantee \\
+SJF & Orders by true cost, cannot be deployed, and is the reference of the gap closed \\
+SPJF-E & Orders by the expected-cost score of Section~\ref{sec:rank}, unguarded \\
+SPJF-log & Orders by the log-scale score, unguarded \\
+Guard($G$) & SPJF-E inside the guard with bound $G$ and the selected shape (the method) \\
+Guard-fixed($G$), -age($G$), -queue($G$) & The same guard with the best constant, age-relative or queue-length shape \\
+Fixed($G$) & The same guard with the whole cap as budget, $\mathrm{budget} \equiv B_{\max}$ \\
+Skip($G$) & A guard that counts overtakes instead of work, charged at start, at the count that gives bound $G$ \\
+Timeout($\theta$) & A maximum waiting time, which serves the earliest-arrived job once it has waited $\theta$ (Section~\ref{sec:clock}) \\
+Corrupted scores & SPJF-E and Guard($G$) under a reversed, a random and an inverted-tail score \\
+\bottomrule
 \end{tabular}
 \end{table}
 
-In every simulation that includes the guard we assert the per-job bound of
-Section~\ref{sec:theory} job by job inside the run
-(Section~\ref{sec:exp_bound}).
+Every simulation that includes a guard checks the per-job bound of
+Section~\ref{sec:theory} on every job while it runs (Section~\ref{sec:exp_bound}).

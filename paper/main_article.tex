@@ -12,6 +12,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{graphicx}
 % The four figures are drawn in LaTeX from numbers that are already in the
 % tables or in the cited precheck files; no external image is included.
@@ -53,6 +54,11 @@
 \newtheorem{definition}[theorem]{Definition}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
+
+% The sections wrap align in linenomath, which mdpi.cls (through lineno) needs for line
+% numbers inside multi-line displays; the article build has no line numbers, so the
+% environment is empty here.
+\newenvironment{linenomath}{}{}
 
 % Marks a figure that comes from development data rather than from the sealed
 % semesters. It expands to its argument; the submission version can redefine it.

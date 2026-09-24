@@ -599,24 +599,28 @@
   x-verified = {Preprint arXiv:2501.05563; 文中算法名为 A-SRPT}
 }
 
-@misc{fu2024ltr,
-  author = {Fu, Yichao and Zhu, Siqi and Su, Runlong and Qiao, Aurick and Stoica, Ion and Zhang, Hao},
-  title  = {Efficient {LLM} Scheduling by Learning to Rank},
-  year   = {2024},
-  eprint = {2408.15792},
-  archivePrefix = {arXiv},
-  x-verified = {作者名单经 arXiv API 核对}
+@inproceedings{fu2024ltr,
+  author    = {Fu, Yichao and Zhu, Siqi and Su, Runlong and Qiao, Aurick and Stoica, Ion and Zhang, Hao},
+  title     = {Efficient {LLM} Scheduling by Learning to Rank},
+  booktitle = {Advances in Neural Information Processing Systems 37 (NeurIPS 2024)},
+  pages     = {59006--59029},
+  year      = {2024},
+  doi       = {10.52202/079017-1882},
+  note      = {Preprint arXiv:2408.15792},
+  x-verified = {Verified 2026-09-24 on the NeurIPS proceedings page https://proceedings.neurips.cc/paper_files/paper/2024/hash/6c8985579293e0209bdaa4f21bb1d237-Abstract-Conference.html (Main Conference Track, DOI shown) and its BibTeX export (six authors in this order, volume 37, pages 59006--59029, publisher Curran Associates, doi 10.52202/079017-1882). Also checked through Crossref: proceedings-article, container 'Advances in Neural Information Processing Systems 37', the same six authors and pages, registered by the NeurIPS Foundation; doi.org resolves to proceedings.com. The earlier entry cited arXiv 2408.15792 only, with the author list checked through the arXiv API. Reading depth: abstract. The scheduler learns to rank the output lengths within a batch of requests and uses the ranking to approximate shortest-job-first}
 }
 
-@misc{li2026tailaware,
-  author = {Li, Yueying and Chen, Yuanfan and Chen, Jiayang and Choukse, Esha and Qiu, Haoran and Suh, G. Edward and Fonseca, Rodrigo and Scully, Ziv and Gupta, Udit},
-  title  = {Beyond Prediction: Tail-Aware Scheduling for {LLM} Inference},
-  year   = {2026},
-  eprint = {2606.18431},
-  archivePrefix = {arXiv},
-  primaryClass = {cs.LG},
-  doi    = {10.48550/arXiv.2606.18431},
-  x-verified = {Full author list read from the arXiv v1 metadata and title block on 2026-09-20: nine authors, the eighth being Ziv Scully. OpenAlex garbles author 2 as ``Yanlun Chen''; arXiv and the paper's own title block say Yuanfan Chen. Read in full text (HTML v1). The method, UniBoost, scores requests with the generalized gamma-Boost function of yu2024boost, and its Appendix A.2 starvation argument is written in that paper's crossing-work terms, so this belongs to the Boost line and not only to the LLM-serving literature. The arXiv journal-ref declares ICML 2026, but that field is author-supplied and PMLR carries no such volume yet, so it is cited here as a preprint}
+@inproceedings{li2026tailaware,
+  author    = {Li, Yueying and Chen, Yuanfan and Chen, Jiayang and Choukse, Esha and Qiu, Haoran and Suh, G. Edward and Fonseca, Rodrigo and Scully, Ziv and Gupta, Udit},
+  title     = {Beyond Prediction: Tail-Aware Scheduling for {LLM} Inference},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML 2026)},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {306},
+  publisher = {PMLR},
+  address   = {Seoul, South Korea},
+  year      = {2026},
+  note      = {Preprint arXiv:2606.18431},
+  x-verified = {Venue verified 2026-09-24. The ICML 2026 virtual site lists it as a poster (https://icml.cc/virtual/2026/poster/63644), linking OpenReview forum V40F5O5N85, which answered with a browser challenge and was not opened. The camera-ready PDF on the authors' project page https://yl3469.github.io/uniboost-icml26/ (16 pages, created 16 June 2026, PDF subject 'Proceedings of the International Conference on Machine Learning 2026') carries the first-page footer 'Proceedings of the 43rd International Conference on Machine Learning, Seoul, South Korea. PMLR 306, 2026.' The eighth author's publication page (ziv.codes) gives the venue as Proceedings of the 43rd International Conference on Machine Learning (ICML 2026), and the arXiv journal-ref reads 'Forty-Third International Conference on Machine Learning (2026)'. PMLR had not published the volume on 2026-09-24: https://proceedings.mlr.press/v306/ returns 404 and the PMLR index lists no ICML 2026 volume. Pages are therefore unknown; recheck them and add them once v306 appears. The volume number 306 comes from the camera-ready footer alone. Earlier notes still hold: the full author list was read from the arXiv v1 metadata and title block on 2026-09-20, nine authors with Ziv Scully eighth. OpenAlex garbles author 2 as ``Yanlun Chen''; arXiv, the ICML site, the project page and the PDF metadata all say Yuanfan Chen (the ICML site drops the initial G. of Edward Suh). Read in full text (HTML v1). The method, UniBoost, scores requests with the generalized gamma-Boost function of yu2024boost, and its Appendix A.2 starvation argument is written in that paper's crossing-work terms, so it belongs to the Boost line and not only to the LLM-serving literature}
 }
 
 @inproceedings{zhao2025fairpredictions,
@@ -1215,4 +1219,96 @@
   howpublished = {\url{https://codebench.icomp.ufam.edu.br/}},
   note         = {Accessed 2026-09-23},
   x-verified = {Home page read 2026-09-23. It says, in Portuguese: CodeBench creates an independent Docker container for each student (cria um Docker Container independente para cada aluno). It does not say the container is created at login.}
+}
+
+@inproceedings{im2021nonclairvoyant,
+  author    = {Im, Sungjin and Kumar, Ravi and Montazer Qaem, Mahshid and Purohit, Manish},
+  title     = {Non-Clairvoyant Scheduling with Predictions},
+  booktitle = {Proceedings of the 33rd ACM Symposium on Parallelism in Algorithms and Architectures (SPAA '21)},
+  pages     = {285--294},
+  year      = {2021},
+  doi       = {10.1145/3409964.3461790},
+  x-verified = {Verified 2026-09-24 through the Crossref REST API (proceedings-article; four authors in this order, Montazer Qaem registered as one family name; Proceedings of the 33rd ACM Symposium on Parallelism in Algorithms and Architectures, SPAA '21, virtual event, ACM, New York, pp. 285--294, 6 July 2021) and OpenAlex (same pages); doi.org resolves to dl.acm.org, whose page sat behind a Cloudflare challenge and was not opened. A journal version exists, ACM Transactions on Parallel Computing 10(4):1--26, 2023, doi:10.1145/3593969 (Crossref; it splits the name as given Mahshid Montazer, family Qaem). Reading depth: the journal version's abstract. Single machine, total completion time, processing times unknown a priori; the paper proposes a new measure of prediction quality and gives algorithms with guarantees under that measure. The objective is an aggregate against the optimum, not a per-job bound}
+}
+
+@inproceedings{lattanzi2020learnedweights,
+  author    = {Lattanzi, Silvio and Lavastida, Thomas and Moseley, Benjamin and Vassilvitskii, Sergei},
+  title     = {Online Scheduling via Learned Weights},
+  booktitle = {Proceedings of the 2020 ACM-SIAM Symposium on Discrete Algorithms (SODA)},
+  pages     = {1859--1877},
+  year      = {2020},
+  doi       = {10.1137/1.9781611975994.114},
+  x-verified = {Verified 2026-09-24 on the publisher's chapter page (SIAM, archived at http://web.archive.org/web/20221221034641/https://epubs.siam.org/doi/10.1137/1.9781611975994.114; live epubs.siam.org returns 403): volume title 'Proceedings of the 2020 ACM-SIAM Symposium on Discrete Algorithms (SODA)', four authors in this order, pp. 1859--1877, eISBN 978-1-61197-599-4; the SIAM book page (archived 2025-07-21) names editor Shuchi Chawla. dblp (conf/soda/LattanziLMV20) gives the same authors and pages. Crossref registers the volume as 'Proceedings of the Fourteenth Annual ACM-SIAM Symposium on Discrete Algorithms', which is a SIAM deposit error; the ACM DL co-listing (10.5555/3381089) titles it 'Proceedings of the Thirty-First Annual ACM-SIAM Symposium on Discrete Algorithms'. The booktitle follows the DOI owner, SIAM. Reading depth: the abstract on the SIAM page and on the Google Research publication page. Makespan minimisation on unrelated machines and restricted assignment; the predictions have dimension linear in the number of machines (a learned weight per machine); O(log eta)-competitive fractional assignments, where eta is the prediction error, followed by an online rounding that is O((log log m)^3)-competitive}
+}
+
+@article{lykouris2021caching,
+  author  = {Lykouris, Thodoris and Vassilvitskii, Sergei},
+  title   = {Competitive Caching with Machine Learned Advice},
+  journal = {Journal of the ACM},
+  volume  = {68},
+  number  = {4},
+  pages   = {1--25},
+  year    = {2021},
+  doi     = {10.1145/3447579},
+  note    = {Preliminary version in Proceedings of the 35th International Conference on Machine Learning (ICML 2018), PMLR 80:3296--3305; preprint arXiv:1802.05399},
+  x-verified = {Verified 2026-09-24. Journal version checked through Crossref (two authors; Journal of the ACM 68(4):1--25, online 14 July 2021, issue dated August 2021; doi.org resolves to dl.acm.org, which sat behind Cloudflare and was not opened) and through the first author's MIT Sloan CV ('Journal of the ACM (JACM); vol. 68, iss. 4, art. 24, pp. 1-25, 2021', with 'Extended abstract appeared at ICML'18'). Conference version checked on https://proceedings.mlr.press/v80/lykouris18a.html: Proceedings of the 35th International Conference on Machine Learning, PMLR 80:3296--3305, editors Dy and Krause, 2018. PMLR misspells the second author as 'Vassilvtiskii'; Crossref and the CV spell Vassilvitskii. The arXiv 1802.05399 comment says preliminary versions appeared at ICML 18 and SysML 18 and that the current version improves the presentation of the framework (Section 2.2). The journal version is cited because it is the archival, revised statement of the framework; the note keeps the ICML 2018 priority. Article number 24 is not printed by the MDPI style, so pages follow the POMACS entries here. Reading depth: abstract. The oracle is a black box with no assumption on its error distribution, and the competitive ratio decreases with the oracle's error while always staying below O(log k)}
+}
+
+@inproceedings{lindermayr2022permutation,
+  author    = {Lindermayr, Alexander and Megow, Nicole},
+  title     = {Permutation Predictions for Non-Clairvoyant Scheduling},
+  booktitle = {Proceedings of the 34th ACM Symposium on Parallelism in Algorithms and Architectures (SPAA '22)},
+  pages     = {357--368},
+  year      = {2022},
+  doi       = {10.1145/3490148.3538579},
+  note      = {Preprint arXiv:2202.10199},
+  x-verified = {Verified 2026-09-24 through Crossref (proceedings-article; two authors; Proceedings of the 34th ACM Symposium on Parallelism in Algorithms and Architectures, SPAA '22, Philadelphia, ACM, New York, pp. 357--368, 11 July 2022), OpenAlex (same pages) and the arXiv record 2202.10199 (comment 'SPAA 2022'). The ACM DL page sat behind Cloudflare and was not opened. A journal version exists, ACM Transactions on Parallel Computing 12(2):1--26, 2025, doi:10.1145/3711872 (Crossref); not read. Reading depth: arXiv abstract. The prediction is a relative order of the jobs rather than their processing requirements, framed as predicting algorithmic actions, with an error measure on that order. The objective is total (weighted) completion time, on a single machine and on unrelated machines. The paper generalises the framework of Purohit, Svitkina and Kumar (purohit2018predictions)}
+}
+
+@article{scully2018soap,
+  author  = {Scully, Ziv and Harchol-Balter, Mor and Scheller-Wolf, Alan},
+  title   = {{SOAP}: One Clean Analysis of All Age-Based Scheduling Policies},
+  journal = {Proceedings of the ACM on Measurement and Analysis of Computing Systems},
+  volume  = {2},
+  number  = {1},
+  pages   = {1--30},
+  year    = {2018},
+  doi     = {10.1145/3179419},
+  note    = {Preprint arXiv:1712.00790},
+  x-verified = {Verified 2026-09-24 through Crossref (three authors in this order; POMACS 2(1), pages 1--30, dated 3 April 2018; title 'SOAP' with subtitle 'One Clean Analysis of All Age-Based Scheduling Policies') and the first author's publication page https://ziv.codes/scully_soap_2018/ (BibTeX: volume 2, number 1, articleno 16, numpages 30, month March 2018, DOI). The ACM DL page sat behind Cloudflare and was not opened. The MDPI style does not print the article number (16), so pages follow the other POMACS entries here. Read first-hand in the ar5iv HTML rendering of arXiv 1712.00790. A SOAP policy serves the job of minimum rank r(d, a), where d is the descriptor and a the age, with ties broken FCFS (Section 2.2). A primary rank of -a encodes non-preemption: FCFS is r = -a (Example 3.2) and non-preemptive priority classes are r = <-a, k> (Example 3.3). SEPT, the non-preemptive shortest-expected-processing-time policy with rank <-a, E[X_d]>, is a SOAP policy (Example 3.5); on one server this is the policy SPJF-E instantiates. The analysis is for the M/G/1 queue with lambda E[X] < 1 and gives the mean and the Laplace--Stieltjes transform of response time, so it covers one server under Poisson arrivals only. The example numbers are the arXiv version's; check them against the published article before quoting one}
+}
+
+@article{schrage1966srpt,
+  author  = {Schrage, Linus E. and Miller, Louis W.},
+  title   = {The Queue {M/G/1} with the Shortest Remaining Processing Time Discipline},
+  journal = {Operations Research},
+  volume  = {14},
+  number  = {4},
+  pages   = {670--684},
+  year    = {1966},
+  doi     = {10.1287/opre.14.4.670},
+  x-verified = {Verified 2026-09-24 through the Crossref REST API: two authors (Linus E. Schrage, Louis W. Miller), Operations Research 14(4):670--684, August 1966, DOI, publisher INFORMS. The INFORMS landing page answered with a bot check and was not opened, so the article text was not read; it is cited only as the origin of the discipline, not for any formula}
+}
+
+@inproceedings{demers1989fq,
+  author    = {Demers, Alan and Keshav, Srinivasan and Shenker, Scott},
+  title     = {Analysis and Simulation of a Fair Queueing Algorithm},
+  booktitle = {Symposium Proceedings on Communications Architectures \& Protocols (SIGCOMM '89)},
+  pages     = {1--12},
+  publisher = {ACM},
+  year      = {1989},
+  doi       = {10.1145/75246.75248},
+  x-verified = {Verified 2026-09-24 through the Crossref REST API (three authors, SIGCOMM '89 proceedings pages 1--12, August 1989, DOI; the same paper is also registered as ACM SIGCOMM Computer Communication Review 19(4):1--12, DOI 10.1145/75247.75248) and read in full text from the copy at \url{https://web.stanford.edu/class/cs244/papers/demers-queueing.pdf}, which carries the 1989 ACM proceedings copyright line. Section 2.2 defines the packet-by-packet algorithm as sending the packet with the smallest bit-by-bit round-robin finishing number, in a preemptive and a nonpreemptive version, and states that for each conversation the total bits sent at a given time by the two packetized algorithms and by bit-by-bit round robin are always within one maximum packet size of each other; it credits the proof of this emulation discrepancy bound to Greenberg and Madras and does not prove it itself. Section 5 generalises the algorithm to unequal bandwidth shares, the weighted form. The words weighted and fluid do not occur}
+}
+
+@article{feitelson2014pwa,
+  author  = {Feitelson, Dror G. and Tsafrir, Dan and Krakov, David},
+  title   = {Experience with using the {Parallel Workloads Archive}},
+  journal = {Journal of Parallel and Distributed Computing},
+  volume  = {74},
+  number  = {10},
+  pages   = {2967--2982},
+  year    = {2014},
+  doi     = {10.1016/j.jpdc.2014.06.013},
+  x-verified = {Verified 2026-09-24 through the Crossref REST API (three authors, Journal of Parallel and Distributed Computing 74(10):2967--2982, October 2014, DOI) and against the archive's home page \url{https://www.cs.huji.ac.il/labs/parallel/workload/}, read through WebFetch because curl receives the university firewall page, which asks users of the archive to cite this paper as J. Parallel \& Distributed Comput. 74(10) pp. 2967--2982, Oct 2014. It is a journal article, not a JSSPP paper. Full text not read; it is cited as the archive's own description}
 }
