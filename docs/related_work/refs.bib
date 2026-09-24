@@ -1132,3 +1132,61 @@
   doi     = {10.1137/0325013},
   x-verified = {Verified 2026-09-23 from the SIAM publisher page: P. J. Ramadge and W. M. Wonham, SIAM Journal on Control and Optimization 25(1):206--230, January 1987, DOI. Reading depth: publisher abstract. The abstract reduces supervisor existence to the largest controllable language contained in a legal language; the manuscript cites only this maximally permissive supervisory-control framing}
 }
+
+@article{cruz1991calculus,
+  author  = {Cruz, Rene L.},
+  title   = {A Calculus for Network Delay, Part {I}: Network Elements in Isolation},
+  journal = {IEEE Transactions on Information Theory},
+  volume  = {37},
+  number  = {1},
+  pages   = {114--131},
+  year    = {1991},
+  doi     = {10.1109/18.61109},
+  x-verified = {Verified 2026-09-23 through Crossref (author Cruz, R.L.; IEEE Transactions on Information Theory 37(1):114--131, 1991; DOI resolves; Crossref prints the title as "A calculus for network delay. I. Network elements in isolation", the journal's running head is "Calculus for network delay, Pt. I: Network elements in isolation"). Read in full text from a scan of the printed article (18 pages, running heads with page numbers 114--131). Section II, p. 116: a stream R satisfies the (sigma, rho) burstiness constraint if the data it carries in any interval [x, y] is at most sigma + rho (y - x); Fig. 2 and the text beside it identify the least such sigma with the largest backlog of a work-conserving system that serves at rate rho, which is the sigma of the proposition with rho = k. Eq. (2.3), p. 116: with packets of length L on a link of capacity C, sigma >= L (1 - rho/C). The article treats single-server network elements only; it has no multiserver element and no (k-1)L term. Given name expanded from the initials R.L. as the IEEE author record spells it (Rene L. Cruz)}
+}
+
+@book{leboudec2001network,
+  author    = {Le Boudec, Jean-Yves and Thiran, Patrick},
+  title     = {Network Calculus: A Theory of Deterministic Queuing Systems for the Internet},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {2050},
+  publisher = {Springer},
+  address   = {Berlin, Heidelberg},
+  year      = {2001},
+  doi       = {10.1007/3-540-45318-0},
+  isbn      = {978-3-540-42184-9},
+  x-verified = {Verified 2026-09-23 through Crossref: type book, title "Network Calculus", series Lecture Notes in Computer Science, Springer Berlin Heidelberg, print 2001, online 2002-01-29, ISBN 9783540421849 (print) and 9783540453185 (electronic); Crossref lists Le Boudec and Thiran as EDITORS, a known registration quirk for this monograph, which they authored, so they are entered as authors. Volume 2050 is the LNCS number printed on the book, not a Crossref field; the subtitle is the printed one and is not in the Crossref title field. Read in full text from the authors' online version (leboudec.github.io/netcal/latex/netCalBook.pdf, 265 pages, revision log to 2019-12-09); theorem numbers below are that version's. Theorem 1.4.2: the virtual delay is at most the horizontal deviation h(alpha, beta); Figure 1.10: for a leaky-bucket arrival curve (b, r) and a rate-latency service curve (R, T) the delay bound is T + b/R. Theorem 1.7.1 item 3: appending an L-packetizer turns a minimum service curve beta into [beta - l_max]^+, so a rate-latency server's latency grows by l_max/R. The envelope bound reads as that pattern with R = k and a deficit of (k-1)L rather than l_max; the book has no multiserver element}
+}
+
+@inproceedings{leontyev2009multiprocessor,
+  author    = {Leontyev, Hennadiy and Chakraborty, Samarjit and Anderson, James H.},
+  title     = {Multiprocessor Extensions to Real-Time Calculus},
+  booktitle = {Proceedings of the 30th IEEE Real-Time Systems Symposium (RTSS)},
+  address   = {Washington, DC, USA},
+  pages     = {410--421},
+  year      = {2009},
+  doi       = {10.1109/RTSS.2009.29},
+  x-verified = {Verified 2026-09-23 through Crossref (proceedings-article, three authors, 2009 30th IEEE Real-Time Systems Symposium, pp. 410--421, December 2009, event 1--4 December 2009, Washington DC). Read in full text from the authors' copy https://www.cs.unc.edu/~anderson/papers/rtss09c.pdf. Globally scheduled m-processor platform, event streams described by real-time-calculus arrival curves, fixed job-priority schedulers (preemptive variants of global EDF and FIFO named explicitly); Theorem 3 and Definition 16 carry a term (m - 1)(E*(k) - 1), the demand m - 1 processors can still hold, in a response-time test that needs utilisation below the supplied capacity. The extended journal version is Real-Time Systems 47(6):562--617, 2011, doi:10.1007/s11241-011-9135-8, verified through Crossref but not read}
+}
+
+@misc{wu2023fastserve,
+  author        = {Wu, Bingyang and Zhong, Yinmin and Zhang, Zili and Liu, Shengyu and Liu, Fangyue and Sun, Yuanhang and Huang, Gang and Liu, Xuanzhe and Jin, Xin},
+  title         = {Fast Distributed Inference Serving for Large Language Models},
+  year          = {2023},
+  eprint        = {2305.05920},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  doi           = {10.48550/arXiv.2305.05920},
+  x-verified = {Verified 2026-09-23: Crossref returns 404 for the DataCite DOI; api.datacite.org returns the title, year 2023 and nine creators; the arXiv abstract page meta tags give the nine authors in this order, v1 2023-05-10, v3 2024-09-25. Read in the LaTeX source of the current version, Section 4.1 (Skip-Join MLFQ Scheduler), through the arxiv MCP. The starvation rule promotes a job whose starveTime reaches alpha to the highest-priority queue (Algorithm 1, lines 19--21); alpha is tuned from the user's SLO, 300 ms by default. The section states no bound on waiting time. Preemptive at token granularity, so the setting differs from ours}
+}
+
+@misc{luo2025autellix,
+  author        = {Luo, Michael and Shi, Xiaoxiang and Cai, Colin and Zhang, Tianjun and Wong, Justin and Wang, Yichuan and Wang, Chi and Huang, Yanping and Chen, Zhifeng and Gonzalez, Joseph E. and Stoica, Ion},
+  title         = {Autellix: An Efficient Serving Engine for {LLM} Agents as General Programs},
+  year          = {2025},
+  eprint        = {2502.13965},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  doi           = {10.48550/arXiv.2502.13965},
+  x-verified = {Verified 2026-09-23: Crossref returns 404 for the DataCite DOI; api.datacite.org returns the title, year 2025 and eleven creators; the arXiv abstract page meta tags give the eleven authors in this order, single version v1 of 2025-02-19. Read in the arXiv HTML v1, the scheduler algorithm and the Anti-Starvation paragraph: a call is moved to the top queue when wait/service >= beta, and the paper argues that promoting calls that have waited past a fixed threshold reduces the scheduler to naive MLFQ. No bound on waiting time is stated}
+}

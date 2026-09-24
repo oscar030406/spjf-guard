@@ -323,6 +323,154 @@ sequence and the same waits. Supplementary Section~S4.2 states this as a proposi
 with the two conditions under which a constant budget meets its hypothesis and the two
 counterexamples that make consistency one-sided.
 
+\subsection{A Clock Keeps the Same Promise}
+\label{sec:clock}
+
+Deployed schedulers guard against starvation with a maximum waiting time. Recent
+inference servers promote a request once it has waited past a threshold, and state no
+bound on the wait~\cite{wu2023fastserve,luo2025autellix}. In the simplest form, once the
+oldest waiting job has waited $\theta$ it is served next, and until then the base
+policy decides. Call this Timeout($\theta$), and read ``oldest'' as the waiting job of
+minimum rank, so that ties in arrival time are broken by input order and not by the
+base policy. The rule reads arrival times and a clock, and never a service time. It
+carries the same kind of promise as the guard.
+
+\begin{proposition}[Timeout bound]
+\label{prop:clock}
+Fix a base policy and $\theta \ge 0$. For every input and every job $i$ with at least
+one overtaker, Timeout($\theta$) gives $\mathrm{In}_i < k(\theta + L)$, and every job
+waits
+\[
+  W \;<\; W_{\mathrm{FCFS}}[i] + \theta + (3 - 2/k)L .
+\]
+\end{proposition}
+
+\begin{proof}[Proof idea]
+From $a_i + \theta$ on, the minimum-rank waiting job has waited at least $\theta$, so
+every dispatch until $s_i$ serves a job of rank below $i$. Each overtaker of $i$
+therefore starts before $a_i + \theta$ and ends no later than $L$ after its start. The
+overtakers that share a server run one after another inside $[a_i, a_i + \theta + L)$,
+and summing over the $k$ servers bounds $\mathrm{In}_i$. Theorem~\ref{thm:identity}
+with $\mathrm{Out}_i \ge 0$ turns that into the bound on the wait. Supplementary
+Section~S4.11 gives the proof in full.
+\end{proof}
+
+At $\theta = G - (3-2/k)L$ the clock makes the promise that the guard makes at
+$B_{\max} = k\theta$. The two rules differ in what they charge a waiting job for. The
+clock charges it for all the work the servers do while it waits, $k(t - a_q)$. The
+guard charges it only for the completed work of jobs that arrived after it. The
+difference is the work of older jobs, which first-come first-served would have done
+anyway. Near saturation that work is large. A job that arrives behind a backlog is
+charged for the backlog, the clock fires for most of the queue, and the schedule falls
+back to arrival order at the loads where ordering by cost pays most.
+Section~\ref{sec:exp_guard} measures the difference.
+
+The two rules also combine. Serve the minimum-rank waiting job if it has waited
+$\theta$, and otherwise run Algorithm~\ref{alg:guard}. When a job is served ahead of a
+waiting job $i$ of lower rank, $i$ is then outside the guard's fired set, which is all
+Theorem~\ref{thm:guard} uses; and every overtaker of $i$ still starts before
+$a_i + \theta$, which is all Proposition~\ref{prop:clock} uses. Both bounds hold at
+once. The order matters: a rule that serves the guard's fired job first can pass over
+an aged head when budgets differ between jobs, and it breaks the clock's bound for the
+queue-length and age-relative shapes (Supplementary Section~S4.11 gives the
+instances). The clock's half reads no completion report, so the combined rule keeps
+$W < W_{\mathrm{FCFS}} + \theta + (3-2/k)L$ when reports arrive late or not at all.
+
+\subsection{An Absolute Bound from the Arrival Log}
+\label{sec:absolute}
+
+A promise relative to first-come first-served is one a student cannot check, since
+nobody runs the counterfactual queue. The arrival log alone gives an absolute one. Let
+$V_i^-$ be the work that a single server of rate $k$, fed the same jobs, would still
+hold at $a_i$ from the jobs of rank below $i$:
+$V_1^- = 0$ and
+$V_i^- = \max\bigl(0,\ V_{i-1}^- + C_{i-1} - k(a_i - a_{i-1})\bigr)$. The largest value
+$\sigma = \max_i (V_i^- + C_i)$ is the depth of the smallest token bucket of rate $k$
+that the arrivals, counted in work, conform to, which is the burst parameter of network
+calculus~\cite{cruz1991calculus,leboudec2001network}.
+
+\begin{proposition}[Absolute bound]
+\label{prop:absolute}
+For every non-preemptive work-conserving policy and every job $i$,
+$k\,W[i] \le V_i^- + (k-1)L + \mathrm{In}_i$. Hence
+$W_{\mathrm{FCFS}}[i] \le (V_i^- + (k-1)L)/k$, and under Algorithm~\ref{alg:guard} with
+cap $B_{\max}$
+\[
+  W \;<\; \frac{V_i^- + B_{\max}}{k} + \Bigl(2 - \frac{1}{k}\Bigr)L
+    \;\le\; \frac{\sigma + B_{\max}}{k} + \Bigl(2 - \frac{1}{k}\Bigr)L .
+\]
+\end{proposition}
+
+\begin{proof}[Proof idea]
+The accounting \eqref{eq:busy} gives $k\,W[i] \le R_i + \mathrm{In}_i$. A
+work-conserving $k$-server queue never holds more than $(k-1)L$ above the fluid
+server. Whenever it does, all $k$ servers are busy, since otherwise the queue is empty
+and at most $k-1$ jobs in service hold at most $(k-1)L$, and then it drains at the
+fluid rate. So $R_i \le V_i^- + (k-1)L$, and Theorem~\ref{thm:guard} bounds
+$\mathrm{In}_i$. Supplementary Section~S4.11 gives the proof in full.
+\end{proof}
+
+The comparison with the fluid server is the argument Grosof, Scully and Harchol-Balter
+use for multiserver shortest-remaining-processing-time, where it bounds the work of jobs
+below a size cutoff by $kx$~\cite{grosof2018srpt}. Here it covers every non-preemptive
+work-conserving policy and all the work, and the constant is $(k-1)L$.
+
+At $k = 1$ the fluid server is the queue, $V_i^- = W_{\mathrm{FCFS}}[i]$, and the
+proposition is Theorem~\ref{thm:guard} again. For $k \ge 2$ it is sharper than a bound
+that goes through $W_{\mathrm{FCFS}}$, which would pay the $2(k-1)L$ of
+Theorem~\ref{thm:identity} a second time. An operator who promises that no job waits
+longer than $D$, over a period whose arrivals conform to a bucket of depth $\sigma$,
+sets $B_{\max} = kD - \sigma - (2k-1)L$: the capacity over the deadline, less the
+burst, less $2k-1$ job-limits. The clock obeys the same bound with $B_{\max}$ replaced by
+$k\theta$. The comparison with a single fast server has a history of false sample-path
+claims. Wolff~\cite{wolff1987work} showed that earlier sample-path orderings between a
+multichannel queue and single-channel comparison systems fail. The statement here is not
+an ordering. It is an additive envelope around the fluid server that uses the service
+cap $L$, and it is proved directly. Section~\ref{sec:exp_bound} measures how close the
+bound comes on the traces, and how well one period's $\sigma$ predicts the next.
+
+\subsection{Completion Reports That Arrive Late}
+\label{sec:late}
+
+Theorem~\ref{thm:guard} assumes that a completion is charged before the next dispatch.
+In a distributed service the workers report completions over a network, and a server
+may pull its next job before its report has reached the counter. Suppose every charge
+reaches the counter within $\delta$ of the completion, while servers still pull the
+instant they free.
+
+\begin{proposition}[Late charges]
+\label{prop:late}
+Under Algorithm~\ref{alg:guard} with a shared counter and charges delayed by at most
+$\delta$, every job $i$ with an overtaker has
+$\mathrm{In}_i < B_{\max} + kL + k(L + \delta)$, and
+\[
+  W \;<\; W_{\mathrm{FCFS}}[i] + B_{\max}/k + (4 - 2/k)L + \delta .
+\]
+The extra $L + \delta$ is attained in the limit at $k = 1$ and $k = 2$. If each server
+applies its own completion report in the same step as its next pull, and only other
+servers' reports travel late, Theorem~\ref{thm:guard} holds unchanged for every
+$\delta$, lost reports included.
+\end{proposition}
+
+\begin{proof}[Proof idea]
+At the last overtaker's dispatch the charged part is below the budget, as before. The
+uncharged overtakers are those in service, as in Theorem~\ref{thm:guard}, and those
+that finished in the last $\delta$ and whose charge has not arrived. On one server the
+latter are at most one job that started before that window and jobs that fit inside
+it, so they hold less than $L + \delta$. When a server reports before it pulls, any
+stale completion must belong to a server that finished at the dispatch instant itself
+and has not yet pulled; that server holds no job in service, so the per-server
+uncharged work is at most one job, as in Theorem~\ref{thm:guard}. Supplementary
+Section~S4.12 gives both proofs and the instances that attain the extra term.
+\end{proof}
+
+At $k = 1$ any $\delta > 0$ already costs a whole $L$: the single server pulls its next
+job at the instant it finishes one, before that job's charge can arrive. Pulling ahead
+of the report, which is what prefetching workers do, therefore changes the promise, and
+reporting on the pull removes the change. The combined rule of
+Section~\ref{sec:clock} gives a second remedy that needs no protocol at all, since its
+clock half keeps $W < W_{\mathrm{FCFS}} + \theta + (3-2/k)L$ for any delay.
+
 \subsection{Which Assumptions Can Be Dropped}
 
 Four of the standing assumptions can go, and one cannot. The global service

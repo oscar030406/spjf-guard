@@ -206,7 +206,8 @@ three differences are \devnum{[-0.142, -0.077]}, \devnum{[-0.098, -0.064]} and
 \devnum{[-0.526, -0.314]}. None contains zero, so the promise has a resolved cost at
 every $G$ we tested. All three use the original source-clock score, an optimistic
 reference rather than the headline of Table~\ref{tab:visibility}.
-% Source: outputs/dev_tables/paired_differences.csv, rows Guard(G) - SPJF-E, rho = 1.0.
+% Source: outputs/dev_tables/paired_differences.csv, rows Guard(G) - SPJF-E, rho = 1.0;
+% the two gaps 0.801 and 0.916 are main_table.csv rows 71 and 62, gap_closed.
 
 % Wider than the MDPI text block: set across the full page with the template's
 % adjustwidth/\extralength mechanism.
@@ -260,6 +261,72 @@ remains within the proved promise. Supplementary Figure~S1 displays each selecte
 shape and the full-cap comparator against harm, with the validation trade-offs
 shown separately, and Supplementary Section~S3 makes the comparison with the aging
 baseline under the same conservative protocol.
+
+A maximum waiting time keeps a promise of the same form (Proposition~\ref{prop:clock}),
+so the budget counter has to earn its place against it. Table~\ref{tab:clock} runs
+Timeout($G - (3-2/k)L$) beside Guard($G$) on the same five overlays and the same scores,
+so both make the promise $G$. At $\rho = \devnum{0.5}$ the two close nearly the same
+share of the gap. Near saturation they part. At $\rho = \devnum{1.0}$ and
+$G = \devnum{600}$ s the clock closes \devnum{0.420} of the gap and the guard
+\devnum{0.801}; at $G = \devnum{300}$ s the clock closes \devnum{0.031}, and its
+deadline-window p99 of \devnum{266.4} s is barely below the \devnum{273.5} s of FCFS.
+Both paired differences exclude zero. At $G = \devnum{1200}$ s the two agree again,
+because the clock then fires only after most bursts have drained, and at the two lighter
+loads the clock is ahead by \devnum{0.006} and \devnum{0.013}. The clock also harms more:
+its worst harm at $\rho = \devnum{1.0}$ and $G = \devnum{600}$ s is \devnum{456.7} s,
+against \devnum{339.9} s for the guard. What the counter buys is the tight promise near
+saturation, where the clock falls back to arrival order.
+
+\begin{table}[htbp]
+\centering
+\caption{Guard($G$) against the maximum waiting time Timeout($G - (3-2/k)L$), which
+makes the same promise $G$ (Proposition~\ref{prop:clock}). Gap closed at the
+deadline-window p99, mean over the five overlays, with paired week-block intervals; the
+difference is Guard minus Timeout, resampled as a difference. Harm is the worst over the
+overlays, in seconds. Original source-clock scores, as in Table~\ref{tab:guard}.}
+\label{tab:clock}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llllll}
+\toprule
+Load & $G$ (s) & Guard($G$) & Timeout & Difference & Harm, Guard / Timeout \\
+\midrule
+\devnum{0.5} & \devnum{300} & \devnum{0.705 [0.678, 0.724]} & \devnum{0.652 [0.619, 0.679]} & \devnum{$+0.053$ [$+0.030$, $+0.077$]} & \devnum{132.1} / \devnum{148.0} \\
+ & \devnum{600} & \devnum{0.740 [0.713, 0.760]} & \devnum{0.734 [0.707, 0.753]} & \devnum{$+0.006$ [$+0.001$, $+0.012$]} & \devnum{237.0} / \devnum{237.0} \\
+ & \devnum{1200} & \devnum{0.746 [0.719, 0.768]} & \devnum{0.752 [0.724, 0.774]} & \devnum{$-0.006$ [$-0.009$, $-0.001$]} & \devnum{94.3} / \devnum{237.0} \\
+\midrule
+\devnum{0.8} & \devnum{300} & \devnum{0.738 [0.697, 0.761]} & \devnum{0.244 [0.017, 0.508]} & \devnum{$+0.494$ [$+0.241$, $+0.691$]} & \devnum{114.1} / \devnum{177.1} \\
+ & \devnum{600} & \devnum{0.837 [0.815, 0.851]} & \devnum{0.789 [0.754, 0.807]} & \devnum{$+0.048$ [$+0.030$, $+0.080$]} & \devnum{319.6} / \devnum{443.7} \\
+ & \devnum{1200} & \devnum{0.844 [0.823, 0.857]} & \devnum{0.857 [0.837, 0.869]} & \devnum{$-0.013$ [$-0.017$, $-0.009$]} & \devnum{117.6} / \devnum{469.2} \\
+\midrule
+\devnum{1.0} & \devnum{300} & \devnum{0.478 [0.387, 0.602]} & \devnum{0.031 [0.012, 0.055]} & \devnum{$+0.447$ [$+0.369$, $+0.550$]} & \devnum{134.8} / \devnum{182.3} \\
+ & \devnum{600} & \devnum{0.801 [0.764, 0.842]} & \devnum{0.420 [0.131, 0.673]} & \devnum{$+0.381$ [$+0.158$, $+0.650$]} & \devnum{339.9} / \devnum{456.7} \\
+ & \devnum{1200} & \devnum{0.830 [0.801, 0.857]} & \devnum{0.827 [0.786, 0.865]} & \devnum{$+0.003$ [$-0.015$, $+0.031$]} & \devnum{144.8} / \devnum{708.8} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Sources: prechecks/timeout_rule/timeout_intervals.csv (gap closed and paired
+%   differences at six decimals, 2,000 week-block resamples, seed 20260919; the Guard(G)
+%   columns reproduce Table tab:guard) and out_summarise.txt (worst harm over the five
+%   overlays; the p99 266.41 s of Timeout(300) and 273.50 s of FCFS at rho = 1.0).
+%   Separate kernel checked job for job against the package's FCFS and SPJF-E on every
+%   cell (timeout_overlays.py, cross_check); bound violations 0 on every Timeout run.
+
+Ordering by predicted cost inside fixed windows, as in the closest judging-queue
+scheduler~\cite{zhang2024ojscheduling}, limits overtaking by position. We ran a
+stand-in for it on overlay~\devnum{0}: ranks are cut into consecutive blocks of $W$
+jobs, a job may start only when no earlier block has a waiting job, and the smallest
+predicted cost goes first inside the block. With blocks of up to \devnum{512} jobs it
+closes at most \devnum{0.417}, \devnum{0.146} and \devnum{0.057} of the gap at the three
+loads, with worst excess \devnum{232.7}, \devnum{359.6} and \devnum{444.5} s.
+Guard($\devnum{300}$) closes \devnum{0.678}, \devnum{0.716} and \devnum{0.486} on the
+same overlay, with worst excess \devnum{189.3}, \devnum{199.7} and \devnum{219.6} s. A
+window bounds how far a job can be passed in positions, and near saturation a window
+large enough to help lets the long jobs wait longer than the guard does.
+% Sources: prechecks/referee_round4/maxwait_overlay0.csv (Block(512) rows, levels 0-2:
+%   gap_closed 0.417, 0.146, 0.057; max_excess_s 232.7, 359.6, 444.5) and
+%   prechecks/timeout_rule/timeout_overlays.csv (overlay 0, Guard(300): gap_closed
+%   0.6783, 0.7156, 0.4856; max_excess_s 189.288, 199.702, 219.608).
 % Sources: outputs/dev_tables/main_table.csv, Guard(600), levels=1,2, harm_s;
 % outputs/selection_v3/selected_parameters.csv, joint, promise_s=600, harm_limit_s.
 
@@ -272,6 +339,10 @@ secondary metrics of Section~\ref{sec:model}. The unguarded ranking's worst exce
 worst heavy job inside the promise at every load, within about \devnum{450} s of the
 FCFS figure, where the unguarded ranking multiplies it by between \devnum{2.8} and
 \devnum{4.1}; Supplementary Section~S3.16 gives the nine waits.
+% Sources: outputs/dev_tables/main_table.csv. 98.4 = SPJF-E rho 1.0 max_excess_s
+% 5904.525 / 60 (row 62). 450 = largest Guard(600) - FCFS max_heavy_s over the three
+% loads (rows 13/2, 42/31, 71/60: 433.95, 444.01, 450.14). 2.8 and 4.1 = SPJF-E / FCFS
+% max_heavy_s at rho 0.5 (1374.79 / 486.87) and rho 1.0 (6286.25 / 1542.75).
 
 
 \paragraph{What the shape of the budget decides.}
@@ -306,6 +377,9 @@ every job inside its promise. The deadline-window p99 is not rescued: it stays a
 worse than FCFS for two of the three. The guarantee is per job and additive, so this is what it
 permits: a guarded run may have a worse quantile than FCFS, by at most $G$, and what it
 removes is the worst single job and not the shape of the tail.
+% Source: outputs/dev_tables/main_table.csv rows 83, 85, 87 (SPJF-reversed, -random,
+% -top1short at rho 1.0: max_excess_s 6295.65, 6235.49, 6107.77, all above 6,000) and rows
+% 84, 86, 88 (Guard(600) under the same three scores: p99_dl_s 546.48, 261.93, 543.63).
 
 
 
@@ -325,6 +399,26 @@ its own ceiling $2(k-1)L$, and Table~\ref{tab:resid} reports it on four cells.
 Supplementary Sections~S3.13 and~S3.16 give the identity measured job by job, the
 cross-check against the second simulator, the ratio at each $k$, and why a search that
 does not build the cascade of Theorem~\ref{thm:tight1} stops where it does.
+
+The absolute bound of Proposition~\ref{prop:absolute} holds on every job of the
+\devnum{304} bounded runs as well, the first-come first-served and work-budget runs
+among them, with \devnum{0} violations. It comes close. At one server every
+first-come first-served wait equals its fluid backlog to the microsecond, as the
+proposition predicts, and the largest wait reaches \devnum{0.999} of the bound. At
+the three loads the worst wait under a work budget reaches \devnum{0.886},
+\devnum{0.951} and \devnum{0.963} of its bound, and under first-come first-served
+\devnum{0.881}, \devnum{0.945} and \devnum{0.965}. An operator who quotes an absolute
+promise in advance needs a forecast of $\sigma$. The burst of the validation terms
+predicts that of the evaluation terms only to within a factor of \devnum{0.738} to
+\devnum{1.573}, and it is too low in \devnum{10} of the \devnum{15} cells. A promise
+quoted from it is broken in \devnum{18} of \devnum{60} runs, by up to \devnum{349.8} s,
+so the absolute promise needs either a margin, here a factor of \devnum{1.36} on
+$\sigma$, or a shaper that holds the arrivals to the quoted bucket.
+% Sources: prechecks/envelope_bound/out_summarise_tight.txt (304 rows, 0 violations; max
+%   ratio per family and level: work 0.8860/0.9506/0.9625, fcfs 0.8807/0.9446/0.9653,
+%   k = 1 fcfs 0.9990) and out_envelope_bound.txt:21 (k = 1: FCFS wait - V_i^- = 0 us on
+%   every job); out_tight_bound.txt:310-336 (validation sigma ratio 0.7377-1.5733, 10 of
+%   15 under-forecast, margin x1.3555, 18 of 60 quotes broken, worst shortfall 349.8 s).
 
 \begin{table}[htbp]
 \centering
@@ -370,7 +464,7 @@ $\rho = \devnum{1.0}$, $k = \devnum{4}$
 %   supplementary.tex as Supplementary Table S4; nothing was recomputed.
 %   The tool validation (3,000 random instances, sequence agreement with the independent
 %   reference simulator, wait agreement with the production kernel) is section 1 of that file
-%   and out_validate.txt.
+%   and evidence/identity_residuals/out_validate.txt.
 % Source of Section~\ref{sec:exp_bound}: outputs/dev_tables/bound_checks.csv (315 rows,
 %   jobs_checked summing to 5,554,949,400, violations 0, column used_over_allowed with maxima
 %   0.9311 at k = 4, 0.9219 at k = 5, 0.8975 at k = 7 and 0.8850 at k = 8) and
@@ -439,9 +533,9 @@ CI pool B\textsuperscript{c}, $k_{\mathrm{eff}} = \devnum{96}$ of \devnum{105} &
 Compute farm, window $\rho = \devnum{0.95}$ & \devnum{0.372} & \devnum{0.890} & \devnum{0.136} & no & \devnum{$-4.111$} & \devnum{0.85}$L$ & \devnum{$-4.346$} / \devnum{0.83}$L$ \\
 LPC-EGEE, chronological test\textsuperscript{d} & \devnum{0.351} & \devnum{0.892} & \devnum{0.042} & no & \devnum{0.193} & \devnum{0.162}$L$ & \devnum{0.193} / \devnum{0.162}$L$ \\
 LPC-EGEE \texttt{test} class, per-class pool\textsuperscript{e} & \devnum{0.213} & \devnum{0.746} & \devnum{13.76} & yes & \devnum{0.679} & \devnum{86.07}$L$ & \devnum{0.569} / \devnum{3.48}$L$ \\
-% Sources: prechecks/lpc_egee_queues/applicability.csv, period=test variant=fit
-% queue_name=test pooled row: top1 (0.213), fcfs_p99_over_L (13.763) and
-% condition1_3L; prediction_metrics.csv, class=test AUROC (0.746);
+% Sources: prechecks/lpc_egee_queues/tables.md:48 (both partitions pooled, built by
+% qreport.py; applicability.csv holds only the per-pool rows), variant=fit
+% queue_name=test: top1 (0.213), fcfs_p99_over_L (13.763) and condition1_3L; prediction_metrics.csv, class=test AUROC (0.746);
 % policy_metrics.csv, scope=test queue_name=test: SPJF-E p99_busy_gap (0.679) and
 % max_excess (77,467 s = 86.07 L at L = 900), Constant-3.5L mean_gap (0.569) and
 % max_excess (3,129 s = 3.48 L).

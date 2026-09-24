@@ -206,6 +206,8 @@ curve; retrieval of the small heavy class degrades, average precision falling fr
 % "auprc, all test rows", row (core, M4): column ires0 = 0.2891 and column
 % ires600 = 0.1388.  The AUROC pair 0.9283 / 0.9066 of the sentence before it is the
 % same row of the table "heavy-vs-not AUROC [95%% user-block CI], all test rows".
+% The second platform: evidence/accoding_v2/out_accoding_v2.txt:395 (M4 AUROC 0.9266 at
+% lag 0) and :567, :576 (stage boot --lag 1000, M4 AUROC 0.8902).
 
 
 \subsection{Predictor Families}
@@ -430,6 +432,9 @@ magnitude here and the scheduler is worth one server (\devnum{14} to \devnum{13}
 \devnum{30} s). It does not support a claim that the platform ever queued, the pooled
 side being simulated, nor that the containers are over-provisioned, since they also run
 the editing session the pool does not replace, nor that any of it is a cost saving.
+% Source: evidence/consolidation/out_SUMMARY.txt: 1,636 and 0.12% at :76 (proxy1800) and
+% :225; 1,003 and 2,525 at :73-74 and :106; 0.07% to 0.17% at :106; 11% to 35% of logins
+% with a logout at :200-201; server counts 14/13, 11/10, 8/7 at :135, :227 and :246.
 
 The third is that the simulator reproduces waits somebody else recorded. The CI logs carry
 the queue wait of every run, so we replay the recorded arrivals and services through our
@@ -1210,7 +1215,9 @@ closed in eight of the nine cells, by up to \devnum{0.042}, so it buys its extra
 above the declared limit in some cells; we make no claim that any shape beats it on
 the gap at equal promise.
 % Sources: outputs/selection_v3/selection_worst.csv, family=fixed full-cap candidates,
-% worst_harm_s; outputs/dev_tables/main_table.csv, Fixed(G), harm_s and gap_closed.
+% worst_harm_s; outputs/dev_tables/main_table.csv, Fixed(G), harm_s and gap_closed. The
+% limits 150/300/600 s are G/2: outputs/selection_v3/selected_parameters.csv harm_limit_s,
+% configs/main.yaml harm_fraction 0.5.
 % Source of the two paragraphs above: outputs/dev_tables/paired_differences.csv (rows
 %   left = Guard(G), right = Guard-fixed(G) / Guard-queue(G) at levels 0, 1, 2; columns
 %   difference_gap, gap_lo, gap_hi, excludes_zero_gap) and the Harm and Gap-closed columns of
@@ -1433,6 +1440,9 @@ The count baseline is charged at dispatch, which allows \devnum{34} rather than
 \devnum{30} passes at $k = \devnum{4}$ and $G = \devnum{600}$ s; charging at completion
 instead changes the gap closed by at most \devnum{0.015}, and by at most \devnum{0.001}
 at the two higher loads.
+% Sources: evidence/main_v3/v31/README.md:18 (34 against 30 passes at k = 4, G = 600 s);
+% evidence/main_v3/v31/report_diff.csv:11 (SKIP-G300 - SKIPC-G300, level 0, d_gap 0.015,
+% the largest of the nine) and :36, :48 (levels 1-2, at most 0.001).
 % Ninth pass: this sentence stood in Section 8.5 of the manuscript, beside equation (2).
 
 \subsection{The Unguarded Policies at the Three Loads}
@@ -1897,11 +1907,11 @@ assumed for every job, and the terms in $\mathrm{excess}_P[i]$ cancel.
 \subsection{The Floor of Order \texorpdfstring{$L$}{L}, and the Scope of Its Hypothesis}
 \label{sec:supp_floorscope}
 
-The floor of Proposition~1 of the manuscript is proved here, and its hypothesis is shown
+The floor of Proposition~4 of the manuscript is proved here, and its hypothesis is shown
 to be neither droppable nor tightenable, the remaining cases of the budget family being
 exhaustive.
 
-\begin{proof}[Proof of Proposition~1 of the manuscript]
+\begin{proof}[Proof of Proposition~4 of the manuscript]
 Into an empty system, at $t=0$, let $k+1$ jobs arrive together, all of service
 $L$. The first $k$ ranks are precisely the jobs FCFS starts at once. Nothing has
 completed, so every waiting job has $\mathrm{over}=0$; because its first-epoch
@@ -2071,6 +2081,189 @@ constant, the unit or nothing at all.
 %   "Relaxations", whose item 1 is now the first of the
 %   two.  The manuscript keeps a one-paragraph summary and this pointer; the
 %   mathematics, the sharp forms and the counterexample are unchanged.
+
+\subsection{A Clock in Place of the Counter, and an Absolute Bound}
+\label{sec:supp_clock}
+
+This section proves Propositions~1 and~2 of the manuscript and the combined rule stated
+after Proposition~1. We keep the conventions of Section~6.1 of the manuscript: a phase
+is the ordered list of dispatches at one instant, and remaining work at $a_i$ is read
+after the arrivals at $a_i$.
+
+\begin{lemma}[Fluid comparison]
+\label{lem:fluid}
+Let $V(t)$ be the unfinished work at $t$ of a single server of rate $k$ fed the same
+jobs at the same instants, serving whenever it holds work. For every non-preemptive
+work-conserving $k$-server policy $Q$ and every $t$,
+$V(t) \le U_Q(t) \le V(t) + (k-1)L$.
+\end{lemma}
+
+\begin{proof}
+Both quantities rise by $C_j$ at the arrival of $j$, so $D = U_Q - V$ changes only
+between arrivals. There $U_Q$ falls at the number of busy servers and $V$ falls at
+rate $k$ while it is positive. If $V > 0$, the slope of $D$ is $k$ minus the number of
+busy servers, which is non-negative; if $V = 0$, then $D = U_Q \ge 0$. Since $D = 0$
+before the first arrival, $D \ge 0$ throughout. If $D > (k-1)L$, then
+$U_Q > (k-1)L$. All $k$ servers are then busy, since otherwise the queue is empty by
+work conservation and the at most $k-1$ jobs in service hold at most $(k-1)L$. So
+$U_Q$ falls at rate $k$ and $D$ does not rise. Hence $D \le (k-1)L$ throughout.
+\end{proof}
+
+Write $V_i^-$ for the fluid backlog at $a_i$ of the jobs of rank below $i$, as defined
+in Section~6.8 of the manuscript. No dispatch happens between two arrivals at the same
+instant, and an arrival moves $U_Q$ and $V$ by the same amount. Reading $D$ at $a_i$
+after the arrivals of rank below $i$ and before $i$'s own gives $U_Q = R^Q_i$ and
+$V = V_i^-$, so Lemma~\ref{lem:fluid} yields $R^Q_i \le V_i^- + (k-1)L$ for every
+policy $Q$. A clairvoyant policy is included, since the lemma is a statement about the
+schedule that was actually run.
+
+\begin{proof}[Proof of Proposition~2 of the manuscript]
+Equation~(1) of the manuscript gives
+$k\,W_P[i] = R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \rho^P_i \le R^P_i + \mathrm{In}_i$,
+and $R^P_i \le V_i^- + (k-1)L$. Under first-come first-served $\mathrm{In}_i = 0$.
+Under Algorithm~1, $\mathrm{In}_i < B_{\max} + kL$ when $i$ has an overtaker, by
+Theorem~3 of the manuscript, and $\mathrm{In}_i = 0$ otherwise. Dividing by $k$ gives
+the first bound; $V_i^- \le \sigma - C_i < \sigma$ gives the second. That $\sigma$ is the
+least depth of a conforming rate-$k$ bucket is the usual reading of the Lindley
+recursion~\cite{cruz1991calculus}: $V_i^- + C_i$ is the largest amount by which the work
+arriving in a closed window ending at $a_i$ exceeds $k$ times the window's length.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~1 of the manuscript]
+Let $i$ have an overtaker. At every dispatch epoch $t \ge a_i + \theta$ at which $i$
+waits, the minimum-rank waiting job has rank at most $i$ and has waited at least
+$t - a_i \ge \theta$, so it is served; no job of rank above $i$ is dispatched at or
+after $a_i + \theta$ while $i$ waits. Every overtaker therefore starts in
+$[a_i, a_i + \theta)$ and ends no later than $L$ after its start. The overtakers on one
+server run one after another inside $[a_i, a_i + \theta + L)$, the last starting
+strictly before $a_i + \theta$, so their total service is below $\theta + L$. Summing
+over the $k$ servers, $\mathrm{In}_i < k(\theta + L)$. Theorem~1 of the manuscript with
+$\mathrm{Out}_i \ge 0$ gives
+$k(W - W_{\mathrm{FCFS}}[i]) \le \mathrm{In}_i + 2(k-1)L < k\theta + (3k-2)L$, and the
+first inequality of Proposition~2 gives the absolute form
+$W < V_i^-/k + \theta + (2-1/k)L$. A job without an overtaker has
+$\mathrm{In}_i = 0$ and excess at most $(2-2/k)L$.
+\end{proof}
+
+The reading of ``oldest'' as minimum rank is needed. If jobs that arrive at the same
+instant are treated as equally old and the base policy chooses among them, the step
+``serves a job of rank below $i$'' fails. At $k = 1$, $L = 3$ and $\theta = 0$, six jobs
+arrive at $t = 0$ with sizes $1, 3, 3, 3, 3, 3$. A base policy that serves the five
+long jobs first makes job~1 wait $15$ s with $W_{\mathrm{FCFS}} = 0$, against the bound
+$\theta + L = 3$.
+
+\begin{proof}[Proof of the combined rule]
+The rule serves the minimum-rank waiting job if it has waited $\theta$, and otherwise
+runs Algorithm~1. Suppose $j$ is served while $i$, of lower rank, waits. Either the
+base policy chose $j$, in which case $E(t)$ is empty, or $j$ is the minimum-rank member
+of $E(t)$, in which case $i \notin E(t)$. In both cases
+$\mathrm{over}[i](t) < \mathrm{budget}(i,t)$, which is the only property of the
+dispatch the proof of Theorem~3 uses; so Theorem~3 holds. When the minimum-rank job has
+waited $\theta$ it is served, which is the only property the proof of Proposition~1
+uses; so Proposition~1 holds. The second argument reads no completion, so it holds for
+charges that arrive late or never.
+\end{proof}
+
+The order of the two tests matters whenever budgets differ between jobs. Serving the
+minimum-rank member of $E(t)$ first can pass over an aged head, and it breaks
+Proposition~1. At $k = 1$, $L = 3$, $\theta = 3.5$ and
+$\mathrm{budget}(q) = \min(3 n_q, 5)$, jobs arrive at $0, 0, 0, 2, 2, 2$ with sizes
+$1, 1, 1, 3, 1, 3$, so their budgets are $0, 3, 5, 3, 5, 5$. The base policy serves
+jobs 1, 2, 5 and~6 in that order, and at $t = 6$ both job~3 and job~4 have
+$\mathrm{over} = 4$. Job~3 has waited $6 \ge \theta$ but is below its budget, and job~4
+has passed its budget. Serving job~4 first makes job~3 start at $9$, with
+$W_{\mathrm{FCFS}} = 2$ and excess $7 > \theta + L = 6.5$; serving the aged head first
+leaves every excess at most $4$. The age-relative shape gives a second instance, at
+$k = 1$, $\theta = 0$, $\eta = 1/4$, arrivals $0, 1, 2$ and sizes $2, 3, 3$. With a
+constant budget the fired set is a prefix of the queue and the two orders coincide.
+
+We checked every statement of this section by exhaustive enumeration and by random
+search, with two simulators written independently of each other and of the package. The
+enumeration covered $k = 1, 2, 3$, up to six jobs of sizes in $\{1, 2, 3\}$ with
+$L = 3$, arrivals in $\{0, \dots, 4\}$, and every choice a base policy can make at every
+dispatch, so clairvoyant and randomised base policies are included. It ran 53 to 56
+million schedules per $k$. The random search covered 320{,}000 bursty instances with
+$k \le 4$ and up to $40$ jobs. It found no violation of Lemma~\ref{lem:fluid}, of
+Proposition~2 for any policy, of Proposition~1 under the rank reading, or of the combined
+rule under late or lost reports; the two instances above are the only failures, and
+both come from the readings the text excludes. The worst observed ratio of the excess
+to $\theta + (3-2/k)L$ was $0.996$ at $k = 1$ and between $0.756$ and $0.829$ for
+$k = 2, 3, 4$; for $k \ge 2$ the constant may be loose, and we do not claim it is exact.
+% Sources: prechecks/new_theory_refutation/refutation.md (verdicts, the two witnesses,
+%   the search space and the table of worst ratios); out_refute_exhaustive.txt,
+%   out_refute_random.txt, out_refute_crosscheck.txt, out_refute_eta_witness.json,
+%   out_refute_witness.json key "GFEX k=1"; prechecks/timeout_rule/out_theory_check.txt
+%   (the author's own check: 571,776 exhaustive and 200,000 random cases, 0 violations).
+
+\subsection{Completion Reports That Arrive Late}
+\label{sec:supp_late}
+
+This section proves Proposition~3 of the manuscript. The charge of a job $c$ that
+completes at $f_c$ reaches the shared counter at $f_c + d_c$, with
+$0 \le d_c \le \delta$, and is added to every job of rank below $c$ still waiting then.
+At one instant the order is completions, charges due by then, arrivals, dispatches, so
+$\delta = 0$ is Algorithm~1 exactly. Servers still pull the instant they free.
+
+\begin{proof}[Proof of the first part]
+Fix $i$ with an overtaker, let $j$ be its last overtaker, $t$ the instant of $j$'s
+dispatch and $s^*$ the server taking $j$. As in Theorem~3 of the manuscript,
+$i \notin E(t)$, so $\mathrm{over}[i](t) < B_{\max}$. Every charge added to
+$\mathrm{over}[i]$ comes from an overtaker, since a job of higher rank that completes
+while $i$ waits was dispatched before $i$. Split the overtakers dispatched before $j$
+into (a) those in service at $t$, (b) those completed and charged by $t$, and (c) those
+completed by $t$ whose charge has not arrived, so $f_c \in (t - \delta, t]$. Then
+$\mathrm{In}_i = (a) + (b) + (c) + C_j$ with $(b) < B_{\max}$. The jobs in (a) sit on
+distinct servers other than $s^*$, so $(a) \le (k-1)L$. On one server $s$, the jobs in
+(c) do not overlap in time. Let $c_1$ be the one that finishes first. Then
+$C_{c_1} \le L$, and every other job of (c) on $s$ starts at or after
+$f_{c_1} > t - \delta$ and finishes by $t$, so together they hold less than $\delta$.
+Hence (c) holds less than $L + \delta$ per server, and
+$\mathrm{In}_i < B_{\max} + (k-1)L + k(L + \delta) + L$. Theorem~1 of the manuscript
+with $\mathrm{Out}_i \ge 0$ gives
+$k(W - W_{\mathrm{FCFS}}[i]) < B_{\max} + (3k-2)L + k(L + \delta)$.
+\end{proof}
+
+The extra $L + \delta$ cannot be charged against (a): one server can hold a stale job of
+size $L$ and an overtaker in service at the same instant. At $k = 1$ the following
+instance attains the integer form $B + 2L + \delta - 2$ of the bound. All jobs arrive
+at $0$. The victim has rank~1, size $L$ and the worst score. Then come $B - 1$ unit jobs
+charged at once, one job of size $L$ and $\delta - 1$ unit jobs all charged after
+$\delta$, and a last job of size $L$, scored in that order. When the last unit
+finishes, $\mathrm{over} = B - 1 < B$, the last job starts, and the victim starts
+$B + 2L + \delta - 2$ after its FCFS start. The cascade of Section~S8.1 with
+one stale job of size $L$ per server gives the $k = 2$ instance. At $L = 256$ it
+reaches at least $0.998$ of the bound for each of $\delta = 1, 128, 256, 512$, and it
+exceeds Theorem~3's bound by $L + \delta - 2$.
+
+\begin{proof}[Proof of the second part]
+Suppose every server applies its own completion report in the same step as its next
+pull. Take $t$, $j$ and $s^*$ as above, and let $c$ be a stale overtaker on server $s$.
+Every earlier pull of $s$ applied the report of the job $s$ had just finished, so $c$ is
+the last job $s$ finished and $s$ has not pulled since $f_c$. If $f_c < t$, then at the
+instant $f_c$ the server $s$ was free while $i$ waited, so by work conservation it
+pulled at $f_c$ and applied $c$'s report, a contradiction. So $f_c = t$, and $s$ has
+not pulled yet in the phase at $t$. Then $s \ne s^*$, because $s^*$ applied its own
+report before pulling $j$, and $s$ holds no job in service. Per server other than
+$s^*$, (a) and (c) together are at most one job of size at most $L$, and on $s^*$ both
+are empty. So $\mathrm{In}_i < B_{\max} + kL$, which is inequality~(2) of the
+manuscript, and Theorem~3 follows as before. Nothing in the argument reads another
+server's report, so it holds for every $\delta$, and for reports that never arrive.
+\end{proof}
+
+A third arrangement keeps one view of the counter per server, in which a server sees
+its own completions at once and other servers' within $\delta$. The same argument then
+gives $\mathrm{excess} < B_{\max}/k + (3 - 2/k)L + (1 - 1/k)(L + \delta)$, which the
+cascade approaches at $k = 2$.
+
+We checked all three statements by exhaustive enumeration over up to six jobs,
+$2{,}273{,}660{,}361$ schedules in all, and on $200{,}000$ random instances with
+$k \le 4$, with no violation. The combined rule of Section~\ref{sec:supp_clock}, run
+with lost reports, had no violation either.
+% Sources: prechecks/stale_charging/derivation.md, Sections 1-7 (proofs and the
+%   lower-bound instances); out_sim_stale.txt:10-85 (instances, ratios 0.9980-0.9987 at
+%   k = 2, m = 8, L = 256) and :87-108 (200,000 random instances);
+%   out_sim_stale_exhaustive_n6.txt:14-36 (2,273,660,361 schedules, 0 violations);
+%   out_check_union_rule.txt.
 
 
 %=================================================================
@@ -2766,7 +2959,7 @@ weeks with replacement, puts the closed-minus-open difference in the gap closed 
 \toprule
 $\rho$ & SPJF-E & Guard(\devnum{600}) \\
 \midrule
-\devnum{0.5} & \devnum{$+0.093$} [\devnum{0.000}, \devnum{0.174}] & \devnum{$+0.123$} [\devnum{0.043}, \devnum{0.193}] \\
+\devnum{0.5} & \devnum{$+0.092$} [\devnum{0.000}, \devnum{0.174}] & \devnum{$+0.123$} [\devnum{0.043}, \devnum{0.193}] \\
 \devnum{0.8} & \devnum{$-0.071$} [\devnum{$-0.108$}, \devnum{$-0.025$}] & \devnum{$-0.025$} [\devnum{$-0.077$}, \devnum{0.036}] \\
 \devnum{1.0} & \devnum{$-0.055$} [\devnum{$-0.089$}, \devnum{$-0.007$}] & \devnum{$+0.010$} [\devnum{$-0.037$}, \devnum{0.063}] \\
 \bottomrule
@@ -2774,8 +2967,8 @@ $\rho$ & SPJF-E & Guard(\devnum{600}) \\
 \end{center}
 % Source: prechecks/closed_loop/out/bootstrap.json, paired closed-minus-open
 % difference in gap_closed, mean and 2.5/97.5 percentiles, overlay 0, 400 resamples,
-% levels 0-2, SPJF-E and Guard(600); rendered as table D of
-% prechecks/closed_loop/out/report_tables.md.
+% levels 0-2, SPJF-E and Guard(600). The table is written by hand from that file
+% (prechecks/closed_loop/REPORT.md:163-174 printed +0.093 for 0.09246; corrected here).
 
 \noindent so the movement is resolved in four of the six comparisons and is small in
 every one. This is a reduction of the scheme Section~S5.3 describes, which uses
@@ -3518,10 +3711,10 @@ $k$ & $L$ & $m$ & jobs & $B$ & excess & $(k\,\mathrm{excess}-B)/L$ \\
 \label{sec:supp_floor}
 
 At one server the bound $B+L$ of Theorem~3 of the manuscript is the exact supremum of
-the excess, which is what the manuscript states in prose after Proposition~1. This is
+the excess, which is what the manuscript states in prose after Proposition~4. This is
 the family that approaches it.
 
-\begin{proof}[Proof of the single-server supremum stated after Proposition~1 of the manuscript]
+\begin{proof}[Proof of the single-server supremum stated after Proposition~4 of the manuscript]
 Fix $L$, a budget $B>0$, and a granularity $g$ dividing $B$ with $0 < g \le L$.
 Take $k = 1$ and, at $t = 0$, the victim $i$ of rank $0$, then $B/g - 1$ jobs of
 service $g$, then one job of service $L$; let the base policy dispatch the jobs
@@ -3675,7 +3868,7 @@ $G \le 3L$, agrees with Proposition~\ref{prop:s_k1frac} in every case.
 
 The price bound of Theorem~4 of the manuscript is an upper bound on what any policy
 with the promise can close. Two results say that the bound is nearly met, and that the
-wrapper concedes nothing it could safely permit. Section~6.9 of the manuscript states
+wrapper concedes nothing it could safely permit. Section~6.12 of the manuscript states
 both in words; here they are in full, with their proofs. Neither gives instance
 optimality on arbitrary inputs, and for $k\geq2$ the exact value of $F^*(G)$ below
 remains open.

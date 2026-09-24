@@ -90,6 +90,7 @@ service cap, and the two Firefox CI pools \cite{taskcluster_docs,treeherder_docs
 the second. Section~\ref{sec:exp_cross} gives both conditions in numbers, trace by
 trace, and Supplementary Section~S6.8 says what failing either does and does not
 establish.
+% Source: 5.7 days = Netbatch L = 493,857 s (printed in Table tab:cross) / 86,400.
 
 \paragraph{The guarantee is per job, not per quantile.}
 On a fixed set of jobs, the pointwise bound implies
@@ -186,7 +187,10 @@ longer than it would have in arrival order, whatever the predictor does. We find
 work, not position, is the unit the excess is written in. A job's delay relative
 to first-come first-served equals its net overtaken work divided by the number of
 servers, up to a constant multiple of the time limit, and a budget on that quantity is
-sufficient and necessary for a per-job guarantee. Counting overtakes is not necessary,
+sufficient for a per-job guarantee and, up to an additive $O(kL)$, necessary. A
+maximum waiting time makes a promise of the same form, and it gives up most of the
+benefit near saturation, because it charges a job for the backlog ahead of it as well as
+for the jobs that pass it. Counting overtakes is not necessary,
 and it gives a guarantee only at the worst-case charge of the time limit per pass. On
 our traces that charge stands for one to two orders of magnitude more work than
 actually passes. With scores that use only results available in the replay,
@@ -200,8 +204,12 @@ reordering, and we do not claim it is necessary.
 % Guard(600)|exact and SPJF-E|exact, gap_closed.
 
 We have not run the guard in production. The physical service reproduces the dispatch
-rule but not the ideal simulator's waits, the sealed terms are still sealed, and the
-graph model's failure is a result about traces where every user already has a history.
+rule but not the ideal simulator's waits, and the sealed terms are still sealed. The
+graph model adds nothing where each task already has a record, and its edges help only
+on tasks with fewer than five prior results, \devnum{1{,}092} of the \devnum{40{,}844}
+test rows here.
+% Source: evidence/predictor_neural/out_evaluate_core.txt:1-2 (test rows 40,844;
+% cold-start exercises 1092).
 Two questions are left open. The identity is stated in the dispatch-sequence convention,
 where the constant is exactly determined in both directions. Under the executed-work
 convention the upward constant is unchanged, but we know only that the downward one
