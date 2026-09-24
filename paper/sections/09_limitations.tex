@@ -35,7 +35,7 @@ student's sequence. The offset between one result and the next submission is a
 recorded think time: it is non-negative for \devnum{98.38\%} of consecutive pairs, its
 median is \devnum{123.5} s, and its Spearman correlation with the previous job's cost
 is \devnum{0.015}. We replayed the traces a second time with each submission released
-after its predecessor's result plus that offset. Every wait shortens, and the benefit
+after its predecessor's result plus that offset. The deadline-window p99 and the mean wait both shorten, and the benefit
 reverses in none of the nine development cells: on their original-clock scores
 Guard(\devnum{600}) closes \devnum{0.734}, \devnum{0.827} and \devnum{0.800} of the
 FCFS-to-SJF deadline-window gap at the three loads under the recorded instants, and
@@ -61,7 +61,8 @@ overlaying whole class-semesters aligned on weekday and clock time.
 % row.
 
 \paragraph{The guarantee is measured in $L$.}
-Every constant in Section~\ref{sec:theory} is a multiple of the per-job time limit.
+Every additive constant in Section~\ref{sec:theory} is a multiple of the per-job time
+limit, apart from the report delay $\delta$ and the arrival burst $\sigma$.
 The additive constant $(3-2/k)L$ is an exact supremum, not an artefact of the proof.
 It grows with $k$, from $L$ at a single server towards $3L$. A promise that is to hold
 around every base policy cannot be less than $L$ unless the wrapper gives up
@@ -84,9 +85,9 @@ floor.
 \paragraph{Two applicability conditions, each with traces that fail it.}
 The first condition asks whether the uniform certificate is informative at the waits
 that matter, and the second is an empirical opportunity screen rather than a theorem
-assumption. Four of the original six workloads fail the first, the Intel Netbatch
-compute farm \cite{netbatch2012trace,shai2014netbatch} worst at a \devnum{5.7}-day
-service cap, and the two Firefox CI pools \cite{taskcluster_docs,treeherder_docs} fail
+assumption. Four of the original six workloads fail the first, among them the Intel
+Netbatch compute farm \cite{netbatch2012trace,shai2014netbatch}, whose service cap of
+\devnum{5.7} days is the largest, and the two Firefox CI pools \cite{taskcluster_docs,treeherder_docs} fail
 the second. Section~\ref{sec:exp_cross} gives both conditions in numbers, trace by
 trace, and Supplementary Section~S6.8 says what failing either does and does not
 establish.
@@ -189,12 +190,11 @@ work, not position, is the unit the excess is written in. A job's delay relative
 to first-come first-served equals its net overtaken work divided by the number of
 servers, up to a constant multiple of the time limit, and a budget on that quantity is
 sufficient for a per-job guarantee and, up to an additive $O(kL)$, necessary. A
-maximum waiting time makes a promise of the same form, and it gives up most of the
-benefit near saturation, because it charges a job for the backlog ahead of it as well as
+maximum waiting time makes a promise of the same form, and at the busiest load and tight promises it keeps
+much less of the benefit, because it charges a job for the backlog ahead of it as well as
 for the jobs that pass it. Counting overtakes is not necessary,
 and it gives a guarantee only at the worst-case charge of the time limit per pass. On
-our traces that charge stands for one to two orders of magnitude more work than
-actually passes. With scores that use only results available in the replay,
+the main trace that charge is \devnum{150} times the mean job cost. With scores that use only results available in the replay,
 Guard($\devnum{600}$) closes $\devnum{0.672}$ of the reference gap at the busiest
 load, against $\devnum{0.848}$ for unguarded ordering. These are development results,
 conditional on the constructed demand and on the information protocol. Four of the
@@ -204,17 +204,17 @@ reordering, and we do not claim it is necessary.
 % Source: outputs/dev_consistent_visibility/exact_comparison.csv, level=2,
 % Guard(600)|exact and SPJF-E|exact, gap_closed.
 
-We have not run the guard in production. The physical service reproduces the dispatch
+We have not run the guard in production. The timed-work service reproduces the dispatch
 rule but not the ideal simulator's waits, and the sealed terms are still sealed. The
-graph model adds nothing where each task already has a record, and its edges help only
-on tasks with fewer than five prior results, \devnum{1{,}092} of the \devnum{40{,}844}
-test rows here.
+graph model's edges add a small rank-correlation gain over all test rows,
+\devnum{0.006}, and a larger one, \devnum{0.028}, on tasks with fewer than five prior
+results, \devnum{1{,}092} of the \devnum{40{,}844} test rows here.
 % Source: evidence/predictor_neural/out_evaluate_core.txt:1-2 (test rows 40,844;
 % cold-start exercises 1092).
 Two questions are left open. The identity is stated in the dispatch-sequence convention,
 where the constant is exactly determined in both directions. Under the executed-work
 convention the upward constant is unchanged, but we know only that the downward one
-lies in $((k-1)L, 2(k-1)L]$; closing that gap would make the two conventions
+lies in $[(k-1)L, 2(k-1)L]$; closing that gap would make the two conventions
 interchangeable. And Algorithm~\ref{alg:guard} is not claimed to be the least
 restrictive rule carrying its guarantee: whether some wrapper overrides the base policy
 strictly less often and still promises $G$ is a question we have not settled in either

@@ -26,9 +26,9 @@ Section~\ref{sec:exp_visibility} gives the headline under the exact protocol, in
 every score uses only results available in the replay. The original-score ranking,
 budget-shape, corrupted-score, residual and single-server results retain the source
 result clock and are optimistic references, not estimates under the exact protocol. The capacity and physical experiments use an archived
-development fit and are reported separately. We report the fraction of the FCFS-to-SJF gap closed and the
-plain percentage reduction against FCFS side by side throughout, because they are
-different numbers and the first is easy to read as the second.
+development fit and are reported separately. Table~\ref{tab:guard} and Supplementary Tables~S6 and~S16 report the plain percentage
+reduction against FCFS beside the fraction of the FCFS-to-SJF gap closed, because they
+are different numbers and the second is easy to read as the first.
 
 
 \subsection{What Was Selected on What}
@@ -265,13 +265,13 @@ baseline under the same conservative protocol.
 A maximum waiting time keeps a promise of the same form (Proposition~\ref{prop:clock}),
 so the budget counter has to earn its place against it. Table~\ref{tab:clock} runs
 Timeout($G - (3-2/k)L$) beside Guard($G$) on the same five overlays and the same scores,
-so both make the promise $G$. At $\rho = \devnum{0.5}$ the two close nearly the same
-share of the gap. Near saturation they part. At $\rho = \devnum{1.0}$ and
+so both make the promise $G$. At $\rho = \devnum{0.5}$ they differ by at most
+\devnum{0.053} of the gap. Near saturation they part. At $\rho = \devnum{1.0}$ and
 $G = \devnum{600}$ s the clock closes \devnum{0.420} of the gap and the guard
 \devnum{0.801}; at $G = \devnum{300}$ s the clock closes \devnum{0.031}, and its
 deadline-window p99 of \devnum{266.4} s is barely below the \devnum{273.5} s of FCFS.
-Both paired differences exclude zero. At $G = \devnum{1200}$ s the two agree again,
-because the clock then fires only after most bursts have drained, and at the two lighter
+Both paired differences exclude zero. At $G = \devnum{1200}$ s the two agree again, with a
+paired difference of \devnum{+0.003} [\devnum{-0.015}, \devnum{+0.031}], and at the two lighter
 loads the clock is ahead by \devnum{0.006} and \devnum{0.013}. The clock also harms more:
 its worst harm at $\rho = \devnum{1.0}$ and $G = \devnum{600}$ s is \devnum{456.7} s,
 against \devnum{339.9} s for the guard. What the counter buys is the tight promise near
@@ -386,12 +386,15 @@ removes is the worst single job and not the shape of the tail.
 \subsection{The Bounds on the Traces}
 \label{sec:exp_bound}
 
-Every bound in Section~\ref{sec:theory} is asserted on every job of every run, inside
+The promise of every bounded policy is asserted on every job of every run, inside
 the simulation rather than afterwards on summary statistics, so a violation would be a
 failure of the code and not of the theorem. That is \devnum{5{,}554{,}949{,}400} per-job
 checks over the \devnum{315} policy-by-cell runs reported here, \devnum{67{,}396{,}287}
 more in the single-server configuration and \devnum{5.7} billion in an independently
-written second simulator, with \devnum{0} violations anywhere. The ratio of the realised
+written second simulator, with \devnum{0} violations anywhere. Propositions~\ref{prop:clock}
+and~\ref{prop:absolute} were checked job by job after the runs on the same overlays, also
+with \devnum{0} violations, and Proposition~\ref{prop:late} on constructed instances only
+(Supplementary Section~S4.12). The ratio of the realised
 worst excess to the bound falls as $k$ grows, from \devnum{0.9950} at $k = 1$ to
 \devnum{0.8850} at $k = 8$, while the finite-skip bound is attained exactly on small
 instances. The residual of Theorem~\ref{thm:identity} never exceeds \devnum{0.518} of
@@ -404,7 +407,8 @@ The absolute bound of Proposition~\ref{prop:absolute} holds on every job of the
 \devnum{304} bounded runs as well, the first-come first-served and work-budget runs
 among them, with \devnum{0} violations. It comes close. At one server every
 first-come first-served wait equals its fluid backlog to the microsecond, as the
-proposition predicts, and the largest wait reaches \devnum{0.999} of the bound. At
+proposition predicts, and the largest wait reaches \devnum{0.999} of the bound in its $\sigma$ form,
+$(\sigma + B_{\max})/k + (2-1/k)L$. At
 the three loads the worst wait under a work budget reaches \devnum{0.886},
 \devnum{0.951} and \devnum{0.963} of its bound, and under first-come first-served
 \devnum{0.881}, \devnum{0.945} and \devnum{0.965}. An operator who quotes an absolute
@@ -478,8 +482,8 @@ $\rho = \devnum{1.0}$, $k = \devnum{4}$
 
 At $k = 1$ the additive constant $(3 - 2/k)L$ is exactly $L$, the identity of
 Section~\ref{sec:theory} holds with no error term, and the separation between budget shapes is
-largest (Supplementary Table~S10). Guard($\devnum{600}$) and Fixed($\devnum{600}$) are
-statistically indistinguishable on the gap closed. They differ by a factor of
+largest (Supplementary Table~S10). Guard($\devnum{600}$) and Fixed($\devnum{600}$) close
+\devnum{0.854} and \devnum{0.868} of the gap, with overlapping intervals. They differ by a factor of
 \devnum{3.41} in harm, and the same comparison gives \devnum{3.01} at
 $G = \devnum{300}$ s and \devnum{12.18} at $G = \devnum{1200}$ s, so the looser the
 promise, the more the shape of the budget matters. The realised excess reaches
@@ -654,7 +658,8 @@ promise of \devnum{400} s. Unguarded predicted-order dispatch left \devnum{7} jo
 beyond the promise, the worst by \devnum{4.67} times $G$. The four guarded cells,
 \devnum{400} jobs in all, left none, with a worst excess of \devnum{0.514}~$G$, and the
 package simulator, fed the measured arrivals and service times, reproduced every
-measured wait within \devnum{0.17} s. Because the accounts waited for results, the
+measured wait within \devnum{0.17} s in the five cells it can simulate; it has no
+reservation-and-refund wrapper for the sixth. Because the accounts waited for results, the
 arrival sequence differed from cell to cell, so each cell is compared only with its own
 replayed first-come first-served run. One hundred jobs per cell give no p99, and no
 human learner was in the loop. Supplementary Section~S6.9 gives the six cells, the
@@ -676,7 +681,8 @@ configuration and the release boundary. A sixth variant changes the arrival proc
 instead of the trace construction. The
 logs carry a recorded think time, the offset between one result and that student's
 next submission. Releasing each submission after its predecessor's result plus that
-offset shortens every wait by a factor of \devnum{1.3} to \devnum{3.8}. The baseline
+offset shortens the deadline-window p99 by a factor of \devnum{1.3} to \devnum{3.8}, and
+the mean wait by \devnum{1.5} to \devnum{3.9}. The baseline
 gains most, because its own longer waits delay its own users more. The absolute gap
 therefore narrows while the fraction of it a policy closes does not: Guard(\devnum{600})
 closes \devnum{0.825}, \devnum{0.809} and \devnum{0.810} of it, against

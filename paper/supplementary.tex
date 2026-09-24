@@ -1767,7 +1767,7 @@ the manuscript; inverting it, a promise $G$ admits
 $\kappa = \lfloor Gk/L \rfloor - (2k-2)$ passes, the largest integer with
 $(\kappa + 2k-2)L/k \le G$. Either accounting charges every overtaker the worst
 case $L$, so the rule is loose against a work budget by the ratio $L/\bar{C}$,
-\devnum{one to two orders of magnitude} on our traces.
+\devnum{150} on the main trace ($L = 60$ s against a mean cost of \devnum{0.40} s).
 \end{remark}
 
 How the count is charged decides which guarantee. Charged when an overtaker is
@@ -1995,7 +1995,7 @@ the work that passes it is small. Counting is sufficient in this model, but only
 the worst-case charge of $L$ per overtake, since every overtaker is bounded by the time
 limit; a count of $\kappa$ therefore buys a promise of $(\kappa + 2k-2)L/k$
 (Remark~\ref{rem:counts} and \eqref{eq:skip}). That is the bound a count can give, and it
-is loose by the ratio $L/\bar{C}$, one to two orders of magnitude on our traces. Ten
+is loose by the ratio $L/\bar{C}$, \devnum{150} on the main trace. Ten
 overtakers that each run for the full limit $L$ and ten that run for ten milliseconds
 carry the same count and delays that differ by three orders of magnitude, so the charge
 is paid on every dispatch whether or not the work is there.
@@ -2198,8 +2198,9 @@ dispatch, so clairvoyant and randomised base policies are included. It ran 53 to
 million schedules per $k$. The random search covered 320{,}000 bursty instances with
 $k \le 4$ and up to $40$ jobs. It found no violation of Lemma~\ref{lem:fluid}, of
 Proposition~2 for any policy, of Proposition~1 under the rank reading, or of the combined
-rule under late or lost reports; the two instances above are the only failures, and
-both come from the readings the text excludes. The worst observed ratio of the excess
+rule under late or lost reports; every failure found came from the two readings the
+text excludes, ties broken by the base policy and serving the fired set before an aged
+head, and the instances above are the smallest found. The worst observed ratio of the excess
 to $\theta + (3-2/k)L$ was $0.996$ at $k = 1$ and between $0.756$ and $0.829$ for
 $k = 2, 3, 4$; for $k \ge 2$ the constant may be loose, and we do not claim it is exact.
 % Sources: prechecks/new_theory_refutation/refutation.md (verdicts, the two witnesses,
@@ -2927,7 +2928,8 @@ $\rho$ & $k$ & Policy & Open p99 & Closed p99, kept & Closed p99, dropped & Gap,
 % prechecks/closed_loop/make_tables.py.
 
 The ordering of the policies survives in all nine cells and under both edge treatments,
-and the scale does not: every wait falls by a factor of \devnum{1.3} to \devnum{3.8}. A
+and the scale does not: the deadline-window p99 falls by a factor of \devnum{1.3} to
+\devnum{3.8} and the mean wait by \devnum{1.5} to \devnum{3.9}. A
 queue that builds up holds back the submissions that would have deepened it, so the
 realised busiest-hour utilisation under FCFS drops from \devnum{0.505}, \devnum{0.807}
 and \devnum{1.009} to \devnum{0.450}, \devnum{0.745} and \devnum{0.942}, and the heaviest

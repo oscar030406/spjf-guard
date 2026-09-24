@@ -32,7 +32,9 @@ shows that each constant in those bounds is an exact supremum, so that no smalle
 constant would do. Every statement kept here comes with the idea of its argument;
 Supplementary Sections~S4 and~S8 give every deferred proof, every extremal
 construction and the statements this section only summarises, S8 opening with the idea
-of each construction beside it.
+of each construction beside it. Sections~\ref{sec:clock} to~\ref{sec:late} then add a
+clock rule, an absolute bound and late completion reports; of their constants only the
+late-report term is shown to be attained.
 
 \subsection{Conventions}
 
@@ -227,8 +229,8 @@ be passed~\cite{grosof2021nudge,vanhoudt2022nudgek}, or how far down the queue s
 may reach~\cite{grosof2022wcfs}. Inside the model of
 Section~\ref{sec:model} such a count is not necessary for a per-job guarantee, and it
 gives one only at the worst-case charge of $L$ per pass. That charge makes it loose
-against a work budget by the ratio $L/\bar{C}$, \devnum{one to two orders of magnitude}
-on our traces. Supplementary Section~S4.4 states this as a remark and proves both
+against a work budget by the ratio $L/\bar{C}$, \devnum{150} on the main trace ($L = 60$ s
+against a mean cost of \devnum{0.40} s). Supplementary Section~S4.4 states this as a remark and proves both
 halves, and it carries the conversion from a count to a promise that the Skip baseline
 of Section~\ref{sec:scheduling} uses.
 
@@ -361,8 +363,8 @@ At $\theta = G - (3-2/k)L$ the clock makes the promise that the guard makes at
 $B_{\max} = k\theta$. The two rules differ in what they charge a waiting job for. The
 clock charges it for all the work the servers do while it waits, $k(t - a_q)$. The
 guard charges it only for the completed work of jobs that arrived after it. The
-difference is the work of older jobs, which first-come first-served would have done
-anyway. Near saturation that work is large. A job that arrives behind a backlog is
+difference is mostly the work of older jobs, which first-come first-served would have
+done anyway, plus the work of overtakers still in service. Near saturation that work is large. A job that arrives behind a backlog is
 charged for the backlog, the clock fires for most of the queue, and the schedule falls
 back to arrival order at the loads where ordering by cost pays most.
 Section~\ref{sec:exp_guard} measures the difference.
@@ -381,8 +383,9 @@ $W < W_{\mathrm{FCFS}} + \theta + (3-2/k)L$ when reports arrive late or not at a
 \subsection{An Absolute Bound from the Arrival Log}
 \label{sec:absolute}
 
-A promise relative to first-come first-served is one a student cannot check, since
-nobody runs the counterfactual queue. The arrival log alone gives an absolute one. Let
+A promise relative to first-come first-served is a margin over a queue that nobody runs.
+The arrival log alone gives an absolute one, which an operator can state as a number of
+seconds. Let
 $V_i^-$ be the work that a single server of rate $k$, fed the same jobs, would still
 hold at $a_i$ from the jobs of rank below $i$:
 $V_1^- = 0$ and
@@ -426,9 +429,9 @@ longer than $D$, over a period whose arrivals conform to a bucket of depth $\sig
 sets $B_{\max} = kD - \sigma - (2k-1)L$: the capacity over the deadline, less the
 burst, less $2k-1$ job-limits. The clock obeys the same bound with $B_{\max}$ replaced by
 $k\theta$. The comparison with a single fast server has a history of false sample-path
-claims. Wolff~\cite{wolff1987work} showed that earlier sample-path orderings between a
-multichannel queue and single-channel comparison systems fail. The statement here also
-holds on every sample path. What separates it from the refuted orderings is the additive
+claims. Wolff~\cite{wolff1987work} showed that previously derived sample-path upper bounds on
+the work in a multichannel queue are false. The statement here also
+holds on every sample path. What separates it from the refuted bounds is the additive
 $(k-1)L$, which the service cap $L$ makes finite, and it is proved directly. Section~\ref{sec:exp_bound} measures how close the
 bound comes on the traces, and how well one period's $\sigma$ predicts the next.
 
@@ -449,7 +452,8 @@ $\mathrm{In}_i < B_{\max} + kL + k(L + \delta)$, and
 \[
   W \;<\; W_{\mathrm{FCFS}}[i] + B_{\max}/k + (4 - 2/k)L + \delta .
 \]
-The extra $L + \delta$ is attained in the limit at $k = 1$ and $k = 2$. If each server
+The extra $L + \delta$ is attained in the limit at $k = 1$, and approached to within
+$0.2\%$ at $k = 2$ on the constructed instances. If each server
 applies its own completion report in the same step as its next pull, and only other
 servers' reports travel late, Theorem~\ref{thm:guard} holds unchanged for every
 $\delta$, lost reports included.
@@ -469,8 +473,7 @@ Section~S4.12 gives both proofs and the instances that attain the extra term.
 
 At $k = 1$ any $\delta > 0$ already costs a whole $L$: the single server pulls its next
 job at the instant it finishes one, before that job's charge can arrive. Pulling ahead
-of the report, which is what prefetching workers do, therefore changes the promise, and
-reporting on the pull removes the change. The combined rule of
+of the report therefore changes the promise, and reporting on the pull removes the change. The combined rule of
 Section~\ref{sec:clock} gives a second remedy that needs no protocol at all, since its
 clock half keeps $W < W_{\mathrm{FCFS}} + \theta + (3-2/k)L$ for any delay.
 
@@ -584,7 +587,9 @@ definition of the wrapper class, the single-server frontier they imply and the
 proofs; supplementary theory material records an unbounded instance-optimality
 counterexample and the limits of instance-dependent refinements.
 
-Every uniform constant above is on the scale of $L$. Proposition~\ref{prop:floor}
+Every uniform constant above is a multiple of $L$, apart from the report delay $\delta$ of
+Proposition~\ref{prop:late} and the arrival burst $\sigma$ of
+Proposition~\ref{prop:absolute}. Proposition~\ref{prop:floor}
 establishes such a floor for the wrapper family under arbitrary opaque base
 proposals, not for all scheduling mechanisms. Empirically, usefulness depends on
 size dispersion, score predictability and the arrival structure; the CI pools

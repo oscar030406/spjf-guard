@@ -25,8 +25,9 @@ definition of heavy used in the paper, and the worst heavy-job wait of
 Section~\ref{sec:model} is taken over the jobs it selects. On the main judging trace
 the cut-off is \devnum{1.559} s and heavy jobs are \devnum{1.31\%} of the test period;
 on the second judging trace it is \devnum{1{,}314} ms and \devnum{5.07\%}. The label is
-fixed on training rows and never refit on the period being scored, so its rate in the
-test period is a quarter of its rate in training. Because the positive class is small
+fixed on training rows and never refit on the period being scored. On the main trace its
+rate in the test period is about a quarter of its training rate, \devnum{1.31\%} against
+\devnum{5.00\%}; on the second it stays at about the training rate. Because the positive class is small
 we report average precision next to AUROC. For the regression output we report RMSE on
 $\log(1+C)$ and Spearman correlation, since a ranking policy consumes order rather than
 level.
