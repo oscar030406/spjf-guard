@@ -117,6 +117,7 @@ def fit_frozen_m4_models(
     targets: Sequence[str],
     all_terms: Sequence[str],
     expected_scores: np.ndarray | None = None,
+    score_name: str = "spjf_e",
 ) -> tuple[FrozenM4Models, np.ndarray, np.ndarray, np.ndarray]:
     """Refit the original M4 weights once and verify their stored predictions.
 
@@ -135,7 +136,7 @@ def fit_frozen_m4_models(
     first, order = term_order(prepared.semester, arrival, all_terms)
     available = availability[rows]
     executed = np.minimum(prepared.cost_s[rows], limit_s)
-    spec = SCORE_SPECS["spjf_e"]
+    spec = SCORE_SPECS[score_name]
     label = spec.target_of(executed)
     settings = lgb_parameters(cfg_predictor, spec)
     models: dict[str, Any] = {}

@@ -60,6 +60,12 @@ def _latest(rows: np.ndarray, arrival: np.ndarray) -> int:
     return int(rows[arrival[rows] == latest_time].max())
 
 
+def _by_release(rows: np.ndarray, release: np.ndarray, arrival: np.ndarray) -> np.ndarray:
+    """Order records as the sweep absorbs them: release, then zero lag, then row."""
+    zero = release == arrival[rows]
+    return rows[np.lexsort((rows, zero, release))]
+
+
 def _summary(values: np.ndarray, errors: np.ndarray, heavy: np.ndarray) -> tuple[float, ...]:
     count = len(values)
     if count == 0:
@@ -133,6 +139,7 @@ class M4HistoryRecomputer:
         )
         self.source_cache: dict[int, np.ndarray] = {}
         self.score_cache: dict[tuple[int, bool, tuple[int, ...]], float] = {}
+        self._scoped: tuple[tuple[np.ndarray, _GroupedRows], ...] | None = None
 
     def _pair_code(self, target: int) -> int:
         value = (
@@ -282,6 +289,106 @@ class M4HistoryRecomputer:
             user_rows = self._released(user_rows, target, same_copy_lag_s, True)
             pair_rows = self._released(pair_rows, target, same_copy_lag_s, True)
             event_rows = self._released(event_rows, target, same_copy_lag_s, False)
+        out = self._outcome_fields(baseline, ex_rows, user_rows, pair_rows, event_rows)
+        if withhold_other_pool_classes:
+            self._other_class_arrivals(target, out, pool_terms)
+        if len(out) != len(HIST_COLS):
+            raise AssertionError("the targeted M4 row has the wrong width")
+        return out
+
+    def _own_copy(self, events: np.ndarray, target: int) -> np.ndarray:
+        """Replayed records of the target's own class-term, in event space."""
+        sub_rows = self.prepared.row_of[events]
+        replayed = sub_rows >= 0
+        replayed[replayed] &= self.prepared.simulatable[sub_rows[replayed]]
+        class_term = self.prepared.class_term[self.submission_events[target]]
+        return replayed & (self.prepared.class_term[events] == class_term)
+
+    def own_copy_candidates(self, target: int) -> np.ndarray:
+        """Own-copy submissions sharing the target's user or exercise, arrived earlier."""
+        if self._scoped is None:
+            self._scoped = self._scoped_arrival_groups()
+        now = self.sub_arrival[target]
+        class_term = np.int64(self.prepared.class_term[self.submission_events[target]])
+        width = np.int64(max(int(self.prepared.n_exercises), int(self.sub_user.max()) + 1))
+        parts = []
+        for (keys, grouped), value in zip(
+            self._scoped, (self.sub_exercise[target], self.sub_user[target])
+        ):
+            scoped = class_term * width + np.int64(value)
+            key = int(np.searchsorted(keys, scoped))
+            if keys[key] != scoped:
+                raise AssertionError("an online target is not a replayed submission")
+            parts.append(grouped.before(key, now, self.sub_arrival))
+        return np.union1d(*parts)
+
+    def _scoped_arrival_groups(self) -> tuple[tuple[np.ndarray, _GroupedRows], ...]:
+        """Replayed submissions keyed by (class-term, exercise) and (class-term, user)."""
+        rows = np.flatnonzero(self.prepared.simulatable).astype(np.int64)
+        class_term = self.prepared.class_term[self.submission_events[rows]].astype(np.int64)
+        width = np.int64(max(int(self.prepared.n_exercises), int(self.sub_user.max()) + 1))
+        out = []
+        for values in (self.sub_exercise, self.sub_user):
+            keys, codes = np.unique(class_term * width + values[rows], return_inverse=True)
+            full = np.full(len(self.sub_arrival), -1, np.int64)
+            full[rows] = codes
+            out.append((keys, _grouped(full, rows, self.sub_arrival, self.sub_arrival)))
+        return tuple(out)
+
+    def recompute_visible(
+        self,
+        target: int,
+        baseline: np.ndarray,
+        own_rows: np.ndarray,
+        own_release: np.ndarray,
+    ) -> np.ndarray:
+        """Rebuild the M4 row when the target's own-copy outcomes are exactly ``own_rows``.
+
+        This is the online replay's reading: an own-copy outcome is visible when it has
+        completed in the replay, and it enters the history at its replay release instant
+        ``own_release`` (original clock), which orders the rolling windows.  Every other
+        record keeps its original availability.
+        """
+        now = self.sub_arrival[target]
+        own_rows = np.asarray(own_rows, np.int64)
+        own_release = np.asarray(own_release, np.float64)
+        if np.any(own_release > now):
+            raise AssertionError("an own-copy outcome is released after the target reads")
+        pair_code = self._pair_code(target)
+        pieces = []
+        for grouped, key, keys in (
+            (self.exercise, int(self.sub_exercise[target]), self.sub_exercise),
+            (self.user, int(self.sub_user[target]), self.sub_user),
+            (self.pair, pair_code, self.sub_pair),
+        ):
+            original = grouped.before(key, now, self.sub_arrival)
+            external = original[~self._own_copy(self.submission_events[original], target)]
+            mine = keys[own_rows] == key
+            pieces.append(
+                _by_release(
+                    np.r_[external, own_rows[mine]],
+                    np.r_[self.sub_availability[external], own_release[mine]],
+                    self.sub_arrival,
+                )
+            )
+        events = self.event_user.before(int(self.sub_user[target]), now, self.arrival)
+        external = events[~self._own_copy(events, target)]
+        mine = self.sub_user[own_rows] == self.sub_user[target]
+        event_rows = _by_release(
+            np.r_[external, self.submission_events[own_rows[mine]]],
+            np.r_[self.availability[external], own_release[mine]],
+            self.arrival,
+        )
+        return self._outcome_fields(baseline, *pieces, event_rows)
+
+    def _outcome_fields(
+        self,
+        baseline: np.ndarray,
+        ex_rows: np.ndarray,
+        user_rows: np.ndarray,
+        pair_rows: np.ndarray,
+        event_rows: np.ndarray,
+    ) -> np.ndarray:
         ex_events = self.submission_events[ex_rows]
         user_events = self.submission_events[user_rows]
         out = np.asarray(baseline, np.float32).copy()
@@ -305,10 +412,6 @@ class M4HistoryRecomputer:
         out[20] = (
             self.prepared.error[_latest(event_rows, self.arrival)] if len(event_rows) else _NAN
         )
-        if withhold_other_pool_classes:
-            self._other_class_arrivals(target, out, pool_terms)
-        if len(out) != len(HIST_COLS):
-            raise AssertionError("the targeted M4 row has the wrong width")
         return out
 
     def _released(

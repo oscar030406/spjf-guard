@@ -195,6 +195,7 @@ def prepare_context(
         "same_copy": build_same_copy_history_index(prepared, arrival, availability, pool_terms),
         "base_score": scores["spjf_e"].to_numpy("float64"),
         "pool_terms": set(str(term) for term in pool_terms),
+        "all_terms": all_terms,
     }
 
 
