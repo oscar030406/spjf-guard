@@ -218,13 +218,20 @@ PAPER_ONLY = {
 """Values the paper prints that this package does not produce, kept on purpose with a
 table note saying where they come from."""
 
-COINCIDENCE: dict[str, str] = {}
+COINCIDENCE: dict[str, str] = {
+    "08_experiments:what-the-guarantee-costs-and-gains:29": (
+        "the printed -0.015 was the lower end of the Guard(1200) - Timeout interval at "
+        "rho 1.0 (prechecks/timeout_rule/timeout_intervals.csv, -0.015135), not the "
+        "Guard(300) - Guard-queue(300) difference; the interval is now printed only "
+        "inside tab:clock"
+    ),
+}
 """Rows of `numbers.csv` whose value matched a package artefact by accident: they are
 reported apart from real leftovers, because dropping them is the right outcome.
 
-Empty at the moment.  The two the editor found (an old `tab:resid` ratio cell and the old
-same-phase cell) are gone: the package now produces the same-phase share itself, and the
-table was regenerated.  A key here is `<file>:<table or section>:<n>`, which survives a
+The two the editor found earlier (an old `tab:resid` ratio cell and the old same-phase
+cell) are gone: the package now produces the same-phase share itself, and the table was
+regenerated.  A key here is `<file>:<table or section>:<n>`, which survives a
 re-layout of the paper; it does not survive the number moving to another section, and an
 entry that stops matching should be re-derived rather than kept."""
 
