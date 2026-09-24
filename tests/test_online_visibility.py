@@ -156,8 +156,8 @@ def test_fixed_point_is_the_event_driven_online_replay(seed):
     np.testing.assert_allclose(used, expected_score, rtol=0.0, atol=1e-6)
     assert result.passes[-1].mismatched_jobs == 0
     assert len(result.changed_jobs) > 0
-    frontiers = [p.frontier_s for p in result.passes[:-1]]
-    assert frontiers == sorted(frontiers)
+    frontiers = [p.frontier_s for p in result.passes if p.mismatched_jobs]
+    assert all(a < b for a, b in zip(frontiers, frontiers[1:]))
 
 
 def test_a_replay_on_the_source_clock_has_nothing_to_change():

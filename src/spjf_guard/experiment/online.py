@@ -401,6 +401,7 @@ def _online_part(
 
 @njit(parallel=True, cache=True)
 def _online_loop(
+    jobs,
     job_row,
     arrival_us,
     completion,
@@ -431,7 +432,8 @@ def _online_loop(
     out,
     visible_count,
 ):
-    for i in prange(len(job_row)):
+    for t in prange(len(jobs)):
+        i = jobs[t]
         c0, d0, t0, w0 = _online_part(
             i,
             window,
@@ -485,10 +487,11 @@ def online_signatures(
     layout: _CellLayout,
     arrays: dict[str, np.ndarray],
     view: _PassView,
-) -> tuple[np.ndarray, np.ndarray]:
-    n = len(arrays["job_row"])
-    out = np.zeros(n, np.uint64)
-    counts = np.zeros(n, np.int64)
+    jobs: np.ndarray,
+    out: np.ndarray,
+    counts: np.ndarray,
+) -> None:
+    """Write the online signature and visible count of every job in ``jobs``."""
     histories = []
     for g, history in enumerate((index.exercise, index.user)):
         histories += [
@@ -502,6 +505,7 @@ def online_signatures(
             view.hashes[g],
         ]
     _online_loop(
+        jobs,
         arrays["job_row"],
         arrays["arrival_us"],
         view.completion,
@@ -517,7 +521,6 @@ def online_signatures(
         out,
         counts,
     )
-    return out, counts
 
 
 def own_outcomes(
@@ -592,27 +595,45 @@ def refine_policy_online(
     scores = np.asarray(baseline_score, np.float64).copy()
     stored = index.original_signature[arrays["job_row"]].copy()
     explicit = np.zeros(len(scores), bool)
+    signature = stored.copy()
+    counts = np.zeros(len(scores), np.int64)
+    everyone = np.arange(len(scores), dtype=np.int64)
+    # Jobs arriving at or before the previous pass's earliest mismatch are consistent
+    # (module docstring), so a pass checks only later arrivals; a pass that finds none
+    # is repeated over every job on the same replay before the iteration stops.
+    settled_us = np.int64(-1)
     cache: dict[tuple[int, int], float] = {}
     passes: list[OnlinePass] = []
     initial_outcome = None
+    outcome = None
+    view = None
     while True:
         number = len(passes) + 1
         if number > max_passes:
             raise RuntimeError(f"{policy.name}: no online fixed point in {max_passes} passes")
         started = perf_counter()
-        current = Trace(trace.arrival_us, trace.service_us, {score_key: scores}, trace.limit_s)
-        outcome = (
-            simulate(current, policy, servers, window=window)
-            if simulator is None
-            else simulator(current)
-        )
-        if initial_outcome is None:
-            initial_outcome = outcome
+        full_check = view is not None and settled_us < 0
+        if not full_check:
+            current = Trace(
+                trace.arrival_us, trace.service_us, {score_key: scores}, trace.limit_s
+            )
+            outcome = (
+                simulate(current, policy, servers, window=window)
+                if simulator is None
+                else simulator(current)
+            )
+            if initial_outcome is None:
+                initial_outcome = outcome
         simulated = perf_counter()
-        completion = arrays["arrival_us"] + outcome.wait_us + arrays["service_us"]
-        view = pass_view(index, layout, arrays, completion)
-        signature, counts = online_signatures(index, layout, arrays, view)
-        mismatched = np.flatnonzero(signature != stored)
+        if not full_check:
+            completion = arrays["arrival_us"] + outcome.wait_us + arrays["service_us"]
+            view = pass_view(index, layout, arrays, completion)
+        viewed = perf_counter()
+        checked = (
+            everyone if settled_us < 0 else np.flatnonzero(arrays["arrival_us"] > settled_us)
+        )
+        online_signatures(index, layout, arrays, view, checked, signature, counts)
+        mismatched = checked[signature[checked] != stored[checked]]
         detected = perf_counter()
         frontier = (
             float(arrays["arrival_us"][mismatched].min()) / MICROS if len(mismatched) else -1.0
@@ -645,12 +666,18 @@ def refine_policy_online(
             )
         )
         print(
-            f"    {policy.name} online pass {number}: {len(mismatched):,} jobs "
-            f"({perf_counter() - started:.1f} s)",
+            f"    {policy.name} online pass {number}: {len(mismatched):,} of "
+            f"{len(checked):,} checked jobs; frontier {frontier:,.0f} s; sim "
+            f"{simulated - started:.1f} s, view {viewed - simulated:.1f} s, signatures "
+            f"{detected - viewed:.1f} s, rescore {perf_counter() - detected:.1f} s",
             flush=True,
         )
-        if not len(mismatched):
+        if len(mismatched):
+            settled_us = np.int64(arrays["arrival_us"][mismatched].min())
+        elif len(checked) == len(everyone):
             break
+        else:
+            settled_us = np.int64(-1)
     changed = np.flatnonzero(explicit & (scores != baseline_score))
     return OnlineResult(
         outcome=outcome,

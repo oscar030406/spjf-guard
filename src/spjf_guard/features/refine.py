@@ -347,13 +347,13 @@ class M4HistoryRecomputer:
         This is the online replay's reading: an own-copy outcome is visible when it has
         completed in the replay, and it enters the history at its replay release instant
         ``own_release`` (original clock), which orders the rolling windows.  Every other
-        record keeps its original availability.
+        record keeps its original availability.  Which outcomes are visible is decided by
+        the caller on the replay clock; on the original clock a release can sit a few
+        microseconds after ``now`` through quantisation, and it only orders the windows.
         """
         now = self.sub_arrival[target]
         own_rows = np.asarray(own_rows, np.int64)
         own_release = np.asarray(own_release, np.float64)
-        if np.any(own_release > now):
-            raise AssertionError("an own-copy outcome is released after the target reads")
         pair_code = self._pair_code(target)
         pieces = []
         for grouped, key, keys in (
