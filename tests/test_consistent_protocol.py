@@ -277,10 +277,22 @@ def test_the_online_row_joins_the_headline_only_beside_matching_original_rows(tm
     replayed = {**_metric_row("Guard(600)", "online"), "gap_closed": 0.321}
     _write(online / "online_comparison.csv", [_metric_row("Guard(600)", "original"), replayed])
 
-    ept.emit_exact(exact, package, online=online)
+    written = ept.emit_exact(exact, package, online=online)
+    assert "tab_online_suite.tex" not in written, "five headline policies print no suite"
     headline = (package / "tab_visibility.tex").read_text(encoding="utf-8")
     assert "0.321" in headline and "three information protocols" in headline
     assert "0.321" in (package / "tab_exact_visibility.tex").read_text(encoding="utf-8")
+    skip = [
+        {**_metric_row("Skip(600)", "original"), "gap_closed": 0.654},
+        {**_metric_row("Skip(600)", "online"), "gap_closed": 0.543},
+    ]
+    _write(
+        online / "online_comparison.csv",
+        [_metric_row("Guard(600)", "original"), replayed, *skip],
+    )
+    assert "tab_online_suite.tex" in ept.emit_exact(exact, package, online=online)
+    suite = (package / "tab_online_suite.tex").read_text(encoding="utf-8")
+    assert "0.654" in suite and "0.543" in suite and "0.321" in suite
     rows, complaints = cpn.load_exact_source(exact, online)
     assert (
         complaints == []

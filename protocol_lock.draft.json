@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-24T09:03:45-04:00",
+  "written_at": "2026-09-24T09:06:22-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -631,7 +631,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "268b53952df64c5a7c1c557454aaec5b7538cca343a8b0cc8d04fd20274f2149"
+        "sha256": "c6ad74efedd0ec7f2885b767b322cb0baf1e28bd9fdaaed082f97cf66404df0f"
       },
       {
         "path": "scripts/check_preserved_outputs.py",
@@ -659,7 +659,7 @@
       },
       {
         "path": "scripts/emit_paper_tables.py",
-        "sha256": "b507b7846f66321739b0d7e46b3ff68e5b3ce454e1b99954ff073ec059de7546"
+        "sha256": "c4911fa9932c80908f2967ac986309d15e3547c7b6bc27389704ce9e20730a2a"
       },
       {
         "path": "scripts/eval_scores.py",
@@ -783,7 +783,7 @@
       },
       {
         "path": "src/spjf_guard/experiment/paper_tables.py",
-        "sha256": "e1209beb20dfe7dba899e347cc6cca869f2455e50f05af85d26d99b7c12f481f"
+        "sha256": "0d752af96cec0b7cf6874f9e3ad013158b08ccba7a75026f4f0d05cb7f522727"
       },
       {
         "path": "src/spjf_guard/experiment/parallel.py",
@@ -899,7 +899,7 @@
       },
       {
         "path": "tests/test_consistent_protocol.py",
-        "sha256": "dfb8d3bb43096fa63fca2b473008c5df976a4556d389ca303879e2f670f6364d"
+        "sha256": "d20a82a72086ae7c305000033a0f6a040c2f99d42e8b93e9515dc7417a105579"
       },
       {
         "path": "tests/test_consistent_runner.py",
@@ -1018,7 +1018,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "f8710dbc99f8249059e3aa2bced41251c60200ab2a4af859d72a43312df5132f"
+    "digest": "f5fb8f05eb485b42dc65feab69f90e9dbe206aa3dd75ae7b092c133f03f4c1c4"
   },
   "inputs": {
     "artefacts": [

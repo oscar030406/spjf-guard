@@ -506,3 +506,51 @@ def same_copy_exposure_table(rows: list[dict]) -> str:
         "Same-copy outcome withholding and score-rank displacement. Statistics are averaged "
         "over overlays, except the maximum displacement, which is the largest over overlays.",
     )
+
+
+SUITE_HEAD = ("SPJF-E", "SPJF-log", "Aging(600)")
+SUITE_FAMILY = ("Guard", "Guard-fixed", "Guard-age", "Guard-queue", "Fixed", "Skip", "Timeout")
+
+
+def suite_order(promises=(300.0, 600.0, 1200.0)) -> list[str]:
+    """Every compared policy, the unguarded ones first, then each promise's guard family."""
+    return [*SUITE_HEAD, *(f"{name}({g:g})" for g in promises for name in SUITE_FAMILY)]
+
+
+def online_suite_table(rows: list[dict]) -> str:
+    """tab:s_online_suite -- every compared policy, original clock beside online replay.
+
+    Empty unless the online replay covered a policy outside the headline five, so an
+    online directory with only those five prints no suite table.
+    """
+    covered = {_base_policy(r) for r in rows if r["variant"] == "online"}
+    if covered <= set(EXACT_POLICIES):
+        return ""
+    body: list[str] = []
+    for level in _levels(rows):
+        block = _at_level(rows, level)
+        keyed = {(_base_policy(row), row["variant"]): row for row in block}
+        body.append(rf"\multicolumn{{8}}{{l}}{{{_load_header(block[0])}}} \\")
+        for policy in suite_order():
+            before, after = keyed.get((policy, "original")), keyed.get((policy, "online"))
+            if before is None or after is None:
+                continue
+            cells = [
+                _cell(float(before["p99_dl_s"]), 2),
+                _cell(float(after["p99_dl_s"]), 2),
+                _cell(float(before["gap_closed"]), 3),
+                _cell(float(after["gap_closed"]), 3, _interval(after, "gap_closed")),
+                _cell(float(after["max_excess_s"]), 1),
+                _cell(float(after["harm_s"]), 1),
+            ]
+            body.append(f" & {policy_label(policy):<22s} & " + " & ".join(cells) + r" \\")
+        body.append(RULE)
+    return _table(
+        "llrrrlrr",
+        r"Load & Policy & \multicolumn{2}{c}{p99$_{\mathrm{dl}}$} & Gap, orig. & "
+        r"Gap, online & Max exc. & Harm \ & & orig. & online & & & &",
+        _without_trailing_rule(body),
+        "tab:s_online_suite",
+        "Every compared policy on the original clock and under the online replay, at the "
+        "selected parameters, over five overlays. Largest excess and harm are online.",
+    )

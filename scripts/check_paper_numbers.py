@@ -78,6 +78,7 @@ EXACT_PACKAGE_FILE = {
     "tab:exact_visibility": "tab_exact_visibility.tex",
     "tab:same_copy_exposure": "tab_same_copy_exposure.tex",
     "tab:visibility": "tab_visibility.tex",
+    "tab:s_online_suite": "tab_online_suite.tex",
 }
 """Optional exact-policy tables.  They are checked only after their CSV directory exists.
 
@@ -960,6 +961,7 @@ def load_exact_source(
         online = read_online_rows(online_dir, rows["tab:exact_visibility"])
         for label in ("tab:exact_visibility", "tab:visibility"):
             rows[label] = rows[label] + online
+        rows["tab:s_online_suite"] = rows["tab:exact_visibility"]
     return rows, complaints
 
 
@@ -987,6 +989,7 @@ def check_exact_tables(
         "tab:exact_visibility": pt.exact_visibility_table,
         "tab:same_copy_exposure": pt.same_copy_exposure_table,
         "tab:visibility": pt.exact_headline_table,
+        "tab:s_online_suite": pt.online_suite_table,
     }
     complaints = list(source_complaints)
     cache = {} if cache is None else cache
@@ -996,6 +999,8 @@ def check_exact_tables(
         if not source_rows:
             continue
         expected = builders[label](source_rows)
+        if not expected:
+            continue
         if sealed:
             expected = as_sealed(expected)
         filename = EXACT_PACKAGE_FILE[label].replace(".tex", f"{suffix}.tex")

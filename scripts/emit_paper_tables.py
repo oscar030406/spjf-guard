@@ -159,27 +159,31 @@ depend on which policies shared the bootstrap, so two runs are compared on these
 
 
 def read_online_rows(tables: Path, exact_comparison: list[dict]) -> list[dict]:
-    """The online replay's own rows, once its original-clock rows match the exact run's.
+    """The online replay's rows, once its original-clock rows match the exact run's.
 
     Both runners replay the same policies on the same overlays and scores before either
     changes a score, so their original rows must agree; a difference means the two
-    directories came from different configurations or inputs.
+    directories came from different configurations or inputs.  The online rows are
+    returned, and the original rows of policies the exact run did not replay, each
+    marked with the file it came from.
     """
     path = tables / ONLINE_SOURCE_FILE
     rows = read_rows(path)
     if not rows:
         raise SystemExit(f"explicit online source is missing or empty: {path}")
     exact = {(r["policy"], r["level"]): r for r in exact_comparison}
+    kept = []
     for row in rows:
         twin = exact.get((row["policy"], row["level"]))
-        if row["variant"] != "original" or twin is None:
+        if row["variant"] == "original" and twin is not None:
+            if any(float(row[f]) != float(twin[f]) for f in POINT_FIELDS):
+                raise SystemExit(
+                    f"{path}: {row['policy']} level {row['level']} differs from the exact "
+                    "run's original row; the two directories do not share their inputs"
+                )
             continue
-        if any(float(row[f]) != float(twin[f]) for f in POINT_FIELDS):
-            raise SystemExit(
-                f"{path}: {row['policy']} level {row['level']} differs from the exact "
-                "run's original row; the two directories do not share their inputs"
-            )
-    return [row for row in rows if row["variant"] == "online"]
+        kept.append(row | {"_source": f"{tables.name}/{ONLINE_SOURCE_FILE}"})
+    return kept
 
 
 def read_exact_rows(tables: Path) -> tuple[list[dict], list[dict]]:
@@ -580,12 +584,7 @@ def exact_values(
     add = _adder(out)
     for row in rows:
         name = row.get("policy") or f"{row['base_policy']}|{row['variant']}"
-        where = f"{source}/{filename}[{name} level {row['level']}]"
-        if row.get("variant") == "online":
-            where = (
-                f"{source.replace('consistent', 'online')}/{ONLINE_SOURCE_FILE}"
-                f"[{name} level {row['level']}]"
-            )
+        where = f"{row.get('_source', f'{source}/{filename}')}[{name} level {row['level']}]"
         for field, digits in (
             ("p99_dl_s", 2),
             ("gap_closed", 3),
@@ -711,6 +710,7 @@ def emit_exact(
             pt.same_copy_exposure_table(exposure) if exposure else "",
         ),
         ("tab_visibility", pt.exact_headline_table(comparison) if comparison else ""),
+        ("tab_online_suite", pt.online_suite_table(comparison) if comparison else ""),
     ):
         if not text:
             continue
