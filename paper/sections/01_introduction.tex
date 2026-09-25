@@ -116,13 +116,14 @@ This study makes three contributions.
   cloud-function platform \cite{azure2021trace}, two from CI machine pools
   \cite{taskcluster_docs,treeherder_docs} and one from an industrial compute farm
   \cite{netbatch2012trace,shai2014netbatch}. Every simulated job is checked against the
-  proved bound. At the busiest load, a guard that promises 600 seconds keeps
-  $\devnum{0.672}$ (bootstrap interval $\devnum{[0.602, 0.743]}$) of the reduction in
+  proved bound. At the busiest load, with every score computed from the results
+  available when its job arrives, a guard that promises 600 seconds keeps
+  $\devnum{0.705}$ (bootstrap interval $\devnum{[0.648, 0.768]}$) of the reduction in
   the 99th-percentile wait before deadlines that shortest job first (SJF), which knows
   every running time in advance, achieves over FCFS (Section~\ref{sec:exp_visibility}).
 \end{enumerate}
-% Source: outputs/dev_consistent_visibility/exact_comparison.csv, level=2,
-% Guard(600)|exact, gap_closed and gap_closed_lo/hi.
+% Source: outputs/dev_online_visibility/online_comparison.csv, level=2,
+% Guard(600)|online, gap_closed and gap_closed_lo/hi.
 
 Two qualifications apply throughout. The grading logs record how long each submission
 ran but not how long it waited, so the shared queue in our simulations is our own
