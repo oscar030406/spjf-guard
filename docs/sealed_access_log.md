@@ -11,5 +11,17 @@
 | 2026-09-25 | `prechecks/codebench_service/code_features.py`（经 `local_tools/code_features_to.py` 调用） | 封存学期 2023-1 的归档（流式），每次执行日志的 CODE 段 | `data/codebench/parquet/code_features/2023-1.parquet`：每个提交/测试块的静态代码计数（字符数、行数、关键字与导入计数等 45 列），244,481 行；终端只打印行数与耗时 | 主线程看过行数与耗时，没有看任何特征值或统计 | 否。冻结前补齐 `build_cache` 需要而 09-18 未生成的输入，没有计算开销、预测或调度结果；同一解析器在开发学期 2022-1 上重跑与盘上文件逐列相同 |
 | 2026-09-25 | `prechecks/codebench_service/code_features.py`（经 `local_tools/code_features_to.py` 调用） | 封存学期 2023-2 的归档（流式），每次执行日志的 CODE 段 | `data/codebench/parquet/code_features/2023-2.parquet`：每个提交/测试块的静态代码计数（字符数、行数、关键字与导入计数等 45 列），212,559 行；终端只打印行数与耗时 | 主线程看过行数与耗时，没有看任何特征值或统计 | 否。冻结前补齐 `build_cache` 需要而 09-18 未生成的输入，没有计算开销、预测或调度结果；同一解析器在开发学期 2022-1 上重跑与盘上文件逐列相同 |
 | 2026-09-25 | `prechecks/codebench_service/code_features.py`（经 `local_tools/code_features_to.py` 调用） | 封存学期 2024-1 的归档（流式），每次执行日志的 CODE 段 | `data/codebench/parquet/code_features/2024-1.parquet`：每个提交/测试块的静态代码计数（字符数、行数、关键字与导入计数等 45 列），242,628 行；终端只打印行数与耗时 | 主线程看过行数与耗时，没有看任何特征值或统计 | 否。冻结前补齐 `build_cache` 需要而 09-18 未生成的输入，没有计算开销、预测或调度结果；同一解析器在开发学期 2022-1 上重跑与盘上文件逐列相同 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/archives/cb_dataset_2023_1_v1.81.tar.gz（271,701,503 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/archives/cb_dataset_2023_2_v1.81.tar.gz（237,054,274 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/archives/cb_dataset_2024_1_v1.81.tar.gz（293,907,257 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/events/2023-1.parquet（3,077,064 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/code_features/2023-1.parquet（1,790,613 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/assessments/2023-1.parquet（11,769 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/events/2023-2.parquet（2,709,769 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/code_features/2023-2.parquet（1,556,504 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/assessments/2023-2.parquet（11,728 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/events/2024-1.parquet（3,087,324 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/code_features/2024-1.parquet（1,824,620 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/assessments/2024-1.parquet（11,941 字节），未解析内容 | 冻结脚本 | 否 |
 
 上表是全部记录，冻结前后都一样：冻结之前，行里只有计数、字节数与划分边界，没有对任何封存学期或 ACcoding 封存块算过开销分布、预测或调度结果；冻结之后，封存运行每开一次也各占一行，中断的那一次同样有行，输出栏写明停在哪一步。

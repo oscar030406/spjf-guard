@@ -1,0 +1,3332 @@
+{
+  "written_at": "2026-09-25T06:48:43-04:00",
+  "status": "frozen",
+  "config": {
+    "path": "configs/main.yaml",
+    "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe",
+    "document": {
+      "name": "main",
+      "description": "CodeBench shared judge pool, development terms, five overlays, three loads",
+      "data": {
+        "archive_dir": "data/codebench/archives",
+        "raw_parquet_dir": "data/codebench/parquet",
+        "cache_dir": "data/derived/codebench_cache_r4",
+        "events_file": "ev.parquet",
+        "sealed_events_file": "ev_sealed.parquet",
+        "features_file": "feat_ires0.parquet",
+        "forward_predictions_file": "forward_ires0.parquet",
+        "score_predictions_file": "data/derived/ranking_score_predictions/rs_pred_ires0.parquet",
+        "overlay_dir": "data/derived/overlay_traces",
+        "score_dir": "data/derived/package_ranking_scores",
+        "input_hashes": {}
+      },
+      "semesters": {
+        "train": [
+          "2018-1",
+          "2018-2",
+          "2019-1",
+          "2019-2"
+        ],
+        "train_remote": [
+          "2020-ERE",
+          "2020-1",
+          "2020-2",
+          "2021-1",
+          "2021-2"
+        ],
+        "validation": [
+          "2022-1"
+        ],
+        "development_test": [
+          "2022-2"
+        ],
+        "sealed_test": [
+          "2023-1",
+          "2023-2",
+          "2024-1"
+        ],
+        "excluded_from_load": [
+          "2019-2",
+          "2020-1"
+        ],
+        "overlay_pool": [
+          "2020-ERE",
+          "2020-2",
+          "2021-1",
+          "2021-2",
+          "2022-1",
+          "2022-2"
+        ]
+      },
+      "clock": {
+        "reading": "result",
+        "arrival_rule": "t - C",
+        "done_rule": "t",
+        "delta_s": 0.0,
+        "test_block_outcome_lag_s": 60.0,
+        "jitter": {
+          "enabled": true,
+          "key": "cbjitter20260919",
+          "id_columns": [
+            "semester",
+            "class",
+            "user",
+            "assessment",
+            "exercise",
+            "blk_i"
+          ]
+        },
+        "limit_s": 60.0,
+        "drop_zero_cost_terms": [
+          "2020-ERE",
+          "2020-1",
+          "2020-2",
+          "2021-1",
+          "2021-2",
+          "2022-1",
+          "2022-2"
+        ]
+      },
+      "features": {
+        "visibility_rule": "done_j + delta <= a_i",
+        "set": "M4",
+        "groups": [
+          "code_static",
+          "exercise_history",
+          "user_history",
+          "user_exercise_prior",
+          "schedule"
+        ],
+        "headline_variant": "online",
+        "visibility_variants": {
+          "original": {
+            "score_suffix": "",
+            "delta_s": 0.0,
+            "feature_group": "M4",
+            "history_scope": "global",
+            "eligible_results_only": false
+          },
+          "conservative": {
+            "score_suffix": "_conservative",
+            "delta_s": 3600.0,
+            "feature_group": "M4",
+            "history_scope": "class_term",
+            "eligible_results_only": true,
+            "development_max_fcfs_wait_s": 1544.602708,
+            "largest_guard_promise_s": 1200.0,
+            "safety_margin_s": 855.397292
+          },
+          "static": {
+            "score_suffix": "_static",
+            "delta_s": 0.0,
+            "feature_group": "STATIC",
+            "history_scope": "global",
+            "eligible_results_only": false
+          }
+        },
+        "exact_visibility": {
+          "algorithm": "monotone_per_job_withholding",
+          "base_score": "spjf_e",
+          "model_weights": "frozen",
+          "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+          "external_history_clock": "original_relative",
+          "same_semester_other_class_history": "exogenous",
+          "alternative_sensitivity": "drop_same_semester_other_class_records",
+          "sensitivity_policies": [
+            "Guard(600)"
+          ],
+          "terminal_assertion": "no_new_violation",
+          "policies": [
+            "SPJF-E",
+            "Guard(300)",
+            "Guard(600)",
+            "Guard(1200)",
+            "Aging(600)"
+          ],
+          "fixed_lags_s": [
+            60.0,
+            300.0,
+            900.0,
+            3600.0
+          ],
+          "selection_assessment": "retained_original_due_cost",
+          "selection_cost_seed": 20260922,
+          "reselection_budget_hours": 8.0,
+          "development_overlays": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "development_levels": [
+            0,
+            1,
+            2
+          ]
+        },
+        "online_visibility": {
+          "algorithm": "event_driven_pausing_replay",
+          "base_score": "spjf_e",
+          "model_weights": "frozen",
+          "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+          "release_clock": "replay_completion_plus_copy_offset",
+          "rolling_window_order": "release",
+          "external_history_clock": "original_relative",
+          "cross_check": "fixed_point_iteration",
+          "audit_sample": 2000,
+          "policies": [
+            "SPJF-E",
+            "Guard(300)",
+            "Guard(600)",
+            "Guard(1200)",
+            "Aging(600)"
+          ],
+          "variants": [
+            "online"
+          ],
+          "selection": "retained_selection_of_record",
+          "reselection_candidates_per_family": 4,
+          "development_overlays": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "development_levels": [
+            0,
+            1,
+            2
+          ]
+        },
+        "heavy_quantile": 0.95,
+        "heavy_reference_semesters": [
+          "2018-1",
+          "2018-2",
+          "2019-1",
+          "2019-2"
+        ],
+        "class_cut_quantiles": [
+          0.3333333333333333,
+          0.6666666666666667
+        ]
+      },
+      "predictor": {
+        "model": "lightgbm",
+        "protocol": "rolling_origin",
+        "seed": 3,
+        "num_threads": 4,
+        "deterministic": true,
+        "force_row_wise": true,
+        "n_estimators": 300,
+        "learning_rate": 0.06,
+        "num_leaves": 63,
+        "min_child_samples": 50,
+        "colsample_bytree": 1.0,
+        "subsample": 0.8,
+        "subsample_freq": 1,
+        "fixed_cutoff_terms": [
+          "2018-1",
+          "2018-2",
+          "2019-1",
+          "2019-2"
+        ],
+        "forward_from": "2019-1",
+        "scores": {
+          "spjf_e": {
+            "objective": "tweedie",
+            "tweedie_variance_power": 1.5,
+            "target": "c_cap_seconds"
+          },
+          "spjf_log": {
+            "objective": "regression",
+            "target": "log1p_c_cap"
+          }
+        }
+      },
+      "scheduling": {
+        "ranking_score": "spjf_e",
+        "headline_ranking_score": "policy_specific_online",
+        "guard_budget": "min(B0 + gam * w_q + eta * k * (t - a_q), Bmax)",
+        "promises_s": [
+          300.0,
+          600.0,
+          1200.0
+        ],
+        "bmax_rule": "k * (G - (3 - 2/k) * L)",
+        "selection": {
+          "grids": {
+            "fixed": {
+              "log_points": 32,
+              "log_from_s": 15.0,
+              "log_to_s": 4200.0,
+              "anchors_s": [
+                15.0,
+                30.0,
+                60.0,
+                120.0,
+                240.0,
+                360.0,
+                480.0,
+                600.0
+              ],
+              "include_equal_promise": true
+            },
+            "capped": {
+              "b0_base_s": [
+                0.0,
+                15.0,
+                30.0,
+                60.0,
+                120.0,
+                240.0,
+                360.0,
+                480.0,
+                600.0
+              ],
+              "eta": [
+                0.0,
+                0.25,
+                0.5,
+                0.75,
+                0.9,
+                0.95
+              ]
+            },
+            "hybrid": {
+              "b0_base_s": [
+                0.0,
+                30.0,
+                120.0
+              ],
+              "gam_base_s": [
+                1.0,
+                4.0,
+                16.0
+              ],
+              "eta": [
+                0.0,
+                0.9
+              ]
+            }
+          },
+          "harm_fraction": 0.5,
+          "objective": "worst_cell_deadline_window_gap_closed",
+          "tie_break": [
+            "smaller_worst_harm",
+            "smaller_b0",
+            "smaller_eta",
+            "smaller_gam"
+          ],
+          "trace": "validation_only",
+          "joint_winner": "best worst-cell gap over the three families; this is the paper's Guard(G)",
+          "family_names": {
+            "fixed": "Guard-fixed",
+            "capped": "Guard-age",
+            "hybrid": "Guard-queue"
+          }
+        },
+        "selected": {
+          "300.0": {
+            "family": "capped",
+            "b0_base_s": 60.0,
+            "eta": 0.5,
+            "gam_base_s": 0.0
+          },
+          "600.0": {
+            "family": "capped",
+            "b0_base_s": 120.0,
+            "eta": 0.75,
+            "gam_base_s": 0.0
+          },
+          "1200.0": {
+            "family": "hybrid",
+            "b0_base_s": 120.0,
+            "eta": 0.0,
+            "gam_base_s": 16.0
+          }
+        },
+        "family_best": {
+          "300.0": {
+            "fixed": {
+              "b0_base_s": 329.671,
+              "eta": 0.0,
+              "gam_base_s": 0.0
+            },
+            "capped": {
+              "b0_base_s": 60.0,
+              "eta": 0.5,
+              "gam_base_s": 0.0
+            },
+            "hybrid": {
+              "b0_base_s": 120.0,
+              "eta": 0.0,
+              "gam_base_s": 4.0
+            }
+          },
+          "600.0": {
+            "fixed": {
+              "b0_base_s": 981.126,
+              "eta": 0.0,
+              "gam_base_s": 0.0
+            },
+            "capped": {
+              "b0_base_s": 120.0,
+              "eta": 0.75,
+              "gam_base_s": 0.0
+            },
+            "hybrid": {
+              "b0_base_s": 120.0,
+              "eta": 0.0,
+              "gam_base_s": 16.0
+            }
+          },
+          "1200.0": {
+            "fixed": {
+              "b0_base_s": 2029.958,
+              "eta": 0.0,
+              "gam_base_s": 0.0
+            },
+            "capped": {
+              "b0_base_s": 360.0,
+              "eta": 0.75,
+              "gam_base_s": 0.0
+            },
+            "hybrid": {
+              "b0_base_s": 120.0,
+              "eta": 0.0,
+              "gam_base_s": 16.0
+            }
+          }
+        },
+        "comparators": {
+          "fixed_equal_promise": true,
+          "skip_charge": "dispatch"
+        },
+        "corrupted_scores": [
+          "reversed",
+          "random",
+          "longest_one_percent_called_shortest"
+        ],
+        "aging_baseline": {
+          "label": "Aging(600)",
+          "ranking_score": "spjf_e_conservative",
+          "guarantee": "none",
+          "priority": "predicted_cost - credit_per_s * current_age_s",
+          "reference_promise_s": 600.0,
+          "credit_per_s_grid": [
+            1e-05,
+            3e-05,
+            0.0001,
+            0.0003,
+            0.001,
+            0.003,
+            0.01,
+            0.03,
+            0.1,
+            0.3,
+            1.0
+          ],
+          "selection": {
+            "trace": "validation_only",
+            "constraint": "harm <= reference_promise_s / 2 in every cell",
+            "objective": "worst_cell_deadline_window_gap_closed",
+            "tie_break": [
+              "smaller_worst_harm",
+              "larger_credit"
+            ]
+          },
+          "selected_credit_per_s": 0.03
+        }
+      },
+      "overlay": {
+        "reference_monday_epoch_s": 1578268800,
+        "week_s": 604800,
+        "seed": 3,
+        "shift_weeks_max": 12,
+        "copies_probe": {
+          "min_servers_at_full_load": 4,
+          "distinct_server_counts": 3,
+          "stop_after_extra_copies": 5
+        },
+        "target_busy_hour_utilisation": [
+          0.5,
+          0.8,
+          1.0
+        ],
+        "server_count_rule": "round_half_up(W / (3600 * rho)), at least 1",
+        "overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "pools": {
+          "primary": [
+            "2020-ERE",
+            "2020-2",
+            "2021-1",
+            "2021-2",
+            "2022-1",
+            "2022-2"
+          ],
+          "validation": [
+            "2020-ERE",
+            "2020-2",
+            "2021-1",
+            "2021-2",
+            "2022-1"
+          ],
+          "sealed": [
+            "2023-1",
+            "2023-2",
+            "2024-1"
+          ]
+        },
+        "single_server": {
+          "pool": "primary",
+          "copies": 321,
+          "seed_offset": 50,
+          "target_utilisation": 0.8,
+          "utilisation_window": [
+            0.78,
+            0.82
+          ],
+          "pool_repeats": 8
+        }
+      },
+      "metrics": {
+        "primary": "deadline_window_p99_wait",
+        "deadline_window_s": 86400,
+        "starts_immediately_s": 1.0,
+        "secondary": [
+          "mean_wait",
+          "max_excess",
+          "harm",
+          "fired_rate_queue_weighted",
+          "worst_heavy_wait",
+          "gap_closed"
+        ]
+      },
+      "bootstrap": {
+        "method": "paired_week_block",
+        "resamples": 2000,
+        "seed": 20260919,
+        "block": "whole_week",
+        "paired_across": [
+          "policies",
+          "overlays"
+        ]
+      },
+      "run": {
+        "assert_per_job_bounds": true,
+        "output_dir": "outputs",
+        "segment_tree_window_ranks": 4194304,
+        "sealed_tables": [
+          "main_cells.csv",
+          "main_table.csv",
+          "main_table.tex",
+          "paired_differences.csv",
+          "bound_checks.csv",
+          "identity_residuals.csv",
+          "policy_parameters.csv",
+          "manifest.json"
+        ],
+        "sealed_k1_tables": [
+          "main_cells.csv",
+          "main_table.csv",
+          "main_table.tex",
+          "paired_differences.csv",
+          "bound_checks.csv",
+          "identity_residuals.csv",
+          "policy_parameters.csv",
+          "manifest.json"
+        ],
+        "sealed_predictor_tables": [
+          "predictor_metrics.csv",
+          "manifest.json"
+        ],
+        "sealed_visibility_tables": [
+          "visibility_cells.csv",
+          "visibility_comparison.csv",
+          "visibility_paired_differences.csv",
+          "visibility_exposure.csv",
+          "visibility_waits_and_lag.csv",
+          "manifest.json"
+        ],
+        "sealed_consistent_visibility_tables": [
+          "exact_cells.csv",
+          "exact_comparison.csv",
+          "exact_passes.csv",
+          "same_copy_exposure_cells.csv",
+          "same_copy_exposure.csv",
+          "attribution_cells.csv",
+          "attribution_comparison.csv",
+          "exact_delta_manifest.csv",
+          "exact_costs.csv",
+          "exact_sensitivity_cells.csv",
+          "exact_sensitivity_comparison.csv",
+          "manifest.json"
+        ],
+        "sealed_online_visibility_tables": [
+          "online_cells.csv",
+          "online_comparison.csv",
+          "online_passes.csv",
+          "online_audit.csv",
+          "online_delta_manifest.csv",
+          "online_costs.csv",
+          "manifest.json"
+        ]
+      }
+    }
+  },
+  "config_snapshots": [
+    {
+      "path": "configs/main_original_84932d9.yaml",
+      "present": true,
+      "sha256": "94c82eabb1428300a6badc037e6fc795e5e451388af9fad83dcc4e1123f153ee"
+    },
+    {
+      "path": "configs/visibility_development_20260922.yaml",
+      "present": true,
+      "sha256": "3ecc81fe448828622088fade31856b9d3f68b8f5163d77f97d0f1f0ac9654bc0"
+    },
+    {
+      "path": "configs/visibility_development_20260924.yaml",
+      "present": true,
+      "sha256": "4f54bd492aa4817afde4d9c994001396a0364d850699be31ef715da4f55ca704"
+    }
+  ],
+  "code": {
+    "files": [
+      {
+        "path": "scripts/assess_consistent_selection.py",
+        "sha256": "57903aa93d81cb90b1d7686cd81e03c1e249cc8d031f01839cc72a8442be95c7"
+      },
+      {
+        "path": "scripts/build_cache.py",
+        "sha256": "4699e82911fe5d12efa203f752fd99b849e5e828b5b8b34643adbdc89efd5d0a"
+      },
+      {
+        "path": "scripts/build_overlays.py",
+        "sha256": "bdd8fed9aaff36d003207df3d58becefe9cd45da4cf36e4afd13095368c4b4c3"
+      },
+      {
+        "path": "scripts/check_consistent_visibility.py",
+        "sha256": "2c511cb80c08ba80e386bb26b8790053ffb3103fa37b90a33f14b2ba352373b6"
+      },
+      {
+        "path": "scripts/check_features.py",
+        "sha256": "80a999e8b2848156283b3d84f502431f9f6ba50c180782a288814e2b4945fe7f"
+      },
+      {
+        "path": "scripts/check_generated.py",
+        "sha256": "b42ece8e6a5ccbb0ac4caa8d437642af707e7672bc3efde91dc1949d086092b7"
+      },
+      {
+        "path": "scripts/check_overlays.py",
+        "sha256": "4bbb8db86f9447e7444afda258c3896153f93696181657a21d9ec4911efba58b"
+      },
+      {
+        "path": "scripts/check_paper_numbers.py",
+        "sha256": "3a1eceb2da677308443d07042aa9506270f22b98e5e08f68301a7e54cd6ff966"
+      },
+      {
+        "path": "scripts/check_preserved_outputs.py",
+        "sha256": "a9387ead049673a2baf551076db618bc6bc944befdaeb0143e9bbb6c20ac1103"
+      },
+      {
+        "path": "scripts/check_reproduction.py",
+        "sha256": "b403d49f17c983394ea7b26acb8025194c0e1124d6affcd7141548c1261ca81d"
+      },
+      {
+        "path": "scripts/compare_selection.py",
+        "sha256": "7d2a99d70b8a74efba25dbe8ab0c3e403e78e7a67e2d92aa1f92fb7efa298d83"
+      },
+      {
+        "path": "scripts/consistent_cells.py",
+        "sha256": "be44bf402d9d2a18e2acd1d006daabf6c2c9d34cc59a74236bae38fb94b5948d"
+      },
+      {
+        "path": "scripts/diff_dev_tables.py",
+        "sha256": "462245badf10ec4169cc6368eb33d77bfa16639ef53ed3fc69a8fefb2eeec35f"
+      },
+      {
+        "path": "scripts/emit_gap_harm_figure.py",
+        "sha256": "94b681ebddc6f2d4b9186a169b8f3140d35d7ed5651f064d9bf48d18420de6ee"
+      },
+      {
+        "path": "scripts/emit_paper_tables.py",
+        "sha256": "f4934f8c9c093f797b475cb55bae2fe1842d800b8154a8114ad163aaba1364ca"
+      },
+      {
+        "path": "scripts/eval_scores.py",
+        "sha256": "51b564d12d6536e5904d1e2838d96e06bc6e82e51b049e961ab07435133dd732"
+      },
+      {
+        "path": "scripts/fit_scores.py",
+        "sha256": "8f2b8d9e2133239b9bba2470750b6c0674226a1f0d298c1d9e2c5367f207c37f"
+      },
+      {
+        "path": "scripts/freeze_protocol.py",
+        "sha256": "53217270f1511e4f6b71909c91f740b1e8b2eef459dfa95793c40efdf580728a"
+      },
+      {
+        "path": "scripts/make_protocol_lock.py",
+        "sha256": "0741bf93a5f1aacb942b54013b05bb35d260dd87a18c4c1fe28baaffb92cdc86"
+      },
+      {
+        "path": "scripts/parse_archive.py",
+        "sha256": "ea5b01b2142dbac736de4ef0f466fb4b1bd7b98aba2d07d0d3c0672d4aacc40d"
+      },
+      {
+        "path": "scripts/run_cluster_bootstrap.py",
+        "sha256": "bf73ceca138d8059ee34562ddfa9532a655ac71d473117cd27626edab7dfd52b"
+      },
+      {
+        "path": "scripts/run_consistent_visibility.py",
+        "sha256": "976c4634ce7e15a006a17480bc4019496b1806de97f3d1d1f4558cb8b9d510c9"
+      },
+      {
+        "path": "scripts/run_main.py",
+        "sha256": "2402a35bb0db5cc3959891c206e2a7767626e01e82532f144a2f8c96f1867f26"
+      },
+      {
+        "path": "scripts/run_online_visibility.py",
+        "sha256": "e19a241d25d3eb394d1b1aa2f1051e72cfae5bd18ec11998c290dee63154f1e4"
+      },
+      {
+        "path": "scripts/run_visibility.py",
+        "sha256": "26b40fb891c848e8de4f18beff460cd210a9a938b9d96bad4762403ea41e8ce2"
+      },
+      {
+        "path": "scripts/select_aging.py",
+        "sha256": "33271dff1e734e5666fc50115f0134955c8c56ba6e8494c16ce22a844b5a9e9d"
+      },
+      {
+        "path": "scripts/select_online.py",
+        "sha256": "5e15136989615cc8da9f1194e232ce4ce296108dae1feca51798aee454b0c163"
+      },
+      {
+        "path": "scripts/select_parameters.py",
+        "sha256": "ab99fd77a09c04e4643ab23ffe44055a7e62083cfe1b0e6be1b71276fa1921b6"
+      },
+      {
+        "path": "src/spjf_guard/__init__.py",
+        "sha256": "6a10ebfb20278383d6de19e65aae3253dde358dd51e34595012eea64f8247669"
+      },
+      {
+        "path": "src/spjf_guard/config.py",
+        "sha256": "045e70f73df675ef06f20efe7d4c29f2fa6d098cbe63b6704b12dcf9a6c5591c"
+      },
+      {
+        "path": "src/spjf_guard/data/__init__.py",
+        "sha256": "c8b6367797cbd898561e71f1044ef73bdaad6f67bcdeb9ca27210a0df1d267e7"
+      },
+      {
+        "path": "src/spjf_guard/data/archive.py",
+        "sha256": "91077c03cf5687b6e62e1ed64bd706c05c1f1d09a7ed4e713b35973244bb1b0d"
+      },
+      {
+        "path": "src/spjf_guard/data/cache.py",
+        "sha256": "3a2198794eae62cdfbb58fdc30c098b4902e7ee846b637f186c172c918f14f39"
+      },
+      {
+        "path": "src/spjf_guard/data/clock.py",
+        "sha256": "a36e794d35013de599f9e64c70fbb387cdde9304b88d0e6ea83c365929832e5b"
+      },
+      {
+        "path": "src/spjf_guard/data/events.py",
+        "sha256": "1e97e13bc4263e5fe2a11506ed8866c34931b4b23371211b6428ebf59415ed63"
+      },
+      {
+        "path": "src/spjf_guard/data/sealed.py",
+        "sha256": "da39f87f81013e106b565823762c660b84254d2a8b82792ca01dd84119f2a43c"
+      },
+      {
+        "path": "src/spjf_guard/experiment/__init__.py",
+        "sha256": "d4ef97d020940b4621db21f5d0493e2430461cb0a1da6b07e9a3e1d939977007"
+      },
+      {
+        "path": "src/spjf_guard/experiment/adversarial.py",
+        "sha256": "8366a8666433267c752994d1a3bf1d8340df5dc00e0e5ca9717206961ceb421c"
+      },
+      {
+        "path": "src/spjf_guard/experiment/bootstrap.py",
+        "sha256": "772aa94028db74734ceba150b5023fd409d6b33b934d7fab48c04e4327c6d5df"
+      },
+      {
+        "path": "src/spjf_guard/experiment/consistent.py",
+        "sha256": "0a545296ad69f908a4c42b2f5e8a8f66c6947517fcfda3b8ba7b00aa287ad14d"
+      },
+      {
+        "path": "src/spjf_guard/experiment/grids.py",
+        "sha256": "c818befa586718c8e5b228039540a444cd13979488752fe15e5aa5e39406f4f4"
+      },
+      {
+        "path": "src/spjf_guard/experiment/metrics.py",
+        "sha256": "704fa09765c860bd4ba5b12395bef7f0f04e7445fc35abdec9988151146f552a"
+      },
+      {
+        "path": "src/spjf_guard/experiment/online.py",
+        "sha256": "700049fb93d3f7f222d30243556cab84bddbef4dfb4c5eac5383374b12e0d22b"
+      },
+      {
+        "path": "src/spjf_guard/experiment/online_replay.py",
+        "sha256": "25fba72baaedd2c597758e94f46733a5b95345ca75de6ef5e271574af6da0dfa"
+      },
+      {
+        "path": "src/spjf_guard/experiment/overlay.py",
+        "sha256": "4ea7ac4aff0387ff2c85a957996ef7385c9bd44e700ce20d9c60cc7d23d02f25"
+      },
+      {
+        "path": "src/spjf_guard/experiment/paper_tables.py",
+        "sha256": "e0d1659c9e880a034bd60b5e80e6e18308f38a4515e8856e72a58c43aef53e1f"
+      },
+      {
+        "path": "src/spjf_guard/experiment/parallel.py",
+        "sha256": "cd5fea5b792e7afa6eb97a744cceb1e2cd46a246bc54c213a05f9a61769c93a4"
+      },
+      {
+        "path": "src/spjf_guard/experiment/predictor_metrics.py",
+        "sha256": "229eedee4853e8e2348b5ac57e9c053112bae8ddcc52f1f72d12d29333786543"
+      },
+      {
+        "path": "src/spjf_guard/experiment/provenance.py",
+        "sha256": "4fed2e981a95eb4ad72508d39d690c6ba848cc5ee98bb37344cdfb358a207fa9"
+      },
+      {
+        "path": "src/spjf_guard/experiment/report.py",
+        "sha256": "926ff97971b548d9b020a10991d95087f4ada828fee10f31da5b9a63fe2b93ce"
+      },
+      {
+        "path": "src/spjf_guard/experiment/reproduce.py",
+        "sha256": "b1921178d8afaae8da95cdf9518c8aaef23fe0faeae9151cb8c5aa9393aa5df9"
+      },
+      {
+        "path": "src/spjf_guard/experiment/select.py",
+        "sha256": "2374a4afcd71e7bdb07d7ab07a4c26a9a1d07da55f7932e6d21fcc24dcb24060"
+      },
+      {
+        "path": "src/spjf_guard/experiment/visibility.py",
+        "sha256": "3850f739a15afd29281e12d54cad44763bd733d411b489daeeac1c220a1e99fa"
+      },
+      {
+        "path": "src/spjf_guard/experiment/visibility_controls.py",
+        "sha256": "68394aba499229e008f41fe8632f71204c168f29eaf9c32b0f291aac4f6f2363"
+      },
+      {
+        "path": "src/spjf_guard/features/__init__.py",
+        "sha256": "82c22cfeb0c0c1b2026495f9185d1c63964e8aa8a9298ce39e2f31a442fc3b18"
+      },
+      {
+        "path": "src/spjf_guard/features/causal.py",
+        "sha256": "9d2d5c1d03be3acb80c75d4c64c644a787cce81f82a07dd881e2376f01a12eae"
+      },
+      {
+        "path": "src/spjf_guard/features/refine.py",
+        "sha256": "5fb5a0582255f831f95ee9109ea2c867952b664e6fe7cf64534cb745c4f09105"
+      },
+      {
+        "path": "src/spjf_guard/features/sweep.py",
+        "sha256": "76f116e7b4756e3896b0d54d9193bbebb71c2448fffed175d9cf01667cf499e2"
+      },
+      {
+        "path": "src/spjf_guard/predict/__init__.py",
+        "sha256": "d4e810ff79620bb77e1db4eb44df419d0315f43fd967ee5b77faed31dd60b854"
+      },
+      {
+        "path": "src/spjf_guard/predict/forward.py",
+        "sha256": "2ab7cb24a8186b89d523aba4c50ddb98c2d287d289aacad16b0d05d65f7aff64"
+      },
+      {
+        "path": "src/spjf_guard/predict/scores.py",
+        "sha256": "1b09f5bb438927dbfff1b249ae1ba6bee3c81f88f82d48ac70b041c1f8f15f65"
+      },
+      {
+        "path": "src/spjf_guard/sim/__init__.py",
+        "sha256": "b4b0aa81eb8c907f469a21ba0bd3dc67a24c8842c6d5e97afaf7634a21489fdb"
+      },
+      {
+        "path": "src/spjf_guard/sim/bounds.py",
+        "sha256": "6bd64b495d3eb8408d4e466ce8b189101903f144a793dcfad1095fc2533d13f9"
+      },
+      {
+        "path": "src/spjf_guard/sim/kernel.py",
+        "sha256": "f70ad598ff79962a1eb2a6794130f2458fa5c093269ef3d67d4a51cd91800f88"
+      },
+      {
+        "path": "src/spjf_guard/sim/policy.py",
+        "sha256": "a4142ff0146f2457ffe41c1ff11ac195384bcb194ffda32e8febda485c3ae54a"
+      },
+      {
+        "path": "src/spjf_guard/sim/reference.py",
+        "sha256": "26bcdd2cece39afd792faa807be7c414f1b21b16ff1e43e8cfe261c0ae86a9bc"
+      },
+      {
+        "path": "src/spjf_guard/sim/runner.py",
+        "sha256": "ba743787396147525b8ba1aadfa5306cffd564a7934f30d50199e18fa7851745"
+      },
+      {
+        "path": "src/spjf_guard/sim/tightness.py",
+        "sha256": "7583d56cd7f7573e92e52fdc807390d68e4a044f8211c233d6d29117fc91fde6"
+      },
+      {
+        "path": "tests/conftest.py",
+        "sha256": "b34a8fb2571de94b077c8ce6692c3a0c9c98bf839754b2df87dc6b4a37acb914"
+      },
+      {
+        "path": "tests/test_adversarial.py",
+        "sha256": "76813f4c9d3b4c55b65f338a788b0e98f3669e6559e3d4b9097a6cfa6188152c"
+      },
+      {
+        "path": "tests/test_archive_parse.py",
+        "sha256": "7605fcc273e5219067ead38a751b1c71e13f36c4473530ae3d4f50cc52f1fd2a"
+      },
+      {
+        "path": "tests/test_cluster_bootstrap.py",
+        "sha256": "0b5cf4c632cb72ec9a0ca4cd0446faa2ccdb14465c29d021ed329a74af1e334a"
+      },
+      {
+        "path": "tests/test_consistent_cells.py",
+        "sha256": "6447e74c67825d70ea4d8d65c7c2ca7ab1f99947c278ca556de2eccdaf44fd99"
+      },
+      {
+        "path": "tests/test_consistent_certificate.py",
+        "sha256": "ea73cb71d6ba9d4f312ca6ebc3b7d0cbc80524745826ee4069dff3d386f39c73"
+      },
+      {
+        "path": "tests/test_consistent_covered.py",
+        "sha256": "ebe16e12f90233e7f0bf1acd303e150b70411de0d151f372aa5221def9e99bd4"
+      },
+      {
+        "path": "tests/test_consistent_protocol.py",
+        "sha256": "33d79ec2d56bfe7745e3b445ec681ea012c15eec67a58f022b5b17b82873cbc1"
+      },
+      {
+        "path": "tests/test_consistent_runner.py",
+        "sha256": "d07b1edaa6ee568796a76064b305f364f02d242113acb0a8eb3060a4341eeaac"
+      },
+      {
+        "path": "tests/test_consistent_selection_assessment.py",
+        "sha256": "e8591d3b26c12099c010cf6c92f992b79f654f8fabc0f4b6f211a203564fba31"
+      },
+      {
+        "path": "tests/test_consistent_visibility.py",
+        "sha256": "c722ddf6529e7fa7aabe7107a1f24b51164cd5284e1296f40de03f73d56a4cdd"
+      },
+      {
+        "path": "tests/test_data_cache.py",
+        "sha256": "2e42ea1bb94b195493717aeaa2e070e3ba221492340bf046391bd01bb27f51bf"
+      },
+      {
+        "path": "tests/test_diff_dev_tables.py",
+        "sha256": "02cce445c924ba0a77d019b50e015033436eb6bd531c7f35ff2b0ff74c527dc5"
+      },
+      {
+        "path": "tests/test_eval_scores.py",
+        "sha256": "54053f4a6cc1f832d52a0fb803bb3b381b0ab54b6d3e48dc123b1e6d0f16e03b"
+      },
+      {
+        "path": "tests/test_experiment.py",
+        "sha256": "0dbce0ff763b77b6251e30933ead60f87fbc2e225629e112202228acca7f56a4"
+      },
+      {
+        "path": "tests/test_feature_refine.py",
+        "sha256": "097b0f1589d7e658af64f4e758cbe43eaffcc8b19f73aa80f5bafb1a677985d5"
+      },
+      {
+        "path": "tests/test_features_causal.py",
+        "sha256": "2aa2c36850f94d240bac1a06200901785bd24f2c46b18cd115af60f65aebc5f9"
+      },
+      {
+        "path": "tests/test_frozen_m4.py",
+        "sha256": "cfd76d736c58f36cb3ce0f504a1a9536e053badb0c70c0c1dcdd311221f2c325"
+      },
+      {
+        "path": "tests/test_grids.py",
+        "sha256": "6950526db247b27570a35fd5a5a8dc936c5175947080b4b4b5309c001c10e20b"
+      },
+      {
+        "path": "tests/test_legacy_visibility_certificate.py",
+        "sha256": "a14e8d4ea678f8271f2a1a15656ef132f787ba6f1a3eb669e3b66484dd0cad0d"
+      },
+      {
+        "path": "tests/test_online_visibility.py",
+        "sha256": "349ad97f74be47cc6f8432290b7cdf572ac470e6c70408d47354ea51db13f81c"
+      },
+      {
+        "path": "tests/test_overlay_pools.py",
+        "sha256": "8eca720a54471a4f9bfc4498149f0fd182d7c9f0b73082d1ae237521c39607ee"
+      },
+      {
+        "path": "tests/test_paper_tables.py",
+        "sha256": "36e5f296b904f07c28cf4e1e19f51007ba719767f8952591d55669b96863dfa7"
+      },
+      {
+        "path": "tests/test_predict.py",
+        "sha256": "8a56f31b3f076acadc2650c372aacbf33910581657cda5387805977a84682cd5"
+      },
+      {
+        "path": "tests/test_protocol_lock_validation.py",
+        "sha256": "260fb802687983a166f5e84ae4035f01b96cd388a70f8cc79fe0bafca97c2b48"
+      },
+      {
+        "path": "tests/test_provenance.py",
+        "sha256": "97b3786deaff6f40a82168ba65c6660313a302ac1d02afe6d84bb5767db905d4"
+      },
+      {
+        "path": "tests/test_repo_hygiene.py",
+        "sha256": "5cfc1175fa01963ca4c25026000fded5b56dd6974cf7068bbb484bae78df91a6"
+      },
+      {
+        "path": "tests/test_run_main_smoke.py",
+        "sha256": "b67886b1b9b216e35b3d72662e76e73e5f6d9c227156d9ee04b5d96550bdd18c"
+      },
+      {
+        "path": "tests/test_sealed_data.py",
+        "sha256": "ec9f46e0b0d8dac51db985f537bd4734de8c65623e40f439d5b3094fcf7a1416"
+      },
+      {
+        "path": "tests/test_sealed_k1.py",
+        "sha256": "ac055c8cecfc8ab1f8b9fc82f28a171e8c010c6361a485f7ba23d528384b1683"
+      },
+      {
+        "path": "tests/test_sealed_paper_tables.py",
+        "sha256": "e597f3336f02d71c736955d9c8e62778d9bd600b68eb6a13ced0f1a183859d90"
+      },
+      {
+        "path": "tests/test_sim_crosscheck_prechecks.py",
+        "sha256": "3786d2f310f2facdddbbe642018e4d3249266bedaa867c2bb38702a0e5e10379"
+      },
+      {
+        "path": "tests/test_sim_guard.py",
+        "sha256": "056b8b61c223b9a23ce7d4fa4ba51ac139838a6f81d840ed268b2d6966695440"
+      },
+      {
+        "path": "tests/test_sim_invariants.py",
+        "sha256": "47c158a064bd471df9bcdaf5d02d27e79ed329fa944f9a2ebe71bb96f80418c1"
+      },
+      {
+        "path": "tests/test_sim_tightness.py",
+        "sha256": "7826be72c11aca65a0a4f8d1e0ba8a3cb41990c477f289990a0103c3290e1e30"
+      },
+      {
+        "path": "tests/test_visibility.py",
+        "sha256": "2777d096792d8611522d8feb824b901a7f3b6d745c67f4018ec596aea1199e25"
+      },
+      {
+        "path": "tests/test_visibility_controls.py",
+        "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
+      }
+    ],
+    "digest": "216b3601ceb3c73595699528c732120764f8e0ff5804391914dc6d4bfb1ea892"
+  },
+  "inputs": {
+    "artefacts": [
+      {
+        "key": "events_file",
+        "path": "data/derived/codebench_cache_r4/ev.parquet",
+        "present": true,
+        "sha256": "8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451",
+        "bytes": 67391982
+      },
+      {
+        "key": "features_file",
+        "path": "data/derived/codebench_cache_r4/feat_ires0.parquet",
+        "present": true,
+        "sha256": "19d0e80453d1428c36354f3772f7c3359bacdd61299466bbf58706eb2aa5f89f",
+        "bytes": 70566510
+      },
+      {
+        "key": "forward_predictions_file",
+        "path": "data/derived/codebench_cache_r4/forward_ires0.parquet",
+        "present": true,
+        "sha256": "c2b04f124b82b46110593368fcd263d7bfbdfdce13099dc4a35e5c767d94a1a9",
+        "bytes": 15564171
+      },
+      {
+        "key": "score_predictions_file",
+        "path": "data/derived/ranking_score_predictions/rs_pred_ires0.parquet",
+        "present": true,
+        "sha256": "af90bb2d8cee4cf3e6806a3665fae356c1ea7d32cab52c724a7300706763bc92",
+        "bytes": 33582476
+      }
+    ],
+    "digest": "d3b90d42e1863afe152513ac0089fd6d97aef990190bf049e492b48d6c76ec76"
+  },
+  "pinned": {
+    "semester_split": {
+      "train": [
+        "2018-1",
+        "2018-2",
+        "2019-1",
+        "2019-2"
+      ],
+      "train_remote": [
+        "2020-ERE",
+        "2020-1",
+        "2020-2",
+        "2021-1",
+        "2021-2"
+      ],
+      "validation": [
+        "2022-1"
+      ],
+      "development_test": [
+        "2022-2"
+      ],
+      "sealed_test": [
+        "2023-1",
+        "2023-2",
+        "2024-1"
+      ],
+      "excluded_from_load": [
+        "2019-2",
+        "2020-1"
+      ],
+      "overlay_pool": [
+        "2020-ERE",
+        "2020-2",
+        "2021-1",
+        "2021-2",
+        "2022-1",
+        "2022-2"
+      ]
+    },
+    "sealed": {
+      "semesters": [
+        "2023-1",
+        "2023-2",
+        "2024-1"
+      ],
+      "accoding_id_block": [
+        0.8,
+        1.0
+      ],
+      "oulad_year": "2014"
+    },
+    "visibility_protocol": {
+      "rule": "done_j + delta <= a_i",
+      "clock": {
+        "reading": "result",
+        "arrival_rule": "t - C",
+        "done_rule": "t",
+        "delta_s": 0.0,
+        "test_block_outcome_lag_s": 60.0,
+        "jitter": {
+          "enabled": true,
+          "key": "cbjitter20260919",
+          "id_columns": [
+            "semester",
+            "class",
+            "user",
+            "assessment",
+            "exercise",
+            "blk_i"
+          ]
+        },
+        "limit_s": 60.0,
+        "drop_zero_cost_terms": [
+          "2020-ERE",
+          "2020-1",
+          "2020-2",
+          "2021-1",
+          "2021-2",
+          "2022-1",
+          "2022-2"
+        ]
+      },
+      "exact": {
+        "algorithm": "monotone_per_job_withholding",
+        "base_score": "spjf_e",
+        "model_weights": "frozen",
+        "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+        "external_history_clock": "original_relative",
+        "same_semester_other_class_history": "exogenous",
+        "alternative_sensitivity": "drop_same_semester_other_class_records",
+        "sensitivity_policies": [
+          "Guard(600)"
+        ],
+        "terminal_assertion": "no_new_violation",
+        "policies": [
+          "SPJF-E",
+          "Guard(300)",
+          "Guard(600)",
+          "Guard(1200)",
+          "Aging(600)"
+        ],
+        "fixed_lags_s": [
+          60.0,
+          300.0,
+          900.0,
+          3600.0
+        ],
+        "selection_assessment": "retained_original_due_cost",
+        "selection_cost_seed": 20260922,
+        "reselection_budget_hours": 8.0,
+        "development_overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "development_levels": [
+          0,
+          1,
+          2
+        ]
+      },
+      "online": {
+        "algorithm": "event_driven_pausing_replay",
+        "base_score": "spjf_e",
+        "model_weights": "frozen",
+        "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+        "release_clock": "replay_completion_plus_copy_offset",
+        "rolling_window_order": "release",
+        "external_history_clock": "original_relative",
+        "cross_check": "fixed_point_iteration",
+        "audit_sample": 2000,
+        "policies": [
+          "SPJF-E",
+          "Guard(300)",
+          "Guard(600)",
+          "Guard(1200)",
+          "Aging(600)"
+        ],
+        "variants": [
+          "online"
+        ],
+        "selection": "retained_selection_of_record",
+        "reselection_candidates_per_family": 4,
+        "development_overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "development_levels": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    "feature_set": {
+      "visibility_rule": "done_j + delta <= a_i",
+      "set": "M4",
+      "groups": [
+        "code_static",
+        "exercise_history",
+        "user_history",
+        "user_exercise_prior",
+        "schedule"
+      ],
+      "headline_variant": "online",
+      "visibility_variants": {
+        "original": {
+          "score_suffix": "",
+          "delta_s": 0.0,
+          "feature_group": "M4",
+          "history_scope": "global",
+          "eligible_results_only": false
+        },
+        "conservative": {
+          "score_suffix": "_conservative",
+          "delta_s": 3600.0,
+          "feature_group": "M4",
+          "history_scope": "class_term",
+          "eligible_results_only": true,
+          "development_max_fcfs_wait_s": 1544.602708,
+          "largest_guard_promise_s": 1200.0,
+          "safety_margin_s": 855.397292
+        },
+        "static": {
+          "score_suffix": "_static",
+          "delta_s": 0.0,
+          "feature_group": "STATIC",
+          "history_scope": "global",
+          "eligible_results_only": false
+        }
+      },
+      "exact_visibility": {
+        "algorithm": "monotone_per_job_withholding",
+        "base_score": "spjf_e",
+        "model_weights": "frozen",
+        "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+        "external_history_clock": "original_relative",
+        "same_semester_other_class_history": "exogenous",
+        "alternative_sensitivity": "drop_same_semester_other_class_records",
+        "sensitivity_policies": [
+          "Guard(600)"
+        ],
+        "terminal_assertion": "no_new_violation",
+        "policies": [
+          "SPJF-E",
+          "Guard(300)",
+          "Guard(600)",
+          "Guard(1200)",
+          "Aging(600)"
+        ],
+        "fixed_lags_s": [
+          60.0,
+          300.0,
+          900.0,
+          3600.0
+        ],
+        "selection_assessment": "retained_original_due_cost",
+        "selection_cost_seed": 20260922,
+        "reselection_budget_hours": 8.0,
+        "development_overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "development_levels": [
+          0,
+          1,
+          2
+        ]
+      },
+      "online_visibility": {
+        "algorithm": "event_driven_pausing_replay",
+        "base_score": "spjf_e",
+        "model_weights": "frozen",
+        "own_class_term_copy_outcome_rule": "completion_j <= replay_arrival_i",
+        "release_clock": "replay_completion_plus_copy_offset",
+        "rolling_window_order": "release",
+        "external_history_clock": "original_relative",
+        "cross_check": "fixed_point_iteration",
+        "audit_sample": 2000,
+        "policies": [
+          "SPJF-E",
+          "Guard(300)",
+          "Guard(600)",
+          "Guard(1200)",
+          "Aging(600)"
+        ],
+        "variants": [
+          "online"
+        ],
+        "selection": "retained_selection_of_record",
+        "reselection_candidates_per_family": 4,
+        "development_overlays": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "development_levels": [
+          0,
+          1,
+          2
+        ]
+      },
+      "heavy_quantile": 0.95,
+      "heavy_reference_semesters": [
+        "2018-1",
+        "2018-2",
+        "2019-1",
+        "2019-2"
+      ],
+      "class_cut_quantiles": [
+        0.3333333333333333,
+        0.6666666666666667
+      ]
+    },
+    "predictor": {
+      "model": "lightgbm",
+      "protocol": "rolling_origin",
+      "seed": 3,
+      "num_threads": 4,
+      "deterministic": true,
+      "force_row_wise": true,
+      "n_estimators": 300,
+      "learning_rate": 0.06,
+      "num_leaves": 63,
+      "min_child_samples": 50,
+      "colsample_bytree": 1.0,
+      "subsample": 0.8,
+      "subsample_freq": 1,
+      "fixed_cutoff_terms": [
+        "2018-1",
+        "2018-2",
+        "2019-1",
+        "2019-2"
+      ],
+      "forward_from": "2019-1",
+      "scores": {
+        "spjf_e": {
+          "objective": "tweedie",
+          "tweedie_variance_power": 1.5,
+          "target": "c_cap_seconds"
+        },
+        "spjf_log": {
+          "objective": "regression",
+          "target": "log1p_c_cap"
+        }
+      }
+    },
+    "ranking_score": "spjf_e",
+    "guard_budget": "min(B0 + gam * w_q + eta * k * (t - a_q), Bmax)",
+    "promises_s": [
+      300.0,
+      600.0,
+      1200.0
+    ],
+    "bmax_rule": "k * (G - (3 - 2/k) * L)",
+    "selection_rule": {
+      "grids": {
+        "fixed": {
+          "log_points": 32,
+          "log_from_s": 15.0,
+          "log_to_s": 4200.0,
+          "anchors_s": [
+            15.0,
+            30.0,
+            60.0,
+            120.0,
+            240.0,
+            360.0,
+            480.0,
+            600.0
+          ],
+          "include_equal_promise": true
+        },
+        "capped": {
+          "b0_base_s": [
+            0.0,
+            15.0,
+            30.0,
+            60.0,
+            120.0,
+            240.0,
+            360.0,
+            480.0,
+            600.0
+          ],
+          "eta": [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            0.9,
+            0.95
+          ]
+        },
+        "hybrid": {
+          "b0_base_s": [
+            0.0,
+            30.0,
+            120.0
+          ],
+          "gam_base_s": [
+            1.0,
+            4.0,
+            16.0
+          ],
+          "eta": [
+            0.0,
+            0.9
+          ]
+        }
+      },
+      "harm_fraction": 0.5,
+      "objective": "worst_cell_deadline_window_gap_closed",
+      "tie_break": [
+        "smaller_worst_harm",
+        "smaller_b0",
+        "smaller_eta",
+        "smaller_gam"
+      ],
+      "trace": "validation_only",
+      "joint_winner": "best worst-cell gap over the three families; this is the paper's Guard(G)",
+      "family_names": {
+        "fixed": "Guard-fixed",
+        "capped": "Guard-age",
+        "hybrid": "Guard-queue"
+      }
+    },
+    "search_grids": {
+      "definition": {
+        "fixed": {
+          "log_points": 32,
+          "log_from_s": 15.0,
+          "log_to_s": 4200.0,
+          "anchors_s": [
+            15.0,
+            30.0,
+            60.0,
+            120.0,
+            240.0,
+            360.0,
+            480.0,
+            600.0
+          ],
+          "include_equal_promise": true
+        },
+        "capped": {
+          "b0_base_s": [
+            0.0,
+            15.0,
+            30.0,
+            60.0,
+            120.0,
+            240.0,
+            360.0,
+            480.0,
+            600.0
+          ],
+          "eta": [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            0.9,
+            0.95
+          ]
+        },
+        "hybrid": {
+          "b0_base_s": [
+            0.0,
+            30.0,
+            120.0
+          ],
+          "gam_base_s": [
+            1.0,
+            4.0,
+            16.0
+          ],
+          "eta": [
+            0.0,
+            0.9
+          ]
+        }
+      },
+      "n_points": {
+        "fixed": 42,
+        "capped": 162,
+        "hybrid": 54
+      },
+      "points": {
+        "fixed": [
+          [
+            -1.0,
+            15.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            17.99,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            21.576,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            25.877,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            30.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            31.035,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            37.222,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            44.641,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            53.54,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            60.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            64.212,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            77.012,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            92.363,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            110.774,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            120.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            132.855,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            159.338,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            191.099,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            229.192,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            240.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            274.878,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            329.671,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            360.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            395.386,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            474.201,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            480.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            568.726,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            600.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            682.093,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            818.058,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            981.126,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            1176.699,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            1411.256,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            1692.569,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            2029.958,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            2434.6,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            2919.901,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            3501.94,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            4200.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            Infinity,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            Infinity,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            Infinity,
+            0.0,
+            0.0
+          ]
+        ],
+        "capped": [
+          [
+            300.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            15.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            60.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            240.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            360.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            480.0,
+            0.95,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.0,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.25,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.5,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.75,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.9,
+            0.0
+          ],
+          [
+            300.0,
+            600.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            15.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            60.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            240.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            360.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            480.0,
+            0.95,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.0,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.25,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.5,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.75,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.9,
+            0.0
+          ],
+          [
+            600.0,
+            600.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            15.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            60.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            240.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            360.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            480.0,
+            0.95,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.0,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.25,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.5,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.75,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.9,
+            0.0
+          ],
+          [
+            1200.0,
+            600.0,
+            0.95,
+            0.0
+          ]
+        ],
+        "hybrid": [
+          [
+            300.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.9,
+            1.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.0,
+            4.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.9,
+            4.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.0,
+            16.0
+          ],
+          [
+            300.0,
+            0.0,
+            0.9,
+            16.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.0,
+            1.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.9,
+            1.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.0,
+            4.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.9,
+            4.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.0,
+            16.0
+          ],
+          [
+            300.0,
+            30.0,
+            0.9,
+            16.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.0,
+            1.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.9,
+            1.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.0,
+            4.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.9,
+            4.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.0,
+            16.0
+          ],
+          [
+            300.0,
+            120.0,
+            0.9,
+            16.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.9,
+            1.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.0,
+            4.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.9,
+            4.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.0,
+            16.0
+          ],
+          [
+            600.0,
+            0.0,
+            0.9,
+            16.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.0,
+            1.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.9,
+            1.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.0,
+            4.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.9,
+            4.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.0,
+            16.0
+          ],
+          [
+            600.0,
+            30.0,
+            0.9,
+            16.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.0,
+            1.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.9,
+            1.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.0,
+            4.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.9,
+            4.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.0,
+            16.0
+          ],
+          [
+            600.0,
+            120.0,
+            0.9,
+            16.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.9,
+            1.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.0,
+            4.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.9,
+            4.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.0,
+            16.0
+          ],
+          [
+            1200.0,
+            0.0,
+            0.9,
+            16.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.0,
+            1.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.9,
+            1.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.0,
+            4.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.9,
+            4.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.0,
+            16.0
+          ],
+          [
+            1200.0,
+            30.0,
+            0.9,
+            16.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.0,
+            1.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.9,
+            1.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.0,
+            4.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.9,
+            4.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.0,
+            16.0
+          ],
+          [
+            1200.0,
+            120.0,
+            0.9,
+            16.0
+          ]
+        ]
+      },
+      "digest": "b06321638d2445059ee19a1633763daaeb7a04d0f6ddcc20845f95aa11314a34"
+    },
+    "selected_parameters": {
+      "300.0": {
+        "family": "capped",
+        "b0_base_s": 60.0,
+        "eta": 0.5,
+        "gam_base_s": 0.0
+      },
+      "600.0": {
+        "family": "capped",
+        "b0_base_s": 120.0,
+        "eta": 0.75,
+        "gam_base_s": 0.0
+      },
+      "1200.0": {
+        "family": "hybrid",
+        "b0_base_s": 120.0,
+        "eta": 0.0,
+        "gam_base_s": 16.0
+      }
+    },
+    "family_best": {
+      "300.0": {
+        "fixed": {
+          "b0_base_s": 329.671,
+          "eta": 0.0,
+          "gam_base_s": 0.0
+        },
+        "capped": {
+          "b0_base_s": 60.0,
+          "eta": 0.5,
+          "gam_base_s": 0.0
+        },
+        "hybrid": {
+          "b0_base_s": 120.0,
+          "eta": 0.0,
+          "gam_base_s": 4.0
+        }
+      },
+      "600.0": {
+        "fixed": {
+          "b0_base_s": 981.126,
+          "eta": 0.0,
+          "gam_base_s": 0.0
+        },
+        "capped": {
+          "b0_base_s": 120.0,
+          "eta": 0.75,
+          "gam_base_s": 0.0
+        },
+        "hybrid": {
+          "b0_base_s": 120.0,
+          "eta": 0.0,
+          "gam_base_s": 16.0
+        }
+      },
+      "1200.0": {
+        "fixed": {
+          "b0_base_s": 2029.958,
+          "eta": 0.0,
+          "gam_base_s": 0.0
+        },
+        "capped": {
+          "b0_base_s": 360.0,
+          "eta": 0.75,
+          "gam_base_s": 0.0
+        },
+        "hybrid": {
+          "b0_base_s": 120.0,
+          "eta": 0.0,
+          "gam_base_s": 16.0
+        }
+      }
+    },
+    "comparators": {
+      "fixed_equal_promise": true,
+      "skip_charge": "dispatch"
+    },
+    "event_cache_stage": {
+      "raw_parquet_dir": "data/codebench/parquet",
+      "code": [
+        {
+          "path": "src/spjf_guard/data/cache.py",
+          "sha256": "3a2198794eae62cdfbb58fdc30c098b4902e7ee846b637f186c172c918f14f39"
+        },
+        {
+          "path": "scripts/build_cache.py",
+          "sha256": "4699e82911fe5d12efa203f752fd99b849e5e828b5b8b34643adbdc89efd5d0a"
+        }
+      ],
+      "sealed_inputs": [
+        "data/codebench/archives/cb_dataset_2023_1_v1.81.tar.gz",
+        "data/codebench/archives/cb_dataset_2023_2_v1.81.tar.gz",
+        "data/codebench/archives/cb_dataset_2024_1_v1.81.tar.gz",
+        "data/codebench/parquet/events/2023-1.parquet",
+        "data/codebench/parquet/code_features/2023-1.parquet",
+        "data/codebench/parquet/assessments/2023-1.parquet",
+        "data/codebench/parquet/events/2023-2.parquet",
+        "data/codebench/parquet/code_features/2023-2.parquet",
+        "data/codebench/parquet/assessments/2023-2.parquet",
+        "data/codebench/parquet/events/2024-1.parquet",
+        "data/codebench/parquet/code_features/2024-1.parquet",
+        "data/codebench/parquet/assessments/2024-1.parquet"
+      ],
+      "note": "sealed inputs are named, never hashed: hashing one would read it. This is the same list the freeze hashes, so the draft a person reads describes the set that is frozen."
+    },
+    "sealed_tables": [
+      "main_cells.csv",
+      "main_table.csv",
+      "main_table.tex",
+      "paired_differences.csv",
+      "bound_checks.csv",
+      "identity_residuals.csv",
+      "policy_parameters.csv",
+      "manifest.json"
+    ],
+    "sealed_k1_tables": [
+      "main_cells.csv",
+      "main_table.csv",
+      "main_table.tex",
+      "paired_differences.csv",
+      "bound_checks.csv",
+      "identity_residuals.csv",
+      "policy_parameters.csv",
+      "manifest.json"
+    ],
+    "sealed_predictor_tables": [
+      "predictor_metrics.csv",
+      "manifest.json"
+    ],
+    "sealed_visibility_tables": [
+      "visibility_cells.csv",
+      "visibility_comparison.csv",
+      "visibility_paired_differences.csv",
+      "visibility_exposure.csv",
+      "visibility_waits_and_lag.csv",
+      "manifest.json"
+    ],
+    "sealed_consistent_visibility_tables": [
+      "exact_cells.csv",
+      "exact_comparison.csv",
+      "exact_passes.csv",
+      "same_copy_exposure_cells.csv",
+      "same_copy_exposure.csv",
+      "attribution_cells.csv",
+      "attribution_comparison.csv",
+      "exact_delta_manifest.csv",
+      "exact_costs.csv",
+      "exact_sensitivity_cells.csv",
+      "exact_sensitivity_comparison.csv",
+      "manifest.json"
+    ],
+    "sealed_online_visibility_tables": [
+      "online_cells.csv",
+      "online_comparison.csv",
+      "online_passes.csv",
+      "online_audit.csv",
+      "online_delta_manifest.csv",
+      "online_costs.csv",
+      "manifest.json"
+    ],
+    "load": {
+      "target_busy_hour_utilisation": [
+        0.5,
+        0.8,
+        1.0
+      ],
+      "server_count_rule": "round_half_up(W / (3600 * rho)), at least 1",
+      "overlay_seed": 3,
+      "overlays": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "copies_probe": {
+        "min_servers_at_full_load": 4,
+        "distinct_server_counts": 3,
+        "stop_after_extra_copies": 5
+      }
+    },
+    "primary_metric": "deadline_window_p99_wait",
+    "bootstrap": {
+      "method": "paired_week_block",
+      "resamples": 2000,
+      "seed": 20260919,
+      "block": "whole_week",
+      "paired_across": [
+        "policies",
+        "overlays"
+      ]
+    }
+  },
+  "commit": "38402d09e528f33c385b6e159aca964f8ef617e3",
+  "sealed_input_hashes": [
+    {
+      "path": "data/codebench/archives/cb_dataset_2023_1_v1.81.tar.gz",
+      "sha256": "925168b9b0d540034e20eeebd0f41aec1e8aef6ddb0aac976d01b02dca71528e",
+      "bytes": 271701503
+    },
+    {
+      "path": "data/codebench/archives/cb_dataset_2023_2_v1.81.tar.gz",
+      "sha256": "933440738082d8d3a2acac5c012c15885d36ddac29d39cd6fcde26e8354303b1",
+      "bytes": 237054274
+    },
+    {
+      "path": "data/codebench/archives/cb_dataset_2024_1_v1.81.tar.gz",
+      "sha256": "ff6b870a5ceef6b9dc6ed076612dc3b16f978bc8e5ed096cb5b8cf16c9b71c62",
+      "bytes": 293907257
+    },
+    {
+      "path": "data/codebench/parquet/events/2023-1.parquet",
+      "sha256": "2343e90bbf79865128fd4dbb587dfe5aebf268e36fe507877a24122c5dae10af",
+      "bytes": 3077064
+    },
+    {
+      "path": "data/codebench/parquet/code_features/2023-1.parquet",
+      "sha256": "68c0aa4e4435a5a762d26c1502a466ac64e793548ccb1e840cfd2e2be38f55bb",
+      "bytes": 1790613
+    },
+    {
+      "path": "data/codebench/parquet/assessments/2023-1.parquet",
+      "sha256": "85e8021ab135789cb2d438af115a8cecf2a18d5719eb3ad9073748520f57efeb",
+      "bytes": 11769
+    },
+    {
+      "path": "data/codebench/parquet/events/2023-2.parquet",
+      "sha256": "00c349e115fc9f83589c5c29a0b3d31996d56735264eb1b95ee6079aa4b1c665",
+      "bytes": 2709769
+    },
+    {
+      "path": "data/codebench/parquet/code_features/2023-2.parquet",
+      "sha256": "3ecf01841070c3fb09ee12aff68d4507f4fae15ce0ec6faf55349f739e9d87ba",
+      "bytes": 1556504
+    },
+    {
+      "path": "data/codebench/parquet/assessments/2023-2.parquet",
+      "sha256": "ad63b815bad0ae3204d74a14ecc76999cf03ed8f98172b0be5022976d01b199b",
+      "bytes": 11728
+    },
+    {
+      "path": "data/codebench/parquet/events/2024-1.parquet",
+      "sha256": "458a23bcf14add29adbad740ae4f3d641d70332513858d00b14f4317e969d650",
+      "bytes": 3087324
+    },
+    {
+      "path": "data/codebench/parquet/code_features/2024-1.parquet",
+      "sha256": "4d905d47ded65dd135b9bf0db072a138d19a35ef90b9200bba94725d22033415",
+      "bytes": 1824620
+    },
+    {
+      "path": "data/codebench/parquet/assessments/2024-1.parquet",
+      "sha256": "46e9fe9d7663d6dd2e04589f461428f4a65ee4f9d7526fff8b5c7e949e400389",
+      "bytes": 11941
+    }
+  ]
+}
