@@ -58,6 +58,7 @@ DERIVED = ("outputs/paper_tables/numbers.csv",)
 figures and changes whenever `paper/` does."""
 
 RERUN_DIRECTORY = "outputs/prefreeze/"
+ORIGINAL_CONFIG = Path("configs/main_original_84932d9.yaml")
 """The pre-freeze check writes a fresh copy of the selection and the development tables
 here on every run, to compare them with the ones the paper uses; its files are
 replaced by design.  `--refresh` may replace their records only when the file now
@@ -126,40 +127,36 @@ def verify(path: Path) -> int:
     return int(not ok)
 
 
-def pin_historical_config(snapshot_path: Path) -> int:
+def pin_historical_config(
+    snapshot_path: Path, archived: Path = ORIGINAL_CONFIG, root: Path = ROOT
+) -> int:
     """Keep old run recipes honest when the live protocol acquires new experiments.
 
     This changes only a manifest's config path, after proving that the archived config
     is exactly the byte sequence that manifest already recorded. It neither re-signs
     table contents nor claims that an old experiment ran under the amended protocol.
+    Every manifest under `outputs/` that names `configs/main.yaml` is moved.
     """
-    if verify(snapshot_path):
+    if not check(snapshot_path, root)[0]:
         raise ValueError("existing tables changed; refusing provenance migration")
-    archived = ROOT / "configs/main_original_84932d9.yaml"
-    expected = digest(archived)
+    expected = digest(root / archived)
     changed = 0
-    paths = sorted(
-        {
-            path
-            for directory in DIRECTORIES
-            for path in (ROOT / "outputs" / directory).rglob("manifest.json")
-        }
-    )
-    for path in paths:
+    for path in sorted((root / "outputs").rglob("manifest.json")):
         document = json.loads(path.read_text(encoding="utf-8"))
         config = document["config"]
         if config["path"] != "configs/main.yaml":
             continue
         if config["sha256"] != expected:
-            raise ValueError(f"{path}: recorded config differs from the historical snapshot")
-        config["path"] = archived.relative_to(ROOT).as_posix()
+            raise ValueError(f"{path}: recorded config differs from {archived.as_posix()}")
+        config["path"] = archived.as_posix()
         document.setdefault("notes", {})["historical_recipe"] = (
-            "Original commit 84932d9 configuration, preserved byte-for-byte. Only its "
-            "path was relocated after the visibility amendment; output hashes unchanged."
+            f"The configuration this run read, preserved byte-for-byte as "
+            f"{archived.as_posix()}. Only its path was relocated after configs/main.yaml "
+            f"was amended; output hashes unchanged."
         )
         path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
         changed += 1
-    print(f"pinned {changed} historical manifests to the unchanged configuration bytes")
+    print(f"pinned {changed} manifests to {archived.as_posix()}")
     return 0
 
 
@@ -193,7 +190,14 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--snapshot", action="store_true")
     parser.add_argument("--ancillary", action="store_true")
-    parser.add_argument("--pin-historical-config", action="store_true")
+    parser.add_argument(
+        "--pin-historical-config",
+        nargs="?",
+        const=ORIGINAL_CONFIG,
+        type=Path,
+        metavar="ARCHIVED_CONFIG",
+        help="repoint manifests naming configs/main.yaml to this byte-identical copy",
+    )
     parser.add_argument(
         "--file", type=Path, default=ROOT / "outputs/consistent_original_tables.json"
     )
@@ -209,7 +213,7 @@ def main() -> int:
     if args.refresh:
         return refresh(args.file, args.refresh)
     if args.pin_historical_config:
-        return pin_historical_config(args.file)
+        return pin_historical_config(args.file, args.pin_historical_config)
     return verify(args.file)
 
 

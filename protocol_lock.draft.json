@@ -1,9 +1,9 @@
 {
-  "written_at": "2026-09-25T06:48:43-04:00",
+  "written_at": "2026-09-25T07:16:27-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
-    "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe",
+    "sha256": "ecd7b34bc4a83fe62b2f777fa136c9ea34ab00b0f9fa2042dbc1ae45c5f5db8d",
     "document": {
       "name": "main",
       "description": "CodeBench shared judge pool, development terms, five overlays, three loads",
@@ -84,7 +84,10 @@
           "2021-1",
           "2021-2",
           "2022-1",
-          "2022-2"
+          "2022-2",
+          "2023-1",
+          "2023-2",
+          "2024-1"
         ]
       },
       "features": {
@@ -597,6 +600,11 @@
       "path": "configs/visibility_development_20260924.yaml",
       "present": true,
       "sha256": "4f54bd492aa4817afde4d9c994001396a0364d850699be31ef715da4f55ca704"
+    },
+    {
+      "path": "configs/main_frozen_1289aa2.yaml",
+      "present": true,
+      "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe"
     }
   ],
   "code": {
@@ -635,7 +643,7 @@
       },
       {
         "path": "scripts/check_preserved_outputs.py",
-        "sha256": "a9387ead049673a2baf551076db618bc6bc944befdaeb0143e9bbb6c20ac1103"
+        "sha256": "98642bed869a3a13a0c551ebfd43c2d8f22a3922f9d092cbcf743ae847455531"
       },
       {
         "path": "scripts/check_reproduction.py",
@@ -743,7 +751,7 @@
       },
       {
         "path": "src/spjf_guard/data/sealed.py",
-        "sha256": "da39f87f81013e106b565823762c660b84254d2a8b82792ca01dd84119f2a43c"
+        "sha256": "a6bf6ecfb2a98a6fe3d6bb0d257920238c55bdc86c64361fd8f7265411f0e3dd"
       },
       {
         "path": "src/spjf_guard/experiment/__init__.py",
@@ -903,7 +911,7 @@
       },
       {
         "path": "tests/test_consistent_protocol.py",
-        "sha256": "33d79ec2d56bfe7745e3b445ec681ea012c15eec67a58f022b5b17b82873cbc1"
+        "sha256": "85bb2e1b11618aed792f74d0979f5a141c5a03a2bbffd4ecbbbb0838aac69fe1"
       },
       {
         "path": "tests/test_consistent_runner.py",
@@ -1022,7 +1030,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "216b3601ceb3c73595699528c732120764f8e0ff5804391914dc6d4bfb1ea892"
+    "digest": "63bfce62364f394693fa5c4dabb381a64d5ca404e7ed167c0a997b6de45162ec"
   },
   "inputs": {
     "artefacts": [
@@ -1136,7 +1144,10 @@
           "2021-1",
           "2021-2",
           "2022-1",
-          "2022-2"
+          "2022-2",
+          "2023-1",
+          "2023-2",
+          "2024-1"
         ]
       },
       "exact": {

@@ -23,5 +23,11 @@
 | 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/events/2024-1.parquet（3,087,324 字节），未解析内容 | 冻结脚本 | 否 |
 | 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/code_features/2024-1.parquet（1,824,620 字节），未解析内容 | 冻结脚本 | 否 |
 | 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/assessments/2024-1.parquet（11,941 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/build_cache.py` | 封存学期 2023-1, 2023-2, 2024-1 | 699,668 行事件表写到 data/derived/codebench_cache_r4/ev_sealed.parquet | 运行者 | 否 |
+| 2026-09-25 | `scripts/build_overlays.py` | 封存学期 2023-1, 2023-2, 2024-1 | 5 条叠加轨迹写到 data/derived/overlay_traces，每条 31 份拷贝、29 个整周 | 运行者 | 否 |
+| 2026-09-25 | `scripts/fit_scores.py` | 封存学期 2023-1, 2023-2, 2024-1 | 1,058,593 行排序分数写到 data/derived/package_ranking_scores/sealed_scores.parquet | 运行者 | 否 |
+| 2026-09-25 | `scripts/run_main.py` | 封存学期 2023-1, 2023-2, 2024-1 | 运行中断于逐格仿真，未产出汇总表（ValueError: service times must be positive） | 运行者 | 否 |
+| 2026-09-25 | `scripts/run_consistent_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | 手动终止于拟合与核对冻结原 M4 模型（第 4 步报错后停下整个封存运行），未开始仿真，未产出任何表；进程被强制结束，Python 没有写行，此行手写 | 运行者 | 否 |
+| 2026-09-25 | （方法修订，无脚本） | — | 第一次冻结（1289aa2，锁存档 `docs/archive/protocol_lock_1289aa2.json`）下第 4 步载入叠加轨迹时报 `service times must be positive`：配置的零开销剔除名单只列了开发学期。按补充材料写明的规则（开销恰为 0 的块离开仿真轨迹）把三个封存学期加入名单（ADR 0009），重新冻结后从第 1 步重跑。第一次冻结下产出的只有第 1–3 步的缓存、叠加与分数（重跑覆盖），第 4 步无表，第 6 步未开始仿真 | 主线程只看过报错信息与各步日志的末几行（行数、拷贝数、k） | 否：修订由论文已写明的规则决定，不依赖任何封存结果 |
 
 上表是全部记录，冻结前后都一样：冻结之前，行里只有计数、字节数与划分边界，没有对任何封存学期或 ACcoding 封存块算过开销分布、预测或调度结果；冻结之后，封存运行每开一次也各占一行，中断的那一次同样有行，输出栏写明停在哪一步。

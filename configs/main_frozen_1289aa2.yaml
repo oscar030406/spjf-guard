@@ -62,11 +62,8 @@ clock:
     key: cbjitter20260919
     id_columns: [semester, class, user, assessment, exercise, blk_i]
   limit_s: 60.0              # the observed platform time limit; C_cap = min(C, L)
-  # Blocks recorded with cost exactly 0 leave the simulated trace in every term that records
-  # them (from 2020 on). The first freeze (1289aa2) listed only the development terms, so
-  # its sealed stage 4 met zero service times; ADR 0009 adds the sealed terms.
   drop_zero_cost_terms: ["2020-ERE", "2020-1", "2020-2", "2021-1", "2021-2",
-                         "2022-1", "2022-2", "2023-1", "2023-2", "2024-1"]
+                         "2022-1", "2022-2"]
 
 # --- features ------------------------------------------------------------------------ #
 features:

@@ -266,6 +266,30 @@ def test_a_rerun_table_is_guarded_at_its_preserved_copy_and_nowhere_else(tmp_pat
     assert not cpo.check(snapshot, tmp_path)[0]
 
 
+def test_a_manifest_moves_to_an_archived_config_only_when_its_bytes_match(tmp_path):
+    import check_preserved_outputs as cpo
+
+    snapshot = tmp_path / "outputs/tables.json"
+    snapshot.parent.mkdir(parents=True)
+    snapshot.write_text("[]", encoding="utf-8")
+    archived = Path("configs/main_frozen.yaml")
+    (tmp_path / "configs").mkdir()
+    (tmp_path / archived).write_bytes(b"limit_s: 60.0\n")
+    manifest = tmp_path / "outputs/dev_tables/manifest.json"
+    manifest.parent.mkdir()
+    recorded = {"path": "configs/main.yaml", "sha256": cpo.digest(tmp_path / archived)}
+    manifest.write_text(json.dumps({"config": recorded, "outputs": []}), encoding="utf-8")
+
+    cpo.pin_historical_config(snapshot, archived, tmp_path)
+    moved = json.loads(manifest.read_text(encoding="utf-8"))["config"]
+    assert moved == {"path": "configs/main_frozen.yaml", "sha256": recorded["sha256"]}
+
+    other = {"path": "configs/main.yaml", "sha256": "0" * 64}
+    manifest.write_text(json.dumps({"config": other, "outputs": []}), encoding="utf-8")
+    with pytest.raises(ValueError, match="recorded config differs"):
+        cpo.pin_historical_config(snapshot, archived, tmp_path)
+
+
 def test_the_sealed_dry_run_lists_the_exact_stage_and_its_own_outputs(capsys):
     cfg = cfgmod.load(ROOT / "configs" / "main.yaml", expand_environment=False)
     args = SimpleNamespace(

@@ -49,6 +49,7 @@ CONFIG_SNAPSHOT_PATHS = (
     Path("configs") / "main_original_84932d9.yaml",
     Path("configs") / "visibility_development_20260922.yaml",
     Path("configs") / "visibility_development_20260924.yaml",
+    Path("configs") / "main_frozen_1289aa2.yaml",
 )
 """Archived ordinary configurations that the frozen protocol must preserve."""
 

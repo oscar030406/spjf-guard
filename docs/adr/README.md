@@ -15,3 +15,4 @@
 | [0006](0006-single-server-copies-reused-on-the-sealed-pool.md) | 单机轨迹的拷贝数在开发池上选定，封存池沿用并如实报告利用率 |
 | [0007](0007-policy-consistent-score-visibility.md) | 用班次—学期内的 3600 秒保守可见性作为预测排序的主结果 |
 | [0008](0008-online-replay-headline.md) | 预测排序的主结果改为在线重放：到达时只用本次重放已完成的同拷贝结果打分；exact 降为离线证书 |
+| [0009](0009-zero-cost-blocks-leave-every-term.md) | 开销为零的块在封存学期同样离开仿真轨迹；第一次冻结作废，重新冻结 |
