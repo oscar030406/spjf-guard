@@ -8,5 +8,8 @@
 | 2026-09-19 | `prechecks/codebench_audit/counts_reconcile.py` | 三个封存学期的归档（流式） | 逐学期计数：文件数、班级数、学生数候选口径、练习数之和、代码文件数、各去重规则下的块数、重复块计数、作业窗口内计数；封存学期 672 个学生标识中 131 个也在开发学期出现 | 主线程看过计数表 | 否；只用于和官方表对账 |
 | 2026-09-19 | `prechecks/codebench_audit/tail_and_counts.py` | parquet 全部学期 | 全体计数（含封存学期的行数合计）；执行时间分布只算开发学期 | 主线程 | 否 |
 | 2026-09-19 | `prechecks/accoding_v2/accoding_v2.py` | ACcoding 全表的行数与封存块（编号 80%–100%）的首个编号，用来确定划分边界；封存块在任何统计之前被切掉，每个阶段有断言 | 封存块行数 809,330 与起始编号 3246174 | 主线程读了代理报告 | 否 |
+| 2026-09-25 | `prechecks/codebench_service/code_features.py`（经 `local_tools/code_features_to.py` 调用） | 封存学期 2023-1 的归档（流式），每次执行日志的 CODE 段 | `data/codebench/parquet/code_features/2023-1.parquet`：每个提交/测试块的静态代码计数（字符数、行数、关键字与导入计数等 45 列），244,481 行；终端只打印行数与耗时 | 主线程看过行数与耗时，没有看任何特征值或统计 | 否。冻结前补齐 `build_cache` 需要而 09-18 未生成的输入，没有计算开销、预测或调度结果；同一解析器在开发学期 2022-1 上重跑与盘上文件逐列相同 |
+| 2026-09-25 | `prechecks/codebench_service/code_features.py`（经 `local_tools/code_features_to.py` 调用） | 封存学期 2023-2 的归档（流式），每次执行日志的 CODE 段 | `data/codebench/parquet/code_features/2023-2.parquet`：每个提交/测试块的静态代码计数（字符数、行数、关键字与导入计数等 45 列），212,559 行；终端只打印行数与耗时 | 主线程看过行数与耗时，没有看任何特征值或统计 | 否。冻结前补齐 `build_cache` 需要而 09-18 未生成的输入，没有计算开销、预测或调度结果；同一解析器在开发学期 2022-1 上重跑与盘上文件逐列相同 |
+| 2026-09-25 | `prechecks/codebench_service/code_features.py`（经 `local_tools/code_features_to.py` 调用） | 封存学期 2024-1 的归档（流式），每次执行日志的 CODE 段 | `data/codebench/parquet/code_features/2024-1.parquet`：每个提交/测试块的静态代码计数（字符数、行数、关键字与导入计数等 45 列），242,628 行；终端只打印行数与耗时 | 主线程看过行数与耗时，没有看任何特征值或统计 | 否。冻结前补齐 `build_cache` 需要而 09-18 未生成的输入，没有计算开销、预测或调度结果；同一解析器在开发学期 2022-1 上重跑与盘上文件逐列相同 |
 
 上表是全部记录，冻结前后都一样：冻结之前，行里只有计数、字节数与划分边界，没有对任何封存学期或 ACcoding 封存块算过开销分布、预测或调度结果；冻结之后，封存运行每开一次也各占一行，中断的那一次同样有行，输出栏写明停在哪一步。

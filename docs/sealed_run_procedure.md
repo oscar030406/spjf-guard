@@ -45,7 +45,7 @@ export UV="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
 
 第四轮把归档解析也搬进了包：`scripts/parse_archive.py` + `src/spjf_guard/data/archive.py`，从 `data/codebench/archives/cb_dataset_<学期>_v1.81.tar.gz` 流式解析出 `assessments / events / logins / codemirror / users` 五张表。验证方式是在开发学期 **2022-1** 上重解析一遍再与盘上的 parquet 逐列比对：**40 列全等**，11 秒（`scripts/parse_archive.py --semesters 2022-1 --compare`，测试 `tests/test_archive_parse.py`，标了 `slow`）。
 
-**封存那一次不跑这一步**。十八个学期的 parquet 是 2026-09-18 一次性解析出来的（`data/codebench/parquet/_parse_stats.csv` 记着每个学期的行数、字节数与耗时），三个封存学期的六个文件当时就已经在盘上：
+**封存那一次不跑这一步**。更正（2026-09-25 冻结空跑发现）：09-18 解析出的是 events 与 assessments；三个封存学期的 `code_features` 当时没有生成（静态代码特征由 `prechecks/codebench_service/code_features.py` 另算，开发期只算了 2018-1 至 2022-2）。冻结前于 2026-09-25 用同一解析器补齐，只算静态代码计数，台账各记一行；该解析器在开发学期 2022-1 上重跑与盘上文件逐列相同。十八个学期的 events/assessments parquet 是 2026-09-18 一次性解析出来的（`data/codebench/parquet/_parse_stats.csv` 记着每个学期的行数、字节数与耗时），三个封存学期的六个文件当时就已经在盘上：
 
 ```text
 data/codebench/parquet/events/2023-1.parquet        data/codebench/archives/cb_dataset_2023_1_v1.81.tar.gz
