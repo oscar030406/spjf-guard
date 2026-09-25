@@ -39,12 +39,14 @@ $\mathrm{p99}_{\mathrm{dl}}$ than FCFS (Section~\ref{sec:exp_guard}). Where the 
 already below about $3L$, the bound is coarser than the waits it bounds, which is the case
 for four of the six workloads (Section~\ref{sec:exp_cross}).
 
-\textbf{All CodeBench numbers are development results.} We explored the guard family and an
+\textbf{Development results and the sealed terms.} We explored the guard family and an
 early parameter grid on the overlay the tables report, and only then searched the
 pre-stated grids on validation overlays that exclude the evaluation term. The selection is
 thus validation-only within a family that is not. The worst-cell rule is sensitive to which
 cells it sees, and the five overlays are week-shifts of the same class-terms rather than
-independent samples. Moreover, the shape selected on \devnum{15} cells with $k \ge 4$ does
+independent samples. Resampling whole class-terms was run under the original protocol only,
+so the online figures carry intervals from resampled weeks, which do not cover the choice of
+classes and terms. Moreover, the shape selected on \devnum{15} cells with $k \ge 4$ does
 not carry over to a single server (Supplementary Section~S3.14). We therefore do not call
 the parameters validated. The guarantee does not depend on them, and only the benefit does.
 The sealed terms were opened once, after the method, parameters and metric were frozen
@@ -76,7 +78,7 @@ A service that runs many users' jobs on a few shared servers can order its queue
 predicted running time and still guarantee every job a wait no more than $G$ seconds longer
 than in arrival order, whatever the predictions are. This guarantee follows from one
 identity. A job's extra wait relative to FCFS equals the net running time of the jobs that
-overtook it, divided by the number of servers, up to at most $2(k-1)L$. Limiting that
+overtook it, divided by the number of servers, up to at most $(2-2/k)L$. Limiting that
 overtaken work is therefore sufficient for a per-job guarantee and, up to an additive
 $O(kL)$, necessary. The guard enforces such a limit with the exact constant $(3-2/k)L$, and
 its guarantee survives completion reports that arrive up to $\delta$ late at a cost of

@@ -312,7 +312,9 @@ At $k = 1$ the fast server is the queue itself, $V_i^- = W_{\mathrm{FCFS}}[i]$, 
 proposition is Theorem~\ref{thm:guard} again. An operator who guarantees that no job waits
 longer than $D$, over a period whose arrivals fit a bucket of depth $\sigma$, sets
 $B_{\max} = kD - \sigma - (2k-1)L$: the capacity over the deadline, less the burst, less
-$2k-1$ time limits. The clock obeys the same bound with $k\theta$ in place of $B_{\max}$.
+$2k-1$ time limits. The cap is non-negative only when $D \ge \sigma/k + (2 - 1/k)L$, and a
+shorter deadline cannot be guaranteed this way. The clock obeys the same bound with
+$k\theta$ in place of $B_{\max}$.
 Supplementary Section~S4.11 relates the statement to earlier sample-path comparisons with a
 fast server, some of which were shown to be false \cite{wolff1987work}.
 

@@ -14,11 +14,12 @@ configuration.
 The prediction study of Section~\ref{sec:prediction} releases a job's result at the time the
 original platform recorded it. In the simulated queue, a job completes at a time that
 depends on the policy, so a score computed on the original clock may use a result that the
-simulated queue has not produced yet. The \emph{online} protocol removes this in the way a
-deployed scheduler would. It freezes the fitted model and simulates each policy once. When a
+simulated queue has not produced yet. The \emph{online} protocol removes this for each copy
+of a class-term. It freezes the fitted model and simulates each policy once. When a
 job arrives, the model scores it from the results of earlier jobs in the same copy of its
 class-term that this simulation has completed by that moment, and from the recorded results
-of other classes and terms. Supplementary Section~S3.7 defines the
+of other classes and terms, which keep their original times. A score therefore follows the
+simulated queue for its job's own copy and the recorded clock for all others. Supplementary Section~S3.7 defines the
 simulation and checks it against a second implementation.
 
 Four references stand beside the online protocol. The \emph{exact} protocol also freezes
@@ -59,11 +60,13 @@ unless stated otherwise, and its figures are optimistic references.
 \centering
 \small
 \caption{Guard(600) under five protocols for what the scores may use. Online: each score
-uses only the results completed by its job's arrival in the simulated queue (the headline).
+uses the results of its own class-term copy completed by its job's arrival in the simulated
+queue, and the recorded results of other classes and terms (the headline).
 Exact: results withheld and the queue simulated again until no score uses an unavailable
 result; a withheld result stays withheld. Original: the platform's own clock (optimistic).
 Conservative and static withhold more than the queue requires. Gap closed with
-\devnum{95\%} intervals; waits, largest excess and harm in seconds. Fired: share of
+\devnum{95\%} intervals from resampled weeks (Section~\ref{sec:overlay}), which do not cover
+the choice of classes and terms; waits, largest excess and harm in seconds. Fired: share of
 dispatch decisions, weighted by queue length, at which the guard overrode the base policy.
 At $\rho = \devnum{0.5}$, $k = \devnum{7.8}$ is the mean over the five overlays.}
 \label{tab:visibility}
@@ -433,7 +436,7 @@ Log and load & share & AUROC & p99$/L$ & 1 & SPJF-E & max excess & gap closed / 
 CodeBench, $\rho \approx \devnum{1.0}$ & \devnum{0.375} & \devnum{0.936} & \devnum{4.56} & yes & \devnum{0.916} & \devnum{98.4}$L$ & \devnum{0.478} / \devnum{3.82}$L$ \\
 ACcoding, drawn arrivals, $\rho = \devnum{0.8}$\textsuperscript{a} & \devnum{0.122} & \devnum{0.927} & \devnum{0.021} & no & \devnum{0.980} & \devnum{20}$L$ & \devnum{0.974} / \devnum{2.21}$L$ \\
 Azure Functions, $\rho = \devnum{1.0}$ & \devnum{0.443} & \devnum{0.985} & \devnum{4.22} & yes & \devnum{0.858} & \devnum{10.07}$L$ & \devnum{0.710} / \devnum{2.52}$L$ \\
-CI pool A, $k = \devnum{156}$ of \devnum{173} & \devnum{0.034} & \devnum{0.651} & \devnum{1.78} & no & n/a\textsuperscript{b} & \devnum{11.53}$L$ & \devnum{0.735}\textsuperscript{b} / \devnum{2.64}$L$ \\
+CI pool A, $k = \devnum{156}$ of \devnum{173} & \devnum{0.034} & \devnum{0.651} & \devnum{1.78} & no & n/a\textsuperscript{b} & \devnum{11.53}$L$ & \devnum{0.735} (mean)\textsuperscript{b} / \devnum{2.64}$L$ \\
 CI pool B, $k = \devnum{96}$ of \devnum{105} & \devnum{0.052} & \devnum{0.997} & \devnum{0.373} & no & \devnum{0.958} & \devnum{0.34}$L$ & \devnum{0.958} / \devnum{0.34}$L$ \\
 Intel Netbatch, $\rho = \devnum{0.95}$ & \devnum{0.372} & \devnum{0.890} & \devnum{0.136} & no & \devnum{$-4.111$} & \devnum{0.85}$L$ & \devnum{$-4.346$} / \devnum{0.83}$L$ \\
 \bottomrule
@@ -446,8 +449,9 @@ Intel Netbatch, $\rho = \devnum{0.95}$ & \devnum{0.372} & \devnum{0.890} & \devn
 waiting on that platform. Its budget is the largest tested, $B = \devnum{10}L$, and its tail
 share is simulated with $L = \devnum{30.5}$ s (\devnum{0.275} on measured cost at $L =
 \devnum{30.0}$ s, the figure of Section~\ref{sec:intro}).
-\textsuperscript{b} On CI pool A, SJF is itself worse than FCFS at the p99, so the entry is
-the gap in mean wait.
+\textsuperscript{b} On CI pool A, SJF is itself worse than FCFS at the p99, so no p99 gap is
+defined; the guard's entry is the gap in mean wait and is not comparable with the other
+rows.
 \end{minipage}
 \end{adjustwidth}
 \end{table}

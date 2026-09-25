@@ -79,7 +79,10 @@ OULAD \cite{oulad2017} & deadline crowding elsewhere &
 Three features of the main log shape how we use it, and Supplementary Section~S2 gives the
 full audit. Since the timestamp of a run is the moment its result was written, we
 reconstruct the arrival as $a_i = t_i - C_i$ and treat the recorded stamp as
-$\mathrm{done}_i$.
+$\mathrm{done}_i$. This is the time the run started. CodeBench runs each student's code in
+its own container (Section~\ref{sec:overlay}), so we take it as the submission time, and the
+log does not record the delay between the two. Supplementary Section~S3.15 reads the stamp the
+other way, as the time of receipt, for an earlier configuration of the method.
 
 Stamps are whole seconds while durations are in microseconds, which lets a model read the
 fractional part of the gap to the previous record and learn from it something it should
