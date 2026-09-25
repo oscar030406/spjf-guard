@@ -49,5 +49,6 @@
 | 2026-09-25 | `scripts/eval_scores.py` | 封存学期 2023-1, 2023-2, 2024-1 | 24 行预测器指标写到 outputs/sealed_predictor/predictor_metrics.csv | 运行者 | 否 |
 | 2026-09-25 | `scripts/run_main.py` | 封存学期 2023-1, 2023-2, 2024-1 | 435 个策略—格的汇总写到 outputs/sealed_tables（29 条策略 × 3 档负载 × 5 条叠加） | 运行者 | 否 |
 | 2026-09-25 | `scripts/run_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | 策略一致可见性比较写到 outputs/sealed_visibility，耗时 1039 秒 | 运行者 | 否 |
+| 2026-09-25 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 6623 s | 运行者 | 否 |
 
 上表是全部记录，冻结前后都一样：冻结之前，行里只有计数、字节数与划分边界，没有对任何封存学期或 ACcoding 封存块算过开销分布、预测或调度结果；冻结之后，封存运行每开一次也各占一行，中断的那一次同样有行，输出栏写明停在哪一步。
