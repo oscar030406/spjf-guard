@@ -47,8 +47,10 @@ cells it sees, and the five overlays are week-shifts of the same class-terms rat
 independent samples. Moreover, the shape selected on \devnum{15} cells with $k \ge 4$ does
 not carry over to a single server (Supplementary Section~S3.14). We therefore do not call
 the parameters validated. The guarantee does not depend on them, and only the benefit does.
-The sealed terms will be opened once, after the method, parameters and metric are frozen,
-and that evaluation is not part of this paper (Section~\ref{sec:sealed}).
+The sealed terms were opened once, after the method, parameters and metric were frozen
+(Section~\ref{sec:exp_sealed}). They come from the same platform and pass through the same
+constructed queue, so they test the frozen choices on new classes and terms but not on
+another service.
 
 \textbf{Information, costs, and what was not studied.} Only the cells of the main
 comparison were replayed under the online protocol, and the guard's parameters were
@@ -90,16 +92,17 @@ behind a looping one is now a number. At the busiest load of the recorded course
 with every score computed from the results available when its job arrives, a guard with
 $G = \devnum{600}$ s keeps \devnum{0.705} of the reduction in 99th-percentile wait before
 deadlines that SJF achieves over FCFS. Unguarded ordering keeps \devnum{0.864}, and with the
-guard no job exceeds its bound. The scores come from gradient-boosted trees on each
+guard no job exceeds its bound. On three terms held back until the method was frozen, the
+same guard keeps \sealednum{0.894} and unguarded ordering \sealednum{0.936}. The scores come from gradient-boosted trees on each
 student's and each task's history, chosen on queueing outcomes rather than prediction
 accuracy. A heterogeneous graph network over students, tasks, assignments and cohorts does
 not beat these trees on average. Its edges add \devnum{0.006} in rank correlation over all
 \devnum{40{,}844} test submissions and \devnum{0.028} on the \devnum{1{,}092} submissions
 to tasks with fewer than five earlier results, the situation that a newly released
-assignment creates. These are development results on constructed demand. The benefit
-depends on capacity and appeared only for $k = 4$ to $12$, and the sealed terms remain to be
-tested.
-% Sources: outputs/dev_online_visibility/online_comparison.csv, level=2,
+assignment creates. The demand is constructed in both evaluations, and the benefit depends
+on capacity: it appeared only for $k = 4$ to $12$.
+% Sources: outputs/dev_online_visibility/online_comparison.csv and
+% outputs/sealed_online_visibility/online_comparison.csv, level=2,
 % Guard(600)|online and SPJF-E|online, gap_closed;
 % evidence/predictor_neural/out_evaluate_core.txt:1-2 (test rows 40,844; cold-start 1,092).
 

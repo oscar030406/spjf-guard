@@ -127,10 +127,13 @@ This study makes three contributions.
 
 Two qualifications apply throughout. The grading logs record how long each submission
 ran but not how long it waited, so the shared queue in our simulations is our own
-construction (Section~\ref{sec:data}). Every number reported comes from data we used
-while developing the method; three academic terms of the main log are held back unread,
-for one final test after the method and its parameters are frozen
-(Section~\ref{sec:sealed}).
+construction (Section~\ref{sec:data}). Most numbers reported come from data we used while
+developing the method. Three academic terms of the main log were held back unread and
+opened once, after the method and its parameters were frozen. On them the guard keeps
+\sealednum{0.894} of the reduction at peak load, against \devnum{0.705} on the development
+terms (Section~\ref{sec:exp_sealed}).
+% Sources: outputs/sealed_online_visibility/online_comparison.csv and
+% outputs/dev_online_visibility/online_comparison.csv, level=2, Guard(600)|online, gap_closed.
 
 The rest of the paper is organised as follows. Section~\ref{sec:related} reviews related
 work, and Section~\ref{sec:model} states the model and the measures of performance.

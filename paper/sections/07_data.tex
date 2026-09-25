@@ -168,12 +168,15 @@ Three logs have a part that was sealed before the method was designed: three aca
 terms of CodeBench (\devnum{2023-1}, \devnum{2023-2} and \devnum{2024-1}), the last
 \devnum{20\%} of ACcoding's submission identifiers, and OULAD's \devnum{2014} year. Of the
 \devnum{809{,}330} sealed ACcoding rows, only the count and the first identifier have been
-read. No cost, prediction or scheduling result has been computed on any sealed part, and
-every access is recorded in the repository.
+read, and no result has been computed on the sealed parts of ACcoding and OULAD. Every
+access is recorded in the repository.
 
-For this paper we will open only the CodeBench terms, once, after the method, its
-parameters and the primary metric are frozen. That evaluation is not reported here, so every
-number in this paper is a development number.
+We opened the CodeBench terms once, on 25 September 2026, after the method, its parameters
+and the primary metric had been frozen, and Section~\ref{sec:exp_sealed} reports that
+evaluation. Every other number in this paper is a development number. A first attempt at
+the run stopped before producing any result, because a cleaning rule named only the
+development terms; the rule was extended to the sealed terms and the protocol frozen again
+(Supplementary Section~S10).
 
 A rule fixed before the grids were run chooses the guard's shape parameters. Each of the
 three shapes has a grid of parameter points, and the rule keeps the points whose worst harm

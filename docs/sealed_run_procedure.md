@@ -246,6 +246,32 @@ $UV python scripts/check_generated.py     # 看到 outputs/sealed_tables 就自�
 
 第一次冻结（1289aa2）下的封存运行在第 4 步载入叠加轨迹时失败：`clock.drop_zero_cost_terms` 只列了开发学期，封存学期里开销恰为 0 的块留在轨迹里，取整后服务时间为 0。按下节“真发现必须改的 bug，那就是新的一份方法”处理：停下整个运行（第 6 步在拟合冻结模型时手动终止，台账手写一行），名单加入三个封存学期（ADR 0009），旧锁存档为 `docs/archive/protocol_lock_1289aa2.json`，旧配置逐字节存为 `configs/main_frozen_1289aa2.yaml`，重新冻结后十条命令从第 1 步重跑。第一次冻结下没有产出任何汇总表，没有人看过封存结果。
 
+## 四·B 封存运行结束后（2026-09-25）
+
+锁 f6c1b3af 下十条命令全部跑完，北京时间 19:22 开始、22:34 结束（笔记本时钟是美东，日志里是 07:22–10:34）。
+第 4、6、7 步并行（`sealed_run_parallel.sh`：1–3 顺序，然后 4→5、6、7、8→9→10 四条链），每条命令各写一行台账。
+第 7 步 75 个 policy-cell 的抽样审计不一致数全为 0；第 5 步 conservative 证书在封存格上有效；第 6 步每格末轮零违规。
+主运行 315 项、单机 21 项逐 job 界检查违反数为 0。
+
+出表与核对用了三条命令：第三节末尾那条 `--out-dir outputs/consistent_paper_tables` 的出表与核对，
+再加一条默认输出目录的出表（`check_generated.py` 的旧出表那一轮到 `outputs/paper_tables/` 里找封存表）：
+
+```bash
+$UV python scripts/emit_paper_tables.py --sealed-dir outputs/sealed_tables \
+    --sealed-predictor-dir outputs/sealed_predictor --sealed-visibility-dir outputs/sealed_visibility
+$UV python scripts/check_preserved_outputs.py --refresh outputs/paper_tables/numbers.csv
+$UV python scripts/check_preserved_outputs.py --file outputs/selection_v4_tables.json \
+    --refresh outputs/paper_tables/numbers.csv
+```
+
+写进论文的：正文 §8.2 与表 `tab:visibility_sealed`，补充材料 S10 的 `tab:rank_sealed`、`tab:guard_sealed`、
+`tab:adv_sealed`、`tab:k1_sealed`，摘要、引言、§7.3、§9 各一句。`tab:resid_sealed` 没有放：出表把三档负载都印成
+`\rho = 0`（开发表靠 `RESPELT` 改写，封存表的 D1 核对不改写），照抄会误导读者。
+`tab:exact_visibility_sealed`、`tab:same_copy_exposure_sealed`、`tab:visibility_audit_sealed` 的开发版也不在论文里。
+
+写论文时发现三处核对与测试的缺陷，改了五个锁定文件，逐个声明在 `docs/post_run_changes.json`，理由见 ADR 0010。
+`protocol_lock.json` 没动。
+
 ## 五 中途崩了怎么办
 
 规矩是「看结果之前不能改方法」，不是「文件只能打开一次」。所以技术性重跑允许，条件有三条：

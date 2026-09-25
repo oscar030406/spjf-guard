@@ -104,6 +104,85 @@ Load & Protocol & p99$_{\mathrm{dl}}$ & Gap closed & Max excess & Harm & Fired (
 %   Guard(600), all three levels; columns p99_dl_s, gap_closed with gap_closed_lo/hi,
 %   max_excess_s, harm_s, fired_pct.
 
+\subsection{The Sealed Terms}
+\label{sec:exp_sealed}
+
+The three sealed terms of the main log were opened once, on 25 September 2026, after the
+method, its parameters and the primary metric had been frozen (Section~\ref{sec:sealed}).
+The run replayed the frozen configuration and code and selected nothing, and the access
+ledger in the repository lists each of its ten commands and what each produced. The sealed
+terms hold fewer class-terms than the development pool, so each of their five overlays
+superposes 31 copies over 29 weeks. The number of servers follows the rule of
+Section~\ref{sec:load}, and the busiest hours reach utilisations of 0.487, 0.770 and 0.954
+at the three loads.
+% Sources: docs/sealed_access_log.md, rows of 2026-09-25 under lock f6c1b3af
+% (build_overlays.py: 5 overlays, 31 copies each, 29 whole weeks);
+% outputs/sealed_tables/main_table.csv, FCFS rows, rho_realised 0.487, 0.770, 0.954.
+
+At the busiest load, Guard(600) under the online protocol reaches a
+$\mathrm{p99}_{\mathrm{dl}}$ of \sealednum{47.22} s and closes \sealednum{0.894}
+[\sealednum{0.862}, \sealednum{0.912}] of the gap (Table~\ref{tab:visibility_sealed}). It closes
+\sealednum{0.880} under the exact protocol and \sealednum{0.911} under the original one, and
+the five protocols fall in the same order as on the development terms. Unguarded SPJF-E
+closes \sealednum{0.936} [\sealednum{0.909}, \sealednum{0.948}] online. The guard's largest excess over FCFS is
+\sealednum{533.8} s against its promise of 600 s, and its harm is \sealednum{237.5} s,
+where SPJF-E reaches \sealednum{3{,}301.6} s and \sealednum{1{,}602.0} s. No guard in the
+main comparison exceeds its promise at any load (Supplementary Section~S10).
+
+Every policy closes a larger share of the gap on the sealed terms than on the development
+ones, except five of the deliberately corrupted rankings, which do more damage there. The
+sealed run therefore confirms the guarantee and the order of the policies, but not the
+size of the development figures. The running-time predictor ranks the sealed
+terms as well as the development ones, with a pooled AUROC of \sealednum{0.9414} for
+SPJF-E's score against \devnum{0.9360} on the development terms.
+% Sources: outputs/sealed_online_visibility/online_comparison.csv, level=2,
+% Guard(600)|online and SPJF-E|online (p99_dl_s, gap_closed and lo/hi, max_excess_s,
+% harm_s); outputs/sealed_consistent_visibility/exact_comparison.csv, level=2,
+% Guard(600)|exact and Guard(600)|original; outputs/sealed_tables/main_table.csv against
+% outputs/dev_tables/main_table.csv (gap_closed higher on 76 of 81 policy-levels; the five
+% lower are SPJF-reversed, Guard(600)-reversed and Guard(600)-top1short; max_excess_s at
+% most the promise for every Guard and Fixed row); outputs/sealed_predictor and
+% outputs/dev_predictor predictor_metrics.csv, pooled spjf_e auroc.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Guard(600) under the five protocols of Table~\ref{tab:visibility} on the three
+sealed terms, opened once after the method and its parameters were frozen. Columns as in
+Table~\ref{tab:visibility}; $k$ is the mean over the five overlays.}
+\label{tab:visibility_sealed}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrlrrr}
+\toprule
+Load & Protocol & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm & Fired (\%) \\
+\midrule
+\multicolumn{7}{l}{$\rho = \sealednum{0.5}$, $k = \sealednum{8.2}$} \\
+ & online         & \sealednum{3.76} & \sealednum{0.895 [0.872, 0.906]} & \sealednum{260.8} & \sealednum{166.2} & \sealednum{2.59} \\
+ & exact          & \sealednum{3.77} & \sealednum{0.893 [0.871, 0.903]} & \sealednum{256.6} & \sealednum{166.6} & \sealednum{3.29} \\
+ & original       & \sealednum{3.75} & \sealednum{0.897 [0.878, 0.907]} & \sealednum{264.0} & \sealednum{173.9} & \sealednum{4.01} \\
+ & conservative   & \sealednum{4.15} & \sealednum{0.839 [0.816, 0.858]} & \sealednum{264.1} & \sealednum{178.0} & \sealednum{3.40} \\
+ & static         & \sealednum{4.46} & \sealednum{0.792 [0.744, 0.824]} & \sealednum{259.3} & \sealednum{203.3} & \sealednum{0.16} \\
+\midrule
+\multicolumn{7}{l}{$\rho = \sealednum{0.8}$, $k = \sealednum{5.2}$} \\
+ & online         & \sealednum{24.59} & \sealednum{0.884 [0.862, 0.903]} & \sealednum{506.6} & \sealednum{202.6} & \sealednum{6.40} \\
+ & exact          & \sealednum{24.74} & \sealednum{0.880 [0.860, 0.899]} & \sealednum{499.2} & \sealednum{202.6} & \sealednum{4.41} \\
+ & original       & \sealednum{24.22} & \sealednum{0.891 [0.874, 0.908]} & \sealednum{504.6} & \sealednum{189.5} & \sealednum{7.01} \\
+ & conservative   & \sealednum{28.09} & \sealednum{0.811 [0.772, 0.845]} & \sealednum{520.3} & \sealednum{233.2} & \sealednum{7.06} \\
+ & static         & \sealednum{31.70} & \sealednum{0.740 [0.691, 0.786]} & \sealednum{533.7} & \sealednum{255.3} & \sealednum{1.33} \\
+\midrule
+\multicolumn{7}{l}{$\rho = \sealednum{1}$, $k = \sealednum{4.2}$} \\
+ & online         & \sealednum{47.22} & \sealednum{0.894 [0.862, 0.912]} & \sealednum{533.8} & \sealednum{237.5} & \sealednum{7.65} \\
+ & exact          & \sealednum{49.40} & \sealednum{0.880 [0.839, 0.903]} & \sealednum{526.5} & \sealednum{243.1} & \sealednum{5.25} \\
+ & original       & \sealednum{44.33} & \sealednum{0.911 [0.890, 0.926]} & \sealednum{522.9} & \sealednum{293.2} & \sealednum{7.10} \\
+ & conservative   & \sealednum{65.08} & \sealednum{0.784 [0.712, 0.845]} & \sealednum{518.8} & \sealednum{244.6} & \sealednum{8.57} \\
+ & static         & \sealednum{82.66} & \sealednum{0.679 [0.583, 0.783]} & \sealednum{528.6} & \sealednum{332.3} & \sealednum{3.20} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source of Table~\ref{tab:visibility_sealed}:
+%   outputs/consistent_paper_tables/tab_visibility_sealed.tex, emitted with the --sealed-*
+%   options of scripts/emit_paper_tables.py (docs/sealed_run_procedure.md, Section 3).
+
 \subsection{What to Rank By}
 \label{sec:exp_rank}
 

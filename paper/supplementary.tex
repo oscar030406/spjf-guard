@@ -135,9 +135,10 @@ Firefox continuous-integration pools collected from Mozilla's public APIs
 queueing, feedback and LPC-EGEE results are Section~S6. Additional theory is Section~S7;
 the extremal constructions and remaining proofs behind Section~\ref*{M-sec:theory} of the manuscript,
 which carries no appendix of its own, are Section~S8; and the per-paper detail behind
-Section~\ref*{M-sec:related} of the manuscript is Section~S9. Every empirical figure quoted here is a development
-figure in the sense of Section~\ref*{M-sec:exp_prov} of the manuscript: nothing in this file comes from a
-sealed part of any trace, and nothing here was recomputed for it.
+Section~\ref*{M-sec:related} of the manuscript is Section~S9; and the tables of the sealed run are
+Section~S10. Outside Section~S10, every empirical figure quoted here is a development figure in
+the sense of Section~\ref*{M-sec:exp_prov} of the manuscript: nothing in those sections comes
+from a sealed part of any trace, and nothing there was recomputed for it.
 
 %=================================================================
 \section{Cost Prediction}
@@ -2715,15 +2716,14 @@ shape at $G = \devnum{1200}$ s, where it reaches worst-cell gap \devnum{0.7275} 
 harm \devnum{152.2} s against \devnum{482.2} s for the best age-relative point. And a worst-cell
 rule can be decided by a single cell: dropping the one validation cell that decides
 the $G = \devnum{600}$ choice moves that choice to $B_0 = \devnum{15}k/4$ s, $\eta =
-\devnum{0.90}$, with worst-cell gap \devnum{0.7237}. The sealed terms will be opened
-once after the protocol freeze and reported in the same multiserver tables as an
-additional column, with the parameters unchanged. The current frozen-run procedure
-also produces a separate single-server trace and its tables, per-term and pooled
-predictor metrics, conservative/static visibility tables and exposure/lag audits,
-and a separate policy-specific exact-visibility stage. It does not produce the
-refit-control and GRU rows of Table~\ref{tab:s_rank}, the other predictor-family
-comparisons, cross-domain sealed results, or the earlier trace-construction
-sensitivities. No sealed result is printed here.
+\devnum{0.90}$, with worst-cell gap \devnum{0.7237}. The sealed terms were opened
+once after the protocol freeze, with the parameters unchanged, and Section~S10 gives
+their tables. The frozen-run procedure also produced a separate single-server trace
+and its tables, per-term and pooled predictor metrics, conservative/static visibility
+tables and exposure/lag audits, the policy-specific exact-visibility stage and the
+online replay. It does not produce the refit-control and GRU rows of
+Table~\ref{tab:s_rank}, the other predictor-family comparisons, cross-domain sealed
+results, or the earlier trace-construction sensitivities.
 % Source of the paragraph above: protocol_lock.draft.json (grids, rule, selected points);
 %   docs/repo_build_status.md third pass, sections 1 and 3 (the three grids at comparable
 %   density, the nine family winners, the integer-microsecond kernel and the deterministic
@@ -4403,6 +4403,212 @@ construction.
 %   -language result; bibliographic verification is recorded in the x-verified fields of
 %   the cited entries.
 
+%=================================================================
+\section{The Sealed Terms}
+\label{sec:s_sealed}
+
+This section gives the tables of the sealed run (Section~\ref*{M-sec:exp_sealed} of the
+manuscript) that the manuscript does not print. Every figure in them comes from the three
+sealed terms of the main log, 2023-1, 2023-2 and 2024-1, which were opened once on 25
+September 2026 under the frozen protocol. A first attempt at the run stopped at its fourth
+command, before any table was written. The rule that removes records with zero cost from
+the simulated trace listed the development terms by name and not the sealed ones, so a
+service time of zero reached the simulator. The rule was extended to the sealed terms, the
+protocol was frozen again, and the run was repeated from its first command. The access
+ledger in the repository records both attempts.
+
+The tables use the original protocol, as their development counterparts do; the five
+protocols for Guard(600) are in Table~\ref*{M-tab:visibility_sealed} of the manuscript.
+Every Guard and Fixed row stays within its promise, and the per-job check found no
+violation among the jobs it examined. The single-server trace reuses the 321 copies chosen
+on the development pool, because choosing copies by the utilisation they produce would be
+a design decision taken on sealed data. On the sealed terms those copies load the server to
+a busy-hour utilisation of 2.26, an overloaded queue in which FCFS reaches a
+$\mathrm{p99}_{\mathrm{dl}}$ of 3,692.9 s. No guard closes more than 0.041 of the gap there
+(Table~\ref{tab:k1_sealed}), and the identity of Theorem~1 holds with zero residual on every
+job.
+% Sources: docs/sealed_access_log.md (rows of 2026-09-25, both freezes);
+% docs/adr/0009-zero-cost-blocks-leave-every-term.md; outputs/sealed_tables/bound_checks.csv
+% and k1/bound_checks.csv (violations 0 in every row); docs/sealed_access_log.md row of
+% build_overlays.py --single-server (321 copies reused, busy-hour utilisation 2.2614);
+% outputs/sealed_tables/k1/main_table.csv (FCFS p99_dl_s 3692.94, largest Guard/Fixed
+% gap_closed 0.041); outputs/sealed_tables/k1/identity_residuals.csv (ratio_to_bound 0).
+
+\begin{table}[htbp]
+\centering
+\caption{Sealed terms: ranking scores at the three loads under the original protocol, five overlays. Columns as in Table~\ref{tab:s_rank}.}
+\label{tab:rank_sealed}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrlrr}
+\toprule
+Load & Policy & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Mean \\
+\midrule
+$\rho = \sealednum{0.5}$, $k = \sealednum{8.2}$
+ & FCFS                 & \sealednum{9.85} & \sealednum{0.000 [0.000, 0.000]} & \sealednum{0.0 [0.0, 0.0]} & \sealednum{0.290} \\
+ & SJF                  & \sealednum{3.03} & \sealednum{1.000 [1.000, 1.000]} & \sealednum{69.8 [65.4, 72.9]} & \sealednum{0.162} \\
+ & SPJF-log             & \sealednum{3.78} & \sealednum{0.894 [0.870, 0.910]} & \sealednum{62.4 [57.3, 66.2]} & \sealednum{0.209} \\
+ & SPJF-E               & \sealednum{3.74} & \sealednum{0.898 [0.879, 0.909]} & \sealednum{62.7 [57.9, 66.2]} & \sealednum{0.216} \\
+\midrule
+$\rho = \sealednum{0.8}$, $k = \sealednum{5.2}$
+ & FCFS                 & \sealednum{67.88} & \sealednum{0.000 [0.000, 0.000]} & \sealednum{0.0 [0.0, 0.0]} & \sealednum{2.012} \\
+ & SJF                  & \sealednum{18.91} & \sealednum{1.000 [1.000, 1.000]} & \sealednum{71.9 [69.0, 74.0]} & \sealednum{0.763} \\
+ & SPJF-log             & \sealednum{24.82} & \sealednum{0.879 [0.854, 0.901]} & \sealednum{63.2 [59.4, 66.1]} & \sealednum{1.036} \\
+ & SPJF-E               & \sealednum{23.64} & \sealednum{0.903 [0.883, 0.919]} & \sealednum{64.9 [61.2, 67.7]} & \sealednum{1.052} \\
+\midrule
+$\rho = \sealednum{1}$, $k = \sealednum{4.2}$
+ & FCFS                 & \sealednum{187.20} & \sealednum{0.000 [0.000, 0.000]} & \sealednum{0.0 [0.0, 0.0]} & \sealednum{5.642} \\
+ & SJF                  & \sealednum{30.46} & \sealednum{1.000 [1.000, 1.000]} & \sealednum{83.2 [78.6, 85.4]} & \sealednum{1.445} \\
+ & SPJF-log             & \sealednum{41.82} & \sealednum{0.925 [0.898, 0.941]} & \sealednum{77.0 [70.7, 80.0]} & \sealednum{2.085} \\
+ & SPJF-E               & \sealednum{38.95} & \sealednum{0.944 [0.923, 0.955]} & \sealednum{78.5 [72.7, 81.4]} & \sealednum{2.101} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: outputs/consistent_paper_tables/tab_rank_sealed.tex (emit_paper_tables.py
+%   with the --sealed-* options); every sealed figure is the emitted one.
+
+\begin{table}[htbp]
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\caption{Sealed terms: the guard at three promises, its three budget shapes, and the comparators, under the original protocol. Columns as in Table~\ref{tab:s_guard}; excess and harm are the worst over the five overlays, the rest are means.}
+\label{tab:guard_sealed}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrlrrrr}
+\toprule
+Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max exc. & Harm & Fired (\%) \\
+\midrule
+\multicolumn{9}{l}{$\rho = \sealednum{0.5}$, $k = \sealednum{8.2}$; FCFS p99$_{\mathrm{dl}}$ = \sealednum{9.85} s, SPJF-E \sealednum{3.74} s with max excess \sealednum{364.7} s} \\
+ & Guard($\sealednum{300}$)      & \sealednum{300} & \sealednum{3.88} & \sealednum{0.878 [0.863, 0.890]} & \sealednum{61.3} & \sealednum{132.4} & \sealednum{95.4} & \sealednum{10.91} \\
+ & Guard-fixed($\sealednum{300}$) & \sealednum{300} & \sealednum{3.81} & \sealednum{0.888 [0.872, 0.899]} & \sealednum{62.0} & \sealednum{117.4} & \sealednum{117.4} & \sealednum{9.76} \\
+ & Guard-age($\sealednum{300}$)  & \sealednum{300} & \sealednum{3.88} & \sealednum{0.878 [0.863, 0.890]} & \sealednum{61.3} & \sealednum{132.4} & \sealednum{95.4} & \sealednum{10.91} \\
+ & Guard-queue($\sealednum{300}$) & \sealednum{300} & \sealednum{3.80} & \sealednum{0.888 [0.870, 0.901]} & \sealednum{62.0} & \sealednum{137.3} & \sealednum{94.6} & \sealednum{7.38} \\
+ & Fixed($\sealednum{300}$)      & \sealednum{300} & \sealednum{3.75} & \sealednum{0.896 [0.877, 0.906]} & \sealednum{62.5} & \sealednum{157.9} & \sealednum{157.9} & \sealednum{7.37} \\
+ & Skip($\sealednum{300}$), $\kappa=29$ & \sealednum{300} & \sealednum{7.49} & \sealednum{0.359 [0.294, 0.445]} & \sealednum{25.1} & \sealednum{60.3} & \sealednum{60.2} & \sealednum{42.88} \\
+ & Guard($\sealednum{600}$)      & \sealednum{600} & \sealednum{3.75} & \sealednum{0.897 [0.878, 0.907]} & \sealednum{62.6} & \sealednum{264.0} & \sealednum{173.9} & \sealednum{4.01} \\
+ & Guard-fixed($\sealednum{600}$) & \sealednum{600} & \sealednum{3.74} & \sealednum{0.898 [0.879, 0.909]} & \sealednum{62.7} & \sealednum{247.5} & \sealednum{241.1} & \sealednum{1.04} \\
+ & Guard-age($\sealednum{600}$)  & \sealednum{600} & \sealednum{3.75} & \sealednum{0.897 [0.878, 0.907]} & \sealednum{62.6} & \sealednum{264.0} & \sealednum{173.9} & \sealednum{4.01} \\
+ & Guard-queue($\sealednum{600}$) & \sealednum{600} & \sealednum{3.76} & \sealednum{0.895 [0.876, 0.907]} & \sealednum{62.5} & \sealednum{346.3} & \sealednum{124.6} & \sealednum{0.09} \\
+ & Fixed($\sealednum{600}$)      & \sealednum{600} & \sealednum{3.74} & \sealednum{0.898 [0.879, 0.909]} & \sealednum{62.7} & \sealednum{364.7} & \sealednum{241.1} & \sealednum{0.00} \\
+ & Skip($\sealednum{600}$), $\kappa=74$ & \sealednum{600} & \sealednum{5.84} & \sealednum{0.599 [0.543, 0.673]} & \sealednum{41.9} & \sealednum{62.8} & \sealednum{62.8} & \sealednum{36.05} \\
+ & Guard($\sealednum{1200}$)     & \sealednum{1200} & \sealednum{3.76} & \sealednum{0.895 [0.876, 0.907]} & \sealednum{62.5} & \sealednum{346.3} & \sealednum{124.6} & \sealednum{0.09} \\
+ & Guard-fixed($\sealednum{1200}$) & \sealednum{1200} & \sealednum{3.74} & \sealednum{0.898 [0.879, 0.909]} & \sealednum{62.7} & \sealednum{364.7} & \sealednum{241.1} & \sealednum{0.00} \\
+ & Guard-age($\sealednum{1200}$) & \sealednum{1200} & \sealednum{3.74} & \sealednum{0.898 [0.879, 0.909]} & \sealednum{62.7} & \sealednum{364.7} & \sealednum{241.1} & \sealednum{0.00} \\
+ & Guard-queue($\sealednum{1200}$) & \sealednum{1200} & \sealednum{3.76} & \sealednum{0.895 [0.876, 0.907]} & \sealednum{62.5} & \sealednum{346.3} & \sealednum{124.6} & \sealednum{0.09} \\
+ & Fixed($\sealednum{1200}$)     & \sealednum{1200} & \sealednum{3.74} & \sealednum{0.898 [0.879, 0.909]} & \sealednum{62.7} & \sealednum{364.7} & \sealednum{241.1} & \sealednum{0.00} \\
+ & Skip($\sealednum{1200}$), $\kappa=164$ & \sealednum{1200} & \sealednum{4.64} & \sealednum{0.770 [0.741, 0.804]} & \sealednum{53.8} & \sealednum{82.6} & \sealednum{78.2} & \sealednum{29.36} \\
+\midrule
+\multicolumn{9}{l}{$\rho = \sealednum{0.8}$, $k = \sealednum{5.2}$; FCFS p99$_{\mathrm{dl}}$ = \sealednum{67.88} s, SPJF-E \sealednum{23.64} s with max excess \sealednum{1{,}613.4} s} \\
+ & Guard($\sealednum{300}$)      & \sealednum{300} & \sealednum{27.88} & \sealednum{0.817 [0.794, 0.844]} & \sealednum{58.8} & \sealednum{221.4} & \sealednum{151.1} & \sealednum{19.74} \\
+ & Guard-fixed($\sealednum{300}$) & \sealednum{300} & \sealednum{28.61} & \sealednum{0.801 [0.779, 0.832]} & \sealednum{57.6} & \sealednum{150.9} & \sealednum{130.3} & \sealednum{22.66} \\
+ & Guard-age($\sealednum{300}$)  & \sealednum{300} & \sealednum{27.88} & \sealednum{0.817 [0.794, 0.844]} & \sealednum{58.8} & \sealednum{221.4} & \sealednum{151.1} & \sealednum{19.74} \\
+ & Guard-queue($\sealednum{300}$) & \sealednum{300} & \sealednum{27.24} & \sealednum{0.830 [0.812, 0.855]} & \sealednum{59.7} & \sealednum{221.4} & \sealednum{105.6} & \sealednum{17.23} \\
+ & Fixed($\sealednum{300}$)      & \sealednum{300} & \sealednum{25.53} & \sealednum{0.864 [0.850, 0.884]} & \sealednum{62.1} & \sealednum{221.4} & \sealednum{167.9} & \sealednum{17.31} \\
+ & Skip($\sealednum{300}$), $\kappa=20$ & \sealednum{300} & \sealednum{66.18} & \sealednum{0.038 [0.019, 0.066]} & \sealednum{2.7} & \sealednum{96.3} & \sealednum{61.6} & \sealednum{76.17} \\
+ & Guard($\sealednum{600}$)      & \sealednum{600} & \sealednum{24.22} & \sealednum{0.891 [0.874, 0.908]} & \sealednum{64.1} & \sealednum{504.6} & \sealednum{189.5} & \sealednum{7.01} \\
+ & Guard-fixed($\sealednum{600}$) & \sealednum{600} & \sealednum{24.43} & \sealednum{0.887 [0.871, 0.903]} & \sealednum{63.8} & \sealednum{311.5} & \sealednum{262.9} & \sealednum{7.40} \\
+ & Guard-age($\sealednum{600}$)  & \sealednum{600} & \sealednum{24.22} & \sealednum{0.891 [0.874, 0.908]} & \sealednum{64.1} & \sealednum{504.6} & \sealednum{189.5} & \sealednum{7.01} \\
+ & Guard-queue($\sealednum{600}$) & \sealednum{600} & \sealednum{24.59} & \sealednum{0.884 [0.865, 0.902]} & \sealednum{63.5} & \sealednum{494.9} & \sealednum{166.1} & \sealednum{0.63} \\
+ & Fixed($\sealednum{600}$)      & \sealednum{600} & \sealednum{24.01} & \sealednum{0.895 [0.878, 0.912]} & \sealednum{64.4} & \sealednum{491.3} & \sealednum{464.5} & \sealednum{0.43} \\
+ & Skip($\sealednum{600}$), $\kappa=50$ & \sealednum{600} & \sealednum{63.69} & \sealednum{0.093 [0.053, 0.157]} & \sealednum{6.6} & \sealednum{97.3} & \sealednum{78.1} & \sealednum{69.24} \\
+ & Guard($\sealednum{1200}$)     & \sealednum{1200} & \sealednum{24.42} & \sealednum{0.888 [0.868, 0.905]} & \sealednum{63.8} & \sealednum{1064.0} & \sealednum{166.1} & \sealednum{0.31} \\
+ & Guard-fixed($\sealednum{1200}$) & \sealednum{1200} & \sealednum{23.91} & \sealednum{0.898 [0.879, 0.914]} & \sealednum{64.5} & \sealednum{564.4} & \sealednum{517.3} & \sealednum{0.17} \\
+ & Guard-age($\sealednum{1200}$) & \sealednum{1200} & \sealednum{23.84} & \sealednum{0.899 [0.881, 0.915]} & \sealednum{64.6} & \sealednum{1062.0} & \sealednum{384.7} & \sealednum{0.30} \\
+ & Guard-queue($\sealednum{1200}$) & \sealednum{1200} & \sealednum{24.42} & \sealednum{0.888 [0.868, 0.905]} & \sealednum{63.8} & \sealednum{1064.0} & \sealednum{166.1} & \sealednum{0.31} \\
+ & Fixed($\sealednum{1200}$)     & \sealednum{1200} & \sealednum{23.74} & \sealednum{0.901 [0.882, 0.917]} & \sealednum{64.8} & \sealednum{1092.5} & \sealednum{1045.3} & \sealednum{0.01} \\
+ & Skip($\sealednum{1200}$), $\kappa=110$ & \sealednum{1200} & \sealednum{59.38} & \sealednum{0.186 [0.125, 0.306]} & \sealednum{13.3} & \sealednum{97.3} & \sealednum{81.7} & \sealednum{60.50} \\
+\midrule
+\multicolumn{9}{l}{$\rho = \sealednum{1}$, $k = \sealednum{4.2}$; FCFS p99$_{\mathrm{dl}}$ = \sealednum{187.20} s, SPJF-E \sealednum{38.95} s with max excess \sealednum{3{,}202.5} s} \\
+ & Guard($\sealednum{300}$)      & \sealednum{300} & \sealednum{75.96} & \sealednum{0.725 [0.620, 0.803]} & \sealednum{60.2} & \sealednum{229.7} & \sealednum{149.1} & \sealednum{21.58} \\
+ & Guard-fixed($\sealednum{300}$) & \sealednum{300} & \sealednum{106.11} & \sealednum{0.552 [0.377, 0.716]} & \sealednum{45.6} & \sealednum{150.9} & \sealednum{148.1} & \sealednum{28.95} \\
+ & Guard-age($\sealednum{300}$)  & \sealednum{300} & \sealednum{75.96} & \sealednum{0.725 [0.620, 0.803]} & \sealednum{60.2} & \sealednum{229.7} & \sealednum{149.1} & \sealednum{21.58} \\
+ & Guard-queue($\sealednum{300}$) & \sealednum{300} & \sealednum{76.22} & \sealednum{0.726 [0.608, 0.808]} & \sealednum{60.2} & \sealednum{229.7} & \sealednum{90.7} & \sealednum{20.07} \\
+ & Fixed($\sealednum{300}$)      & \sealednum{300} & \sealednum{68.00} & \sealednum{0.778 [0.639, 0.850]} & \sealednum{64.6} & \sealednum{229.7} & \sealednum{207.1} & \sealednum{20.21} \\
+ & Skip($\sealednum{300}$), $\kappa=17$ & \sealednum{300} & \sealednum{186.55} & \sealednum{0.005 [0.001, 0.018]} & \sealednum{0.4} & \sealednum{94.4} & \sealednum{61.4} & \sealednum{87.57} \\
+ & Guard($\sealednum{600}$)      & \sealednum{600} & \sealednum{44.33} & \sealednum{0.911 [0.890, 0.926]} & \sealednum{75.8} & \sealednum{522.9} & \sealednum{293.2} & \sealednum{7.10} \\
+ & Guard-fixed($\sealednum{600}$) & \sealednum{600} & \sealednum{52.58} & \sealednum{0.865 [0.797, 0.894]} & \sealednum{71.9} & \sealednum{321.9} & \sealednum{289.1} & \sealednum{11.04} \\
+ & Guard-age($\sealednum{600}$)  & \sealednum{600} & \sealednum{44.33} & \sealednum{0.911 [0.890, 0.926]} & \sealednum{75.8} & \sealednum{522.9} & \sealednum{293.2} & \sealednum{7.10} \\
+ & Guard-queue($\sealednum{600}$) & \sealednum{600} & \sealednum{45.38} & \sealednum{0.904 [0.884, 0.919]} & \sealednum{75.2} & \sealednum{522.9} & \sealednum{157.0} & \sealednum{2.26} \\
+ & Fixed($\sealednum{600}$)      & \sealednum{600} & \sealednum{43.38} & \sealednum{0.917 [0.899, 0.930]} & \sealednum{76.3} & \sealednum{522.9} & \sealednum{475.0} & \sealednum{2.05} \\
+ & Skip($\sealednum{600}$), $\kappa=42$ & \sealednum{600} & \sealednum{185.51} & \sealednum{0.014 [0.004, 0.046]} & \sealednum{1.2} & \sealednum{107.7} & \sealednum{65.6} & \sealednum{82.92} \\
+ & Guard($\sealednum{1200}$)     & \sealednum{1200} & \sealednum{43.19} & \sealednum{0.918 [0.898, 0.931]} & \sealednum{76.3} & \sealednum{1111.7} & \sealednum{157.0} & \sealednum{0.61} \\
+ & Guard-fixed($\sealednum{1200}$) & \sealednum{1200} & \sealednum{42.88} & \sealednum{0.921 [0.903, 0.933]} & \sealednum{76.6} & \sealednum{583.9} & \sealednum{526.4} & \sealednum{1.28} \\
+ & Guard-age($\sealednum{1200}$) & \sealednum{1200} & \sealednum{40.53} & \sealednum{0.935 [0.916, 0.945]} & \sealednum{77.7} & \sealednum{1105.4} & \sealednum{408.6} & \sealednum{0.74} \\
+ & Guard-queue($\sealednum{1200}$) & \sealednum{1200} & \sealednum{43.19} & \sealednum{0.918 [0.898, 0.931]} & \sealednum{76.3} & \sealednum{1111.7} & \sealednum{157.0} & \sealednum{0.61} \\
+ & Fixed($\sealednum{1200}$)     & \sealednum{1200} & \sealednum{40.45} & \sealednum{0.935 [0.917, 0.946]} & \sealednum{77.8} & \sealednum{1111.6} & \sealednum{1061.3} & \sealednum{0.13} \\
+ & Skip($\sealednum{1200}$), $\kappa=92$ & \sealednum{1200} & \sealednum{183.31} & \sealednum{0.033 [0.011, 0.097]} & \sealednum{2.7} & \sealednum{167.8} & \sealednum{103.7} & \sealednum{76.56} \\
+\bottomrule
+\end{tabular}
+\end{adjustwidth}
+\end{table}
+% Source: outputs/consistent_paper_tables/tab_guard_sealed.tex (emit_paper_tables.py
+%   with the --sealed-* options); every sealed figure is the emitted one.
+
+\begin{table}[htbp]
+\centering
+\caption{Sealed terms: deliberately corrupted scores, unguarded and under Guard(600). Columns as in Table~\ref{tab:s_adv}.}
+\label{tab:adv_sealed}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{p99$_{\mathrm{dl}}$} & \multicolumn{2}{c}{Max excess} & Harm \\
+Load & Score & unguarded & guarded & unguarded & guarded & guarded \\
+\midrule
+$\rho = \sealednum{0.5}$ & reversed             & \sealednum{12.15} & \sealednum{12.21} & \sealednum{366.8} & \sealednum{263.3} & \sealednum{248.8} \\
+                      & random               & \sealednum{4.36} & \sealednum{4.37} & \sealednum{363.2} & \sealednum{263.5} & \sealednum{256.0} \\
+                      & longest as shortest  & \sealednum{8.89} & \sealednum{8.91} & \sealednum{364.7} & \sealednum{264.0} & \sealednum{242.1} \\
+$\rho = \sealednum{0.8}$ & reversed             & \sealednum{143.00} & \sealednum{150.56} & \sealednum{1861.7} & \sealednum{530.7} & \sealednum{337.6} \\
+                      & random               & \sealednum{40.72} & \sealednum{42.61} & \sealednum{1850.1} & \sealednum{521.6} & \sealednum{343.4} \\
+                      & longest as shortest  & \sealednum{116.03} & \sealednum{125.35} & \sealednum{1790.3} & \sealednum{525.9} & \sealednum{344.7} \\
+$\rho = \sealednum{1}$ & reversed             & \sealednum{437.89} & \sealednum{462.06} & \sealednum{3525.0} & \sealednum{537.7} & \sealednum{318.7} \\
+                      & random               & \sealednum{120.71} & \sealednum{170.55} & \sealednum{3520.5} & \sealednum{522.4} & \sealednum{331.9} \\
+                      & longest as shortest  & \sealednum{342.53} & \sealednum{418.60} & \sealednum{3426.4} & \sealednum{528.3} & \sealednum{296.8} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: outputs/consistent_paper_tables/tab_adv_sealed.tex (emit_paper_tables.py
+%   with the --sealed-* options); every sealed figure is the emitted one.
+
+\begin{table}[htbp]
+\centering
+\caption{Sealed terms: the single server, with the 321 copies chosen on the development pool and a busy-hour utilisation of 2.26. Columns as in Table~\ref{tab:s_k1}.}
+\label{tab:k1_sealed}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrlrrr}
+\toprule
+Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm & Fired (\%) \\
+\midrule
+FCFS                         & --- & \sealednum{3692.94} & \sealednum{0.000 [0.000, 0.000]} & \sealednum{0.0} & \sealednum{0.0} & \sealednum{100.00} \\
+SJF                          & --- & \sealednum{67.16} & \sealednum{1.000 [1.000, 1.000]} & \sealednum{21075.7} & \sealednum{4899.8} & \sealednum{0.00} \\
+SPJF-E                       & --- & \sealednum{660.71} & \sealednum{0.836 [0.696, 0.921]} & \sealednum{21429.6} & \sealednum{5766.5} & \sealednum{0.00} \\
+Guard($\sealednum{300}$)        & \sealednum{300} & \sealednum{3627.74} & \sealednum{0.018 [-0.061, 0.082]} & \sealednum{296.6} & \sealednum{75.9} & \sealednum{62.06} \\
+Guard-fixed($\sealednum{300}$)  & \sealednum{300} & \sealednum{3678.73} & \sealednum{0.004 [-0.022, 0.036]} & \sealednum{140.9} & \sealednum{122.5} & \sealednum{80.21} \\
+Guard-age($\sealednum{300}$)    & \sealednum{300} & \sealednum{3627.74} & \sealednum{0.018 [-0.061, 0.082]} & \sealednum{296.6} & \sealednum{75.9} & \sealednum{62.06} \\
+Guard-queue($\sealednum{300}$)  & \sealednum{300} & \sealednum{3624.59} & \sealednum{0.019 [-0.061, 0.082]} & \sealednum{296.6} & \sealednum{75.9} & \sealednum{61.31} \\
+Fixed($\sealednum{300}$)        & \sealednum{300} & \sealednum{3627.74} & \sealednum{0.018 [-0.061, 0.082]} & \sealednum{298.0} & \sealednum{272.6} & \sealednum{61.91} \\
+Skip($\sealednum{300}$), $\kappa=5$ & \sealednum{300} & \sealednum{3694.63} & \sealednum{-0.000 [-0.001, -0.000]} & \sealednum{175.6} & \sealednum{53.6} & \sealednum{98.73} \\
+Guard($\sealednum{600}$)        & \sealednum{600} & \sealednum{3543.41} & \sealednum{0.041 [-0.121, 0.149]} & \sealednum{596.1} & \sealednum{149.6} & \sealednum{40.87} \\
+Guard-fixed($\sealednum{600}$)  & \sealednum{600} & \sealednum{3624.07} & \sealednum{0.019 [-0.062, 0.082]} & \sealednum{302.6} & \sealednum{272.6} & \sealednum{61.42} \\
+Guard-age($\sealednum{600}$)    & \sealednum{600} & \sealednum{3543.41} & \sealednum{0.041 [-0.121, 0.149]} & \sealednum{596.1} & \sealednum{149.6} & \sealednum{40.87} \\
+Guard-queue($\sealednum{600}$)  & \sealednum{600} & \sealednum{3545.95} & \sealednum{0.041 [-0.121, 0.147]} & \sealednum{599.3} & \sealednum{75.9} & \sealednum{40.36} \\
+Fixed($\sealednum{600}$)        & \sealednum{600} & \sealednum{3544.86} & \sealednum{0.041 [-0.121, 0.147]} & \sealednum{596.1} & \sealednum{555.0} & \sealednum{40.69} \\
+Skip($\sealednum{600}$), $\kappa=10$ & \sealednum{600} & \sealednum{3693.38} & \sealednum{-0.000 [-0.001, 0.000]} & \sealednum{235.4} & \sealednum{54.1} & \sealednum{98.16} \\
+Guard($\sealednum{1200}$)       & \sealednum{1200} & \sealednum{3558.60} & \sealednum{0.037 [-0.202, 0.257]} & \sealednum{1194.4} & \sealednum{75.9} & \sealednum{20.14} \\
+Guard-fixed($\sealednum{1200}$) & \sealednum{1200} & \sealednum{3571.32} & \sealednum{0.034 [-0.114, 0.145]} & \sealednum{567.0} & \sealednum{507.9} & \sealednum{42.49} \\
+Guard-age($\sealednum{1200}$)   & \sealednum{1200} & \sealednum{3555.55} & \sealednum{0.038 [-0.204, 0.263]} & \sealednum{1194.4} & \sealednum{376.0} & \sealednum{20.95} \\
+Guard-queue($\sealednum{1200}$) & \sealednum{1200} & \sealednum{3558.60} & \sealednum{0.037 [-0.202, 0.257]} & \sealednum{1194.4} & \sealednum{75.9} & \sealednum{20.14} \\
+Fixed($\sealednum{1200}$)       & \sealednum{1200} & \sealednum{3559.78} & \sealednum{0.037 [-0.202, 0.270]} & \sealednum{1196.7} & \sealednum{1140.3} & \sealednum{21.05} \\
+Skip($\sealednum{1200}$), $\kappa=20$ & \sealednum{1200} & \sealednum{3692.13} & \sealednum{0.000 [-0.001, 0.001]} & \sealednum{307.8} & \sealednum{54.1} & \sealednum{97.21} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: outputs/consistent_paper_tables/tab_k1_sealed.tex (emit_paper_tables.py
+%   with the --sealed-* options); every sealed figure is the emitted one.
+
+% Flush the sealed tables before the reference list.
+\clearpage
 %=================================================================
 \begin{adjustwidth}{-\extralength}{0cm}
 \reftitle{References}
