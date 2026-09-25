@@ -848,7 +848,7 @@ def check_sourced(paper: Path, package_dir: Path, cache: dict) -> list[str]:
     moved = 0
     for row in rows:
         home = SECTION_FILE.get(row["section"], "")
-        found = _where_printed(texts, (home,), "\\devnum{" + row["value"] + "}")
+        found = _where_printed(texts, (home,), _printed_as(row))
         if found is None:
             (dropped if row["key"] in COINCIDENCE else gone).append(row)
         elif found != home:
@@ -861,10 +861,17 @@ def check_sourced(paper: Path, package_dir: Path, cache: dict) -> list[str]:
     )
     for row in dropped:
         print(f"   dropped  {row['key']}: {row['value']} -- {COINCIDENCE[row['key']]}")
-    return [
-        f"{r['key']}: \\devnum{{{r['value']}}} (package source {r['produced_by']})"
-        for r in gone
-    ]
+    return [f"{r['key']}: {_printed_as(r)} (package source {r['produced_by']})" for r in gone]
+
+
+SEALED_KEY_PREFIX = "sealed."
+"""What `emit_paper_tables.py` puts before the `numbers.csv` key of a `\\sealednum{}` figure."""
+
+
+def _printed_as(row: dict) -> str:
+    """The figure as the paper spells it: a sealed-term row under `\\sealednum{}`."""
+    macro = "sealednum" if row["key"].startswith(SEALED_KEY_PREFIX) else "devnum"
+    return f"\\{macro}{{{row['value']}}}"
 
 
 SEALEDNUM = re.compile(r"\\sealednum\{((?:[^{}]|\{[^{}]*\})*)\}")
@@ -1106,8 +1113,14 @@ def run(
     dev_online: Path | None = None,
     sealed_online: Path | None = None,
     dev_cluster: Path | None = None,
+    sealed_prose: bool = True,
 ) -> list[str]:
-    """Every check that `only` allows; returns the complaints, empty when the paper agrees."""
+    """Every check that `only` allows; returns the complaints, empty when the paper agrees.
+
+    `sealed_prose=False` leaves the sealed figures in running text to a pass that reads
+    every sealed output: without the exact and online directories this one would count
+    their figures as having no source.
+    """
     cache: dict = {}
     complaints: list[str] = []
     dev_exact_rows: dict[str, list[dict]] = {}
@@ -1148,6 +1161,7 @@ def run(
             sealed_visibility=sealed_visibility,
             sealed_exact=sealed_exact,
             sealed_exact_rows=sealed_exact_rows,
+            prose=sealed_prose,
         )
     return complaints
 
@@ -1163,6 +1177,7 @@ def _check_sealed(
     sealed_visibility: Path | None,
     sealed_exact: Path | None,
     sealed_exact_rows: dict[str, list[dict]],
+    prose: bool,
 ) -> list[str]:
     """Check D: the sealed tables, the sealed exact tables and the sealed prose."""
     complaints: list[str] = []
@@ -1179,7 +1194,7 @@ def _check_sealed(
             cache=cache,
             source_rows=sealed_exact_rows,
         )
-    if any((sealed, sealed_predictor, sealed_visibility, sealed_exact)):
+    if prose and any((sealed, sealed_predictor, sealed_visibility, sealed_exact)):
         complaints += check_sealed_prose(
             paper,
             read_rows(sealed_predictor / "predictor_metrics.csv", optional=True)

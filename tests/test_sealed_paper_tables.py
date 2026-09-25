@@ -135,6 +135,35 @@ def test_the_sealed_figures_of_the_paper_are_keyed_apart_and_sourced(tmp_path):
     assert sum(not k.startswith(ept.SEALED_PREFIX) for k in keyed) == 1
 
 
+def _sourced_paper(tmp_path: Path, printed: str) -> tuple[Path, Path]:
+    """A paper that quotes one sealed figure in prose, and the numbers.csv emitted from it."""
+    package, _, values = _emit(tmp_path)
+    paper = tmp_path / "paper"
+    paper.mkdir()
+    source = paper / "08_experiments.tex"
+    source.write_text(
+        "\\section{Results}\nthe sealed terms give p99 \\sealednum{27.00} s\n", encoding="utf-8"
+    )
+    ept.write_numbers(ept.paper_numbers(paper, {}, values), package)
+    source.write_text(
+        f"\\section{{Results}}\nthe sealed terms give p99 \\sealednum{{{printed}}} s\n",
+        encoding="utf-8",
+    )
+    return paper, package
+
+
+def test_a_sourced_sealed_figure_in_prose_counts_as_printed_under_its_own_macro(tmp_path):
+    assert cpn.SEALED_KEY_PREFIX == ept.SEALED_PREFIX
+    paper, package = _sourced_paper(tmp_path, "27.00")
+    assert cpn.check_sourced(paper, package, {}) == []
+
+
+def test_a_sourced_sealed_figure_changed_in_prose_is_caught(tmp_path):
+    paper, package = _sourced_paper(tmp_path, "27.01")
+    complaints = cpn.check_sourced(paper, package, {})
+    assert len(complaints) == 1 and "\\sealednum{27.00}" in complaints[0]
+
+
 def test_a_line_that_says_sealed_stops_excusing_a_number_once_the_sealed_run_is_in(tmp_path):
     line = "the sealed terms give \\devnum{99.99} s"
     assert ept.classify(line, "07_data", "", ept.reasons(False)) == "sealed"
@@ -204,6 +233,25 @@ def test_a_sealed_predictor_figure_the_paper_invents_is_caught(tmp_path):
     assert cpn.check_sealed_predictor(paper, rows) == []
     section.write_text("AUROC \\sealednum{0.9321} on the sealed terms\n", encoding="utf-8")
     assert len(cpn.check_sealed_predictor(paper, rows)) == 1
+
+
+def test_a_pass_told_to_leave_sealed_prose_alone_does_not_count_an_unknown_figure(tmp_path):
+    """The legacy package reads no online output, so an online figure is unknown to it."""
+    package, sealed_dir, _ = _emit(tmp_path)
+    paper = _paper_with(package, tmp_path)
+    (paper / "08_experiments.tex").write_text(
+        "online the guard closes \\sealednum{0.894}\n", encoding="utf-8"
+    )
+    predictor = tmp_path / "sealed_predictor"
+    _write(
+        predictor / "predictor_metrics.csv",
+        [{"target": "pooled", "score": "spjf_e", "auroc": "0.9123", "spearman": "0.402"}],
+    )
+    args = (paper, tmp_path / "dev", package)
+    known = {"sealed": sealed_dir, "sealed_predictor": predictor}
+    checked = cpn.run(*args, only="D", **known)
+    assert any("0.894" in c for c in checked)
+    assert cpn.run(*args, only="D", sealed_prose=False, **known) == []
 
 
 def test_a_sealed_visibility_figure_is_a_known_prose_source(tmp_path):

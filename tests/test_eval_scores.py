@@ -128,8 +128,12 @@ def test_the_block_draw_is_the_one_the_week_block_bootstrap_uses():
     )
 
 
-def test_the_sealed_pool_is_refused_without_a_frozen_lock(tmp_path):
-    """The entry point refuses before it opens anything: no cache, no score file."""
+def test_the_sealed_pool_is_refused_without_unseal(tmp_path):
+    """The entry point refuses before it opens anything: no cache, no score file.
+
+    The reason it gives depends on the repository: before the freeze there is no frozen
+    lock, after it the call lacks --unseal.  Either way nothing is opened or written.
+    """
     result = subprocess.run(
         [
             sys.executable,
@@ -148,7 +152,7 @@ def test_the_sealed_pool_is_refused_without_a_frozen_lock(tmp_path):
     )
     assert result.returncode != 0
     assert "SealedDataError" in result.stderr
-    assert "no frozen protocol_lock.json" in result.stderr
+    assert "--unseal" in result.stderr or "no frozen protocol_lock.json" in result.stderr
     assert not (tmp_path / "absent_out").exists()
 
 

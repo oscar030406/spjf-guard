@@ -186,6 +186,9 @@ def check_paper_prints() -> tuple[bool, str]:
         sealed_visibility=(
             visibility if (visibility / "visibility_comparison.csv").is_file() else None
         ),
+        # This package reads no exact or online output; once the sealed exact run exists,
+        # check_exact_paper_prints checks the sealed prose against all of them.
+        sealed_prose=not (ROOT / SEALED_EXACT / "manifest.json").is_file(),
     )
     if complaints:
         return False, "paper prints: " + "; ".join(complaints[:4]) + (

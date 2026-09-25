@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-25T07:16:27-04:00",
+  "written_at": "2026-09-25T11:06:04-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -631,7 +631,7 @@
       },
       {
         "path": "scripts/check_generated.py",
-        "sha256": "b42ece8e6a5ccbb0ac4caa8d437642af707e7672bc3efde91dc1949d086092b7"
+        "sha256": "638c34637f9c750fa9255bf443817b92d6e1861e56990ded1209289dec773612"
       },
       {
         "path": "scripts/check_overlays.py",
@@ -639,7 +639,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "3a1eceb2da677308443d07042aa9506270f22b98e5e08f68301a7e54cd6ff966"
+        "sha256": "aa81742da5a06d8583eb6d890fe243d8fa1e17410ee671cdc0d91d970cc2584c"
       },
       {
         "path": "scripts/check_preserved_outputs.py",
@@ -935,7 +935,7 @@
       },
       {
         "path": "tests/test_eval_scores.py",
-        "sha256": "54053f4a6cc1f832d52a0fb803bb3b381b0ab54b6d3e48dc123b1e6d0f16e03b"
+        "sha256": "ae228f4666e3bfe8b718d484888356653c877b3211d765b02cea18fe90ed870f"
       },
       {
         "path": "tests/test_experiment.py",
@@ -995,7 +995,7 @@
       },
       {
         "path": "tests/test_sealed_data.py",
-        "sha256": "ec9f46e0b0d8dac51db985f537bd4734de8c65623e40f439d5b3094fcf7a1416"
+        "sha256": "c3fdc37480859f4c153f44697c9a831aba6b02c04384a8701dc024bf67921275"
       },
       {
         "path": "tests/test_sealed_k1.py",
@@ -1003,7 +1003,7 @@
       },
       {
         "path": "tests/test_sealed_paper_tables.py",
-        "sha256": "e597f3336f02d71c736955d9c8e62778d9bd600b68eb6a13ced0f1a183859d90"
+        "sha256": "0b8012f8f9dc90b1c4c8b805a3d9efc4a36b483f00620ee26343bd5f7cb4a765"
       },
       {
         "path": "tests/test_sim_crosscheck_prechecks.py",
@@ -1030,7 +1030,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "63bfce62364f394693fa5c4dabb381a64d5ca404e7ed167c0a997b6de45162ec"
+    "digest": "f97b84b62b6a3f14dd621502b28e118e26d3f6f285422ba09379c28a363f4bec"
   },
   "inputs": {
     "artefacts": [

@@ -114,15 +114,16 @@ def lock_complaints(root) -> list[str]:
         return [f"{path.name} is missing; write it with scripts/make_protocol_lock.py"]
     document = json.loads(path.read_text(encoding="utf-8"))
     out = []
-    if document["code"]["digest"] != _digest_of(code_manifest(root)):
-        out.append(
-            f"{path.name} does not describe the code in src/, scripts/ and tests/: "
-            + (
-                "regenerate it"
-                if lock is None
-                else "a locked file has changed since the freeze"
+    tree = code_manifest(root)
+    if lock is None and document["code"]["digest"] != _digest_of(tree):
+        out.append(f"{path.name} does not describe the code in src/, scripts/ and tests/")
+    if lock is not None:
+        undeclared = _undeclared_changes(root, document["code"]["files"], tree)
+        if undeclared:
+            out.append(
+                "a locked file has changed since the freeze without a matching entry in "
+                f"{POST_RUN_CHANGES}: " + ", ".join(undeclared)
             )
-        )
     if document["config"]["sha256"] != sha256_file(root / "configs" / "main.yaml"):
         out.append(f"{path.name} was written for another configs/main.yaml")
     if document.get("config_snapshots") != config_snapshot_manifest(root):
@@ -133,9 +134,37 @@ def lock_complaints(root) -> list[str]:
         out.append("a frozen lock names the commit it froze")
     ledger = (root / sealed.LOG_RELATIVE_PATH).read_text(encoding="utf-8")
     rows = [r for r in ledger.splitlines() if "scripts/freeze_protocol.py" in r]
-    if len(rows) != len(document.get("sealed_input_hashes", [])):
+    # A second freeze writes the same rows again, so the rule is that every hashed input
+    # has a row, not that the two counts match.
+    if any(
+        not any(entry["path"] in row for row in rows)
+        for entry in document.get("sealed_input_hashes", [])
+    ):
         out.append("the ledger has no row for every sealed input the freeze hashed")
     return out
+
+
+POST_RUN_CHANGES = "docs/post_run_changes.json"
+"""Locked files changed after the sealed run finished, each with the bytes it now has and
+why.  A change that is not listed, or whose file no longer has the listed bytes, still
+breaks the lock: the declaration pins the new bytes as the freeze pinned the old ones."""
+
+
+def _undeclared_changes(root, locked: list[dict], tree: list[dict]) -> list[str]:
+    """Locked source files whose bytes differ from the lock and from the declaration."""
+    before = {entry["path"]: entry["sha256"] for entry in locked}
+    now = {entry["path"]: entry["sha256"] for entry in tree}
+    declaration = root / POST_RUN_CHANGES
+    declared = (
+        {
+            entry["path"]: entry["sha256"]
+            for entry in json.loads(declaration.read_text(encoding="utf-8"))["files"]
+        }
+        if declaration.is_file()
+        else {}
+    )
+    changed = sorted(p for p in before.keys() | now.keys() if before.get(p) != now.get(p))
+    return [p for p in changed if declared.get(p) != now.get(p)]
 
 
 def test_the_protocol_lock_describes_the_tree_it_belongs_to():
@@ -179,7 +208,11 @@ def _frozen_tree(tmp_path, inputs: int = 2):
     ledger = _ledger(tmp_path)
     for i in range(inputs):
         sealed.record_access(
-            tmp_path, "scripts/freeze_protocol.py", "封存学期", f"sha256 of {i}", "冻结脚本"
+            tmp_path,
+            "scripts/freeze_protocol.py",
+            "封存学期",
+            f"只读取字节求 sha256：data/{i}.parquet",
+            "冻结脚本",
         )
     return ledger
 
@@ -194,6 +227,48 @@ def test_a_locked_file_that_changed_after_the_freeze_is_caught(tmp_path):
     (tmp_path / "scripts").mkdir(exist_ok=True)
     (tmp_path / "scripts" / "afterwards.py").write_text("x = 1\n", encoding="utf-8")
     assert any("changed since the freeze" in c for c in lock_complaints(tmp_path))
+
+
+def _declare(root, relative: str, reason: str = "reporting fix after the sealed run") -> None:
+    import hashlib
+
+    digest = hashlib.sha256((root / relative).read_bytes()).hexdigest()
+    (root / "docs").mkdir(exist_ok=True)
+    (root / POST_RUN_CHANGES).write_text(
+        json.dumps({"files": [{"path": relative, "sha256": digest, "why": reason}]}),
+        encoding="utf-8",
+    )
+
+
+def test_a_change_declared_with_its_bytes_after_the_run_passes(tmp_path):
+    _frozen_tree(tmp_path)
+    (tmp_path / "scripts").mkdir(exist_ok=True)
+    (tmp_path / "scripts" / "afterwards.py").write_text("x = 1\n", encoding="utf-8")
+    _declare(tmp_path, "scripts/afterwards.py")
+    assert lock_complaints(tmp_path) == []
+
+
+def test_a_declared_file_edited_again_is_caught(tmp_path):
+    _frozen_tree(tmp_path)
+    (tmp_path / "scripts").mkdir(exist_ok=True)
+    changed = tmp_path / "scripts" / "afterwards.py"
+    changed.write_text("x = 1\n", encoding="utf-8")
+    _declare(tmp_path, "scripts/afterwards.py")
+    changed.write_text("x = 2\n", encoding="utf-8")
+    assert any("scripts/afterwards.py" in c for c in lock_complaints(tmp_path))
+
+
+def test_a_second_freeze_that_wrote_its_rows_again_still_has_a_row_per_input(tmp_path):
+    _frozen_tree(tmp_path)
+    for i in range(2):
+        sealed.record_access(
+            tmp_path,
+            "scripts/freeze_protocol.py",
+            "封存学期",
+            f"只读取字节求 sha256：data/{i}.parquet",
+            "冻结脚本",
+        )
+    assert lock_complaints(tmp_path) == []
 
 
 def test_a_freeze_the_ledger_does_not_record_is_caught(tmp_path):
