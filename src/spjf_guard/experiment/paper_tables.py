@@ -548,7 +548,9 @@ def online_suite_table(rows: list[dict]) -> str:
     return _table(
         "llrrrlrr",
         r"Load & Policy & \multicolumn{2}{c}{p99$_{\mathrm{dl}}$} & Gap, orig. & "
-        r"Gap, online & Max exc. & Harm \ & & orig. & online & & & &",
+        r"Gap, online & Max exc. & Harm \\"
+        "\n"
+        r" & & orig. & online & & & &",
         _without_trailing_rule(body),
         "tab:s_online_suite",
         "Every compared policy on the original clock and under the online replay, at the "

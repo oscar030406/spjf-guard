@@ -154,6 +154,7 @@ def read_rows(path: Path) -> list[dict]:
 
 EXACT_SOURCE_FILES = ("exact_comparison.csv", "same_copy_exposure.csv")
 ONLINE_SOURCE_FILE = "online_comparison.csv"
+ONLINE_AUDIT_FILE = "online_audit.csv"
 POINT_FIELDS = ("p99_dl_s", "gap_closed", "max_excess_s", "harm_s", "fired_pct")
 """The figures of a comparison row that follow from its cells alone; the intervals also
 depend on which policies shared the bootstrap, so two runs are compared on these."""
@@ -164,7 +165,9 @@ def read_online_rows(tables: Path, exact_comparison: list[dict]) -> list[dict]:
 
     Both runners replay the same policies on the same overlays and scores before either
     changes a score, so their original rows must agree; a difference means the two
-    directories came from different configurations or inputs.  The online rows are
+    directories came from different configurations or inputs.  The runner only prints
+    an audit disagreement, so the rows are refused here unless every sampled job of
+    every policy-cell was rescored to the score the replay used.  The online rows are
     returned, and the original rows of policies the exact run did not replay, each
     marked with the file it came from.
     """
@@ -172,6 +175,15 @@ def read_online_rows(tables: Path, exact_comparison: list[dict]) -> list[dict]:
     rows = read_rows(path)
     if not rows:
         raise SystemExit(f"explicit online source is missing or empty: {path}")
+    audit = read_rows(tables / ONLINE_AUDIT_FILE)
+    if not audit:
+        raise SystemExit(f"online audit is missing or empty: {tables / ONLINE_AUDIT_FILE}")
+    failed = [r for r in audit if int(r["mismatches"])]
+    if failed:
+        raise SystemExit(
+            f"{tables / ONLINE_AUDIT_FILE}: rescored scores differ from the replay's in "
+            f"{len(failed)} policy-cell(s), first {failed[0]}"
+        )
     exact = {(r["policy"], r["level"]): r for r in exact_comparison}
     kept = []
     for row in rows:

@@ -162,7 +162,7 @@ $UV python scripts/eval_scores.py --pool sealed \
 第 5 步把 fixed-lag 证书状态打印并写入 manifest。若 conservative 的观测 `W > 3600`，该锚必须
 标成 `legacy conservative certificate invalid`，不能继续称为已认证的可见性方案。headline 为
 online（ADR 0008）时，这个警告不阻断后面的步骤；若 headline 是 conservative，则该情况硬停。第 6 步的
-末轮零违规断言、第 7 步的抽样审计不一致、两步的逐 job Guard 边界或 sparse delta 检查失败始终硬停。
+末轮零违规断言、两步的逐 job Guard 边界或 sparse delta 检查失败始终硬停。第 7 步的抽样审计不一致由出表那一步硬停：runner 只打印不一致的份数，`emit_paper_tables.py` 与 `check_paper_numbers.py` 读 `online_audit.csv`，文件缺失或任一行 `mismatches` 非零就拒绝出表。
 
 跑完之后出表与核对（这几条只读 `outputs/`，不读封存数据，也不需要 `--unseal`）：
 

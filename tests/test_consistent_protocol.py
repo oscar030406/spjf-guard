@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -46,6 +47,27 @@ def _metric_row(policy: str, variant: str) -> dict:
         "harm_s": 20.0,
         "fired_pct": 1.25,
     }
+
+
+def _audit_row(policy: str, mismatches: int) -> dict:
+    return {
+        "level": 0,
+        "mismatches": mismatches,
+        "overlay": 0,
+        "policy": policy,
+        "sampled_jobs": 4000,
+        "variant": "online",
+    }
+
+
+def _header_widths(table: str) -> list[int]:
+    """Columns spanned by each header row between \\toprule and \\midrule."""
+    head = table.split(r"\toprule", 1)[1].split(r"\midrule", 1)[0]
+    widths = []
+    for row in head.split(r"\\")[:-1]:
+        spans = [int(n) for n in re.findall(r"\\multicolumn\{(\d+)\}", row)]
+        widths.append(row.count("&") + 1 + sum(n - 1 for n in spans))
+    return widths
 
 
 def _exposure_row(policy: str) -> dict:
@@ -276,6 +298,7 @@ def test_the_online_row_joins_the_headline_only_beside_matching_original_rows(tm
     _write(exact / "same_copy_exposure.csv", [_exposure_row("Guard(600)")])
     replayed = {**_metric_row("Guard(600)", "online"), "gap_closed": 0.321}
     _write(online / "online_comparison.csv", [_metric_row("Guard(600)", "original"), replayed])
+    _write(online / "online_audit.csv", [_audit_row("Guard(600)", 0)])
 
     written = ept.emit_exact(exact, package, online=online)
     assert "tab_online_suite.tex" not in written, "five headline policies print no suite"
@@ -293,6 +316,7 @@ def test_the_online_row_joins_the_headline_only_beside_matching_original_rows(tm
     assert "tab_online_suite.tex" in ept.emit_exact(exact, package, online=online)
     suite = (package / "tab_online_suite.tex").read_text(encoding="utf-8")
     assert "0.654" in suite and "0.543" in suite and "0.321" in suite
+    assert _header_widths(suite) == [8, 8], "two header rows across the eight columns"
     rows, complaints = cpn.load_exact_source(exact, online)
     assert (
         complaints == []
@@ -303,6 +327,23 @@ def test_the_online_row_joins_the_headline_only_beside_matching_original_rows(tm
     _write(online / "online_comparison.csv", [drifted, replayed])
     with pytest.raises(SystemExit, match="do not share their inputs"):
         ept.emit_exact(exact, package, online=online)
+
+
+def test_online_rows_are_refused_when_the_audit_found_a_differing_score(tmp_path):
+    exact, online, package = tmp_path / "exact", tmp_path / "online", tmp_path / "package"
+    package.mkdir()
+    _write(exact / "exact_comparison.csv", [_metric_row("Guard(600)", "original")])
+    _write(exact / "same_copy_exposure.csv", [_exposure_row("Guard(600)")])
+    _write(
+        online / "online_comparison.csv",
+        [_metric_row("Guard(600)", "original"), _metric_row("Guard(600)", "online")],
+    )
+    _write(online / "online_audit.csv", [_audit_row("Guard(600)", 0), _audit_row("SPJF-E", 3)])
+    with pytest.raises(SystemExit, match="differ from the replay's in 1 policy-cell"):
+        ept.emit_exact(exact, package, online=online)
+    (online / "online_audit.csv").unlink()
+    with pytest.raises(SystemExit, match="online audit is missing"):
+        cpn.load_exact_source(exact, online)
 
 
 def test_the_two_exact_tables_are_optional_generated_recipes(tmp_path):
