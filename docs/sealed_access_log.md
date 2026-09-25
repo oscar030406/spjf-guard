@@ -41,5 +41,13 @@
 | 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/events/2024-1.parquet（3,087,324 字节），未解析内容 | 冻结脚本 | 否 |
 | 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/code_features/2024-1.parquet（1,824,620 字节），未解析内容 | 冻结脚本 | 否 |
 | 2026-09-25 | `scripts/freeze_protocol.py` | 封存学期 2023-1, 2023-2, 2024-1 | 只读取字节求 sha256：data/codebench/parquet/assessments/2024-1.parquet（11,941 字节），未解析内容 | 冻结脚本 | 否 |
+| 2026-09-25 | `scripts/build_cache.py` | 封存学期 2023-1, 2023-2, 2024-1 | 699,668 行事件表写到 data/derived/codebench_cache_r4/ev_sealed.parquet | 运行者 | 否 |
+| 2026-09-25 | `scripts/build_overlays.py` | 封存学期 2023-1, 2023-2, 2024-1 | 5 条叠加轨迹写到 data/derived/overlay_traces，每条 31 份拷贝、29 个整周 | 运行者 | 否 |
+| 2026-09-25 | `scripts/fit_scores.py` | 封存学期 2023-1, 2023-2, 2024-1 | 1,058,593 行排序分数写到 data/derived/package_ranking_scores/sealed_scores.parquet | 运行者 | 否 |
+| 2026-09-25 | `scripts/build_overlays.py` | 封存学期 2023-1, 2023-2, 2024-1 | k = 1 叠加轨迹 sealed_k1_rep0.npz 写到 data/derived/overlay_traces，321 份拷贝（321 copies reused from pool primary），实际忙时利用率 2.2614 | 运行者 | 否 |
+| 2026-09-25 | `scripts/run_main.py` | 封存学期 2023-1, 2023-2, 2024-1 | 29 个策略—格的汇总写到 outputs/sealed_tables/k1（29 条策略 × 1 档负载 × 1 条叠加） | 运行者 | 否 |
+| 2026-09-25 | `scripts/eval_scores.py` | 封存学期 2023-1, 2023-2, 2024-1 | 24 行预测器指标写到 outputs/sealed_predictor/predictor_metrics.csv | 运行者 | 否 |
+| 2026-09-25 | `scripts/run_main.py` | 封存学期 2023-1, 2023-2, 2024-1 | 435 个策略—格的汇总写到 outputs/sealed_tables（29 条策略 × 3 档负载 × 5 条叠加） | 运行者 | 否 |
+| 2026-09-25 | `scripts/run_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | 策略一致可见性比较写到 outputs/sealed_visibility，耗时 1039 秒 | 运行者 | 否 |
 
 上表是全部记录，冻结前后都一样：冻结之前，行里只有计数、字节数与划分边界，没有对任何封存学期或 ACcoding 封存块算过开销分布、预测或调度结果；冻结之后，封存运行每开一次也各占一行，中断的那一次同样有行，输出栏写明停在哪一步。
