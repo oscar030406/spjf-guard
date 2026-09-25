@@ -14,42 +14,58 @@ configuration.
 The prediction study of Section~\ref{sec:prediction} releases a job's result at the time the
 original platform recorded it. In the simulated queue, a job completes at a time that
 depends on the policy, so a score computed on the original clock may use a result that the
-simulated queue has not produced yet. The \emph{exact} protocol removes this. It freezes the
-fitted model, simulates a policy, and withholds every result that was not yet complete in
-that simulation when the job using it arrived. It then recomputes the affected histories
-and scores and simulates again, until no score uses an unavailable result. The set of
-withheld results only grows, so the procedure stops, and in every development cell it ends
-with no unavailable result in use. Three references stand beside the exact protocol. The
+simulated queue has not produced yet. The \emph{online} protocol removes this in the way a
+deployed scheduler would. It freezes the fitted model and simulates each policy once. When a
+job arrives, the model scores it from the results of earlier jobs in the same copy of its
+class-term that this simulation has completed by that moment, and from the recorded results
+of other classes and terms. Supplementary Section~S3.7 defines the
+simulation and checks it against a second implementation.
+
+Four references stand beside the online protocol. The \emph{exact} protocol also freezes
+the model. It simulates a policy, withholds every result that was not yet complete when the
+job using it arrived, rescores, and simulates again until no score uses an unavailable
+result. A result it has withheld once stays withheld, even when a later simulation
+completes it in time, so it can use less history than the online protocol. The
 \emph{original} protocol keeps the platform's clock and is optimistic. The
 \emph{conservative} protocol admits a result only an hour after it appeared, uses only
 history from the same class-term copy, and refits the models. The \emph{static} protocol
-uses no outcome history at all. The guard's parameters are the same under all four.
+uses no outcome history at all. The guard's parameters are the same under all five.
 
-At the busiest load, Guard($\devnum{600}$) under the exact protocol reaches a
-$\mathrm{p99}_{\mathrm{dl}}$ of \devnum{118.94} s and closes \devnum{0.672 [0.602, 0.743]} of
-the gap (Table~\ref{tab:visibility}). The same guard closes \devnum{0.801 [0.764, 0.842]}
-under the original protocol, \devnum{0.429 [0.357, 0.533]} under the conservative one and
-\devnum{0.349 [0.281, 0.457]} under the static one. Unguarded SPJF-E closes \devnum{0.848}
-under the exact protocol. The conservative figure falls further than the exact one because
-it also withholds history that the queue would have had and refits the models.
-Supplementary Section~S3.7 separates the two effects. The parameters were selected under
-the original protocol, and we do not know in which direction a selection under the exact
-protocol would move the figure. The full grids were run under the original protocol, so the
-rest of this section uses it unless stated otherwise, and its figures are optimistic
-references.
-% Sources: outputs/dev_consistent_visibility/exact_comparison.csv, level=2,
-% Guard(600)|exact, Guard(600)|original, Guard(600)|conservative, Guard(600)|static,
-% SPJF-E|exact: p99_dl_s, gap_closed, gap_closed_lo/hi.
+At the busiest load, Guard($\devnum{600}$) under the online protocol reaches a
+$\mathrm{p99}_{\mathrm{dl}}$ of \devnum{111.25} s and closes \devnum{0.705 [0.648, 0.768]} of
+the gap (Table~\ref{tab:visibility}). The same guard closes \devnum{0.672 [0.602, 0.743]}
+under the exact protocol, \devnum{0.801 [0.764, 0.842]} under the original one,
+\devnum{0.429 [0.357, 0.533]} under the conservative one and \devnum{0.349 [0.281, 0.457]}
+under the static one. The online figure lies between the exact and the original ones. The
+exact protocol uses less history than the online one, and the original protocol uses
+results the queue has not produced. At the two lighter loads the two figures are closer,
+\devnum{0.725} against \devnum{0.740} and \devnum{0.800} against \devnum{0.837}, and their
+intervals overlap. Unguarded SPJF-E closes \devnum{0.864} under the online protocol. The
+conservative figure falls further than the exact one because it also withholds history that
+the queue would have had and refits the models. Supplementary Section~S3.7 separates the
+two effects.
+The parameters were selected under the original protocol.
+% PENDING RESELECTION: the restricted online reselection result goes here.
+The full grids were run under the original protocol, so the rest of this section uses it
+unless stated otherwise, and its figures are optimistic references.
+% PENDING SUITE: pointer to the supplement's table of every compared policy online.
+% Sources: outputs/dev_online_visibility/online_comparison.csv, level=2, Guard(600)|online
+% and SPJF-E|online: p99_dl_s, gap_closed, gap_closed_lo/hi.
+% outputs/dev_consistent_visibility/exact_comparison.csv, level=2, Guard(600)|exact,
+% Guard(600)|original, Guard(600)|conservative, Guard(600)|static. Levels 0 and 1:
+% Guard(600)|online 0.725, 0.800 and Guard(600)|original 0.740, 0.837.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Guard(600) under four protocols for what the scores may use. Exact: only results
-available in the simulated queue (the headline). Original: the platform's own clock
-(optimistic). Conservative and static withhold more than the queue requires. Gap closed
-with \devnum{95\%} intervals; waits, largest excess and harm in seconds. Fired: share of
-dispatch decisions, weighted by queue length, at which the guard overrode the base policy. At $\rho = \devnum{0.5}$, $k = \devnum{7.8}$ is the mean over the
-five overlays.}
+\caption{Guard(600) under five protocols for what the scores may use. Online: each score
+uses only the results completed by its job's arrival in the simulated queue (the headline).
+Exact: results withheld and the queue simulated again until no score uses an unavailable
+result; a withheld result stays withheld. Original: the platform's own clock (optimistic).
+Conservative and static withhold more than the queue requires. Gap closed with
+\devnum{95\%} intervals; waits, largest excess and harm in seconds. Fired: share of
+dispatch decisions, weighted by queue length, at which the guard overrode the base policy.
+At $\rho = \devnum{0.5}$, $k = \devnum{7.8}$ is the mean over the five overlays.}
 \label{tab:visibility}
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{llrlrrr}
@@ -57,18 +73,21 @@ five overlays.}
 Load & Protocol & p99$_{\mathrm{dl}}$ & Gap closed & Max excess & Harm & Fired (\%) \\
 \midrule
 \multicolumn{7}{l}{$\rho = \devnum{0.5}$, $k = \devnum{7.8}$} \\
+ & online         & \devnum{15.22} & \devnum{0.725 [0.696, 0.746]} & \devnum{499.5} & \devnum{248.3} & \devnum{0.38} \\
  & exact          & \devnum{15.25} & \devnum{0.724 [0.697, 0.747]} & \devnum{498.6} & \devnum{248.1} & \devnum{0.45} \\
  & original       & \devnum{14.97} & \devnum{0.740 [0.713, 0.760]} & \devnum{492.2} & \devnum{237.0} & \devnum{0.17} \\
  & conservative   & \devnum{16.68} & \devnum{0.640 [0.604, 0.671]} & \devnum{499.9} & \devnum{235.2} & \devnum{0.94} \\
  & static         & \devnum{17.95} & \devnum{0.560 [0.519, 0.594]} & \devnum{498.0} & \devnum{225.1} & \devnum{0.38} \\
 \midrule
 \multicolumn{7}{l}{$\rho = \devnum{0.8}$, $k = \devnum{5}$} \\
+ & online         & \devnum{50.57} & \devnum{0.800 [0.772, 0.819]} & \devnum{509.3} & \devnum{215.7} & \devnum{2.18} \\
  & exact          & \devnum{51.90} & \devnum{0.785 [0.748, 0.807]} & \devnum{509.0} & \devnum{215.6} & \devnum{2.64} \\
  & original       & \devnum{47.47} & \devnum{0.837 [0.815, 0.851]} & \devnum{507.8} & \devnum{319.6} & \devnum{1.31} \\
  & conservative   & \devnum{64.77} & \devnum{0.634 [0.560, 0.688]} & \devnum{509.4} & \devnum{327.7} & \devnum{3.26} \\
  & static         & \devnum{70.18} & \devnum{0.571 [0.504, 0.638]} & \devnum{512.9} & \devnum{341.6} & \devnum{3.89} \\
 \midrule
 \multicolumn{7}{l}{$\rho = \devnum{1}$, $k = \devnum{4}$} \\
+ & online         & \devnum{111.25} & \devnum{0.705 [0.648, 0.768]} & \devnum{517.7} & \devnum{333.2} & \devnum{7.27} \\
  & exact          & \devnum{118.94} & \devnum{0.672 [0.602, 0.743]} & \devnum{519.9} & \devnum{332.8} & \devnum{7.82} \\
  & original       & \devnum{89.24} & \devnum{0.801 [0.764, 0.842]} & \devnum{523.7} & \devnum{339.9} & \devnum{7.15} \\
  & conservative   & \devnum{174.71} & \devnum{0.429 [0.357, 0.533]} & \devnum{527.8} & \devnum{303.5} & \devnum{7.71} \\
@@ -78,9 +97,11 @@ Load & Protocol & p99$_{\mathrm{dl}}$ & Gap closed & Max excess & Harm & Fired (
 \end{table}
 % Source of Table~\ref{tab:visibility}: outputs/consistent_paper_tables/tab_visibility.tex,
 %   produced by `python scripts/emit_paper_tables.py --out-dir outputs/consistent_paper_tables
-%   --dev-exact-dir outputs/dev_consistent_visibility` (see GENERATED.md), from
-%   outputs/dev_consistent_visibility/exact_comparison.csv, base_policy=Guard(600), all four
-%   variants and all three levels; columns p99_dl_s, gap_closed with gap_closed_lo/hi,
+%   --dev-exact-dir outputs/dev_consistent_visibility --dev-online-dir
+%   outputs/dev_online_visibility` (see GENERATED.md), from
+%   outputs/dev_online_visibility/online_comparison.csv (the online rows) and
+%   outputs/dev_consistent_visibility/exact_comparison.csv (the other four), base_policy
+%   Guard(600), all three levels; columns p99_dl_s, gap_closed with gap_closed_lo/hi,
 %   max_excess_s, harm_s, fired_pct.
 
 \subsection{What to Rank By}

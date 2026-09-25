@@ -1010,10 +1010,10 @@ Skip($\devnum{1200}$), $\kappa=20$ & \devnum{1200} & \devnum{217.64} & \devnum{0
 \subsection{Outcome Visibility: Exposure, Lag and the Variants}
 \label{sec:supp_visibility}
 
-Three things stand behind the headline of Section~\ref*{M-sec:exp_visibility} of the manuscript: the same-copy
-queueing exposure that the exact protocol corrects for, an audit of the release lag of
-the conservative reference, and the two references its table names. All three are
-defined here.
+Four things stand behind the headline of Section~\ref*{M-sec:exp_visibility} of the manuscript: the online
+simulation that produces it, the same-copy queueing exposure that the online and exact
+protocols correct for, an audit of the release lag of the conservative reference, and the
+references its table names. All four are defined here.
 
 The conservative figure can be taken apart. At the busiest load, Guard($\devnum{600}$)
 closes \devnum{0.429} of the gap under the conservative reference and unguarded SPJF-E
@@ -1072,15 +1072,39 @@ the development maximum does not certify it in advance.
 % for FCFS; sum(lag_violations) for conservative SPJF-E=336 and for FCFS/Guard=0;
 % outputs/dev_visibility/manifest.json, promises and conservative_lag_s.
 
+The online protocol freezes the original model weights and simulates each policy once.
+When job $i$ arrives, its score is computed from the history a deployed scheduler would
+hold at $a_i$: every record from another class or term at its recorded time, and a
+same-copy record $j$ only if $a_j+W_P[j]+C_j\le a_i$ in this simulation, that is, only if
+job $j$ has already completed. Rolling windows over the same copy are ordered by these
+completion times. A score depends only on completions before its job arrives, and those
+depend only on the scores of jobs that arrived earlier, so one pass defines the
+simulation. We implement it by pausing the simulator at every arrival whose visible
+same-copy history differs from the one its current score was computed on, recomputing
+that job's history and score, and resuming. A second implementation reaches the same
+simulation by iteration: simulate, rescore every job whose visible history differs, and
+simulate again until none does. On the first overlay at the lightest load the two agree
+job for job for SPJF-E, Guard($\devnum{600}$) and Timeout($\devnum{600}$), in every wait
+and in every rescored score. About \devnum{255{,}000} of the \devnum{17.6} million arrivals
+pause, and the pausing implementation needs \devnum{4} to \devnum{5} minutes per policy
+against \devnum{15} to \devnum{26} for the iteration. In every development cell,
+\devnum{2{,}000} jobs drawn at random and up to \devnum{2{,}000} rescored ones are scored
+again directly from their visible history, and every one matches the simulation.
+% Sources: outputs/online_probe/.checkpoints/o0_l0/*.json (metric rows, audit, elapsed_s,
+% pass_rows: pauses 254,788 / 256,499 / 257,271; online 234 / 268 / 304 s; iteration
+% 1,033 / 1,582 / 895 s) and deltas/*.npz (identical job_index and corrected_score);
+% outputs/dev_online_visibility/online_audit.csv, mismatches = 0 in every row. ADR 0008.
+
 The exact protocol freezes the original model weights, replays each policy, leaves out
 same-copy outcomes still unavailable at the target arrival, recomputes affected
 histories and scores, and repeats until no used outcome violates availability. The set
 of left-out outcomes only grows, so this finite procedure terminates. Every development cell,
 five overlays by three loads by five policies, and every sensitivity cell ended its
 final pass with no used outcome unavailable. The procedure certifies availability in
-that final replay; it is not a claim that the left-out set is minimal, of a unique fixed point, or of
-an online predictor driven by completion events. The visibility table of Section~\ref*{M-sec:exp_visibility}
-of the manuscript prints Guard(600) under all four protocols. The other policies under
+that final replay. Unlike the online protocol, it never returns a left-out result, even
+one its final replay completes in time, so it can use less history than a deployed
+scheduler would hold. The visibility table of Section~\ref*{M-sec:exp_visibility}
+of the manuscript prints Guard(600) under all five protocols. The other policies under
 each protocol, the same-copy exposure statistics of each replay, and the attribution
 ladder that separates leaving results out from refitting are in the package output directory
 \texttt{outputs/dev\_consistent\_visibility/}, in \texttt{exact\_comparison.csv},
