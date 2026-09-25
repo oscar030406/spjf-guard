@@ -136,7 +136,13 @@ the lightest load. Averaged over the five overlays, the utilisation of the busie
 The five overlays are one construction and not five platforms. For intervals we use
 \devnum{95\%} percentile intervals from \devnum{2{,}000} resamples of whole weeks, drawn once
 and shared by every policy so that differences between policies are paired. Such intervals
-cover variation over time, not the choice of terms or courses.
+cover variation over time, not the choice of terms or courses. Resampling whole
+class-terms instead and rebuilding the overlays each time widens them several-fold. At the
+busiest load Guard($\devnum{600}$) then closes \devnum{0.801} of the gap with interval
+\devnum{[0.328, 0.913]}, and its difference to unguarded ordering still excludes zero
+(Supplementary Table~S18).
+% Source: outputs/cluster_bootstrap/bootstrap_summary.csv, level 2, Guard(600) lo/hi
+% and Guard(600) - SPJF-E lo/hi [-0.320, -0.046].
 
 Arrivals follow the course calendar. When the number of runs per class is predicted a week
 ahead, the log-scale RMSE is \devnum{1.243} from recent counts alone, \devnum{1.159} from

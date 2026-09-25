@@ -2563,6 +2563,64 @@ averaged overlay quantiles, as explicitly identified in Section~S6.
 % prechecks/weakness1_attack/capacity_curve.csv. Algorithms: scripts/run_main.py,
 % spjf_guard.experiment.metrics and prechecks/weakness1_attack/summarize_capacity.py.
 
+The week-block intervals of the main tables hold the \devnum{40} class-terms fixed and
+resample only which weeks the queue sees. Table~\ref{tab:s_cluster} resamples the
+class-terms themselves. Each of \devnum{100} draws takes the development class-terms with
+replacement, reruns the copy-count probe and the week set on the draw, builds five
+overlays with fresh week shifts, and simulates FCFS, SJF, SPJF-E and the three selected
+guards at the three loads on the original clock. The predictor and the guard parameters
+stay fixed. A draw of the development pool itself reproduces the development tables cell
+for cell. The class-term intervals are several times as wide as the week-block ones. At
+the busiest load Guard($\devnum{600}$) closes \devnum{0.801} of the gap with interval
+\devnum{[0.328, 0.913]}, against \devnum{[0.764, 0.842]} from week blocks, and its paired
+difference to unguarded SPJF-E, \devnum{$-0.115$}, has interval \devnum{[-0.320, -0.046]}.
+At the two higher loads the difference excludes zero for every $G$. At the lightest load
+the difference of Guard($\devnum{1200}$) has interval \devnum{[-0.015, 0.001]}, which
+contains zero. With
+\devnum{100} draws each end of an interval rests on two or three draws, so the class-term
+intervals are coarse.
+% Source: outputs/cluster_bootstrap/bootstrap_summary.csv (point, lo, hi, week_lo,
+% week_hi; 100 resamples), manifest.json identity_rows_checked = 90;
+% scripts/run_cluster_bootstrap.py. Table: outputs/consistent_paper_tables/tab_cluster.tex.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Two sampling units for the development comparison, original clock: whole weeks (the intervals of the main tables) and whole class-terms, redrawn with replacement and rebuilt into five overlays each time. Levels \devnum{0}, \devnum{1} and \devnum{2} are the loads $\rho = \devnum{0.5}$, \devnum{0.8} and \devnum{1.0}. Width is the length of the interval.}
+\label{tab:s_cluster}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrll}
+\toprule
+Level & Gap closed of & Point & Week blocks: width [95\%] & Class-terms: width [95\%] \\
+\midrule
+\devnum{0} & SPJF-E                         & \devnum{0.754} & \devnum{0.052 [0.725, 0.776]} & \devnum{0.210 [0.698, 0.908]} \\
+\devnum{0} & Guard($\devnum{300}$)          & \devnum{0.705} & \devnum{0.046 [0.678, 0.724]} & \devnum{0.280 [0.577, 0.857]} \\
+\devnum{0} & Guard($\devnum{600}$)          & \devnum{0.740} & \devnum{0.047 [0.713, 0.760]} & \devnum{0.201 [0.693, 0.894]} \\
+\devnum{0} & Guard($\devnum{1200}$)         & \devnum{0.750} & \devnum{0.050 [0.723, 0.772]} & \devnum{0.207 [0.695, 0.902]} \\
+\devnum{0} & Guard($\devnum{300}$) $-$ SPJF-E & \devnum{-0.049} & \devnum{0.026 [-0.061, -0.036]} & \devnum{0.262 [-0.289, -0.027]} \\
+\devnum{0} & Guard($\devnum{600}$) $-$ SPJF-E & \devnum{-0.014} & \devnum{0.012 [-0.020, -0.008]} & \devnum{0.032 [-0.032, -0.000]} \\
+\devnum{0} & Guard($\devnum{1200}$) $-$ SPJF-E & \devnum{-0.004} & \devnum{0.006 [-0.007, -0.000]} & \devnum{0.016 [-0.015, 0.001]} \\
+\midrule
+\devnum{1} & SPJF-E                         & \devnum{0.885} & \devnum{0.037 [0.862, 0.899]} & \devnum{0.191 [0.762, 0.953]} \\
+\devnum{1} & Guard($\devnum{300}$)          & \devnum{0.738} & \devnum{0.064 [0.697, 0.761]} & \devnum{0.733 [0.107, 0.840]} \\
+\devnum{1} & Guard($\devnum{600}$)          & \devnum{0.837} & \devnum{0.036 [0.815, 0.851]} & \devnum{0.281 [0.634, 0.915]} \\
+\devnum{1} & Guard($\devnum{1200}$)         & \devnum{0.850} & \devnum{0.035 [0.829, 0.865]} & \devnum{0.245 [0.687, 0.932]} \\
+\devnum{1} & Guard($\devnum{300}$) $-$ SPJF-E & \devnum{-0.147} & \devnum{0.067 [-0.189, -0.122]} & \devnum{0.607 [-0.675, -0.069]} \\
+\devnum{1} & Guard($\devnum{600}$) $-$ SPJF-E & \devnum{-0.049} & \devnum{0.020 [-0.058, -0.038]} & \devnum{0.129 [-0.141, -0.012]} \\
+\devnum{1} & Guard($\devnum{1200}$) $-$ SPJF-E & \devnum{-0.035} & \devnum{0.013 [-0.041, -0.028]} & \devnum{0.058 [-0.072, -0.014]} \\
+\midrule
+\devnum{2} & SPJF-E                         & \devnum{0.916} & \devnum{0.037 [0.892, 0.930]} & \devnum{0.267 [0.704, 0.971]} \\
+\devnum{2} & Guard($\devnum{300}$)          & \devnum{0.478} & \devnum{0.214 [0.387, 0.602]} & \devnum{0.708 [0.066, 0.774]} \\
+\devnum{2} & Guard($\devnum{600}$)          & \devnum{0.801} & \devnum{0.078 [0.764, 0.842]} & \devnum{0.585 [0.328, 0.913]} \\
+\devnum{2} & Guard($\devnum{1200}$)         & \devnum{0.844} & \devnum{0.053 [0.817, 0.870]} & \devnum{0.393 [0.545, 0.938]} \\
+\devnum{2} & Guard($\devnum{300}$) $-$ SPJF-E & \devnum{-0.438} & \devnum{0.213 [-0.526, -0.314]} & \devnum{0.538 [-0.714, -0.176]} \\
+\devnum{2} & Guard($\devnum{600}$) $-$ SPJF-E & \devnum{-0.115} & \devnum{0.065 [-0.142, -0.077]} & \devnum{0.274 [-0.320, -0.046]} \\
+\devnum{2} & Guard($\devnum{1200}$) $-$ SPJF-E & \devnum{-0.072} & \devnum{0.031 [-0.083, -0.052]} & \devnum{0.118 [-0.150, -0.032]} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
 \subsection{Which Results the Package Reproduces}
 
 The package produces the main CodeBench ranking, guard, adversarial and residual
