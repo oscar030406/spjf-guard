@@ -237,7 +237,7 @@ def build_online_index(recomputer: M4HistoryRecomputer) -> OnlineIndex:
     )
     signature = np.zeros(n_rows, np.uint64)
     fields = [getattr(h, name) for h in (exercise, user) for name in _ORIGINAL_FIELDS]
-    _original_loop(targets, WINDOW, *fields, signature)
+    _original_loop(targets, WINDOW, *fields, signature)  # type: ignore[call-arg]
     return OnlineIndex(
         exercise=exercise,
         user=user,
@@ -254,8 +254,8 @@ def build_online_index(recomputer: M4HistoryRecomputer) -> OnlineIndex:
 class _CellLayout:
     """Per-cell static layout: own-copy segments, clock offsets and the clock slack."""
 
-    segments: tuple[np.ndarray, np.ndarray]  # per history: segment of every job
-    n_segments: tuple[int, int]
+    segments: tuple[np.ndarray, ...]  # per history: segment of every job
+    n_segments: tuple[int, ...]
     offset: np.ndarray  # original minus replay clock of each job's copy, whole seconds
     slack_s: float
 
@@ -304,9 +304,9 @@ class _PassView:
 
     completion: np.ndarray
     release: np.ndarray
-    order: tuple[np.ndarray, np.ndarray]
-    offsets: tuple[np.ndarray, np.ndarray]
-    hashes: tuple[np.ndarray, np.ndarray]
+    order: tuple[np.ndarray, ...]
+    offsets: tuple[np.ndarray, ...]
+    hashes: tuple[np.ndarray, ...]
 
 
 def release_times(layout: _CellLayout, completion: np.ndarray) -> np.ndarray:
@@ -518,7 +518,7 @@ def online_signatures(
             view.offsets[g],
             view.hashes[g],
         ]
-    _online_loop(
+    _online_loop(  # type: ignore[call-arg]
         jobs,
         arrays["job_row"],
         arrays["arrival_us"],
@@ -640,13 +640,13 @@ def refine_policy_online(
                 initial_outcome = outcome
         simulated = perf_counter()
         if not full_check:
-            completion = arrays["arrival_us"] + outcome.wait_us + arrays["service_us"]
+            completion = arrays["arrival_us"] + outcome.wait_us + arrays["service_us"]  # type: ignore[union-attr]
             view = pass_view(index, layout, arrays, completion)
         viewed = perf_counter()
         checked = (
             everyone if settled_us < 0 else np.flatnonzero(arrays["arrival_us"] > settled_us)
         )
-        online_signatures(index, layout, arrays, view, checked, signature, counts)
+        online_signatures(index, layout, arrays, view, checked, signature, counts)  # type: ignore[arg-type]
         mismatched = checked[signature[checked] != stored[checked]]
         detected = perf_counter()
         frontier = (
@@ -658,7 +658,7 @@ def refine_policy_online(
                 signature,
                 layout,
                 arrays,
-                view,
+                view,  # type: ignore[arg-type]
                 recomputer,
                 models,
                 baseline_history,
@@ -694,8 +694,8 @@ def refine_policy_online(
             settled_us = np.int64(-1)
     changed = np.flatnonzero(explicit & (scores != baseline_score))
     return OnlineResult(
-        outcome=outcome,
-        initial_outcome=initial_outcome,
+        outcome=outcome,  # type: ignore[arg-type]
+        initial_outcome=initial_outcome,  # type: ignore[arg-type]
         passes=passes,
         changed_jobs=changed,
         score_delta=scores[changed] - baseline_score[changed],

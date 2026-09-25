@@ -854,10 +854,10 @@ def replay_online(
         job = int(kernel.st[X_PENDING])
         done = np.union1d(lists[0].done(job), lists[1].done(job))
         row = int(job_row[job])
-        history = recomputer.recompute_visible(
+        history = recomputer.recompute_visible(  # type: ignore[assignment]
             row, baseline_history[row], job_row[done], release[done]
         )
-        raw[job] = float(models.predict(job_row[job : job + 1], history[None, :])[0])
+        raw[job] = float(models.predict(job_row[job : job + 1], history[None, :])[0])  # type: ignore[index]
         score[job] = raw[job] + aging[job]
         decided[job] = 2
         pauses += 1

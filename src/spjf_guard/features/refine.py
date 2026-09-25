@@ -379,7 +379,7 @@ class M4HistoryRecomputer:
             np.r_[self.availability[external], own_release[mine]],
             self.arrival,
         )
-        return self._outcome_fields(baseline, *pieces, event_rows)
+        return self._outcome_fields(baseline, *pieces, event_rows)  # type: ignore[call-arg]
 
     def _outcome_fields(
         self,
