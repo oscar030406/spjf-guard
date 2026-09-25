@@ -208,7 +208,15 @@ $UV python scripts/check_paper_numbers.py
 $UV python scripts/check_generated.py
 ```
 
-Three things are worth knowing before you start.
+Four things are worth knowing before you start.
+
+The committed tables were produced on Windows x86-64 with the locked dependencies, and
+the replays that refit the frozen predictor reproduce them there bit for bit. On Linux,
+with the same locked versions, the refit differs in the last bit of the score for 714
+of the 147,380 jobs of the first target semester (checked on 2026-09-25), and those
+runners stop at their assertion that the refit equals the released scores. The overlays
+themselves rebuild byte for byte on Linux once the zip header's host-system byte is set
+to the Windows value.
 
 Choosing the guard's settings is slow. `select_parameters.py` tries 258 candidate
 settings fixed in advance (`docs/adr/0005`) on every validation cell. One cell with two
