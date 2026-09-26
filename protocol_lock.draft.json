@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-25T11:06:04-04:00",
+  "written_at": "2026-09-26T05:39:48-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -686,6 +686,10 @@
         "sha256": "0741bf93a5f1aacb942b54013b05bb35d260dd87a18c4c1fe28baaffb92cdc86"
       },
       {
+        "path": "scripts/online_paired_differences.py",
+        "sha256": "6c2185fc986aed5b438b5ee987f35c7a481d27d05849c295eb56cc0d6b884457"
+      },
+      {
         "path": "scripts/parse_archive.py",
         "sha256": "ea5b01b2142dbac736de4ef0f466fb4b1bd7b98aba2d07d0d3c0672d4aacc40d"
       },
@@ -962,6 +966,10 @@
         "sha256": "a14e8d4ea678f8271f2a1a15656ef132f787ba6f1a3eb669e3b66484dd0cad0d"
       },
       {
+        "path": "tests/test_online_paired_differences.py",
+        "sha256": "19cef539f157983a0b5f1c82387b6247f691d086502570ee7bf1833e875320fe"
+      },
+      {
         "path": "tests/test_online_visibility.py",
         "sha256": "349ad97f74be47cc6f8432290b7cdf572ac470e6c70408d47354ea51db13f81c"
       },
@@ -1030,7 +1038,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "f97b84b62b6a3f14dd621502b28e118e26d3f6f285422ba09379c28a363f4bec"
+    "digest": "7488196f0f730dda6e36183d1d074525de2e7a3d67dc16e0137dcbcfafcd727f"
   },
   "inputs": {
     "artefacts": [

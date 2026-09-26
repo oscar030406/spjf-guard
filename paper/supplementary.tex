@@ -135,8 +135,9 @@ Firefox continuous-integration pools collected from Mozilla's public APIs
 queueing, feedback and LPC-EGEE results are Section~S6. Additional theory is Section~S7;
 the extremal constructions and remaining proofs behind Section~\ref*{M-sec:theory} of the manuscript,
 which carries no appendix of its own, are Section~S8; and the per-paper detail behind
-Section~\ref*{M-sec:related} of the manuscript is Section~S9; and the tables of the sealed run are
-Section~S10. Outside Section~S10, every empirical figure quoted here is a development figure in
+Section~\ref*{M-sec:related} of the manuscript is Section~S9; the tables of the sealed run are
+Section~S10; and the main comparisons replayed under the online protocol are Section~S11.
+Outside Section~S10, every empirical figure quoted here is a development figure in
 the sense of Section~\ref*{M-sec:exp_prov} of the manuscript: nothing in those sections comes
 from a sealed part of any trace, and nothing there was recomputed for it.
 
@@ -1054,9 +1055,10 @@ uses code, course and clock information known at submission, without outcome
 history. Both use their own fitted models; original, conservative and static
 therefore differ in more than release delay. Their differences cannot be attributed
 to queueing delay alone and are not mathematical upper or lower performance bounds.
-Guard parameters remain those selected under the original score. The exact protocol
-below is the empirical headline; the original-score results are optimistic
-references, and the conservative and static results are controls.
+Guard parameters remain those selected under the original score. The online protocol
+below is the empirical headline and the exact protocol its stricter reference; the
+original-score results are optimistic references, and the conservative and static
+results are controls.
 % Source: outputs/dev_visibility/manifest.json, notes.conservative_lag_s and
 % selected_parameters_unchanged; headline: configs/main.yaml, features.headline_variant.
 
@@ -1118,12 +1120,12 @@ typeset the first two.
 \subsection{Aging Outside the Budget Family}
 \label{sec:supp_aging}
 
-A linear aging credit, selected under the same conservative score and the same harm
-limit as the guard, carries no proved per-job guarantee and closes far less of the gap.
-Section~\ref*{M-sec:exp_visibility} of the manuscript states the comparison; here it is run.
+A linear aging credit, selected under the conservative score and the guard's harm limit,
+carries no proved per-job guarantee and closes far less of the gap.
+Section~\ref*{M-sec:exp_guard} of the manuscript states the comparison; here it is run.
 
 Table~\ref{tab:s_aging_policy} extends the policy definitions with linear aging.
-It uses the same conservative score as the headline, with a validation search
+It uses the conservative score of Section~\ref{sec:supp_visibility}, with a validation search
 over \devnum{11} credits, of which \devnum{4} pass the \devnum{300} s harm limit.
 The selected credit is $\omega=\devnum{0.03}$; its worst validation gap is
 \devnum{0.0375} and harm \devnum{246.36} s. The label Aging(\devnum{600}) records
@@ -3053,8 +3055,8 @@ deadline-window p99 in seconds, mean over overlays \devnum{0}--\devnum{2}, and t
 fraction of the FCFS-to-SJF gap each policy closes. ``Late kept'' and ``late dropped''
 are the two treatments of submissions that gating pushes past their own assignment's
 end. SPJF-E here is the stored expected-cost score read on the original result clock,
-the variant the main development cells use, and not the conservative-visibility
-headline of Section~\ref*{M-sec:exp_visibility} of the manuscript; these rows are therefore a sensitivity and
+the variant the main development cells use, and not the online headline of
+Section~\ref*{M-sec:exp_visibility} of the manuscript; these rows are therefore a sensitivity and
 not a restatement of that headline.}
 \label{tab:s_closed}
 \begin{adjustwidth}{-\extralength}{0cm}
@@ -4607,7 +4609,278 @@ Skip($\sealednum{1200}$), $\kappa=20$ & \sealednum{1200} & \sealednum{3692.13} &
 % Source: outputs/consistent_paper_tables/tab_k1_sealed.tex (emit_paper_tables.py
 %   with the --sealed-* options); every sealed figure is the emitted one.
 
-% Flush the sealed tables before the reference list.
+% Flush the sealed tables before the next section.
+\clearpage
+%=================================================================
+\section{The Comparisons under the Online Replay}
+\label{sec:s_online}
+
+Section~\ref*{M-sec:exp_visibility} of the manuscript reports Guard(600) under the online
+protocol, and the comparisons after it use the original one. We replayed the main policies
+of those comparisons under the online protocol on the same fifteen development cells: SPJF-E,
+SPJF-log and the aging baseline, and at each promise the guard, its three single-shape
+winners, Fixed, Skip and Timeout, \devnum{24} policies in all. Their parameters are the ones
+selected before the replay, the guard family's on the original clock and the aging credit
+under the conservative score (Section~\ref{sec:supp_aging}). Every other comparison after
+Section~\ref*{M-sec:exp_visibility} of the manuscript stays on the original clock. The
+sampled audit of
+Section~\ref{sec:supp_visibility} found no mismatch in
+any of the 360 policy-cells. Table~\ref{tab:s_online_suite} sets each policy's online
+figures beside its original ones. The replay keeps each policy's week-block replicates, so a
+difference between two policies is resampled as one quantity, as it is on the original
+clock. Table~\ref{tab:s_online_pairs} gives the paired differences of
+Sections~\ref*{M-sec:exp_rank} and~\ref*{M-sec:exp_guard} of the manuscript and of
+Section~\ref{sec:supp_shape} on both clocks, and Table~\ref{tab:s_online_clock} repeats Table~\ref*{M-tab:clock} of the
+manuscript under the online protocol.
+% Sources: outputs/dev_online_visibility/online_audit.csv (360 rows, mismatches 0, at least
+% 3,999 jobs sampled per row); online_comparison.csv (24 base policies x 3 levels).
+% Runner: scripts/run_online_visibility.py --policies all (GENERATED.md); pairs:
+% scripts/online_paired_differences.py, outputs/online_paired/.
+
+No policy with a promise exceeds it under the online replay. The replay checks every job
+against its bound, and the largest excess over FCFS is \devnum{0.945} of the promise, for
+Guard-age(1200) at the busiest load. At the two higher loads every policy closes less of the
+gap online than on the original clock. At the lightest load \devnum{22} of the 24 do, and
+SPJF-log and Aging(600) close \devnum{0.008} and \devnum{0.007} more. Within each promise
+the order of the seven policies changes only between two policies whose original gaps differ
+by less than \devnum{0.003}.
+% Sources: outputs/dev_online_visibility/online_comparison.csv: max_excess_s / promise,
+% largest 1134.56689 / 1200 (Guard-age(1200)|online, level 2); gap_closed online minus
+% original, negative for all 24 policies at levels 1 and 2 and for 22 at level 0
+% (SPJF-log +0.0082, Aging(600) +0.0070); rank changes inside a promise: Timeout(1200) and
+% Guard-age(1200) at level 0 (0.7521 / 0.7513), Guard(300) and Guard-queue(300) at level 1
+% (0.7382 / 0.7359), Guard-age(1200) and Fixed(1200), Timeout(1200) and Guard-fixed(1200)
+% at level 2 (0.8741 / 0.8722, 0.8272 / 0.8270). Bounds: _check_bound in the runner.
+
+The guarantee costs more under the online replay. Guard($G$) minus SPJF-E is negative with
+an interval clear of zero in all nine cells. At the busiest load it is
+\devnum{$-0.497$}, \devnum{$-0.158$} and \devnum{$-0.110$} at $G = 300$, 600 and 1200 s,
+against \devnum{$-0.438$}, \devnum{$-0.115$} and \devnum{$-0.072$} on the original clock.
+Every difference that clears zero on the original clock keeps its sign online, including the
+guard's lead over the maximum waiting time in Table~\ref{tab:s_online_clock}. At the busiest
+load and $G = 600$ s that lead is \devnum{$+0.423$ [$+0.204$, $+0.664$]}, against
+\devnum{$+0.381$ [$+0.158$, $+0.650$]}. Four differences no longer clear zero: the
+queue-length shape's lead over the guard at $G = 600$ s and the lightest load, the constant
+shape's deficit at $G = 1200$ s and the busiest load, which Section~\ref{sec:supp_shape}
+calls barely clear of zero, and SPJF-E's lead over SPJF-log at the two higher loads. Three
+newly clear zero, all at the lightest load: SPJF-log's lead over SPJF-E, the age-relative
+shape's lead of \devnum{0.006} over the guard at $G = 1200$ s, and Timeout's lead of
+\devnum{0.005} over the guard at $G = 1200$ s.
+
+Three statements of Section~\ref{sec:supp_shape} therefore hold on the original clock only:
+that at $G = 1200$ s the constant shape's deficit clears zero at the busiest load, that at a
+loose promise and a light load the shape does no measurable work, and that the queue-length
+shape at $G = 600$ s halves the guard's harm at every load. Online its worst-overlay harm is
+\devnum{127.1}, \devnum{135.4} and \devnum{128.6} s against the guard's \devnum{248.3},
+\devnum{215.7} and \devnum{333.2} s, under half only at the busiest load, and its gap is
+within \devnum{0.013} of the guard's. The shape still matters most where the promise is tight
+and the load high. The constant shape trails the guard by \devnum{0.007}, \devnum{0.026} and
+\devnum{0.131} at $G = 600$ s as the load rises, and by \devnum{0.091} and \devnum{0.199} at
+$G = 300$ s at the two higher loads, each interval clear of zero.
+% Sources: outputs/online_paired/online_paired_differences.csv (variant online and original,
+% difference_gap, gap_lo, gap_hi; the original rows equal outputs/dev_tables/
+% paired_differences.csv exactly, checked by the script) and online_clock_intervals.csv
+% (level 2, promise 600; level 0, promise 1200); outputs/dev_online_visibility/
+% online_comparison.csv, harm_s of Guard-queue(600)|online (127.1, 135.4, 128.6) and
+% Guard(600)|online (248.3, 215.7, 333.2). Counts of differences that stop or start
+% clearing zero: every row of both CSVs, original against online (4 stop, 3 start, none
+% changes sign among those clear of zero on the original clock).
+
+The changes between the two rankings alter the conclusion of
+Section~\ref*{M-sec:exp_rank} of the manuscript. On the original clock the
+expected-cost score beats the log-scale one at the two higher loads and ties with it at the
+lightest. Online, SPJF-E minus SPJF-log is \devnum{$-0.022$ [$-0.039$, $-0.009$]},
+\devnum{$+0.006$ [$-0.004$, $+0.015$]} and \devnum{$+0.009$ [$-0.000$, $+0.015$]} at the
+three loads: the log-scale score is ahead at the lightest load, and the expected-cost score's
+lead at the two higher loads no longer clears zero. Both are replayed with their own frozen
+models, so the change comes from the history each score may use and not from a new fit.
+% Source: outputs/online_paired/online_paired_differences.csv, rows SPJF-E - SPJF-log.
+
+\begin{table}[p]
+\centering
+\scriptsize
+\caption{The \devnum{24} main policies on the original clock and under the online replay,
+at the parameters selected before the replay, five overlays. Gap closed online with
+\devnum{95\%} intervals from resampled weeks. Largest excess and harm are online, the worst
+over the overlays; times in seconds.}
+\label{tab:s_online_suite}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrlrr}
+\toprule
+Load & Policy & \multicolumn{2}{c}{p99$_{\mathrm{dl}}$} & Gap, orig. & Gap, online & Max exc. & Harm \\
+ & & orig. & online & & & & \\
+\midrule
+\multicolumn{8}{l}{$\rho = \devnum{0.5}$, $k = \devnum{7.8}$} \\
+ & SPJF-E                 & \devnum{14.68} & \devnum{14.94} & \devnum{0.754} & \devnum{0.740 [0.708, 0.764]} & \devnum{1237.4} & \devnum{248.3} \\
+ & SPJF-log               & \devnum{14.71} & \devnum{14.59} & \devnum{0.754} & \devnum{0.762 [0.735, 0.785]} & \devnum{1234.0} & \devnum{305.2} \\
+ & Aging($\devnum{600}$)  & \devnum{17.12} & \devnum{17.06} & \devnum{0.613} & \devnum{0.620 [0.551, 0.659]} & \devnum{888.8} & \devnum{245.8} \\
+ & Guard($\devnum{300}$)  & \devnum{15.58} & \devnum{16.03} & \devnum{0.705} & \devnum{0.681 [0.648, 0.706]} & \devnum{198.9} & \devnum{116.3} \\
+ & Guard-fixed($\devnum{300}$) & \devnum{15.75} & \devnum{16.12} & \devnum{0.697} & \devnum{0.677 [0.649, 0.701]} & \devnum{143.1} & \devnum{126.9} \\
+ & Guard-age($\devnum{300}$) & \devnum{15.58} & \devnum{16.03} & \devnum{0.705} & \devnum{0.681 [0.648, 0.706]} & \devnum{198.9} & \devnum{116.3} \\
+ & Guard-queue($\devnum{300}$) & \devnum{15.43} & \devnum{15.81} & \devnum{0.714} & \devnum{0.693 [0.669, 0.714]} & \devnum{192.9} & \devnum{91.2} \\
+ & Fixed($\devnum{300}$)  & \devnum{15.30} & \devnum{15.72} & \devnum{0.721} & \devnum{0.698 [0.672, 0.719]} & \devnum{197.9} & \devnum{195.0} \\
+ & Skip($\devnum{300}$)   & \devnum{26.38} & \devnum{26.51} & \devnum{0.078} & \devnum{0.071 [0.044, 0.100]} & \devnum{102.7} & \devnum{72.6} \\
+ & Timeout($\devnum{300}$) & \devnum{16.59} & \devnum{16.96} & \devnum{0.652} & \devnum{0.632 [0.597, 0.660]} & \devnum{168.3} & \devnum{137.3} \\
+ & Guard($\devnum{600}$)  & \devnum{14.97} & \devnum{15.22} & \devnum{0.740} & \devnum{0.725 [0.696, 0.746]} & \devnum{499.5} & \devnum{248.3} \\
+ & Guard-fixed($\devnum{600}$) & \devnum{15.09} & \devnum{15.35} & \devnum{0.733} & \devnum{0.718 [0.691, 0.739]} & \devnum{313.1} & \devnum{248.3} \\
+ & Guard-age($\devnum{600}$) & \devnum{14.97} & \devnum{15.22} & \devnum{0.740} & \devnum{0.725 [0.696, 0.746]} & \devnum{499.5} & \devnum{248.3} \\
+ & Guard-queue($\devnum{600}$) & \devnum{14.88} & \devnum{15.16} & \devnum{0.744} & \devnum{0.729 [0.700, 0.749]} & \devnum{496.5} & \devnum{127.1} \\
+ & Fixed($\devnum{600}$)  & \devnum{14.91} & \devnum{15.17} & \devnum{0.742} & \devnum{0.728 [0.699, 0.750]} & \devnum{491.5} & \devnum{248.3} \\
+ & Skip($\devnum{600}$)   & \devnum{24.64} & \devnum{24.93} & \devnum{0.184} & \devnum{0.168 [0.119, 0.222]} & \devnum{127.2} & \devnum{72.6} \\
+ & Timeout($\devnum{600}$) & \devnum{15.07} & \devnum{15.34} & \devnum{0.734} & \devnum{0.719 [0.691, 0.740]} & \devnum{425.7} & \devnum{248.3} \\
+ & Guard($\devnum{1200}$) & \devnum{14.78} & \devnum{15.06} & \devnum{0.750} & \devnum{0.733 [0.703, 0.755]} & \devnum{954.3} & \devnum{127.1} \\
+ & Guard-fixed($\devnum{1200}$) & \devnum{14.83} & \devnum{15.10} & \devnum{0.747} & \devnum{0.731 [0.701, 0.754]} & \devnum{558.6} & \devnum{248.3} \\
+ & Guard-age($\devnum{1200}$) & \devnum{14.73} & \devnum{14.96} & \devnum{0.751} & \devnum{0.739 [0.707, 0.762]} & \devnum{1037.7} & \devnum{248.3} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{14.78} & \devnum{15.06} & \devnum{0.750} & \devnum{0.733 [0.703, 0.755]} & \devnum{954.3} & \devnum{127.1} \\
+ & Fixed($\devnum{1200}$) & \devnum{14.70} & \devnum{14.95} & \devnum{0.753} & \devnum{0.739 [0.708, 0.763]} & \devnum{1085.6} & \devnum{248.3} \\
+ & Skip($\devnum{1200}$)  & \devnum{21.62} & \devnum{21.98} & \devnum{0.367} & \devnum{0.345 [0.264, 0.412]} & \devnum{131.8} & \devnum{85.5} \\
+ & Timeout($\devnum{1200}$) & \devnum{14.72} & \devnum{14.97} & \devnum{0.752} & \devnum{0.739 [0.707, 0.762]} & \devnum{1001.4} & \devnum{248.3} \\
+\midrule
+\multicolumn{8}{l}{$\rho = \devnum{0.8}$, $k = \devnum{5}$} \\
+ & SPJF-E                 & \devnum{43.33} & \devnum{45.42} & \devnum{0.885} & \devnum{0.861 [0.836, 0.877]} & \devnum{3041.1} & \devnum{394.6} \\
+ & SPJF-log               & \devnum{44.36} & \devnum{45.92} & \devnum{0.873} & \devnum{0.855 [0.831, 0.869]} & \devnum{3055.1} & \devnum{678.9} \\
+ & Aging($\devnum{600}$)  & \devnum{67.30} & \devnum{72.58} & \devnum{0.608} & \devnum{0.546 [0.448, 0.627]} & \devnum{1401.0} & \devnum{343.0} \\
+ & Guard($\devnum{300}$)  & \devnum{55.94} & \devnum{62.42} & \devnum{0.738} & \devnum{0.662 [0.590, 0.709]} & \devnum{206.0} & \devnum{127.9} \\
+ & Guard-fixed($\devnum{300}$) & \devnum{64.44} & \devnum{70.27} & \devnum{0.640} & \devnum{0.571 [0.448, 0.657]} & \devnum{155.6} & \devnum{128.2} \\
+ & Guard-age($\devnum{300}$) & \devnum{55.94} & \devnum{62.42} & \devnum{0.738} & \devnum{0.662 [0.590, 0.709]} & \devnum{206.0} & \devnum{127.9} \\
+ & Guard-queue($\devnum{300}$) & \devnum{56.13} & \devnum{61.83} & \devnum{0.736} & \devnum{0.669 [0.599, 0.711]} & \devnum{208.0} & \devnum{127.1} \\
+ & Fixed($\devnum{300}$)  & \devnum{53.83} & \devnum{58.51} & \devnum{0.763} & \devnum{0.708 [0.636, 0.743]} & \devnum{213.8} & \devnum{177.9} \\
+ & Skip($\devnum{300}$)   & \devnum{119.20} & \devnum{119.53} & \devnum{0.002} & \devnum{-0.002 [-0.004, 0.005]} & \devnum{143.4} & \devnum{58.8} \\
+ & Timeout($\devnum{300}$) & \devnum{98.76} & \devnum{113.04} & \devnum{0.244} & \devnum{0.078 [-0.077, 0.431]} & \devnum{183.1} & \devnum{165.8} \\
+ & Guard($\devnum{600}$)  & \devnum{47.47} & \devnum{50.57} & \devnum{0.837} & \devnum{0.800 [0.772, 0.819]} & \devnum{509.3} & \devnum{215.7} \\
+ & Guard-fixed($\devnum{600}$) & \devnum{49.85} & \devnum{52.80} & \devnum{0.809} & \devnum{0.775 [0.743, 0.794]} & \devnum{308.8} & \devnum{264.1} \\
+ & Guard-age($\devnum{600}$) & \devnum{47.47} & \devnum{50.57} & \devnum{0.837} & \devnum{0.800 [0.772, 0.819]} & \devnum{509.3} & \devnum{215.7} \\
+ & Guard-queue($\devnum{600}$) & \devnum{47.69} & \devnum{50.98} & \devnum{0.834} & \devnum{0.796 [0.771, 0.813]} & \devnum{503.7} & \devnum{135.4} \\
+ & Fixed($\devnum{600}$)  & \devnum{47.03} & \devnum{49.91} & \devnum{0.842} & \devnum{0.808 [0.785, 0.823]} & \devnum{523.7} & \devnum{394.6} \\
+ & Skip($\devnum{600}$)   & \devnum{118.69} & \devnum{119.20} & \devnum{0.008} & \devnum{0.002 [-0.007, 0.018]} & \devnum{210.9} & \devnum{66.7} \\
+ & Timeout($\devnum{600}$) & \devnum{51.55} & \devnum{55.09} & \devnum{0.789} & \devnum{0.748 [0.696, 0.775]} & \devnum{458.0} & \devnum{394.6} \\
+ & Guard($\devnum{1200}$) & \devnum{46.31} & \devnum{49.30} & \devnum{0.850} & \devnum{0.815 [0.791, 0.832]} & \devnum{1102.5} & \devnum{135.4} \\
+ & Guard-fixed($\devnum{1200}$) & \devnum{46.76} & \devnum{49.34} & \devnum{0.845} & \devnum{0.815 [0.792, 0.831]} & \devnum{573.8} & \devnum{394.6} \\
+ & Guard-age($\devnum{1200}$) & \devnum{45.16} & \devnum{47.53} & \devnum{0.864} & \devnum{0.836 [0.813, 0.851]} & \devnum{1113.4} & \devnum{373.4} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{46.31} & \devnum{49.30} & \devnum{0.850} & \devnum{0.815 [0.791, 0.832]} & \devnum{1102.5} & \devnum{135.4} \\
+ & Fixed($\devnum{1200}$) & \devnum{45.32} & \devnum{47.78} & \devnum{0.862} & \devnum{0.833 [0.811, 0.848]} & \devnum{1109.4} & \devnum{394.6} \\
+ & Skip($\devnum{1200}$)  & \devnum{117.48} & \devnum{118.11} & \devnum{0.022} & \devnum{0.015 [-0.003, 0.060]} & \devnum{221.3} & \devnum{134.1} \\
+ & Timeout($\devnum{1200}$) & \devnum{45.77} & \devnum{48.25} & \devnum{0.857} & \devnum{0.828 [0.804, 0.843]} & \devnum{1048.3} & \devnum{394.6} \\
+\midrule
+\multicolumn{8}{l}{$\rho = \devnum{1}$, $k = \devnum{4}$} \\
+ & SPJF-E                 & \devnum{62.79} & \devnum{74.91} & \devnum{0.916} & \devnum{0.864 [0.827, 0.890]} & \devnum{5812.7} & \devnum{735.1} \\
+ & SPJF-log               & \devnum{67.17} & \devnum{77.00} & \devnum{0.897} & \devnum{0.854 [0.821, 0.881]} & \devnum{5806.0} & \devnum{1031.5} \\
+ & Aging($\devnum{600}$)  & \devnum{201.72} & \devnum{214.33} & \devnum{0.313} & \devnum{0.258 [0.222, 0.339]} & \devnum{1808.9} & \devnum{468.9} \\
+ & Guard($\devnum{300}$)  & \devnum{163.40} & \devnum{188.97} & \devnum{0.478} & \devnum{0.367 [0.278, 0.485]} & \devnum{224.6} & \devnum{129.4} \\
+ & Guard-fixed($\devnum{300}$) & \devnum{223.69} & \devnum{235.16} & \devnum{0.217} & \devnum{0.168 [0.114, 0.263]} & \devnum{161.9} & \devnum{145.9} \\
+ & Guard-age($\devnum{300}$) & \devnum{163.40} & \devnum{188.97} & \devnum{0.478} & \devnum{0.367 [0.278, 0.485]} & \devnum{224.6} & \devnum{129.4} \\
+ & Guard-queue($\devnum{300}$) & \devnum{171.79} & \devnum{197.20} & \devnum{0.442} & \devnum{0.331 [0.262, 0.455]} & \devnum{221.9} & \devnum{108.1} \\
+ & Fixed($\devnum{300}$)  & \devnum{169.29} & \devnum{193.74} & \devnum{0.453} & \devnum{0.347 [0.280, 0.501]} & \devnum{230.8} & \devnum{206.1} \\
+ & Skip($\devnum{300}$)   & \devnum{273.14} & \devnum{273.71} & \devnum{0.001} & \devnum{-0.001 [-0.003, 0.001]} & \devnum{146.7} & \devnum{81.3} \\
+ & Timeout($\devnum{300}$) & \devnum{266.41} & \devnum{268.13} & \devnum{0.031} & \devnum{0.023 [0.008, 0.040]} & \devnum{191.4} & \devnum{191.4} \\
+ & Guard($\devnum{600}$)  & \devnum{89.24} & \devnum{111.25} & \devnum{0.801} & \devnum{0.705 [0.648, 0.768]} & \devnum{517.7} & \devnum{333.2} \\
+ & Guard-fixed($\devnum{600}$) & \devnum{116.75} & \devnum{141.55} & \devnum{0.682} & \devnum{0.574 [0.475, 0.681]} & \devnum{317.4} & \devnum{298.5} \\
+ & Guard-age($\devnum{600}$) & \devnum{89.24} & \devnum{111.25} & \devnum{0.801} & \devnum{0.705 [0.648, 0.768]} & \devnum{517.7} & \devnum{333.2} \\
+ & Guard-queue($\devnum{600}$) & \devnum{91.09} & \devnum{114.26} & \devnum{0.793} & \devnum{0.692 [0.641, 0.753]} & \devnum{520.4} & \devnum{128.6} \\
+ & Fixed($\devnum{600}$)  & \devnum{86.53} & \devnum{106.87} & \devnum{0.813} & \devnum{0.725 [0.674, 0.783]} & \devnum{517.9} & \devnum{469.1} \\
+ & Skip($\devnum{600}$)   & \devnum{272.98} & \devnum{274.06} & \devnum{0.002} & \devnum{-0.002 [-0.007, 0.002]} & \devnum{225.4} & \devnum{82.3} \\
+ & Timeout($\devnum{600}$) & \devnum{177.08} & \devnum{208.91} & \devnum{0.420} & \devnum{0.282 [0.016, 0.548]} & \devnum{481.3} & \devnum{454.7} \\
+ & Guard($\devnum{1200}$) & \devnum{79.32} & \devnum{100.11} & \devnum{0.844} & \devnum{0.754 [0.711, 0.799]} & \devnum{1116.4} & \devnum{128.6} \\
+ & Guard-fixed($\devnum{1200}$) & \devnum{83.32} & \devnum{102.76} & \devnum{0.827} & \devnum{0.743 [0.696, 0.795]} & \devnum{583.4} & \devnum{508.2} \\
+ & Guard-age($\devnum{1200}$) & \devnum{72.52} & \devnum{90.68} & \devnum{0.874} & \devnum{0.795 [0.755, 0.835]} & \devnum{1134.6} & \devnum{442.3} \\
+ & Guard-queue($\devnum{1200}$) & \devnum{79.32} & \devnum{100.11} & \devnum{0.844} & \devnum{0.754 [0.711, 0.799]} & \devnum{1116.4} & \devnum{128.6} \\
+ & Fixed($\devnum{1200}$) & \devnum{72.94} & \devnum{90.51} & \devnum{0.872} & \devnum{0.796 [0.754, 0.836]} & \devnum{1126.9} & \devnum{735.1} \\
+ & Skip($\devnum{1200}$)  & \devnum{273.08} & \devnum{274.43} & \devnum{0.002} & \devnum{-0.004 [-0.012, 0.008]} & \devnum{279.0} & \devnum{164.7} \\
+ & Timeout($\devnum{1200}$) & \devnum{83.29} & \devnum{103.46} & \devnum{0.827} & \devnum{0.740 [0.683, 0.800]} & \devnum{1085.9} & \devnum{735.1} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: outputs/consistent_paper_tables/tab_online_suite.tex, emitted by
+%   scripts/emit_paper_tables.py --dev-online-dir outputs/dev_online_visibility (GENERATED.md);
+%   check_paper_numbers.py compares this body with the emitted one value for value.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Paired differences in gap closed, left policy minus right, on the original clock and
+under the online replay, five overlays, with \devnum{95\%} intervals from resampled weeks.
+The original column is the development package's own. Guard-age($G$) at $G = 300$ and
+600~s and Guard-queue(1200) are the guard's own grid points, so their rows are zero on both
+clocks and are omitted.}
+\label{tab:s_online_pairs}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llll}
+\toprule
+Load & Difference & Original & Online \\
+\midrule
+\devnum{0.5} & SPJF-E $-$ SPJF-log & \devnum{$-0.000$ [$-0.016$, $+0.013$]} & \devnum{$-0.022$ [$-0.039$, $-0.009$]} \\
+ & Guard($\devnum{300}$) $-$ Guard-fixed($\devnum{300}$) & \devnum{$+0.008$ [$-0.002$, $+0.015$]} & \devnum{$+0.004$ [$-0.007$, $+0.012$]} \\
+ & Guard($\devnum{300}$) $-$ Guard-queue($\devnum{300}$) & \devnum{$-0.009$ [$-0.016$, $-0.003$]} & \devnum{$-0.012$ [$-0.025$, $-0.003$]} \\
+ & Guard($\devnum{300}$) $-$ SPJF-E & \devnum{$-0.049$ [$-0.061$, $-0.036$]} & \devnum{$-0.059$ [$-0.076$, $-0.043$]} \\
+ & Guard($\devnum{600}$) $-$ Guard-fixed($\devnum{600}$) & \devnum{$+0.007$ [$+0.003$, $+0.012$]} & \devnum{$+0.007$ [$+0.002$, $+0.014$]} \\
+ & Guard($\devnum{600}$) $-$ Guard-queue($\devnum{600}$) & \devnum{$-0.005$ [$-0.009$, $-0.002$]} & \devnum{$-0.003$ [$-0.007$, $+0.001$]} \\
+ & Guard($\devnum{600}$) $-$ SPJF-E & \devnum{$-0.014$ [$-0.020$, $-0.008$]} & \devnum{$-0.015$ [$-0.021$, $-0.008$]} \\
+ & Guard($\devnum{1200}$) $-$ Guard-fixed($\devnum{1200}$) & \devnum{$+0.003$ [$-0.000$, $+0.008$]} & \devnum{$+0.002$ [$-0.002$, $+0.006$]} \\
+ & Guard($\devnum{1200}$) $-$ Guard-age($\devnum{1200}$) & \devnum{$-0.002$ [$-0.004$, $+0.002$]} & \devnum{$-0.006$ [$-0.008$, $-0.002$]} \\
+ & Guard($\devnum{1200}$) $-$ SPJF-E & \devnum{$-0.004$ [$-0.007$, $-0.000$]} & \devnum{$-0.007$ [$-0.011$, $-0.002$]} \\
+\midrule
+\devnum{0.8} & SPJF-E $-$ SPJF-log & \devnum{$+0.012$ [$+0.004$, $+0.019$]} & \devnum{$+0.006$ [$-0.004$, $+0.015$]} \\
+ & Guard($\devnum{300}$) $-$ Guard-fixed($\devnum{300}$) & \devnum{$+0.099$ [$+0.056$, $+0.157$]} & \devnum{$+0.091$ [$+0.041$, $+0.150$]} \\
+ & Guard($\devnum{300}$) $-$ Guard-queue($\devnum{300}$) & \devnum{$+0.002$ [$-0.008$, $+0.011$]} & \devnum{$-0.007$ [$-0.023$, $+0.008$]} \\
+ & Guard($\devnum{300}$) $-$ SPJF-E & \devnum{$-0.147$ [$-0.189$, $-0.122$]} & \devnum{$-0.199$ [$-0.262$, $-0.151$]} \\
+ & Guard($\devnum{600}$) $-$ Guard-fixed($\devnum{600}$) & \devnum{$+0.028$ [$+0.020$, $+0.038$]} & \devnum{$+0.026$ [$+0.015$, $+0.041$]} \\
+ & Guard($\devnum{600}$) $-$ Guard-queue($\devnum{600}$) & \devnum{$+0.003$ [$-0.001$, $+0.007$]} & \devnum{$+0.005$ [$-0.001$, $+0.008$]} \\
+ & Guard($\devnum{600}$) $-$ SPJF-E & \devnum{$-0.049$ [$-0.058$, $-0.038$]} & \devnum{$-0.060$ [$-0.077$, $-0.046$]} \\
+ & Guard($\devnum{1200}$) $-$ Guard-fixed($\devnum{1200}$) & \devnum{$+0.005$ [$-0.001$, $+0.011$]} & \devnum{$+0.000$ [$-0.004$, $+0.006$]} \\
+ & Guard($\devnum{1200}$) $-$ Guard-age($\devnum{1200}$) & \devnum{$-0.014$ [$-0.018$, $-0.009$]} & \devnum{$-0.021$ [$-0.025$, $-0.016$]} \\
+ & Guard($\devnum{1200}$) $-$ SPJF-E & \devnum{$-0.035$ [$-0.041$, $-0.028$]} & \devnum{$-0.046$ [$-0.054$, $-0.035$]} \\
+\midrule
+\devnum{1.0} & SPJF-E $-$ SPJF-log & \devnum{$+0.019$ [$+0.011$, $+0.024$]} & \devnum{$+0.009$ [$-0.000$, $+0.015$]} \\
+ & Guard($\devnum{300}$) $-$ Guard-fixed($\devnum{300}$) & \devnum{$+0.262$ [$+0.202$, $+0.288$]} & \devnum{$+0.199$ [$+0.137$, $+0.234$]} \\
+ & Guard($\devnum{300}$) $-$ Guard-queue($\devnum{300}$) & \devnum{$+0.036$ [$+0.016$, $+0.046$]} & \devnum{$+0.036$ [$+0.005$, $+0.045$]} \\
+ & Guard($\devnum{300}$) $-$ SPJF-E & \devnum{$-0.438$ [$-0.526$, $-0.314$]} & \devnum{$-0.497$ [$-0.565$, $-0.393$]} \\
+ & Guard($\devnum{600}$) $-$ Guard-fixed($\devnum{600}$) & \devnum{$+0.119$ [$+0.074$, $+0.176$]} & \devnum{$+0.131$ [$+0.082$, $+0.183$]} \\
+ & Guard($\devnum{600}$) $-$ Guard-queue($\devnum{600}$) & \devnum{$+0.008$ [$+0.004$, $+0.013$]} & \devnum{$+0.013$ [$+0.001$, $+0.024$]} \\
+ & Guard($\devnum{600}$) $-$ SPJF-E & \devnum{$-0.115$ [$-0.142$, $-0.077$]} & \devnum{$-0.158$ [$-0.191$, $-0.110$]} \\
+ & Guard($\devnum{1200}$) $-$ Guard-fixed($\devnum{1200}$) & \devnum{$+0.017$ [$+0.002$, $+0.031$]} & \devnum{$+0.011$ [$-0.004$, $+0.025$]} \\
+ & Guard($\devnum{1200}$) $-$ Guard-age($\devnum{1200}$) & \devnum{$-0.030$ [$-0.036$, $-0.022$]} & \devnum{$-0.041$ [$-0.047$, $-0.033$]} \\
+ & Guard($\devnum{1200}$) $-$ SPJF-E & \devnum{$-0.072$ [$-0.083$, $-0.052$]} & \devnum{$-0.110$ [$-0.124$, $-0.082$]} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: outputs/online_paired/tab_s_online_pairs_body.tex, written by
+%   scripts/online_paired_differences.py from the online checkpoints; its original column
+%   equals outputs/dev_tables/paired_differences.csv bit for bit (checked by the script).
+
+\begin{table}[htbp]
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\caption{Table~\ref*{M-tab:clock} of the manuscript under the online replay: Guard($G$)
+against the maximum waiting time Timeout($G - (3-2/k)L$), which has the same bound $G$. Gap
+closed, mean over the five overlays, with \devnum{95\%} intervals. The difference is Guard
+minus Timeout, resampled as a difference. Harm is the worst over the overlays, in seconds.}
+\label{tab:s_online_clock}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llllll}
+\toprule
+Load & $G$ (s) & Guard($G$) & Timeout & Difference & Harm, Guard / Timeout \\
+\midrule
+\devnum{0.5} & \devnum{300} & \devnum{0.681 [0.648, 0.706]} & \devnum{0.632 [0.597, 0.660]} & \devnum{$+0.049$ [$+0.024$, $+0.074$]} & \devnum{116.3} / \devnum{137.3} \\
+ & \devnum{600} & \devnum{0.725 [0.696, 0.746]} & \devnum{0.719 [0.691, 0.740]} & \devnum{$+0.006$ [$+0.001$, $+0.013$]} & \devnum{248.3} / \devnum{248.3} \\
+ & \devnum{1200} & \devnum{0.733 [0.703, 0.755]} & \devnum{0.739 [0.707, 0.762]} & \devnum{$-0.005$ [$-0.009$, $-0.001$]} & \devnum{127.1} / \devnum{248.3} \\
+\midrule
+\devnum{0.8} & \devnum{300} & \devnum{0.662 [0.590, 0.709]} & \devnum{0.078 [-0.077, 0.431]} & \devnum{$+0.584$ [$+0.257$, $+0.709$]} & \devnum{127.9} / \devnum{165.8} \\
+ & \devnum{600} & \devnum{0.800 [0.772, 0.819]} & \devnum{0.748 [0.696, 0.775]} & \devnum{$+0.053$ [$+0.030$, $+0.092$]} & \devnum{215.7} / \devnum{394.6} \\
+ & \devnum{1200} & \devnum{0.815 [0.791, 0.832]} & \devnum{0.828 [0.804, 0.843]} & \devnum{$-0.012$ [$-0.016$, $-0.008$]} & \devnum{135.4} / \devnum{394.6} \\
+\midrule
+\devnum{1.0} & \devnum{300} & \devnum{0.367 [0.278, 0.485]} & \devnum{0.023 [0.008, 0.040]} & \devnum{$+0.344$ [$+0.265$, $+0.450$]} & \devnum{129.4} / \devnum{191.4} \\
+ & \devnum{600} & \devnum{0.705 [0.648, 0.768]} & \devnum{0.282 [0.016, 0.548]} & \devnum{$+0.423$ [$+0.204$, $+0.664$]} & \devnum{333.2} / \devnum{454.7} \\
+ & \devnum{1200} & \devnum{0.754 [0.711, 0.799]} & \devnum{0.740 [0.683, 0.800]} & \devnum{$+0.014$ [$-0.008$, $+0.044$]} & \devnum{128.6} / \devnum{735.1} \\
+\bottomrule
+\end{tabular}
+\end{adjustwidth}
+\end{table}
+% Source: outputs/online_paired/tab_s_online_clock_body.tex, written by
+%   scripts/online_paired_differences.py; its original-clock rows equal
+%   prechecks/timeout_rule/timeout_intervals.csv at six decimals (checked by the script).
+
+% Flush the online tables before the reference list.
 \clearpage
 %=================================================================
 \begin{adjustwidth}{-\extralength}{0cm}

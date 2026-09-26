@@ -54,10 +54,12 @@ The sealed terms were opened once, after the method, parameters and metric were 
 constructed queue, so they test the frozen choices on new classes and terms but not on
 another service.
 
-\textbf{Information, costs, and what was not studied.} Only the cells of the main
-comparison were replayed under the online protocol, and the guard's parameters were
-selected under the original one, so the comparisons of Sections~\ref{sec:exp_rank}
-to~\ref{sec:exp_physical} rest on the optimistic original protocol. The online protocol
+\textbf{Information, costs, and what was not studied.} The guard's parameters were selected
+under the original protocol. Of the comparisons after Section~\ref{sec:exp_visibility}, only
+the \devnum{24} main policies of Sections~\ref{sec:exp_rank} and~\ref{sec:exp_guard} were
+also replayed under the online one (Supplementary Section~S11). Every other comparison there,
+and the queue comparison that chose the predictor (Section~\ref{sec:pred_comparison}), rests
+on the optimistic original protocol. The online protocol
 takes the results of other classes and terms at their recorded times. The recorded costs are wall-clock durations that already
 contain some contention, and the \devnum{60}-second limit is inferred from the data rather
 than documented. ACcoding arrival times are drawn because the released tables omit them

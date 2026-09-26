@@ -272,6 +272,12 @@ $UV python scripts/check_preserved_outputs.py --file outputs/selection_v4_tables
 写论文时发现三处核对与测试的缺陷，改了五个锁定文件，逐个声明在 `docs/post_run_changes.json`，理由见 ADR 0010。
 `protocol_lock.json` 没动。
 
+封存运行之后，开发池上又跑完了两件只读开发数据的事（2026-09-26）。先是 5h 的比较组全集：同一目录
+`--policies all --resume`，五条主策略直接命中已有检查点，另外十九条新算，24 条 × 15 格 = 360 个 policy-cell；
+五条主策略在六张 CSV 里的行与只跑五条时逐字段相同。再是 `scripts/online_paired_differences.py`，
+从这次运行的检查点给出成对差（补充材料 S11 的表 S32、S33）。新脚本与测试按 ADR 0010 的追加一节声明。
+两件事都不读封存学期，也不改动任何封存产物。
+
 ## 五 中途崩了怎么办
 
 规矩是「看结果之前不能改方法」，不是「文件只能打开一次」。所以技术性重跑允许，条件有三条：

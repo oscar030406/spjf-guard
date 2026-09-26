@@ -1,5 +1,5 @@
 {
-  "about": "Locked files changed after the sealed run under protocol_lock.json (sha256 f6c1b3af..., tree 2ae513f) had finished on 2026-09-25. Each change is to reporting checks or tests; none touches a file the sealed commands executed differently, and every sealed output was written before these changes. tests/test_sealed_data.py accepts a changed locked file only with its exact current sha256 here. ADR 0010.",
+  "about": "Locked files changed after the sealed run under protocol_lock.json (sha256 f6c1b3af..., tree 2ae513f) had finished on 2026-09-25. Each change is to reporting checks, tests, or a new development-pool analysis that reads no sealed data; none touches a file the sealed commands executed differently, and every sealed output was written before these changes. tests/test_sealed_data.py accepts a changed locked file only with its exact current sha256 here. ADR 0010.",
   "files": [
     {
       "path": "scripts/check_paper_numbers.py",
@@ -25,6 +25,16 @@
       "path": "tests/test_sealed_paper_tables.py",
       "sha256": "0b8012f8f9dc90b1c4c8b805a3d9efc4a36b483f00620ee26343bd5f7cb4a765",
       "why": "Tests for the two check_paper_numbers changes: a sourced sealed figure in prose counts as printed under \\sealednum{}, and a pass told to leave the sealed prose alone does not count an unknown figure."
+    },
+    {
+      "path": "scripts/online_paired_differences.py",
+      "sha256": "6c2185fc986aed5b438b5ee987f35c7a481d27d05849c295eb56cc0d6b884457",
+      "why": "New on 2026-09-26, after the development comparison suite finished under the online replay: reads that run's checkpoints (development pool only, no sealed data) and states the paired differences of outputs/dev_tables and Guard(G) against Timeout(G) online, for Supplementary Section S11. No sealed command runs it."
+    },
+    {
+      "path": "tests/test_online_paired_differences.py",
+      "sha256": "19cef539f157983a0b5f1c82387b6247f691d086502570ee7bf1833e875320fe",
+      "why": "New on 2026-09-26: tests of scripts/online_paired_differences.py (a paired difference is one resampled quantity; each cross-check catches a changed value)."
     }
   ]
 }

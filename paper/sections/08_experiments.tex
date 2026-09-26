@@ -47,9 +47,19 @@ the queue would have had and refits the models. Supplementary Section~S3.7 separ
 two effects.
 The parameters were selected under the original protocol.
 % PENDING RESELECTION: the restricted online reselection result goes here.
-The full grids were run under the original protocol, so the rest of this section uses it
-unless stated otherwise, and its figures are optimistic references.
-% PENDING SUITE: pointer to the supplement's table of every compared policy online.
+The full grids were run under the original protocol, so the rest of this section reports it
+unless stated otherwise, and its figures are optimistic references. Supplementary
+Section~S11 replays \devnum{24} of the compared policies under the online protocol: the two
+unguarded rankings, the aging baseline, and at each promise the guard, its three
+single-shape winners, Fixed, Skip and Timeout. There every one of them closes less of the
+gap at the two higher loads and none with a promise exceeds it. Every paired difference that
+clears zero on the original clock keeps its sign, four no longer clear zero and three newly
+do, and the one conclusion of this section that changes is the choice between the two
+rankings in Section~\ref{sec:exp_rank}.
+% Sources of the S11 pointer: outputs/dev_online_visibility/online_comparison.csv (24 base
+% policies, gap_closed online below original for all of them at levels 1 and 2;
+% max_excess_s below the promise in every row) and outputs/online_paired/
+% online_paired_differences.csv (scripts/online_paired_differences.py).
 % Sources: outputs/dev_online_visibility/online_comparison.csv, level=2, Guard(600)|online
 % and SPJF-E|online: p99_dl_s, gap_closed, gap_closed_lo/hi.
 % outputs/dev_consistent_visibility/exact_comparison.csv, level=2, Guard(600)|exact,
@@ -189,15 +199,24 @@ Load & Protocol & p99$_{\mathrm{dl}}$ & Gap closed & Max exc. & Harm & Fired (\%
 \subsection{What to Rank By}
 \label{sec:exp_rank}
 
-Ranking by expected cost beats the log-scale score at the two higher loads and ties with it
-at the lightest. The paired difference in gap closed is
+On the original clock, ranking by expected cost beats the log-scale score at the two higher
+loads and ties with it at the lightest. The paired difference in gap closed is
 \devnum{$-0.000$ $[-0.016, 0.013]$}, \devnum{$+0.012$ $[0.004, 0.019]$} and
 \devnum{$+0.019$ $[0.011, 0.024]$} at $\rho = \devnum{0.5}$, \devnum{0.8} and \devnum{1.0}.
 Refitting the log-scale model from scratch moves this difference by at most \devnum{0.001}
-(Supplementary Table~S16). Quantile scores and squared error on raw seconds lose to the
-Tweedie fit at every load. A rule that only separates predicted-heavy from predicted-light
-jobs recovers little of the benefit, so most of the benefit comes from the order inside the
-light class (Supplementary Table~S14).
+(Supplementary Table~S16). The online protocol does not confirm this order. There the three
+differences are \devnum{$-0.022$ $[-0.039, -0.009]$}, \devnum{$+0.006$ $[-0.004, 0.015]$}
+and \devnum{$+0.009$ $[-0.000, 0.015]$}, so the log-scale score is ahead at the lightest load
+and the two tie at the higher ones (Supplementary Table~S32). Both scores are replayed with
+their own frozen models, so the change comes from the history each may use. The choice of
+SPJF-E as the base ranking therefore rests on the original protocol. On the original clock,
+quantile scores and squared error on raw seconds lose to the Tweedie fit at every load. A
+rule that only
+separates predicted-heavy from predicted-light jobs recovers little of the benefit, so most
+of the benefit comes from the order inside the light class (Supplementary Table~S14).
+% Source of the online differences: outputs/online_paired/online_paired_differences.csv,
+% variant online, left SPJF-E, right SPJF-log, levels 0-2 (difference_gap, gap_lo, gap_hi),
+% written by scripts/online_paired_differences.py.
 
 The two kinds of prediction error do not cost the same. Replacing the largest
 \devnum{1\%} of underestimates by the true cost closes \devnum{0.91} of the distance to SJF
@@ -219,13 +238,17 @@ policy \devnum{0.916}. A bound of ten time limits therefore costs \devnum{0.115}
 The cost is \devnum{0.072} at $G = \devnum{1200}$ s and \devnum{0.438} at $G =
 \devnum{300}$ s. The paired intervals of these three differences are
 \devnum{[-0.142, -0.077]}, \devnum{[-0.083, -0.052]} and \devnum{[-0.526, -0.314]}, and none
-contains zero, so the guarantee has a cost at every $G$ we tested. What the guarantee buys
+contains zero, so the guarantee has a cost at every $G$ we tested. Under the online protocol
+the cost is larger, \devnum{0.158 [0.110, 0.191]}, \devnum{0.110 [0.082, 0.124]} and
+\devnum{0.497 [0.393, 0.565]} (Supplementary Table~S32). What the guarantee buys
 is protection of the worst job. The unguarded policy delays one job at the busiest load by
 \devnum{5{,}904.5} s beyond its FCFS wait, \devnum{98.4} times the \devnum{60}-second limit.
 The guard keeps every job within its bound. It also keeps the worst wait among heavy jobs
 within about \devnum{450} s of its FCFS value, whereas the unguarded policy multiplies that
 wait by \devnum{2.8} to \devnum{4.1}.
 % Source: outputs/dev_tables/paired_differences.csv, rows Guard(G) - SPJF-E, rho = 1.0;
+% online: outputs/online_paired/online_paired_differences.csv, variant online, level 2,
+% Guard(G) - SPJF-E, printed as costs (sign reversed, interval ends swapped);
 % the two gaps 0.801 and 0.916 are main_table.csv rows 71 and 62, gap_closed.
 % 98.4 = SPJF-E rho 1.0 max_excess_s 5904.525 / 60 (row 62). 450 = largest Guard(600) - FCFS
 % max_heavy_s over the three loads (433.95, 444.01, 450.14). 2.8 and 4.1 = SPJF-E / FCFS
@@ -284,10 +307,14 @@ gap closed by at most \devnum{0.015}, and by at most \devnum{0.001} at the two h
 An aging baseline ranks by $\hat C_i - \omega(t - a_i)$, with the credit $\omega$ chosen
 under the same harm limit. At the busiest load under the conservative protocol it closes
 \devnum{0.051} of the gap, against \devnum{0.429} for the guard, and one job exceeds its
-FCFS wait by \devnum{855.6} s. Aging carries no proved bound (Supplementary Table~S12).
+FCFS wait by \devnum{855.6} s. Under the online protocol it closes \devnum{0.258} against
+\devnum{0.705}, and one job exceeds its FCFS wait by \devnum{1{,}808.9} s. Aging carries no
+proved bound (Supplementary Tables~S12 and~S31).
 % Sources: outputs/dev_tables/main_table.csv, Guard(600), levels=1,2, harm_s;
 % evidence/main_v3/v31/report_diff.csv (Skip charged at completion, as in Supplementary
-% Section S3.16); outputs/dev_visibility/visibility_comparison.csv, level=2, Aging(600).
+% Section S3.16); outputs/dev_visibility/visibility_comparison.csv, level=2, Aging(600);
+% online: outputs/dev_online_visibility/online_comparison.csv, level=2, Aging(600)|online
+% and Guard(600)|online, gap_closed and max_excess_s.
 
 A maximum waiting time gives a guarantee of the same form (Proposition~\ref{prop:clock}), so
 the guard's counter has to earn its place against it. Table~\ref{tab:clock} runs
@@ -301,10 +328,17 @@ we also compare the two at equal realised worst excess. On the first overlay at 
 load, Timeout with $\theta = \devnum{480}$ s reaches a largest excess of \devnum{506.1} s and
 closes \devnum{0.490} of the gap. Guard($\devnum{600}$) reaches \devnum{512.3} s and closes
 \devnum{0.797}. The clock also harms more, \devnum{456.7} s against \devnum{339.9} s at
-$\rho = \devnum{1.0}$ and $G = \devnum{600}$ s.
+$\rho = \devnum{1.0}$ and $G = \devnum{600}$ s. Under the online protocol every difference of
+Table~\ref{tab:clock} keeps its sign (Supplementary Table~S33). At $\rho = \devnum{1.0}$ and
+$G = \devnum{600}$ s the clock closes \devnum{0.282} and the guard \devnum{0.705}, a paired
+difference of \devnum{$+0.423$ [$+0.204$, $+0.664$]}, and at $G = \devnum{300}$ s the clock
+closes \devnum{0.023}.
 % Sources: prechecks/timeout_rule/timeout_intervals.csv and out_summarise.txt (Table
 % tab:clock and the harms); evidence/timeout_rule/out_timeout_overlays.txt, overlay 0 level 2,
 % Timeout-grid theta 480 (max_excess 506.079, gap 0.4897) and Guard(600) (512.304, 0.7972).
+% Online: outputs/online_paired/online_clock_intervals.csv, variant online, level 2 (promise
+% 600: guard_gap, timeout_gap, gap_difference with lo/hi; promise 300: timeout_gap); the
+% nine online differences have the signs of the nine original ones.
 
 \begin{table}[htbp]
 \begin{adjustwidth}{-\extralength}{0cm}
