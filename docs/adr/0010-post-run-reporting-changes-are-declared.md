@@ -42,3 +42,8 @@
 online 协议下跑完后，新加了 `scripts/online_paired_differences.py` 和 `tests/test_online_paired_differences.py`：
 前者读那次运行的检查点（只有开发池，不读封存数据），给出补充材料 S11 的成对差。两者照同样的办法写进
 `docs/post_run_changes.json`。没有一条封存命令会执行它们，上面「为什么」一节的理由不变。
+
+同一天又加了 `scripts/sealed_dev_contrast.py` 和 `tests/test_sealed_dev_contrast.py`：前者只读开发与封存两次运行已写出的 CSV，
+不读封存数据、不模拟，给出 §8.2 解释封存学期为何闭合更多差距的数字；`check_paper_numbers.py` 相应多一个
+`--sealed-contrast-dir`，把这份输出里非开发池的数字认作封存数字的来源，`check_generated.py` 在它的 manifest 存在时自动带上。
+四个文件同样写进声明文件。

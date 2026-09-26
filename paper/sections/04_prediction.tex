@@ -13,8 +13,10 @@ Section~\ref{sec:data} and chooses the one the scheduler uses.
 \subsection{Targets and Measures}
 
 For ranking, the target is the conditional mean $\mathbb{E}[C_i \mid x_i]$. This mean
-orders a batch optimally on one server, by the pairwise-interchange argument of
-Section~\ref{sec:rank}. The mix of jobs shifts between periods, so to compare predictors
+minimises the expected mean wait of a batch on one server, by the pairwise-interchange
+argument of Section~\ref{sec:rank}. The argument does not extend to the 99th percentile of
+the wait that we report, so whether this target also serves the percentile is tested in the
+queue (Section~\ref{sec:exp_rank}). The mix of jobs shifts between periods, so to compare predictors
 across periods we also score each model on a binary label. A job is \emph{heavy} when its
 cost exceeds the 95th percentile of the training rows. On the main grading log this cut-off
 is \devnum{1.559} s, and heavy jobs are \devnum{1.31\%} of the test period against
@@ -93,7 +95,7 @@ GNN & N0 & M4, no graph & \devnum{0.9209} & \devnum{0.278} \\
 \subsection{What the Comparison Shows}
 \label{sec:pred_comparison}
 
-The graph does not help on average. One-hop aggregates barely change the trees' AUROC,
+The graph does not help. One-hop aggregates barely change the trees' AUROC,
 since M5 $-$ M4 is \devnum{$+0.0019$} of AUROC on the main log and \devnum{$-0.0002$} on
 the second. In the GNN ladder, removing every edge (G0) or shuffling them (G2) leaves AUROC
 within \devnum{0.002} of G1. The paired intervals for G1 $-$ G0,
@@ -102,13 +104,20 @@ within \devnum{0.002} of G1. The paired intervals for G1 $-$ G0,
 \devnum{$+0.0139$ $[+0.0090, +0.0195]$} of AUROC, and this step changes the encoder while
 the edges stay empty.
 
-The edges help only for tasks with little history of their own. On the \devnum{1{,}092}
-test rows whose task has fewer than five visible earlier results, G1 beats M4 by
-\devnum{$+0.1464$ $[+0.0997, +0.1887]$} in Spearman correlation. On these rows G1 also beats
-its own shuffled-edge control by \devnum{$+0.0282$ $[+0.0130, +0.0432]$}, whereas over all
-rows G1 $-$ G2 is \devnum{$+0.0063$ $[+0.0014, +0.0111]$}. We read this as a property of
-the task and not of relational models. When each user and each task already has a rich
-record, a neighbourhood adds little except for an entity with no record yet.
+Tasks with little history of their own are where the neural models differ from the trees,
+and the edges do not cause the difference. On the \devnum{1{,}092} test rows whose task has
+fewer than five visible earlier results, G1 beats M4 by \devnum{$+0.1464$ $[+0.0997,
++0.1887]$} in Spearman correlation. The same comparison without any graph gives most of
+this: the perceptron N0, which sees only M4's features, beats M4 by \devnum{$+0.1064$}, the
+GRU R1 by \devnum{$+0.1078$}, and the edgeless G0U by \devnum{$+0.1419$ $[+0.0994,
++0.1803]$}. Adding the real edges to G0U changes the correlation by \devnum{$+0.0045$
+$[-0.0163, +0.0248]$}. G1 does beat its shuffled-edge control on these rows, by
+\devnum{$+0.0282$ $[+0.0130, +0.0432]$}, but because shuffled edges make the model worse
+than having none (G2 $-$ G0U is \devnum{$-0.0238$ $[-0.0453, -0.0025]$}), not because real
+edges make it better. On new tasks as over all rows, the relations between users and tasks
+add nothing measurable to the ranking that each entity's own features do not already give.
+% Source: evidence/predictor_neural/boot_pairs_core_cold_ex.csv and out_evaluate_core.txt,
+% group cold_ex (pairs G1-M4, N0-M4, R1-M4, G0U-M4, G1-G0U, G1-G2, G2-G0U, dSpear).
 
 % sloppypar: the unbreakable interval below otherwise overruns the margin by about 10 pt.
 \begin{sloppypar}

@@ -219,6 +219,32 @@ the inequality is strict. At equality $B_{\max} = 0$ and the guard is FCFS.
 Substitute $B_{\max}$ into \eqref{eq:guardadd}.
 \end{proof}
 
+The per-job promise also bounds the largest flow time, the quantity most scheduling
+results for this setting bound. Write $F_i = W[i] + C_i$ for the flow time of job $i$ and
+$F^*$ for the smallest largest flow time $\max_i F_i$ that any schedule of the input on $k$
+servers achieves, with or without interruption.
+
+\begin{corollary}[Largest flow time]
+\label{cor:maxflow}
+Under the cap of Corollary~\ref{cor:params}, every job has
+$W_P[i] + C_i < (3 - 2/k)F^* + G$.
+\end{corollary}
+
+\begin{proof}[Proof of Corollary~\ref{cor:maxflow}]
+We show $W_{\mathrm{FCFS}}[i] + C_i \le (3 - 2/k)F^*$; adding the guarantee $G$ gives the
+claim. Let $S_i$ be $i$'s start under FCFS and $t'$ the last instant at or before $a_i$ at
+which a server is idle. No job waits at $t'$, and all $k$ servers are busy on
+$(t', S_i)$, since before $a_i$ none is idle after $t'$ and from $a_i$ on $i$ waits. That busy time is filled by the at most $k - 1$ jobs running at $t'$,
+each with remaining cost at most $p = \max_j C_j \le F^*$, and by jobs that arrived in
+$[t', a_i]$ and started before $i$, of total cost $W_A$. Hence $k(S_i - t') \le W_A +
+(k-1)p$. Every schedule must run these jobs and $i$ after $t'$ and finish them by $a_i +
+F^*$, so $W_A + C_i \le k(a_i + F^* - t')$. Together, $S_i - a_i \le F^* - C_i/k +
+(1 - 1/k)F^*$, and $F_i \le (2 - 1/k)F^* + (1 - 1/k)C_i \le (3 - 2/k)F^*$.
+\end{proof}
+
+At $k = 1$ the factor is $1$, so FCFS minimises the largest flow time on one server and the
+guard stays within $G$ of that optimum.
+
 The proof reads the budget only through the cap, so the shape below the cap is free. The
 age-relative shape with one constant $B_0$ for every job also gives a multiplicative bound,
 $(1 - \eta)\,W < W_{\mathrm{FCFS}}[i] + B_0/k + (3 - 2/k)L$. The queue-length shape does
@@ -357,9 +383,28 @@ At $k = 1$ any $\delta > 0$ already costs a whole $L$, because the single server
 next job the instant it finishes one, before that job's report can arrive. The remedy is a
 protocol change rather than a smaller budget: a server that counts its own completion
 before taking the next job restores Theorem~\ref{thm:guard}, and the combined rule of
-Section~\ref{sec:clock} keeps its clock bound for any delay.
+Section~\ref{sec:clock} keeps its clock bound for any delay. The model counts a dispatch as
+instantaneous. A server that must wait a network round trip for its next job is idle
+while jobs wait, and the bound of a job then grows by the server-idle time accumulated
+while it waits, divided by $k$
+(Section~\ref{sec:relax}). If each server keeps its own view of the counter, in which it
+sees its own completions at once and other servers' within $\delta$, the excess is below
+$B_{\max}/k + (3-2/k)L + (1-1/k)(L+\delta)$, and at $k = 2$ this bound is also attained in
+the limit (Supplementary Section~S4.12).
+
+The guard needs no coordination beyond the reports. At any instant $\mathrm{over}[q]$ is
+the total cost of the reported completions of jobs that arrived after $q$, a function of
+the set of reports received and of the arrival order, and not of the order in which the
+reports came. Two replicas of the scheduler that share the arrival order and have received
+the same reports therefore make the same decisions, and a replica that lags the reports by
+at most $\delta$ is a scheduler whose charges arrive up to $\delta$ late, the case of
+Proposition~\ref{prop:late}. A report counted twice can only raise
+$\mathrm{over}[q]$. The proof of Theorem~\ref{thm:guard} uses only that the counted total
+of $i$ was below its budget when $i$'s last overtaker started, so the true total was below
+it too, and the bound holds with duplicated reports.
 
 \subsection{Which Assumptions Can Be Dropped}
+\label{sec:relax}
 
 We may replace the global bound $L$ by the largest cost seen so far, read at the right
 instant. Servers may run at different speeds, with the budget divided by total capacity,

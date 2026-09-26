@@ -1048,11 +1048,14 @@ def check_sealed_prose(
     cache=None,
     exact_comparison: list[dict] | None = None,
     exact_exposure: list[dict] | None = None,
+    contrast: list[dict] | None = None,
 ) -> list[str]:
     """D2: every sealed figure in prose comes from a pinned sealed output.
 
     The predictor's figures have no table of their own: the paper states them in running
-    text, and that text is read wherever it sits.
+    text, and that text is read wherever it sits.  `contrast` is
+    outputs/sealed_dev_contrast/contrast.csv, figures derived from the sealed outputs
+    (scripts/sealed_dev_contrast.py), accepted in the spelling that file prints.
     """
     from emit_paper_tables import (
         exact_exposure_values,
@@ -1068,6 +1071,7 @@ def check_sealed_prose(
         or visibility_exposure
         or exact_comparison
         or exact_exposure
+        or contrast
     ):
         return []
     values: dict[str, str] = {}
@@ -1077,6 +1081,7 @@ def check_sealed_prose(
     exact_values(exact_comparison or [], values, "sealed_consistent_visibility")
     exact_exposure_values(exact_exposure or [], values, "sealed_consistent_visibility")
     known = {normalise(v) for v in values}
+    known |= {normalise(row["printed"]) for row in contrast or [] if row["pool"] != "dev"}
     printed, stray = 0, []
     for name, text in _running_text(paper, {} if cache is None else cache).items():
         for value in SEALEDNUM.findall(text):
@@ -1114,6 +1119,7 @@ def run(
     sealed_online: Path | None = None,
     dev_cluster: Path | None = None,
     sealed_prose: bool = True,
+    sealed_contrast: Path | None = None,
 ) -> list[str]:
     """Every check that `only` allows; returns the complaints, empty when the paper agrees.
 
@@ -1162,6 +1168,7 @@ def run(
             sealed_exact=sealed_exact,
             sealed_exact_rows=sealed_exact_rows,
             prose=sealed_prose,
+            sealed_contrast=sealed_contrast,
         )
     return complaints
 
@@ -1178,6 +1185,7 @@ def _check_sealed(
     sealed_exact: Path | None,
     sealed_exact_rows: dict[str, list[dict]],
     prose: bool,
+    sealed_contrast: Path | None = None,
 ) -> list[str]:
     """Check D: the sealed tables, the sealed exact tables and the sealed prose."""
     complaints: list[str] = []
@@ -1209,6 +1217,7 @@ def _check_sealed(
             cache=cache,
             exact_comparison=sealed_exact_rows.get("tab:exact_visibility", []),
             exact_exposure=sealed_exact_rows.get("tab:same_copy_exposure", []),
+            contrast=read_rows(sealed_contrast / "contrast.csv") if sealed_contrast else [],
         )
     return complaints
 
@@ -1227,6 +1236,7 @@ def main() -> int:
     ap.add_argument("--dev-online-dir", type=Path, default=None)
     ap.add_argument("--sealed-online-dir", type=Path, default=None)
     ap.add_argument("--dev-cluster-dir", type=Path, default=None)
+    ap.add_argument("--sealed-contrast-dir", type=Path, default=None)
     ap.add_argument("--only", choices=("A", "B", "C", "D"))
     args = ap.parse_args()
 
@@ -1244,6 +1254,7 @@ def main() -> int:
         args.dev_online_dir,
         args.sealed_online_dir,
         args.dev_cluster_dir,
+        sealed_contrast=args.sealed_contrast_dir,
     )
     for complaint in complaints:
         print(f"   FAIL {complaint}")

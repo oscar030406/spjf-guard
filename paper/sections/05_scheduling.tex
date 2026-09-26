@@ -11,8 +11,8 @@ any base policy, and its guarantee does not depend on that policy behaving well.
 \label{sec:rank}
 
 When a server frees, the base policy starts the waiting job with the smallest score. For a
-batch on one server, the pairwise-interchange argument orders jobs by their conditional
-mean costs. However, this conclusion does not carry over to $k \ge 2$ servers. On two
+batch on one server, the pairwise-interchange argument shows that ordering jobs by their
+conditional mean costs minimises the expected mean wait. However, this conclusion does not carry over to $k \ge 2$ servers. On two
 servers, let job $u$ cost $2$ and job $w$ cost $3$, and let job $v$ cost $0.1$ with
 probability $0.9$ and $100$ with probability $0.1$. Ordering by conditional mean starts $u$
 and $w$ and gives an expected mean wait of $2/3$, whereas starting $u$ and $v$ gives
@@ -37,8 +37,9 @@ We use only the order of a score. Its level does not transfer between periods, b
 share of heavy jobs differs between training and test periods by a factor of several, so
 the scheduler never reads a score as a time or a threshold. Section~\ref{sec:exp_rank}
 compares these and other objectives in the queue. No choice of score bounds the worst case.
-Whatever the score, a job it underestimates can be passed again and again, and only the
-guard below bounds that.
+Whatever the score, a job it ranks late, because the job is long or because its cost is
+overestimated, can be passed again and again by later arrivals ranked ahead of it, and only
+the guard below bounds that.
 % Source for the fitted Tweedie power and objective comparison:
 % evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1.
 

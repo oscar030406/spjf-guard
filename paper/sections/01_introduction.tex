@@ -33,10 +33,15 @@ jobs on one server shows (Figure~\ref{fig:threejob}). Job $A$ loops and is stopp
 60-second limit; jobs $B$ and $C$ take 0.2 seconds each. In arrival order the mean wait is
 40.1 seconds; shortest first, it is 0.2 seconds, at a cost of 0.4 seconds to $A$. These
 numbers are arithmetic and rest on one assumption, that the scheduler knows before $A$
-starts that $A$ will be long. When an estimate is wrong, the same ordering can hold a
-job back for a long time. In our simulation of the busiest period we tested, driven by
-the recorded submissions, one job waited almost a hundred time limits longer than it
-would have under first-come first-served (FCFS) order (Section~\ref{sec:exp_guard}).
+starts that $A$ will be long. The ordering has a second cost, which does not need a wrong
+estimate: a long job waits while shorter ones keep arriving ahead of it. In our simulation
+of the busiest period we tested, driven by the recorded submissions, shortest-job-first
+with exact running times kept one job waiting \devnum{4{,}755.5} s, \devnum{79.3} time
+limits, longer than it would have under first-come first-served (FCFS) order. With
+predicted costs in place of exact ones, the worst such delay was \devnum{5{,}904.5} s,
+\devnum{98.4} time limits (Section~\ref{sec:exp_guard}).
+% Source: outputs/dev_tables/main_table.csv, rho 1.0, max_excess_s of SJF (4755.467) and
+% SPJF-E (5904.525); divided by L = 60 s.
 
 \input{figures/fig_threejob}
 
@@ -84,18 +89,19 @@ gradient-boosted decision trees \cite{ke2017lightgbm}, a gated recurrent unit (G
 reads each user's earlier jobs, and a heterogeneous graph neural network (GNN) over users,
 programming tasks and assignments, of the relational graph convolutional network (R-GCN)
 type \cite{schlichtkrull2018rgcn}. The history available at arrival separates the long
-jobs from the short ones on all three platforms we test it on. The graph network does not
-improve on the trees on average, and its edges add only \devnum{0.006} in Spearman
-correlation over all test submissions, so most of the information lies in each user's and
-each task's own history.
-On tasks with fewer than five earlier results the graph network does rank jobs better,
-by \devnum{0.146} in Spearman correlation over the trees and by \devnum{0.028} over the
-same network with shuffled edges (Section~\ref{sec:prediction}). The scheduler orders jobs by their expected running time
+jobs from the short ones on all three platforms we test it on. The graph network's Spearman
+correlation lies between those of the two tree models, its AUROC is within \devnum{0.005}
+of both, and its edges add nothing measurable over the
+same network without edges, so the information lies in each user's and each task's own
+history. On tasks with fewer than five earlier results the graph network ranks jobs better
+than the trees, by \devnum{0.146} in Spearman correlation, but the same network without
+edges does nearly as well, \devnum{0.142} (Section~\ref{sec:prediction}). The scheduler orders jobs by their expected running time
 given the observed features, and for our fitted predictor, treating a long job as
 short costs about ten times more than treating a short job as long
 (Section~\ref{sec:exp_rank}).
-% Source: Section 4 (evidence/predictor_neural/boot_pairs_core_cold_ex.csv: G1 - M4
-% Spearman +0.1464; G1 - G2 +0.0282; boot_pairs_core_all.csv: G1 - G2 +0.0063).
+% Source: Section 4 (evidence/predictor_neural/boot_pairs_core_all.csv: G1 - M4 Spearman
+% +0.0172, G1 - M5 -0.0152, AUROC +0.0041 and +0.0022, G1 - G0U Spearman +0.0083
+% [-0.0003, +0.0161]; boot_pairs_core_cold_ex.csv: G1 - M4 +0.1464, G0U - M4 +0.1419).
 
 This study makes three contributions.
 \begin{enumerate}
@@ -107,9 +113,11 @@ This study makes three contributions.
   \item We give the guard and prove that it keeps every job's extra wait over FCFS below
   $B_{\max}/k + (3-2/k)L$, for $k$ servers, any arrivals and any predictions; the constant
   cannot be improved. An operator who wants to promise $G$ seconds sets
-  $B_{\max} = k(G - (3-2/k)L)$ and needs no data to do so. When completion reports arrive
-  up to $\delta$ late, the promise grows by $L + \delta$, and it does not grow at all if
-  each server reports its own completion before taking its next job. We also bound the
+  $B_{\max} = k(G - (3-2/k)L)$ and needs no data to do so. The same promise keeps the
+  largest flow time below $(3-2/k)$ times its optimum plus $G$. When completion reports arrive
+  up to $\delta$ late, the promise grows by $L + \delta$. It does not grow if each server
+  reports its own completion before taking its next job and dispatch takes no time, and
+  replicas of the scheduler that hold the same reports make the same decisions. We also bound the
   absolute wait from the arrival record alone, and compare the guard with a maximum
   waiting time, which makes a promise of the same form.
   \item We evaluate the method on six logs: two from university systems that grade

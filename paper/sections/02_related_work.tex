@@ -89,5 +89,6 @@ tables beat gradient-boosted trees fitted on the columns of a single table
 \cite{robinson2024relbench}, while on single tables tree ensembles still outperform deep
 models \cite{grinsztajn2022tabular}. We therefore compare a heterogeneous graph neural
 network over users, tasks and assignments \cite{schlichtkrull2018rgcn,xu2019gin} with
-gradient-boosted trees \cite{ke2017lightgbm} that carry engineered history features, and we
-judge them by the waits they produce in the queue as well as by their prediction scores.
+gradient-boosted trees \cite{ke2017lightgbm} that carry engineered history features. The
+graph network is judged by its prediction scores only; the trees and a recurrent model are
+also judged by the waits they produce in the queue.

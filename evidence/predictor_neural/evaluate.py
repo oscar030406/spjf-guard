@@ -42,7 +42,8 @@ NEURAL = {"N0": "N0_{v}_lr0.001_mean_wd0.0_dr0.1_s{s}_final",
           "R1": "R1_{v}_lr0.0003_mean_wd0.0_dr0.1_s{s}_final"}
 PAIRS = [("G1", "G2"), ("G1", "G0"), ("G0", "G0U"), ("G0U", "N0"),
          ("G1", "M5"), ("G1", "M4"), ("G0", "M4"), ("N0", "M4"),
-         ("G3", "M4"), ("R1", "M4"), ("R1S", "M4"), ("R1", "N0"), ("M5", "M4")]
+         ("G3", "M4"), ("R1", "M4"), ("R1S", "M4"), ("R1", "N0"), ("M5", "M4"),
+         ("G0U", "M4"), ("G1", "G0U"), ("G2", "G0U")]
 
 LOG = open(os.path.join(HERE, f"out_evaluate_{sys.argv[-1]}.txt"), "w", encoding="utf-8")
 

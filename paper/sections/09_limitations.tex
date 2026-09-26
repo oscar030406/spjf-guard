@@ -97,18 +97,30 @@ with every score computed from the results available when its job arrives, a gua
 $G = \devnum{600}$ s keeps \devnum{0.705} of the reduction in 99th-percentile wait before
 deadlines that SJF achieves over FCFS. Unguarded ordering keeps \devnum{0.864}, and with the
 guard no job exceeds its bound. On three terms held back until the method was frozen, the
-same guard keeps \sealednum{0.894} and unguarded ordering \sealednum{0.936}. The scores come from gradient-boosted trees on each
+same guard keeps \sealednum{0.894} and unguarded ordering \sealednum{0.936}. In seconds,
+the 99th-percentile wait of the submissions made in the 24 hours before a deadline falls
+from \devnum{273.5} s under FCFS to \devnum{111.2} s with the guard, and from
+\sealednum{187.20} s to \sealednum{47.22} s on the held-back terms. No job waits more than
+\devnum{600} s beyond its FCFS wait, where unguarded ordering delayed one job by
+\devnum{5{,}812.7} s. The scores come from gradient-boosted trees on each
 student's and each task's history, chosen on queueing outcomes rather than prediction
-accuracy. A heterogeneous graph network over students, tasks, assignments and cohorts does
-not beat these trees on average. Its edges add \devnum{0.006} in rank correlation over all
-\devnum{40{,}844} test submissions and \devnum{0.028} on the \devnum{1{,}092} submissions
-to tasks with fewer than five earlier results, the situation that a newly released
-assignment creates. The demand is constructed in both evaluations, and the benefit depends
+accuracy. A heterogeneous graph network over students, tasks, assignments and cohorts
+has a rank correlation between the two tree models' over all \devnum{40{,}844} test submissions and was not
+run through the queue. On the \devnum{1{,}092} submissions to tasks with fewer than five
+earlier results, the situation that a newly released assignment creates, it ranks jobs
+better than the trees by \devnum{0.146} in rank correlation, and the same network without
+edges does so by \devnum{0.142}, so the gain there comes from the neural model of each
+job's own features. The demand is constructed in both evaluations, and the benefit depends
 on capacity: it appeared only for $k = 4$ to $12$.
 % Sources: outputs/dev_online_visibility/online_comparison.csv and
 % outputs/sealed_online_visibility/online_comparison.csv, level=2,
-% Guard(600)|online and SPJF-E|online, gap_closed;
-% evidence/predictor_neural/out_evaluate_core.txt:1-2 (test rows 40,844; cold-start 1,092).
+% Guard(600)|online and SPJF-E|online, gap_closed; the same rows, p99_dl_s (111.246 dev,
+% 47.221 sealed) and SPJF-E|online max_excess_s (5812.691 dev); FCFS p99_dl_s from
+% outputs/dev_tables/main_table.csv (273.497) and outputs/sealed_tables/main_table.csv
+% (187.202), level 2;
+% evidence/predictor_neural/out_evaluate_core.txt:1-2 (test rows 40,844; cold-start 1,092);
+% boot_pairs_core_all.csv (G1 - M4 Spearman +0.0172, G1 - M5 -0.0152) and
+% boot_pairs_core_cold_ex.csv (G1 - M4 +0.1464, G0U - M4 +0.1419).
 
 Two questions remain open. Under the executed-work convention of
 Section~\ref{sec:conventions}, the lower constant of the identity is known only to lie in

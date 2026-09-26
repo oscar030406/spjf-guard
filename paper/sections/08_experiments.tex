@@ -157,6 +157,25 @@ SPJF-E's score against \devnum{0.9360} on the development terms.
 % most the promise for every Guard and Fixed row); outputs/sealed_predictor and
 % outputs/dev_predictor predictor_metrics.csv, pooled spjf_e auroc.
 
+At the busiest load the guard closes \sealednum{0.189} more of the gap on the sealed terms
+under the online protocol. Unguarded SPJF-E closes \sealednum{0.072} more, and the guard's
+cost against SPJF-E falls from \devnum{0.158} to \sealednum{0.041}, which gives the other
+\sealednum{0.117}. The load on the two pools does not account for the difference. One cell from each pool has
+four servers and a busiest-hour utilisation of \devnum{0.980} and \sealednum{0.979}, and
+FCFS and SJF differ by \devnum{220.1} s and \sealednum{223.6} s in
+$\mathrm{p99}_{\mathrm{dl}}$ in these two cells; the guard closes \devnum{0.681} of the gap
+in the first and \sealednum{0.889} in the second. The larger share on the sealed terms is confined to
+the primary metric. The jobs that this metric reads, those arriving in the 24 hours before
+a deadline, are \sealednum{37.5}\% of the sealed jobs against \devnum{23.9}\% of the
+development ones. On the
+99th-percentile wait over all jobs, the same ratio gives the guard \devnum{0.904} and
+\sealednum{0.896} and SPJF-E \devnum{0.956} and \sealednum{0.932}, and on the mean wait
+SPJF-E closes less on the sealed terms at all three loads (\sealednum{0.819} against
+\devnum{0.903} at the busiest).
+% Source: outputs/sealed_dev_contrast/contrast.csv (scripts/sealed_dev_contrast.py):
+% difference, ranking_part, cost_part and guard_cost at level 2; matched_* rows (dev
+% overlay 2, sealed overlay 0); deadline_share_pct; gap_all and gap_mean.
+
 \begin{table}[htbp]
 \centering
 \small
@@ -238,19 +257,34 @@ policy \devnum{0.916}. A bound of ten time limits therefore costs \devnum{0.115}
 The cost is \devnum{0.072} at $G = \devnum{1200}$ s and \devnum{0.438} at $G =
 \devnum{300}$ s. The paired intervals of these three differences are
 \devnum{[-0.142, -0.077]}, \devnum{[-0.083, -0.052]} and \devnum{[-0.526, -0.314]}, and none
-contains zero, so the guarantee has a cost at every $G$ we tested. Under the online protocol
+contains zero, so the guarantee has a cost at every $G$ we tested. The cost falls as the
+slack above the floor of Corollary~\ref{cor:params}, $G - (3-2/k)L$, grows against FCFS's
+$\mathrm{p99}_{\mathrm{dl}}$ of \devnum{273.50} s: the slack is \devnum{0.55},
+\devnum{1.65} and \devnum{3.84} times that wait at $G = \devnum{300}$, \devnum{600} and
+\devnum{1200} s. Under the online protocol
 the cost is larger, \devnum{0.158 [0.110, 0.191]}, \devnum{0.110 [0.082, 0.124]} and
 \devnum{0.497 [0.393, 0.565]} (Supplementary Table~S32). What the guarantee buys
 is protection of the worst job. The unguarded policy delays one job at the busiest load by
 \devnum{5{,}904.5} s beyond its FCFS wait, \devnum{98.4} times the \devnum{60}-second limit.
+Exact SJF, which knows every running time, delays one job by \devnum{4{,}755.5} s,
+\devnum{79.3} limits, so most of this delay comes from ordering by length and not from
+wrong predictions.
 The guard keeps every job within its bound. It also keeps the worst wait among heavy jobs
 within about \devnum{450} s of its FCFS value, whereas the unguarded policy multiplies that
-wait by \devnum{2.8} to \devnum{4.1}.
+wait by \devnum{2.8} to \devnum{4.1}. The price of this protection is paid in the mean and
+just below the worst job. At the busiest load the guard keeps \devnum{0.751} of SJF's reduction of the mean
+wait, against \devnum{0.930} unguarded, and its 99.9th-percentile wait over all jobs is
+\devnum{717.6} s, against \devnum{192.4} s unguarded and \devnum{984.3} s under FCFS.
+% Mean: outputs/dev_tables/main_table.csv, level 2, mean_s, (FCFS - policy)/(FCFS - SJF)
+% = (10.270 - 3.830)/(10.270 - 1.696) and (10.270 - 2.294)/(10.270 - 1.696).
+% p99.9: outputs/dev_visibility/visibility_waits_and_lag.csv, level 2, wait_p999_s mean
+% over the five overlays: Guard(600)-original 717.57, SPJF-E-original 192.44, FCFS 984.31.
 % Source: outputs/dev_tables/paired_differences.csv, rows Guard(G) - SPJF-E, rho = 1.0;
 % online: outputs/online_paired/online_paired_differences.csv, variant online, level 2,
 % Guard(G) - SPJF-E, printed as costs (sign reversed, interval ends swapped);
 % the two gaps 0.801 and 0.916 are main_table.csv rows 71 and 62, gap_closed.
-% 98.4 = SPJF-E rho 1.0 max_excess_s 5904.525 / 60 (row 62). 450 = largest Guard(600) - FCFS
+% 98.4 = SPJF-E rho 1.0 max_excess_s 5904.525 / 60 (row 62); 79.3 = SJF rho 1.0 max_excess_s
+% 4755.467 / 60. 450 = largest Guard(600) - FCFS
 % max_heavy_s over the three loads (433.95, 444.01, 450.14). 2.8 and 4.1 = SPJF-E / FCFS
 % max_heavy_s at rho 0.5 (1374.79 / 486.87) and rho 1.0 (6286.25 / 1542.75).
 
@@ -386,12 +420,18 @@ deliberately, by reversing them, by drawing them at random, or by calling the lo
 \devnum{1\%} of jobs the shortest. The unguarded policy then delays some job by more than
 \devnum{6{,}000} s beyond FCFS at the busiest load, and Guard($\devnum{600}$) keeps every job
 within its bound. The guarded $\mathrm{p99}_{\mathrm{dl}}$ is then \devnum{546.5},
-\devnum{261.9} and \devnum{543.6} s, against FCFS's \devnum{273.50} s. The guarantee thus
+\devnum{261.9} and \devnum{543.6} s, against FCFS's \devnum{273.50} s. Over these three
+corrupted scores and the five protocols of Section~\ref{sec:exp_visibility}, Guard($\devnum{600}$)
+closes between \devnum{$-1.187$} and \devnum{0.801} of the gap at the busiest load, while
+its largest excess over FCFS stays between \devnum{517.7} and \devnum{534.8} s. The guarantee thus
 protects the worst single job but not the shape of the tail, and a guarded run may have a
 worse percentile than FCFS, by at most $G$ (Supplementary Table~S8).
 % Sources: prechecks/referee_round4/maxwait_overlay0.csv (Block(512) rows, levels 0-2) and
 %   prechecks/timeout_rule/timeout_overlays.csv (overlay 0, Guard(300));
 %   outputs/dev_tables/main_table.csv rows 83-88 (corrupted scores at rho 1.0).
+%   Range over eight rows at level 2: Guard(600)|{original,exact,online,conservative,static}
+%   (exact_comparison.csv, online_comparison.csv) and Guard(600)-{reversed,random,top1short}
+%   (main_table.csv): gap_closed -1.187..0.801, max_excess_s 517.7..534.8.
 
 \subsection{The Bounds on the Traces}
 \label{sec:exp_bound}
@@ -507,7 +547,11 @@ by \devnum{493.79} s, and all five overlays agree that it improves the p99 only 
 \devnum{4}$ to \devnum{12}. We also ran the guard physically, on two worker processes that
 occupy real time slots for each job's recorded duration. This run executed
 \devnum{2{,}151} jobs of one development window, and all \devnum{6{,}453} dispatch decisions
-followed the rule. The guarded p99 of \devnum{1{,}783.65} s was nevertheless no better than
+followed the rule. Against FCFS on the same run's measured arrivals and running times, every
+job stayed within the promise of Guard($\devnum{300}$), with a largest excess of
+\devnum{222.21} s. A physical run needs the bound widened by the time workers sat idle
+during dispatch, at most \devnum{1.127} s here, and no job came close to needing it. Both processes ran on one machine, so this run tests the dispatch
+rule, not network delay. The guarded p99 of \devnum{1{,}783.65} s was nevertheless no better than
 FCFS's \devnum{1{,}763.30} s, and single jobs differed from the ideal simulation by up to
 \devnum{1{,}354.10} s. A second physical test used the two-worker back end of a course
 platform, where twenty scripted accounts submitted \devnum{100} jobs per cell in a
@@ -516,6 +560,9 @@ jobs beyond the bound. The four guarded cells left none, with a worst excess of
 \devnum{0.514}$G$ (Supplementary Sections~S6.1, S6.2 and~S6.9).
 % Sources: prechecks/weakness1_attack/summary_numbers.json and capacity_curve.csv;
 % prechecks/weakness1_attack/physical_numbers.json and physical_verification.json;
+% prechecks/weakness1_attack/stall_bound_check.json (G_ns 300e9, jobs 2151,
+% maximum_uncorrected_excess_ns 222207551100, maximum_additive_correction_twice_ns / 2
+% = 1.1265 s, corrected_violations 0);
 % prechecks/platform_testbed/records/summary.json (jobsOverPromise, ratio 0.5138).
 
 The simulations replay arrivals at their recorded times, so they neither reward a scheduler

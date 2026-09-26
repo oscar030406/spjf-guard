@@ -1,15 +1,15 @@
 {
-  "about": "Locked files changed after the sealed run under protocol_lock.json (sha256 f6c1b3af..., tree 2ae513f) had finished on 2026-09-25. Each change is to reporting checks, tests, or a new development-pool analysis that reads no sealed data; none touches a file the sealed commands executed differently, and every sealed output was written before these changes. tests/test_sealed_data.py accepts a changed locked file only with its exact current sha256 here. ADR 0010.",
+  "about": "Locked files changed after the sealed run under protocol_lock.json (sha256 f6c1b3af..., tree 2ae513f) had finished on 2026-09-25. Each change is to reporting checks, tests, or a new analysis that reads existing outputs and no sealed data; none touches a file the sealed commands executed differently, and every sealed output was written before these changes. tests/test_sealed_data.py accepts a changed locked file only with its exact current sha256 here. ADR 0010.",
   "files": [
     {
       "path": "scripts/check_paper_numbers.py",
-      "sha256": "aa81742da5a06d8583eb6d890fe243d8fa1e17410ee671cdc0d91d970cc2584c",
-      "why": "Check C looked for every sourced numbers.csv row under \\devnum{}, so a sealed figure quoted in prose (a 'sealed.' key) always failed; it now looks under the key's own macro. run() gains sealed_prose so that a pass that reads no exact or online output can leave the sealed prose to the pass that reads them all."
+      "sha256": "4da37c89de93e50ef398c92788ac5af73b671de2469b588e3c9fa4db0837ea85",
+      "why": "Check C looked for every sourced numbers.csv row under \\devnum{}, so a sealed figure quoted in prose (a 'sealed.' key) always failed; it now looks under the key's own macro. run() gains sealed_prose so that a pass that reads no exact or online output can leave the sealed prose to the pass that reads them all. 2026-09-26: run() and --sealed-contrast-dir add the figures of outputs/sealed_dev_contrast/contrast.csv (rows not from the development pool) to the known sources of sealed prose."
     },
     {
       "path": "scripts/check_generated.py",
-      "sha256": "638c34637f9c750fa9255bf443817b92d6e1861e56990ded1209289dec773612",
-      "why": "The legacy paper-prints pass (outputs/paper_tables) reads no exact or online output; once the sealed exact run exists it leaves the sealed prose to check_exact_paper_prints, which checks it against every sealed output."
+      "sha256": "414610851f1481c8cf1c457df017bc8973c2f09b08f83699f6ef0fac5b279429",
+      "why": "The legacy paper-prints pass (outputs/paper_tables) reads no exact or online output; once the sealed exact run exists it leaves the sealed prose to check_exact_paper_prints, which checks it against every sealed output. 2026-09-26: that pass also reads outputs/sealed_dev_contrast when its manifest exists."
     },
     {
       "path": "tests/test_eval_scores.py",
@@ -35,6 +35,16 @@
       "path": "tests/test_online_paired_differences.py",
       "sha256": "19cef539f157983a0b5f1c82387b6247f691d086502570ee7bf1833e875320fe",
       "why": "New on 2026-09-26: tests of scripts/online_paired_differences.py (a paired difference is one resampled quantity; each cross-check catches a changed value)."
+    },
+    {
+      "path": "scripts/sealed_dev_contrast.py",
+      "sha256": "f42393e32f463bb6dbc1897a29e16bb30b477e5a918a4ef83f56a3dd9585741f",
+      "why": "New on 2026-09-26: reads CSVs the development and sealed runs already wrote (no sealed data, no simulation) and states why the sealed terms close more of the gap, for Section 8.2. No sealed command runs it."
+    },
+    {
+      "path": "tests/test_sealed_dev_contrast.py",
+      "sha256": "4cd37e7bef02a41cabed408434a7f03177414db4cd634ea9e29a1bd8fda8b91a",
+      "why": "New on 2026-09-26: tests of scripts/sealed_dev_contrast.py and of the number check accepting its sealed figures but not its development ones."
     }
   ]
 }
