@@ -82,7 +82,7 @@ every job $i$,
  k\bigl(W_P[i]-W_{\mathrm{FCFS}}[i]\bigr)
  =\mathrm{In}_i-\mathrm{Out}_i
   +\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i)
-  -\rho_i^P+\rho_i^{\mathrm{FCFS}}.
+  -\beta^P_i+\beta^{\mathrm{FCFS}}_i.
 \]
 The identity was checked on \devnum{214{,}735} job-instances, including tied
 events, non-batch arrivals, and same-phase overtakers.
@@ -105,9 +105,9 @@ from jobs not ranked below $i$ is identical in the two runs. Hence
  =U_P(a_i)-U_{\mathrm{FCFS}}(a_i)
  =\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i).
 \]
-Substitution into the two busy-period equalities of the main text (the displayed equality $k\,W_P[i] = R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \rho^P_i$ in the proof of the identity), one for $P$
+Substitution into the two busy-period equalities of the main text (the displayed equality $k\,W_P[i] = R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \beta^P_i$ in the proof of the identity), one for $P$
 and one for FCFS, proves the formula. A same-phase overtaker enters both
-$\mathrm{In}_i$ and $\rho_i^P$ with its full size and therefore cancels.
+$\mathrm{In}_i$ and $\beta^P_i$ with its full size and therefore cancels.
 \end{proof}
 
 Writing $D_i=\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i)$, the arrival-frozen
@@ -118,7 +118,7 @@ budget
 has the mathematical promise $G$ in the standard range
 $G\geq(3-2/k)L$: combine
 $\mathrm{In}_i<b_i+kL$ with Lemma~\ref{lem:supp_gamma_identity} and
-$\rho_i^{\mathrm{FCFS}}\leq(k-1)L$. This is not a deployable rule under the
+$\beta^{\mathrm{FCFS}}_i\leq(k-1)L$. This is not a deployable rule under the
 paper's completion-only observation model. In general
 $\Gamma_{\mathrm{FCFS}}(a_i)$ depends on when an FCFS-shadow job completes
 before its size has been revealed in the realised run; simulating the shadow
@@ -169,9 +169,9 @@ For every policy $P$ and job $i$,
 \begin{proof}
 In Lemma~\ref{lem:supp_gamma_identity}, Proposition~\ref{prop:supp_lambda_gap}
 bounds the idle-capacity difference, equivalently the workload difference at
-$a_i$, by $\Lambda_{k-1}(a_i)$. Drop $-\rho_i^P\leq0$. The at most $k-1$ FCFS
+$a_i$, by $\Lambda_{k-1}(a_i)$. Drop $-\beta^P_i\leq0$. The at most $k-1$ FCFS
 jobs still running when $i$ starts all have rank below $i$, so
-$\rho_i^{\mathrm{FCFS}}\leq\Lambda^{<i}_{k-1}$.
+$\beta^{\mathrm{FCFS}}_i\leq\Lambda^{<i}_{k-1}$.
 \end{proof}
 
 \begin{proposition}[Instance-dependent overtaking under the guard]

@@ -117,7 +117,8 @@ This study makes three contributions.
   largest flow time below $(3-2/k)$ times its optimum plus $G$. When completion reports arrive
   up to $\delta$ late, the promise grows by $L + \delta$. It does not grow if each server
   reports its own completion before taking its next job and dispatch takes no time, and
-  replicas of the scheduler that hold the same reports make the same decisions. We also bound the
+  replicas of the scheduler that hold the same reports agree on which jobs the guard must
+  serve next. We also bound the
   absolute wait from the arrival record alone, and compare the guard with a maximum
   waiting time, which makes a promise of the same form.
   \item We evaluate the method on six logs: two from university systems that grade

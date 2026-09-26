@@ -87,8 +87,9 @@ other way, as the time of receipt, for an earlier configuration of the method.
 Stamps are whole seconds while durations are in microseconds, which lets a model read the
 fractional part of the gap to the previous record and learn from it something it should
 not know. Given only that part, a classifier separates heavy from light jobs with AUROC
-\devnum{0.8091}. This AUROC falls to \devnum{0.4499}, which is chance, when each stamp is
-jittered deterministically, and the forward models move by less than \devnum{0.008}.
+\devnum{0.8091}. When each stamp is jittered deterministically this AUROC falls to \devnum{0.4499}, so the
+fractional part no longer ranks heavy jobs above light ones, and the forward models move by
+less than \devnum{0.008}.
 
 No run after \devnum{2019-08-28} lasts longer than \devnum{60} s, although the platform
 documents no timeout. Hence we take the periods after that date, cap each duration at the

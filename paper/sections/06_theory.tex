@@ -396,9 +396,11 @@ The guard needs no coordination beyond the reports. At any instant $\mathrm{over
 the total cost of the reported completions of jobs that arrived after $q$, a function of
 the set of reports received and of the arrival order, and not of the order in which the
 reports came. Two replicas of the scheduler that share the arrival order and have received
-the same reports therefore make the same decisions, and a replica that lags the reports by
-at most $\delta$ is a scheduler whose charges arrive up to $\delta$ late, the case of
-Proposition~\ref{prop:late}. A report counted twice can only raise
+the same reports therefore hold the same counters and the same set of eligible jobs, so they
+agree whenever the guard overrides the base policy; they agree on every decision when the
+base policy is deterministic given the same history. The bound needs only the first
+agreement: a replica that lags the reports by at most $\delta$ is a scheduler whose charges
+arrive up to $\delta$ late, the case of Proposition~\ref{prop:late}. A report counted twice can only raise
 $\mathrm{over}[q]$. The proof of Theorem~\ref{thm:guard} uses only that the counted total
 of $i$ was below its budget when $i$'s last overtaker started, so the true total was below
 it too, and the bound holds with duplicated reports.
