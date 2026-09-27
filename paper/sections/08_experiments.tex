@@ -570,10 +570,11 @@ with the work it would attract nor punish it for the users it would drive away
 \cite{feitelson2021resampling,shmueli2009simulation}. The logs record one part of that
 feedback, the time between one result and the same student's next submission. In a second
 replay, each submission is released only after its predecessor's result plus that recorded
-delay. This replay shortens $\mathrm{p99}_{\mathrm{dl}}$ by a factor of \devnum{1.3} to
-\devnum{3.8}. Guard($\devnum{600}$) then closes \devnum{0.825}, \devnum{0.809} and
-\devnum{0.810} of the gap at the three loads, against \devnum{0.734}, \devnum{0.827} and
-\devnum{0.800} with the recorded arrival times, and it keeps every job within its bound
+delay. We ran it on the first three overlays. This replay shortens
+$\mathrm{p99}_{\mathrm{dl}}$ by a factor of \devnum{1.3} to \devnum{3.8}.
+Guard($\devnum{600}$) then closes \devnum{0.825}, \devnum{0.809} and \devnum{0.810} of the
+gap at the three loads, against \devnum{0.734}, \devnum{0.827} and \devnum{0.800} with the
+recorded arrival times on the same three overlays, and it keeps every job within its bound
 (Supplementary Section~S6.5).
 % Sources: prechecks/closed_loop/out/open_vs_closed_mean.csv, p99_dl_s and gap_closed for
 % FCFS and Guard(600) at mode=open and mode=closed/late_submissions=kept, levels 0-2.

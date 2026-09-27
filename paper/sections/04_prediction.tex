@@ -35,9 +35,10 @@ the log in the order in which results became available and reading each user's a
 task's state at the query instant. Recomputing these features from scratch gives
 \devnum{0} disagreeing rows in all eight configurations we tested. Each test period is
 predicted by a model fitted only on earlier periods and frozen before the period's first
-arrival, and the heavy cut-off is refitted on that model's own training rows. Delaying the results by up to ten minutes
-before they may enter the features leaves the ranking intact and worsens only the
-calibration. Supplementary Section~S1 gives these audits.
+arrival, and the heavy cut-off is refitted on that model's own training rows. Delaying the
+results by ten minutes before they may enter the features lowers M4's AUROC from
+\devnum{0.9283} to \devnum{0.9066} and halves its average precision on the heavy label.
+Supplementary Section~S1 gives these audits.
 
 The three kinds of model are listed in Table~\ref{tab:predictors}, which compares what each
 representation knows. Every model in that table is a classifier for the heavy label,

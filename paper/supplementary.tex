@@ -126,7 +126,9 @@ and the trace-construction sensitivities (Section~S3); and the deferred proofs a
 remarks of the theory section, the workload comparison and the consistency proposition
 among them, including the proof of the net-overtake identity (Section~S4). Section,
 table, figure, equation and statement numbers here carry an S prefix; a number without
-it refers to the main manuscript, and the sentence says so. In the proofs, a job's
+it refers to the main manuscript, and the sentence says so. What the manuscript calls
+logs are called traces here, and its two grading logs are the two judging traces. In the
+proofs, a job's
 rank is its position in arrival order: a job of lower rank arrived earlier. The traces are the ones the manuscript's Table~\ref*{M-tab:traces} names: the
 CodeBench judging logs \cite{codebench_dataset}, the Azure Functions invocation trace
 \cite{azure2021trace}, the Intel Netbatch logs \cite{netbatch2012trace} and the two
@@ -167,10 +169,9 @@ the later ones.
 \subsection{Predictors on the Non-Judging Traces}
 
 Table~\ref{tab:s_pred_cross} is the cross-trace counterpart of
-Table~\ref{tab:s_pred_edu}. The three figures Section~\ref*{M-sec:pred_comparison} of the manuscript quotes from it are the serverless STATIC
-Spearman correlation and the two CI pools' ENT AUROC; the AUROC column of Table~\ref*{M-tab:cross} of
-the manuscript carries the figure the scheduling results there are read against, which
-is the ALL row of each trace.
+Table~\ref{tab:s_pred_edu}, and Section~\ref*{M-sec:pred_comparison} of the manuscript points
+here for the four logs from outside education. The AUROC column of
+Table~\ref*{M-tab:cross} of the manuscript is the ALL row of each trace.
 
 A task on the first judging platform is attempted by one cohort within a few days, so
 who is writing still carries information. A task on the second is attempted by
@@ -339,9 +340,9 @@ predictors is not a latency decision at this job size.
 
 \subsection{The Field Audit of the Main Judging Trace}
 
-Section~\ref*{M-sec:fields} of the manuscript states four readings of the main trace. This is the
-evidence for them, and the two archive defects that follow from reading the trace this
-way.
+Section~\ref*{M-sec:fields} of the manuscript summarises how the main trace is read. This is
+the evidence for each reading, and the two archive defects that follow from reading the
+trace this way.
 
 \paragraph{The timestamp is a result stamp.}
 Among later-period runs the gap to the same user's previous event grows one for one with
@@ -412,8 +413,7 @@ mean ratio of \devnum{1.14} on its test part where the whole-window capacity giv
 \devnum{0.99}. The difference between those two numbers is the size of the circularity
 that fitting on the reported window would have hidden.
 
-What the split does not cover is stated in Section~\ref*{M-sec:limits} of the manuscript and belongs here
-in full. Out of sample the 90th percentile lands up to \devnum{21\%} from the recorded
+The split leaves two things uncovered. Out of sample the 90th percentile lands up to \devnum{21\%} from the recorded
 one and is systematically low on the larger pool. The split is chronological inside one
 \devnum{21}-day and one \devnum{7}-day window of two pools, not a different cluster,
 quarter or workload, and the capacity is held constant over the test part although the
@@ -521,8 +521,8 @@ of the original whole-window fit off the two pools directly.
 \label{sec:supp_tails}
 
 The cost-concentration screen is read trace by trace below, with the arrival and service
-fields each trace supplies and what each analysis truncation removes. Section~\ref*{M-sec:load} of the
-manuscript quotes its headline shares.
+fields each trace supplies and what each analysis truncation removes. Section~\ref*{M-sec:intro}
+of the manuscript quotes its headline shares.
 
 \begin{table}[htbp]
 \centering
@@ -566,8 +566,8 @@ Spearman correlation between a contest's first submission id and its recorded st
 is \devnum{0.9995}, but in \devnum{207} of \devnum{468} consecutive transitions the id
 ranges of two contests overlap.
 % Source: evidence/accoding_v2/out_accoding_v2.txt:170-171. Moved from Section 7 of the
-%   manuscript in the revision of 2026-09-24. Its measured cost sums test
-case execution times, each subject to its problem limit, and the replay adds an
+%   manuscript in the revision of 2026-09-24.
+ACcoding's measured cost sums test-case execution times, each subject to its problem limit, and the replay adds an
 assumed \devnum{0.5} s overhead. Thus neither the observed \devnum{30.0} s sum nor
 the resulting \devnum{30.5} s maximum is a verified whole-job timeout.
 % Source: evidence/accoding_v2/out_accoding_v2.txt, field audit and compare section B.
@@ -792,8 +792,8 @@ Load & Policy & Promise & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Max ex
 %   Thirteenth pass: the whole table moved here from sections/08_experiments.tex, which
 %   keeps the nine Guard(G) rows and the three block headers under tab:guard.
 
-Section~\ref*{M-sec:exp_guard} of the manuscript compares the three budget shapes at a fixed promise through
-the paired differences, which is how the comparison is read. Table~\ref{tab:s_guard_abl}
+Section~\ref*{M-sec:exp_guard} of the manuscript summarises where the three budget shapes
+differ, and Section~\ref{sec:supp_shape} gives the paired differences. Table~\ref{tab:s_guard_abl}
 gives the age-relative and queue-length rows themselves, in the same format and the same
 cells. One of the three shape winners coincides with Guard($G$) at each promise, which is
 why some rows below repeat a row of Table~\ref{tab:s_guard}.
@@ -1182,14 +1182,15 @@ expected-cost score are not the same measurement. The first belongs to the retro
 classifier comparison, the second to the score the scheduler uses. This is what separates
 them.
 
-The AUROC \devnum{0.928} in the earlier predictor comparison is M4 under the
-source-clock I-res protocol, using heavy-class classifier probabilities averaged
+The AUROC \devnum{0.928} in the earlier predictor comparison is M4 under the protocol
+of Section~\ref*{M-sec:pred_visibility} of the manuscript, with results released at their
+recorded times, using heavy-class classifier probabilities averaged
 over seeds, trained on the core terms and evaluated on
 \devnum{2022-2}. It is not the AUROC of the package's deployed expected-cost score.
 The latter is \devnum{0.9360} pooled over rolling forward development predictions
 and \devnum{0.9372} on \devnum{2022-2}; the conservative pooled score is
-\devnum{0.9116}. Table~\ref{tab:s_development_predictor} uses the package values and
-split definitions that will accompany the sealed predictor column. The earlier
+\devnum{0.9116}. Table~\ref{tab:s_development_predictor} uses the package values and the
+split definitions that the sealed predictor results of Section~S10 also use. The earlier
 value remains evidence for its own retrospective classifier comparison, whose
 predictions never enter scheduling; it is not a competing estimate of the same fitted score.
 % Sources: evidence/codebench_service_v2/out_service_v2.txt, SUMMARY 1, core/M4/ires0;
@@ -1321,16 +1322,16 @@ the gap at equal promise.
 \label{sec:supp_gapvsg}
 
 The fraction of the gap each policy closes is plotted below against the promise, with
-the count-based baseline beside it. Section~\ref*{M-sec:exp_guard} of the manuscript reads the crossing
-point off this figure.
+the count-based baseline beside it. Section~\ref*{M-sec:exp_guard} of the manuscript cites
+this figure for the count-based baseline.
 
 \input{figures/fig_gapvsg}
 
 \subsection{The Identity, Measured Job by Job}
 \label{sec:supp_identity}
 
-Section~\ref*{M-sec:theory} of the manuscript states that neither exhaustive search nor real input reaches
-the error term of Theorem~\ref*{M-thm:identity}. Exhaustive and random search over millions of small
+Neither exhaustive search nor real input reaches the error term of
+Theorem~\ref*{M-thm:identity} of the manuscript. Exhaustive and random search over millions of small
 instances never exceeds $(k-1)L$ by more than one time unit, and on the
 \devnum{17.6}-million-job trace of Section~\ref*{M-sec:experiments} of the manuscript the largest residual
 reaches \devnum{0.470} to \devnum{0.518} of $2(k-1)L$, again about $(k-1)L$. That is
@@ -1421,8 +1422,8 @@ of the timestamp, in which the stamp is receipt rather than completion, gives
 \devnum{0.926} against \devnum{0.895}. Merging or dropping the groups of runs by one user that
 end in the same second moves the gap closed by \devnum{0.017} and \devnum{0.003} at full load,
 so that earlier result survives these two treatments of co-ending runs;
-delaying the visibility of a completed job's outcome costs prediction quality and not much of
-it (Section~\ref*{M-sec:prediction} of the manuscript). The earlier fixed-budget guard is more sensitive to the
+delaying the visibility of a completed job's outcome costs prediction quality
+(Section~\ref*{M-sec:pred_visibility} of the manuscript and Section~\ref{sec:supp_lag}). The earlier fixed-budget guard is more sensitive to the
 construction, ranging from \devnum{0.442} to \devnum{0.843} of the gap at a fixed budget of
 \devnum{600} s at full load. What these variants show is that the earlier ordering
 experiment is sensitive to how the timestamps are read, to which source terms are
@@ -2474,7 +2475,7 @@ must not be read as a measured improvement on a common split.
 \subsection{Exact Selection Grids and Counts}
 
 The full expanded grid, its definitions, counts and deduplication totals are in
-\path{outputs/selection_v3/selection_protocol.json}; per-cell values, worst-cell
+\path{outputs/selection_v4/selection_protocol.json}; per-cell values, worst-cell
 values and selections are in the adjacent \path{selection_grid.csv},
 \path{selection_worst.csv}, \path{selection_frontier.csv} and
 \path{selected_parameters.csv}. All budget and queue-work bases below scale
@@ -2664,7 +2665,7 @@ The package produces the main CodeBench ranking, guard, adversarial and residual
 tables from \path{outputs/dev_tables/}, including its separate single-server
 directory; predictor metrics from \path{outputs/dev_predictor/}; and visibility
 comparisons from \path{outputs/dev_visibility/}. Guard selection and aging selection
-are in \path{outputs/selection_v3/} and \path{outputs/selection_aging/}. Their
+are in \path{outputs/selection_v4/} and \path{outputs/selection_aging/}. Their
 manifests identify inputs, settings and output hashes. The preserved original
 recipe is \path{configs/main_original_84932d9.yaml}; the original outputs are not
 claimed to have been regenerated under an unfinished visibility revision.
@@ -2698,7 +2699,7 @@ The sealed procedure is specified by \path{docs/sealed_run_procedure.md}. It
 produces separate multiserver, single-server, predictor and visibility outputs,
 including the policy-specific exact stage, with unchanged declared selection
 rules and parameters. It does not extend the earlier predictor-family or
-cross-domain studies. No sealed result is present in this supplement.
+cross-domain studies. Its results are in Section~S10.
 
 
 
@@ -2717,7 +2718,8 @@ smaller worst harm and then to smaller $B_0$, $\eta$, $\gamma$. Guard($G$) is th
 winner over the three grids together; the winner inside each grid is reported as an
 ablation row.
 
-We keep
+Adding each completed cost to every waiting job's account would cost time linear in the
+queue at every completion. We keep
 $\mathrm{over}[q] = TC - F(q)$ instead, where $TC$ is the total completed work and
 $F(q)$ the prefix sum over ranks up to $q$ of completed work, maintained in a Fenwick
 tree, so that a completion is one point update and a query one prefix sum. The firing
@@ -2738,10 +2740,10 @@ waiting jobs, with arrivals sharing a timestamp processed in rank order.
 \label{sec:supp_selection_scope}
 
 What the released package regenerates and what remains archived development evidence are
-recorded here, behind the three statements Section~\ref*{M-sec:exp_prov} of the manuscript places before
-its numbers.
+recorded here, behind the statements on selection in Section~\ref*{M-sec:exp_prov} of the
+manuscript.
 
-Third, the grids, the feasibility rule, the objective and the tie-break were fixed before the
+The grids, the feasibility rule, the objective and the tie-break were fixed before the
 grids were run, at comparable density across the three shapes, and the package comparisons use exact integer microseconds for arrivals, service
 and budget arithmetic. Earlier predictor comparisons, cross-domain analyses and
 trace-construction sensitivities remain archived development evidence, with their
@@ -3013,7 +3015,7 @@ The public LPC-EGEE trace supplies recorded waits and concentrated execution cos
 together \cite{lpc_egee_trace}. After outage exclusion and queue-limit capping,
 the longest \devnum{1\%} of \devnum{206{,}222} retained jobs carries
 \devnum{40.7\%} of work. On the chronological evaluation part the top share is
-\devnum{35.1\%}, which is the value used in the main cross-domain table.
+\devnum{35.1\%}, which is the value Table~\ref{tab:s_lpc_rows} uses.
 The physical pools stay disjoint. Effective capacities \devnum{83} and
 \devnum{56} are fitted only on the earlier part, with no test-driven refit.
 Service is the minimum of recorded run time and its documented queue limit;
@@ -3438,9 +3440,9 @@ excess is \devnum{3{,}129} s of an allowed \devnum{3{,}150} s
 \subsection{What Failing an Applicability Condition Does Not Establish}
 \label{sec:supp_applicability}
 
-Section~\ref*{M-sec:limits} of the manuscript names two applicability conditions and the traces that
-fail them, and Section~\ref*{M-sec:exp_cross} there gives the numbers trace by trace. What a failure
-does and does not support is here.
+Section~\ref*{M-sec:exp_cross} of the manuscript names two screens, which this file calls
+applicability conditions, and gives the numbers trace by trace. What a failure does and
+does not support is here.
 
 Under the first condition, the four failing workloads have a first-come first-served
 p99 wait between \devnum{0.021} and \devnum{1.78} multiples of $L$, against the
@@ -3557,7 +3559,7 @@ the mean wait fell from \devnum{235.2} s in cell 3 to \devnum{205.7} s.
 % Source: summary.json replayFcfsWaitS.mean, load.rho, waitS.mean; results.md section 4.
 
 \paragraph{Two ways of charging the budget.} Cell 4 charges the budget by the
-reservation-and-refund rule of Section~S7.6, whose threshold is lower by $L$, so under
+reservation-and-refund rule of Section~S7.6, whose additive constant is lower by $L$, so under
 the same promise its cap was \devnum{460} s against \devnum{120} s for completed-work
 charging. It let more overtaking through, kept more of the base policy's benefit
 (mean wait \devnum{206.7} s; reports waited \devnum{26.9} s on average) and cost the
@@ -4614,7 +4616,7 @@ $\rho = \sealednum{1}$ & reversed             & \sealednum{437.89} & \sealednum{
 
 \begin{table}[htbp]
 \centering
-\caption{Sealed terms: the single server, with the 321 copies chosen on the development pool and a busy-hour utilisation of 2.26. Columns as in Table~\ref{tab:s_k1}.}
+\caption{Sealed terms: the single server, with the 321 copies chosen on the development pool and a busy-hour utilisation of 2.26. Columns as in Table~\ref{tab:s_k1}, except that the unguarded rows print the firing rate as the sealed run emitted it, \sealednum{100.00} for FCFS and \sealednum{0.00} for SJF and SPJF-E, where Table~\ref{tab:s_k1} prints ---.}
 \label{tab:k1_sealed}
 \small
 \setlength{\tabcolsep}{3pt}
