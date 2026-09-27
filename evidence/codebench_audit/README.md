@@ -4,10 +4,10 @@
 with the dataset publisher's own release statistics, and what does the cost tail look
 like under one common definition?
 
-**Paper items.** `out_tail_and_counts.txt` carries the CodeBench sizes of
-`paper/sections/07_data.tex` (4,611,325 events; 1,398,801 submits; 3,212,524 tests), the
-per-era row counts of the same section, the tail share of the CodeBench row in
-Section 8's cross-domain table, and the field audit cited in `paper/supplementary.tex`.
+**Paper items.** `out_tail_and_counts.txt` carries the CodeBench run count of Table 4
+(Section 7.1, 4,611,325 events), the CodeBench tail share of Table 9 (Section 8.6) and the
+CodeBench rows of Table S3 (Supplementary Section S2.4); the field audit of Supplementary
+Section S2.1 cites it beside `evidence/codebench_service_v2/`.
 
 **Inputs.** `data/codebench/parquet/` (built by `evidence/codebench/parse_codebench.py`).
 

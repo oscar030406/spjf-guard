@@ -5,9 +5,9 @@ to break them: the fluid-comparison lemma, the absolute bound, the maximum-waiti
 bound and the rule that combines the clock with the guard. Which statements survive a
 line-by-line reading and an adversarial search, and in what wording?
 
-**Paper items.** Lemma `lem:fluid`, Proposition `prop:absolute` (Section 6.8),
-Proposition `prop:clock` and the combined rule (Section 6.7), and the counterexamples and
-check summary of Supplementary Section S4.11.
+**Paper items.** Lemma S5 (the fluid comparison), the counterexamples and the check
+summary of Supplementary Section S4.11; the wording of Proposition 10 and of the combined
+rule (Section 6.6) and of Proposition 11 (Section 6.7).
 
 **Inputs.** None from `data/`. Synthetic integer instances only; no sealed data. The
 text under test is `evidence/timeout_rule/draft_clock_main.tex` and

@@ -5,10 +5,11 @@ synthetic instances and never measured on the trace the paper runs on. How large
 residual of the net-overtake identity there, and how much of the per-job excess over
 FCFS does it explain?
 
-**Paper items.** The measurement behind `outputs/dev_tables/identity_residuals.csv`,
-which is what `paper/sections/06_theory.tex`, `paper/sections/08_experiments.tex` and
-`paper/supplementary.tex` quote; the identity residual on all nine cells reported in the
-supplement.
+**Paper items.** None printed. The residual figures of Section 8.5, Table S9
+(Supplementary Section S3.5) and Supplementary Section S3.13 come from
+`outputs/dev_tables/identity_residuals.csv`, which the package writes
+(`scripts/run_main.py`); this study is the earlier measurement of the same residual, on
+the v3.1 trace.
 
 **Inputs.** The overlay trace `<cache-dir>/mv31/traces/primary_rep0.npz` and the loaders
 and selected parameters of `evidence/main_v3/v31/`; rebuild the trace with

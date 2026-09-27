@@ -36,8 +36,8 @@ machines, the extra time a job waits compared with arrival order equals the work
 jumped ahead of it, minus the work it jumped ahead of itself, divided by `k`, up to an
 error of at most `(2 - 2/k) L`. It
 then wraps any ordering rule in a *guard*: a small rule that counts how much work has
-jumped ahead of each waiting job and, when the count reaches a budget, makes the oldest
-waiting job run next. The result is that no job waits more than `G` seconds longer than
+jumped ahead of each waiting job and, once some job's count reaches its budget, runs the
+earliest-arrived of those jobs next. The result is that no job waits more than `G` seconds longer than
 it would have in arrival order, however wrong the predictions are. The operator chooses
 `G`; the theorem turns it into a guarantee.
 
@@ -64,11 +64,11 @@ on a server.
 | `configs/main.yaml` | every setting of the main experiment, each with a comment saying what it does |
 | `scripts/` | the commands listed below |
 | `evidence/` | the studies behind the numbers the package does not produce, one folder each; see "Where each number comes from" |
-| `docs/adr/` | decisions that are hard to reverse, one page each, with the alternatives that were rejected |
-| `docs/sealed_access_log.md` | every read of a sealed semester, one line per read |
+| `docs/adr/` | decisions that are hard to reverse, one page each, with the alternatives that were rejected; `docs/adr/zh-CN/` holds the Chinese originals |
+| `docs/sealed_access_log.md` | the ledger of sealed reads, one line per read, in the Chinese strings the code writes: every sealed run of the package and the pre-freeze reads logged at the time. `evidence/README.md` lists every pre-freeze bookkeeping read by script and log line; `docs/sealed_access_log.en.md` is an English rendering |
 | `paper/` | the manuscript source. Table numbers are copied in from `outputs/`; no script writes into `paper/` |
-| `CONTEXT.md` | the glossary, in Chinese. One word per concept, used identically in the paper, the code, the configuration and the tables |
-| `GENERATED.md` | every file a script produces: its source, the command that regenerates it, the command that checks it (in Chinese) |
+| `CONTEXT.md` | the glossary. One word per concept, used identically in the paper, the code, the configuration and the tables. `CONTEXT.zh-CN.md` is the Chinese original |
+| `GENERATED.md` | every file a script produces: its source, the command that regenerates it, the command that checks it. `GENERATED.zh-CN.md` is the Chinese original |
 
 `README.zh-CN.md` is this file in Chinese, section for section, with the same commands.
 
@@ -118,8 +118,8 @@ No raw data is redistributed here. Download each dataset from its publisher into
 
 | dataset | what it is | source | terms |
 |---|---|---|---|
-| CodeBench v1.81 | the log of an introductory programming course at the Federal University of Amazonas, Brazil: 18 semesters from 2016 to 2024, every action in the students' online editor with a millisecond time stamp, and the start and deadline of every assignment. The main experiment runs on this | <https://codebench.icomp.ufam.edu.br/dataset/> | the page states no licence. Used for academic research and cited; the raw archives are not redistributed. Write to the dataset authors before publishing |
-| ACcoding v1.0.0 | the submission log of an online judge, the second grading platform | <https://zenodo.org/record/6522395>, doi:10.5281/zenodo.6522395 | the paper says CC BY 4.0, the Zenodo page says other-open; confirm before publishing |
+| CodeBench v1.81 | the log of an introductory programming course at the Federal University of Amazonas, Brazil: 18 semesters from 2016 to 2024, every action in the students' online editor with a millisecond time stamp, and the start and deadline of every assignment. The main experiment runs on this | <https://codebench.icomp.ufam.edu.br/dataset/> | the page states no licence. Used for academic research and cited; the raw archives are not redistributed |
+| ACcoding v1.0.0 | the submission log of an online judge, the second grading platform | <https://zenodo.org/record/6522395>, doi:10.5281/zenodo.6522395 | the dataset paper states CC BY 4.0; the Zenodo record lists "other (open)". Cited; not redistributed |
 | OULAD | Open University learning analytics dataset. The project began as a study of this dataset; that direction did not work, and nothing in the paper rests on it | <https://analyse.kmi.open.ac.uk/open_dataset>, doi:10.1038/sdata.2017.171 | CC BY 4.0 |
 | Azure Functions 2021 | two weeks of function calls on Microsoft's serverless platform, 1,980,951 calls | <https://github.com/Azure/AzurePublicDataset> (Zhang et al., SOSP 2021) | CC BY 4.0 |
 | Intel Netbatch 2012 | one pool of Intel's internal compute farm, 9,054,066 jobs, in the standard format of the Parallel Workloads Archive | <https://www.cs.huji.ac.il/labs/parallel/workload/l_intel_netbatch/> (Shai, Shmueli & Feitelson, JSSPP 2013) | the archive gives no licence, states that the log is free for researchers, and asks for acknowledgement and citation. Acknowledge Ohad Shai, Edi Shmueli and Nir Antebi (Intel); the file is not redistributed |
@@ -160,26 +160,38 @@ $UV python -m pytest -q -m crosscheck
 ```
 
 Step 3 turns the raw data into the experiment's inputs. One semester of one course
-rarely makes the grader busy enough to show queueing, so the experiment replays several
-semesters laid on top of one another. Each submission keeps its weekday and hour, each
-semester is shifted by a whole number of weeks, and the sum is one trace with a realistic
-deadline rush. The paper calls such a trace an *overlay* and uses five, drawn with five
-different shifts from the same semesters. A *pool* is the set of semesters that goes into
-an overlay: `primary` is six semesters from 2020 to 2022, and `validation` is the same
-set without its last semester. The guard's settings are chosen on the validation
-overlays only, so that the semester they are tested on never influences them. The
-single-server overlay is a separate trace on which the paper's identity holds exactly:
+rarely makes the grader busy enough to show queueing, so the experiment lays 44 copies of
+the same classes on top of one another. Each submission keeps its weekday and hour, each
+copy of each class is shifted by a whole number of weeks drawn at random, and the sum is
+one trace with a realistic deadline rush. The paper calls such a trace an *overlay* and
+uses five, drawn with five different sets of shifts. A *pool* is the set of semesters that
+goes into an overlay: `primary` is six semesters from 2020 to 2022, and `validation` is
+the same set without its last semester. The guard's settings are chosen on the
+validation overlays only, so that the semester they are tested on never influences them.
+The single-server overlay is a separate trace on which the paper's identity holds
+exactly.
+
+The commands run in this order: parse the eleven development semesters, compute their
+static code features, build the per-submission cache, fit the running-time scores, then
+build the overlays, which store those scores, and choose the settings on them. None of
+them reads a sealed semester.
 
 ```bash
-$UV python scripts/parse_archive.py --semesters 2022-1 --compare
+DEV=2018-1,2018-2,2019-1,2019-2,2020-ERE,2020-1,2020-2,2021-1,2021-2,2022-1,2022-2
+SCORES=data/derived/package_ranking_scores/forward_scores.parquet
+$UV python scripts/parse_archive.py --semesters $DEV
+$UV python evidence/codebench_service/code_features.py --only $DEV
 $UV python scripts/build_cache.py --pool development
-$UV python scripts/build_overlays.py --pool primary
-$UV python scripts/build_overlays.py --pool validation
-$UV python scripts/build_overlays.py --single-server
 $UV python scripts/fit_scores.py --repeat
+$UV python scripts/build_overlays.py --pool primary --score-parquet $SCORES
+$UV python scripts/build_overlays.py --pool validation --score-parquet $SCORES
+$UV python scripts/build_overlays.py --single-server
 $UV python scripts/select_parameters.py --workers 2 --out-dir outputs/selection_v4
 $UV python scripts/select_aging.py --workers 2
 ```
+
+`scripts/parse_archive.py --semesters 2022-1 --compare` parses one semester again and
+compares it column by column with the files on disk.
 
 Step 4 is the experiment. Every policy runs on the five overlays at three load levels,
 where the level is how busy the machines are in the busiest hour: 50 %, 80 % or 100 %.
@@ -194,6 +206,30 @@ $UV python scripts/run_main.py --prefix k1 --reps 0 --levels 0 \
 $UV python scripts/eval_scores.py --pool primary
 $UV python scripts/run_visibility.py --pool primary --workers 2
 ```
+
+The paper's headline replays compute each job's score only from the results that had
+reached its class in the simulated queue when it arrived (`docs/adr/0007`, `0008`). They
+come after step 4, in this order, and the last command writes the table bodies the paper
+copies in:
+
+```bash
+$UV python scripts/run_consistent_visibility.py --config configs/visibility_development_20260924.yaml \
+    --pool primary --workers 2 --resume \
+    --controls data/derived/package_ranking_scores/consistent_controls_20260924.npz
+$UV python scripts/run_online_visibility.py --pool primary --workers 2 --resume --policies all
+$UV python scripts/online_paired_differences.py
+$UV python scripts/run_cluster_bootstrap.py --resamples 100 --workers 3
+$UV python scripts/sealed_dev_contrast.py
+$UV python scripts/emit_paper_tables.py --dev-exact-dir outputs/dev_consistent_visibility \
+    --dev-online-dir outputs/dev_online_visibility --dev-cluster-dir outputs/cluster_bootstrap \
+    --out-dir outputs/consistent_paper_tables
+```
+
+`sealed_dev_contrast.py` reads the sealed outputs as well, so it runs only after the
+sealed run described below. The controls cache of the first command is built by the same
+script with `--build-controls-only`; `GENERATED.md` has that command, the two sensitivity
+reruns of Supplementary Section S3.15, and the reselection of the settings under the
+online replay.
 
 Step 5 checks the result: the per-job waits against the earlier programs, the overlays
 against their specification, the tables against the committed copies, and the numbers
@@ -245,10 +281,15 @@ page.
 ## The sealed semesters
 
 Three CodeBench semesters (2023-1, 2023-2 and 2024-1), the last fifth of the ACcoding
-submissions by id, and the OULAD 2014 presentations are *sealed*. Until the method is
-frozen, any code path that would read them raises an error before the file is opened
-(`src/spjf_guard/data/sealed.py`; the reasoning is in `docs/adr/0004`). The point is to
-make it impossible to adjust the method after seeing the test result.
+submissions by id, and the OULAD 2014 presentations are *sealed*. Without the `--unseal`
+flag and a protocol lock, any code path that would read them raises an error before the
+file is opened (`src/spjf_guard/data/sealed.py`; the reasoning is in `docs/adr/0004`).
+The point is to make it impossible to adjust the method after seeing the test result.
+
+The method was frozen on 2026-09-25 (commit `f32c393`, `protocol_lock.json`), and the
+sealed CodeBench semesters were then run once; the paper reports them in Section 8.2 and
+Supplementary Section S10. Changes made to reporting scripts after that run are declared,
+file by file, in `docs/post_run_changes.json` (`docs/adr/0010`).
 
 Freezing goes in four steps. A rehearsal with `--dry-run-sealed` prints which files would
 be read without opening any. Then the *protocol lock* is written: a file of hashes
@@ -274,7 +315,7 @@ from the raw datasets, and `scripts/check_paper_numbers.py` checks that the manu
 prints exactly what the tables contain.
 
 The second kind comes from separate studies, each run once to answer one question.
-`evidence/` keeps one folder per study, 30 in all. Each folder holds the scripts that
+`evidence/` keeps one folder per study, 38 in all. Each folder holds the scripts that
 were run, the log they printed (`out_*.txt`), the tables they wrote, and a `README.md`
 that states the question, which part of the paper uses the answer, what the study needs
 as input, and whether it is finished. In plain terms, the studies cover:
@@ -297,7 +338,12 @@ source comments still name the folder the studies were run in, `prechecks/`;
 The copies keep the file and directory names the scripts import each other by. Absolute
 paths from the authors' machines were replaced by `<repo-root>` and `<cache-dir>`; no
 measured value was changed. The `out_*.txt` logs were not rewritten. No raw dataset is
-redistributed here, and no study read sealed data.
+redistributed here. Before the freeze, some studies read sealed data for bookkeeping: to
+parse and count the CodeBench archives, to reconcile those counts with the publisher's
+tables, to compute the static code features the cache needs, to fix where the sealed
+ACcoding block starts, and to audit an earlier project plan's OULAD request counts.
+`evidence/README.md` lists each script and log line, and none of them computed a cost, a
+prediction or a scheduling result on sealed data.
 
 ## Conventions
 
@@ -311,5 +357,5 @@ command and its check command; a hand edit to a generated file fails
 ## Licence and citation
 
 The code is MIT-licensed; see `LICENSE`. The datasets are not covered by it; each keeps
-the terms in the data table above. `CITATION.cff` carries the manuscript's title and
-placeholder authors, to be filled in before release.
+the terms in the data table above. `CITATION.cff` gives the manuscript's title and
+authors.

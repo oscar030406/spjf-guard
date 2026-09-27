@@ -2,7 +2,7 @@
 
     uv run python scripts/diff_dev_tables.py \
         [--table outputs/dev_tables/main_table.csv] \
-        [--v31 prechecks/main_v3/v31/table_main_primary.csv] \
+        [--v31 evidence/main_v3/v31/table_main_primary.csv] \
         [--out outputs/dev_tables/diff_vs_v31.csv]
 
 The package's kernel is the authority (ADR 0001: its clock is exact integer microseconds,
@@ -103,7 +103,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--table", type=Path, default=ROOT / "outputs/dev_tables/main_table.csv")
     ap.add_argument(
-        "--v31", type=Path, default=ROOT / "prechecks/main_v3/v31/table_main_primary.csv"
+        "--v31", type=Path, default=ROOT / "evidence/main_v3/v31/table_main_primary.csv"
     )
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()

@@ -4,10 +4,11 @@
 on public non-education workloads with real arrival times and real per-job costs — the
 Azure Functions 2021 invocation trace and the Intel Netbatch 2012 compute-farm log?
 
-**Paper items.** The eta-squared column of `paper/sections/04_prediction.tex`; the
-serverless and compute-farm rows and spans of `paper/sections/07_data.tex`; the
-serverless, compute-farm and overlay rows of Section 8's cross-domain table; the
-serverless invocation and compute-farm rows of `paper/supplementary.tex`.
+**Paper items.** The serverless and compute-farm rows of Table 4 (Section 7.1); the
+ACcoding, Azure Functions and Netbatch rows of Table 9 (Section 8.6); Table S1 and the
+variance share 0.867 of Supplementary Section S1.2; the serverless and compute-farm rows
+of Table S3 and the truncation counts of Supplementary Section S2.4. Supplementary Section
+S5.4 names this folder in its text.
 
 **Inputs.** `data/azure_functions_2021/` and `data/intel_netbatch_2012/`; neither is
 redistributed here.

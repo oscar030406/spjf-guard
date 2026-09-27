@@ -8,8 +8,8 @@ per-job FCFS-relative guarantee from the 60 s job limit down to the first-attemp
 counterexamples, the one bound that survives and its price, the trace numbers and the
 prior-art verdict; `out_SUMMARY.txt` has it in ten lines.
 
-**Paper items.** The kill-and-restart tiering paragraph of
-`paper/sections/09_limitations.tex`.
+**Paper items.** The kill-and-restart tiering sentences of Section 9 and Supplementary
+Section S7.5. No source comment names this folder.
 
 **Inputs.** The development trace already built by
 `evidence/guard_variants/build_inputs.py`; no sealed data is read.

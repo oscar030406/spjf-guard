@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-26T07:54:48-04:00",
+  "written_at": "2026-09-27T05:41:10-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -631,7 +631,7 @@
       },
       {
         "path": "scripts/check_generated.py",
-        "sha256": "414610851f1481c8cf1c457df017bc8973c2f09b08f83699f6ef0fac5b279429"
+        "sha256": "560adb92e63cae2024e1e2c92a750ed6e073de79befaf5767ee7af73e1834798"
       },
       {
         "path": "scripts/check_overlays.py",
@@ -647,11 +647,11 @@
       },
       {
         "path": "scripts/check_reproduction.py",
-        "sha256": "b403d49f17c983394ea7b26acb8025194c0e1124d6affcd7141548c1261ca81d"
+        "sha256": "8432e17315b154605faa2c8af487b7ffc2779c0abef195b5e6fdd0a7d5662112"
       },
       {
         "path": "scripts/compare_selection.py",
-        "sha256": "7d2a99d70b8a74efba25dbe8ab0c3e403e78e7a67e2d92aa1f92fb7efa298d83"
+        "sha256": "c14652a0718788126db1e9a39f74126561fe467536ef840224b0a395d119a287"
       },
       {
         "path": "scripts/consistent_cells.py",
@@ -659,7 +659,7 @@
       },
       {
         "path": "scripts/diff_dev_tables.py",
-        "sha256": "462245badf10ec4169cc6368eb33d77bfa16639ef53ed3fc69a8fefb2eeec35f"
+        "sha256": "aab8861c916834133b35e28b16721ee3cf94f232cf87b9656e5822adefd52d3e"
       },
       {
         "path": "scripts/emit_gap_harm_figure.py",
@@ -687,7 +687,7 @@
       },
       {
         "path": "scripts/online_paired_differences.py",
-        "sha256": "6c2185fc986aed5b438b5ee987f35c7a481d27d05849c295eb56cc0d6b884457"
+        "sha256": "1752bf41d6339b22e8263a66fd36db8d66be6b7a30d64c33b070effda3ed3cbf"
       },
       {
         "path": "scripts/parse_archive.py",
@@ -1023,7 +1023,7 @@
       },
       {
         "path": "tests/test_sim_crosscheck_prechecks.py",
-        "sha256": "3786d2f310f2facdddbbe642018e4d3249266bedaa867c2bb38702a0e5e10379"
+        "sha256": "50427a5b250a9b428d21c2dabf35d1da729aa1df3fe55ddb4b538de1657898b5"
       },
       {
         "path": "tests/test_sim_guard.py",
@@ -1046,7 +1046,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "b363ed180db979716bcd087ac5c221fde9ec59e4dae46ea59eac4f52f482097d"
+    "digest": "c9781a9a2810218dfb738507d87205ddbaa92f3c82b6559ff9c8c9e8cc22a06a"
   },
   "inputs": {
     "artefacts": [

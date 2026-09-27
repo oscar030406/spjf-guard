@@ -4,9 +4,9 @@
 tables built from them, hold up under a second implementation — and is the fixed-budget
 grid the comparison rests on fine enough to be fair?
 
-**Paper items.** Finding G1 of `out_VERDICT.txt` is why version 3.2 of the main
-experiment exists and why the paper's claim about the capped budget's margin is the
-weaker one; `out_paper.txt` pins by sha256 the version of `paper/sections/` it checked.
+**Paper items.** None printed. Finding G1 of `out_VERDICT.txt` is why version 3.2 of the
+main experiment exists, whose drop-one-cell sensitivity Supplementary Section S5.6 quotes;
+`out_paper.txt` pins by sha256 the version of `paper/sections/` it checked.
 
 **Reading the logs.** *Builder* means the implementation under review, *mine* the one
 written here. 50 cells, 804 guarded runs and 13,921,826,346 per-job bound checks were run

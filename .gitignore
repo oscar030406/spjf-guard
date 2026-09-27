@@ -23,3 +23,8 @@ paper/*.blg
 paper/*.aux
 paper/*.bbl
 paper/*.out
+
+# platform test bed: internal build notes and a survey of the live site, kept out of the repository
+evidence/platform_testbed/assessment.md
+evidence/platform_testbed/build_report.md
+evidence/platform_testbed/live_server_survey.md

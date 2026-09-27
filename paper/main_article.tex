@@ -3,7 +3,7 @@
 % which uses Definitions/mdpi.cls. Both pull the same sections/ files, so any
 % edit to a section shows up in both.
 %
-% Build: "D:/environment/tools/tectonic/tectonic.exe" main_article.tex
+% Build: tectonic main_article.tex
 \documentclass[11pt,a4paper]{article}
 
 \usepackage{amsmath}
@@ -63,7 +63,7 @@
 % Marks a figure that comes from development data rather than from the sealed
 % semesters. It expands to its argument; the submission version can redefine it.
 \newcommand{\devnum}[1]{#1}
-% Figures from the sealed terms, opened once after the protocol freeze.
+% Figures from the sealed terms, evaluated once after the protocol freeze.
 \newcommand{\sealednum}[1]{#1}
 
 % Pulls in a section if its file exists, and otherwise leaves a numbered

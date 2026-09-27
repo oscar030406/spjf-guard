@@ -66,6 +66,8 @@ work that $i$ overtook are
   \mathrm{Out}_i \;=\; \sum_{j < i,\; i \prec j} C_j .
   \label{eq:inout}
 \end{equation}
+A job counted in $\mathrm{In}_i$, one that arrived after $i$ and started before it, is an
+\emph{overtaker} of $i$.
 
 A policy $P$ offers a \emph{service guarantee} $G$ if $\mathrm{excess}_P[i] \le G$ for every
 job $i$, on every arrival sequence, for all costs bounded by $L$ and for every score,

@@ -1,6 +1,6 @@
 % Supplementary Materials, built on its own:
 %
-%   "D:/environment/tools/tectonic/tectonic.exe" supplementary.tex   (run from paper/)
+%   tectonic supplementary.tex   (run from paper/)
 %
 % Same class and same bibliography as main.tex; the only difference is the `supfile'
 % article type, which mdpi.cls uses to prefix every table and figure number with S and to
@@ -1845,7 +1845,7 @@ same constant and the same proof, the upward supremum is still $2(k-1)L$, and
 the best downward witness we have falls to $(k-1)L$. We keep the
 dispatch-sequence convention for two reasons. Its constant is exactly determined
 in both directions, whereas the downward constant for the executed-work variant
-is open, somewhere in $((k-1)L, 2(k-1)L]$; and its two sides are symmetric.
+is open, somewhere in $[(k-1)L, 2(k-1)L]$; and its two sides are symmetric.
 Completed work lower-bounds both currencies, so the guard is implementable
 either way: a job $j$ of rank above $i$ that completes while $i$ waits has
 $a_j \ge a_i$ and is dispatched at or after $a_i$, so all of $C_j$ is executed
@@ -1981,7 +1981,7 @@ has none $\mathrm{In}_i = 0$ and the excess is at most $(2-2/k)L < (3-2/k)L$.
 \label{sec:supp_multscope}
 
 With the queue-length shape, the multiplicative bound stated with one common constant is
-false, which is why Section~\ref*{M-sec:scheduling} of the manuscript restricts the multiplicative bound to
+false, which is why Section~\ref*{M-sec:th_guard} of the manuscript restricts the multiplicative bound to
 the age-relative shape. The counterexample is below.
 
 \begin{remark}[Why the multiplicative bound is claimed for one shape only]
@@ -2158,7 +2158,7 @@ charges the last overtaker and the at most
 $k-1$ overtakers still in service beside it, all of them jobs of rank above $i$, which
 arrive after $a_i$ and are bounded only by the prefix maximum at the instant $i$
 starts. The counterexample at the earlier instant is short. Take $k = 1$ with budget
-$B = 2$, let $i$ and one job of service $1$ arrive at $t = 0$ and a job of service $M$
+$B = 2$, let $i$, of service $1$, and one more job of service $1$ arrive at $t = 0$ and a job of service $M$
 at $t = 1$, and let the base policy take the two others first. Then
 $\Lambda(a_i) = 1$ for every $M$, the guard never fires because $\mathrm{over}[i]$
 stops at $1 < 2$, and $\mathrm{In}_i = M + 1$ against a claimed
@@ -2365,7 +2365,8 @@ $\delta$, and a last job of size $L$, scored in that order. When the last unit
 finishes, $\mathrm{over} = B - 1 < B$, the last job starts, and the victim starts
 $B + 2L + \delta - 2$ after its FCFS start. For $k \ge 2$ we start from the cascade of Section~\ref{sec:supp_cascade} with $L = k^m$, delay the charges
 of its final jobs by $\delta$, let each server run $\delta - 1$ unit jobs charged late, add
-a second batch of $k$ jobs of size $L$, and set $B = f + L + 1$. At $k = 2$ the victim's
+a second batch of $k$ jobs of size $L$, and set $B = f + L + 1$, with $f$ the remaining
+service of Lemma~\ref{lem:cascade}. At $k = 2$ the victim's
 excess is then $f + 3L + \delta - 1$, two units below the bound at every depth $m$, so the
 bound is attained in the limit. At $m = 12$ the ratio is at least $0.99988$ for
 $\delta = 1, 2048, 4096$, and at $m = 8$ the excess exceeds Theorem~\ref*{M-thm:guard}'s bound by
@@ -2390,8 +2391,12 @@ server's report, so it holds for every $\delta$, and for reports that never arri
 \end{proof}
 
 A third arrangement keeps one view of the counter per server, in which a server sees
-its own completions at once and other servers' within $\delta$. The same argument then
-gives $\mathrm{excess} < B_{\max}/k + (3 - 2/k)L + (1 - 1/k)(L + \delta)$. At $k = 2$ a
+its own completions at once and other servers' within $\delta$. The server $s^*$ that
+takes $j$ has counted its own completions, so it holds no job of class (c), and each other
+server holds jobs of (a) and (c) of total cost below $L + (L + \delta)$ as in the first part.
+Hence $\mathrm{In}_i < B_{\max} + (k-1)L + (k-1)(L + \delta) + L$, and
+Theorem~\ref*{M-thm:identity} of the manuscript with $\mathrm{Out}_i \ge 0$ gives
+$\mathrm{excess} < B_{\max}/k + (3 - 2/k)L + (1 - 1/k)(L + \delta)$. At $k = 2$ a
 variant of the cascade falls short of it by $3/2$ at every depth, so this bound too is
 attained in the limit.
 
@@ -2754,7 +2759,7 @@ shape at $G = \devnum{1200}$ s, where it reaches worst-cell gap \devnum{0.7275} 
 harm \devnum{152.2} s against \devnum{482.2} s for the best age-relative point. And a worst-cell
 rule can be decided by a single cell: dropping the one validation cell that decides
 the $G = \devnum{600}$ choice moves that choice to $B_0 = \devnum{15}k/4$ s, $\eta =
-\devnum{0.90}$, with worst-cell gap \devnum{0.7237}. The sealed terms were opened
+\devnum{0.90}$, with worst-cell gap \devnum{0.7237}. The sealed terms were evaluated
 once after the protocol freeze, with the parameters unchanged, and Section~S10 gives
 their tables. The frozen-run procedure also produced a separate single-server trace
 and its tables, per-term and pooled predictor metrics, conservative/static visibility
@@ -3644,7 +3649,8 @@ rule~\cite{smith1956} stated on an arbitrary arrival sequence---and then bounds 
 numerator through Corollary~\ref*{M-cor:necessary} of the manuscript and the denominator through the $mn$
 inversions of shortest job first. Achievability counts the short jobs exact shortest job
 first places before the first long one, which is
-$r_g = \min(n, k\lceil B/(kc)\rceil)$ and at least $qn$, while maximality turns on
+$r_g = \min(n, k\lceil B/(kc)\rceil)$ and at least $qn$, with $q = \min(1, B/(nc))$, while
+maximality turns on
 one relabelling: if a wrapper permits a later-ranked job while the head has
 $\mathrm{over}[h] > G - L$, giving that job the unrevealed size $L$ leaves the
 transcript the wrapper sees unchanged and pushes the head past $G$, after which the
@@ -4212,7 +4218,8 @@ sandwich.
 \end{proof}
 
 The guard therefore leaves at most $2(3k-2)L/(nc)$ of the closable gap on the
-table here, and at one server it leaves none of it. Saying so precisely needs the
+table here, and at one server it leaves none of what a size-oblivious wrapper can permit
+(Proposition~\ref{cor:k1_frontier}). Saying so precisely needs the
 class of wrappers the claim is quantified over.
 
 \begin{definition}[Opaque-base, size-oblivious wrapper]
@@ -4453,7 +4460,7 @@ construction.
 
 This section gives the tables of the sealed run (Section~\ref*{M-sec:exp_sealed} of the
 manuscript) that the manuscript does not print. Every figure in them comes from the three
-sealed terms of the main log, 2023-1, 2023-2 and 2024-1, which were opened once on 25
+sealed terms of the main log, 2023-1, 2023-2 and 2024-1, which were evaluated once on 25
 September 2026 under the frozen protocol. A first attempt at the run stopped at its fourth
 command, before any table was written. The rule that removes records with zero cost from
 the simulated trace listed the development terms by name and not the sealed ones, so a

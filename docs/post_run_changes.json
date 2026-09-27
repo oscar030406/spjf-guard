@@ -8,8 +8,8 @@
     },
     {
       "path": "scripts/check_generated.py",
-      "sha256": "414610851f1481c8cf1c457df017bc8973c2f09b08f83699f6ef0fac5b279429",
-      "why": "The legacy paper-prints pass (outputs/paper_tables) reads no exact or online output; once the sealed exact run exists it leaves the sealed prose to check_exact_paper_prints, which checks it against every sealed output. 2026-09-26: that pass also reads outputs/sealed_dev_contrast when its manifest exists."
+      "sha256": "560adb92e63cae2024e1e2c92a750ed6e073de79befaf5767ee7af73e1834798",
+      "why": "The legacy paper-prints pass (outputs/paper_tables) reads no exact or online output; once the sealed exact run exists it leaves the sealed prose to check_exact_paper_prints, which checks it against every sealed output. 2026-09-26: that pass also reads outputs/sealed_dev_contrast when its manifest exists. 2026-09-27: the machine-path gate also looks for D: drive paths and scans paper/*.tex and paper/**/*.md; the one path exception, for a git-ignored file the scan already skips, is removed, so a clean clone passes the hygiene test."
     },
     {
       "path": "tests/test_eval_scores.py",
@@ -28,8 +28,28 @@
     },
     {
       "path": "scripts/online_paired_differences.py",
-      "sha256": "6c2185fc986aed5b438b5ee987f35c7a481d27d05849c295eb56cc0d6b884457",
-      "why": "New on 2026-09-26, after the development comparison suite finished under the online replay: reads that run's checkpoints (development pool only, no sealed data) and states the paired differences of outputs/dev_tables and Guard(G) against Timeout(G) online, for Supplementary Section S11. No sealed command runs it."
+      "sha256": "1752bf41d6339b22e8263a66fd36db8d66be6b7a30d64c33b070effda3ed3cbf",
+      "why": "New on 2026-09-26, after the development comparison suite finished under the online replay: reads that run's checkpoints (development pool only, no sealed data) and states the paired differences of outputs/dev_tables and Guard(G) against Timeout(G) online, for Supplementary Section S11. No sealed command runs it. 2026-09-27: its reference CSV is read from evidence/timeout_rule/, the public copy of prechecks/timeout_rule/ (identical bytes)."
+    },
+    {
+      "path": "scripts/check_reproduction.py",
+      "sha256": "8432e17315b154605faa2c8af487b7ffc2779c0abef195b5e6fdd0a7d5662112",
+      "why": "2026-09-27: the reference kernels and table are read from evidence/ (the public copies of prechecks/main_v3/v31 and prechecks/guard_variants; the kernels are identical up to line endings), so the check runs from a clean clone. No sealed command runs it."
+    },
+    {
+      "path": "scripts/diff_dev_tables.py",
+      "sha256": "aab8861c916834133b35e28b16721ee3cf94f232cf87b9656e5822adefd52d3e",
+      "why": "2026-09-27: the default v3.1 table is read from evidence/main_v3/v31/, the public copy (identical up to line endings). No sealed command runs it."
+    },
+    {
+      "path": "scripts/compare_selection.py",
+      "sha256": "c14652a0718788126db1e9a39f74126561fe467536ef840224b0a395d119a287",
+      "why": "2026-09-27: the default v3.2 directory is evidence/main_v3/v32/, the public copy. No sealed command runs it."
+    },
+    {
+      "path": "tests/test_sim_crosscheck_prechecks.py",
+      "sha256": "50427a5b250a9b428d21c2dabf35d1da729aa1df3fe55ddb4b538de1657898b5",
+      "why": "2026-09-27: imports the two exploratory kernels from evidence/, which the repository carries, and fails instead of skipping when one is absent, so a clean clone runs the seven cross-checks."
     },
     {
       "path": "tests/test_online_paired_differences.py",

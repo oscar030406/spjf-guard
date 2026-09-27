@@ -4,9 +4,12 @@
 `evidence/codebench_service_v2/` reproduce on a second, independent online judge
 (ACcoding, Beihang University)?
 
-**Paper items.** The ACcoding prediction column of `paper/sections/04_prediction.tex`;
-the ACcoding sizes and both per-job limits in `paper/sections/07_data.tex`; the ACcoding
-row of Section 8's cross-domain table (block `sim poisson_rho0.8_main`).
+**Paper items.** The ACcoding sizes of Table 4 (Section 7.1) and the sealed-block count of
+Section 7.3; the ACcoding difference M5 − M4 quoted in Section 4.3; the ACcoding guard
+entry of Table 9 (Section 8.6, block `sim poisson_rho0.8_main`); the ACcoding column of
+Table S2 (Supplementary Section S1.5), the lag sensitivity of Supplementary Section S1.3,
+and the ACcoding rows, both per-job limits and the id-to-time check of Table S3 and
+Supplementary Section S2.4. Supplementary Section S5.4 names this folder in its text.
 
 **Inputs.** `data/accoding/`. The sealed submission-id block (80–100%) is never opened
 beyond counting rows and reading the first id.

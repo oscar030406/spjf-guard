@@ -5,9 +5,11 @@
 recurrent models (R1, R1S) and a tabular MLP (N0) — beat the gradient-boosting baselines
 on the same causal feature cache?
 
-**Paper items.** The CodeBench column of `paper/sections/04_prediction.tex`
-(`out_evaluate_core.txt`, test semester 2022-2), which is where the ablation ladder is
-read off.
+**Paper items.** Table 1 (Section 4.2), which is where the ablation ladder is read off,
+and the paired comparisons of Section 4.3 (`out_evaluate_core.txt`, test semester 2022-2;
+`boot_pairs_core_cold_ex.csv`); the cold-start and test-row figures of Sections 1 and 10;
+the CodeBench column of Table S2 (Supplementary Section S1.5). Supplementary Section S5.4
+names this folder in its text.
 
 **Inputs.** The causal feature cache of `evidence/codebench_service_v2/`. The forward
 prediction table `forward_neural.parquet` is derived student-log data and is not

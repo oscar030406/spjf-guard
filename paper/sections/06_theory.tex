@@ -33,7 +33,7 @@ the instant $a_i$ is read after the jobs arriving at $a_i$ have been added.
 \caption{Notation of Section~\ref{sec:theory}.}
 \label{tab:notation}
 \small
-\begin{tabular}{lp{0.62\linewidth}l}
+\begin{tabular}{lp{0.55\linewidth}l}
 \toprule
 Symbol & Meaning & Defined in \\
 \midrule
@@ -330,9 +330,9 @@ claim. Let $S_i$ be $i$'s start under FCFS and $t'$ the last instant at or befor
 which a server is idle. No job waits at $t'$, and all $k$ servers are busy on
 $(t', S_i)$, since before $a_i$ none is idle after $t'$ and from $a_i$ on $i$ waits. That busy time is filled by the at most $k - 1$ jobs running at $t'$,
 each with remaining cost at most $p = \max_j C_j \le F^*$, and by jobs that arrived in
-$[t', a_i]$ and started before $i$, of total cost $W_A$. Hence $k(S_i - t') \le W_A +
+$[t', a_i]$ and started before $i$, of total cost $X$. Hence $k(S_i - t') \le X +
 (k-1)p$. Every schedule must run these jobs and $i$ after $t'$ and finish them by $a_i +
-F^*$, so $W_A + C_i \le k(a_i + F^* - t')$. Together, $S_i - a_i \le F^* - C_i/k +
+F^*$, so $X + C_i \le k(a_i + F^* - t')$. Together, $S_i - a_i \le F^* - C_i/k +
 (1 - 1/k)F^*$, and $F_i \le (2 - 1/k)F^* + (1 - 1/k)C_i \le (3 - 2/k)F^*$.
 \end{proof}
 
@@ -463,7 +463,8 @@ and
   W \;<\; W_{\mathrm{FCFS}}[i] + B_{\max}/k + (4 - 2/k)L + \delta .
   \label{eq:late}
 \end{equation}
-For $\delta > 0$ the bound is attained in the limit at $k = 1$ and at $k = 2$. If each
+For $\delta > 0$ the bound is attained in the limit at $k = 1$, and constructed instances at
+$k = 2$ come within two time units of it. If each
 server applies its own completion report in the same step as its next pull, and only other
 servers' reports travel late, Theorem~\ref{thm:guard} holds unchanged for every $\delta$,
 lost reports included.
@@ -549,7 +550,8 @@ Section~S8.4). The guarantee also caps how much reordering can gain at all.
 \label{thm:price}
 Take $m$ jobs of cost $L$ and $n$ jobs of cost $c < L$, the long ones arriving first, all
 at $t = 0$, and let $P$ be a non-preemptive work-conserving policy with
-$\mathrm{excess}_P[j] \le G$ for every job. Define $D_0 = mn(L-c)/k$,
+$\mathrm{excess}_P[j] \le G$ for every job. Write $\overline{W}_Q$ for the mean wait under
+a policy $Q$, and define $D_0 = mn(L-c)/k$,
 $H = 2(1-1/k)L(m+n)$ and $\alpha = (kG + (3k-2)L)/(nc)$. If $D_0 > H$, equivalently
 $mn(L-c) > 2(k-1)L(m+n)$, then
 \begin{equation}

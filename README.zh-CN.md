@@ -26,8 +26,8 @@ Bursty Load*。论文印出的每个数字，都能用这个仓库从论文所�
 论文给每个任务一条承诺。它先证明：在任何这样的 `k` 台机器的服务上，一个任务比按到达顺序多等
 的时间，等于插到它前面的工作量减去它自己插到别人前面的工作量，再除以 `k`，误差不超过
 `(2 - 2/k) L`。然后给任意一种排序规则套
-一个守卫：一条小规则，记录已经插到每个等待任务前面的工作量，一旦这个量达到预算，就让等得最久
-的任务下一个跑。结果是无论预测错得多离谱，没有任务会比按到达顺序多等超过 `G` 秒。`G` 由运营者
+一个守卫：一条小规则，记录已经插到每个等待任务前面的工作量，一旦有任务的这个量达到它的预算，就让
+这些任务里最早到达的那个下一个跑。结果是无论预测错得多离谱，没有任务会比按到达顺序多等超过 `G` 秒。`G` 由运营者
 定，定理把它变成保证。
 
 守卫之外，论文还有三项结果。第一，已部署的调度器用“最长等待时间”防止任务饿死，论文证明这条
@@ -49,11 +49,11 @@ Bursty Load*。论文印出的每个数字，都能用这个仓库从论文所�
 | `configs/main.yaml` | 主实验的每一项设置，每项都有一句注释说它管什么 |
 | `scripts/` | 下面列出的那些命令 |
 | `evidence/` | 包本身不产出的那些数字背后的研究，一个研究一个文件夹；见「每个数字从哪来」 |
-| `docs/adr/` | 难以回头的决定，一个一页，写明被否掉的备选 |
-| `docs/sealed_access_log.md` | 每次读封存学期的记录，一次一行 |
+| `docs/adr/` | 难以回头的决定，一个一页，写明被否掉的备选；`docs/adr/zh-CN/` 是中文原稿 |
+| `docs/sealed_access_log.md` | 封存数据读取台账，一次一行，用的是代码写入的中文字符串：包的每次封存运行，以及冻结前当时记下的读取。冻结前所有记账性读取按脚本和日志行列在 `evidence/README.md`；`docs/sealed_access_log.en.md` 是英文版 |
 | `paper/` | 论文源文件。表里的数字从 `outputs/` 抄进来，没有脚本往 `paper/` 里写 |
-| `CONTEXT.md` | 术语表。一个概念一个词，论文、代码、配置、表格用同一个词 |
-| `GENERATED.md` | 每个由脚本产出的文件：来源、重新生成的命令、核对的命令 |
+| `CONTEXT.md` | 术语表。一个概念一个词，论文、代码、配置、表格用同一个词。`CONTEXT.zh-CN.md` 是中文原稿 |
+| `GENERATED.md` | 每个由脚本产出的文件：来源、重新生成的命令、核对的命令。`GENERATED.zh-CN.md` 是中文原稿 |
 
 `README.md` 是这个文件的英文版，逐节对应，命令相同。
 
@@ -100,8 +100,8 @@ export UV="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
 
 | 数据集 | 是什么 | 来源 | 条款 |
 |---|---|---|---|
-| CodeBench v1.81 | 巴西亚马逊联邦大学一门编程入门课的日志：2016 到 2024 年 18 个学期，学生在线编辑器里的每个动作都有毫秒级时间戳，每次作业都有开始时间和截止时间。主实验跑在它上面 | <https://codebench.icomp.ufam.edu.br/dataset/> | 页面未声明许可证。用于学术研究并引用；原始归档不再分发。发表前给数据集作者写信 |
-| ACcoding v1.0.0 | 一个在线评测系统的提交日志，第二个评测平台 | <https://zenodo.org/record/6522395>，doi:10.5281/zenodo.6522395 | 论文说 CC BY 4.0，Zenodo 页面写 other-open；发表前确认 |
+| CodeBench v1.81 | 巴西亚马逊联邦大学一门编程入门课的日志：2016 到 2024 年 18 个学期，学生在线编辑器里的每个动作都有毫秒级时间戳，每次作业都有开始时间和截止时间。主实验跑在它上面 | <https://codebench.icomp.ufam.edu.br/dataset/> | 页面未声明许可证。用于学术研究并引用；原始归档不再分发 |
+| ACcoding v1.0.0 | 一个在线评测系统的提交日志，第二个评测平台 | <https://zenodo.org/record/6522395>，doi:10.5281/zenodo.6522395 | 数据集论文写 CC BY 4.0，Zenodo 记录写 "other (open)"。引用，不再分发 |
 | OULAD | 英国开放大学的学习分析数据集。这个项目最初是研究它的，那个方向没走通，论文里没有任何结论依赖它 | <https://analyse.kmi.open.ac.uk/open_dataset>，doi:10.1038/sdata.2017.171 | CC BY 4.0 |
 | Azure Functions 2021 | 微软无服务器平台两周的函数调用，1,980,951 次 | <https://github.com/Azure/AzurePublicDataset>（Zhang 等，SOSP 2021） | CC BY 4.0 |
 | Intel Netbatch 2012 | Intel 内部计算集群的一个池，9,054,066 个任务，Parallel Workloads Archive 的标准格式 | <https://www.cs.huji.ac.il/labs/parallel/workload/l_intel_netbatch/>（Shai、Shmueli、Feitelson，JSSPP 2013） | 归档未给许可证，声明日志对研究者免费，要求致谢和引用。致谢 Ohad Shai、Edi Shmueli、Nir Antebi（Intel）；文件不再分发 |
@@ -137,23 +137,32 @@ $UV python -m pytest -q -m crosscheck
 ```
 
 第 3 步把原始数据变成实验的输入。一门课的一个学期很少能把评测机忙到看得出排队，所以实验
-回放的是几个学期叠在一起的轨迹。每份提交保留自己的星期几和钟点，每个学期整周平移，叠起来就
-是一条带真实截止高峰的轨迹。论文把这样的轨迹叫 *overlay*（叠加轨迹），用了五条，是同一批
-学期用五组不同平移量得到的。*pool*（池）指进入一条叠加轨迹的学期集合：`primary` 是 2020
-到 2022 年的六个学期，`validation` 是同一组去掉最后一个学期。守卫的参数只在 validation 的
-叠加轨迹上选，这样测试它的那个学期从不影响参数。单机叠加轨迹是另外一条轨迹，论文的恒等式在
-它上面精确成立：
+把同一批班级复制 44 份叠在一起。每份提交保留自己的星期几和钟点，每个班级的每一份副本各自
+随机整周平移，叠起来就是一条带真实截止高峰的轨迹。论文把这样的轨迹叫 *overlay*（叠加轨迹），
+用了五条，是五组不同的平移量得到的。*pool*（池）指进入一条叠加轨迹的学期集合：`primary` 是
+2020 到 2022 年的六个学期，`validation` 是同一组去掉最后一个学期。守卫的参数只在 validation
+的叠加轨迹上选，这样测试它的那个学期从不影响参数。单机叠加轨迹是另外一条轨迹，论文的恒等式
+在它上面精确成立。
+
+命令按这个顺序跑：解析十一个开发学期，算它们的静态代码特征，建逐提交缓存，拟合运行时长分数，
+再建存有这些分数的叠加轨迹，并在上面选参数。这些命令都不读封存学期。
 
 ```bash
-$UV python scripts/parse_archive.py --semesters 2022-1 --compare
+DEV=2018-1,2018-2,2019-1,2019-2,2020-ERE,2020-1,2020-2,2021-1,2021-2,2022-1,2022-2
+SCORES=data/derived/package_ranking_scores/forward_scores.parquet
+$UV python scripts/parse_archive.py --semesters $DEV
+$UV python evidence/codebench_service/code_features.py --only $DEV
 $UV python scripts/build_cache.py --pool development
-$UV python scripts/build_overlays.py --pool primary
-$UV python scripts/build_overlays.py --pool validation
-$UV python scripts/build_overlays.py --single-server
 $UV python scripts/fit_scores.py --repeat
+$UV python scripts/build_overlays.py --pool primary --score-parquet $SCORES
+$UV python scripts/build_overlays.py --pool validation --score-parquet $SCORES
+$UV python scripts/build_overlays.py --single-server
 $UV python scripts/select_parameters.py --workers 2 --out-dir outputs/selection_v4
 $UV python scripts/select_aging.py --workers 2
 ```
+
+`scripts/parse_archive.py --semesters 2022-1 --compare` 把一个学期再解析一遍，与盘上的文件
+逐列比对。
 
 第 4 步是实验本身。每个策略在五条叠加轨迹、三档负载上跑，负载档指最忙的那一小时机器有多忙：
 50%、80% 或 100%。然后是单机那一行、运行时长预测器的准确度，以及让预测器少看一些历史的
@@ -168,6 +177,27 @@ $UV python scripts/eval_scores.py --pool primary
 $UV python scripts/run_visibility.py --pool primary --workers 2
 ```
 
+论文的主结果回放里，每个任务的分数只用它到达时它所在班级在模拟队列里已经拿到的结果来算
+（`docs/adr/0007`、`0008`）。它们在第 4 步之后按下面的顺序跑，最后一条命令写出论文抄进去的
+表体：
+
+```bash
+$UV python scripts/run_consistent_visibility.py --config configs/visibility_development_20260924.yaml \
+    --pool primary --workers 2 --resume \
+    --controls data/derived/package_ranking_scores/consistent_controls_20260924.npz
+$UV python scripts/run_online_visibility.py --pool primary --workers 2 --resume --policies all
+$UV python scripts/online_paired_differences.py
+$UV python scripts/run_cluster_bootstrap.py --resamples 100 --workers 3
+$UV python scripts/sealed_dev_contrast.py
+$UV python scripts/emit_paper_tables.py --dev-exact-dir outputs/dev_consistent_visibility \
+    --dev-online-dir outputs/dev_online_visibility --dev-cluster-dir outputs/cluster_bootstrap \
+    --out-dir outputs/consistent_paper_tables
+```
+
+`sealed_dev_contrast.py` 也读封存运行的输出，所以要等下面说的封存运行做完才能跑。第一条命令
+用到的控制缓存由同一个脚本加 `--build-controls-only` 建出；`GENERATED.md` 里有这条命令、补充
+材料 S3.15 节的两组敏感性重跑，以及在 online 回放下重选参数的命令。
+
 第 5 步核对结果：逐任务等待对照早期程序，叠加轨迹对照它的规格，表对照已提交的副本，论文里
 印的数字对照表：
 
@@ -180,7 +210,12 @@ $UV python scripts/check_paper_numbers.py
 $UV python scripts/check_generated.py
 ```
 
-开始之前有三件事值得知道。
+开始之前有四件事值得知道。
+
+已提交的表是在 Windows x86-64 上用锁定的依赖跑出来的，重拟合冻结预测器的回放在那里能逐位
+复现它们。在 Linux 上用同样锁定的版本，第一个目标学期的 147,380 个任务里有 714 个的分数在
+最后一位上不同（2026-09-25 核对），这些运行会停在「重拟合结果等于已发布分数」的断言上。
+叠加轨迹本身在 Linux 上能逐字节重建，前提是把 zip 头里的宿主系统字节改成 Windows 的值。
 
 选守卫的参数很慢。`select_parameters.py` 在每个 validation 单元上试 258 组事先定好的候选
 参数（`docs/adr/0005`）。作者的机器上，两个工作进程跑一个单元约 29 分钟，十五个单元约 7.3
@@ -202,9 +237,13 @@ $UV python scripts/check_generated.py
 ## 封存学期
 
 CodeBench 的三个学期（2023-1、2023-2、2024-1）、ACcoding 按编号排的最后五分之一提交，以及
-OULAD 2014 年的几期课程，是*封存*的。方法冻结之前，任何会读到它们的代码路径都在打开文件
-之前就报错（`src/spjf_guard/data/sealed.py`，理由在 `docs/adr/0004`）。目的是让「看到测试
-结果之后再改方法」这件事做不到。
+OULAD 2014 年的几期课程，是*封存*的。没有 `--unseal` 参数和配置锁时，任何会读到它们的代码
+路径都在打开文件之前就报错（`src/spjf_guard/data/sealed.py`，理由在 `docs/adr/0004`）。目的
+是让「看到测试结果之后再改方法」这件事做不到。
+
+方法在 2026-09-25 冻结（提交 `f32c393`，`protocol_lock.json`），之后三个封存的 CodeBench
+学期跑了一次；论文在第 8.2 节和补充材料 S10 节报告它们。那次运行之后对报告脚本的改动，逐个
+文件声明在 `docs/post_run_changes.json` 里（`docs/adr/0010`）。
 
 冻结分四步。先用 `--dry-run-sealed` 演练一遍，它只打印会读哪些文件，不打开任何一个。然后写
 *配置锁*：一个哈希文件，覆盖代码、配置和每一个输入产物。然后提交。然后跑
@@ -223,7 +262,7 @@ OULAD 2014 年的几期课程，是*封存*的。方法冻结之前，任何会�
 第一类来自 `src/` 里的包。上面的命令从原始数据集重建这些表，`scripts/check_paper_numbers.py`
 核对论文印的是不是表里的原样。
 
-第二类来自单独的研究，每个研究跑一次、回答一个问题。`evidence/` 一个研究一个文件夹，共 30
+第二类来自单独的研究，每个研究跑一次、回答一个问题。`evidence/` 一个研究一个文件夹，共 38
 个。每个文件夹放当时跑的脚本、脚本打印的日志（`out_*.txt`）、写出的表，以及一份 `README.md`，
 写明问题是什么、论文哪一处用了答案、需要什么输入、是否完成。用大白话说，这些研究覆盖：
 
@@ -239,8 +278,11 @@ OULAD 2014 年的几期课程，是*封存*的。方法冻结之前，任何会�
 当时所在的文件夹名 `prechecks/`，`evidence/PATHS.md` 把每一个这样的名字对应到 `evidence/`。
 
 副本保留了脚本之间互相导入所用的文件名和目录名。作者机器上的绝对路径换成了 `<repo-root>`
-和 `<cache-dir>`；没有改任何测量值。`out_*.txt` 日志没有重写。这里不再分发任何原始数据集，
-也没有任何研究读过封存数据。
+和 `<cache-dir>`；没有改任何测量值。`out_*.txt` 日志没有重写。这里不再分发任何原始数据集。
+冻结之前，有几个研究为记账读过封存数据：解析并计数 CodeBench 归档、把这些计数和发布方的
+统计表对账、算缓存需要的静态代码特征、确定 ACcoding 封存段从哪里开始、审计早先一份项目计划
+里 OULAD 的请求计数。`evidence/README.md` 列出了每个脚本和日志行，其中没有一个在封存数据上
+算过开销、预测或调度结果。
 
 ## 约定
 
@@ -252,4 +294,4 @@ OULAD 2014 年的几期课程，是*封存*的。方法冻结之前，任何会�
 ## 许可证与引用
 
 代码采用 MIT 许可证，见 `LICENSE`。数据集不在其内，各自保留上面数据表里的条款。`CITATION.cff`
-里是论文标题和占位作者，发布前填好。
+给出论文标题和作者。

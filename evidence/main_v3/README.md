@@ -5,13 +5,17 @@ parameters are chosen on validation overlays only, and the per-job bound asserte
 every simulated job — how much of the FCFS-to-SJF gap does the guarded policy close, and
 at what cost?
 
-**Paper items.** `out_main_v31.txt` sections 2, 4 and 5 (the trace table and the
-interval rows of `paper/sections/08_experiments.tex`, rows SPJF-M4refit and SPJF-r1s, and
-the finite-skip row cross-checked in section 10); `out_main_v32.txt` section 4 (the
-drop-one-cell sensitivity table). Section 8 of the manuscript also names this directory
-in the text, as the earlier version that used a floating-point clock and a stored copy of
-the trace. `v31/table_main_primary.csv` and `v31/table_main_k1.csv` are read by
-`scripts/check_reproduction.py` and `scripts/diff_dev_tables.py` in the released package.
+**Paper items.** `out_main_v31.txt` section 2 (the trace and interval rows of Table S4 in
+Supplementary Section S3.1, and the trace construction of Supplementary Section S5.3),
+sections 4 and 5 (rows SPJF-M4refit and SPJF-r1s of Table S16 in Supplementary Section
+S3.17, and the refit control that Section 8.3 cites) and section 10 (the finite-skip ratio
+of Supplementary Section S3.16); `v31/report_diff.csv` and `v31/README.md` (the count
+baseline charged at completion, Section 8.4 and Supplementary Section S3.16);
+`out_main_v3.txt` (the copies probe of Supplementary Section S3.15); `out_main_v32.txt`
+section 4 (the drop-one-cell sensitivity of Supplementary Section S5.6). Supplementary
+Section S5.4 names this directory in its text. `v31/table_main_primary.csv` and
+`v31/table_main_k1.csv` are read by `scripts/check_reproduction.py` and
+`scripts/diff_dev_tables.py` in the released package.
 
 **Read v32/ first.** `out_main_v32.txt` is the current result and supersedes both
 `out_main_v31.txt` and `out_main_v3.txt`. All three are kept exactly as reported, each

@@ -268,6 +268,8 @@ MACHINE_PATHS = (
     "scratch" + "pad",
     "C:/Use" + "rs",
     "C:\\Use" + "rs",
+    "D" + ":/",
+    "D" + ":\\",
 )
 """What a path that belongs to one machine, or to one session, looks like.
 
@@ -287,15 +289,13 @@ SCANNED = (
     "*.md",
     "*.toml",
     "protocol_lock*.json",
+    "paper/*.tex",
+    "paper/**/*.md",
 )
 """The file sets that go into the repository.  Everything under `data/` and `outputs/` is
 git-ignored and is skipped, as is any other file git is told to ignore."""
 
-PATH_EXCEPTIONS = {
-    "docs/related_work/shared_queue_evidence.md": "prose: it says where a one-off probe "
-    "script was run from, and says in the same sentence that the directory is temporary "
-    "and that nothing reads it",
-}
+PATH_EXCEPTIONS: dict[str, str] = {}
 """Files allowed to name a machine path, with the reason.  A file earns a place here only
 when the path is the subject of a sentence, never when something reads it."""
 

@@ -4,9 +4,10 @@
 University Learning Analytics Dataset. These scripts are the falsification pre-checks
 that were run on that direction.
 
-**Paper items.** `out_load.txt` carries the OULAD header line of
-`paper/sections/07_data.tex` (the nine 2013 course-presentations). Nothing else in this
-folder appears in the paper.
+**Paper items.** `out_load.txt` carries the OULAD row of Table 4 (Section 7.1), the OULAD
+paragraph of Section 7.2 (activity 1.29 to 2.95 times higher before an assessment; a peak
+warning with F1 0.593 against 0.000) and the development presentations named in Section
+7.3. Nothing else in this folder appears in the paper.
 
 **Inputs.** The seven OULAD csv files under `data/`. The `DATA` constant at the top of
 each script points at that directory. The sealed 2014 presentations are never opened.

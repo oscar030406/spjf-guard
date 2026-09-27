@@ -32,8 +32,8 @@ tier, as task assignment by guessing size does \cite{harcholbalter2002tags}, doe
 escape this floor on a shared pool. The stopped work is lost rather than overtaken, and the
 second tier is again non-preemptive in blocks of $L$ (Supplementary Section~S7.5).
 Charging a cap known at arrival lowers the constant by exactly $L$ and leaves the floor.
-Because the guarantee bounds each job, it also bounds each percentile,
-$Q_\alpha(W_P) \le Q_\alpha(W_{\mathrm{FCFS}}) + G$. It does not ensure that a percentile
+Because the guarantee bounds each job, it also bounds each percentile: every percentile of
+the waits under the guard is at most the same percentile under FCFS plus $G$. It does not ensure that a percentile
 improves, and under corrupted scores a guarded run had a worse
 $\mathrm{p99}_{\mathrm{dl}}$ than FCFS (Section~\ref{sec:exp_guard}). Where the FCFS tail is
 already below about $3L$, the bound is coarser than the waits it bounds, which is the case
@@ -49,7 +49,7 @@ so the online figures carry intervals from resampled weeks, which do not cover t
 classes and terms. Moreover, the shape selected on \devnum{15} cells with $k \ge 4$ does
 not carry over to a single server (Supplementary Section~S3.14). We therefore do not call
 the parameters validated. The guarantee does not depend on them, and only the benefit does.
-The sealed terms were opened once, after the method, parameters and metric were frozen
+The sealed terms were evaluated once, after the method, parameters and metric were frozen
 (Section~\ref{sec:exp_sealed}). They come from the same platform and pass through the same
 constructed queue, so they test the frozen choices on new classes and terms but not on
 another service.
@@ -94,7 +94,7 @@ gives the same guarantee only at a charge of $L$ per pass, which on the main log
 For the grading system that opened this paper, the answer to a student whose submission sat
 behind a looping one is now a number. At the busiest load of the recorded course demand,
 with every score computed from the results that its job's own copy of the demand had
-returned when the job arrived, a guard with
+returned when the job arrived and from other classes' results at their recorded times, a guard with
 $G = \devnum{600}$ s keeps \devnum{0.705} of the reduction in 99th-percentile wait before
 deadlines that SJF achieves over FCFS. Unguarded ordering keeps \devnum{0.864}, and with the
 guard no job exceeds its bound. On three terms held back until the method was frozen, the
@@ -102,7 +102,7 @@ same guard keeps \sealednum{0.894} and unguarded ordering \sealednum{0.936}. In 
 the 99th-percentile wait of the submissions made in the 24 hours before a deadline falls
 from \devnum{273.50} s under FCFS to \devnum{111.25} s with the guard, and from
 \sealednum{187.20} s to \sealednum{47.22} s on the held-back terms. No job waits more than
-\devnum{600} s beyond its FCFS wait, where unguarded ordering delayed one job by
+\devnum{600} s beyond its FCFS wait, where unguarded ordering, replayed the same way, delayed one job by
 \devnum{5{,}812.7} s. The scores come from gradient-boosted trees on each
 student's and each task's history, chosen on queueing outcomes rather than prediction
 accuracy. A heterogeneous graph network over students, tasks, assignments and cohorts

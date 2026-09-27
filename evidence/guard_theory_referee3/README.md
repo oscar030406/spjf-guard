@@ -12,8 +12,8 @@ work-conservation and non-preemption from the produced schedule alone. Exact int
 **Headline.** Theorem 3 survives; section 6.4's conjecture is refuted by an explicit
 family and open problem 8.1 is settled in the affirmative.
 
-**Paper items.** One of the three referee passes that revisions 1–3 of the theory note
-answer.
+**Paper items.** None printed. It is one of the three referee passes that revisions 1–3 of
+the theory note answer.
 
 **Status.** Current.
 

@@ -16,12 +16,11 @@ is actually stated on passes only at the fitted capacity `k = 1`, which is a cor
 search grid, and fails at the queue's observed concurrency ceiling. Section 9 of
 `REPORT.md` ranks what a referee will attack; the corner solution is first.
 
-**Paper items.** The applicability and cross-domain paragraphs of
-`paper/sections/08_experiments.tex` (source comments name `applicability.csv` and
-`tables.md`); the forced-dispatch figures of `paper/sections/09_limitations.tex`
-(`guard_dispatches.csv`); supplementary Section S7.6 and Tables~\ref{tab:s_lpc_queues}
-and~\ref{tab:s_lpc_replay}, whose source comments name `tables.md`, `policy_metrics.csv`,
-`bound_checks.csv`, `guard_dispatches.csv` and Sections 4, 7 and 9 of `REPORT.md`.
+**Paper items.** Tables S22 and S23 and the text of Supplementary Section S6.6, and the
+`test`-class row of Table S24 with its paragraph in Supplementary Section S6.7, whose
+source comments name `tables.md`, `policy_metrics.csv`, `prediction_metrics.csv`,
+`bound_checks.csv`, `guard_dispatches.csv` and Sections 4, 7 and 9 of `REPORT.md`. The
+manuscript only points there, from the caption of Table 9 (Section 8.6).
 
 **Inputs.** The Parallel Workloads Archive log `LPC-EGEE-2004-1.2-cln.swf.gz`
 (2,718,006 bytes, SHA256 `2fc37df5cc14c355fc7a88235f72e54fdf5f0d93de09399d015383ee5c35a59d`),

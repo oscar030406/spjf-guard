@@ -4,9 +4,11 @@
 `== SUBMITION/TEST (...)` header time measure, and from when does the 60 s evaluation
 limit apply? Every cost model in the paper is built on the answers.
 
-**Paper items.** Section 7's description of the CodeBench trace and the 60 s per-job
-limit `L` used throughout Sections 6 and 8; the field audit cited in
-`paper/supplementary.tex` alongside `evidence/codebench_audit/`.
+**Paper items.** No source comment names this folder. Its findings are what Section 7.1
+states about the main log: the stamp is the moment the result was written, and no run
+after 2019-08-28 lasts longer than 60 s, which gives the limit `L` = 60 s used in Sections
+6 and 8. The field audit of Supplementary Section S2.1 states the same facts and cites
+`evidence/codebench_audit/` and `evidence/codebench_service_v2/`.
 
 **Inputs.** The per-semester archives and the parquet tables of
 `evidence/codebench/`. The parse cache (`cache/*.parquet`) and the copies of the

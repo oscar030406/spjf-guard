@@ -2,7 +2,7 @@
 % README.md for where Definitions/ came from). The stand-in article build is
 % main_article.tex; both pull the same sections/ files.
 %
-% Build: "D:/environment/tools/tectonic/tectonic.exe" main.tex   (run from paper/)
+% Build: tectonic main.tex   (run from paper/)
 %
 % The template's first option is the journal; `mathematics' is in the class's
 % journal list. MDPI's own template.tex passes no graphics driver, and the
@@ -110,7 +110,7 @@
 % Marks a figure that comes from development data rather than from the sealed
 % semesters. It expands to its argument; the submission version can redefine it.
 \newcommand{\devnum}[1]{#1}
-% Figures from the sealed terms, opened once after the protocol freeze.
+% Figures from the sealed terms, evaluated once after the protocol freeze.
 \newcommand{\sealednum}[1]{#1}
 
 % Pulls in a section if its file exists, and otherwise leaves a numbered
@@ -201,7 +201,7 @@ $^{3}$ \quad Division of Logistics and Transportation, Shenzhen International Gr
 % The supplementary file is paper/supplementary.tex, built on its own with the same class
 % under the `supfile' article type and the same bibliography. The items are listed in
 % MDPI's named-element form, "Table S1: title; ...", with short titles; the numbers are
-% checked against the built supplement with local_tools/supp_list_0924.py, since a table
+% checked against the \newlabel entries of supplementary.aux, since a table
 % added there shifts every later number here.
 \supplementary{The following supporting information can be downloaded at
 \linksupplementary{s1}: Table S1: Predictors on the non-judging logs, by feature group;

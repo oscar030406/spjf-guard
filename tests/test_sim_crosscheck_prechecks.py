@@ -1,8 +1,8 @@
 """Job-for-job agreement with the exploratory kernels the development results came from.
 
-The two modules under `prechecks/` are imported read-only and only here: the package
-itself never depends on them.  Bytecode and the numba cache are redirected to a scratch
-directory so that importing them leaves `prechecks/` untouched.
+The two exploratory kernels under `evidence/` are imported read-only and only here: the
+package itself never depends on them.  Bytecode and the numba cache are redirected to a
+scratch directory so that importing them leaves `evidence/` untouched.
 """
 
 from __future__ import annotations
@@ -19,28 +19,17 @@ from conftest import LIMIT_S, random_trace
 from spjf_guard.sim import MICROS, simulate, spjf
 from spjf_guard.sim.policy import fcfs, fixed, guard, sjf, skip
 
-PRECHECKS = Path(__file__).resolve().parents[1] / "prechecks"
+EVIDENCE = Path(__file__).resolve().parents[1] / "evidence"
 pytestmark = pytest.mark.crosscheck
 
 
 @pytest.fixture(scope="module")
 def kernels():
-    needed = (
-        PRECHECKS / "guard_variants" / "guardkern.py",
-        PRECHECKS / "main_v3" / "v31" / "v31_skipkern.py",
-    )
-    missing = [p for p in needed if not p.is_file()]
-    if missing:
-        pytest.skip(
-            "the exploratory kernels are not in this checkout ("
-            + ", ".join(str(p.relative_to(PRECHECKS.parent)) for p in missing)
-            + "); prechecks/ is not part of the package"
-        )
     sys.dont_write_bytecode = True
     os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
     os.environ.setdefault("NUMBA_CACHE_DIR", tempfile.mkdtemp(prefix="numba_xcheck_"))
-    sys.path.insert(0, str(PRECHECKS / "guard_variants"))
-    sys.path.insert(0, str(PRECHECKS / "main_v3" / "v31"))
+    sys.path.insert(0, str(EVIDENCE / "guard_variants"))
+    sys.path.insert(0, str(EVIDENCE / "main_v3" / "v31"))
     import guardkern
     import v31_skipkern
 

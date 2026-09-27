@@ -1,69 +1,69 @@
-# 0008 在线重放成为预测排序的主结果，exact 降为离线证书
+# 0008 The online replay becomes the headline result for predicted ordering; exact becomes an offline certificate
 
-日期 2026-09-24。
+Date 2026-09-24.
 
-## 决定
+## Decision
 
-预测排序的主结果改用 **online** 协议：调度器只跑一次，每个 job 在自己到达的那一刻，用这一次
-重放里**已经完成**的同一班次—学期拷贝的结果（`completion_j <= replay_arrival_i`）重算 M4
-历史，由冻结的原模型打分；滚动窗口按重放完成时刻排序，其他班次与学期仍按原相对时钟作为外生
-输入（与 ADR 0007 修订相同）。实现是 `experiment/online_replay.py`：把 package 内核的调度循环
-原样搬过来，在每个到达点比较该 job 可见的同拷贝历史签名，签名变了就暂停，回到 Python 用
-`recompute_visible` 与冻结模型重打分，再从暂停处继续。
+The headline result for predicted ordering now uses the **online** protocol: the scheduler runs once, and each job, at the moment it arrives, recomputes the M4
+history from the results of the same class-term copy that have **already completed** in this replay (`completion_j <= replay_arrival_i`), and is scored by the frozen original model;
+the rolling windows are ordered by replay completion time, and other classes and terms still enter as exogenous
+input on the original relative clock (the same as in the ADR 0007 amendment). The implementation is `src/spjf_guard/experiment/online_replay.py`: it takes the scheduling loop of the package kernel
+unchanged, compares at each arrival the signature of the same-copy history visible to that job, pauses when the signature has changed, returns to Python to
+rescore with `recompute_visible` and the frozen model, and continues from where it paused.
 
-exact（ADR 0007 修订）保留，降为离线单调证书：它只增不减地扣留结果，某一轮扣下的结果在它
-自己的最后一轮重放里即使已经完成也不会放回，所以它是“没有用到未完成结果”的一个保守解，
-不是在线调度器在到达时刻看到的那份历史。original、
-conservative、static 仍是三条参照。参数不因协议改变而重选：记录在案的仍是 selection_v4；
-在线协议下的受限重选（每族每个承诺取原协议前四个可行点，共 36 个候选，验证池 15 格）作为
-稳健性检查与主结果并列报告，不替换配置里的参数。
+exact (the ADR 0007 amendment) is kept, demoted to an offline monotone certificate: it withholds results in a set that only grows, and a result withheld in one pass is not put back
+even if it has completed in exact's own final replay, so exact is a conservative solution to "no incomplete result was used",
+not the history the online scheduler sees at arrival time. original,
+conservative and static remain the three references. The parameters are not reselected because the protocol changed: the recorded selection is still selection_v4;
+a restricted reselection under the online protocol (the top four feasible points of the original protocol for each family and each promise, 36 candidates in all, 15 cells of the validation pool) is
+reported alongside the headline result as a robustness check and does not replace the parameters in the configuration.
 
-## 为什么
+## Why
 
-ADR 0007 修订说在线预测器“不能在冻结前作为一天内可审计的改动完成”，所以当时用单调证书代替。
-这个判断的前提是要写一个新的事件引擎；实际做法只需要让现有内核在签名变化处暂停，调度逻辑
-一行不改。正确性用三种互相独立的方式核对：
+The ADR 0007 amendment said an online predictor "cannot be completed before the freeze as a change that can be audited within one day", so a monotone certificate was used instead.
+That judgement assumed a new event engine would have to be written; in practice it is enough to let the existing kernel pause where the signature changes, with the scheduling logic
+unchanged in every line. Correctness is checked in three mutually independent ways:
 
-1. 玩具实例上与逐事件暴力模拟逐 job 相同（`tests/test_online_visibility.py`）；
-2. 与 Jacobi 不动点迭代（`experiment/online.py`，每轮全量重放、只对签名不一致的 job 重打分，
-   直到没有不一致）在真实 cell 上逐 job 的等待与分数相同；
-3. 在分数不变的预测器下，暂停内核与 package 内核、Timeout 内核逐 job 相同。
+1. On toy instances it is identical job by job to a brute-force event-by-event simulation (`tests/test_online_visibility.py`);
+2. On real cells, waits and scores are identical job by job to a Jacobi fixed-point iteration (`src/spjf_guard/experiment/online.py`: each pass is a full replay that rescores only the jobs whose signatures disagree,
+   until none disagree);
+3. With a predictor whose scores do not change, the pausing kernel is identical job by job to the package kernel and the Timeout kernel.
 
-online 回答的正是审稿人问的那个问题：部署时的调度器在 job 到达时能知道什么。exact 回答的是
-“存在一组扣留使每个用到的结果都已完成”，两者在单调扣留恰好不多扣时重合，一般不重合。
+online answers exactly the question the reviewers asked: what can a deployed scheduler know when a job arrives. exact answers
+"there exists a set of withheld results such that every result used had completed". The two coincide when the monotone withholding happens not to withhold more than needed, and in general they do not.
 
-## 代价与边界
+## Costs and limits
 
-- 仍是每份班次—学期拷贝各自独立部署的语义；不认证所有拷贝共享一份学生状态的部署。
-- 参数没有在 online 协议下完整重选（258 个展开点 × 15 格的在线重放超出预算），受限重选只覆盖
-  原协议下排名靠前的点；若它选出不同的点，论文如实报告两组数字，冻结配置不改。
-- online 每个 policy-cell 的耗时、暂停次数与内存见下节实测；封存程序因此多一个阶段（第 7 步），
-  钉死输出清单为 `run.sealed_online_visibility_tables`。
+- The semantics are still that each class-term copy is deployed independently; a deployment in which all copies share one student state is not certified.
+- The parameters were not fully reselected under the online protocol (an online replay of 258 expanded points × 15 cells exceeds the budget); the restricted reselection covers only
+  the points ranked highest under the original protocol. If it selects different points, the paper reports both sets of numbers as they are, and the frozen configuration is not changed.
+- The time, number of pauses and memory of online per policy-cell are in the measurements below; the sealed procedure therefore gains one stage (step 7),
+  with the pinned output manifest `run.sealed_online_visibility_tables`.
 
-## 实测
+## Measurements
 
-**两种实现的交叉核对**（2026-09-24，overlay 0、最轻负载，`outputs/online_probe/.checkpoints/o0_l0/`
-与 `deltas/`）。事件驱动暂停重放与 Jacobi 不动点迭代给出逐 job 相同的等待，改分 job 的集合与
-修正分数逐项相同（最大差 0.0）：
+**Cross-check of the two implementations** (2026-09-24, overlay 0, lightest load, `outputs/online_probe/.checkpoints/o0_l0/`
+and `deltas/`). The event-driven pausing replay and the Jacobi fixed-point iteration give identical waits job by job, and the set of rescored jobs and the
+corrected scores are identical item by item (largest difference 0.0):
 
-| policy | 改分 job | 暂停次数 | online 耗时（内核 / 重打分） | 不动点耗时（轮数） | 抽样审计不一致 |
+| policy | rescored jobs | pauses | online time (kernel / rescoring) | fixed-point time (passes) | sampled audit mismatches |
 |---|---:|---:|---|---|---:|
-| SPJF-E | 143,211 | 254,788 | 234 s（78 / 140） | 1,033 s（55） | 0 / 4,000 |
-| Guard(600) | 144,086 | 256,499 | 268 s（90 / 155） | 1,582 s（55） | 0 / 4,000 |
-| Timeout(600) | 144,520 | 257,271 | 304 s（86 / 203） | 895 s | 0 / 4,000 |
+| SPJF-E | 143,211 | 254,788 | 234 s (78 / 140) | 1,033 s (55) | 0 / 4,000 |
+| Guard(600) | 144,086 | 256,499 | 268 s (90 / 155) | 1,582 s (55) | 0 / 4,000 |
+| Timeout(600) | 144,520 | 257,271 | 304 s (86 / 203) | 895 s | 0 / 4,000 |
 
-Timeout 的 fired 列只有暂停内核统计（它在超时接管时计数）；original 行与不动点行走的是预检的
-Timeout 内核，不统计接管，该列为 0。论文不印这一列。
+Timeout's fired column is counted only by the pausing kernel (it counts when the timeout takes over); the original row and the fixed-point row use the precheck
+Timeout kernel, which does not count takeovers, so that column is 0 there. The paper does not print this column.
 
-探针写表时因两种变体的 passes 行字段不同而失败（15dfb36 修复）；上表数字直接取自检查点 JSON
-与 delta NPZ。同一提交把 runner 的检查点签名收窄为参与计算的文件，改论文表格代码不再使已算的
-policy-cell 失效。
+Writing the probe's table failed because the passes rows of the two variants have different fields (fixed in 15dfb36); the numbers above are taken directly from the checkpoint JSON
+and the delta NPZ. The same commit narrowed the runner's checkpoint signature to the files that take part in the computation, so changing the paper table code no longer invalidates
+policy-cells that have already been computed.
 
-**primary 池主结果**（2026-09-24，`outputs/dev_online_visibility/`，五条冻结策略 × 15 格）。75 个
-policy-cell 的抽样审计全部 0 不一致（每格 2,000 个随机 job 加最多 2,000 个改分 job，按其可见
-历史直接重算）。计算合计 33,479 秒，每个 policy-cell 240–728 秒。gap closed 与 95% 区间：
+**Headline result on the primary pool** (2026-09-24, `outputs/dev_online_visibility/`, five frozen policies × 15 cells). The sampled audits of all 75
+policy-cells have 0 mismatches (in each cell 2,000 random jobs plus up to 2,000 rescored jobs, recomputed directly from their visible
+history). Computation took 33,479 seconds in total, 240–728 seconds per policy-cell. Gap closed with 95% intervals:
 
-| 负载 | 策略 | original | online |
+| load | policy | original | online |
 |---|---|---|---|
 | ρ = 0.5 | Guard(600) | 0.740 [0.713, 0.760] | 0.725 [0.696, 0.746] |
 | ρ = 0.8 | Guard(600) | 0.837 [0.815, 0.851] | 0.800 [0.772, 0.819] |
@@ -73,18 +73,21 @@ policy-cell 的抽样审计全部 0 不一致（每格 2,000 个随机 job 加�
 | ρ = 1.0 | Guard(300) | 0.478 [0.387, 0.602] | 0.367 [0.278, 0.485] |
 | ρ = 1.0 | Aging(600) | 0.313 [0.276, 0.404] | 0.258 [0.222, 0.339] |
 
-最忙负载下 Guard(600) 的 online 值落在 exact（0.672，09-23 exact 运行）与 original 之间。
+At the busiest load, Guard(600)'s online value lies between exact (0.672, from the 09-23 exact run) and original.
 
-**比较组全集**（2026-09-26，同一目录 `--policies all --resume`，24 条策略 × 15 格 = 360 个 policy-cell）。
-审计 360 行全部 0 不一致；五条主策略的行与只跑五条时逐字段相同。带承诺的策略没有一条超过承诺，最大
-超额是承诺的 0.945（Guard-age(1200)，ρ = 1.0）。两档高负载下 24 条策略的 gap closed 全部低于 original，
-最轻负载下 22 条低于。成对差由 `scripts/online_paired_differences.py` 从检查点读回（original 一半与
-`outputs/dev_tables/paired_differences.csv` 逐位相等）：original 下区间不含 0 的差在 online 下全部不变号，
-其中 4 个不再显著、另有 3 个新变显著（都在最轻负载）；
-保证的代价变大（ρ = 1.0、G = 600 s 时 Guard(600) − SPJF-E 从 −0.115 变为 −0.158）；守护对超时九格符号
-不变（ρ = 1.0、G = 600 s 为 +0.423 [+0.204, +0.664]）。唯一改变结论的是两种排序：online 下 SPJF-E − SPJF-log
-在三档负载是 −0.022 [−0.039, −0.009]、+0.006 [−0.004, 0.015]、+0.009 [−0.000, 0.015]，original 下期望代价
-排序在两档高负载领先的结论不再成立。论文补充材料 S11（表 S31–S33）与正文 §8.3、§8.4 照此写。
+**Full comparison set** (2026-09-26, same directory, `--policies all --resume`, 24 policies × 15 cells = 360 policy-cells).
+All 360 audit rows have 0 mismatches; the rows of the five main policies are identical field by field to those of the run with only five policies. No policy with a promise exceeds its promise; the largest
+excess is 0.945 of the promise (Guard-age(1200), ρ = 1.0). At the two higher loads the gap closed of all 24 policies is below original,
+and at the lightest load 22 are. The paired differences are read back from the checkpoints by `scripts/online_paired_differences.py` (the original half is bit-for-bit equal to
+`outputs/dev_tables/paired_differences.csv`): every difference whose interval excludes 0 under original keeps its sign under online;
+4 of them are no longer significant, and 3 others become significant (all at the lightest load);
+the cost of the guarantee grows (at ρ = 1.0, G = 600 s, Guard(600) − SPJF-E goes from −0.115 to −0.158); the sign of guard versus timeout is unchanged in all nine
+cells (+0.423 [+0.204, +0.664] at ρ = 1.0, G = 600 s). The only conclusion that changes concerns the two orderings: under online, SPJF-E − SPJF-log
+is −0.022 [−0.039, −0.009], +0.006 [−0.004, 0.015] and +0.009 [−0.000, 0.015] at the three loads, so the original-protocol conclusion that the expected-cost
+ordering leads at the two higher loads no longer holds. Supplementary Section S11 (Tables S31–S33) and Sections 8.3 and 8.4 of the main text are written accordingly.
 
-（验证池受限重选完成后续填。受限重选先跑每族每承诺前 2 个点（18 个候选，
-`candidates_top2.csv`），再补到配置钉死的前 4 个；前 2 个是前 4 个的子集。）
+Restricted reselection (finished 2026-09-27): the same rule on the 15 validation cells under the online protocol, over the top 4 feasible points per family per promise
+(36 candidates, `outputs/online_selection/candidates.csv`), audit mismatches 0. The original group of `online_choices.csv` equals selection_v4 in all 12 rows. Under
+online the joint choice moves at every promise: G = 300 s to capped B0 = 15k/4 s, eta = 0.5; G = 600 s to hybrid B0 = 120k/4 s, eta = 0, gam = 16k/4 s, which is the
+Guard-queue(600) of S11 (0.692 [0.641, 0.753] online at rho = 1.0, harm 128.6 s, against 0.705 and 333.2 s for Guard(600)); G = 1200 s to capped B0 = 480k/4 s,
+eta = 0.75. The recorded parameters stay selection_v4; Section 8.1 reports the reselection.

@@ -8,7 +8,7 @@ produces must equal, job for job, the waits the exploratory kernels produce on t
 trace.  Second, in summary: aggregated over the overlays exactly as v3.1's report
 aggregates them (mean for the waits, the firing rate and k, worst-over-overlays for the
 excess, the harm and the worst heavy wait), the numbers must match
-prechecks/main_v3/v31/table_main_primary.csv to the precision that file prints.
+evidence/main_v3/v31/table_main_primary.csv to the precision that file prints.
 
 Exit status is non-zero when any wait differs or any summary number moves.
 """
@@ -24,7 +24,7 @@ from pathlib import Path
 
 # numba reads NUMBA_CACHE_DIR once, when it is imported, so it has to be redirected
 # before anything pulls numba in; otherwise the compiled caches of the read-only kernels
-# under prechecks/ land next to their sources.
+# under evidence/ land next to their sources.
 os.environ.setdefault("NUMBA_CACHE_DIR", tempfile.mkdtemp(prefix="numba_repro_"))
 os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
 sys.dont_write_bytecode = True
@@ -78,7 +78,7 @@ def _per_cell(args, table):
                 labels,
                 level,
                 table,
-                ROOT / "prechecks",
+                ROOT / "evidence",
                 args.b0_base,
                 args.eta,
                 args.promise,
@@ -160,7 +160,7 @@ def main() -> int:
     ap.add_argument("--eta", type=float, default=0.75)
     ap.add_argument("--promise", type=float, default=600.0)
     ap.add_argument(
-        "--table", type=Path, default=ROOT / "prechecks/main_v3/v31/table_main_primary.csv"
+        "--table", type=Path, default=ROOT / "evidence/main_v3/v31/table_main_primary.csv"
     )
     ap.add_argument("--out", type=Path, default=ROOT / "outputs/reproduction.csv")
     args = ap.parse_args()

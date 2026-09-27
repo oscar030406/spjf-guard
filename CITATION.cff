@@ -1,8 +1,3 @@
-# Placeholder. The manuscript's front matter has no author names yet
-# (paper/main.tex marks them "[to be completed by the authors]"), so the two
-# entries below are placeholders. Fill in given-names, family-names,
-# affiliation and orcid, set the repository-code URL, and add the preferred
-# citation's journal, volume, pages and DOI once the paper is accepted.
 cff-version: 1.2.0
 title: >-
   Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for
@@ -12,14 +7,27 @@ message: >-
   manuscript below.
 type: software
 authors:
-  - given-names: FIRST-AUTHOR-GIVEN-NAME
-    family-names: FIRST-AUTHOR-FAMILY-NAME
-    affiliation: FIRST-AUTHOR-AFFILIATION
-  - given-names: SECOND-AUTHOR-GIVEN-NAME
-    family-names: SECOND-AUTHOR-FAMILY-NAME
-    affiliation: SECOND-AUTHOR-AFFILIATION
+  - given-names: Yazhou
+    family-names: Guo
+    affiliation: >-
+      College of Automation, Nanjing University of Posts and
+      Telecommunications
+  - given-names: Zexin
+    family-names: Lin
+    affiliation: >-
+      College of Artificial Intelligence, Nanjing University of Posts and
+      Telecommunications
+  - given-names: Chengyang
+    family-names: Huo
+    affiliation: >-
+      Shenzhen International Graduate School, Tsinghua University
+  - given-names: Yurong
+    family-names: Song
+    affiliation: >-
+      College of Automation, Nanjing University of Posts and
+      Telecommunications
 license: MIT
-repository-code: https://github.com/OWNER/spjf-guard
+repository-code: https://github.com/oscar030406/spjf-guard
 keywords:
   - non-preemptive scheduling
   - scheduling with predictions
@@ -34,9 +42,13 @@ preferred-citation:
     Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for
     Shared Execution Services under Deadline-Driven Bursty Load
   authors:
-    - given-names: FIRST-AUTHOR-GIVEN-NAME
-      family-names: FIRST-AUTHOR-FAMILY-NAME
-    - given-names: SECOND-AUTHOR-GIVEN-NAME
-      family-names: SECOND-AUTHOR-FAMILY-NAME
+    - given-names: Yazhou
+      family-names: Guo
+    - given-names: Zexin
+      family-names: Lin
+    - given-names: Chengyang
+      family-names: Huo
+    - given-names: Yurong
+      family-names: Song
   journal: Mathematics
   year: 2026

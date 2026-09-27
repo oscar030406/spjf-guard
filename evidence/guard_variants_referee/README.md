@@ -8,8 +8,9 @@ an adversarial attempt to break it by someone who did not write it?
 instances, random and annealing attacks, a per-step audit of the proof, and a final
 agreement test against the kernel under review. `out_*.txt` are the raw logs.
 
-**Paper items.** This is the first of the three referee passes that revisions 1–3 of
-`evidence/guard_theory/theory.md` answer; the theory note's CHANGELOG lists every item.
+**Paper items.** None printed. This is the first of the three referee passes that
+revisions 1–3 of `evidence/guard_theory/theory.md` answer; the theory note's CHANGELOG
+lists every item.
 
 **Status.** Current.
 

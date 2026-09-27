@@ -4,10 +4,12 @@
 non-preemptive scheduler sort by — a forward predictor of the mean, a quantile, the
 probability of a heavy job, or a two-part model?
 
-**Paper items.** Table `tab:scores` of `paper/sections/08_experiments.tex`
-(`out_table_primary_5reps.txt`); the two-class figures quoted in the same section
-(`out_sim_primary_rep0_twoclass.txt`); the asymmetry figures
-(`out_sim_primary_rep0_mech.txt`).
+**Paper items.** The asymmetry figures of Section 8.3 (`out_sim_primary_rep0_mech.txt`,
+`out_sim_primary_rep1_mech.txt`) and the waits behind them in Supplementary Section S3.16;
+Table S14 and its two-class figures in Supplementary Section S3.10
+(`out_table_primary_5reps.txt`, `out_sim_primary_rep0_twoclass.txt`), which Section 8.3
+cites; the fit targets of Supplementary Section S5.1 (`fit_targets.csv`). Supplementary
+Section S5.4 names this folder in its text.
 
 **Inputs.** The verified simulator and feature cache of
 `evidence/codebench_service_v2/`, imported read-only.

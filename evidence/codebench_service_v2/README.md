@@ -4,11 +4,13 @@
 information available at its arrival, and does a prediction-driven shared evaluator pool
 beat first-come first-served on the real arrival times?
 
-**Paper items.** The CodeBench prediction column of
-`paper/sections/04_prediction.tex`; the block count before the `C == 0` drop in
-Section 7; the AUROC of the CodeBench row in Section 8's cross-domain table; the
-sensitivity table (`tab:sens`) of Section 8; the slopes, kill feedback and 60 s
-discussion in `paper/supplementary.tex`.
+**Paper items.** The score-objective comparison behind Section 5.1; the 863,149 graded
+submissions of Table 4 (Section 7.1) and the sealed-term exclusions of Section 7.3; the
+release-delay sensitivity of Supplementary Section S1.3; the field audit of Supplementary
+Section S2.1 (slopes, kill feedback, the 60 s limit); the earlier M4 AUROC 0.9283 of
+Supplementary Sections S3.9 and S5.1; Table S15 (Supplementary Section S3.15); the
+cross-check of the M1–M6 rows of Table S2. Supplementary Section S5.4 names this folder in
+its text.
 
 **Status.** Current. It supersedes the first version of this study, which built its
 history features by submission order rather than by result-availability time and is

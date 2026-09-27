@@ -5,9 +5,11 @@ candidate actually hold a per-job bound? `guardkern.py` is the simulator kernel 
 the main experiment, the cross-domain studies and the identity-residual measurement; its
 docstring states and proves the two per-job theorems.
 
-**Paper items.** Indirect but load-bearing: the kernel behind the guard rows of
-Section 8, and `pareto_tables.txt` is the cross-check that
-`evidence/consolidation/` uses to confirm it replays the same trace.
+**Paper items.** Indirect: no printed number is read from this folder. `guardkern.py` is
+the simulator kernel of `evidence/main_v3/`, `evidence/cross_domain/`,
+`evidence/firefox_ci/` and `evidence/consolidation/`, whose numbers the paper quotes; the
+guard rows of Tables 5 to 7 come from the package in `src/`. `pareto_tables.txt` is the
+cross-check that `evidence/consolidation/` uses to confirm it replays the same trace.
 
 **Inputs.** The primary overlay rebuilt through `evidence/codebench_service_v2/`
 (`build_inputs.py`); the arrays it writes go to the cache directory, not here.

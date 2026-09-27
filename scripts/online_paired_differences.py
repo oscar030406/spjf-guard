@@ -11,12 +11,12 @@ difference as one resampled quantity each:
   guard against its family, SPJF-E against SPJF-log), through run_main.paired_differences,
   the function that wrote that file;
 * Guard(G) against Timeout(G), with each policy's own interval beside the difference, as
-  prechecks/timeout_rule/timeout_intervals.py states it on the original clock.
+  evidence/timeout_rule/timeout_intervals.py states it on the original clock.
 
 Nothing is simulated except FCFS and SJF.  Three checks run before anything is written,
 because each original-clock quantity was computed once before by another route: the pairs
 equal outputs/dev_tables/paired_differences.csv exactly, the Timeout rows equal
-prechecks/timeout_rule/timeout_intervals.csv at six decimals, and every online policy's
+evidence/timeout_rule/timeout_intervals.csv at six decimals, and every online policy's
 own gap closed and interval equal the runner's online_comparison.csv exactly.
 """
 
@@ -52,7 +52,7 @@ from spjf_guard.sim.policy import fcfs, sjf  # noqa: E402
 
 VARIANTS = ("original", "online")
 DEV_PAIRS = ROOT / "outputs" / "dev_tables" / "paired_differences.csv"
-CLOCK_CHECK = ROOT / "prechecks" / "timeout_rule" / "timeout_intervals.csv"
+CLOCK_CHECK = ROOT / "evidence" / "timeout_rule" / "timeout_intervals.csv"
 PAIR_FIELDS = ("difference_s", "lo", "hi", "difference_gap", "gap_lo", "gap_hi")
 CLOCK_FIELDS = (
     "guard_gap",
@@ -351,7 +351,7 @@ def main() -> int:
         arguments={"online_dir": str(options.online_dir)},
         notes={
             "checks": "original pairs equal outputs/dev_tables/paired_differences.csv "
-            "exactly; original Timeout rows equal prechecks/timeout_rule/"
+            "exactly; original Timeout rows equal evidence/timeout_rule/"
             "timeout_intervals.csv at six decimals; online gaps and intervals equal "
             "online_comparison.csv exactly",
             "online_signature": signature,

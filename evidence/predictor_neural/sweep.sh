@@ -1,5 +1,5 @@
 set -e
-PY="D:/environment/tools/ml-env/python.exe"
+PY="${PY:-python}"
 R="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME $PY train_neural.py --seed 3 --epochs 30 --tag _sweep"
 for lr in 1e-3 3e-4; do
   for wd in 0 1e-4 1e-3; do

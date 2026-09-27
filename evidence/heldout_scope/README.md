@@ -12,9 +12,8 @@ sealed list itself is accurate where it is defined. The audit also confirms that
 time it was written, no sealed run had happened: the repository held only
 `protocol_lock.draft.json`, which is the gate in `sealed.py`.
 
-**Paper items.** The sealed-scope sentence of `paper/sections/01_introduction.tex`
-(findings G1 and G2-G3), the output-scope paragraph of `paper/sections/07_data.tex`
-(G1-G6), and one location in `paper/supplementary.tex` (Q2).
+**Paper items.** The development and sealed-data paragraph of Section 7.3 (findings G1–G6)
+and one location in Supplementary Section S5.1 (Q2).
 
 **Inputs.** None, by construction. Nothing was opened, parsed or hashed: every conclusion
 comes from the code, the configuration, the logs, the `out_*.txt` files and the paper

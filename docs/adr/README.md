@@ -1,19 +1,19 @@
-# 决策记录（ADR）
+# Decision records (ADR)
 
-一条一个文件，`0001-slug.md` 递增。正文可以只有一段：背景是什么、决定了什么、为什么。
+One file per record, numbered upward as `0001-slug.md`. The body may be a single paragraph: what the context was, what was decided, and why.
 
-只在三条同时成立时写：难以撤销；没有背景的人看代码会问「为什么这样做」；确实有过别的选项。
-三条缺一就不写。
+Write one only when all three conditions hold: the decision is hard to undo; a reader without the background would look at the code and ask "why was it done this way"; there really were other options.
+If any of the three is missing, do not write one.
 
-| 编号 | 决定 |
+| No. | Decision |
 |---|---|
-| [0001](0001-integer-microsecond-time.md) | 仿真器的时钟与记账用整数微秒 |
-| [0002](0002-result-availability-clock-and-jitter.md) | 到达与可见性按结果可用时刻定义，同秒记录用确定性抖动打散 |
-| [0003](0003-validation-only-selection-with-harm-constraint.md) | 护栏参数只在验证轨迹上选，且必须满足伤害约束 |
-| [0004](0004-sealed-data-path-level-protection.md) | 封存数据的保护放在路径层，由配置锁加显式开关解除 |
-| [0005](0005-one-guard-three-budget-shapes.md) | 护栏是一个机制，预算形状是设计自由度；三张同等密度的网格由同一条规则选出胜者 |
-| [0006](0006-single-server-copies-reused-on-the-sealed-pool.md) | 单机轨迹的拷贝数在开发池上选定，封存池沿用并如实报告利用率 |
-| [0007](0007-policy-consistent-score-visibility.md) | 用班次—学期内的 3600 秒保守可见性作为预测排序的主结果 |
-| [0008](0008-online-replay-headline.md) | 预测排序的主结果改为在线重放：到达时只用本次重放已完成的同拷贝结果打分；exact 降为离线证书 |
-| [0009](0009-zero-cost-blocks-leave-every-term.md) | 开销为零的块在封存学期同样离开仿真轨迹；第一次冻结作废，重新冻结 |
-| [0010](0010-post-run-reporting-changes-are-declared.md) | 封存运行结束后对锁定文件（核对脚本与测试）的改动逐个声明、钉住字节，不重新冻结 |
+| [0001](0001-integer-microsecond-time.md) | The simulator's clock and accounting use integer microseconds |
+| [0002](0002-result-availability-clock-and-jitter.md) | Arrival and visibility are defined by the time the result became available; records in the same second are separated by a deterministic jitter |
+| [0003](0003-validation-only-selection-with-harm-constraint.md) | Guard parameters are selected on validation traces only and must satisfy the harm constraint |
+| [0004](0004-sealed-data-path-level-protection.md) | Protection of sealed data sits at the path layer and is lifted only by the protocol lock plus an explicit switch |
+| [0005](0005-one-guard-three-budget-shapes.md) | The guard is one mechanism and the budget shape is a design freedom; three grids of equal density, winner chosen by one rule |
+| [0006](0006-single-server-copies-reused-on-the-sealed-pool.md) | The number of copies in the single-server trace is chosen on the development pool; the sealed pool reuses it and reports the utilisation it actually reaches |
+| [0007](0007-policy-consistent-score-visibility.md) | Conservative 3600-second visibility within a class-term as the headline result for predicted ordering |
+| [0008](0008-online-replay-headline.md) | The headline result for predicted ordering becomes the online replay: at arrival a job is scored only with same-copy results already completed in this replay; exact becomes an offline certificate |
+| [0009](0009-zero-cost-blocks-leave-every-term.md) | Zero-cost blocks leave the simulated trace in the sealed terms as well; the first freeze is void and the protocol is frozen again |
+| [0010](0010-post-run-reporting-changes-are-declared.md) | Changes to locked files (checking scripts and tests) after the sealed run are declared one by one with their bytes pinned, without a new freeze |

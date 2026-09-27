@@ -4,8 +4,10 @@
 simulator, the metrics, the aggregation and the bootstrap are written a second time from
 the written policy definitions rather than reused?
 
-**Paper items.** `out_VERDICT.txt` section C2 and its "MAY" list are the independent
-simulator figures quoted in `paper/sections/08_experiments.tex`.
+**Paper items.** `out_VERDICT.txt` section C2 and its "MAY" list are the
+independent-simulator figures: the 5.7 billion checks of Section 8.5 and the job-for-job
+agreement over 17,634,760 jobs and 22 policies in Supplementary Section S3.16.
+Supplementary Section S5.4 cites `out_VERDICT.txt` beside the earlier-pipeline validation.
 
 **Reading the logs.** In these logs *builder* means the original implementation under
 review and *mine* the independent re-implementation written here; the two are compared

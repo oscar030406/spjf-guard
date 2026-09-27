@@ -44,8 +44,8 @@ drawn; ``Waits'' whether each job's queueing wait is recorded.}
 Log & Use & Size & Arrivals & Waits \\
 \midrule
 CodeBench \cite{codebench_dataset} & main scheduling log &
-\devnum{4{,}611{,}325} runs; \devnum{863{,}149} graded submissions in the development
-period & reconstructed & no \\
+\devnum{4{,}611{,}325} runs in the \devnum{18} terms; \devnum{863{,}149} graded
+submissions in the development period & reconstructed & no \\
 ACcoding \cite{accoding2024} & ordering on a second grading platform &
 \devnum{4{,}046{,}652} submissions, \devnum{3{,}237{,}322} outside the sealed block &
 drawn & no \\
@@ -93,7 +93,8 @@ fractional part no longer ranks heavy jobs above light ones, and the forward mod
 less than \devnum{0.008}.
 
 No run after \devnum{2019-08-28} lasts longer than \devnum{60} s, although the platform
-documents no timeout. Hence we take the periods after that date, cap each duration at the
+documents no timeout. Hence the pool we schedule uses only the periods after that date; we
+cap each duration at the
 observed ceiling, $C^{\mathrm{cap}} = \min(C, 60)$, and impose $L = \devnum{60}$ s in our
 pool, as a shared service would (Supplementary Table~S3). The logs from outside education
 document no time limit. For them we take $L$ to be the 99.9th percentile of running times
@@ -120,17 +121,21 @@ other part's mean wait, hourly profile and per-job order (Supplementary Section~
 of this shows that the original platform ever queued, and we make no claim about waiting
 there.
 
-A single course in a single term does not load even one server, so we overlay several. From
-the \devnum{40} class-terms of the development period, each holding the submissions of one
-class in one academic term, we superimpose \devnum{44} copies. The copies are aligned by
-weekday and hour, and each is shifted by a whole number of weeks drawn at random. Overlaying whole
+A single course in a single term does not load even one server, so we overlay several. The
+six primary development terms hold \devnum{40} class-terms, each the submissions of one class
+in one academic term, with \devnum{400{,}790} jobs in all. We superimpose \devnum{44} copies
+of them, aligned by weekday and hour, and shift each copy of each class-term by a whole
+number of weeks drawn at random. Drawing the shifts five times gives five such traces, which
+we call overlays. Overlaying whole
 terms keeps the daily and weekly cycles and each job's position relative to its own
 deadline, which compressing the gaps between arrivals would not. In all,
 \devnum{17{,}634{,}760} jobs arrive over \devnum{30} weeks, and \devnum{4{,}219{,}556} of
 them arrive in the \devnum{24} hours before an assessment deadline.
 
-Three loads share this trace and differ only in the number of servers. Four of the five
-overlays, which differ only in the drawn week shifts, use $k = \devnum{8}$, \devnum{5} and
+Three loads share each overlay and differ only in the number of servers: at a target
+utilisation $\rho$, $k$ is the executed work arriving in the overlay's busiest whole hour,
+in seconds, divided by $3600\rho$ and rounded to the nearest integer. Four of the five
+overlays use $k = \devnum{8}$, \devnum{5} and
 \devnum{4}. On the fifth, whose busy hours carry the least work, $k$ is \devnum{7},
 \devnum{5} and \devnum{4}, so tables that average over overlays print $k = \devnum{7.8}$ at
 the lightest load. Averaged over the five overlays, the utilisation of the busiest hours is
@@ -171,14 +176,18 @@ days ahead reaches an F1 score (the harmonic mean of precision and recall) of
 
 Three logs have a part that was sealed before the method was designed: three academic
 terms of CodeBench (\devnum{2023-1}, \devnum{2023-2} and \devnum{2024-1}), the last
-\devnum{20\%} of ACcoding's submission identifiers, and OULAD's \devnum{2014} year. Of the
-\devnum{809{,}330} sealed ACcoding rows, only the count and the first identifier have been
-read, and no result has been computed on the sealed parts of ACcoding and OULAD. Every
-access is recorded in the repository.
+\devnum{20\%} of ACcoding's submission identifiers, and OULAD's \devnum{2014} year. Before
+the method was frozen, the sealed parts were read only for bookkeeping. The CodeBench
+archives were parsed and counted, which is why the run count of Table~\ref{tab:traces}
+covers all \devnum{18} terms, and their static code features were computed. The
+\devnum{809{,}330} sealed ACcoding rows were dropped on loading, after their count and first
+identifier had been recorded. An audit of an earlier project plan counted OULAD's
+\devnum{2014} requests. No cost, prediction or scheduling result was computed on a sealed
+part before the freeze, and every access is recorded in the repository.
 
-We opened the CodeBench terms once, on 25 September 2026, after the method, its parameters
-and the primary metric had been frozen, and Section~\ref{sec:exp_sealed} reports that
-evaluation. Every other number in this paper is a development number. A first attempt at
+We evaluated the method on the sealed CodeBench terms once, on 25 September 2026, after the
+method, its parameters and the primary metric had been frozen, and
+Section~\ref{sec:exp_sealed} reports that evaluation. Every other number in this paper is a development number. A first attempt at
 the run stopped before producing any result, because a cleaning rule named only the
 development terms; the rule was extended to the sealed terms and the protocol frozen again
 (Supplementary Section~S10).

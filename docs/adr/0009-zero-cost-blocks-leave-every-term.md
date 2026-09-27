@@ -1,33 +1,33 @@
-# 0009 开销为零的块在封存学期同样离开仿真轨迹；第一次冻结作废，重新冻结
+# 0009 Zero-cost blocks leave the simulated trace in the sealed terms as well; the first freeze is void and the protocol is frozen again
 
-日期 2026-09-25。
+Date 2026-09-25.
 
-## 决定
+## Decision
 
-`configs/main.yaml` 的 `clock.drop_zero_cost_terms` 加入三个封存学期 2023-1、2023-2、2024-1。
-补充材料 S2 写的规则是：记录开销恰为 0 的块离开仿真轨迹，但留在特征、标签和各项总数里。
-配置把这条规则写成了一张学期名单，名单只列了开发期发现这种块的七个学期（2020 年起），
-没有列封存学期。第一次冻结（1289aa2，锁存档为 `docs/archive/protocol_lock_1289aa2.json`）
-下的封存运行因此在第 4 步载入叠加轨迹时报 `service times must be positive`：
-开销为 0 的块按微秒取整后服务时间为 0。
+The three sealed terms 2023-1, 2023-2 and 2024-1 are added to `clock.drop_zero_cost_terms` in `configs/main.yaml`.
+The rule written in Supplementary Section S2 is: blocks whose recorded cost is exactly 0 leave the simulated trace but stay in the features, labels and all totals.
+The configuration wrote this rule as a list of terms, and the list named only the seven terms (from 2020 on) in which such blocks were found during development,
+not the sealed terms. The sealed run under the first freeze (1289aa2, lock archived as `docs/archive/protocol_lock_1289aa2.json`)
+therefore failed at step 4, when loading the overlay traces, with `service times must be positive`:
+a zero-cost block has a service time of 0 after rounding to microseconds.
 
-修订后重新冻结，封存运行从第 1 步重跑。第一次冻结的配置逐字节存为
-`configs/main_frozen_1289aa2.yaml`，开发期以 `configs/main.yaml` 为配置的五份 manifest
-改指向它（`check_preserved_outputs.py --pin-historical-config`，只改路径，先核对字节相同）。
+After the revision the protocol is frozen again and the sealed run is rerun from step 1. The configuration of the first freeze is stored byte for byte as
+`configs/main_frozen_1289aa2.yaml`, and the five development-phase manifests whose configuration was `configs/main.yaml`
+are repointed to it (`check_preserved_outputs.py --pin-historical-config`, which changes only the path, after checking that the bytes are identical).
 
-## 为什么
+## Why
 
-- 修订由论文事先写明的规则决定，不依赖任何封存结果：第一次冻结下第 4 步在载入时失败，
-  没有产出任何表；第 6 步在拟合冻结模型时被手动终止，没有开始仿真；没有人看过任何封存
-  输出，只看过报错信息。
-- 开发缓存 `ev.parquet` 只有 2018-1 至 2022-2 十一个学期，名单里加的三个学期在开发期的
-  任何计算里都不出现，所以开发期的全部结果逐行不变。online 检查点的签名因配置哈希改变而
-  变了，按与 069cb06 相同的办法改签（`local_tools/resign_online_checkpoints.py`，先核对
-  每个检查点的旧格签名）。
+- The revision is determined by a rule the paper stated in advance and does not depend on any sealed result: under the first freeze, step 4 failed while loading
+  and produced no table; step 6 was stopped manually while fitting the frozen model and had not started simulating; nobody saw any sealed
+  output, only the error message.
+- The development cache `ev.parquet` contains only the eleven terms 2018-1 to 2022-2, and the three terms added to the list do not appear in any
+  development-phase computation, so every development result is unchanged row for row. The signatures of the online checkpoints changed because the configuration hash
+  changed, and were re-signed the same way as in 069cb06 (`local_tools/resign_online_checkpoints.py`, after checking
+  the old per-cell signature of each checkpoint).
 
-## 代价
+## Cost
 
-- 程序多一次冻结与一次重跑，台账多一组行；程序文档第五节“真发现必须改的 bug，那就是新的一份
-  方法”正是为这种情况写的。
-- 名单式写法本身留着：把规则改成“所有学期”会改动开发期 2018–2019 学期的特征计算，
-  需要重跑全部开发结果。
+- The procedure needs one more freeze and one more rerun, and the ledger gets one more group of rows; Section 5 of the procedure document, "if a bug that really must be fixed is found, that is a new
+  version of the method", was written for exactly this case.
+- The list form itself stays: changing the rule to "all terms" would change the feature computation for the development terms of 2018–2019,
+  and all development results would have to be rerun.

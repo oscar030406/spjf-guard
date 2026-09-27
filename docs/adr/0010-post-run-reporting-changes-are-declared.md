@@ -1,49 +1,49 @@
-# 0010 封存运行结束后对锁定文件的改动逐个声明，不重新冻结
+# 0010 Changes to locked files after the sealed run are declared one by one, without a new freeze
 
-日期 2026-09-25。
+Date 2026-09-25.
 
-## 决定
+## Decision
 
-封存运行在锁 f6c1b3af（树 2ae513f）下跑完十条命令之后，把结果写进论文时发现三处出表核对与测试的缺陷，
-修改了五个锁定文件：`scripts/check_paper_numbers.py`、`scripts/check_generated.py`、
-`tests/test_eval_scores.py`、`tests/test_sealed_data.py`、`tests/test_sealed_paper_tables.py`。
-改动逐个写进 `docs/post_run_changes.json`，每条带文件现在的 sha256 和原因。
-`tests/test_sealed_data.py` 的锁检查在冻结之后逐文件比对：与锁不同的文件，必须在声明里有一条、
-且字节与声明完全相同，否则照样报错。`protocol_lock.json` 不动，它仍然是封存运行那一次代码的记录。
+After the sealed run had finished its ten commands under lock f6c1b3af (tree 2ae513f), writing the results into the paper exposed three defects in the table checks and tests,
+and five locked files were modified: `scripts/check_paper_numbers.py`, `scripts/check_generated.py`,
+`tests/test_eval_scores.py`, `tests/test_sealed_data.py`, `tests/test_sealed_paper_tables.py`.
+Each change is written into `docs/post_run_changes.json`, with the file's current sha256 and the reason.
+The lock check in `tests/test_sealed_data.py` compares file by file after the freeze: a file that differs from the lock must have an entry in the declaration
+whose bytes match the declaration exactly; otherwise it still fails. `protocol_lock.json` is not touched; it remains the record of the code of the sealed run.
 
-三处缺陷：
+The three defects:
 
-- 核对 C 在论文里找每一行有来源的 `numbers.csv` 数字时只认 `\devnum{}`，正文里引用的封存数字
-  （`sealed.` 开头的键）因此一定失败。改为按键的前缀找对应的宏。
-- `check_generated.py` 的旧出表那一轮只读封存主表、预测器与可见性目录，不读 exact 和 online，
-  却也检查正文里的封存数字，online 数字在这一轮必然查不到来源。有封存 exact 结果时，这一轮不再查
-  正文封存数字，交给读齐全部封存输出的 exact 那一轮。
-- 两个测试写的是冻结之前的仓库状态：一个断言拒绝原因是「没有冻结锁」，冻结后同一调用因为没加
-  `--unseal` 被拒绝；另一个要求台账里冻结行的条数等于锁里哈希的输入数，第二次冻结把同样的行又写了
-  一遍，条数翻倍。两处改成断言要求本身：被拒绝且没写任何东西；每个哈希过的输入都有一行冻结记录。
-  这两个测试在第二次冻结（f32c393）之后就是红的，冻结闸门在写锁之前跑测试，所以没看到。
+- When check C looked in the paper for each sourced number in `numbers.csv`, it recognised only `\devnum{}`, so the sealed numbers quoted in the main text
+  (keys starting with `sealed.`) were bound to fail. It now finds the matching macro by the key's prefix.
+- The old table-generation pass of `check_generated.py` reads only the sealed main tables, predictor and visibility directories, not exact and online,
+  yet it also checked the sealed numbers in the main text, so online numbers could never be traced to a source in that pass. When sealed exact results exist, this pass no longer checks
+  the sealed numbers in the main text; that is left to the exact pass, which reads all the sealed outputs.
+- Two tests described the repository state before the freeze: one asserted that the reason for refusal was "no frozen lock", while after the freeze the same call is refused because
+  `--unseal` was not passed; the other required the number of freeze rows in the ledger to equal the number of hashed inputs in the lock, and the second freeze wrote the same rows again,
+  doubling the count. Both now assert the requirement itself: the call is refused and nothing is written; every hashed input has one freeze row.
+  These two tests had been failing since the second freeze (f32c393); the freeze gate runs the tests before writing the lock, so this was not seen.
 
-## 为什么
+## Why
 
-- 锁要证明的是封存那一次用的是冻结的方法。十条命令全部在改动之前跑完，各步产物的 manifest 记着
-  实现哈希；改动的只有核对论文数字的脚本和测试，没有一条封存命令执行的代码被改动，也没有重跑任何封存命令。
-- 重新冻结在这里是错的：封存数据已经打开过，新的一次冻结会看上去像一份在看结果之前定下的方法。
-- 直接放宽锁检查（只比冻结提交，不管工作树）会让以后任何改动都悄悄通过。逐个声明把新字节钉住，
-  和冻结钉住旧字节是同一种保护。
+- What the lock has to prove is that the sealed run used the frozen method. All ten commands finished before the changes, and the manifest of each step's outputs records
+  the implementation hashes; the only things changed are the scripts and tests that check the paper's numbers. No code executed by any sealed command was changed, and no sealed command was rerun.
+- A new freeze would be wrong here: the sealed data have already been opened, and a new freeze would look like a method fixed before seeing the results.
+- Simply relaxing the lock check (comparing only the frozen commit and ignoring the working tree) would let any later change pass silently. Declaring changes one by one pins the new bytes,
+  which is the same kind of protection as the freeze pinning the old bytes.
 
-## 代价
+## Cost
 
-- 仓库里多一份声明文件，锁检查多一条分支；以后再改这五个文件要同时更新声明。
-- 协议的原话是「冻结之后锁定路径下什么都不动」，这次改动违反了字面，靠这份 ADR 和声明文件说明。
+- The repository has one more declaration file and the lock check one more branch; any later change to these five files must also update the declaration.
+- The protocol's own wording is "after the freeze, nothing under the locked paths is touched"; this change breaks the letter of that, which is accounted for by this ADR and the declaration file.
 
-## 追加（2026-09-26）
+## Addendum (2026-09-26)
 
-锁住的是 `scripts/*.py` 与 `tests/*.py` 整组文件，所以冻结之后新加的文件也算改动。开发池比较组全集在
-online 协议下跑完后，新加了 `scripts/online_paired_differences.py` 和 `tests/test_online_paired_differences.py`：
-前者读那次运行的检查点（只有开发池，不读封存数据），给出补充材料 S11 的成对差。两者照同样的办法写进
-`docs/post_run_changes.json`。没有一条封存命令会执行它们，上面「为什么」一节的理由不变。
+The lock covers the whole set of `scripts/*.py` and `tests/*.py`, so files added after the freeze also count as changes. After the full comparison set on the development pool was run
+under the online protocol, `scripts/online_paired_differences.py` and `tests/test_online_paired_differences.py` were added:
+the former reads the checkpoints of that run (development pool only, no sealed data) and gives the paired differences of Supplementary Section S11. Both are written into
+`docs/post_run_changes.json` in the same way. No sealed command executes them, and the reasoning of the "Why" section above is unchanged.
 
-同一天又加了 `scripts/sealed_dev_contrast.py` 和 `tests/test_sealed_dev_contrast.py`：前者只读开发与封存两次运行已写出的 CSV，
-不读封存数据、不模拟，给出 §8.2 解释封存学期为何闭合更多差距的数字；`check_paper_numbers.py` 相应多一个
-`--sealed-contrast-dir`，把这份输出里非开发池的数字认作封存数字的来源，`check_generated.py` 在它的 manifest 存在时自动带上。
-四个文件同样写进声明文件。
+On the same day `scripts/sealed_dev_contrast.py` and `tests/test_sealed_dev_contrast.py` were added: the former reads only CSVs already written by the development and sealed runs,
+does not read sealed data and does not simulate, and gives the numbers with which Section 8.2 explains why the sealed terms close more of the gap; `check_paper_numbers.py` correspondingly gains
+`--sealed-contrast-dir`, which accepts the numbers in that output that are not from the development pool as sources for sealed numbers, and `check_generated.py` passes it automatically when that output's manifest exists.
+These four files are likewise written into the declaration file.

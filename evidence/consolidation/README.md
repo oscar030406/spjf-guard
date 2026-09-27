@@ -5,9 +5,10 @@ has computed how many dedicated containers it takes to match a shared pool of si
 the same wait percentile. Both numbers are computed here from the existing CodeBench
 development trace, with no new data.
 
-**Paper items.** Supports the shared-pool framing of the manuscript; no individual number
-of the paper is read from this folder, and `out_SUMMARY.txt` states in its own words what
-may and may not be claimed from it.
+**Paper items.** The 1,636 containers alive at the 99th percentile, their 0.12% busy share
+and the 14 servers that replace them, in Section 7.2 and Section 9; the reconstruction
+range and the server counts in Supplementary Section S2.3. All come from
+`out_SUMMARY.txt`, which states in its own words what may and may not be claimed from it.
 
 **Inputs.** `data/codebench/parquet/{events,logins}/<semester>.parquet` and the parse
 cache of `evidence/codebench_service_v2/`. Only the six 60 s-limit development semesters

@@ -13,10 +13,12 @@ the promise is far coarser than the observed waits. That failure is what
 `evidence/lpc_egee_queues/` was built to answer, by giving each walltime class its own
 pool and its own `L`.
 
-**Paper items.** Three locations in `paper/sections/08_experiments.tex`, one in
-`paper/sections/09_limitations.tex` and six in `paper/supplementary.tex`, whose source
-comments name `applicability.csv`, `validation.csv`, `capacity.json`, `bound_checks.csv`
-and `pooled_policy_metrics.csv`.
+**Paper items.** No location in the manuscript; the caption of Table 9 (Section 8.6)
+points to the supplement. Supplementary Section S6.4, the pooled contrast in Supplementary
+Section S6.6, and the chronological-test row of Table S24 with its paragraph in
+Supplementary Section S6.7, whose source comments name `applicability.csv`,
+`validation.csv`, `capacity.json`, `policy_parameters.csv`, `prediction_metrics.csv`,
+`guard_dispatches.csv`, `bound_checks.csv` and `pooled_policy_metrics.csv`.
 
 **Inputs.** The Parallel Workloads Archive log `LPC-EGEE-2004-1.2-cln.swf.gz`
 (2,718,006 bytes, SHA256

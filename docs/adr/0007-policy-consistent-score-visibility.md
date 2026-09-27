@@ -1,94 +1,94 @@
-# 0007 用班次—学期内的 3600 秒保守可见性作为预测排序的主结果
+# 0007 Conservative 3600-second visibility within a class-term as the headline result for predicted ordering
 
-日期 2026-09-21。
+Date 2026-09-21.
 
-## 决定
+## Decision
 
-预测排序今后的主结果用 `spjf_e_conservative`：M4 的用户、题目和用户—题目历史全部限定在同一个
-班次—学期，只吸收会成为调度 job 的提交结果，并要求结果时钟满足
-`done_j + 3600 <= a_i`。叠加的一份班次—学期拷贝因此只读这份拷贝里有唯一对应 job 的历史；同一
-原始 job 的每份拷贝仍共用一个冻结分数，但不再借用另一班次—学期或根本没有进入该池的结果。
+From now on the headline result for predicted ordering uses `spjf_e_conservative`: the M4 user, exercise and user–exercise histories are all restricted to the same
+class-term, only absorb the results of submissions that become scheduled jobs, and require the result clock to satisfy
+`done_j + 3600 <= a_i`. One class-term copy in an overlay therefore reads only the history that has a unique corresponding job within that copy; all copies of the same
+original job still share one frozen score, but they no longer borrow results from another class-term or results that never entered the pool.
 
-3600 秒在看封存学期之前确定。五条开发叠加、三档负载里，FCFS 的最大等待是
-1544.602708 秒。对本包最大的承诺 1200 秒，定理给出每个 guarded policy 的
-`W^P <= W^FCFS + G <= 2744.602708` 秒；3600 秒还留 855.397292 秒、即 31.2% 的余量。
-封存运行仍逐 cell 计算 `W > 3600` 的数量：FCFS 和三条 Guard 有一条就说明开发期推导没有覆盖
-新池，不能静默继续；没有证明的 SPJF-E 也照样报告，不能把它算进证书。
+The 3600 seconds were fixed before looking at the sealed terms. Over the five development overlays and three load levels, the largest FCFS wait is
+1544.602708 seconds. For the largest promise in this package, 1200 seconds, the theorem gives for every guarded policy
+`W^P <= W^FCFS + G <= 2744.602708` seconds; 3600 seconds leaves 855.397292 seconds of margin, i.e. 31.2%.
+The sealed run still counts `W > 3600` in every cell: a single one under FCFS or any of the three Guards means the development-phase derivation does not cover
+the new pool, and the run must not continue silently; SPJF-E, which has no proof, is reported the same way and cannot be counted towards the certificate.
 
-旧的全局、`delta = 0` 分数保留为明确标注的 optimistic reference；只用代码与提交时已经知道的
-课务/时钟列的 `STATIC` 分数是下锚。所有比较沿用已经在验证池选好的 Guard 参数，不用新分数重选。
+The old global, `delta = 0` score is kept as a clearly labelled optimistic reference; the `STATIC` score, which uses only the code and the course/clock
+columns known at submission time, is the lower anchor. All comparisons keep the Guard parameters already selected on the validation pool; nothing is reselected with the new score.
 
-## 为什么
+## Why
 
-旧分数在原平台的 `done_j` 一到就读结果，重放却要到 `a_j + W_j^P + C_j` 才完成。开发审计显示，
-按同一 outer round 给历史找重放对应项时，约 80% 的 job 至少读了一条在自己到达时尚未完成的
-结果；95.39% 还读过至少一条根本不在同一重放池里的提交结果。这个暴露不影响 Guard 对任意静态
-排序分数的最坏等待保证，却使预测排序的收益不是可部署时钟下的收益。
+The old score reads a result as soon as `done_j` is reached on the original platform, but in the replay that result is only complete at `a_j + W_j^P + C_j`. The development audit shows that,
+when replay counterparts for the history are found within the same outer round, about 80% of jobs read at least one result that was not yet complete at their own arrival;
+95.39% also read at least one submission result that is not in the same replay pool at all. This exposure does not affect the Guard's worst-case wait guarantee for any static
+ordering score, but it means the gain from predicted ordering is not a gain under a deployable clock.
 
-在线精确释放是更直接的定义，但不是现有内核的一处局部改动。现在的 Numba 调度核接收一条预先
-排好的静态分数；精确版本要在每个策略的完成事件上同时更新用户、题目和用户—题目滚动状态，再
-执行冻结的 300 棵 LightGBM 树，而且原叠加的跨班次历史没有唯一的重放副本。那是新的事件引擎和
-预测执行器，不能在冻结前作为一天内可审计的改动完成。固定滞后方案则保留静态内核，并把充分条件
-变成运行后可以逐 job 核验的 `W <= D`。
+Online exact release is the more direct definition, but it is not a local change to the current kernel. The current Numba scheduling kernel takes one pre-
+sorted static score; the exact version would have to update the rolling user, exercise and user–exercise state at every completion event of every policy, then
+evaluate the frozen 300 LightGBM trees, and the cross-class history of the original overlay has no unique replayed counterpart. That is a new event engine and
+prediction executor, and it cannot be completed before the freeze as a change that can be audited within one day. The fixed-lag scheme instead keeps the static kernel and turns the sufficient condition
+into `W <= D`, which can be verified job by job after the run.
 
-## 代价
+## Cost
 
-保守结果并不接近旧结果。在最忙负载，沿用原参数的 Guard(600) gap closed 从 0.801
-`[0.764, 0.842]` 降到 0.429 `[0.357, 0.533]`；静态下锚是 0.349
-`[0.281, 0.457]`。这说明旧时钟放大了高负载下的预测收益，论文不能再把它当主效应。保守结果仍
-显著优于静态下锚，所以可陈述的是“有可部署的历史收益，但比原先报告的小”，而不是“敏感性不影响
-结论”。
+The conservative result is not close to the old one. At the busiest load, with the original parameters, Guard(600)'s gap closed falls from 0.801
+`[0.764, 0.842]` to 0.429 `[0.357, 0.533]`; the static lower anchor is 0.349
+`[0.281, 0.457]`. This shows that the old clock inflated the prediction gain at high load, and the paper can no longer treat it as the main effect. The conservative result is still
+significantly better than the static lower anchor, so what can be stated is "there is a deployable gain from history, but smaller than originally reported", not "the sensitivity analysis does not affect
+the conclusion".
 
-班次—学期限定也有意放弃跨班次的可部署先验。若部署系统另有一个在窗口开始前落盘、在拷贝间定义
-清楚的先验库，日后可以作为第四个变体加入；本次冻结不把当前全局原日历历史冒充成那种先验。
+Restricting to the class-term also deliberately gives up a deployable cross-class prior. If a deployed system has a separate prior store written to disk before the window starts and
+clearly defined across copies, it can be added later as a fourth variant; this freeze does not pass off the current global original-calendar history as such a prior.
 
 ## Amendment — 2026-09-23
 
-上文保留为 2026-09-21 的决定记录；本节修正其暴露解释、精确计算的可行性判断和最终报告口径。
-本次只使用开发与验证池，不访问封存数据，不创建正式 lock。
+The text above is kept as the record of the 2026-09-21 decision; this section corrects its explanation of the exposure, its judgement of the feasibility of the exact computation, and the final reporting basis.
+This amendment uses only the development and validation pools, does not access sealed data, and does not create a formal lock.
 
-### 修正的问题
+### Problems corrected
 
-约 80% 的旧统计把同 outer round 内独立移位的不同班次历史混在一起，不能称为同拷贝排队造成的
-泄露率。95.39% 的未重放历史也不等于不可用信息：早期学期的已完成记录有合法的原时钟。原
-conservative 与 original 同时改变 namespace、历史支持集、固定释放滞后和模型训练；因此
-0.801 → 0.429 本身不能识别 queueing delay 的效应。原文关于“旧时钟放大收益”的强归因被撤回，
-由一次只改变一项的冻结权重对照替代。
+The old statistic of about 80% mixed histories of different classes that were shifted independently within the same outer round, and cannot be called a leakage rate caused by same-copy queueing.
+The 95.39% of unreplayed history is also not unusable information: completed records of earlier terms have a legitimate original clock. The original
+conservative variant differs from original at once in namespace, history support set, fixed release lag and model training; therefore
+0.801 → 0.429 by itself cannot identify the effect of queueing delay. The strong attribution in the text above, that "the old clock inflated the gain", is withdrawn
+and replaced by a frozen-weight comparison that changes one item at a time.
 
-现有静态调度核无需改成在线预测引擎，也能计算要求的最终可见性证书：每个 policy/cell 从原分数
-出发，模拟后将仍未完成的同拷贝结果加入逐 job 的 withheld 集合，只对新增违规目标重算 M4、用
-原冻结权重评分，再模拟。集合只增不减，有限记录保证终止；最后一轮必须断言零个仍被使用的违规。
-逐轮计数、耗时、稀疏分数和内容哈希全部输出。这是离线单调 availability certificate，不是唯一、
-最小删减或最大历史量的在线解。
+The existing static scheduling kernel does not need to be turned into an online prediction engine to compute the required final visibility certificate: each policy/cell starts from the original score,
+and after simulating, the same-copy results that are still incomplete are added to a per-job withheld set; M4 is recomputed only for targets with new violations, scored with
+the original frozen weights, and simulated again. The set only grows, and the finite number of records guarantees termination; the last pass must assert zero violations still in use.
+The per-pass counts, timings, sparse scores and content hashes are all written out. This is an offline monotone availability certificate, not a unique,
+minimum-deletion or maximum-history online solution.
 
-每份班次—学期拷贝视为独立实例，其他班次及学期的历史按该实例的原相对时钟作为外生输入。这样
-保留真实过去的信息，也不借另一独立移位实例的虚构未来完成时间。全部 15 个 primary cell 的
-Guard(600) 另做整条删除同学期其他已复制班次历史的精确敏感性；这项选择的含义与边界必须与结果
-一起报告，不能推广为共享学生状态的全平台干预模型。
+Each class-term copy is treated as an independent instance, and the history of other classes and terms enters as exogenous input on that instance's original relative clock. This
+keeps real past information and does not borrow fictitious future completion times from another independently shifted instance. For all 15 primary cells,
+Guard(600) also gets an exact sensitivity analysis that deletes outright the history of the other replicated classes in the same term; the meaning and limits of this choice must be
+reported together with the result, and cannot be generalised to a platform-wide intervention model with shared student state.
 
-### 实测与 headline 决定
+### Measurements and the headline decision
 
-2026-09-23，开发与验证池上的 exact 运行完成，输出在 `outputs/dev_consistent_visibility/`。
-覆盖是测量前钉死的 5 条 primary overlay × 3 档负载 × 5 条策略，共 75 个细化单元，没有一格缺失，
-也没有按结果挑子集。`exact_passes.csv` 里每个单元的末轮 `terminal_zero` 都是 `True`、
-`offending_records` 都是 `0`；细化用 10–18 轮收敛（含末轮），合计 1,033 轮。另有 15 个
-`exact_other_class_withheld` 单元，同样全部以零违规结束。三条 Guard 的逐 job 边界在 exact 分数下
-仍然成立。`scripts/check_generated.py` 的 consistent visibility 一项报
-`1 run(s) have complete monotone, terminal-zero certificates`。
+2026-09-23: the exact run on the development and validation pools finished, with output in `outputs/dev_consistent_visibility/`.
+The coverage, pinned before measurement, is 5 primary overlays × 3 load levels × 5 policies, 75 refinement units in all; no cell is missing,
+and no subset was picked according to results. In `exact_passes.csv` every unit's final pass has `terminal_zero` equal to `True` and
+`offending_records` equal to `0`; refinement converged in 10–18 passes (including the final pass), 1,033 passes in total. A further 15
+`exact_other_class_withheld` units also all ended with zero violations. The per-job bounds of the three Guards
+still hold under the exact scores. The consistent visibility item of `scripts/check_generated.py` reports
+`1 run(s) have complete monotone, terminal-zero certificates`.
 
-**决定：exact 成为预测排序的主结果（headline），conservative 与 original 降为两条参照。**
+**Decision: exact becomes the headline result for predicted ordering; conservative and original are demoted to two references.**
 
-依据本节上文那一句：“现有静态调度核无需改成在线预测引擎，也能计算要求的最终可见性证书……
-最后一轮必须断言零个仍被使用的违规。”这句话把 exact 定义为**要求的**最终可见性证书，并把它可以
-发布的条件写成一个可判定的断言。该断言现在成立，所以 exact 就是 M2 那个问题的直接答案。相反，
-本节前面已经撤回了 conservative 作为主结果的理由：“原 conservative 与 original 同时改变
-namespace、历史支持集、固定释放滞后和模型训练；因此 0.801 → 0.429 本身不能识别 queueing delay
-的效应。”一个被自己的决策记录判定为不可识别的对照，不能继续充当主结果。
-`docs/sealed_run_procedure.md` 第 5 步的两分支写法（“headline 为 exact 时，这个警告不阻断第 6 步；
-若 headline 仍是 conservative，则该情况硬停”）也是按这次决定落到第一支。
+The basis is this sentence from earlier in this section: "The existing static scheduling kernel does not need to be turned into an online prediction engine to compute the required final visibility certificate …
+the last pass must assert zero violations still in use." That sentence defines exact as **the required** final visibility certificate and writes the condition under which it can be
+published as a decidable assertion. That assertion now holds, so exact is the direct answer to the question in M2. Conversely,
+this section has already withdrawn the reason for conservative as the headline result: "The original conservative variant differs from original at once in
+namespace, history support set, fixed release lag and model training; therefore 0.801 → 0.429 by itself cannot identify the effect of queueing delay."
+A comparison that its own decision record judges unidentifiable cannot remain the headline result.
+The two-branch wording of step 5 of `docs/sealed_run_procedure.md` ("when the headline is exact, this warning does not block step 6;
+if the headline is still conservative, this case is a hard stop") also falls into the first branch under this decision.
 
-数字全部取自 `outputs/dev_consistent_visibility/exact_comparison.csv`，五条 overlay 汇总，
-参数不变（Guard(600) = capped B0=120、eta=.75）。最忙负载（level 2，rho=1.0，k=4）：
+All numbers are from `outputs/dev_consistent_visibility/exact_comparison.csv`, pooled over five overlays,
+with parameters unchanged (Guard(600) = capped B0=120, eta=.75). At the busiest load (level 2, rho=1.0, k=4):
 
 | policy | variant | gap_closed [lo, hi] | p99_dl_s | max_excess_s | harm_s | fired_pct |
 |---|---|---|---:|---:|---:|---:|
@@ -100,57 +100,57 @@ namespace、历史支持集、固定释放滞后和模型训练；因此 0.801 �
 | SPJF-E | conservative | 0.670 [0.599, 0.733] | 119.20 | 6069.684 | 891.634 | 0.00 |
 | SPJF-E | original | 0.916 [0.892, 0.930] | 62.79 | 5904.525 | 708.755 | 0.00 |
 
-另外两档负载的 Guard(600) exact 是 0.724 [0.697, 0.747]（level 0）与 0.785 [0.748, 0.807]
-（level 1），对应 original 的 0.740 与 0.837、conservative 的 0.640 与 0.634。
+At the other two load levels Guard(600) exact is 0.724 [0.697, 0.747] (level 0) and 0.785 [0.748, 0.807]
+(level 1), against 0.740 and 0.837 for original and 0.640 and 0.634 for conservative.
 
-两条参照各是什么，一句话：**original** 保留原平台的结果时钟，会让一条结果在产生它的重放 job
-完成之前就可见，因此是乐观参照；**conservative** 比可用性本身更严，它同时把历史限定在同一
-班次—学期拷贝、把每条结果推迟 3600 秒、并重新拟合模型，因此是更严的参照，不是干净对照。
-`attribution_comparison.csv` 在最忙负载上把这三件事分开：只换 namespace 是 0.807，删掉没有重放
-job 的历史是 0.770，固定滞后一档才是移动结果的那一项（60/300/900/3600 秒分别是
-0.573/0.519/0.502/0.518），三项合起来用冻结权重是 0.536，重拟合后才是 0.429。
+What each of the two references is, in one sentence each: **original** keeps the result clock of the original platform, which makes a result visible before the replayed job that produces it
+has completed, so it is an optimistic reference; **conservative** is stricter than availability itself: it at once restricts history to the same
+class-term copy, delays every result by 3600 seconds, and refits the model, so it is a stricter reference and not a clean control.
+`attribution_comparison.csv` separates these three things at the busiest load: changing only the namespace gives 0.807, deleting the history that has no replayed
+job gives 0.770, and the fixed lag is the item that moves the result (0.573/0.519/0.502/0.518 for 60/300/900/3600 seconds
+respectively); the three together with frozen weights give 0.536, and only after refitting is it 0.429.
 
-边界与这个 headline 一起报告，不能省：这是**离线单调 availability certificate**，不是唯一解、
-不是最小删减、不是完成事件驱动的在线预测器；每份班次—学期拷贝当作独立部署实例，其他班次与学期
-按该实例的原相对时钟作为外生输入，所以它不认证“所有拷贝共享同一份学生状态”的部署。
-`exact_sensitivity_comparison.csv` 给出这条语义的敏感性：整条删除同学期其他已复制班次的历史后，
-最忙负载的 gap 从 0.672 [0.602, 0.743] 变成 0.655 [0.583, 0.732]，p99 从 118.94 秒到 122.69 秒，
-方向一致、幅度小于 original 与 exact 之差。参数仍是按 original 选出的那一组，本次不做 exact 重选
-（下一节的成本评估给出理由），因此不声称这组参数在 exact 下最优。
+The limits are reported together with this headline and cannot be left out: this is an **offline monotone availability certificate**, not a unique solution,
+not a minimum deletion, and not an online predictor driven by completion events; each class-term copy is treated as an independent deployment instance, and other classes and terms
+enter as exogenous input on that instance's original relative clock, so it does not certify a deployment in which "all copies share one student state".
+`exact_sensitivity_comparison.csv` gives the sensitivity of this semantics: after deleting outright the history of the other replicated classes in the same term,
+the gap at the busiest load goes from 0.672 [0.602, 0.743] to 0.655 [0.583, 0.732] and the p99 from 118.94 seconds to 122.69 seconds,
+in the same direction and smaller in size than the difference between original and exact. The parameters are still the set selected under original; no exact reselection is done this time
+(the cost estimate in the next section gives the reason), so no claim is made that these parameters are optimal under exact.
 
-发布闸门按本 ADR 末节执行：exact 的末轮零违规或 Guard 边界失败始终硬停；headline 既然是 exact，
-conservative 的 fixed-lag 证书失败不再阻断发布，但仍然照常打印并写入 manifest。
+The publication gate follows the last section of this ADR: a failure of exact's final-pass zero violations or of a Guard bound is always a hard stop; since the headline is exact,
+a failure of conservative's fixed-lag certificate no longer blocks publication, but it is still printed as usual and written into the manifest.
 
-### 选择协议
+### Selection protocol
 
-原 validation pool、逐格 harm 约束和 worst-cell 规则不变。exact 重选必须对每个候选策略独立
-细化，不能把一个候选的 exact 分数给其他候选复用。预先固定种子 20260922 的 12 层验证池计时
-用于估计全部 15 格、258 个 Guard 展开点（243 条去重调度）和 11 个 Aging 点的费用，不用于选参。
+The original validation pool, per-cell harm constraint and worst-cell rule are unchanged. An exact reselection must refine each candidate policy independently;
+one candidate's exact scores cannot be reused for other candidates. Timing on a 12-stratum validation pool with the pre-fixed seed 20260922 is
+used to estimate the cost for all 15 cells, 258 Guard expanded points (243 distinct schedules) and 11 Aging points, and is not used for selection.
 
-12 个预声明计时点全部完成，细化为 8–17 轮且均以零违规结束，细化合计 3,329.65 秒。按层权重
-外推、扣除已知重复调度并假设理想双 worker 加速，完整重选仍约需 164.26 小时；这个乐观估计还
-没有计入拟合、读盘与 reference，远超约 8 小时预算。因此不运行全网格，不改变原选点：
-Guard(300) 为 capped B0=60、eta=.5，Guard(600) 为 capped B0=120、eta=.75，Guard(1200)
-为 hybrid B0=0、eta=0、gamma=16，Aging beta=.03。Guard 选点来自原 original 验证，Aging
-来自 committed conservative 验证。成本样本只估计费用，不参与选择。
+All 12 pre-declared timing points finished; refinement took 8–17 passes and every one ended with zero violations, 3,329.65 seconds of refinement in total. Extrapolating by stratum
+weights, removing known duplicate schedules and assuming an ideal two-worker speed-up, a full reselection would still need about 164.26 hours; this optimistic estimate
+does not yet include fitting, disk reads and references, and is far beyond the budget of about 8 hours. So the full grid is not run, and the original selected points are not changed:
+Guard(300) is capped B0=60, eta=.5; Guard(600) is capped B0=120, eta=.75; Guard(1200)
+is hybrid B0=0, eta=0, gamma=16; Aging beta=.03. The Guard points come from the original validation under original, and Aging
+from the committed conservative validation. The cost sample only estimates the cost and takes no part in selection.
 
-本修订支持固定参数的信息协议比较，不证明这四个点在 exact 验证池上仍最优或满足原 harm
-筛选条件，也没有提供一套不存在的 exact 重选结果。未来若完整重选，必须先冻结新的验证运行，
-同时保留本次参数集并重新生成对应开发比较，不能在当前表上换一个参数标签。
+This amendment supports a comparison of information protocols at fixed parameters. It does not prove that these four points are still optimal on the exact validation pool or satisfy the original harm
+screen, and it does not provide an exact reselection result that does not exist. If a full reselection is done in future, a new validation run must be frozen first,
+the current parameter set must be kept at the same time and the corresponding development comparison regenerated; a different parameter label cannot be put on the current tables.
 
-### 冻结与保存
+### Freezing and preservation
 
-实验配方快照为 `configs/visibility_development_20260922.yaml`；最终决定写入 `configs/main.yaml`。
-旧表清单仅改指向逐字节相同的 `configs/main_original_84932d9.yaml`，旧配置哈希和产物哈希不变。
-原 75 张 CSV、18,627 行及全部原列由独立字节快照闸门保护。`run_main.py` 继续写历史 reference 行；
-exact 结果由独立 runner 和输出目录提供，不借 headline 的改变覆盖旧数。
+The experiment recipe snapshot is `configs/visibility_development_20260922.yaml`; the final decision is written into `configs/main.yaml`.
+The old table manifests only change their pointer to the byte-identical `configs/main_original_84932d9.yaml`; the old configuration hash and output hashes are unchanged.
+The original 75 CSVs, 18,627 rows and all original columns are protected by an independent byte-snapshot gate. `run_main.py` continues to write the historical reference rows;
+the exact results come from an independent runner and output directory, and the change of headline is not used as a reason to overwrite old numbers.
 
-封存程序增加独立 exact 阶段，成为九阶段、五份钉死输出清单；exact 固定清单包括 11 张 CSV 与
-manifest，动态稀疏 NPZ 由 delta manifest 管理。支持内容签名检查点恢复、末轮零违规检查、独立
-论文衍生表 emitter/checker 与只读 sealed dry-run。主文与证据目录不在本次修改范围内；论文可用
-的准确陈述、完整数字及实测资源预算放在 `docs/policy_consistent_visibility.md`。
+The sealed procedure gains an independent exact stage and becomes nine stages with five pinned output manifests; the fixed exact manifest includes 11 CSVs and the
+manifest, and the dynamic sparse NPZ files are managed by a delta manifest. It supports checkpoint recovery with content signatures, the final-pass zero-violation check, an independent
+emitter/checker for the tables derived for the paper, and a read-only sealed dry run. The main text and the evidence directory are outside the scope of this change; accurate statements the paper can use,
+the full numbers and the measured resource budget are in `docs/policy_consistent_visibility.md`.
 
-旧 fixed-lag 证书状态单独打印并记入 manifest；若新池的 conservative 等待超过 3600 秒，该锚
-明确标为未通过证书。exact headline 不依赖这个充分条件，因此仍运行其独立零违规证书；若
-headline 为 conservative，则 fixed-lag 失败会阻止发布。任何 exact 零违规或 Guard 边界失败
-始终阻止发布。重命名 draft 不是正式冻结；封存入口只接受正式冻结格式的锁与显式开放参数。
+The status of the old fixed-lag certificate is printed separately and recorded in the manifest; if the conservative waits on the new pool exceed 3600 seconds, that anchor is
+explicitly marked as having failed the certificate. The exact headline does not depend on this sufficient condition, so it still runs its own zero-violation certificate; if the
+headline were conservative, a fixed-lag failure would block publication. Any failure of exact zero violations or of a Guard bound
+always blocks publication. Renaming the draft is not a formal freeze; the sealed entry point only accepts a lock in the formal frozen format together with the explicit opening argument.

@@ -14,11 +14,11 @@ and is approached but not attained. At `k >= 2` pointwise maximality fails. Six
 conjectures C1-C6 with their exact integer simulators and logs; `report.md` has the
 verdicts.
 
-**Paper items.** None are cited from this folder directly. The manuscript's supplementary
-theory section quotes the independent re-check in `evidence/reservation_guard_verify/`,
-which restated and re-ran these claims from a separate implementation; where the two
-disagree the re-check governs. This folder is where the claims come from, and `report.md`
-is what the re-check was run against.
+**Paper items.** None are cited from this folder directly. Supplementary Section S7.6
+(Propositions S12 to S14) quotes the independent re-check in
+`evidence/reservation_guard_verify/`, which restated and re-ran these claims from a
+separate implementation; where the two disagree the re-check governs. This folder is where
+the claims come from, and `report.md` is what the re-check was run against.
 
 **Inputs.** None. Exact integer simulation over enumerated instances; no dataset is read
 and no sealed semester is opened.

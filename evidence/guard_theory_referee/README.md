@@ -9,8 +9,8 @@ schedule on small instances, more than 5e8 random job-checks, annealing, and
 per-statement attacks. `out_SUMMARY.txt` is the report; the other `out_*.txt` are raw
 logs.
 
-**Paper items.** One of the three referee passes that revisions 1–3 of the theory note
-answer.
+**Paper items.** None printed. It is one of the three referee passes that revisions 1–3 of
+the theory note answer.
 
 **Status.** Current.
 

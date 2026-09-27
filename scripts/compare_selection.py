@@ -1,7 +1,7 @@
 """This package's selection against v3.2's, family by family.
 
     uv run python scripts/compare_selection.py [--ours outputs/selection_v3] \
-        [--theirs prechecks/main_v3/v32] [--out outputs/selection_v3/vs_v32.csv]
+        [--theirs evidence/main_v3/v32] [--out outputs/selection_v3/vs_v32.csv]
 
 The two runs search the same pre-stated grids under the same rule, but not on the same
 predictions: this package refits the ranking score deterministically, v3.2 used the
@@ -68,7 +68,7 @@ def _their_numbers(table: dict, family: str, b0: float, eta: float, gam: float) 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--ours", type=Path, default=ROOT / "outputs" / "selection_v3")
-    ap.add_argument("--theirs", type=Path, default=ROOT / "prechecks" / "main_v3" / "v32")
+    ap.add_argument("--theirs", type=Path, default=ROOT / "evidence" / "main_v3" / "v32")
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
 

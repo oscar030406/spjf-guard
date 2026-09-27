@@ -19,7 +19,7 @@ certificates under completion-only observation.
 \label{tab:supp_related_comparison}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
-\begin{tabular}{p{0.11\textwidth}p{0.13\textwidth}p{0.10\textwidth}p{0.08\textwidth}p{0.15\textwidth}p{0.12\textwidth}p{0.18\textwidth}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.11\textwidth}>{\raggedright\arraybackslash}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.10\textwidth}>{\raggedright\arraybackslash}p{0.09\textwidth}>{\raggedright\arraybackslash}p{0.15\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}>{\raggedright\arraybackslash}p{0.17\textwidth}}
 \hline
 Method & Reference discipline & Arrival assumptions & Preemption & Information needed & Server model & Guarantee \\
 \hline
@@ -129,35 +129,35 @@ does not supply that missing completion time.
 
 \subsection{Instance-Dependent Order-Statistic Bounds}
 
-For a set of jobs $S$, let $\Lambda_r(S)$ be the sum of its largest at most $r$
+For a set of jobs $S$, let $\Sigma_r(S)$ be the sum of its largest at most $r$
 original service times, with missing terms replaced by zero. We abbreviate
 \[
- \Lambda_{k-1}(t)=\Lambda_{k-1}(\{j:a_j\leq t\}),\quad
- \Lambda^{<i}_{k-1}=\Lambda_{k-1}(\{j:j<i\}),
+ \Sigma_{k-1}(t)=\Sigma_{k-1}(\{j:a_j\leq t\}),\quad
+ \Sigma^{<i}_{k-1}=\Sigma_{k-1}(\{j:j<i\}),
 \]
 and
 \[
- \Lambda^{>i}_{k}(t)=\Lambda_k(\{j:j>i,\ a_j\leq t\}).
+ \Sigma^{>i}_{k}(t)=\Sigma_k(\{j:j>i,\ a_j\leq t\}).
 \]
 
 \begin{proposition}[Instance-dependent workload gap]
 \label{prop:supp_lambda_gap}
 For any two non-preemptive work-conserving policies $Q_1,Q_2$,
 \[
- |U_{Q_1}(t)-U_{Q_2}(t)|\leq\Lambda_{k-1}(t)
+ |U_{Q_1}(t)-U_{Q_2}(t)|\leq\Sigma_{k-1}(t)
  \qquad\text{for every }t.
 \]
 \end{proposition}
 
 \begin{proof}
 Let $D=U_{Q_1}-U_{Q_2}$. An arrival adds its cost to both workloads, so $D$ changes
-only while servers work, and continuously; $\Lambda_{k-1}(t)$ never decreases. If
+only while servers work, and continuously; $\Sigma_{k-1}(t)$ never decreases. If
 $Q_1$ has fewer than $k$ jobs present at $t$, all of them are in service by work
 conservation, each has at most its full cost left, and they arrived by $t$, so
-$U_{Q_1}(t)\leq\Lambda_{k-1}(t)$. Hence whenever $D(t)>\Lambda_{k-1}(t)$, which forces
-$U_{Q_1}(t)>\Lambda_{k-1}(t)$, all $k$ servers of $Q_1$ are busy, $U_{Q_1}$ falls at rate
+$U_{Q_1}(t)\leq\Sigma_{k-1}(t)$. Hence whenever $D(t)>\Sigma_{k-1}(t)$, which forces
+$U_{Q_1}(t)>\Sigma_{k-1}(t)$, all $k$ servers of $Q_1$ are busy, $U_{Q_1}$ falls at rate
 $k$, and $D$ does not increase. Since $D=0$ before the first arrival, $D$ can never rise
-above $\Lambda_{k-1}$: at the last instant at which $D\leq\Lambda_{k-1}$ held, $D$ would
+above $\Sigma_{k-1}$: at the last instant at which $D\leq\Sigma_{k-1}$ held, $D$ would
 have to increase while above it. Exchanging $Q_1$ and $Q_2$ gives the other direction.
 \end{proof}
 
@@ -167,7 +167,7 @@ For every policy $P$ and job $i$,
 \[
  k\,\mathrm{excess}_P[i]
  \leq \mathrm{In}_i-\mathrm{Out}_i
- +\Lambda_{k-1}(a_i)+\Lambda^{<i}_{k-1}.
+ +\Sigma_{k-1}(a_i)+\Sigma^{<i}_{k-1}.
 \]
 \end{proposition}
 
@@ -175,9 +175,9 @@ For every policy $P$ and job $i$,
 In Lemma~\ref{lem:supp_gamma_identity} the idle-capacity difference
 $\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i)$ equals the workload difference
 $U_P(a_i)-U_{\mathrm{FCFS}}(a_i)$, which Proposition~\ref{prop:supp_lambda_gap} bounds by
-$\Lambda_{k-1}(a_i)$. Drop $-\beta^P_i\leq0$. The at most $k-1$ FCFS
+$\Sigma_{k-1}(a_i)$. Drop $-\beta^P_i\leq0$. The at most $k-1$ FCFS
 jobs still running when $i$ starts all have rank below $i$, so
-$\beta^{\mathrm{FCFS}}_i\leq\Lambda^{<i}_{k-1}$.
+$\beta^{\mathrm{FCFS}}_i\leq\Sigma^{<i}_{k-1}$.
 \end{proof}
 
 \begin{proposition}[Instance-dependent overtaking under the guard]
@@ -186,7 +186,7 @@ If job $i$ has an overtaker and $\tau$ is the dispatch time of its last
 overtaker, then
 \[
  \mathrm{In}_i
- <\mathrm{budget}(i,\tau)+\Lambda^{>i}_k(s_i^P).
+ <\mathrm{budget}(i,\tau)+\Sigma^{>i}_k(s_i^P).
 \]
 If the budget is nondecreasing in time, the first term may be replaced by
 $\mathrm{budget}(i,s_i^P)$; with only a uniform cap it may be replaced by
@@ -199,7 +199,7 @@ eligible when its last overtaker is started, so the overtakers completed by $\ta
 total cost $\mathrm{over}[i](\tau)<\mathrm{budget}(i,\tau)$. The other overtakers are
 running at $\tau$: the one started at $\tau$ and at most one on each other server. These
 at most $k$ jobs have rank above $i$ and arrived by $\tau\leq s^P_i$, so their total cost
-is at most $\Lambda^{>i}_k(s_i^P)$.
+is at most $\Sigma^{>i}_k(s_i^P)$.
 \end{proof}
 
 \begin{proposition}[Combined instance-dependent guard bound]
@@ -207,8 +207,8 @@ is at most $\Lambda^{>i}_k(s_i^P)$.
 Under a cap $B_{\max}$, every job satisfies
 \[
  k\,\mathrm{excess}_P[i]
- \leq B_{\max}+\Lambda^{>i}_k(s_i^P)
- +\Lambda_{k-1}(a_i)+\Lambda^{<i}_{k-1},
+ \leq B_{\max}+\Sigma^{>i}_k(s_i^P)
+ +\Sigma_{k-1}(a_i)+\Sigma^{<i}_{k-1},
 \]
 and the inequality is strict when $i$ has an overtaker. When it has none, the bound
 holds without the first two terms.
@@ -221,7 +221,7 @@ job overtakes $i$, then $\mathrm{In}_i=0$ and
 Proposition~\ref{prop:supp_lambda_excess} gives the bound without them.
 \end{proof}
 
-These $\Lambda$ quantities use actual sizes, including sizes of unfinished
+These $\Sigma$ quantities use actual sizes, including sizes of unfinished
 jobs, and hence are offline instance certificates in the completion-only model.
 Replacing each unknown size by a public class-specific upper bound gives a
 deployable but generally looser inequality. The homogeneous substitution recovers
@@ -239,8 +239,8 @@ fixed hard cap as the denominator.
 \begin{center}
 \begin{tabular}{rcc}
 \hline
-$k$ & $\mathbb{E}[\Lambda_{k-1}/((k-1)L_{\mathrm{sample}})]$
-    & $\mathbb{E}[\Lambda_{k-1}/((k-1)L_{\mathrm{cap}})]$ \\
+$k$ & $\mathbb{E}[\Sigma_{k-1}/((k-1)L_{\mathrm{sample}})]$
+    & $\mathbb{E}[\Sigma_{k-1}/((k-1)L_{\mathrm{cap}})]$ \\
 \hline
 $4$  & $0.6825$ & $0.0444$ \\
 $8$  & $0.4648$ & $0.0263$ \\
@@ -435,7 +435,7 @@ The claims above are the ones an independent check re-derived from the written r
 re-ran against its own implementation: \devnum{1{,}983{,}467} exhaustive runs and
 \devnum{10{,}230{,}898} per-job checks give
 $\max(\mathrm{In}-Z)=\devnum{0}$ with no violation, the instance form
-$k\,\mathrm{excess} \le B+\Lambda_{k-1}(a_i)+\Lambda^{<i}_{k-1}$ holds with zero margin
+$k\,\mathrm{excess} \le B+\Sigma_{k-1}(a_i)+\Sigma^{<i}_{k-1}$ holds with zero margin
 over \devnum{1{,}488{,}984} checks, the closed form of
 Proposition~\ref{prop:supp_reservation_k1} matches on all \devnum{848} family rows
 including the corner cases $\ell = C$ and $\ell = L$, and the $k=1$ maximality step

@@ -45,12 +45,27 @@ intervals overlap. Unguarded SPJF-E closes \devnum{0.864} under the online proto
 conservative figure falls further than the exact one because it also withholds history that
 the queue would have had and refits the models. Supplementary Section~S3.7 separates the
 two effects.
-The parameters were selected under the original protocol.
-% PENDING RESELECTION: the restricted online reselection result goes here.
+The parameters were selected under the original protocol. Selecting them under the online
+protocol instead, with the same rule on the same validation cells but only among the four
+best feasible points of each shape under the original protocol (\devnum{36} candidates),
+moves the choice. At $G = \devnum{600}$ s it picks the queue-length shape, $B_0 =
+\devnum{120}k/4$ s, $\eta = \devnum{0}$ and $\gamma = \devnum{16}k/4$ s, which is the
+Guard-queue($\devnum{600}$) of Supplementary Section~S11. On the evaluation overlays at the
+busiest load it closes \devnum{0.692 [0.641, 0.753]} of the gap under the online protocol,
+against \devnum{0.705} for the guard as selected, with a harm of \devnum{128.6} s against
+\devnum{333.2} s. At $G = \devnum{300}$ s the choice moves to another age-relative point, and
+at $G = \devnum{1200}$ s from the queue-length shape to an age-relative point; neither was
+replayed on the evaluation overlays.
+% Sources: outputs/online_selection/online_choices.csv (restricted reselection, 36
+% candidates from outputs/online_selection/candidates.csv, 15 validation cells, audit
+% mismatches 0; the original group equals outputs/selection_v4/selected_parameters.csv
+% in all 12 rows); outputs/dev_online_visibility/online_comparison.csv, level 2,
+% Guard-queue(600)|online and Guard(600)|online, gap_closed with lo/hi and harm_s.
 The full grids were run under the original protocol, so the rest of this section reports it
 unless stated otherwise, and its figures are optimistic references. Supplementary
 Section~S11 replays \devnum{24} of the compared policies under the online protocol: the two
-unguarded rankings, the aging baseline, and at each promise the guard, its three
+unguarded rankings, the aging baseline of Section~\ref{sec:exp_guard}, and at each promise
+the guard, its three
 single-shape winners, Fixed, Skip and Timeout. There every one of them closes less of the
 gap at the two higher loads and none with a promise exceeds it. Every paired difference that
 clears zero on the original clock keeps its sign, four no longer clear zero and three newly
@@ -120,7 +135,7 @@ Load & Protocol & p99$_{\mathrm{dl}}$ & Gap closed & Max excess & Harm & Fired (
 \subsection{The Sealed Terms}
 \label{sec:exp_sealed}
 
-The three sealed terms of the main log were opened once, on 25 September 2026, after the
+The three sealed terms of the main log were evaluated once, on 25 September 2026, after the
 method, its parameters and the primary metric had been frozen (Section~\ref{sec:sealed}).
 The run replayed the frozen configuration and code and selected nothing, and the access
 ledger in the repository lists each of its ten commands and what each produced. The sealed
@@ -133,7 +148,8 @@ at the three loads.
 % outputs/sealed_tables/main_table.csv, FCFS rows, rho_realised 0.487, 0.770, 0.954.
 
 At the busiest load, Guard(600) under the online protocol reaches a
-$\mathrm{p99}_{\mathrm{dl}}$ of \sealednum{47.22} s and closes \sealednum{0.894}
+$\mathrm{p99}_{\mathrm{dl}}$ of \sealednum{47.22} s, against \sealednum{187.20} s under FCFS,
+and closes \sealednum{0.894}
 [\sealednum{0.862}, \sealednum{0.912}] of the gap (Table~\ref{tab:visibility_sealed}). It closes
 \sealednum{0.880} under the exact protocol and \sealednum{0.911} under the original one, and
 the five protocols fall in the same order as on the development terms. Unguarded SPJF-E
@@ -180,7 +196,7 @@ SPJF-E closes less on the sealed terms at all three loads (\sealednum{0.819} aga
 \centering
 \small
 \caption{Guard(600) under the five protocols of Table~\ref{tab:visibility} on the three
-sealed terms, opened once after the method and its parameters were frozen. Columns as in
+sealed terms, evaluated once after the method and its parameters were frozen. Columns as in
 Table~\ref{tab:visibility}; $k$ is the mean over the five overlays.}
 \label{tab:visibility_sealed}
 \setlength{\tabcolsep}{3pt}
@@ -255,8 +271,8 @@ Table~\ref{tab:guard} gives the guard at three bounds and three loads. At $\rho 
 \devnum{1.0}$, Guard($\devnum{600}$) closes \devnum{0.801} of the gap and the unguarded
 policy \devnum{0.916}. A bound of ten time limits therefore costs \devnum{0.115} of the gap.
 The cost is \devnum{0.072} at $G = \devnum{1200}$ s and \devnum{0.438} at $G =
-\devnum{300}$ s. The paired intervals of these three differences are
-\devnum{[-0.142, -0.077]}, \devnum{[-0.083, -0.052]} and \devnum{[-0.526, -0.314]}, and none
+\devnum{300}$ s. The paired intervals of the three differences Guard($G$) minus SPJF-E are
+\devnum{$[-0.142, -0.077]$}, \devnum{$[-0.083, -0.052]$} and \devnum{$[-0.526, -0.314]$}, and none
 contains zero, so the guarantee has a cost at every $G$ we tested. The cost falls as the
 slack above the floor of Corollary~\ref{cor:params}, $G - (3-2/k)L$, grows against FCFS's
 $\mathrm{p99}_{\mathrm{dl}}$ of \devnum{273.50} s: the slack is \devnum{0.55},
@@ -443,11 +459,11 @@ The \devnum{315} policy-by-cell runs reported here make \devnum{5{,}554{,}949{,}
 checks. The single-server runs add \devnum{67{,}396{,}287}, and an independently written
 second simulator adds \devnum{5.7} billion. None of them finds a violation, and the count of
 violations is \devnum{0}. Proposition~\ref{prop:clock} was checked job by job on the same
-overlays and Proposition~\ref{prop:absolute} on all \devnum{304} bounded runs, also with
-\devnum{0} violations. Proposition~\ref{prop:late} was checked on constructed instances
+overlays and Proposition~\ref{prop:absolute} on \devnum{304} runs of FCFS, the work
+budgets and Skip, the single server included, also with \devnum{0} violations. Proposition~\ref{prop:late} was checked on constructed instances
 (Supplementary Section~S4.12). The ratio of the realised worst excess to the bound falls as
-$k$ grows, from \devnum{0.9950} at $k = 1$ to \devnum{0.8850} at $k = 8$. At one server
-Guard($\devnum{600}$) reaches \devnum{595.5} s of its \devnum{600} s bound (Supplementary
+$k$ grows, from \devnum{0.9950} at $k = 1$, reached by the guard under the worst corrupted
+score, to \devnum{0.8850} at $k = 8$. At one server Guard($\devnum{600}$) itself reaches \devnum{595.5} s of its \devnum{600} s bound (Supplementary
 Section~S3.6). The residual $\Delta_i$ of Theorem~\ref{thm:identity} never exceeds
 \devnum{0.518} of its own bound $2(k-1)L$ (Supplementary Sections~S3.13 and~S3.16).
 % Source: outputs/dev_tables/bound_checks.csv (315 rows, jobs_checked summing to
@@ -498,7 +514,7 @@ the longest \devnum{1\%} of jobs. AUROC: heavy label from information available 
 Screen 1: whether the FCFS p99 exceeds $(3-2/k)L$. Excess in units of each log's $L$. A
 negative gap closed means that the policy's p99 is worse than FCFS's. CodeBench row: original
 protocol. Supplementary Section~S6.7 describes the CI capacities and adds a log from a grid
-computing cluster.}
+computing cluster (LPC-EGEE).}
 \label{tab:cross}
 \small
 \setlength{\tabcolsep}{3pt}

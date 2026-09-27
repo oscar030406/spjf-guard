@@ -6,9 +6,9 @@ inside fixed windows of W jobs, Block(W). How do they compare with the guard on 
 development overlays, first at T = G and then at the threshold that gives the same
 promise as Guard(G)?
 
-**Paper items.** The fixed-window paragraph of Section 8.4 (Block(512) on overlay 0,
-from `maxwait_overlay0.csv`). The equal-promise comparison with the clock in the same
-section uses the separate kernel of `evidence/timeout_rule/`.
+**Paper items.** The fixed-window paragraph of Section 8.4 (Block(512) on overlay 0, from
+`maxwait_overlay0.csv`). The equal-promise comparison with the clock in the same section
+(Table 8) uses the separate kernel of `evidence/timeout_rule/`.
 
 **Inputs.** Development overlays `data/derived/overlay_traces/primary_rep0..4.npz` and
 the stored expected-cost score; the package rows of `outputs/dev_tables/main_table.csv`

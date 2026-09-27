@@ -5,9 +5,12 @@ capacity to the recorded waits of the whole window, so agreement of the mean is 
 objective rather than evidence. Does the validation survive when the fit is frozen on
 one chronological part of the window and tested on another?
 
-**Paper items.** The held-out rows of `paper/sections/07_data.tex` (the k_eff step-1
-grid per split, and the 90th percentile that does not survive); the same grid in
-Section 8; the sharpness and circularity discussion of `paper/supplementary.tex`.
+**Paper items.** The sentence of Section 7.2 that the simulator, fitted on one part of
+each CI log, returns the other part's waits; the held-out refit of Supplementary Section
+S2.3 (the k_eff step-1 grid per split, and the 90th percentile that does not survive); the
+sharpness and circularity discussion of Supplementary Section S2.2; the CI capacity
+paragraph of Supplementary Section S6.7. Supplementary Section S5.4 names this folder in
+its text.
 
 **Inputs.** The two parquet files already in `data/mozilla_firefox_ci/`; nothing is
 re-downloaded.

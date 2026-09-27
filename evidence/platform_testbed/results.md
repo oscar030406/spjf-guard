@@ -1,50 +1,50 @@
-# 平台试验台：六轮正式结果
+# Platform test bed: results of the six full runs
 
-2026-09-23。本机跑，没有 push，没有部署，没有碰线上站点。
-建造过程与设计取舍在同目录的 `build_report.md`，这里只报结果。
+2026-09-23. Run on the local machine; nothing was pushed, nothing was deployed, and the live site was not touched.
+This file reports the results; the build notes of the test bed are not part of the repository.
 
-- 六个 cell，每个 100 个 job，k = 2，承诺 G = 400 s，逐 job 执行上限
-  L = 170 s（带练路线）/ 25 s（学情蓝图），预算形状 B0 = 30 s、η = 0.5、γ = 0。
-- 20 个测试账号（`loadtest_u001`…`u020`）。作业类顺序六轮完全相同
-  （`guide,guide,blueprint×6` 循环），思考时间按座位分流、同种子，
-  所以几轮之间需求的差别只来自规则本身与反馈。
-- 总墙钟 3 小时 27 分；记到的模型调用 571 次，**42.95 万 input + 40.26 万 output token**。
-- 全部记录在 `records/`。汇总 `records/summary.json`，模拟器比对
-  `records/simulator_replay.json`，逐次派发决策 `records/decisions-<cell>.jsonl`。
+- Six cells, 100 jobs each, k = 2, promise G = 400 s, per-job execution limit
+  L = 170 s (study plan, "practice guide") / 25 s (learner report, "blueprint"), budget shape B0 = 30 s, η = 0.5, γ = 0.
+- 20 test accounts (`loadtest_u001`…`u020`). The sequence of job classes is identical in all six runs
+  (the cycle `guide,guide,blueprint×6`), and think times are drawn per seat with the same seed,
+  so differences in demand between runs come only from the rule itself and from feedback.
+- Total wall-clock time 3 h 27 min; 571 model calls were recorded, **429.5 thousand input + 402.6 thousand output tokens**.
+- All records are in `records/`. Summary in `records/summary.json`, simulator comparison in
+  `records/simulator_replay.json`, per-dispatch decisions in `records/decisions-full-<cell>.jsonl`.
 
 ---
 
-## 1. 六个 cell
+## 1. The six cells
 
-| cell | 策略 / 需求规则 | n | ρ | 跨度 | 平均等待 | p90 等待 | 最大 excess | excess / G | 闸开火 | 模拟器最大逐 job 偏差 |
+| cell | policy / demand rule | n | ρ | span | mean wait | p90 wait | max excess | excess / G | guard firings | simulator max per-job deviation |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1 | fcfs / 闭环(ii) | 100 | 1.000 | 1955 s | 308.8 s | 479.4 s | 0.17 s | 0.0004 | 0 | 167.8 ms |
-| 2 | spjf / 闭环(ii) | 100 | 0.971 | 2104 s | 227.4 s | 1083.3 s | **1869.9 s** | **4.67** | 0 | 125.3 ms |
-| 3 | guard 已完成计费 / 闭环(ii) | 100 | 0.994 | 1777 s | 235.2 s | 680.2 s | 151.7 s | 0.379 | 24 | 138.8 ms |
-| 4 | guard 预留计费 / 闭环(ii) | 100 | 0.976 | 1868 s | 206.7 s | 896.8 s | 205.5 s | 0.514 | 20 | 不可比（见 §6） |
-| 5 | guard 已完成计费 / 开环(i) | 100 | 0.695 | 2753 s | 70.3 s | 177.3 s | 184.0 s | 0.460 | 5 | 115.5 ms |
-| 6 | guard 已完成计费 / 闭环(iii) | 100 | 0.993 | 1906 s | 205.7 s | 433.8 s | 184.8 s | 0.462 | 21 | 132.8 ms |
+| 1 | fcfs / closed loop (ii) | 100 | 1.000 | 1955 s | 308.8 s | 479.4 s | 0.17 s | 0.0004 | 0 | 167.8 ms |
+| 2 | spjf / closed loop (ii) | 100 | 0.971 | 2104 s | 227.4 s | 1083.3 s | **1869.9 s** | **4.67** | 0 | 125.3 ms |
+| 3 | guard, completed-work charging / closed loop (ii) | 100 | 0.994 | 1777 s | 235.2 s | 680.2 s | 151.7 s | 0.379 | 24 | 138.8 ms |
+| 4 | guard, reservation charging / closed loop (ii) | 100 | 0.976 | 1868 s | 206.7 s | 896.8 s | 205.5 s | 0.514 | 20 | not comparable (see §6) |
+| 5 | guard, completed-work charging / open loop (i) | 100 | 0.695 | 2753 s | 70.3 s | 177.3 s | 184.0 s | 0.460 | 5 | 115.5 ms |
+| 6 | guard, completed-work charging / closed loop (iii) | 100 | 0.993 | 1906 s | 205.7 s | 433.8 s | 184.8 s | 0.462 | 21 | 132.8 ms |
 
-`excess` 的算法：拿**这一轮自己的**到达序列与**这一轮自己实测的**执行工作量
-`min(C_i, ℓ_i)`，离线重放一遍先到先派，逐 job 算 `实测等待 − 重放等待`，取最大。
-每一轮的反事实都是它自己的，不是别轮的——闭环下几轮的到达序列本来就不一样（§4）。
+How `excess` is computed: take **this run's own** arrival sequence and **this run's own measured** executed work
+`min(C_i, ℓ_i)`, replay first-come first-served offline once, compute `measured wait − replayed wait` for each job, and take the maximum.
+Each run's counterfactual is its own, not another run's: under the closed loop the arrival sequences of the runs differ in the first place (§4).
 
-**ρ 是量出来的，不是设的**：`ρ = Σ min(C_i, ℓ_i) / (k × 跨度)`。四个闭环 guard/fcfs
-轮都在 0.97–1.00，也就是两个工人几乎没闲过；开环那一轮 0.695，低于当初按
-E[C] = 41 s 抽稀时瞄的 0.85，原因是实测 E[C] = 38.3 s 且尾部要排空。
+**ρ is measured, not set**: `ρ = Σ min(C_i, ℓ_i) / (k × span)`. The four closed-loop guard/fcfs
+runs are all at 0.97–1.00, i.e. the two workers were almost never idle; the open-loop run is at 0.695, below the 0.85
+targeted when thinning with E[C] = 41 s, because the measured E[C] was 38.3 s and the tail has to drain.
 
-### 边界检查
+### Bound check
 
-**超出承诺的 job 数：cell 1 / 3 / 4 / 5 / 6 全是 0，cell 2 是 7 个。**
+**Jobs beyond the promise: 0 in each of cells 1 / 3 / 4 / 5 / 6, 7 in cell 2.**
 
-cell 2 那一栏不是失败，它就是这次实验要量的东西：`spjf` 是不带闸的基策略，
-它本来就不承诺什么。同样的输入、同样的 k，它让最惨的那个 job 比先到先派多等了
-1869.9 s，是承诺 G 的 4.67 倍。把同一个基策略套上闸（cell 3），最惨的那个降到
-151.7 s，是 G 的 0.379 倍。
+The cell 2 entry is not a failure; it is what this experiment is meant to measure: `spjf` is the base policy without the guard,
+and it promises nothing. With the same input and the same k, it made the worst-off job wait
+1869.9 s longer than first-come first-served, 4.67 times the promise G. Putting the guard on the same base policy (cell 3) brought the worst-off job down to
+151.7 s, 0.379 times G.
 
-## 2. 实测服务时间
+## 2. Measured service times
 
-| cell | 类 | n | 中位数 | p90 | 最大 | CV | 触顶 | 超上限最大值 |
+| cell | class | n | median | p90 | max | CV | hit limit | max over limit |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
 | 1 | blueprint | 74 | 6.41 s | 14.47 s | 25.01 s | 0.683 | 6 | 10.3 ms |
 | 1 | practice-guide | 26 | 124.54 s | 170.01 s | 170.01 s | 0.216 | 4 | 13.1 ms |
@@ -59,85 +59,85 @@ cell 2 那一栏不是失败，它就是这次实验要量的东西：`spjf` 是
 | 6 | blueprint | 74 | 9.12 s | 14.75 s | 21.37 s | 0.330 | 0 | 0 |
 | 6 | practice-guide | 26 | 111.32 s | 170.01 s | 170.01 s | 0.270 | 4 | 14.5 ms |
 
-- **两类之内都不重尾**：每一类的 CV 都在 0.20–0.69 之间。跨两类的混合 CV 大于 1，
-  但那是**两类作业的混合**，写进论文必须照这个措辞说，不能写成「平台作业时长重尾」。
-- **上限是真的**：600 个 job 里 **29 个触到了自己的 ℓ**（带练路线 22、学情蓝图 7），
-  实测服务时间超出各自 ℓ 的最大值是 **16.1 ms**。引擎日志里明确记到
-  「执行上限已用完」的有 26 次——另外 3 次是调用方的 abort 与引擎的截止时刻
-  同时到点、abort 先落地，引擎没来得及写那一行。槽位占到执行体真的返回为止，
-  所以这 29 个 job 的执行工作量就是 ℓ，不是一个只被观察到的数。
+- **Neither class is heavy-tailed on its own**: the CV of each class is between 0.20 and 0.69. The CV of the mixture of the two classes is above 1,
+  but that is **a mixture of two job classes**, and the paper must say it in exactly those terms; it must not say "job durations on the platform are heavy-tailed".
+- **The limit is real**: **29 of the 600 jobs reached their own ℓ** (22 study plans, 7 learner reports),
+  and the largest amount by which a measured service time exceeded its ℓ is **16.1 ms**. The engine log explicitly records
+  "execution limit used up" 26 times; in the other 3 cases the caller's abort and the engine's deadline
+  fell due at the same moment, the abort landed first, and the engine did not get to write that line. A slot stays occupied until the executing call actually returns,
+  so the executed work of these 29 jobs is ℓ itself, not a number that was merely observed.
 
-## 3. 谁在付账
+## 3. Who pays
 
-| cell | 比先到先派更惨的 job | 这些 job 的平均多等 | 带练路线平均等待 | 学情蓝图平均等待 | 闸开火率 |
+| cell | jobs worse off than under first-come first-served | mean extra wait of those jobs | mean wait, study plan | mean wait, learner report | guard firing rate |
 |---|---:|---:|---:|---:|---:|
 | 1 fcfs | 98 | 0.1 s | 306.5 s | 309.7 s | 0/100 |
 | 2 spjf | 20 | **460.2 s** | 788.7 s | 30.2 s | 0/100 |
-| 3 guard 已完成计费 | 32 | 57.8 s | 516.0 s | 136.5 s | 24/100 |
-| 4 guard 预留计费 | 29 | 102.6 s | 718.2 s | 26.9 s | 20/100 |
-| 5 guard 开环 | 23 | 45.4 s | 127.3 s | 50.3 s | 5/100 |
-| 6 guard 闭环(iii) | 29 | 65.3 s | 372.8 s | 146.9 s | 21/100 |
+| 3 guard, completed-work charging | 32 | 57.8 s | 516.0 s | 136.5 s | 24/100 |
+| 4 guard, reservation charging | 29 | 102.6 s | 718.2 s | 26.9 s | 20/100 |
+| 5 guard, open loop | 23 | 45.4 s | 127.3 s | 50.3 s | 5/100 |
+| 6 guard, closed loop (iii) | 29 | 65.3 s | 372.8 s | 146.9 s | 21/100 |
 
-不带闸的 `spjf` 把代价压在少数人身上：20 个 job 被牺牲，平均每个多等 460 s，
-长作业（带练路线）平均要等 789 s 而短作业只等 30 s。套上闸以后受影响的 job 变多
-（32 个）但每个的代价小得多（58 s），长短两类的差距从 26 倍收到 3.8 倍。
-cell 1 那 98 个「更惨」的 job 平均只多 0.1 s——先到先派与自己的重放本来就该相等，
-这一行是重放代码的自检。
+Unguarded `spjf` puts the cost on a few jobs: 20 jobs are sacrificed, each waiting 460 s longer on average,
+and long jobs (study plans) wait 789 s on average while short ones wait 30 s. With the guard, more jobs are affected
+(32), but the cost to each is much smaller (58 s), and the ratio between the long and short classes shrinks from 26 times to 3.8 times.
+The 98 "worse off" jobs of cell 1 wait only 0.1 s longer on average: first-come first-served and its own replay should be equal,
+so this row is a self-check of the replay code.
 
-## 4. 开环与闭环：需求确实对等待做出了反应
+## 4. Open and closed loop: demand did react to waiting
 
-这是这个平台相对之前那次 timed-work 物理实验唯一新增的能力，结果是肯定的。
+This is the one capability this platform adds over the earlier timed-work physical experiment, and the result is positive.
 
-**同一条重放的先到先派反事实，在六个 cell 上给出六个不同的数**：
+**The same replayed first-come first-served counterfactual gives six different numbers in the six cells**:
 
-| cell | 重放先到先派的平均 / 最大等待 |
+| cell | mean / max wait of the replayed first-come first-served run |
 |---|---|
 | 1 fcfs | 308.8 / 533.2 s |
 | 2 spjf | 725.2 / 1203.2 s |
-| 3 guard 已完成计费 | 483.7 / 807.8 s |
-| 4 guard 预留计费 | 652.6 / 1082.7 s |
-| 5 guard 开环 | 141.9 / 321.1 s |
-| 6 guard 闭环(iii) | 346.7 / 632.8 s |
+| 3 guard, completed-work charging | 483.7 / 807.8 s |
+| 4 guard, reservation charging | 652.6 / 1082.7 s |
+| 5 guard, open loop | 141.9 / 321.1 s |
+| 6 guard, closed loop (iii) | 346.7 / 632.8 s |
 
-闭环下到达序列是策略的函数：`spjf` 让短作业秒回，用户更快地发下一单，
-于是同一个窗口里挤进更多工作，**它自己的**先到先派反事实就比 `fcfs` 那一轮重一倍多
-（725 s 对 309 s）。**所以几个 cell 的实测等待之间不能横着比**，
-只有每一轮与它自己的重放比才是干净的对照。这条必须写进方法。
+Under the closed loop the arrival sequence is a function of the policy: `spjf` returns short jobs within seconds, users send their next request sooner,
+and so more work is packed into the same window; **its own** first-come first-served counterfactual is therefore more than twice as heavy as that of the `fcfs` run
+(725 s against 309 s). **So the measured waits of different cells cannot be compared with each other directly**;
+only the comparison of each run with its own replay is a clean control. This must be written into the method.
 
-规则 (iii)（等得越久想得越久，slope = 0.5）相对规则 (ii) 的效果：
-同为 guard 已完成计费，cell 6 的平均等待 205.7 s、p90 433.8 s，
-cell 3 是 235.2 s、p90 680.2 s；cell 6 的重放反事实（346.7 s）也比 cell 3 的（483.7 s）轻。
-**需求慢下来，队列就短下去**——负反馈是存在的，而且量得出来。
+The effect of rule (iii) (the longer the wait, the longer the think time, slope = 0.5) relative to rule (ii):
+both with guard and completed-work charging, cell 6 has mean wait 205.7 s and p90 433.8 s,
+cell 3 has 235.2 s and p90 680.2 s; cell 6's replayed counterfactual (346.7 s) is also lighter than cell 3's (483.7 s).
+**When demand slows down, the queue gets shorter**: the negative feedback exists and can be measured.
 
-开环那一轮（cell 5）是唯一一个 ρ 明显小于 1 的：到达按时刻表发，
-与结果无关，所以系统排空得掉，平均等待只有 70.3 s。
-**闭环里 ρ 是结果不是参数**，想钉住 ρ 只能走开环。
+The open-loop run (cell 5) is the only one with ρ clearly below 1: arrivals are sent on a timetable,
+independent of results, so the system can drain, and the mean wait is only 70.3 s.
+**In the closed loop ρ is an outcome, not a parameter**; the only way to pin ρ is the open loop.
 
-## 5. 两种计费口径
+## 5. The two charging rules
 
-| | cell 3 已完成工作量计费 | cell 4 预留-退还（规则 R） |
+| | cell 3, completed-work charging | cell 4, reservation and refund (rule R) |
 |---|---|---|
-| 预算上限 | `B_max = k(G − (3−2/k)L) = 120 s` | `Z_max = k(G − (2−2/k)L) = 460 s` |
-| 平均等待 | 235.2 s | 206.7 s |
-| p90 等待 | 680.2 s | 896.8 s |
-| 最大 excess | 151.7 s（0.379 G） | 205.5 s（0.514 G） |
-| 超出承诺的 job | 0 | 0 |
-| 开火 | 24 | 20 |
-| 被牺牲 job 的平均多等 | 57.8 s | 102.6 s |
+| budget cap | `B_max = k(G − (3−2/k)L) = 120 s` | `Z_max = k(G − (2−2/k)L) = 460 s` |
+| mean wait | 235.2 s | 206.7 s |
+| p90 wait | 680.2 s | 896.8 s |
+| max excess | 151.7 s (0.379 G) | 205.5 s (0.514 G) |
+| jobs beyond the promise | 0 | 0 |
+| firings | 24 | 20 |
+| mean extra wait of sacrificed jobs | 57.8 s | 102.6 s |
 
-预留口径的门槛低一个 L，所以在同一个承诺下它的额度大得多（460 s 对 120 s），
-放行的超越更多，基策略的好处留得更多（平均等待更低、短作业只等 26.9 s），
-代价是被牺牲的那些 job 多等得更多（102.6 s 对 57.8 s）。两边都没有越过承诺。
+The reservation rule's threshold is one L lower, so under the same promise its allowance is much larger (460 s against 120 s);
+it lets more overtaking through and keeps more of the base policy's benefit (lower mean wait, short jobs wait only 26.9 s),
+at the price of a longer extra wait for the sacrificed jobs (102.6 s against 57.8 s). Neither side exceeded the promise.
 
-**这不是一次受控对比**：两轮的额度不同（这是规则本身决定的），
-而且闭环下两轮的需求实现也不同。它说明的是「两种口径在这套栈上都跑得通、
-都守住了承诺、并且落在预期的方向上」，不是「哪一种更好」。
+**This is not a controlled comparison**: the allowances of the two runs differ (that is determined by the rules themselves),
+and under the closed loop the demand realisations of the two runs also differ. What it shows is that "both charging rules run on this stack,
+both keep the promise, and both fall in the expected direction", not "which one is better".
 
-## 6. 模拟器校验（G3）
+## 6. Simulator check (G3)
 
-把每一轮的 `(a_i, C_i, score_i, k)` 喂给论文包的模拟器，逐 job 比等待：
+Each run's `(a_i, C_i, score_i, k)` is fed to the paper package's simulator, and the waits are compared job by job:
 
-| cell | 模拟器里的策略 | job | 实测平均 / 最大等待 | 模拟平均 / 最大等待 | 最大逐 job 偏差 | 偏差 > 1 s 的 job |
+| cell | policy in the simulator | jobs | measured mean / max wait | simulated mean / max wait | max per-job deviation | jobs with deviation > 1 s |
 |---|---|---:|---|---|---:|---:|
 | 1 | FCFS | 100 | 308.84 / 533.29 s | 308.76 / 533.24 s | 167.8 ms | 0 |
 | 2 | SPJF-E | 100 | 227.41 / 1933.61 s | 227.34 / 1933.56 s | 125.3 ms | 0 |
@@ -145,17 +145,17 @@ cell 3 是 235.2 s、p90 680.2 s；cell 6 的重放反事实（346.7 s）也比 
 | 5 | Guard(400) | 100 | 70.33 / 324.42 s | 70.28 / 324.38 s | 115.5 ms | 0 |
 | 6 | Guard(400) | 100 | 205.72 / 433.83 s | 205.66 / 433.78 s | 132.8 ms | 0 |
 
-**五轮 500 个 job，最大逐 job 偏差 167.8 ms，没有一个 job 差过 1 秒。**
+**Five runs, 500 jobs, max per-job deviation 167.8 ms; no job differs by more than 1 second.**
 
-**cell 4 不参与这条结论。** 论文包的模拟器只带已完成工作量那一个 wrapper，
-没有预留-退还的实现，所以拿它去跑 cell 4 等于用算法 1 去对一条规则 R 的轨迹：
-`simulator_replay.json` 里这一行的 `comparable` 是 `false`，偏差 982 s 量的是
-**两种机制的差**，不是保真度。要补这条比对，得把
-`evidence/reservation_guard/rguard.py` 的规则 R 接进 `spjf_guard.sim`。
+**Cell 4 is not part of this conclusion.** The paper package's simulator carries only the completed-work wrapper
+and has no implementation of reservation and refund, so running cell 4 through it would mean checking a rule R trace against Algorithm 1:
+in `simulator_replay.json` this row has `comparable` set to `false`, and the 982 s deviation measures
+**the difference between the two mechanisms**, not fidelity. To add this comparison,
+rule R from `evidence/reservation_guard/rguard.py` would have to be connected to `spjf_guard.sim`.
 
-## 7. 派发器开销
+## 7. Dispatcher overhead
 
-| cell | 每个 dispatch epoch 平均 | 最大 |
+| cell | mean per dispatch epoch | max |
 |---|---:|---:|
 | 1 | 10.0 µs | 58 µs |
 | 2 | 12.1 µs | 75 µs |
@@ -164,93 +164,92 @@ cell 3 是 235.2 s、p90 680.2 s；cell 6 的重放反事实（346.7 s）也比 
 | 5 | 11.1 µs | 61 µs |
 | 6 | 12.1 µs | 57 µs |
 
-队列深度实测在 11–18 之间（`decisions-*.jsonl`），算法 1 每个 epoch 要遍历等待集，
-在这个深度上是 10 µs 量级；服务时间是 10⁰–10² 秒。**差 5 到 7 个数量级。**
-这是只有真部署才拿得到的数。
+The measured queue depth is between 11 and 18 (`decisions-*.jsonl`). Algorithm 1 scans the waiting set at every epoch,
+which at this depth takes on the order of 10 µs; service times are 10⁰–10² seconds. **They differ by 5 to 7 orders of magnitude.**
+This number can only be obtained from a real deployment.
 
-## 8. token 与墙钟
+## 8. Tokens and wall-clock time
 
-| cell | 记到的模型调用 | input | output | 引擎日志里的截停 | 墙钟 |
+| cell | model calls recorded | input | output | stops in the engine log | wall-clock |
 |---|---:|---:|---:|---:|---:|
-| 1 fcfs / 闭环(ii) | 90 | 68,778 | 65,748 | 10 | 1955 s |
-| 2 spjf / 闭环(ii) | 94 | 65,598 | 61,940 | 5 | 2104 s |
-| 3 guard 已完成计费 / 闭环(ii) | 95 | 71,294 | 64,581 | 5 | 1777 s |
-| 4 guard 预留计费 / 闭环(ii) | 99 | 78,711 | 76,856 | 1 | 1868 s |
-| 5 guard 开环(i) | 97 | 74,059 | 68,880 | 2 | 2769 s |
-| 6 guard 闭环(iii) | 96 | 71,086 | 64,578 | 3 | 1906 s |
-| **合计** | **571** | **429,526** | **402,583** | **26** | **12,379 s（发生器）/ 3 h 27 min（含重起）** |
+| 1 fcfs / closed loop (ii) | 90 | 68,778 | 65,748 | 10 | 1955 s |
+| 2 spjf / closed loop (ii) | 94 | 65,598 | 61,940 | 5 | 2104 s |
+| 3 guard, completed-work charging / closed loop (ii) | 95 | 71,294 | 64,581 | 5 | 1777 s |
+| 4 guard, reservation charging / closed loop (ii) | 99 | 78,711 | 76,856 | 1 | 1868 s |
+| 5 guard, open loop (i) | 97 | 74,059 | 68,880 | 2 | 2769 s |
+| 6 guard, closed loop (iii) | 96 | 71,086 | 64,578 | 3 | 1906 s |
+| **Total** | **571** | **429,526** | **402,583** | **26** | **12,379 s (generator) / 3 h 27 min (including restarts)** |
 
-实测单价：
+Measured cost per call:
 
-| 调用 | n | 平均 input | 平均 output |
+| call | n | mean input | mean output |
 |---|---:|---:|---:|
-| 学情蓝图（LearnerDiagnosisAgent） | 437 | 212 | 259 |
-| 带练路线（ResourceGenerationAgent） | 134 | 2514 | 2158 |
+| learner report (LearnerDiagnosisAgent) | 437 | 212 | 259 |
+| study plan (ResourceGenerationAgent) | 134 | 2514 | 2158 |
 
-600 个 job 只记到 571 次调用：被上限截停的那些，流在 usage 块到达之前就被切断了，
-它们烧掉的 output token 没有被记进来。所以 **83.2 万 token 是下界**，
-按截停比例估，真实值大约再高 3–5%。
+Only 571 calls were recorded for 600 jobs: for the jobs stopped at the limit, the stream was cut before the usage block arrived,
+and the output tokens they used were not recorded. So **832 thousand tokens is a lower bound**;
+estimated from the share of stopped jobs, the true value is about 3–5% higher.
 
-金额换算不出来：用量账本没有单价字段（`scripts/usage-ledger.py` 自己写明「所以不出金额」）。
+A monetary cost cannot be derived: the usage ledger has no unit-price field (the platform repository's `scripts/usage-ledger.py` itself states that it "therefore does not output amounts").
 
-## 9. 这次跑支持什么
+## 9. What this run supports
 
-1. **算法 1 在一套生产级栈上守住了逐 job 承诺。** 四个 guard 轮共 400 个 job，
-   超出承诺的 job 数是 0，最大 excess 落在 0.379–0.514 倍 G。同一个基策略
-   不套闸（cell 2）在同样的 k 与同样的承诺下，7 个 job 越界，最惨的越了 4.67 倍。
-2. **闸没有把基策略的好处吃掉。** 对各自的重放反事实：`spjf` 把平均等待从 725.2 s
-   压到 227.4 s（−69%），`guard` 从 483.7 s 压到 235.2 s（−51%）。
-   代价从「20 个 job 平均多等 460 s」变成「32 个 job 平均多等 58 s」。
-3. **逐 job 上限在服务端是被执行的，不是被观察的。** 600 个 job 里 29 个触顶，
-   实测服务时间超出各自 ℓ 的最大值 16.1 ms；引擎日志里 26 次明确记到自己停了。
-   这是规则 R 的前提，在这套栈上成立。
-4. **需求会对等待做出反应，而且量得出来。** 同一条重放反事实在六轮里从 141.9 s
-   到 725.2 s，闭环 ρ 在 0.97–1.00 而开环 0.695；规则 (iii) 把平均等待从 235.2 s
-   压到 205.7 s。这是之前那次 timed-work 实验做不到的。
-5. **论文的模拟器对得上真实服务。** 五轮 500 个 job，最大逐 job 偏差 167.8 ms。
-6. **派发开销可以忽略**：队列深 11–18 时每个 epoch 10–12 µs，比服务时间小 5–7 个数量级。
+1. **Algorithm 1 kept the per-job promise on a production-grade stack.** Over the four guard runs, 400 jobs in all,
+   the number of jobs beyond the promise is 0, and the max excess lies between 0.379 and 0.514 times G. The same base policy
+   without the guard (cell 2), under the same k and the same promise, had 7 jobs beyond the bound, the worst by 4.67 times.
+2. **The guard did not eat up the base policy's benefit.** Against each run's own replayed counterfactual: `spjf` cut the mean wait from 725.2 s
+   to 227.4 s (−69%), `guard` from 483.7 s to 235.2 s (−51%).
+   The cost moved from "20 jobs wait 460 s longer on average" to "32 jobs wait 58 s longer on average".
+3. **The per-job limit is enforced on the server side, not merely observed.** 29 of the 600 jobs reached the limit,
+   and the largest amount by which a measured service time exceeded its ℓ is 16.1 ms; the engine log explicitly records its own stop 26 times.
+   This is the premise of rule R, and it holds on this stack.
+4. **Demand reacts to waiting, measurably.** The same replayed counterfactual ranges from 141.9 s
+   to 725.2 s over the six runs; closed-loop ρ is 0.97–1.00 and open-loop ρ is 0.695; rule (iii) lowers the mean wait from 235.2 s
+   to 205.7 s. The earlier timed-work experiment could not do this.
+5. **The paper's simulator matches the real service.** Five runs, 500 jobs, max per-job deviation 167.8 ms.
+6. **Dispatch overhead is negligible**: 10–12 µs per epoch at a queue depth of 11–18, 5–7 orders of magnitude below the service times.
 
-## 10. 这次跑不支持什么
+## 10. What this run does not support
 
-- **没有真人。** 需求是脚本用户在本机产生的。必须逐字写进 §7/§9：
+- **No real people.** Demand was generated by scripted users on the local machine. This must be written verbatim into §7/§9:
   arrivals are scripted replays driven by synthetic accounts on a local deployment;
-  no human learner was in the loop。
-- **不是 p99 结论。** 每轮 100 个 job，出不了可信的 p99；本机也没有「assessment
-  截止时刻」这个对象，开环的到达形状是从论文 trace 借的，不是这个平台的日历。
-- **几个 cell 的实测等待不能横着比**（§4）。闭环下到达序列是策略的函数，
-  唯一干净的对照是每一轮与它自己的重放先到先派。
-- **cell 3 与 cell 4 不是受控对比**（§5）：额度不同、需求实现也不同。
-- **不重尾**（§2）。跨类混合的 CV > 1 是两类作业的混合，要如实标明是构造。
-- **预算形状不是选出来的。** B0 = 30 s、η = 0.5 是论文早先物理实验用过的一档，
-  这次没有在验证集上重新选过。承诺 G 与上限 B_max 的关系不受影响——
-  定理只通过上限读预算。
-- **规模代理没有标定**，而且不是无偏的：它只用来排序，论文的保证对任意打分成立。
-  `inverted`（故意取负）与 `random` 两档这次仍然没跑。
-- **单机单进程。** 计数器在一个事件循环上，任何关于分布式派发的结论都不支持。
-- **模拟器那 168 ms 不是保真度结论。** `weakness1_attack` 那次 2151 个 job 的
-  timed-work 实验里，Guard 的最大逐 job 偏差是 1354.1 s、1753 个 job 的派发位置不同。
-  100 个 job、20 多次开火到不了那个区域。两件事要并列写。
-- **造课那一类没有接**（一次约 0.6 M token），这次的两类作业都是分钟级与秒级的。
+  no human learner was in the loop.
+- **Not a p99 result.** With 100 jobs per run there is no credible p99; the local set-up also has no "assessment
+  deadline" object, and the shape of the open-loop arrivals is borrowed from the paper's trace, not from this platform's calendar.
+- **Measured waits of different cells cannot be compared with each other directly** (§4). Under the closed loop the arrival sequence is a function of the policy,
+  and the only clean control is each run against its own replayed first-come first-served run.
+- **Cell 3 and cell 4 are not a controlled comparison** (§5): the allowances differ, and so do the demand realisations.
+- **Not heavy-tailed** (§2). The cross-class CV > 1 comes from mixing two job classes, and must be stated honestly as a construction.
+- **The budget shape was not selected.** B0 = 30 s, η = 0.5 is a setting used in the paper's earlier physical experiment,
+  and it was not reselected on a validation set this time. The relation between the promise G and the cap B_max is unaffected:
+  the theorem reads the budget only through the cap.
+- **The size proxy is not calibrated**, and it is not unbiased: it is used only for ordering, and the paper's guarantee holds for any score.
+  The `inverted` (deliberately negated) and `random` settings were again not run this time.
+- **One machine, one process.** The counters live on one event loop; no conclusion about distributed dispatch is supported.
+- **The simulator's 168 ms is not a fidelity result.** In the 2151-job timed-work experiment of `weakness1_attack`,
+  Guard's max per-job deviation was 1354.1 s, and 1753 jobs were dispatched at different positions.
+  100 jobs with about 20 firings do not reach that regime. The two results must be written side by side.
+- **The course-building job class was not connected** (about 0.6 M tokens per call); the two job classes in this run take minutes and seconds.
 
-## 11. 文件
+## 11. Files
 
-| 内容 | 路径 |
+| content | path |
 |---|---|
-| 本文件 | `evidence/platform_testbed/results.md` |
-| 建造与冒烟 | `evidence/platform_testbed/build_report.md` |
-| 逐 cell 汇总 | `evidence/platform_testbed/records/summary.json` |
-| 模拟器比对 | `evidence/platform_testbed/records/simulator_replay.json` |
-| 逐 job 记录 | `evidence/platform_testbed/records/jobs-full-*.jsonl` |
-| 逐次派发决策 | `evidence/platform_testbed/records/decisions-full-*.jsonl` |
-| 客户端记录 | `evidence/platform_testbed/records/client-full-*.jsonl` |
-| 每轮参数 | `evidence/platform_testbed/records/manifest-full-*.json` |
-| 每轮 token 与截停 | `evidence/platform_testbed/records/usage-full-*.log` |
-| 开环到达时刻表 | `evidence/platform_testbed/records/arrivals_deadline_burst_100.csv` |
-| 表格生成脚本 | `evidence/platform_testbed/results_tables.py` |
-| 模拟器比对脚本 | `evidence/platform_testbed/replay_simulator.py` |
-| 到达表裁剪脚本 | `evidence/platform_testbed/make_arrivals.py` |
+| this file | `evidence/platform_testbed/results.md` |
+| per-cell summary | `evidence/platform_testbed/records/summary.json` |
+| simulator comparison | `evidence/platform_testbed/records/simulator_replay.json` |
+| per-job records | `evidence/platform_testbed/records/jobs-full-*.jsonl` |
+| per-dispatch decisions | `evidence/platform_testbed/records/decisions-full-*.jsonl` |
+| client records | `evidence/platform_testbed/records/client-full-*.jsonl` |
+| per-run parameters | `evidence/platform_testbed/records/manifest-full-*.json` |
+| per-run tokens and stops | `evidence/platform_testbed/records/usage-full-*.log` |
+| open-loop arrival timetable | `evidence/platform_testbed/records/arrivals_deadline_burst_100.csv` |
+| table generation script | `evidence/platform_testbed/results_tables.py` |
+| simulator comparison script | `evidence/platform_testbed/replay_simulator.py` |
+| arrival table cutting script | `evidence/platform_testbed/make_arrivals.py` |
 
-平台侧（`<platform-repo>`，分支 `sched-experiment`）：
-派发器 `apps/classroom/lib/server/classroom-dispatch.ts`、
-引擎侧执行上限 `apps/agent-engine/backend/services/call_deadline.py`、
-实验脚本 `experiments/scheduling/`、改动与回退说明 `docs/调度实验改动说明.md`。
+Platform side (`<platform-repo>`, branch `sched-experiment`):
+dispatcher `apps/classroom/lib/server/classroom-dispatch.ts`,
+engine-side execution limit `apps/agent-engine/backend/services/call_deadline.py`,
+experiment scripts `experiments/scheduling/`, change and rollback notes `docs/调度实验改动说明.md`.

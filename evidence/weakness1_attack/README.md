@@ -14,14 +14,15 @@ guard p99 gains at every queueing capacity, open-loop gains as a general lower b
 job-level ideal/physical equivalence for the two priority policies in the physical run.
 `REPORT.md` is the findings, `PLAN.md` the hypotheses and the frozen protocol.
 
-**Paper items.** Three locations in `paper/sections/08_experiments.tex` and 32 in
-`paper/supplementary.tex` — the capacity sweep and its curve (`capacity_curve.csv`,
-`summarize_capacity.py`, `summary_numbers.json`, `verification.json`), the physical
-experiment (`physical_numbers.json`, `physical_verification.json`), the stall-corrected
-certificate (`stall_bound_check.json`, `STALL_BOUND.md`), the feedback counterexamples
-(`out_feedback_counterexamples.txt`, `FEEDBACK.md`), the initial falsification
-(`pilot.json`) and `REPORT.md`. One supplement sentence names the folder in **body text**,
-not in a comment.
+**Paper items.** The capacity paragraph and the first physical run of Section 8.7, and the
+capacity range k = 4 to 12 of Section 10. In the supplement: Table S19 and Supplementary
+Section S6.1, the capacity sweep (`capacity_curve.csv`, `summarize_capacity.py`,
+`summary_numbers.json`, `verification.json`, `pilot.json`); Table S20 and Supplementary
+Section S6.2, the physical experiment and the stall-corrected certificate
+(`physical_numbers.json`, `physical_verification.json`, `stall_bound_check.json`);
+Supplementary Section S6.3, the feedback counterexamples that Section 9 cites
+(`out_feedback_counterexamples.txt`); and Supplementary Section S5.3 (`REPORT.md`,
+`capacity_curve.csv`). Supplementary Section S5.4 names the folder in its text.
 
 **Inputs.** Development overlays only, through the package's guarded loaders with
 `unseal=False`. No sealed semester is opened. `pinned_src/` and `source_snapshot/` hold

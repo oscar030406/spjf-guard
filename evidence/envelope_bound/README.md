@@ -5,12 +5,12 @@ P-abs, (V_i^- + B_max)/k + (2 - 1/k)L for guarded policies and (V_i^- + (k-1)L)/
 FCFS; how well does one period's sigma predict the next; and what did anyone state
 before about the fluid comparison (L1) and a maximum-waiting-time rule (P-clock)?
 
-Paper items: Proposition `prop:absolute` and the operator rule
-B_max = kD - sigma - (2k-1)L (Section 6.8, "An Absolute Bound from the Arrival Log",
-first drafted in `evidence/timeout_rule/draft_clock_main.tex`); `sec:exp_bound` in
-Section 8, including the sigma forecast and its margin;
-the related-work sentence on maximum waiting times (`paper/sections/02_related_work.tex:28`);
-the bibliography of the new text.
+Paper items: Proposition 11 and the operator rule B_max = kD - sigma - (2k-1)L (Section
+6.7, "An Absolute Bound from the Arrival Log", first drafted in
+`evidence/timeout_rule/draft_clock_main.tex`); the check of Proposition 11 on 304 runs,
+the absolute-bound paragraph and the sigma forecast with its margin in Section 8.5; the
+related-work sentence on maximum waiting times (Section 2.3); the bibliography of the new
+text.
 
 Inputs: development overlays only, `data/derived/overlay_traces/primary_rep0..4.npz`,
 `validation_rep0..4.npz`, `k1_rep0.npz` (sha256 in `run_manifest.json`); configuration

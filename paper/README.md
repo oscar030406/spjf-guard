@@ -1,21 +1,21 @@
 # paper
 
-论文稿件（英文，LaTeX）。`sections/` 下每节一个 `.tex`，文件名前缀为节号（`01_introduction.tex`…）；`main.tex` 只做拼接。题录只从 `../docs/related_work/refs.bib` 取，不在这里另建 bib。数字只从 `../prechecks/` 的输出文件取，封存学期结果出来前表格里的数字标注为 development。新的一节放进 `sections/`，并在 `main.tex` 里加一行 `\input`。插图放 `figures/`，规则见 `figures/README.md`。
+The manuscript (English, LaTeX). `sections/` holds one `.tex` file per main-text section, named with the section number as prefix (`01_introduction.tex`, ...), plus `S_theory_additions.tex`, which the supplement inputs, and `A_proofs.tex`, a stub that records where the former appendix went and is no longer input. `main.tex` holds the class settings, the front and back matter and the list of supplementary items, and inputs the sections. Bibliography entries come only from `../docs/related_work/refs.bib`; no separate bib file is kept here. Every number in the text comes from an output file: the package's tables under `../outputs/`, which the commands in `../README.md` regenerate and which are not committed, or a study under `../evidence/` (the public copy of the working folder `prechecks/` that the source comments name; see `../evidence/PATHS.md` for the path mapping). Numbers from the development terms are wrapped in `\devnum{}` and numbers from the sealed terms in `\sealednum{}`; `../scripts/check_paper_numbers.py` checks both against their sources. A new section goes into `sections/`, with one `\input` line added to `main.tex`. Figures go into `figures/`; the rules are in `figures/README.md`.
 
-两个入口共用同一套 `sections/`：`main.tex` 是投稿版，走 MDPI 的 `Definitions/mdpi.cls`；`main_article.tex` 是不依赖期刊类的备用版，走标准 `article`。改任何一节，两边都要能编过。补充材料 `supplementary.tex` 单独成 PDF，用 `xr` 读 `main.aux` 引用正文的节、表、定理编号（写作 `\ref*{M-标签}`），所以必须先编 `main.tex` 并保留中间文件。编译（在 `paper/` 下按顺序跑，需要联网取宏包时设 `HTTPS_PROXY=http://127.0.0.1:7897`）：
+Two entry points share the same `sections/`: `main.tex` is the submission version and uses MDPI's `Definitions/mdpi.cls`; `main_article.tex` is a fallback that does not depend on the journal class and uses the standard `article` class. After changing any section, both must still compile. The supplementary material `supplementary.tex` is a separate PDF. It uses `xr` to read `main.aux` so that it can refer to section, table and theorem numbers of the main text (written as `\ref*{M-label}`), so `main.tex` must be compiled first and its intermediate files kept. Build with tectonic, run in `paper/` in this order (tectonic downloads the LaTeX packages it needs on first use, so the first build needs network access):
 
 ```
-"D:/environment/tools/tectonic/tectonic.exe" --keep-intermediates --keep-logs main.tex
-"D:/environment/tools/tectonic/tectonic.exe" --keep-intermediates --keep-logs supplementary.tex
-"D:/environment/tools/tectonic/tectonic.exe" main_article.tex
+tectonic --keep-intermediates --keep-logs main.tex
+tectonic --keep-intermediates --keep-logs supplementary.tex
+tectonic main_article.tex
 ```
 
-正文里指向补充材料的编号（"Supplementary Table S6"）是写死的，因为 MDPI 编译正文时拿不到补充材料的 aux。补充材料加表或加节后，用 `python ../local_tools/supp_list_0924.py` 列出每个 S 编号的标题，对照正文和 `main.tex` 的 `\supplementary{}` 清单改。
+References from the main text to the supplementary material ("Supplementary Table S6") are written out by hand, because when MDPI compiles the main text it does not have the supplementary material's aux file. After a table or section is added to the supplementary material, list the title of each S number (for example from the `\newlabel` entries in `supplementary.aux`) and update the main text and the `\supplementary{}` list in `main.tex` against it.
 
-`Definitions/` 是 MDPI 官方模板目录，2026-09-20 从 res.mdpi.com 下载的 `MDPI_template_ACS.zip` 里原样解出，未作任何修改（模板自带的 `template.tex` / `template.pdf` 没有放进来）。唯一的例外是我们加的 `Definitions/logo-mdpi.pdf`：XeTeX 不能直接嵌 EPS，所以把 MDPI 自己的 `logo-mdpi.eps` 转了一份 PDF 放在旁边，`main.tex` 里的重定向只认这个文件名，`mdpi.cls` 一个字没动。重新生成：
+`Definitions/` is MDPI's official template directory, extracted unchanged from `MDPI_template_ACS.zip` downloaded from res.mdpi.com on 2026-09-20 (the `template.tex` / `template.pdf` shipped with the template are not included). The one exception is `Definitions/logo-mdpi.pdf`, which we added: XeTeX cannot embed EPS directly, so MDPI's own `logo-mdpi.eps` was converted to a PDF placed next to it. The redirect in `main.tex` recognises only this file name, and `mdpi.cls` is not changed in any way. To regenerate it:
 
 ```
 epstopdf --outfile=Definitions/logo-mdpi.pdf Definitions/logo-mdpi.eps
 ```
 
-第二个例外是 `Definitions/mathematics-logo.png`，期刊 logo，从 MDPI 的 Word 模板 `mathematics-template.dot`（2025 版，`word/media/image3.png`）里取出。`mdpi.cls` 在 `submit` 状态下只印右上角的 MDPI logo，`accept` 状态才印期刊 logo；Word 模板则两个状态都是左 MDPI、右期刊。`main.tex` 里用 `\patchcmd` 改写标题宏的那一行，让投稿版也是这个样子，类文件仍然没动。删掉那段 patch 就回到类文件原样。
+The second exception is `Definitions/mathematics-logo.png`, the journal logo, taken from MDPI's Word template `mathematics-template.dot` (2025 version, `word/media/image3.png`). In the `submit` state `mdpi.cls` prints only the MDPI logo at the top right, and prints the journal logo only in the `accept` state; the Word template puts the MDPI logo on the left and the journal logo on the right in both states. A line in `main.tex` rewrites the title macro with `\patchcmd` so that the submission version looks the same way, and the class file is still unchanged. Removing that patch restores the class file's original behaviour.

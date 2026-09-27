@@ -4,11 +4,12 @@
 structural statement that holds for *every* non-preemptive work-conserving policy, with
 no stationarity and no assumption on prediction quality?
 
-**Paper items.** `theory.md` is the long form of Section 6 and Appendix A of the
-manuscript. `rev5_items.py` and `out_rev5_items.txt` carry the provenance of the
-Appendix A.2 item cited in `paper/sections/A_proofs.tex` (section RR-4), and
-`paper/supplementary.tex` points at this directory for the simulation behind
-Appendix A.2.
+**Paper items.** `theory.md` is the long form of Section 6 and of the proofs that now
+stand in Supplementary Sections S4 and S8. Those proofs were Appendix A of the manuscript,
+which no longer has an appendix; `paper/sections/A_proofs.tex` is a stub that is no longer
+input. The source comments of Supplementary Sections S4.2 and S8.6 name this directory as
+the check of those proofs, and `rev5_items.py` with `out_rev5_items.txt` (section RR-4) is
+the enumeration beside Proposition S17 in Supplementary Section S8.5.
 
 **What is here.** `theory.md` (revision 5) holds the proofs; its section 9 is the
 script-to-log map and its section 10 the referee CHANGELOG. `CHANGES_rev5.md` lists every

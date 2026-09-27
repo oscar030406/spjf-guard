@@ -15,10 +15,8 @@ The per-job guarantee holds on all 17.6 million jobs of each run. Section 7 of `
 lists what a sceptic would still attack, starting with the fact that the recorded think
 times were produced on a platform that served each student immediately.
 
-**Paper items.** The open-loop limitation paragraph and the think-time figures of
-`paper/sections/09_limitations.tex`; the closed-replay sensitivity paragraph of
-`paper/sections/08_experiments.tex`; supplementary Sections S6.5 and S6.6, including
-Table~\ref{tab:s_closed} and the bootstrap table, whose source comments name
+**Paper items.** The closed-replay paragraph of Section 8.7; the open-loop limitation of
+Section 9; Supplementary Section S6.5 and Table S21, whose source comments name
 `out/open_vs_closed_mean.csv`, `out/think_time.json`, `out/validation.json`,
 `out/closed_cells.csv`, `out/bootstrap.json` and `out/report_tables.md`.
 

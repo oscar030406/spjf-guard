@@ -4,9 +4,10 @@
 non-preemptive simulator reproduce the waits of a queue that actually exists, is shared
 by several teams, is non-preemptive, and records its own waits?
 
-**Paper items.** The CI-pool spans of `paper/sections/07_data.tex`; the share of total
-work carried by the top 1% in the same section and in Section 8's cross-domain table;
-the CI pool A and B rows of `paper/supplementary.tex`.
+**Paper items.** The CI rows of Table 4 (Section 7.1); the CI rows of Table 9 and the
+top-1% work shares of 3.4% and 5.2% in Section 8.6; the CI pool A and B rows of Table S1
+(Supplementary Section S1.2) and of Table S3, with the CI provenance paragraph of
+Supplementary Section S2.4. Supplementary Section S5.4 names this folder in its text.
 
 **Inputs.** `data/mozilla_firefox_ci/`, collected from Mozilla's public unauthenticated
 REST APIs. Mozilla publishes no licence for those APIs, so the raw slice is not

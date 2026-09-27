@@ -14,11 +14,13 @@ strengthened, and reservation and refund are shown to be idle there — `overR` 
 is shown to be false. The verdict section recommends the supplement rather than the main
 text, and names the conservative-backfilling literature the mechanism belongs to.
 
-**Paper items.** The supplementary theory section of
-`paper/sections/S_theory_additions.tex`: the three readings and the corrected definition
-pointer (`verification.md` Section 4), the decision-table rows C1-a to C1-f, C2-a to C2-c,
-C3-d and C6-c, the `k = 1` reading counts in `out_overR_eq_overC_k1.txt`, and the witness
-runs in `out_c1b_indep.txt`, `out_c2b_indep.txt` and `out_c4b_indep.txt`.
+**Paper items.** Supplementary Section S7.6 (`paper/sections/S_theory_additions.tex`),
+Propositions S12 to S14: the three readings and the corrected definition pointer
+(`verification.md` Section 4), the decision-table rows C1-a to C1-f, C2-a to C2-c, C3-d,
+C4a-a to C4a-c and C6-c, the `k = 1` reading counts in `out_overR_eq_overC_k1.txt`, and
+the runs in `out_c1_indep.txt`, `out_c1b_indep.txt`, `out_c2a_indep.txt`,
+`out_c2b_indep.txt`, `out_c4b_indep.txt` and `out_t32_indep.txt`; and the sentence of
+Section 9 that charging a cap known at arrival lowers the constant by exactly L.
 
 **Inputs.** None. Exact integer simulation over enumerated instances; no dataset is read
 and no sealed semester is opened.
