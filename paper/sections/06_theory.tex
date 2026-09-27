@@ -17,12 +17,45 @@ in Supplementary Sections~S4 and~S8.
 \subsection{Conventions}
 \label{sec:conventions}
 
-We use the model of Section~\ref{sec:model} and fix three readings the proofs depend on.
-The jobs started at one instant form a \emph{phase}, ordered as the policy starts them, and
-$j \prec i$ refers to the concatenation of the phases. Within a phase, FCFS starts the jobs
-in arrival order. A later-arriving job started in the same phase as $i$ but ahead of it counts
-as overtaking $i$ and contributes its whole $C_j$ to $\mathrm{In}_i$, although it executes
-nothing while $i$ waits. Remaining work at $a_i$ is read after the arrivals at $a_i$.
+We use the model of Section~\ref{sec:model}, and Table~\ref{tab:notation} collects the
+symbols of this section with the place each is defined. The position of a job in the
+arrival order is its \emph{rank}, so $j < i$ means that $j$ has the lower rank. Three
+readings fix what the proofs count. First, several jobs may start at the same instant; we
+call them a \emph{phase} and let the policy start them one after another, so that
+``$j$ is started before $i$'', written $j \prec i$, is defined even inside a phase. Within
+a phase, FCFS starts the jobs in arrival order. Second, a job of higher rank that is started
+in the same phase as $i$ but ahead of it overtakes $i$ and contributes its whole $C_j$ to
+$\mathrm{In}_i$, although it executes nothing while $i$ waits. Third, the remaining work at
+the instant $a_i$ is read after the jobs arriving at $a_i$ have been added.
+
+\begin{table}[htbp]
+\centering
+\caption{Notation of Section~\ref{sec:theory}.}
+\label{tab:notation}
+\small
+\begin{tabular}{lp{0.62\linewidth}l}
+\toprule
+Symbol & Meaning & Defined in \\
+\midrule
+$k$, $L$ & number of servers; time limit, so every cost satisfies $0 < C_i \le L$ & Section~\ref{sec:model} \\
+$a_i$, $C_i$ & arrival time and cost (executed work) of job $i$ & Section~\ref{sec:model} \\
+$j < i$, $j \prec i$ & $j$ arrives before $i$ (lower rank); $j$ is started before $i$ & Sections~\ref{sec:model}, \ref{sec:conventions} \\
+$s^P_i$, $W_P[i]$ & start time and wait $s^P_i - a_i$ of job $i$ under policy $P$ & Section~\ref{sec:model} \\
+$\mathrm{excess}_P[i]$ & $W_P[i] - W_{\mathrm{FCFS}}[i]$ & Equation~\eqref{eq:excess} \\
+$\mathrm{In}_i$ & total cost of the higher-rank jobs started before $i$ (the work that overtook $i$) & Equation~\eqref{eq:inout} \\
+$\mathrm{Out}_i$ & total cost of the lower-rank jobs started after $i$ (the work $i$ overtook) & Equation~\eqref{eq:inout} \\
+$G$ & service guarantee: $\mathrm{excess}_P[i] \le G$ for every job & Section~\ref{sec:model} \\
+$U_Q(t)$ & unfinished work at time $t$ under policy $Q$ & Section~\ref{sec:th_gap} \\
+$R^Q_i$, $\beta^Q_i$ & remaining work at $a_i$ of the lower-rank jobs; remaining work at $s^Q_i$ of the jobs started before $i$ and still running & Section~\ref{sec:th_identity} \\
+$\mathrm{over}[q](t)$ & total cost of the higher-rank jobs completed by time $t$ & Equation~\eqref{eq:over} \\
+$\mathrm{budget}(q,t)$, $B_{\max}$ & the guard's budget for job $q$ at time $t$, and its cap & Section~\ref{sec:guard} \\
+$B_0$, $\eta$, $\gamma$ & parameters of the age-relative and queue-length budget shapes & Section~\ref{sec:guard} \\
+$\theta$ & waiting time after which Timeout($\theta$) starts the earliest-arrived job & Section~\ref{sec:clock} \\
+$\delta$ & largest delay of a completion report & Section~\ref{sec:late} \\
+$F_i$, $F^*$ & flow time $W[i] + C_i$; the smallest achievable largest flow time & Section~\ref{sec:th_guard} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{The Workload Gap between Two Policies}
 \label{sec:th_gap}
@@ -40,12 +73,22 @@ executes work at rate $1$ whenever at least one job is present, so every work-co
 policy has the same unfinished work at every instant.
 \end{lemma}
 
-\begin{proof}[Proof sketch of Lemma~\ref{lem:gap}]
-The difference $D = U_{Q_1} - U_{Q_2}$ is continuous and piecewise linear. Whenever
-$U_{Q_1}$ exceeds $(k-1)L$, more than $k-1$ jobs are present under $Q_1$, every server of
-$Q_1$ is busy, and $D$ cannot increase. Tracking $D$ back to the last instant at which
-$U_{Q_1}$ was at most $(k-1)L$ gives the bound. Supplementary Sections~S4.1 and~S8.1 give
-the proof, the strictness and the construction that shows the constant cannot be lowered.
+\begin{proof}[Proof of the inequality $|U_{Q_1}(t) - U_{Q_2}(t)| \le (k-1)L$]
+Let $N_Q(t)$ be the number of jobs present under $Q$ and put $D = U_{Q_1} - U_{Q_2}$. An
+arrival adds the same cost to both unfinished works, so $D$ has no jumps. Between arrivals,
+a work-conserving policy with $N$ jobs present keeps $\min(N, k)$ servers busy, so $U_Q$
+falls at rate $\min(N_Q, k)$ and $D$ changes at rate $\min(N_{Q_2}, k) - \min(N_{Q_1}, k)$.
+
+Suppose $U_{Q_1}(u) > (k-1)L$ at some instant $u$. Every job carries at most $L$, so more
+than $k-1$ jobs are present under $Q_1$, all $k$ of its servers are busy, and the rate of
+$D$ at $u$ is $\min(N_{Q_2}, k) - k \le 0$: $D$ does not increase while $U_{Q_1}$ stays above
+$(k-1)L$. Now fix $t$ and let $t_0$ be the last instant up to $t$ at which
+$U_{Q_1} \le (k-1)L$, taken as a limit from the left because $U_{Q_1}$ jumps up at
+arrivals; such instants exist since $U_{Q_1} = 0$ before the first arrival. At $t_0$,
+$D \le U_{Q_1} \le (k-1)L$ because $U_{Q_2} \ge 0$, and on $(t_0, t]$ the difference $D$
+does not increase, so $D(t) \le (k-1)L$. Exchanging $Q_1$ and $Q_2$ gives
+$D(t) \ge -(k-1)L$. Supplementary Section~S4.1 proves the strict inequality for $k \ge 2$,
+and Section~S8.1 gives the construction showing that $(k-1)L$ cannot be lowered.
 \end{proof}
 
 The argument that a work-conserving $k$-server system can fall behind only by what $k-1$
@@ -58,6 +101,7 @@ vector in a stronger order, but only among policies whose assignment of jobs to 
 ignores their costs \cite{daley1987fcfs}, which the policies compared here do not.
 
 \subsection{The Net-Overtake Identity}
+\label{sec:th_identity}
 
 For a job $i$ and a policy $Q$, let $R^Q_i$ be the remaining work at time $a_i$, under $Q$,
 of the jobs that arrived before $i$, and let $\beta^Q_i$ be the remaining work at $s^Q_i$
@@ -84,20 +128,45 @@ At $k = 1$ the error term vanishes and $W_P[i] - W_{\mathrm{FCFS}}[i] = \mathrm{
 \mathrm{Out}_i$ exactly.
 \end{theorem}
 
-\begin{proof}[Proof sketch of Theorem~\ref{thm:identity}]
-Job $i$ waits throughout $[a_i, s^P_i)$, so every server is busy there and exactly
-$k\,W_P[i]$ units of work are executed, none of it on $i$. Splitting that work by arrival
-order gives
+\begin{proof}[Proof of Theorem~\ref{thm:identity}]
+\emph{Work done while $i$ waits.} Job $i$ waits throughout $[a_i, s^P_i)$, so by work
+conservation every server is busy on that interval, and exactly $k\,W_P[i]$ units of work
+are executed there, none of it on $i$. We split this work by rank.
+
+A job $j$ of higher rank arrives at or after $a_i$, so it runs inside the interval only if
+it is started inside it, that is, only if $j \prec i$. The work executed on these jobs is
+therefore $\mathrm{In}_i - \beta^{\mathrm{new}}$, where $\beta^{\mathrm{new}}$ is the work
+that the overtakers still running at $s^P_i$ have left. The jobs of lower rank are all
+present at $a_i$ and hold $R^P_i$ there. At $s^P_i$ they still hold $\mathrm{Out}_i$, the full
+cost of those not yet started, plus $\beta^{\mathrm{old}}$, the remainder of those started
+before $i$ and still running. The work executed on them is therefore
+$R^P_i - \mathrm{Out}_i - \beta^{\mathrm{old}}$. Adding the two parts, with
+$\beta^P_i = \beta^{\mathrm{old}} + \beta^{\mathrm{new}}$,
 \begin{equation}
   k\,W_P[i] \;=\; R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \beta^P_i .
   \label{eq:busy}
 \end{equation}
-The jobs counted in $\beta^P_i$ run on distinct servers other than the one that takes $i$,
-so $0 \le \beta^P_i \le (k-1)L$. Under FCFS, $\mathrm{In}_i = \mathrm{Out}_i = 0$, and
-Lemma~\ref{lem:gap} applied at $a_i$ bounds $|R^P_i - R^{\mathrm{FCFS}}_i|$ by $(k-1)L$.
-Subtracting the two instances of \eqref{eq:busy} gives the identity. Each direction uses
-only two of the three ranges, which is why the slack is $2(k-1)L$ and not $3(k-1)L$.
-Supplementary Section~S4.3 gives the proof in full.
+
+\emph{Size of $\beta$.} The jobs counted in $\beta^P_i$ run on distinct servers, none of
+them the server that takes $i$, so there are at most $k-1$ of them, each with at most $L$
+left: $0 \le \beta^P_i \le (k-1)L$.
+
+\emph{The reference.} Under FCFS no job of higher rank starts while $i$ waits, and every
+job of lower rank has started by the time $i$ does, so $\mathrm{In}_i = \mathrm{Out}_i = 0$
+and \eqref{eq:busy} reads $k\,W_{\mathrm{FCFS}}[i] = R^{\mathrm{FCFS}}_i -
+\beta^{\mathrm{FCFS}}_i$, with $0 \le \beta^{\mathrm{FCFS}}_i \le (k-1)L$.
+
+\emph{Comparison.} At $a_i$ the two systems hold the same jobs, and the jobs of rank $i$ or
+higher are untouched in both, so $R^P_i - R^{\mathrm{FCFS}}_i = U_P(a_i) -
+U_{\mathrm{FCFS}}(a_i)$, which Lemma~\ref{lem:gap} places in $[-(k-1)L, (k-1)L]$.
+Subtracting the FCFS instance of \eqref{eq:busy} from the instance for $P$ gives the
+identity \eqref{eq:identity}. Its three terms lie in known ranges: $R^P_i -
+R^{\mathrm{FCFS}}_i$ in $[-(k-1)L, (k-1)L]$ and $\beta^P_i$, $\beta^{\mathrm{FCFS}}_i$ each
+in $[0, (k-1)L]$. The largest value of $\Delta_i$ takes the first at its top,
+$\beta^{\mathrm{FCFS}}_i$ at its top and $\beta^P_i$ at $0$, which is $2(k-1)L$; the
+smallest is the mirror image, $-2(k-1)L$. At $k = 1$ all three ranges are $\{0\}$. The
+strict inequality for $k \ge 2$ comes from the strict form of Lemma~\ref{lem:gap}
+(Supplementary Section~S4.1).
 \end{proof}
 
 \begin{corollary}[A work budget is sufficient]
@@ -124,9 +193,12 @@ supremum that is never attained.
 \end{theorem}
 
 \begin{proof}[Proof sketch of Theorem~\ref{thm:tight1}]
-Both witnesses start from a geometric cascade that drives $U_P - U_{\mathrm{FCFS}}$ to
-$(k-1)L\,(1 - ((k-1)/k)^m)$ in $m$ rounds and then place a victim so that FCFS starts it
-at once while $P$ holds it back (upward), or the mirror image (downward). The instances
+Both witnesses start from a cascade: in each of $m$ rounds, $k-1$ jobs of cost $L$ arrive
+followed by many short jobs, and $P$ runs the short jobs first. After $m$ rounds FCFS has
+finished everything while $P$ still holds $k-1$ long jobs in service, so
+$U_P - U_{\mathrm{FCFS}}$ reaches $(k-1)L\,(1 - ((k-1)/k)^m)$. A victim is then placed so
+that FCFS starts it at once while $P$ holds it back (upward), or the mirror image
+(downward). The instances
 need hundreds of jobs and are rescaled to keep $L$ fixed. Supplementary Section~S8.2 gives
 both in full. Non-attainment follows from Lemma~\ref{lem:gap}.
 \end{proof}
@@ -148,10 +220,15 @@ G$ for every job $j$ counted in $\mathrm{Out}_i$. Then $\mathrm{Out}_i \le k\,(G
 \mathrm{excess}_P[i] + L)$.
 \end{lemma}
 
-\begin{proof}[Proof sketch of Lemma~\ref{lem:outbound}]
-Every job counted in $\mathrm{Out}_i$ starts inside a window of length $G -
-\mathrm{excess}_P[i]$, and of the jobs one server starts inside such a window all but the
-last complete inside it (Supplementary Section~S4.7).
+\begin{proof}[Proof of Lemma~\ref{lem:outbound}]
+A job $j$ counted in $\mathrm{Out}_i$ has lower rank than $i$, so FCFS starts it no later
+than $i$: $s^{\mathrm{FCFS}}_j \le s^{\mathrm{FCFS}}_i$. Its own guarantee gives
+$s^P_j \le s^{\mathrm{FCFS}}_j + G \le s^{\mathrm{FCFS}}_i + G = s^P_i - \mathrm{excess}_P[i] + G$,
+and it starts after $i$, so $s^P_j \ge s^P_i$. Every such job therefore starts inside the
+window $[s^P_i,\, s^P_i + w]$ of length $w = G - \mathrm{excess}_P[i] \ge 0$. Of the jobs that
+one server starts inside this window, each except the last finishes before the next one
+starts, so their costs add up to at most $w$, and the last adds at most $L$. Summing over
+the $k$ servers gives $\mathrm{Out}_i \le k(w + L)$.
 \end{proof}
 
 \begin{corollary}[A work budget is necessary]
@@ -162,8 +239,12 @@ $\mathrm{In}_i \le kG + (3k-2)L$ for every job $i$.
 
 \begin{proof}[Proof of Corollary~\ref{cor:necessary}]
 Theorem~\ref{thm:identity} gives $\mathrm{In}_i \le k\,\mathrm{excess}_P[i] +
-\mathrm{Out}_i + 2(k-1)L$. Lemma~\ref{lem:outbound} bounds $\mathrm{Out}_i$, and the terms
-in $\mathrm{excess}_P[i]$ cancel.
+\mathrm{Out}_i + 2(k-1)L$. The guarantee holds for every job, so Lemma~\ref{lem:outbound}
+applies and
+\[
+  \mathrm{In}_i \;\le\; k\,\mathrm{excess}_P[i] + k\bigl(G - \mathrm{excess}_P[i] + L\bigr)
+  + 2(k-1)L \;=\; kG + (3k-2)L . \qedhere
+\]
 \end{proof}
 
 The two corollaries say that bounding $\mathrm{In}_i$ and offering a per-job guarantee are
@@ -199,12 +280,25 @@ input and every job $i$, writing $W = W_P[i]$ for the wait under the guard,
 where \eqref{eq:guardin} is asserted whenever $i$ has at least one overtaker.
 \end{theorem}
 
-\begin{proof}[Proof sketch of Theorem~\ref{thm:guard}]
-When the last overtaker of $i$ starts, $i$ is waiting and not eligible, so
-$\mathrm{over}[i]$ is below its budget there. The overtakers started earlier and not yet
-finished occupy at most $k-1$ servers, and the last one adds a further $L$, which gives
-\eqref{eq:guardin}. Theorem~\ref{thm:identity} with $\mathrm{Out}_i \ge 0$ turns it into
-\eqref{eq:guardadd}. Supplementary Section~S4.5 gives the proof in full.
+\begin{proof}[Proof of Theorem~\ref{thm:guard}]
+Suppose $i$ has an overtaker, let $j$ be the overtaker started last, and let $t$ be its
+start. Job $i$ is waiting when $j$ is started, since $i$ starts after $j$, possibly in the
+same phase. The guard starts the earliest-arrived eligible job whenever there is one, and
+$i$ arrived before $j$, so $i$ was not eligible at that decision:
+$\mathrm{over}[i](t) < \mathrm{budget}(i,t) \le B_{\max}$.
+
+The overtakers of $i$ started before $j$ are of two kinds. Those completed by $t$ have total
+cost $\mathrm{over}[i](t)$. Those still running at $t$ occupy distinct servers other than
+the one taking $j$, so there are at most $k-1$ of them, each of cost at most $L$. With $j$
+itself, of cost at most $L$,
+\[
+  \mathrm{In}_i \;<\; B_{\max} + (k-1)L + L \;=\; B_{\max} + kL ,
+\]
+which is \eqref{eq:guardin}. For \eqref{eq:guardadd}, Theorem~\ref{thm:identity} with
+$\mathrm{Out}_i \ge 0$ gives $k\,(W - W_{\mathrm{FCFS}}[i]) \le \mathrm{In}_i + 2(k-1)L <
+B_{\max} + kL + 2(k-1)L = B_{\max} + (3k-2)L$, and dividing by $k$ gives
+\eqref{eq:guardadd}. If $i$ has no overtaker, $\mathrm{In}_i = 0$ and the same computation
+gives an excess of at most $(2-2/k)L$, which is below the bound because $L > 0$.
 \end{proof}
 
 \begin{corollary}[The cap for a given bound]
@@ -277,12 +371,18 @@ overtaker, Timeout($\theta$) gives $\mathrm{In}_i < k(\theta + L)$, and every jo
 \end{equation}
 \end{proposition}
 
-\begin{proof}[Proof sketch of Proposition~\ref{prop:clock}]
-From $a_i + \theta$ on, the earliest-arrived waiting job has waited at least $\theta$, so
-every job started before $s_i$ arrived before $i$. Each overtaker of $i$ therefore starts
-before $a_i + \theta$ and runs at most $L$, and on each server the overtakers fit in
-$[a_i, a_i + \theta + L)$. Theorem~\ref{thm:identity} with $\mathrm{Out}_i \ge 0$ gives the
-bound (Supplementary Section~S4.11).
+\begin{proof}[Proof of Proposition~\ref{prop:clock}]
+Consider a start decision at a time $t \ge a_i + \theta$ while $i$ still waits. The
+earliest-arrived waiting job arrived no later than $i$, so it has waited at least
+$t - a_i \ge \theta$, and the rule starts it. That job has rank at most $i$, so no
+overtaker of $i$ is started from $a_i + \theta$ on, and every overtaker starts in
+$[a_i, a_i + \theta)$. Of the overtakers one server starts in this interval, each except
+the last finishes before the next starts, so their costs add up to less than $\theta$, and
+the last adds at most $L$. Summing over the servers, $\mathrm{In}_i < k(\theta + L)$. Then
+Theorem~\ref{thm:identity} with $\mathrm{Out}_i \ge 0$ gives $k\,(W - W_{\mathrm{FCFS}}[i]) <
+k(\theta + L) + 2(k-1)L$, and dividing by $k$ gives \eqref{eq:clock}; a job without
+overtakers has an excess of at most $(2 - 2/k)L$. Supplementary Section~S4.11 relates the
+rule to the guard.
 \end{proof}
 
 At $\theta = G - (3-2/k)L$ the clock gives the bound that the guard gives at $B_{\max} =
@@ -327,11 +427,12 @@ Algorithm~\ref{alg:guard} with cap $B_{\max}$
 \end{proposition}
 
 \begin{proof}[Proof sketch of Proposition~\ref{prop:absolute}]
-Equation~\eqref{eq:busy} gives $k\,W[i] \le R_i + \mathrm{In}_i$. A work-conserving
-$k$-server queue never holds more than $(k-1)L$ above the single fast server: whenever it
-does, all $k$ servers are busy and it drains at the same rate. Hence $R_i \le V_i^- +
-(k-1)L$, and Theorem~\ref{thm:guard} bounds $\mathrm{In}_i$ (Supplementary
-Section~S4.11).
+Equation~\eqref{eq:busy}, with $\mathrm{Out}_i \ge 0$ and $\beta_i \ge 0$, gives
+$k\,W[i] \le R_i + \mathrm{In}_i$, where $R_i$ is the work the jobs of lower rank still hold
+at $a_i$. A work-conserving $k$-server queue never holds more than $(k-1)L$ above the single
+server of rate $k$: whenever it holds more, all $k$ servers are busy and it drains at the
+same rate $k$. Hence $R_i \le V_i^- + (k-1)L$, and \eqref{eq:guardin} bounds
+$\mathrm{In}_i$ under the guard (Supplementary Section~S4.11).
 \end{proof}
 
 At $k = 1$ the fast server is the queue itself, $V_i^- = W_{\mathrm{FCFS}}[i]$, and the
@@ -463,9 +564,14 @@ For fixed $k$, $L$, $c$ and $G$, the finite-sample term is $O((m+n)/(mn))$.
 \end{theorem}
 
 \begin{proof}[Proof sketch of Theorem~\ref{thm:price}]
-Count the inverted pairs of long and short jobs in two ways, once through the mean waits,
-which reads the interchange argument behind Smith's rule \cite{smith1956} on this input,
-and once through Corollary~\ref{cor:necessary} applied to each long job. Supplementary
+Call a pair of jobs inverted when the later-arrived one starts first. Summing
+Theorem~\ref{thm:identity} over all jobs shows that the total saving of $P$ over FCFS equals,
+up to $H$, the sum over inverted pairs of the earlier job's cost minus the later job's cost,
+divided by $k$. This is the interchange argument behind Smith's rule \cite{smith1956}, the
+result that on one server ordering jobs by increasing cost minimises the mean wait. Only a
+short job passing a long one contributes positively, by $L - c$. For each long job,
+Corollary~\ref{cor:necessary} caps the short work that passes it at $kG + (3k-2)L$, which
+bounds the numerator; SJF inverts all $mn$ long--short pairs, which gives the denominator. Supplementary
 Section~S8.5 gives the proof.
 \end{proof}
 

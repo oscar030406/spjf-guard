@@ -40,8 +40,8 @@ Load Balancing Guardrails \cite{grosof2019guardrails} & Unconstrained dispatcher
 
 \begin{proposition}[An unbounded instance-optimality ratio]
 \label{prop:supp_unbounded_instance}
-At $k=1$, let three batch jobs have rank-order service times $(L,1,1)$, with
-$L\geq2$, and set $G=L$. The cap of the parameter rule of the manuscript
+At $k=1$, let three jobs arrive together at $t=0$ with costs $L$, $1$ and $1$ in
+arrival order, with $L\geq2$, and set $G=L$. The cap of the parameter rule of the manuscript
 (Corollary~\ref*{M-cor:params} there, $B_{\max} = k(G-(3-2/k)L)$) is $B=0$, so the
 guard is FCFS and has total waiting time $2L+1$. The order $(1,1,L)$ has total
 waiting time $3$ and satisfies the per-job promise $G$. Consequently the ratio
@@ -92,21 +92,24 @@ events, non-batch arrivals, and same-phase overtakers.
 % prechecks/guard_optimality_verify/verification.md, Sections 7.1--7.2.
 
 \begin{proof}
-Let $A(t)$ be cumulative arrived work and $E_Q(t)$ cumulative executed work.
-Then
+Let $\mathrm{Arr}(t)$ be the total cost of the jobs that have arrived by $t$ and
+$\mathrm{Exe}_Q(t)$ the work executed by $t$ under $Q$. A busy server executes one unit of
+work per unit of time, so $\mathrm{Exe}_Q(t) = k(t-t_0)-\Gamma_Q(t)$ and
 \[
- U_Q(t)=A(t)-E_Q(t)
-       =A(t)-k(t-t_0)+\Gamma_Q(t).
+ U_Q(t)=\mathrm{Arr}(t)-\mathrm{Exe}_Q(t)
+       =\mathrm{Arr}(t)-k(t-t_0)+\Gamma_Q(t).
 \]
-At $a_i$, after simultaneous arrivals and before that phase's dispatches, work
-from jobs not ranked below $i$ is identical in the two runs. Hence
+At $a_i$, after the arrivals and before the dispatches at that instant, the jobs of
+rank $i$ or higher are untouched in both runs, so $R^Q_i$ differs from $U_Q(a_i)$ by the
+same amount under both policies. Hence
 \[
  R_i^P-R_i^{\mathrm{FCFS}}
  =U_P(a_i)-U_{\mathrm{FCFS}}(a_i)
  =\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i).
 \]
-Substitution into the two busy-period equalities of the main text (the displayed equality $k\,W_P[i] = R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \beta^P_i$ in the proof of the identity), one for $P$
-and one for FCFS, proves the formula. A same-phase overtaker enters both
+Subtracting equation~(\ref*{M-eq:busy}) of the manuscript for FCFS, where
+$\mathrm{In}_i=\mathrm{Out}_i=0$, from the same equation for $P$ and substituting this
+difference proves the formula. A same-phase overtaker enters both
 $\mathrm{In}_i$ and $\beta^P_i$ with its full size and therefore cancels.
 \end{proof}
 
@@ -147,13 +150,15 @@ For any two non-preemptive work-conserving policies $Q_1,Q_2$,
 \end{proposition}
 
 \begin{proof}
-The workload difference is continuous across arrivals, whereas
-$\Lambda_{k-1}(t)$ can only increase. If
-$U_{Q_1}(t)>\Lambda_{k-1}(t)$, policy $Q_1$ must have at least $k$ jobs present:
-otherwise their remaining work is no larger than the sum of their at most
-$k-1$ original sizes. All its servers are therefore busy, so the difference
-cannot increase. It cannot cross the nondecreasing barrier from below; exchange
-$Q_1$ and $Q_2$ for the other direction.
+Let $D=U_{Q_1}-U_{Q_2}$. An arrival adds its cost to both workloads, so $D$ changes
+only while servers work, and continuously; $\Lambda_{k-1}(t)$ never decreases. If
+$Q_1$ has fewer than $k$ jobs present at $t$, all of them are in service by work
+conservation, each has at most its full cost left, and they arrived by $t$, so
+$U_{Q_1}(t)\leq\Lambda_{k-1}(t)$. Hence whenever $D(t)>\Lambda_{k-1}(t)$, which forces
+$U_{Q_1}(t)>\Lambda_{k-1}(t)$, all $k$ servers of $Q_1$ are busy, $U_{Q_1}$ falls at rate
+$k$, and $D$ does not increase. Since $D=0$ before the first arrival, $D$ can never rise
+above $\Lambda_{k-1}$: at the last instant at which $D\leq\Lambda_{k-1}$ held, $D$ would
+have to increase while above it. Exchanging $Q_1$ and $Q_2$ gives the other direction.
 \end{proof}
 
 \begin{proposition}[Instance-dependent excess accounting]
@@ -167,9 +172,10 @@ For every policy $P$ and job $i$,
 \end{proposition}
 
 \begin{proof}
-In Lemma~\ref{lem:supp_gamma_identity}, Proposition~\ref{prop:supp_lambda_gap}
-bounds the idle-capacity difference, equivalently the workload difference at
-$a_i$, by $\Lambda_{k-1}(a_i)$. Drop $-\beta^P_i\leq0$. The at most $k-1$ FCFS
+In Lemma~\ref{lem:supp_gamma_identity} the idle-capacity difference
+$\Gamma_P(a_i)-\Gamma_{\mathrm{FCFS}}(a_i)$ equals the workload difference
+$U_P(a_i)-U_{\mathrm{FCFS}}(a_i)$, which Proposition~\ref{prop:supp_lambda_gap} bounds by
+$\Lambda_{k-1}(a_i)$. Drop $-\beta^P_i\leq0$. The at most $k-1$ FCFS
 jobs still running when $i$ starts all have rank below $i$, so
 $\beta^{\mathrm{FCFS}}_i\leq\Lambda^{<i}_{k-1}$.
 \end{proof}
@@ -188,11 +194,12 @@ $B_{\max}$.
 \end{proposition}
 
 \begin{proof}
-Completed overtaking work before the last overtaker is dispatched is strictly
-below $\mathrm{budget}(i,\tau)$. At $\tau$, at most $k$ dispatched overtakers
-remain unfinished: the newly dispatched job and at most one on each other
-server. Their total original size is at most
-$\Lambda^{>i}_k(s_i^P)$.
+As in the proof of Theorem~\ref*{M-thm:guard} of the manuscript, $i$ is waiting and not
+eligible when its last overtaker is started, so the overtakers completed by $\tau$ have
+total cost $\mathrm{over}[i](\tau)<\mathrm{budget}(i,\tau)$. The other overtakers are
+running at $\tau$: the one started at $\tau$ and at most one on each other server. These
+at most $k$ jobs have rank above $i$ and arrived by $\tau\leq s^P_i$, so their total cost
+is at most $\Lambda^{>i}_k(s_i^P)$.
 \end{proof}
 
 \begin{proposition}[Combined instance-dependent guard bound]
@@ -203,15 +210,15 @@ Under a cap $B_{\max}$, every job satisfies
  \leq B_{\max}+\Lambda^{>i}_k(s_i^P)
  +\Lambda_{k-1}(a_i)+\Lambda^{<i}_{k-1},
 \]
-and the inequality is strict when $i$ has an overtaker. When it has none, the
-sharper weak bound omits the first two terms.
+and the inequality is strict when $i$ has an overtaker. When it has none, the bound
+holds without the first two terms.
 \end{proposition}
 
 \begin{proof}
 Combine Propositions~\ref{prop:supp_lambda_excess} and
 \ref{prop:supp_lambda_in}, use $\mathrm{Out}_i\geq0$, and apply the cap. If no
 job overtakes $i$, then $\mathrm{In}_i=0$ and
-Proposition~\ref{prop:supp_lambda_excess} gives the stated sharper form.
+Proposition~\ref{prop:supp_lambda_excess} gives the bound without them.
 \end{proof}
 
 These $\Lambda$ quantities use actual sizes, including sizes of unfinished
@@ -295,9 +302,9 @@ only one that never refunds at an individual job's completion.
 % extension of the collapse argument to EASY) and its Section 5 list of statements that
 % survive the check.
 
-Write $\mathrm{over}_R[q](t)$ for the charge a waiting job $q$ carries: for every job of
-rank above $q$ already dispatched, its cap while it is in service and its true service
-time once it has completed.
+Give every job $q$ an allowance $Z_q\geq0$, and write $\mathrm{over}_R[q](t)$ for the
+charge a waiting job $q$ carries: the sum, over the jobs of rank above $q$ already
+started, of the job's cap while it is in service and its true cost once it has completed.
 
 \begin{proposition}[Reservation charging bounds the overtaken work]
 \label{prop:supp_reservation_in}
@@ -323,16 +330,25 @@ at once.
 
 \begin{proposition}[The promise under a constant allowance]
 \label{prop:supp_reservation_promise}
-With $Z \equiv B$, the rule gives $\mathrm{excess} \le B$ at $k=1$, attained, and
-$k\,\mathrm{excess} < B+(2-2/k)L$ for $k \ge 2$, strictly. Setting
+With $Z \equiv B$, the rule gives $\mathrm{excess} \le B$ at $k=1$ and
+$k\,\mathrm{excess} < B+2(k-1)L$ for $k \ge 2$. Setting
 $B = k\bigl(G-(2-2/k)L\bigr)$ therefore offers the promise $G$.
 \end{proposition}
+
+\begin{proof}
+Proposition~\ref{prop:supp_reservation_in} gives $\mathrm{In}_i\leq B$. At $k=1$
+Theorem~\ref*{M-thm:identity} of the manuscript is the equality
+$\mathrm{excess}_P[i]=\mathrm{In}_i-\mathrm{Out}_i\leq B$. For $k\geq2$ the same theorem,
+with its strict inequality and $\mathrm{Out}_i\geq0$, gives
+$k\,\mathrm{excess}_P[i]<B+2(k-1)L$, and dividing by $k$ at the stated $B$ gives an excess
+below $G$.
+\end{proof}
 
 The additive constant of the promise falls from $(3-2/k)L$ to $(2-2/k)L$, a drop of
 exactly $L$ at every $k$: the $kL$ overshoot that completed-work charging pays in the
 guard's overtaken-work bound disappears, while the $2(k-1)L$ slack of the identity
-remains. That residual is still approached and not attained. On the witness family of
-Section~S8.2 run at $B=f+L+1$, the ratio $(k\,\mathrm{excess}-B)/L$ is exactly
+remains. That residual is still approached and not attained. On the upward witness family of
+Section~\ref{sec:supp_tight1} run at $B=f+L+1$, the ratio $(k\,\mathrm{excess}-B)/L$ is exactly
 $2-2^{1-m}$ after $m$ rounds at $k=2$, reaching \devnum{255/128}, and reaches
 \devnum{907/243} at $k=3$ and \devnum{323/64} at $k=4$, against the limits $2k-2$ of
 \devnum{2}, \devnum{4} and \devnum{6}; a closed-form witness that attains the constant is
@@ -363,12 +379,14 @@ Section~\ref*{M-sec:scheduling} of the manuscript is unchanged.
 
 \begin{proposition}[One server: closed form and maximal permission]
 \label{prop:supp_reservation_k1}
-On the integer two-size batch family at one server, around an exact shortest-job-first
-proposal sequence, the rule closes
-$\min\bigl(1,\ \max(0,\lfloor (G-\ell)/\sigma \rfloor+1)/n\bigr)$ of the FCFS-to-SJF
-total-wait gap. This is $\lfloor G/\sigma \rfloor/n$ at $\ell = C$, the size-aware
-optimum, and $(\lfloor (G-L)/\sigma \rfloor+1)/n$ at $\ell = L$, the size-oblivious
-frontier, so at $\ell=L$ it matches, and does not beat, the sharp completed-work guard.
+Take the family of Theorem~\ref*{M-thm:price} of the manuscript at $k=1$, $m$ jobs of cost
+$L$ followed by $n$ jobs of cost $c$, all arriving at $t=0$, with integer costs and $G$,
+every long job carrying the cap $L$ and every short job the cap $\ell$, $c\leq\ell\leq L$.
+Around an exact shortest-job-first proposal sequence, the rule with $Z\equiv G$ closes
+$\min\bigl(1,\ \max(0,\lfloor (G-\ell)/c \rfloor+1)/n\bigr)$ of the FCFS-to-SJF
+total-wait gap. This is $\lfloor G/c \rfloor/n$ at $\ell = c$, the size-aware
+optimum of Proposition~\ref{prop:s_k1frac}, and $(\lfloor (G-L)/c \rfloor+1)/n$ at
+$\ell = L$, the size-oblivious frontier of Proposition~\ref{cor:k1_frontier}, so at $\ell=L$ it matches, and does not beat, the sharp completed-work guard.
 Moreover, at any reachable history with queue head $h$, a wrapper that reads the caps and
 promises $G$ must reject a later-ranked proposal $j$ whenever
 $\mathrm{over}_R[h]+\ell_j > G$; the largest constant allowance with promise $G$ is
@@ -376,17 +394,19 @@ therefore exactly $B^{*}=G$, against $B^{*}=G-L+1$ for completed-work charging, 
 statement needs no integer lattice.
 \end{proposition}
 
-The maximality argument runs through the relabelling of $j$ to its cap. Three points
-decide whether it closes. Only $j$ itself and the unfinished dispatched jobs of rank
-above $h$ may be relabelled, and at $k=1$ there are none of the latter, so the general
-form of the step is not available and is not needed. $W_{\mathrm{FCFS}}[h]$ is unchanged
-because $h$ is the head, every job of rank below $h$ has already been dispatched, and
-first-come first-served starts $h$ at a time fixed by the arrivals and service times of
-jobs ranked below it alone. And the promise has to be quantified over the base policy's
-proposal transcript: a base that reads true sizes, exact shortest-job-first among them,
-could propose differently after the relabelling, and without that quantifier the
-indistinguishability step fails. Nothing is needed about later steps, since $h$ is the
-head, $\mathrm{Out}_h$ is always zero and $\mathrm{In}_h$ is non-decreasing.
+The maximality claim is proved as Proposition~\ref{thm:k1_maximal} is, with the cap
+in place of $L$. Suppose a wrapper starts a later-ranked $j$ while
+$\mathrm{over}_R[h]+\ell_j>G$. At $k=1$ no job is in service at a decision, so
+$\mathrm{over}_R[h]$ is the total cost of the overtakers of $h$ already completed.
+Change the input only in $j$'s cost, setting it to $\ell_j$. Before $j$ completes, the
+wrapper sees the same arrivals, caps, completions and proposals in both inputs, and so
+starts $j$ in both. In the changed input
+$\mathrm{In}_h\geq\mathrm{over}_R[h]+\ell_j>G$, and $\mathrm{Out}_h=0$ because every job
+of lower rank than the head has already started, so the head's excess exceeds $G$. Two
+conditions are used. $W_{\mathrm{FCFS}}[h]$ does not change, because it depends only on
+the jobs of rank below $h$. And the promise must hold for every sequence of proposals the
+base policy can make, since a base that reads true costs might not propose $j$ again after
+the change.
 
 At $k \ge 2$ the rule is not pointwise maximal, and this is settled rather than open.
 Take two servers, four unit jobs arriving together and $G=0$. At the first epoch the rule

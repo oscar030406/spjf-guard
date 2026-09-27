@@ -82,7 +82,8 @@ reconstruct the arrival as $a_i = t_i - C_i$ and treat the recorded stamp as
 $\mathrm{done}_i$. This is the time the run started. CodeBench runs each student's code in
 its own container (Section~\ref{sec:overlay}), so we take it as the submission time, and the
 log does not record the delay between the two. Supplementary Section~S3.15 reads the stamp the
-other way, as the time of receipt, for an earlier configuration of the method.
+other way, as the time of receipt; with the final method the guard at a promise of
+\devnum{600} s then closes \devnum{0.861} of the gap instead of \devnum{0.801}.
 
 Stamps are whole seconds while durations are in microseconds, which lets a model read the
 fractional part of the gap to the previous record and learn from it something it should

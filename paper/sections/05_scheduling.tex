@@ -56,8 +56,8 @@ the total cost of the jobs that arrived after $q$ and have finished by $t$. Such
 while $q$ waited, so it overtook $q$. Each waiting job has a budget $\mathrm{budget}(q,t)$
 on this quantity, and the job is \emph{eligible} when its account has reached its budget,
 $\mathrm{over}[q](t) \ge \mathrm{budget}(q,t)$. Whenever a server is free and the queue is
-not empty, the guard starts the earliest-arrived eligible job if there is one, and
-otherwise lets $A$ choose (Algorithm~\ref{alg:guard} and Figure~\ref{fig:guard}). Serving
+not empty, the guard starts the earliest-arrived eligible job if there is one, and we
+say the guard \emph{fires}; otherwise it lets $A$ choose (Algorithm~\ref{alg:guard} and Figure~\ref{fig:guard}). Serving
 the earliest-arrived eligible job matters when budgets differ between jobs. It ensures that
 whenever a job $j$ starts ahead of an earlier-arrived waiting job $i$, the job $i$ was not
 eligible at that instant, and the per-job bound of Section~\ref{sec:theory} rests on this
