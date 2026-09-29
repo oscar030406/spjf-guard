@@ -302,9 +302,10 @@ The package is the submitted commit (`4b4c871`) with these changes:
 
 - the manuscript under review (mathematics-4625685) differs from the manuscript source of
   that commit in wording only: the title, the abstract, the keywords, the introduction,
-  Algorithm 1 set as a numbered listing, and one added reference. Every number the
-  source prints appears unchanged in the manuscript under review (checked on 2026-09-29,
-  section by section);
+  one sentence of Section 6.7, Algorithm 1 set as a numbered listing, the author
+  contributions, and the reference list set in the journal's style (the same references).
+  Every number the source prints appears unchanged in the manuscript under review
+  (checked on 2026-09-29, section by section);
 - left out: the manuscript sources, the Chinese copies of the documents, development
   tooling, and four studies that the paper does not use and no packaged script reads
   (`evidence/README.md` names them);
