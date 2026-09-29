@@ -1,5 +1,3 @@
-This file is the English version; the Chinese original is `sealed_run_procedure.zh-CN.md`.
-
 # The one run on the sealed terms: how to run it (revised 2026-09-24; sections 4.A and 4.B added 2026-09-25)
 
 This file covers operations only: what to check before the freeze, how to freeze, which commands make up that one run, what goes into the ledger, how long it takes and how much disk it uses, and what to do if it crashes midway. For why it is designed this way, see ADR 0003 (parameter selection rule), ADR 0004 (sealed-data protection) and ADR 0008 (online headline result); for the source of each artefact, see `GENERATED.md`.

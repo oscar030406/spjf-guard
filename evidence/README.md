@@ -42,6 +42,9 @@ lines 69, 101 and 108) and has no log here; every other OULAD script keeps only 
 presentations before computing anything. No study here reads the outputs of the sealed run of
 25 September 2026.
 
+
+This package leaves out four development studies that the paper does not use and that no packaged script reads: `guard_theory_referee`, `guard_theory_referee3`, `guard_variants_referee`, `identity_residuals`. Some notes below still mention them by name.
+
 ## What is here
 
 | study | what it answers | paper items | size |
@@ -59,11 +62,7 @@ presentations before computing anything. No study here reads the outputs of the 
 | `predictor_neural` | the predictor comparison and the graph-network ablation ladder | Table 1 (§4.2) and §4.3; the cold-start and test-row figures of §1 and §10; CodeBench column of Table S2 (Supplementary Section S1.5); Supplementary Section S5.4 | 0.45 MB |
 | `ranking_score` | which score a prediction-driven scheduler should sort by | asymmetry figures of §8.3; Table S14 and its two-class figures (Supplementary Section S3.10), cited from §8.3; asymmetry waits in Supplementary Section S3.16; fit targets in Supplementary Section S5.1 | 0.43 MB |
 | `guard_variants` | the guard kernel, its per-job theorems, and the budget variants | no printed number; its kernel is the simulator of `main_v3`, `cross_domain`, `firefox_ci` and `consolidation`. The guard rows of Tables 5–7 come from the package | 1.57 MB |
-| `guard_variants_referee` | internal referee report on the per-job guard theorem | nothing printed; revisions 1–3 of the theory note answer it | 0.15 MB |
 | `guard_theory` | the theory note: a pathwise identity for FCFS-relative delay | long form of §6 and of the proofs in Supplementary Sections S4 and S8 (formerly Appendix A, which the manuscript no longer has); `rev5_items.py` is the enumeration beside Proposition S17 (Supplementary Section S8.5) | 0.51 MB |
-| `guard_theory_referee` | internal referee report on the theory note (second pass) | nothing printed; revisions 1–3 of the theory note answer it | 0.19 MB |
-| `guard_theory_referee3` | internal referee report on the theory note (third pass) | nothing printed; revisions 1–3 of the theory note answer it | 0.13 MB |
-| `identity_residuals` | the identity residual measured on the real trace | nothing printed: the residuals of §8.5, Table S9 (Supplementary Section S3.5) and Supplementary Section S3.13 come from the package's `outputs/dev_tables/identity_residuals.csv`; this is the earlier measurement on the v3.1 trace | 0.13 MB |
 | `main_v3` | the main experiment: v3, v3.1 and v3.2 | count baseline charged at completion in §8.4; Table S4 trace and interval rows (Supplementary Section S3.1); Supplementary Sections S3.15, S3.16, S5.3, S5.4 (named in the text) and S5.6 (drop-one-cell sensitivity); Table S16 footnote rows and refit control (Supplementary Section S3.17), cited from §8.3 | 4.84 MB |
 | `main_v3_verify` | independent verification of v3 | the 5.7 billion independent checks of §8.5; the job-for-job cross-check of Supplementary Section S3.16; Supplementary Section S5.4 | 0.23 MB |
 | `main_v31_verify` | independent verification of v3.1 | nothing printed; its finding G1 is why v3.2 exists, whose drop-one-cell sensitivity Supplementary Section S5.6 quotes | 0.46 MB |
@@ -94,7 +93,7 @@ folder, not deleted.
 
 | study | why |
 | --- | --- |
-| `accoding` (first version) | superseded by `accoding_v2`, which reruns it under the v2 protocol; no paper number comes from it |
+| `accoding` (first version) | superseded by `accoding_v2`, which reruns it under the v2 protocol; no paper number comes from it. This package keeps only its `parse_sql.py`, which writes the tables `accoding_v2` reads |
 | `codebench_service` (first version) | superseded by `codebench_service_v2`. Its history features were built by submission order rather than by result-availability time, so its numbers leak and are optimistic. The rest of that first version is left out; only its parser `code_features.py` is carried, in `codebench_service/`, because the data path still runs it |
 | `guard_check` | superseded by `guard_variants`, which checks the same per-job upper bound over the whole family of budget rules |
 | `upc_wifi`, `upc_wifi_gnn` | an early direction — access-point load on a campus Wi-Fi trace, and a heterogeneous graph network against hand-built neighbour features. Nothing in the paper rests on either |

@@ -1,0 +1,2216 @@
+{
+  "counts": [
+    {
+      "family": "fixed",
+      "n_candidates": 27,
+      "n_feasible": 22,
+      "promise_s": 300.0
+    },
+    {
+      "family": "capped",
+      "n_candidates": 54,
+      "n_feasible": 15,
+      "promise_s": 300.0
+    },
+    {
+      "family": "hybrid",
+      "n_candidates": 18,
+      "n_feasible": 7,
+      "promise_s": 300.0
+    },
+    {
+      "family": "joint",
+      "n_candidates": 99,
+      "n_feasible": 44,
+      "promise_s": 300.0
+    },
+    {
+      "family": "fixed",
+      "n_candidates": 35,
+      "n_feasible": 31,
+      "promise_s": 600.0
+    },
+    {
+      "family": "capped",
+      "n_candidates": 54,
+      "n_feasible": 30,
+      "promise_s": 600.0
+    },
+    {
+      "family": "hybrid",
+      "n_candidates": 18,
+      "n_feasible": 9,
+      "promise_s": 600.0
+    },
+    {
+      "family": "joint",
+      "n_candidates": 107,
+      "n_feasible": 70,
+      "promise_s": 600.0
+    },
+    {
+      "family": "fixed",
+      "n_candidates": 39,
+      "n_feasible": 35,
+      "promise_s": 1200.0
+    },
+    {
+      "family": "capped",
+      "n_candidates": 54,
+      "n_feasible": 43,
+      "promise_s": 1200.0
+    },
+    {
+      "family": "hybrid",
+      "n_candidates": 18,
+      "n_feasible": 17,
+      "promise_s": 1200.0
+    },
+    {
+      "family": "joint",
+      "n_candidates": 111,
+      "n_feasible": 95,
+      "promise_s": 1200.0
+    }
+  ],
+  "definition": {
+    "capped": {
+      "b0_base_s": [
+        0.0,
+        15.0,
+        30.0,
+        60.0,
+        120.0,
+        240.0,
+        360.0,
+        480.0,
+        600.0
+      ],
+      "eta": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ]
+    },
+    "fixed": {
+      "anchors_s": [
+        15.0,
+        30.0,
+        60.0,
+        120.0,
+        240.0,
+        360.0,
+        480.0,
+        600.0
+      ],
+      "include_equal_promise": true,
+      "log_from_s": 15.0,
+      "log_points": 32,
+      "log_to_s": 4200.0
+    },
+    "hybrid": {
+      "b0_base_s": [
+        0.0,
+        30.0,
+        120.0
+      ],
+      "eta": [
+        0.0,
+        0.9
+      ],
+      "gam_base_s": [
+        1.0,
+        4.0,
+        16.0
+      ]
+    }
+  },
+  "expanded_points": [
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B15",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 17.99,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B17.99",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 21.576,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B21.576",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 25.877,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B25.877",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B30",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 31.035,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B31.035",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 37.222,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B37.222",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 44.641,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B44.641",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 53.54,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B53.54",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B60",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 64.212,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B64.212",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 77.012,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B77.012",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 92.363,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B92.363",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 110.774,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B110.774",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B120",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 132.855,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B132.855",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 159.338,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B159.338",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 191.099,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B191.099",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 229.192,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B229.192",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B240",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 274.878,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B274.878",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 329.671,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B329.671",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B360",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 395.386,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B395.386",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 474.201,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B474.201",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B480",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 568.726,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B568.726",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B600",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 682.093,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B682.093",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 818.058,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B818.058",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 981.126,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B981.126",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 1176.699,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B1176.7",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 1411.256,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B1411.26",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 1692.569,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B1692.57",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 2029.958,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B2029.96",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 2434.6,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B2434.6",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 2919.901,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B2919.9",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 3501.94,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B3501.94",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": 4200.0,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIX-B4200",
+      "promise_s": -1.0
+    },
+    {
+      "b0_base_s": Infinity,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIXEQ-G300",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B0-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B0-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B0-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B0-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B0-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B0-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B15-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B15-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B15-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B15-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B15-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B15-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B30-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B30-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B30-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B30-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B30-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B30-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B60-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B60-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B60-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B60-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B60-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B60-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B120-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B120-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B120-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B120-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B120-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B120-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B240-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B240-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B240-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B240-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B240-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B240-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B360-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B360-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B360-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B360-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B360-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B360-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B480-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B480-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B480-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B480-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B480-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B480-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B600-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B600-e0.25",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B600-e0.5",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B600-e0.75",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B600-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G300-B600-e0.95",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G300-B0-g1-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G300-B0-g1-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G300-B0-g4-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G300-B0-g4-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G300-B0-g16-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G300-B0-g16-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G300-B30-g1-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G300-B30-g1-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G300-B30-g4-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G300-B30-g4-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G300-B30-g16-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G300-B30-g16-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G300-B120-g1-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G300-B120-g1-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G300-B120-g4-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G300-B120-g4-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G300-B120-g16-e0",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G300-B120-g16-e0.9",
+      "promise_s": 300.0
+    },
+    {
+      "b0_base_s": Infinity,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIXEQ-G600",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B0-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B0-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B0-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B0-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B0-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B0-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B15-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B15-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B15-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B15-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B15-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B15-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B30-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B30-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B30-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B30-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B30-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B30-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B60-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B60-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B60-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B60-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B60-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B60-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B120-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B120-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B120-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B120-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B120-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B120-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B240-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B240-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B240-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B240-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B240-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B240-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B360-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B360-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B360-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B360-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B360-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B360-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B480-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B480-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B480-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B480-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B480-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B480-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B600-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B600-e0.25",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B600-e0.5",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B600-e0.75",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B600-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G600-B600-e0.95",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G600-B0-g1-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G600-B0-g1-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G600-B0-g4-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G600-B0-g4-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G600-B0-g16-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G600-B0-g16-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G600-B30-g1-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G600-B30-g1-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G600-B30-g4-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G600-B30-g4-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G600-B30-g16-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G600-B30-g16-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G600-B120-g1-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G600-B120-g1-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G600-B120-g4-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G600-B120-g4-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G600-B120-g16-e0",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G600-B120-g16-e0.9",
+      "promise_s": 600.0
+    },
+    {
+      "b0_base_s": Infinity,
+      "eta": 0.0,
+      "family": "fixed",
+      "gam_base_s": 0.0,
+      "name": "FIXEQ-G1200",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B0-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B0-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B0-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B0-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B0-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B0-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B15-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B15-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B15-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B15-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B15-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 15.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B15-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B30-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B30-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B30-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B30-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B30-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B30-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B60-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B60-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B60-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B60-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B60-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 60.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B60-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B120-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B120-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B120-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B120-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B120-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B120-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B240-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B240-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B240-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B240-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B240-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 240.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B240-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B360-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B360-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B360-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B360-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B360-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 360.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B360-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B480-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B480-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B480-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B480-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B480-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 480.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B480-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.0,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B600-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.25,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B600-e0.25",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.5,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B600-e0.5",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.75,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B600-e0.75",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.9,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B600-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 600.0,
+      "eta": 0.95,
+      "family": "capped",
+      "gam_base_s": 0.0,
+      "name": "CAP-G1200-B600-e0.95",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G1200-B0-g1-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G1200-B0-g1-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G1200-B0-g4-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G1200-B0-g4-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G1200-B0-g16-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 0.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G1200-B0-g16-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G1200-B30-g1-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G1200-B30-g1-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G1200-B30-g4-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G1200-B30-g4-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G1200-B30-g16-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 30.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G1200-B30-g16-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G1200-B120-g1-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 1.0,
+      "name": "HYB-G1200-B120-g1-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G1200-B120-g4-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 4.0,
+      "name": "HYB-G1200-B120-g4-e0.9",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.0,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G1200-B120-g16-e0",
+      "promise_s": 1200.0
+    },
+    {
+      "b0_base_s": 120.0,
+      "eta": 0.9,
+      "family": "hybrid",
+      "gam_base_s": 16.0,
+      "name": "HYB-G1200-B120-g16-e0.9",
+      "promise_s": 1200.0
+    }
+  ],
+  "explanation": "Expanded points include schedules shared across promises. Candidate counts apply the realised-promise filter at each G; distinct schedules deduplicate points that dispatch identically at one server count.",
+  "per_server_count": {
+    "4": {
+      "distinct_schedules": 243,
+      "expanded_points": 258
+    },
+    "5": {
+      "distinct_schedules": 243,
+      "expanded_points": 258
+    },
+    "7": {
+      "distinct_schedules": 243,
+      "expanded_points": 258
+    },
+    "8": {
+      "distinct_schedules": 243,
+      "expanded_points": 258
+    }
+  }
+}

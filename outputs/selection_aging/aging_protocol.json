@@ -1,0 +1,37 @@
+{
+  "candidate_count": 11,
+  "feasible_count": 4,
+  "grid": [
+    1e-05,
+    3e-05,
+    0.0001,
+    0.0003,
+    0.001,
+    0.003,
+    0.01,
+    0.03,
+    0.1,
+    0.3,
+    1.0
+  ],
+  "guarantee": "none",
+  "label": "Aging(600)",
+  "priority": "predicted_cost - credit_per_s * current_age_s",
+  "selected": {
+    "credit_per_s": 0.03,
+    "feasible": true,
+    "harm_limit_s": 300.0,
+    "n_cells": 15,
+    "worst_gap_closed": 0.037527158847150646,
+    "worst_harm_s": 246.359636
+  },
+  "selection_rule": {
+    "constraint": "harm <= reference_promise_s / 2 in every cell",
+    "objective": "worst_cell_deadline_window_gap_closed",
+    "tie_break": [
+      "smaller_worst_harm",
+      "larger_credit"
+    ],
+    "trace": "validation_only"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "produced_by": "scripts/select_parameters.py",
+  "written_at": "2026-09-24T13:15:24+00:00",
+  "config": {
+    "path": "configs/main_frozen_1289aa2.yaml",
+    "present": true,
+    "bytes": 18770,
+    "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe"
+  },
+  "inputs": [],
+  "outputs": [
+    {
+      "path": "selection_grid.csv",
+      "present": true,
+      "bytes": 526174,
+      "sha256": "0d93fbc2d6cf3be57d2b7f959d1428c0a1717d2171c04b9906bff372aecdc27f"
+    },
+    {
+      "path": "selection_worst.csv",
+      "present": true,
+      "bytes": 17855,
+      "sha256": "54b0138137afb251740a363c8e4c093c19d1d3e3283bf9f01206c3fb66190664"
+    },
+    {
+      "path": "selection_frontier.csv",
+      "present": true,
+      "bytes": 24898,
+      "sha256": "a7e024b7a05832723f97ccf1e6c303b5d3ffb9712c28b78aca7d09c0c068af9a"
+    },
+    {
+      "path": "selected_parameters.csv",
+      "present": true,
+      "bytes": 2353,
+      "sha256": "060a6b59b15c2fe1a43c175478d79973547274595d23b9646732ea3af5bea83a"
+    },
+    {
+      "path": "selection_protocol.json",
+      "present": true,
+      "bytes": 48381,
+      "sha256": "f9e69cd838042ed5bfcb3dc8bd6ac114371543afc00874dc27f87598c402b790"
+    }
+  ],
+  "arguments": {
+    "pool": "validation",
+    "overlays": "0,1,2,3,4",
+    "levels": "0,1,2",
+    "score_array": "tweedie",
+    "score_parquet": null,
+    "score_column": null
+  },
+  "notes": {
+    "harm_fraction": 0.5,
+    "n_cells": 15,
+    "n_points": 258,
+    "historical_recipe": "The configuration this run read, preserved byte-for-byte as configs/main_frozen_1289aa2.yaml. Only its path was relocated after configs/main.yaml was amended; output hashes unchanged."
+  }
+}

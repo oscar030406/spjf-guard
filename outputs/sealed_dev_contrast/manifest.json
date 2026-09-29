@@ -1,0 +1,84 @@
+{
+  "produced_by": "scripts/sealed_dev_contrast.py",
+  "written_at": "2026-09-26T11:39:54+00:00",
+  "config": {
+    "path": "configs/main.yaml",
+    "present": true,
+    "bytes": 19065,
+    "sha256": "ecd7b34bc4a83fe62b2f777fa136c9ea34ab00b0f9fa2042dbc1ae45c5f5db8d"
+  },
+  "inputs": [
+    {
+      "path": "outputs/dev_tables/main_table.csv",
+      "present": true,
+      "bytes": 23955,
+      "sha256": "64963711d9061f362879e5bec42fe322c6fd742531803d9e00adc0a13b67e1ea"
+    },
+    {
+      "path": "outputs/dev_tables/main_cells.csv",
+      "present": true,
+      "bytes": 88375,
+      "sha256": "112dadbca81272f270b0b824809c0cce2ba1f797918437aa87f4561e98917a9a"
+    },
+    {
+      "path": "outputs/dev_online_visibility/online_comparison.csv",
+      "present": true,
+      "bytes": 44707,
+      "sha256": "bcf5a92320f39040c82960a4ac8b7a54bad59fe9408a1899ce8e477756365546"
+    },
+    {
+      "path": "outputs/dev_online_visibility/online_cells.csv",
+      "present": true,
+      "bytes": 170448,
+      "sha256": "543a97d1c7e35d78301e5bfd06f5b1581498b01d3021cb2e893058f537d1806a"
+    },
+    {
+      "path": "outputs/dev_consistent_visibility/same_copy_exposure_cells.csv",
+      "present": true,
+      "bytes": 27880,
+      "sha256": "11d33268ab24ba807371fb209b88833d9286ff1f7c5dad6186f8bfba72611a74"
+    },
+    {
+      "path": "outputs/sealed_tables/main_table.csv",
+      "present": true,
+      "bytes": 23820,
+      "sha256": "b87e2160d75ef488c7c7ed5397d0f47a4f8dae2f00507661184bfc52bb7575ff"
+    },
+    {
+      "path": "outputs/sealed_tables/main_cells.csv",
+      "present": true,
+      "bytes": 86610,
+      "sha256": "be848c4115bdde1442fa2edaef97e9c285fc808217d348f492925309e6e66e58"
+    },
+    {
+      "path": "outputs/sealed_online_visibility/online_comparison.csv",
+      "present": true,
+      "bytes": 9137,
+      "sha256": "c43fcc716db0e8ae7a85c6a9f657de81f00761e173740e472ab1be34aba925a2"
+    },
+    {
+      "path": "outputs/sealed_online_visibility/online_cells.csv",
+      "present": true,
+      "bytes": 33578,
+      "sha256": "047dd7776b0936c04e5eae4362086066293bf6323b9572ddb75604cbbb50d71e"
+    },
+    {
+      "path": "outputs/sealed_consistent_visibility/same_copy_exposure_cells.csv",
+      "present": true,
+      "bytes": 28305,
+      "sha256": "c05b90ea8db54cf4b676cf90fafb73b116db85d2d6a4321bbfc052ad9d3e8aad"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "contrast.csv",
+      "present": true,
+      "bytes": 3275,
+      "sha256": "59a1187831256c14880299bc635ff2b2bf67764e7616eb5fa25e35a470419dfd"
+    }
+  ],
+  "arguments": {
+    "outputs": "D:\\UserData\\Desktop\\\u56fe\u795e\u7ecf\u7f51\u7edc\\outputs"
+  },
+  "notes": {}
+}

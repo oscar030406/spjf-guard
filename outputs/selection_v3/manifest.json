@@ -1,0 +1,57 @@
+{
+  "produced_by": "scripts/select_parameters.py",
+  "written_at": "2026-09-21T15:45:46+00:00",
+  "config": {
+    "path": "configs/main_original_84932d9.yaml",
+    "present": true,
+    "bytes": 14369,
+    "sha256": "94c82eabb1428300a6badc037e6fc795e5e451388af9fad83dcc4e1123f153ee"
+  },
+  "inputs": [],
+  "outputs": [
+    {
+      "path": "selection_grid.csv",
+      "present": true,
+      "bytes": 527175,
+      "sha256": "e73725e53da0e6c469828f8a0d10bfa57d7e642f907e544b7873dab68c3c49b9"
+    },
+    {
+      "path": "selection_worst.csv",
+      "present": true,
+      "bytes": 18149,
+      "sha256": "c8eb6ad4e92ffc1a0a0d15679f1259c4fff4567e5f5be0c3be032a9c650eb8fe"
+    },
+    {
+      "path": "selection_frontier.csv",
+      "present": true,
+      "bytes": 25213,
+      "sha256": "b78663a124ed132a44c405eb633fd45ee063e08bf2b1fbe7d860ccf6061c68a5"
+    },
+    {
+      "path": "selected_parameters.csv",
+      "present": true,
+      "bytes": 2356,
+      "sha256": "1e52bcb5d7f7e4e20507329ced884457cfaf3320a756e589805e59e73f2f0715"
+    },
+    {
+      "path": "selection_protocol.json",
+      "present": true,
+      "bytes": 48381,
+      "sha256": "f9e69cd838042ed5bfcb3dc8bd6ac114371543afc00874dc27f87598c402b790"
+    }
+  ],
+  "arguments": {
+    "pool": "validation",
+    "overlays": "0,1,2,3,4",
+    "levels": "0,1,2",
+    "score_array": "tweedie",
+    "score_parquet": null,
+    "score_column": null
+  },
+  "notes": {
+    "harm_fraction": 0.5,
+    "n_cells": 15,
+    "n_points": 258,
+    "historical_recipe": "Original commit 84932d9 configuration, preserved byte-for-byte. Only its path was relocated after the visibility amendment; output hashes unchanged."
+  }
+}

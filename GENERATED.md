@@ -1,5 +1,3 @@
-This file is the English version; the Chinese original is `GENERATED.zh-CN.md`.
-
 # Map of generated artefacts
 
 Every file that a script or model produces from other files has one row here: source → artefact → regeneration command → check command. Editing an artefact by hand makes its check fail. `scripts/check_generated.py` runs every check row; pre-commit calls it.

@@ -1,0 +1,99 @@
+{
+  "produced_by": "scripts/online_paired_differences.py",
+  "written_at": "2026-09-26T09:28:17+00:00",
+  "config": {
+    "path": "configs/main.yaml",
+    "present": true,
+    "bytes": 19065,
+    "sha256": "ecd7b34bc4a83fe62b2f777fa136c9ea34ab00b0f9fa2042dbc1ae45c5f5db8d"
+  },
+  "inputs": [
+    {
+      "path": "outputs/dev_online_visibility/online_comparison.csv",
+      "present": true,
+      "bytes": 44707,
+      "sha256": "bcf5a92320f39040c82960a4ac8b7a54bad59fe9408a1899ce8e477756365546"
+    },
+    {
+      "path": "outputs/dev_online_visibility/manifest.json",
+      "present": true,
+      "bytes": 3617,
+      "sha256": "33db07af9004ce0a162c6ff91fb8fa069d242c3667db2e237d235eb32de4191b"
+    },
+    {
+      "path": "outputs/dev_tables/paired_differences.csv",
+      "present": true,
+      "bytes": 5577,
+      "sha256": "7478ce48bce138a177b585e4c205c9a2f5f7882bf709a23ce74a83bba9ad1371"
+    },
+    {
+      "path": "prechecks/timeout_rule/timeout_intervals.csv",
+      "present": true,
+      "bytes": 1261,
+      "sha256": "419c323de476eb16f6849be0ada027a6a314082bde80bcd0b43d9b3fcb94c591"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep0.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "78d063485a4281f6fd07560a717ee3d9440a93ac11912e8f74f934d8009061c8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep1.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "71a75d2b6df5c46912e00898c55f6e20cf56350f46c61db3fc40d309e622c81d"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep2.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8f021068e70ef21ec6b1a8b1ca1ae327ac6fb7811f61a4cffa6d1697c74d07eb"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep3.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "f59edee819e5e3a87c5d012171b197f2e7239f9e74ea44a4514507cc5040eea8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep4.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8fd652d5874ef30bb7675e56f6360768e368c47cd67b674567c83e7a10a4a8be"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "online_paired_differences.csv",
+      "present": true,
+      "bytes": 11659,
+      "sha256": "9e836690753a7da4994911cd3b65709f1ce18bcfd23ea3c4d1d83e25dc769687"
+    },
+    {
+      "path": "online_clock_intervals.csv",
+      "present": true,
+      "bytes": 4709,
+      "sha256": "6a972d32ef4151c4da98f951c89dad0fd7e6fe4f8c4f393246100d11cccaa778"
+    },
+    {
+      "path": "tab_s_online_clock_body.tex",
+      "present": true,
+      "bytes": 1491,
+      "sha256": "8caecd7a39b0d7adfbcba87f1e591cde91c75f3974fb335ee97eae836496755d"
+    },
+    {
+      "path": "tab_s_online_pairs_body.tex",
+      "present": true,
+      "bytes": 4064,
+      "sha256": "373211da38597caf1500bde2f3b3469f7124318f42a7d3d339838a651372f75e"
+    }
+  ],
+  "arguments": {
+    "online_dir": "D:\\UserData\\Desktop\\\u56fe\u795e\u7ecf\u7f51\u7edc\\outputs\\dev_online_visibility"
+  },
+  "notes": {
+    "checks": "original pairs equal outputs/dev_tables/paired_differences.csv exactly; original Timeout rows equal prechecks/timeout_rule/timeout_intervals.csv at six decimals; online gaps and intervals equal online_comparison.csv exactly",
+    "online_signature": "721149161a257d0f0ba536410909eeea983c3dfc61fd0f62d1b40afd4633bb56"
+  }
+}

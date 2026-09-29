@@ -27,6 +27,8 @@ authors:
       College of Automation, Nanjing University of Posts and
       Telecommunications
 license: MIT
+version: 1.0.0-submitted
+doi: 10.5281/zenodo.23035900
 repository-code: https://github.com/oscar030406/spjf-guard
 keywords:
   - non-preemptive scheduling

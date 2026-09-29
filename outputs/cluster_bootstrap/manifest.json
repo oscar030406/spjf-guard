@@ -1,0 +1,65 @@
+{
+  "produced_by": "scripts/run_cluster_bootstrap.py",
+  "written_at": "2026-09-25T11:27:13+00:00",
+  "config": {
+    "path": "configs/main.yaml",
+    "present": true,
+    "bytes": 19065,
+    "sha256": "ecd7b34bc4a83fe62b2f777fa136c9ea34ab00b0f9fa2042dbc1ae45c5f5db8d"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    },
+    {
+      "path": "outputs/dev_tables/main_cells.csv",
+      "present": true,
+      "bytes": 88375,
+      "sha256": "112dadbca81272f270b0b824809c0cce2ba1f797918437aa87f4561e98917a9a"
+    },
+    {
+      "path": "outputs/dev_tables/main_table.csv",
+      "present": true,
+      "bytes": 23955,
+      "sha256": "64963711d9061f362879e5bec42fe322c6fd742531803d9e00adc0a13b67e1ea"
+    },
+    {
+      "path": "outputs/dev_tables/paired_differences.csv",
+      "present": true,
+      "bytes": 5577,
+      "sha256": "7478ce48bce138a177b585e4c205c9a2f5f7882bf709a23ce74a83bba9ad1371"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "bootstrap_cells.csv",
+      "present": true,
+      "bytes": 634292,
+      "sha256": "ce5029c0feea2095a7b5f01b5458899375f9ad5ea6252cd5c365581a28902039"
+    },
+    {
+      "path": "bootstrap_summary.csv",
+      "present": true,
+      "bytes": 3023,
+      "sha256": "b44a7d80f4fb5f78457fc55def043669a83ec49f2162af1c54ceec8919a685e8"
+    },
+    {
+      "path": "bootstrap_draws.csv",
+      "present": true,
+      "bytes": 46386,
+      "sha256": "da52e9c7321dfabd738d425af415948c13de062af8e5e5b0eb5f0ac8fd8c302e"
+    }
+  ],
+  "arguments": {
+    "resamples": 100,
+    "workers": 4
+  },
+  "notes": {
+    "unit": "class-term of the primary pool, drawn with replacement",
+    "held_fixed": "predictor weights (spjf_e) and the configured Guard selection",
+    "identity_rows_checked": 90
+  }
+}

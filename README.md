@@ -1,361 +1,327 @@
-**English** | [简体中文](README.zh-CN.md)
+# Code and data for "Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution Services under Deadline-Driven Bursty Load"
 
-# Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking
+Yazhou Guo, Zexin Lin, Chengyang Huo, Yurong Song. Submitted to *Mathematics* (MDPI), 2026.
 
-This is the code, the tables and the run logs behind one paper: *Prediction-Driven
-Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution Services under
-Deadline-Driven Bursty Load*. It rebuilds every number the paper prints from the public
-datasets the paper uses.
+Version 1.0.0-submitted. Archived at Zenodo, <https://doi.org/10.5281/zenodo.23035900>;
+the same files are in the GitHub repository <https://github.com/oscar030406/spjf-guard>
+under the tag `v1.0.0-submitted`.
 
-Read the paper in the browser: [paper/main.pdf](https://cdn.jsdelivr.net/gh/oscar030406/spjf-guard@main/paper/main.pdf),
-and its supplementary material,
-[paper/supplementary.pdf](https://cdn.jsdelivr.net/gh/oscar030406/spjf-guard@main/paper/supplementary.pdf).
-These links go through the jsDelivr mirror of this repository, which may lag a push by up
-to a day. GitHub's own file view does not display the two PDFs; to download them from
-GitHub instead, use [main.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/main.pdf)
-and [supplementary.pdf](https://github.com/oscar030406/spjf-guard/raw/main/paper/supplementary.pdf).
+This package holds the code, the configuration, the result tables and the run logs behind
+every number in the manuscript and its Supplementary Materials, in the version that was
+submitted. It rebuilds those numbers from the public datasets the paper uses. It does not
+contain the datasets themselves (see "Data availability") or the manuscript.
 
-## What the paper is about
+The layout follows the replication-package template of the Social Science Data Editors
+(the AEA template README, v1.1): data availability, computational requirements, a
+description of the programs, instructions, and a list of tables with the programs and
+files that produce them.
 
-The automatic grader of a programming course takes submissions from many students and
-runs them on a few machines. Each machine runs one submission at a time. A submission is
-never interrupted once it has started; it is killed only when it reaches a time limit,
-which the paper calls `L`. Serverless platforms, software build farms and compute
-clusters run other people's jobs in the same way.
+## Contents
 
-Before an assignment deadline, hundreds of students submit at once. A submission that
-loops keeps a machine busy for the whole time limit, and every submission behind it
-waits. The natural fix is to predict how long each submission will run and to run the
-short ones first. That shortens most waits. But a wrong prediction can push one job to
-the back of the queue again and again. On the log studied here, one job waited close to
-6,000 seconds longer than it would have if the queue had simply been served in arrival
-order. No operator will deploy a scheduler that can do that to a user.
+| Path | What it holds |
+|---|---|
+| `README.md`, `README.pdf` | this file |
+| `src/spjf_guard/` | the Python package that runs the main experiment: the queue simulator in front of `k` servers, which checks the paper's per-job bound on every simulated job (`sim/`); dataset readers and the lock on the sealed data (`data/`); causal features (`features/`); the running-time predictor (`predict/`); replay traces, parameter selection, metrics and tables (`experiment/`) |
+| `scripts/` | the command-line steps of the pipeline, listed under "Instructions to replicators" |
+| `configs/` | `main.yaml` holds every setting of the main experiment, each with a comment; the dated files are the configurations of the sensitivity runs and of the visibility runs |
+| `tests/` | unit and property tests of the package |
+| `evidence/` | the separate studies behind the numbers the package does not produce (other workloads, the predictor comparison, numerical checks of the propositions, capacity and physical runs), one folder per study with its scripts, its logs (`out_*.txt`) and a `README.md`; `evidence/README.md` lists them |
+| `outputs/` | the result tables the submitted manuscript reports, as the package wrote them; `outputs/README.md` says which command wrote each directory |
+| `data/` | empty apart from `data/README.md`: where to download each dataset, where to save it, and the SHA-256 of the files we used |
+| `docs/` | `adr/`: design decisions with the alternatives rejected; `sealed_run_procedure.md`: how the sealed semesters were run once; `sealed_access_log.md` (with an English rendering, `sealed_access_log.en.md`): every read of sealed data; `post_run_changes.json`: reporting changes made after the sealed run |
+| `prechecks/timeout_rule/` | one kernel the online replay imports from this path |
+| `protocol_lock.json`, `protocol_lock.draft.json` | the hashes of code, configuration and inputs at the freeze of 2026-09-25, and the pinned choices (split, seeds, selected parameters) |
+| `CONTEXT.md` | glossary: one term per concept, used identically in the paper, the code and the tables |
+| `GENERATED.md` | every generated file: its source, the command that regenerates it and the command that checks it |
+| `pyproject.toml`, `uv.lock` | the Python version and the locked dependency versions |
+| `CITATION.cff`, `LICENSE` | how to cite; MIT licence for the code |
+| `MANIFEST.sha256` | SHA-256 of every file in the package |
 
-The paper gives every job a promise. It first proves that, on any such service with `k`
-machines, the extra time a job waits compared with arrival order equals the work that
-jumped ahead of it, minus the work it jumped ahead of itself, divided by `k`, up to an
-error of at most `(2 - 2/k) L`. It
-then wraps any ordering rule in a *guard*: a small rule that counts how much work has
-jumped ahead of each waiting job and, once some job's count reaches its budget, runs the
-earliest-arrived of those jobs next. The result is that no job waits more than `G` seconds longer than
-it would have in arrival order, however wrong the predictions are. The operator chooses
-`G`; the theorem turns it into a guarantee.
+## Data availability and provenance
 
-Three further results sit beside the guard. First, a maximum waiting time, the rule
-deployed schedulers use against starvation, makes the same kind of promise, and the
-paper proves it. Near full load, though, it keeps much less of the benefit, because it
-charges a waiting job for the whole backlog ahead of it and not only for the work that
-jumped ahead. Second, the arrival log alone bounds how long any job can wait in absolute
-terms, so an operator can promise a number of seconds. Third, the paper says what the
-guard still promises when machines report finished jobs late.
+### Statement about rights
 
-The claim is tested by replaying real logs: two programming-course graders, a serverless
-platform, two pools of machines that build and test Firefox, and a compute cluster.
+The authors have legitimate access to and permission to use every dataset in this
+study. All of them are published by third parties and are publicly downloadable; none
+needs an access agreement. We redistribute none of them, as the manuscript's Data
+Availability Statement says. What the package contains is code, configuration, aggregate
+tables and run logs: no dataset row, student identifier, user name or line of student
+source code.
 
-This repository is a reproduction package. It is not a scheduler that can be installed
-on a server.
+### Datasets
 
-## What is in this repository
-
-| path | what it holds |
-| --- | --- |
-| `src/spjf_guard/` | the Python package that runs the main experiment. `sim/` simulates a queue in front of `k` machines and checks the paper's bound on every simulated job. `data/` reads the datasets, handles their time stamps and refuses to read sealed data. `features/` computes each job's features from what is known when it arrives. `predict/` fits the model that predicts a job's running time. `experiment/` builds the replay traces, chooses the guard's settings, computes the metrics and writes the tables |
-| `tests/` | correctness tests, written before the implementation |
-| `configs/main.yaml` | every setting of the main experiment, each with a comment saying what it does |
-| `scripts/` | the commands listed below |
-| `evidence/` | the studies behind the numbers the package does not produce, one folder each; see "Where each number comes from" |
-| `docs/adr/` | decisions that are hard to reverse, one page each, with the alternatives that were rejected; `docs/adr/zh-CN/` holds the Chinese originals |
-| `docs/sealed_access_log.md` | the ledger of sealed reads, one line per read, in the Chinese strings the code writes: every sealed run of the package and the pre-freeze reads logged at the time. `evidence/README.md` lists every pre-freeze bookkeeping read by script and log line; `docs/sealed_access_log.en.md` is an English rendering |
-| `paper/` | the manuscript source. Table numbers are copied in from `outputs/`; no script writes into `paper/` |
-| `CONTEXT.md` | the glossary. One word per concept, used identically in the paper, the code, the configuration and the tables. `CONTEXT.zh-CN.md` is the Chinese original |
-| `GENERATED.md` | every file a script produces: its source, the command that regenerates it, the command that checks it. `GENERATED.zh-CN.md` is the Chinese original |
-
-`README.zh-CN.md` is this file in Chinese, section for section, with the same commands.
-
-Two directories named below are not in the repository. `data/` holds the raw datasets,
-which we may not redistribute. `outputs/` holds the tables the pipeline writes; the
-commands below regenerate every one of them.
-
-## Setup
-
-Python 3.12. Dependencies are locked by [uv](https://docs.astral.sh/uv/). This installs
-them into a `.venv` inside the repository:
-
-```bash
-uv sync --extra dev
-```
-
-Every command below calls the interpreter through a shell variable named `$UV`. The
-variable unsets `PYTHONHOME` and `PYTHONPATH` in case your shell exports them (one of our
-machines did, and child processes then loaded the wrong standard library), and it caps
-the thread count, because the simulator is memory-bound and more threads only slow it
-down:
-
-```bash
-export UV="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
-  NUMBA_NUM_THREADS=4 OMP_NUM_THREADS=4 uv run --no-sync"
-```
-
-No path variable has to be set. Every input location is written in the `data` section of
-`configs/main.yaml`, relative to the repository root:
-
-| configuration key | points at | written by |
-|---|---|---|
-| `archive_dir` | `data/codebench/archives/` | you, when you download the publisher's per-semester archives |
-| `raw_parquet_dir` | `data/codebench/parquet/` | `scripts/parse_archive.py` |
-| `cache_dir` | `data/derived/codebench_cache_r4/` | `scripts/build_cache.py` |
-| `overlay_dir` | `data/derived/overlay_traces/` | `scripts/build_overlays.py` |
-| `score_dir` | `data/derived/package_ranking_scores/` | `scripts/fit_scores.py` |
-
-If one input has to live somewhere else on your machine, `${NAME}` inside those strings
-is expanded from the environment. No file in the repository may contain a path that
-exists on one machine only; `scripts/check_generated.py --only paths` fails if one does.
-
-## Data
-
-No raw data is redistributed here. Download each dataset from its publisher into
-`data/<name>/` before running anything. The terms are given as the publisher states them.
-
-| dataset | what it is | source | terms |
+| Dataset | Provided here | Where to get it | Terms |
 |---|---|---|---|
-| CodeBench v1.81 | the log of an introductory programming course at the Federal University of Amazonas, Brazil: 18 semesters from 2016 to 2024, every action in the students' online editor with a millisecond time stamp, and the start and deadline of every assignment. The main experiment runs on this | <https://codebench.icomp.ufam.edu.br/dataset/> | the page states no licence. Used for academic research and cited; the raw archives are not redistributed |
-| ACcoding v1.0.0 | the submission log of an online judge, the second grading platform | <https://zenodo.org/record/6522395>, doi:10.5281/zenodo.6522395 | the dataset paper states CC BY 4.0; the Zenodo record lists "other (open)". Cited; not redistributed |
-| OULAD | Open University learning analytics dataset. The project began as a study of this dataset; that direction did not work, and nothing in the paper rests on it | <https://analyse.kmi.open.ac.uk/open_dataset>, doi:10.1038/sdata.2017.171 | CC BY 4.0 |
-| Azure Functions 2021 | two weeks of function calls on Microsoft's serverless platform, 1,980,951 calls | <https://github.com/Azure/AzurePublicDataset> (Zhang et al., SOSP 2021) | CC BY 4.0 |
-| Intel Netbatch 2012 | one pool of Intel's internal compute farm, 9,054,066 jobs, in the standard format of the Parallel Workloads Archive | <https://www.cs.huji.ac.il/labs/parallel/workload/l_intel_netbatch/> (Shai, Shmueli & Feitelson, JSSPP 2013) | the archive gives no licence, states that the log is free for researchers, and asks for acknowledgement and citation. Acknowledge Ohad Shai, Edi Shmueli and Nir Antebi (Intel); the file is not redistributed |
-| LPC-EGEE 2004 | a grid compute farm in France whose jobs fall into six classes by time limit; used in `evidence/lpc_egee_queues/` | <https://www.cs.huji.ac.il/labs/parallel/workload/l_lpc/> | same archive terms. Acknowledge Emmanuel Medernach for the log, Dan Tsafrir for the SWF conversion, and the Parallel Workloads Archive |
-| Mozilla Firefox CI | two pools of machines that build and test Firefox, 2026-08-24 to 09-14 and 2026-09-07 to 09-14. The only log here that records how long each job actually waited, so it is what the simulator is checked against | <https://firefox-ci-tc.services.mozilla.com/api/queue/v1> and <https://treeherder.mozilla.org/api>, public and unauthenticated | no licence statement. Taken from a public API and attributed to Mozilla; only the slice collected here is kept, and it is not redistributed |
-| UPC Campus Nord Wi-Fi | Wi-Fi access-point occupancy on a university campus; an early direction nothing in the paper rests on | <https://data.mendeley.com/datasets/55vx86j8wf/1>, doi:10.17632/55vx86j8wf.1 | CC BY 4.0 |
+| CodeBench v1.81 (Universidade Federal do Amazonas), 18 semesters | no | <https://codebench.icomp.ufam.edu.br/dataset/> | no licence stated; cited, not redistributed |
+| ACcoding v1.0.0 (Chen et al. 2024, doi:10.1038/s41597-024-03392-z) | no | doi:10.5281/zenodo.6522395 | CC BY 4.0 per the data descriptor |
+| OULAD (Kuzilek et al. 2017, doi:10.1038/sdata.2017.171) | no | <https://analyse.kmi.open.ac.uk/open_dataset> | CC BY 4.0 |
+| Azure Functions Invocation Trace 2021 (Zhang et al., SOSP 2021) | no | <https://github.com/Azure/AzurePublicDataset> | CC BY 4.0 |
+| Intel Netbatch 2012, Parallel Workloads Archive (Shai, Shmueli and Feitelson, JSSPP 2013) | no | <https://www.cs.huji.ac.il/labs/parallel/workload/l_intel_netbatch/> | free for research, with acknowledgement |
+| LPC-EGEE 2004, Parallel Workloads Archive | no | <https://www.cs.huji.ac.il/labs/parallel/workload/l_lpc/> | free for research, with acknowledgement |
+| Mozilla Firefox CI, two hardware worker pools, August–September 2026 | no | collected from Mozilla's public Taskcluster and Treeherder APIs by `evidence/firefox_ci/run_collect.sh` | no licence stated; attributed to Mozilla |
 
-SHA-256 checksums of the downloaded files are kept in `data/README.md` in the authors'
-working tree, which is not committed. The Firefox CI slice has no checksum, because the
-API expires old pages and a fresh download is not byte-identical.
+`data/README.md` gives the path each file must be saved at, the checksums of the files we
+used, and the acknowledgements the archives ask for.
 
-No dataset row reaches this repository. What is committed is code, configuration,
-aggregate tables and run logs. The identifier-like columns in the committed tables name
-a configuration (policy, load level, overlay, pool, semester, model, target), never a
-person. No student identifier, user name, e-mail address, IP address or line of student
-source code is committed.
+## Computational requirements
 
-## Reproducing the tables
+### Software
 
-The steps below rebuild every development table in the paper from the raw datasets. Run
-them from the repository root with `$UV` set as above, one process at a time. The whole
-sequence takes about a day on the authors' machine; the slow step is choosing the
-guard's settings.
+Python 3.12 with the dependency versions locked in `uv.lock` (numpy, pandas, pyarrow,
+numba, LightGBM, and pytest, ruff and mypy for the checks), installed with
+[uv](https://docs.astral.sh/uv/). The reported runs were made on Windows 11 x86-64. On
+Linux with the same locked versions, the refit of the frozen predictor differs in the
+last bit of the score for 714 of the 147,380 jobs of the first target semester (checked
+on 2026-09-25), and the runners that assert the refit equals the released scores stop
+there; everything else rebuilds.
 
-Step 1 checks the code itself: style, types and the fast tests:
+### Controlled randomness
 
-```bash
-$UV ruff check src tests scripts
-$UV mypy
-$UV python -m pytest -q -m "not slow and not crosscheck"
-```
+Every random draw uses numpy's `default_rng` with a fixed seed:
 
-Step 2 compares this package, job for job, with the two earlier programs the study was
-first run with. They are kept under `evidence/main_v3/` and are imported read-only:
+- the copy shifts of the replay traces: `overlay.seed` = 3 in `configs/main.yaml`
+  (seed × 100 + overlay, `src/spjf_guard/experiment/overlay.py`), and seed × 100 + 50
+  for the single-server trace;
+- the predictor: `predictor.seed` = 3, with LightGBM's thread count fixed at 4, because
+  its histogram reduction order depends on the thread count;
+- the paired week-block bootstrap: `bootstrap.seed` = 20260919;
+- the class-term bootstrap: `BOOT_SEED` = 20260924 in `scripts/run_cluster_bootstrap.py`;
+- the audit samples and the timing sample: `scripts/run_online_visibility.py`,
+  `scripts/run_consistent_visibility.py`, `selection_cost_seed` in `configs/main.yaml`.
 
-```bash
-$UV python -m pytest -q -m crosscheck
-```
+### Memory, runtime and storage
 
-Step 3 turns the raw data into the experiment's inputs. One semester of one course
-rarely makes the grader busy enough to show queueing, so the experiment lays 44 copies of
-the same classes on top of one another. Each submission keeps its weekday and hour, each
-copy of each class is shifted by a whole number of weeks drawn at random, and the sum is
-one trace with a realistic deadline rush. The paper calls such a trace an *overlay* and
-uses five, drawn with five different sets of shifts. A *pool* is the set of semesters that
-goes into an overlay: `primary` is six semesters from 2020 to 2022, and `validation` is
-the same set without its last semester. The guard's settings are chosen on the
-validation overlays only, so that the semester they are tested on never influences them.
-The single-server overlay is a separate trace on which the paper's identity holds
-exactly.
+Measured on the authors' machine: Intel Core Ultra 9 275HX (24 threads), 64 GB of
+memory, Windows 11, with two worker processes and four threads each.
 
-The commands run in this order: parse the eleven development semesters, compute their
-static code features, build the per-submission cache, fit the running-time scores, then
-build the overlays, which store those scores, and choose the settings on them. None of
-them reads a sealed semester.
+| Step | Wall-clock time |
+|---|---|
+| Parse one CodeBench semester archive | about 11 seconds |
+| Build the parsed cache, 11 development semesters | about 5 minutes |
+| Fit the ranking scores (`--repeat` checks two runs are identical) | about 7 minutes |
+| Build the replay traces | about 2 minutes |
+| Choose the guard's parameters, 258 candidates × 15 validation cells | about 7.3 hours |
+| Main run, 15 cells, 29 policies | about 48 minutes |
+| Predictor metrics | about 11 minutes |
+| Visibility comparison | about 35 minutes |
+| Exact policy-specific visibility | about 4.3 hours |
+| Online replay, 75 policy-cells | about 4.7 hours |
+| Class-term bootstrap, 100 resamples, three worker processes | about 23 hours (first to last resample file) |
 
-```bash
-DEV=2018-1,2018-2,2019-1,2019-2,2020-ERE,2020-1,2020-2,2021-1,2021-2,2022-1,2022-2
-SCORES=data/derived/package_ranking_scores/forward_scores.parquet
-$UV python scripts/parse_archive.py --semesters $DEV
-$UV python evidence/codebench_service/code_features.py --only $DEV
-$UV python scripts/build_cache.py --pool development
-$UV python scripts/fit_scores.py --repeat
-$UV python scripts/build_overlays.py --pool primary --score-parquet $SCORES
-$UV python scripts/build_overlays.py --pool validation --score-parquet $SCORES
-$UV python scripts/build_overlays.py --single-server
-$UV python scripts/select_parameters.py --workers 2 --out-dir outputs/selection_v4
-$UV python scripts/select_aging.py --workers 2
-```
+The development pipeline takes about 41 hours in all, 23 of them in the class-term
+bootstrap. Free disk needed: about 30 GB (8 GB of raw data, 17 GB of derived traces,
+3.5 GB of per-job files, and about 750 MB of temporary files per running cell). One
+online-replay worker process uses about 6 GB of memory.
 
-`scripts/parse_archive.py --semesters 2022-1 --compare` parses one semester again and
-compares it column by column with the files on disk.
+## Instructions to replicators
 
-Step 4 is the experiment. Every policy runs on the five overlays at three load levels,
-where the level is how busy the machines are in the busiest hour: 50 %, 80 % or 100 %.
-Then come the single-server line, the accuracy of the running-time predictor, and the
-runs in which the predictor is allowed to see less history:
+Run everything from the package root. The steps are in order; each one only reads what
+the steps before it wrote.
 
-```bash
-$UV python scripts/run_main.py --selection outputs/selection_v4/selected_parameters.csv \
-    --out-dir outputs/dev_tables --workers 2
-$UV python scripts/run_main.py --prefix k1 --reps 0 --levels 0 \
-    --selection outputs/selection_v4/selected_parameters.csv --out-dir outputs/dev_tables/k1
-$UV python scripts/eval_scores.py --pool primary
-$UV python scripts/run_visibility.py --pool primary --workers 2
-```
+1. **Install.** `uv sync --extra dev`, then set the command prefix every step below uses:
 
-The paper's headline replays compute each job's score only from the results that had
-reached its class in the simulated queue when it arrived (`docs/adr/0007`, `0008`). They
-come after step 4, in this order, and the last command writes the table bodies the paper
-copies in:
+   ```bash
+   export UV="env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
+     NUMBA_NUM_THREADS=4 OMP_NUM_THREADS=4 uv run --no-sync"
+   ```
 
-```bash
-$UV python scripts/run_consistent_visibility.py --config configs/visibility_development_20260924.yaml \
-    --pool primary --workers 2 --resume \
-    --controls data/derived/package_ranking_scores/consistent_controls_20260924.npz
-$UV python scripts/run_online_visibility.py --pool primary --workers 2 --resume --policies all
-$UV python scripts/online_paired_differences.py
-$UV python scripts/run_cluster_bootstrap.py --resamples 100 --workers 3
-$UV python scripts/sealed_dev_contrast.py
-$UV python scripts/emit_paper_tables.py --dev-exact-dir outputs/dev_consistent_visibility \
-    --dev-online-dir outputs/dev_online_visibility --dev-cluster-dir outputs/cluster_bootstrap \
-    --out-dir outputs/consistent_paper_tables
-```
+2. **Check the installation without any data** (the minimal example): the unit and
+   property tests build their inputs synthetically. On the authors' machine 335 pass in
+   about 72 seconds; 8 are skipped, seven because they compare the emitted tables with
+   the manuscript source, which is not in this package, and one because it needs a git
+   checkout.
 
-`sealed_dev_contrast.py` reads the sealed outputs as well, so it runs only after the
-sealed run described below. The controls cache of the first command is built by the same
-script with `--build-controls-only`; `GENERATED.md` has that command, the two sensitivity
-reruns of Supplementary Section S3.15, and the reselection of the settings under the
-online replay.
+   ```bash
+   $UV python -m pytest -q -m "not slow and not crosscheck"
+   ```
 
-Step 5 checks the result: the per-job waits against the earlier programs, the overlays
-against their specification, the tables against the committed copies, and the numbers
-the paper prints against the tables:
+3. **Download the data** into the paths listed in `data/README.md` and compare the
+   checksums. The ACcoding dumps then go through `evidence/accoding/parse_sql.py`.
 
-```bash
-$UV python scripts/check_reproduction.py --overlay-dir data/derived/overlay_traces
-$UV python scripts/check_overlays.py
-$UV python scripts/diff_dev_tables.py
-$UV python scripts/emit_paper_tables.py
-$UV python scripts/check_paper_numbers.py
-$UV python scripts/check_generated.py
-```
+4. **Build the inputs** from the development semesters (none of these reads a sealed one):
 
-Four things are worth knowing before you start.
+   ```bash
+   DEV=2018-1,2018-2,2019-1,2019-2,2020-ERE,2020-1,2020-2,2021-1,2021-2,2022-1,2022-2
+   SCORES=data/derived/package_ranking_scores/forward_scores.parquet
+   $UV python scripts/parse_archive.py --semesters $DEV
+   $UV python evidence/codebench_service/code_features.py --only $DEV
+   $UV python scripts/build_cache.py --pool development
+   $UV python scripts/fit_scores.py --repeat
+   $UV python scripts/build_overlays.py --pool primary --score-parquet $SCORES
+   $UV python scripts/build_overlays.py --pool validation --score-parquet $SCORES
+   $UV python scripts/build_overlays.py --single-server
+   ```
 
-The committed tables were produced on Windows x86-64 with the locked dependencies, and
-the replays that refit the frozen predictor reproduce them there bit for bit. On Linux,
-with the same locked versions, the refit differs in the last bit of the score for 714
-of the 147,380 jobs of the first target semester (checked on 2026-09-25), and those
-runners stop at their assertion that the refit equals the released scores. The overlays
-themselves rebuild byte for byte on Linux once the zip header's host-system byte is set
-to the Windows value.
+5. **Choose the parameters** on the validation traces:
 
-Choosing the guard's settings is slow. `select_parameters.py` tries 258 candidate
-settings fixed in advance (`docs/adr/0005`) on every validation cell. One cell with two
-worker processes took about 29 minutes on the authors' machine, and the fifteen cells
-about 7.3 hours. Results are written per cell, so a crashed run continues where it
-stopped. `--part i --nparts n` splits a cell across machines, and `--from-grid`
-re-derives the choice from saved results without simulating again. A run over only some
-cells writes a `selected_parameters.csv` that is not the final selection; combine the
-parts with `--from-grid` into one output directory.
+   ```bash
+   $UV python scripts/select_parameters.py --workers 2 --out-dir outputs/selection_v4
+   $UV python scripts/select_aging.py --workers 2
+   ```
 
-The bound is checked during the run. Step 4 asserts the paper's per-job bound on each
-simulated job as it is dispatched, not afterwards on averages.
+6. **Run the experiments** on the primary traces:
 
-`check_reproduction.py` exits 1, and that is expected. It fails on a single unequal
-per-job wait. The earlier programs kept time in floating-point seconds and this package
-keeps it in whole microseconds (`docs/adr/0001`). The two disagree on 0.0043 % of 1.59
-billion comparisons, and after aggregation one printed number moves: the p99 wait of
-the unguarded predicted-order policy at the heaviest load, from 62.91 s to 62.92 s. No
-gap-closed figure changes.
+   ```bash
+   $UV python scripts/run_main.py --selection outputs/selection_v4/selected_parameters.csv \
+       --out-dir outputs/dev_tables --workers 2
+   $UV python scripts/run_main.py --prefix k1 --reps 0 --levels 0 \
+       --selection outputs/selection_v4/selected_parameters.csv --out-dir outputs/dev_tables/k1
+   $UV python scripts/eval_scores.py --pool primary
+   $UV python scripts/run_visibility.py --pool primary --workers 2
+   $UV python scripts/run_consistent_visibility.py --config configs/visibility_development_20260924.yaml \
+       --pool primary --workers 2 --resume \
+       --controls data/derived/package_ranking_scores/consistent_controls_20260924.npz
+   $UV python scripts/run_online_visibility.py --pool primary --workers 2 --resume --policies all
+   $UV python scripts/online_paired_differences.py
+   $UV python scripts/run_cluster_bootstrap.py --resamples 100 --workers 3
+   ```
 
-Every number in `outputs/main_table.tex` is wrapped in a LaTeX macro, `\devnum{}`, that
-marks it as coming from the development semesters. Numbers from the sealed run are
-wrapped in `\sealednum{}` instead, so the two kinds can be told apart on the printed
-page.
+   The controls file of `run_consistent_visibility.py` is built by the same script with
+   `--build-controls-only`; `GENERATED.md` has that command, the two sensitivity runs
+   (`configs/sensitivity_*_20260926.yaml`) and the restricted reselection under the
+   online replay (`scripts/select_online.py`).
 
-## The sealed semesters
+7. **The sealed semesters** (2023-1, 2023-2, 2024-1) were run once, after the method was
+   frozen on 2026-09-25 (`protocol_lock.json`). The code refuses to open them without the
+   `--unseal` flag and a valid lock. `docs/sealed_run_procedure.md` lists the commands of
+   that run; `docs/sealed_access_log.md` records every read.
 
-Three CodeBench semesters (2023-1, 2023-2 and 2024-1), the last fifth of the ACcoding
-submissions by id, and the OULAD 2014 presentations are *sealed*. Without the `--unseal`
-flag and a protocol lock, any code path that would read them raises an error before the
-file is opened (`src/spjf_guard/data/sealed.py`; the reasoning is in `docs/adr/0004`).
-The point is to make it impossible to adjust the method after seeing the test result.
+8. **Emit the tables and compare** with the copies in `outputs/`:
 
-The method was frozen on 2026-09-25 (commit `f32c393`, `protocol_lock.json`), and the
-sealed CodeBench semesters were then run once; the paper reports them in Section 8.2 and
-Supplementary Section S10. Changes made to reporting scripts after that run are declared,
-file by file, in `docs/post_run_changes.json` (`docs/adr/0010`).
+   ```bash
+   $UV python scripts/sealed_dev_contrast.py
+   $UV python scripts/emit_paper_tables.py
+   $UV python scripts/emit_paper_tables.py --dev-exact-dir outputs/dev_consistent_visibility \
+       --dev-online-dir outputs/dev_online_visibility --dev-cluster-dir outputs/cluster_bootstrap \
+       --out-dir outputs/consistent_paper_tables
+   $UV python scripts/check_overlays.py
+   $UV python scripts/diff_dev_tables.py
+   ```
 
-Freezing goes in four steps. A rehearsal with `--dry-run-sealed` prints which files would
-be read without opening any. Then the *protocol lock* is written: a file of hashes
-covering the code, the configuration and every input artefact. Then a commit. Then
-`scripts/freeze_protocol.py`, which refuses to run if the working tree is dirty, if
-anything is uncommitted, or if any check fails. Only after that is the sealed pool run,
-once, with `--unseal`. Each such run appends one line to `docs/sealed_access_log.md`:
-the date, the script, which sealed semesters were read, what was produced, who saw it,
-and whether it changed the design. `docs/sealed_run_procedure.md` has the full command
-list, the prerequisites of each step, the running time and disk needed, and what to do
-after a crash.
+   A rerun writes into `outputs/`; compare it with this package's copy, for example with
+   `MANIFEST.sha256`.
 
-The machine load actually reached on the sealed semesters is reported as measured. The
-machine count is not adjusted afterwards to hit a target, and the single-server copy
-count stays the one chosen on the development semesters (`docs/adr/0006`).
+The studies in `evidence/` run separately. Each folder's `README.md` gives its question,
+the paper items it supports, its inputs and the command that reruns it. Their scripts
+write absolute paths as `<repo-root>` (the package root) and `<cache-dir>` (a scratch
+directory); set both before rerunning one.
 
-## Where each number comes from
+## Reproducibility scope
 
-The paper prints two kinds of numbers.
+- **Provided and rebuilt by the commands above:** every table and figure listed below,
+  from the raw datasets, with the result files of the reported runs in `outputs/` and the
+  logs of the separate studies in `evidence/` to compare against.
+- **Not provided:** the raw datasets (third-party; download them as `data/README.md`
+  says); the derived traces and per-job files the pipeline writes (about 20 GB, rebuilt
+  by the same commands); the manuscript.
+- **Sealed semesters:** the three sealed CodeBench semesters were evaluated once, under
+  the frozen protocol. Rerunning that run reproduces those numbers; it is not a new test.
+- **Platform:** the reported runs rebuild bit for bit on Windows x86-64 with the locked
+  dependencies. On Linux, the frozen predictor's refit differs in the last bit for 714
+  of 147,380 jobs (see "Software" above), and the runners that assert equality stop there.
 
-The first kind comes from the package in `src/`. The commands above rebuild those tables
-from the raw datasets, and `scripts/check_paper_numbers.py` checks that the manuscript
-prints exactly what the tables contain.
+## List of tables and programs
 
-The second kind comes from separate studies, each run once to answer one question.
-`evidence/` keeps one folder per study, 38 in all. Each folder holds the scripts that
-were run, the log they printed (`out_*.txt`), the tables they wrote, and a `README.md`
-that states the question, which part of the paper uses the answer, what the study needs
-as input, and whether it is finished. In plain terms, the studies cover:
+"Result file" is the file in this package the printed numbers are read from; "Program" is
+what writes it. Rows marked *no computation* are definitions or illustrations.
 
-- how the main grading log was parsed and checked against its publisher's own counts;
-- the same method applied to the second grader, the serverless platform, the compute
-  cluster and the grid;
-- whether the simulator reproduces the queue waits the two Firefox build pools recorded;
-- the comparison of running-time predictors, including the graph-network model the
-  project started with;
-- independent checks of the theorems, written as referee reports;
-- robustness: replaying the log with users who wait for one result before submitting
-  the next, varying the number of machines, running the guard on a real two-worker
-  service, and a design that was tried and rejected.
+### Manuscript
 
-`evidence/README.md` lists every folder with its question in one line. The manuscript's
-source comments still name the folder the studies were run in, `prechecks/`;
-`evidence/PATHS.md` maps each of those names onto `evidence/`.
+| Item | Result file | Program |
+|---|---|---|
+| Figure 1 | *no computation* (three-job example) | |
+| Figure 2 | *no computation* (diagram of the guard) | |
+| Table 1 | `evidence/predictor_neural/out_evaluate_core.txt` | `evidence/predictor_neural/` |
+| Table 2 | *no computation* (policy definitions) | |
+| Table 3 | *no computation* (notation) | |
+| Table 4 | `evidence/codebench_audit/out_tail_and_counts.txt`; `evidence/accoding_v2/out_accoding_v2.txt`; `evidence/codebench_service_v2/out_service_v2.txt`; `evidence/cross_domain/out_audit_azure.txt`, `out_audit_netbatch.txt`; `evidence/firefox_ci/out_SUMMARY.txt`; `evidence/oulad/out_load.txt` | the studies of the same names |
+| Table 5 | `outputs/consistent_paper_tables/tab_visibility.tex`, from `outputs/dev_online_visibility/online_comparison.csv` and `outputs/dev_consistent_visibility/exact_comparison.csv` | `scripts/emit_paper_tables.py`, from `scripts/run_online_visibility.py` and `scripts/run_consistent_visibility.py` |
+| Table 6 | `outputs/consistent_paper_tables/tab_visibility_sealed.tex`; `outputs/sealed_dev_contrast/contrast.csv` | the sealed run (`docs/sealed_run_procedure.md`); `scripts/sealed_dev_contrast.py` |
+| Table 7 | `outputs/dev_tables/main_table.csv`, `paired_differences.csv`; `outputs/dev_visibility/visibility_waits_and_lag.csv`; `outputs/online_paired/online_paired_differences.csv` | `scripts/run_main.py`; `scripts/run_visibility.py`; `scripts/online_paired_differences.py` |
+| Table 8 | `evidence/timeout_rule/timeout_intervals.csv`, `out_timeout_overlays.txt`; `outputs/online_paired/online_clock_intervals.csv`; `outputs/dev_tables/main_table.csv`; `outputs/dev_visibility/visibility_comparison.csv` | `evidence/timeout_rule/`; `scripts/online_paired_differences.py`; `scripts/run_main.py`; `scripts/run_visibility.py` |
+| Table 9 | CodeBench rows: `outputs/dev_tables/main_table.csv`, `outputs/dev_predictor/predictor_metrics.csv`; other rows: `evidence/cross_domain/out_cross_domain_table.txt`, `evidence/accoding_v2/out_accoding_v2.txt`, `evidence/firefox_ci/out_SUMMARY.txt` | `scripts/run_main.py`, `scripts/eval_scores.py`; the studies of the same names |
 
-The copies keep the file and directory names the scripts import each other by. Absolute
-paths from the authors' machines were replaced by `<repo-root>` and `<cache-dir>`; no
-measured value was changed. The `out_*.txt` logs were not rewritten. No raw dataset is
-redistributed here. Before the freeze, some studies read sealed data for bookkeeping: to
-parse and count the CodeBench archives, to reconcile those counts with the publisher's
-tables, to compute the static code features the cache needs, to fix where the sealed
-ACcoding block starts, and to audit an earlier project plan's OULAD request counts.
-`evidence/README.md` lists each script and log line, and none of them computed a cost, a
-prediction or a scheduling result on sealed data.
+### Supplementary Materials
 
-## Conventions
+| Item | Result file | Program |
+|---|---|---|
+| Table S1 | `evidence/cross_domain/out_cross_domain_table.txt`; `evidence/firefox_ci/out_SUMMARY.txt` | `evidence/cross_domain/`, `evidence/firefox_ci/` |
+| Table S2 | `evidence/predictor_neural/out_evaluate_core.txt`; `evidence/codebench_service_v2/out_service_v2.txt`; `evidence/accoding_v2/out_accoding_v2.txt` | the studies of the same names |
+| Table S3 | `evidence/codebench_audit/out_tail_and_counts.txt`; `evidence/accoding_v2/out_accoding_v2.txt`; `evidence/cross_domain/out_cross_domain_table.txt`; `evidence/firefox_ci/out_SUMMARY.txt` | the studies of the same names |
+| Table S4 | `outputs/paper_tables/tab_setup.tex`, from `outputs/dev_tables/`; trace rows from `evidence/main_v3/out_main_v31.txt` | `scripts/emit_paper_tables.py` |
+| Table S5 | `protocol_lock.draft.json` (`selected_parameters`, `family_best`), which `outputs/selection_v4/` must match | `scripts/select_parameters.py`; `scripts/make_protocol_lock.py` |
+| Table S6 | `outputs/paper_tables/tab_guard.tex`, from `outputs/dev_tables/main_table.csv`, `policy_parameters.csv` | `scripts/emit_paper_tables.py` from `scripts/run_main.py` |
+| Table S7 | `outputs/paper_tables/tab_guard.tex` (Guard-age and Guard-queue rows) | the same |
+| Table S8 | `outputs/paper_tables/tab_adv.tex`, from `outputs/dev_tables/main_table.csv` | the same |
+| Table S9 | `outputs/paper_tables/tab_resid.tex`, from `outputs/dev_tables/identity_residuals.csv` | the same |
+| Table S10 | `outputs/paper_tables/tab_k1.tex`, from `outputs/dev_tables/k1/main_table.csv` | the same |
+| Table S11 | `outputs/selection_aging/aging_protocol.json`, `selected_aging.csv` | `scripts/select_aging.py` |
+| Table S12 | `outputs/dev_visibility/visibility_comparison.csv` | `scripts/run_visibility.py` |
+| Table S13 | `outputs/dev_predictor/predictor_metrics.csv`; `evidence/codebench_service_v2/out_service_v2.txt` | `scripts/eval_scores.py`; `evidence/codebench_service_v2/` |
+| Table S14 | `evidence/ranking_score/out_table_primary_5reps.txt` | `evidence/ranking_score/` |
+| Table S15 | `evidence/codebench_service_v2/out_service_v2.txt` (SUMMARY 5) | `evidence/codebench_service_v2/` |
+| Table S16 | `outputs/paper_tables/tab_rank.tex`, from `outputs/dev_tables/main_table.csv` | `scripts/emit_paper_tables.py` from `scripts/run_main.py` |
+| Table S17 | `outputs/selection_v3/selection_protocol.json` | `scripts/select_parameters.py` |
+| Table S18 | `outputs/consistent_paper_tables/tab_cluster.tex`, from `outputs/cluster_bootstrap/bootstrap_summary.csv` | `scripts/run_cluster_bootstrap.py`, `scripts/emit_paper_tables.py` |
+| Table S19 | `evidence/weakness1_attack/capacity_curve.csv`, `summary_numbers.json` | `evidence/weakness1_attack/` |
+| Table S20 | `evidence/weakness1_attack/physical_numbers.json`, `physical_verification.json` | `evidence/weakness1_attack/` |
+| Table S21 | `evidence/closed_loop/out/open_vs_closed_mean.csv`, `report_tables.md` | `evidence/closed_loop/make_tables.py` |
+| Table S22 | `evidence/lpc_egee_queues/tables.md` | `evidence/lpc_egee_queues/` |
+| Table S23 | `evidence/lpc_egee_queues/tables.md`, `policy_metrics.csv` | `evidence/lpc_egee_queues/` |
+| Table S24 | `evidence/lpc_egee/applicability.csv`; `evidence/lpc_egee_queues/tables.md` | `evidence/lpc_egee/`, `evidence/lpc_egee_queues/` |
+| Table S25 | `evidence/platform_testbed/records/summary.json`, `simulator_replay.json` | `evidence/platform_testbed/` |
+| Table S26 | *no computation* (comparison with the literature; `evidence/guard_optimality_verify/literature_check.md`) | |
+| Tables S27–S30 | `outputs/consistent_paper_tables/tab_rank_sealed.tex`, `tab_guard_sealed.tex`, `tab_adv_sealed.tex`, `tab_k1_sealed.tex`, from `outputs/sealed_tables/` | the sealed run; `scripts/emit_paper_tables.py` |
+| Table S31 | `outputs/consistent_paper_tables/tab_online_suite.tex`, from `outputs/dev_online_visibility/` | `scripts/emit_paper_tables.py` from `scripts/run_online_visibility.py` |
+| Table S32 | `outputs/online_paired/tab_s_online_pairs_body.tex` | `scripts/online_paired_differences.py` |
+| Table S33 | `outputs/online_paired/tab_s_online_clock_body.tex` | `scripts/online_paired_differences.py` |
+| Figure S1 | `outputs/dev_tables/main_table.csv`; `outputs/dev_visibility/visibility_comparison.csv`; `outputs/selection_v4/selected_parameters.csv`; `outputs/selection_aging/selected_aging.csv` | `scripts/emit_gap_harm_figure.py` |
+| Figure S2 | `outputs/paper_tables/tab_guard.tex` | drawn from the table; no new computation |
+| Figure S3 | `outputs/paper_tables/` | drawn from the tables; no new computation |
 
-`CONTEXT.md` is the glossary. A term settled in discussion goes in it, and the paper,
-the code, the configuration and the tables then use that one word. A decision that is
-hard to reverse, surprising later, and a real trade-off gets a page in `docs/adr/`.
-Every generated file has a row in `GENERATED.md` with its source, its regeneration
-command and its check command; a hand edit to a generated file fails
-`scripts/check_generated.py`, which the pre-commit hook runs.
+### Propositions checked numerically
+
+| Paper item | Study |
+|---|---|
+| Section 6 and Supplementary S4, S8: the identity, the guard bound, tightness | `evidence/guard_theory/` |
+| Proposition 10 (maximum waiting time) and Table 8 | `evidence/timeout_rule/`, `evidence/new_theory_refutation/` |
+| Proposition 11 (absolute bound) and Section 8.5 | `evidence/envelope_bound/` |
+| Proposition 12 (late completion reports) | `evidence/stale_charging/` |
+| The cost ratio 150 (Sections 1, 6.4, 10) | `evidence/cost_ratio/` |
+| Supplementary S7.1–S7.4 | `evidence/guard_optimality_verify/` |
+| Supplementary S7.6 | `evidence/reservation_guard/`, `evidence/reservation_guard_verify/` |
+
+`evidence/README.md` maps every other sentence-level number to its study and log line.
+
+## What differs from the authors' working repository
+
+The package is the submitted commit (`4b4c871`) with these changes:
+
+- left out: the manuscript sources, the Chinese copies of the documents, development
+  tooling, and four studies that the paper does not use and no packaged script reads
+  (`evidence/README.md` names them);
+- added: `outputs/` (the result tables, which the repository does not track), this
+  README, `data/README.md`, `outputs/README.md`, `MANIFEST.sha256`, and
+  `evidence/accoding/parse_sql.py`, the parser that turns the ACcoding SQL dumps into the
+  tables `evidence/accoding_v2/` reads (absolute paths replaced by `<repo-root>`), with a
+  short `evidence/accoding/README.md`;
+- edited: the first line of `GENERATED.md` and of `docs/sealed_run_procedure.md`, which
+  pointed to the Chinese originals, the `accoding` row of `evidence/README.md`, and
+  `CITATION.cff`, which now also gives this version and its DOI.
+  Nothing else in the commit was changed. The configuration files still mention
+  `data/derived/README.md`, which this package does not include; they are left as they are because their hashes are recorded in the
+  protocol lock and in every `outputs/*/manifest.json`.
+
+The tables in `outputs/` were checked against the submitted manuscript on 2026-09-29:
+with the manuscript source placed in `paper/`, `tests/test_paper_tables.py` passes and
+`scripts/check_paper_numbers.py` reports that every number the paper prints is the one
+the package produced.
 
 ## Licence and citation
 
-The code is MIT-licensed; see `LICENSE`. The datasets are not covered by it; each keeps
-the terms in the data table above. `CITATION.cff` gives the manuscript's title and
-authors.
+The code is released under the MIT licence (`LICENSE`). The datasets are not covered by
+it; each keeps its publisher's terms. To cite this package, cite the manuscript and this
+archive: Guo, Y.; Lin, Z.; Huo, C.; Song, Y. Code and data for "Prediction-Driven
+Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution Services under
+Deadline-Driven Bursty Load", version 1.0.0-submitted. Zenodo, 2026,
+doi:10.5281/zenodo.23035900. `CITATION.cff` gives the same in machine-readable form.

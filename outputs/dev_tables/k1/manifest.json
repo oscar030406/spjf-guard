@@ -1,0 +1,123 @@
+{
+  "produced_by": "scripts/run_main.py",
+  "written_at": "2026-09-24T13:01:30+00:00",
+  "config": {
+    "path": "configs/main_frozen_1289aa2.yaml",
+    "present": true,
+    "bytes": 18770,
+    "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/overlay_traces/k1_rep0.npz",
+      "present": true,
+      "bytes": 170099287,
+      "sha256": "bff92632842a813af1d20b9bab7ac2093497c4d05be0835d744f91650ed79e0e"
+    },
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "main_cells.csv",
+      "present": true,
+      "bytes": 6017,
+      "sha256": "a0d3dd405651dbf7c9b2a6ee5c1cc13eb809936317ae5c5190e5e8aa9a25024c"
+    },
+    {
+      "path": "main_table.csv",
+      "present": true,
+      "bytes": 7942,
+      "sha256": "a4361dc71e254ec048ea16a285ff22f56cc2bf9dc146e7e28d5a8c12d548d4a6"
+    },
+    {
+      "path": "main_table.tex",
+      "present": true,
+      "bytes": 5617,
+      "sha256": "42ddef1638af6358d76d4891138dda2dfaf52413e6a6a6f18710c0dc0d1a6c93"
+    },
+    {
+      "path": "paired_differences.csv",
+      "present": true,
+      "bytes": 1882,
+      "sha256": "00f5db61aa6cb5e93371c85be2cb992007a6f204aaf1e7a3fb313fdc86b33217"
+    },
+    {
+      "path": "bound_checks.csv",
+      "present": true,
+      "bytes": 1750,
+      "sha256": "281342341db4bfc80b651481f009fbf3aded0cf6aa674564a9dc08691375d2d3"
+    },
+    {
+      "path": "identity_residuals.csv",
+      "present": true,
+      "bytes": 4629,
+      "sha256": "13bbec3b4f994813a38c926494337f800afbf480164fcba10806248b301333a9"
+    },
+    {
+      "path": "policy_parameters.csv",
+      "present": true,
+      "bytes": 933,
+      "sha256": "34b6000ce62ff3e9beed8c60f7716d5318c6c8e66891866bf594205b4b8fa528"
+    }
+  ],
+  "arguments": {
+    "pool": "primary",
+    "prefix": "k1",
+    "reps": "0",
+    "levels": "0",
+    "score_array": "tweedie",
+    "score_parquet": "data/derived/package_ranking_scores/forward_scores.parquet",
+    "selection": "outputs/selection_v4/selected_parameters.csv",
+    "bootstrap": true,
+    "unseal": false
+  },
+  "notes": {
+    "protocol_lock": "not frozen (development run)",
+    "terms": [
+      "2020-ERE",
+      "2020-2",
+      "2021-1",
+      "2021-2",
+      "2022-1",
+      "2022-2"
+    ],
+    "policies": [
+      "FCFS",
+      "SJF",
+      "SPJF-E",
+      "SPJF-log",
+      "Aging(600)",
+      "Guard(300)",
+      "Guard-fixed(300)",
+      "Guard-age(300)",
+      "Guard-queue(300)",
+      "Fixed(300)",
+      "Skip(300)",
+      "Guard(600)",
+      "Guard-fixed(600)",
+      "Guard-age(600)",
+      "Guard-queue(600)",
+      "Fixed(600)",
+      "Skip(600)",
+      "Guard(1200)",
+      "Guard-fixed(1200)",
+      "Guard-age(1200)",
+      "Guard-queue(1200)",
+      "Fixed(1200)",
+      "Skip(1200)",
+      "SPJF-reversed",
+      "Guard(600)-reversed",
+      "SPJF-random",
+      "Guard(600)-random",
+      "SPJF-top1short",
+      "Guard(600)-top1short"
+    ],
+    "resamples": 2000,
+    "historical_recipe": "The configuration this run read, preserved byte-for-byte as configs/main_frozen_1289aa2.yaml. Only its path was relocated after configs/main.yaml was amended; output hashes unchanged."
+  }
+}

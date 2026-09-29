@@ -1,0 +1,115 @@
+{
+  "produced_by": "scripts/run_visibility.py",
+  "written_at": "2026-09-24T13:37:51+00:00",
+  "config": {
+    "path": "configs/main_frozen_1289aa2.yaml",
+    "present": true,
+    "bytes": 18770,
+    "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/overlay_traces/primary_rep0.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "78d063485a4281f6fd07560a717ee3d9440a93ac11912e8f74f934d8009061c8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep1.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "71a75d2b6df5c46912e00898c55f6e20cf56350f46c61db3fc40d309e622c81d"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep2.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8f021068e70ef21ec6b1a8b1ca1ae327ac6fb7811f61a4cffa6d1697c74d07eb"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep3.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "f59edee819e5e3a87c5d012171b197f2e7239f9e74ea44a4514507cc5040eea8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep4.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8fd652d5874ef30bb7675e56f6360768e368c47cd67b674567c83e7a10a4a8be"
+    },
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "visibility_cells.csv",
+      "present": true,
+      "bytes": 46652,
+      "sha256": "ec5732a55227d0d1935901488e10a0b90226792911db436ebfeb685b3839cfc9"
+    },
+    {
+      "path": "visibility_comparison.csv",
+      "present": true,
+      "bytes": 12515,
+      "sha256": "0940fe499dd098a9bb45f2b2970cbebd321783eb774c86b9dfc49e008d01e84c"
+    },
+    {
+      "path": "visibility_paired_differences.csv",
+      "present": true,
+      "bytes": 3980,
+      "sha256": "b64c2242d7c6e17a64a124747fae1fea3886864d47e35157cd9181b3c0679719"
+    },
+    {
+      "path": "visibility_exposure.csv",
+      "present": true,
+      "bytes": 29694,
+      "sha256": "2b326e73336ea52f01220b28bb80ba48996ecfa3de604a950b7cfe793e0c10ef"
+    },
+    {
+      "path": "visibility_waits_and_lag.csv",
+      "present": true,
+      "bytes": 34619,
+      "sha256": "9b468e20bb6df945f9f41a3aacad7211a353e60789d0f43145310b654438d651"
+    }
+  ],
+  "arguments": {
+    "pool": "primary",
+    "reps": "0,1,2,3,4",
+    "levels": "0,1,2",
+    "scores": "data/derived/package_ranking_scores/forward_scores.parquet",
+    "workers": 2,
+    "unseal": false
+  },
+  "notes": {
+    "headline_variant": "online",
+    "conservative_lag_s": 3600.0,
+    "conservative_certificate": "legacy conservative certificate invalid: 5 policy/cell(s)",
+    "selected_parameters_unchanged": {
+      "300.0": {
+        "family": "capped",
+        "b0_base_s": 60.0,
+        "eta": 0.5,
+        "gam_base_s": 0.0
+      },
+      "600.0": {
+        "family": "capped",
+        "b0_base_s": 120.0,
+        "eta": 0.75,
+        "gam_base_s": 0.0
+      },
+      "1200.0": {
+        "family": "hybrid",
+        "b0_base_s": 120.0,
+        "eta": 0.0,
+        "gam_base_s": 16.0
+      }
+    },
+    "exposure_mapping": "same outer overlay round; unreplayed histories separate",
+    "historical_recipe": "The configuration this run read, preserved byte-for-byte as configs/main_frozen_1289aa2.yaml. Only its path was relocated after configs/main.yaml was amended; output hashes unchanged."
+  }
+}
