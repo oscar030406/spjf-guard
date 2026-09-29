@@ -1,10 +1,13 @@
-# Code and data for "Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution Services under Deadline-Driven Bursty Load"
+# Code and data for "Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking: A Per-Job Wait Guarantee"
 
-Yazhou Guo, Zexin Lin, Chengyang Huo, Yurong Song. Submitted to *Mathematics* (MDPI), 2026.
+Yazhou Guo, Zexin Lin, Chengyang Huo, Yurong Song. Manuscript mathematics-4625685, under
+review at *Mathematics* (MDPI), 2026.
 
-Version 1.0.0-submitted. Archived at Zenodo, <https://doi.org/10.5281/zenodo.23035900>;
-the same files are in the GitHub repository <https://github.com/oscar030406/spjf-guard>
-under the tag `v1.0.0-submitted`.
+Version 1.0.1-submitted. Archived at Zenodo, <https://doi.org/10.5281/zenodo.23039931> (all versions:
+<https://doi.org/10.5281/zenodo.23035899>); the same files are in the GitHub repository
+<https://github.com/oscar030406/spjf-guard> under the tag `v1.0.1-submitted`. Version
+1.0.0-submitted (doi:10.5281/zenodo.23035900) has the same code, data and results under
+the manuscript's earlier title.
 
 This package holds the code, the configuration, the result tables and the run logs behind
 every number in the manuscript and its Supplementary Materials, in the version that was
@@ -297,6 +300,11 @@ what writes it. Rows marked *no computation* are definitions or illustrations.
 
 The package is the submitted commit (`4b4c871`) with these changes:
 
+- the manuscript under review (mathematics-4625685) differs from the manuscript source of
+  that commit in wording only: the title, the abstract, the keywords, the introduction,
+  Algorithm 1 set as a numbered listing, and one added reference. Every number the
+  source prints appears unchanged in the manuscript under review (checked on 2026-09-29,
+  section by section);
 - left out: the manuscript sources, the Chinese copies of the documents, development
   tooling, and four studies that the paper does not use and no packaged script reads
   (`evidence/README.md` names them);
@@ -322,6 +330,5 @@ the package produced.
 The code is released under the MIT licence (`LICENSE`). The datasets are not covered by
 it; each keeps its publisher's terms. To cite this package, cite the manuscript and this
 archive: Guo, Y.; Lin, Z.; Huo, C.; Song, Y. Code and data for "Prediction-Driven
-Non-Preemptive Scheduling with Bounded Overtaking for Shared Execution Services under
-Deadline-Driven Bursty Load", version 1.0.0-submitted. Zenodo, 2026,
-doi:10.5281/zenodo.23035900. `CITATION.cff` gives the same in machine-readable form.
+Non-Preemptive Scheduling with Bounded Overtaking: A Per-Job Wait Guarantee", version
+1.0.1-submitted. Zenodo, 2026, doi:10.5281/zenodo.23039931. `CITATION.cff` gives the same in machine-readable form.
