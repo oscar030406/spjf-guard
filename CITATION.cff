@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 title: >-
-  Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for
-  Shared Execution Services under Deadline-Driven Bursty Load
+  Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking: A
+  Per-Job Wait Guarantee
 message: >-
   If you use this software or the tables in evidence/, please cite the
   manuscript below.
@@ -27,8 +27,8 @@ authors:
       College of Automation, Nanjing University of Posts and
       Telecommunications
 license: MIT
-version: 1.0.0-submitted
-doi: 10.5281/zenodo.23035900
+version: 1.0.1-submitted
+doi: 10.5281/zenodo.23039931
 repository-code: https://github.com/oscar030406/spjf-guard
 keywords:
   - non-preemptive scheduling
@@ -41,8 +41,8 @@ keywords:
 preferred-citation:
   type: article
   title: >-
-    Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking for
-    Shared Execution Services under Deadline-Driven Bursty Load
+    Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking: A
+    Per-Job Wait Guarantee
   authors:
     - given-names: Yazhou
       family-names: Guo
