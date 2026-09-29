@@ -1,0 +1,21 @@
+valid221: 8 class-semesters, 139 copies, 30 weeks; refit log score vs cached forward M4: max |diff| = 4.977e-01 on 83,710 of 400,790 rows (refit noise, see CAND note)
+rep 0: 7,128,198 jobs, busiest-hour work 14,972.7 s, k per rho {0.5: 8, 0.8: 5, 1.0: 4}, heavy 116,621 (1.6361%), deadline-window jobs 2,193,142
+
+[valid221_rep0_r0.8_scores] k=5, busy-hour rho 0.832  (25 s)
+              w_p99_dl   w_mean     w_p99  max_heavy  sim_sec
+policy                                                       
+FCFS          686.5590  10.6773  312.9230  1536.5190      1.8
+SJF-ref       227.0862   3.6804   38.9449  2466.8849      2.8
+SPJF-M4       570.2811   5.9784   62.5153  2538.7134      2.7
+SPJF-M4refit  570.2359   5.9782   62.5111  2538.7118      2.7
+SPJF-l2raw    618.3531   6.4207   77.3434  2280.0197      2.7
+SPJF-tweedie  540.3674   5.7936   57.5668  2520.9990      2.8
+SPJF-gamma    559.6459   5.7669   58.0770  2450.6429      2.8
+SPJF-hurdle   596.4799   6.0228   60.3436  2569.9588      2.9
+SPJF-q50      575.8036   6.0233   68.2394  2560.9401      2.7
+SPJF-q90      668.1459   6.4933   67.2667  2732.9856      2.8
+SPJF-q99      555.0471   6.4368   70.7311  2221.6661      2.8
+SPJF-phv      593.0176   6.0094   58.2513  2909.2144      2.9
+SPJF-logvar   571.0543   5.9319   59.7117  2347.9280      2.8
+
+total 25 s

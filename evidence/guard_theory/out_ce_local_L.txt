@@ -1,0 +1,18 @@
+=== COUNTEREXAMPLE: the L in the identity is not a local quantity (k=2) ===
+instance: one job of work M at t=0 (rank 0), then 2M-2 unit jobs at t=0,
+then 2 unit jobs per tick from t=3M/2 on, so both policies stay saturated.
+P defers the big job behind every unit job; FCFS does not.
+Every job other than rank 0 has size 1, so for any job i arriving in the
+saturated tail, Lam^P_i = Lam^F_i = 1 and the localised bound is (k-1)*2 = 2.
+
+   M     job i   a_i    D=k(W_P-W_F)-(In-Out)   Lam_in_service   D / bound
+    10      29     20                    4                1        2.0
+    20      60     40                   10                1        5.0
+    40     120     80                   20                1       10.0
+    80     240    160                   40                1       20.0
+   160     480    320                   80                1       40.0
+
+D grows linearly in M while every job in service near i has size 1, so no
+bound in terms of the sizes local to i's wait can exist.  The big job is
+already finished (under both policies) before any of these jobs arrives.
+The prefix max Lam_pref = M does bound it, as claim A says.

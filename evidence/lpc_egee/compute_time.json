@@ -1,0 +1,51 @@
+{
+  "completed_script_wall_s": 31.026595399991493,
+  "completed_script_cpu_s": 42.15625,
+  "invocations": [
+    {
+      "stage": "audit",
+      "wall_s": 1.3610573999976623,
+      "cpu_s": 1.3125
+    },
+    {
+      "stage": "diagnose",
+      "wall_s": 0.4351141999941319,
+      "cpu_s": 0.421875
+    },
+    {
+      "stage": "audit",
+      "wall_s": 1.4715823000005912,
+      "cpu_s": 1.453125
+    },
+    {
+      "stage": "validate",
+      "wall_s": 6.6078541000024416,
+      "cpu_s": 6.46875
+    },
+    {
+      "stage": "predict",
+      "wall_s": 6.859973600003286,
+      "cpu_s": 18.84375
+    },
+    {
+      "stage": "replay",
+      "wall_s": 12.731394299997191,
+      "cpu_s": 12.296875
+    },
+    {
+      "stage": "supplement",
+      "wall_s": 0.6830135999989579,
+      "cpu_s": 0.65625
+    },
+    {
+      "stage": "report",
+      "wall_s": 0.4773427999971318,
+      "cpu_s": 0.34375
+    },
+    {
+      "stage": "report",
+      "wall_s": 0.39926310000009835,
+      "cpu_s": 0.359375
+    }
+  ]
+}

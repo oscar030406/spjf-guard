@@ -1,0 +1,154 @@
+{
+  "protocol": "cc8e1cc5e7477e045e7caf1d0bef2969ba99f9584aee1992a0e96e5c8e654f4a",
+  "five_overlay_capacity_range": [
+    1,
+    20
+  ],
+  "overlay0_capacity_range": [
+    1,
+    76
+  ],
+  "simultaneous_band": {
+    "method": "centered coordinate-standardized single-bootstrap max-|t| band",
+    "level": 0.95,
+    "critical_value": 3.830366753880591,
+    "coordinates": 80,
+    "bootstrap_draws": 2000,
+    "zero_variance_coordinates": [],
+    "coverage_scope": "conditional calendar-week uncertainty on the five constructed development overlays; no semester, predictor-fit, structural queue-model, or demand-feedback uncertainty"
+  },
+  "support_by_policy": {
+    "SPJF-E": {
+      "simultaneous_positive_k": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "simultaneous_not_positive_k": [
+        1,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "min_point_improvement_s": -21885.81016911035,
+      "min_simultaneous_lower_s": -94817.17898747546,
+      "max_point_improvement_s": 8518.410570459999
+    },
+    "Guard(300)": {
+      "simultaneous_positive_k": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "simultaneous_not_positive_k": [
+        1,
+        2,
+        3,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "min_point_improvement_s": -208.6086705699563,
+      "min_simultaneous_lower_s": -330.91431064973057,
+      "max_point_improvement_s": 109.12781943999957
+    },
+    "Guard(600)": {
+      "simultaneous_positive_k": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "simultaneous_not_positive_k": [
+        1,
+        2,
+        3,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "min_point_improvement_s": -493.7945356199489,
+      "min_simultaneous_lower_s": -647.3964413358357,
+      "max_point_improvement_s": 183.8904232500005
+    },
+    "Guard(1200)": {
+      "simultaneous_positive_k": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "simultaneous_not_positive_k": [
+        1,
+        2,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "min_point_improvement_s": -1071.7246308699541,
+      "min_simultaneous_lower_s": -1276.4296674924885,
+      "max_point_improvement_s": 593.0748083099994
+    }
+  },
+  "largest_observed_wait_s": 412270.285375,
+  "largest_wait_plus_L_weeks": 0.6817630379877645,
+  "note": "The wait-plus-L/week quantity is a conservative diagnostic for possible cross-week dependence. The reported bootstrap resamples realised outcomes; it is not a queue-process bootstrap.",
+  "guard_execution": {
+    "source_guard_policy_cells": 356,
+    "simulated": 307,
+    "certified_identical": 49,
+    "kernel_validations": 2,
+    "bound_checks": 6277974560,
+    "bound_violations": 0,
+    "max_reported_bound_violation_s": 0.0
+  },
+  "summary_timing": {
+    "wall_s": 3.198147600000084,
+    "cpu_s": 2.859375
+  }
+}

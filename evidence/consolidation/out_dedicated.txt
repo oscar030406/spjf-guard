@@ -1,0 +1,23 @@
+[   7.1s] overlay: 40 class-semesters x 44 copies = 1760 entries; simulated jobs 400,790, work 160,199.1 s
+[   7.5s] unparsable timestamps dropped: 0 event rows, 0 login rows; events outside the pool's 40 class-semesters dropped: 0
+[   8.0s] 2020-ERE: users= 489 (multi-class 15) events=457,064 submissions=147,380 | login rows 70,331 -> dedup 66,799 -> in window 36,500 (logins 31,557, logouts 4,943, login->logout pairs 4,943 = 15.7%)
+[   8.2s] 2020-2: users= 197 (multi-class 6) events=177,134 submissions=49,550 | login rows 20,631 -> dedup 18,849 -> in window 11,747 (logins 10,558, logouts 1,189, login->logout pairs 1,188 = 11.3%)
+[   8.4s] 2021-1: users= 215 (multi-class 2) events=188,967 submissions=57,080 | login rows 18,743 -> dedup 18,246 -> in window 13,902 (logins 12,105, logouts 1,797, login->logout pairs 1,795 = 14.8%)
+[   8.6s] 2021-2: users= 217 (multi-class 7) events=226,602 submissions=55,957 | login rows 28,472 -> dedup 26,843 -> in window 17,709 (logins 13,518, logouts 4,191, login->logout pairs 4,189 = 31.0%)
+[   8.9s] 2022-1: users= 234 (multi-class 3) events=210,346 submissions=51,547 | login rows 33,515 -> dedup 32,610 -> in window 19,088 (logins 14,552, logouts 4,536, login->logout pairs 4,528 = 31.1%)
+[   9.0s] 2022-2: users= 193 (multi-class 5) events=163,204 submissions=40,844 | login rows 27,411 -> dedup 26,659 -> in window 12,602 (logins 9,313, logouts 3,289, login->logout pairs 3,274 = 35.2%)
+[   9.1s] 2020-ERE: proxy1800 sessions=16,619 mean=  3.41 p95=15 p99=29 max=64 util=0.0012
+[   9.2s] 2020-2: proxy1800 sessions= 6,696 mean=  1.74 p95=6 p99=10 max=18 util=0.0012
+[   9.2s] 2021-1: proxy1800 sessions= 7,180 mean=  1.90 p95=8 p99=13 max=29 util=0.0011
+[   9.3s] 2021-2: proxy1800 sessions= 6,807 mean=  1.70 p95=8 p99=18 max=43 util=0.0012
+[   9.3s] 2022-1: proxy1800 sessions= 6,840 mean=  0.85 p95=5 p99=12 max=26 util=0.0011
+[   9.3s] 2022-2: proxy1800 sessions= 4,840 mean=  1.40 p95=7 p99=13 max=26 util=0.0013
+[   9.3s] class-semesters with no container (no user has them as primary class): []
+[   9.8s] overlay login_obs    : sessions=  876,348 mean=   96.79 p95=  533 p99= 1003 max= 1856 span= 315.47 d util=0.0007
+[  11.0s] overlay login_act    : sessions=4,030,532 mean=  332.36 p95= 1622 p99= 2525 max= 4302 span= 318.97 d util=0.0007
+[  12.2s] overlay proxy600     : sessions=4,065,996 mean=  142.65 p95=  691 p99= 1130 max= 1969 span= 315.92 d util=0.0017
+[  12.8s] overlay proxy1800    : sessions=2,155,208 mean=  210.48 p95= 1023 p99= 1636 max= 2725 span= 315.92 d util=0.0012
+[  13.3s] overlay proxy3600    : sessions=1,775,840 mean=  245.10 p95= 1194 p99= 1874 max= 3091 span= 315.92 d util=0.0010
+[  14.6s] overlay proxy1800_lg : sessions=3,870,196 mean=  252.74 p95= 1245 p99= 1957 max= 3150 span= 318.97 d util=0.0010
+[  14.6s] overlay executed seconds: all submissions, sum of C_cap 7,048,761 s; simulated job set 7,048,760 s
+[  14.6s] wrote dedicated.json

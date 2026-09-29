@@ -1,0 +1,105 @@
+% DRAFT (scratch) -- supplement proofs for the clock rule and the absolute bound.
+% Not yet in the paper. Framing of the clock rule waits on prechecks/timeout_rule.
+
+\subsection{A Clock in Place of the Counter, and an Absolute Bound}
+\label{sec:supp_clock}
+
+\begin{lemma}[Fluid comparison]
+\label{lem:fluid}
+Let $V(t)$ be the unfinished work at $t$ of a single server of rate $k$ fed the same
+work at the same instants, serving whenever it holds work. For every
+non-preemptive work-conserving $k$-server policy $Q$ and every $t$,
+$V(t) \le U_Q(t) \le V(t) + (k-1)L$.
+\end{lemma}
+
+\begin{proof}
+Both quantities rise by $C_j$ at the arrival of $j$, so $D = U_Q - V$ changes only
+between arrivals, where $U_Q$ falls at the number of busy servers and $V$ falls at
+rate $k$ while it is positive. If $D > 0$ then $U_Q > V \ge 0$ and $D$ does not
+fall while $V > 0$, and $V$ reaching $0$ leaves $D = U_Q \ge 0$; since $D(0) = 0$,
+$D \ge 0$ throughout. If $D > (k-1)L$ then $U_Q > (k-1)L$, so some job waits, since
+at most $k-1$ jobs in service hold at most $(k-1)L$; by work conservation all $k$
+servers are busy, $U_Q$ falls at rate $k$, and $D$ does not rise. Hence
+$D \le (k-1)L$ throughout.
+\end{proof}
+
+Write $V_i^-$ for the fluid backlog at $a_i$ of the jobs of rank below $i$, read after
+the arrivals at $a_i$: $V_i^- = \max(0, V_{i-1}^- + C_{i-1} - k(a_i - a_{i-1}))$ with
+$V_1^- = 0$. Arrivals move $U_Q$ and $V$ by the same amount, so the difference
+$U_Q - V$ is the same between any two of the arrivals at one instant as after all of
+them. Read it at $a_i$ after the arrivals of rank below $i$ and before $i$'s own: there
+$U_Q = R^Q_i$ and $V = V_i^-$, so Lemma~\ref{lem:fluid} gives
+$R^Q_i \le V_i^- + (k-1)L$ for every policy $Q$, a clairvoyant one included, since the
+lemma is a statement about the schedule actually run.
+
+\begin{proposition}[An absolute bound from the arrivals alone]
+\label{prop:absolute}
+For every non-preemptive work-conserving policy $P$ and every job $i$,
+$k\,W_P[i] \le V_i^- + (k-1)L + \mathrm{In}_i$. In particular
+$W_{\mathrm{FCFS}}[i] \le (V_i^- + (k-1)L)/k$, and under Algorithm~1 with cap
+$B_{\max}$,
+\[
+  W_P[i] \;<\; \frac{V_i^- + B_{\max}}{k} + \Bigl(2 - \frac{1}{k}\Bigr)L
+         \;\le\; \frac{\sigma + B_{\max}}{k} + \Bigl(2 - \frac{1}{k}\Bigr)L ,
+\]
+where $\sigma = \max_i (V_i^- + C_i)$ is the smallest depth of a token bucket of
+rate $k$ that the arrivals, counted as work, conform to.
+\end{proposition}
+
+\begin{proof}
+Equation~(busy) of the manuscript gives
+$k\,W_P[i] = R^P_i + \mathrm{In}_i - \mathrm{Out}_i - \rho^P_i \le R^P_i + \mathrm{In}_i$,
+and $R^P_i \le V_i^- + (k-1)L$. Under first-come first-served $\mathrm{In}_i = 0$.
+Under Algorithm~1, $\mathrm{In}_i < B_{\max} + kL$ when $i$ has an overtaker, by
+Theorem~3 of the manuscript, and $\mathrm{In}_i = 0$ otherwise. For the last step,
+$V_i^- \le \sigma - C_i < \sigma$. That $\sigma$ is the least conforming depth is the
+standard reading of the Lindley recursion: $V_i^- + C_i$ is the largest amount by
+which the work arriving in a window ending at $a_i$ exceeds $k$ times the window's
+length.
+\end{proof}
+
+At $k = 1$ the fluid server is the queue itself, $V_i^- = W_{\mathrm{FCFS}}[i]$, and the
+proposition is Theorem~3 of the manuscript again. For $k \ge 2$ it is not a
+consequence of Theorem~3: going through $W_{\mathrm{FCFS}}$ would add the
+$2(k-1)L$ of Theorem~1 a second time.
+
+\begin{corollary}[A cap from an absolute promise]
+\label{cor:absolute}
+An operator who promises that no job waits longer than $D$, and who expects the
+arrivals of the coming period to conform to a rate-$k$ bucket of depth $\sigma$, sets
+$B_{\max} = kD - \sigma - (2k-1)L$ when that is non-negative.
+\end{corollary}
+
+\begin{proposition}[A clock keeps the same promise]
+\label{prop:clock}
+Let Timeout($\theta$) serve, at each dispatch epoch, the oldest waiting job if it has
+waited at least $\theta$, and the base policy's choice otherwise. For every base
+policy, every input and every job $i$ with an overtaker,
+$\mathrm{In}_i < k(\theta + L)$, hence
+\[
+  W_P[i] \;<\; W_{\mathrm{FCFS}}[i] + \theta + (3 - 2/k)L,
+  \qquad
+  W_P[i] \;<\; V_i^-/k + \theta + (2 - 1/k)L .
+\]
+\end{proposition}
+
+\begin{proof}
+From $a_i + \theta$ on, $i$ has waited $\theta$, so the oldest waiting job has too and
+every dispatch until $s_i$ serves a job older than $i$. Every overtaker of $i$ therefore
+starts on some server in $[a_i, a_i + \theta)$ and ends before its start plus $L$. The
+overtakers that share a server run one after another inside
+$[a_i,\, a_i + \theta + L)$, so they hold that server for less than $\theta + L$, and
+summing over the $k$ servers gives $\mathrm{In}_i < k(\theta + L)$. Corollary~1 of the
+manuscript turns this into the first bound and Proposition~\ref{prop:absolute}'s first
+inequality into the second. A job with no overtaker has excess at most $(2-2/k)L$.
+\end{proof}
+
+The rule is Algorithm~1 with a budget that is unbounded until age $\theta$ and zero from
+then on. Its fired set is a prefix of the queue in arrival order, so the head is
+always its minimum-rank member. Read as a charge, the clock bills a waiting job for
+every unit of work the $k$ servers execute while it waits, $k(t - a_q)$, and the guard
+bills it only for completed work that arrived after it. Firing on either rule keeps
+both promises at once, since each proof reads only its own condition; with the clock's
+half computed from arrival times alone, the promise
+$W < W_{\mathrm{FCFS}} + \theta + (3-2/k)L$ survives completion reports that are late
+or lost.

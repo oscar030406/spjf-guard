@@ -1,0 +1,7 @@
+## 2026-09-19 21:05:11 manifest=7d6ed04de3219c6982328c8d3b82ace5dec84547405fdeeea0aeb1cd4eba5687 argv=--small 3000 --trace primary --rep 0 --level 2
+small instances: 3000 drawn {'fcfs': 589, 'pri': 603, 'cap': 610, 'fix': 605, 'skip': 593}; job-by-job mismatches vs the referee simulator and the project simulator: 0; the per-job bound holds on the REFEREE's waits in every guarded instance, worst used/allowed 0.9615
+[     6s] real primary rep0 level2 (k=4, 17,634,760 jobs) FCFS: kernel vs the project simulator, differing jobs 0, max |diff| 0
+[    13s] real primary rep0 level2 (k=4, 17,634,760 jobs) SPJF-tweedie: kernel vs the project simulator, differing jobs 0, max |diff| 0
+[    52s] real primary rep0 level2 (k=4, 17,634,760 jobs) FIX-G600: kernel vs the project simulator, differing jobs 0, max |diff| 0
+TOTAL job-by-job disagreements: 0
+## done in 52 s

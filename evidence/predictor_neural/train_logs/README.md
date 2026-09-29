@@ -1,0 +1,1 @@
+One file per training run of train_neural.py, named `out_train_<model>_<variant>_lr<lr>_<agg>_wd<wd>_dr<dropout>_s<seed>_<tag>.txt`; tag `_sweep` = the validation-semester hyper-parameter search, `_final` = the three frozen seeds. `runs.jsonl` is one line per run with its validation loss, appended in run order.

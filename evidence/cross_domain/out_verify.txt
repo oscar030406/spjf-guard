@@ -1,0 +1,12 @@
+cd_kernel vs brute-force reference (exact start-time comparison)
+  trial 0: done
+  trial 1: done
+  trial 2: done
+  trial 3: done
+  trial 4: done
+  trial 5: done
+start-time mismatches over all trials/k/policies: 0
+degenerate cases: max|guard(B=0)-FCFS| = 0.000000000, max|guard(B=huge)-SPJF| = 0.000000000
+all jobs started: True; no start before arrival: True
+max concurrent jobs in service = 4 (k = 4)
+VERDICT: PASS

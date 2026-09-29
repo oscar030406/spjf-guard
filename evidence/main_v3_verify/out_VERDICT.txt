@@ -1,0 +1,290 @@
+====================================================================================================
+ADVERSARIAL VERIFICATION OF prechecks/main_v3  --  verdict
+written by an independent verifier; nothing in main_v3 was modified
+====================================================================================================
+Method: a k-server non-preemptive event simulator written here from the policy definitions of
+docs/research_plan.md ch. 4-5 (vsim.py; it imports neither guardkern.py nor refsim.py nor
+service_precheck_v2.py), an exact rational brute force (vsmall.py:brute), my own week-block
+paired bootstrap (vboot.py), and scripts that re-derive every printed number from the per-cell
+artefacts (vtrace.py, vhygiene.py, vcomplete.py, vtable.py).  Inputs taken from the builder:
+the overlay traces in <cache-dir>/mv3/traces (arrivals, true service times, ranking scores,
+deadline-window and heavy flags) and its per-cell csv files, used only as the thing to compare
+against.
+
+SUMMARY OF CLAIMS
+  C1 selection hygiene     PARTIALLY CONFIRMED   (F3 WARNING: the family and the grid were tuned
+                                                  on the evaluation trace beforehand; F8 WARNING:
+                                                  the G = 600 choice fails on a second validation
+                                                  overlay)
+  C2 simulator             CONFIRMED             (0 differing jobs on 17.6 M x 22 policies)
+  C3 headline numbers      CONFIRMED             (1364 numbers re-derived, 0 mismatches)
+  C4 bootstrap             CONFIRMED             (my own RNG: 0.9159 [0.8922,0.9289] vs
+                                                  0.916 [0.891,0.929]; +0.0182 vs +0.019)
+  C5 finite-skip fairness  PARTIALLY CONFIRMED   (F4: the baseline may legitimately have 11-13%
+                                                  more skips; measured, it changes nothing)
+  C6 adversarial and k=1   CONFIRMED             (reproduced job for job)
+  C7 completeness          CONFIRMED             (19 cells, one manifest, all after the incident)
+
+----------------------------------------------------------------------------------------------------
+C1  SELECTION HYGIENE -- PARTIALLY CONFIRMED
+----------------------------------------------------------------------------------------------------
+Confirmed by re-derivation (out_hygiene.txt, out_complete.txt):
+  * selected_params.csv -- G=300 -> (B0 = 30*k/4, eta 0.5), 600 -> (30*k/4, 0.9), 1200 ->
+    (120*k/4, 0.9) -- is exactly what the report's own rule produces when I apply it myself to
+    select_grid.csv (feasible = worst-level harm <= G/2, objective = worst-level p99 gap, ties to
+    smaller harm, then smaller B0, then smaller eta): all three picks identical.
+  * the 144 rows of select_grid.csv re-derive exactly (0 mismatches) from the raw validation
+    cells <cache-dir>/mv3/sim/valid_rep0_L{0,1,2}_grid.csv; the fixed-budget guard is infeasible
+    at all three G on validation (harm 186.1 / 490.5 / 678.5 s against limits 150 / 300 / 600).
+  * the validation trace artefact really is a sub-pool: primary rep0 = 44 copies x 400,790 jobs
+    over 40 class-semesters, valid rep0 = 49 copies x 360,125 jobs over 32; the per-copy
+    service-time multiset of the validation trace is a strict sub-multiset of the primary one
+    (0 negative entries), 40,665 jobs per copy removed, and trace_summary.csv puts 2022-2 alone
+    at exactly 8 class-semesters (40 - 32).  Code path: mv3_common.py:182-189 drops
+    TEST_SEM = "2022-2" by name.  (The npz carries no semester labels, so this is a structural
+    check plus the code, not a label check.)
+  * no look-ahead in the scores used for a target period: rs_fit.py:86-100 (Tweedie and the
+    "log" control) trains on semesters whose first arrival precedes the target and on rows whose
+    availability precedes the origin; mv3_r1s.py:96-104 asserts the same for R1S and its itr
+    control; service_precheck_v2.py:1299-1310 does it for the cached M4.  The heavy-job threshold
+    is NOT fitted per target: it is the fixed 2018-1..2019-2 p95 (service_precheck_v2.py:362-365),
+    which is stronger than the claim.  Sealed semesters are blocked at
+    service_precheck_v2.py:181,286-288,3002 and never appear in any path used here.
+  * order of execution: selection ran at 20:44:47 (out_select.txt:1), the first primary "main"
+    cell at 20:44:53 (out_run.txt:175); mv3_select.py reads only validation cells.  Every
+    out_*.txt in main_v3 has a file creation time equal to its first logged invocation, so no
+    earlier or discarded invocation was deleted from these logs.
+
+Not confirmed:
+  * F3 (WARNING).  The guard family and the (B0, eta) grid were explored on the PRIMARY
+    evaluation trace earlier the same day: prechecks/guard_variants/all_runs.csv holds runs on
+    rep0, rep1 and k1rep0 at levels 0-2 for CAP-B{30,120,600}-e{0.5,0.75,0.9}-M{600,1200,3600}
+    and FIX-B{30..3600}, and docs/research_plan.md 4.3 tabulates them.  main_v3's choice is
+    validation-only INSIDE a family that had already been narrowed on the trace the paper reports.
+    docs/research_plan.md, where the selection rule is written, has creation = last write
+    2026-09-19 20:52, i.e. after the selection at 20:44:47, so its pre-registration cannot be
+    established from disk.  There is no sealed or held-out trace anywhere in v3 (the 2022-2-only
+    trace needs 190 copies and was correctly dropped), so nothing here is a test result.
+  * F8 (WARNING).  The choice is not stable across validation overlays at G = 600.  The builder
+    built valid rep 1 and never used it (limitation 2); I ran the whole 15-point grid plus the
+    fixed-budget guard on it at all three load levels with my own simulator (out_select2.txt,
+    144 guarded runs, 0 bound violations).  Applying the report's own rule to that overlay:
+        G =  300  -> (30*k/4, 0.5)    SAME as the reported choice
+        G = 1200  -> (120*k/4, 0.9)   SAME
+        G =  600  -> (120*k/4, 0.75)  DIFFERENT; the reported (30*k/4, 0.9) is INFEASIBLE here,
+                     its worst-level harm being 358.9 s against the 300 s limit (level 2), while
+                     the alternative reaches the same objective (worst-level gap 0.7216 vs
+                     0.7210) with harm 293.3 s.
+    So the one setting whose advantage section 9 already admits does not survive the worst primary
+    overlay is also the one whose selection does not survive a second validation overlay.
+  * The section-9 admission, quantified (out_hygiene.txt section 3).  At G = 600 the worst-over-
+    overlays harm is identical for the fixed and the capped guard at level 0 (238.1 s both) and
+    level 2 (520.5 s both); the per-overlay ratios at level 2 are [1.72, 1.51, 1.50, 1.00, 2.52],
+    so the tie is produced by one overlay (rep 3).  At level 1 the capped guard still wins
+    (446.7 -> 276.9 s).  The headline table does NOT hide this: its harm column prints the worst
+    over the overlays, 520.5 for both policies, and section 9 states it in words.
+
+----------------------------------------------------------------------------------------------------
+C2  SIMULATOR -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+  * 6,000 small random instances (out_small.txt) with simultaneous arrivals, tied predictions and
+    tied service times, 1,200 each of FCFS / pure-prediction / capped-relative / fixed / finite
+    skip, budgets including zero and B0 = 1 us:
+        max |builder kernel - my simulator|  = 0          (job for job, every instance)
+        max |exact rational brute - mine|    = 3.4e-13    (after F5 below is excluded)
+        per-job bound violations on MY waits = 0, worst used/allowed 0.9890
+  * full primary cell rep0 level 2 (k = 4, 17,634,760 jobs, 22 policies, out_cell_primary_rep0_
+    L2.txt) and the k = 1 cell: every metric (p99 of the deadline window, mean, p99 overall, max
+    excess, harm, max heavy, queue-weighted fired share, used/allowed) equals the builder's
+    stored row; the largest deviation anywhere in the 16 cells I re-simulated is 4.5e-13 s, i.e.
+    one ulp of a ~2000 s value.  FCFS additionally equals a Kiefer-Wolfowitz recursion written
+    here (max |diff| 0 over the first 2,000,000 jobs of every cell).
+  * both theorem bounds asserted on MY OWN waits, per job:
+        W <= W_FCFS + Bmax/k + (3-2/k) L    and    W <= (W_FCFS + B0/k + (3-2/k) L)/(1-eta)
+    over 15 primary cells x 12 guarded policies plus the k = 1 cell -- 3,204,731,948 checks --
+    and a further 2,541,042,000 on the 144 guarded runs of the validation grid I ran for F8:
+    0 violations anywhere.  The worst used/allowed on my waits is 0.995 at k = 1 and 0.93 at
+    k >= 4, which reproduces the report's statement that the constant is tight only at k = 1.
+  * F5 (NOTE).  One instance in 6,000 (vsmall it=4941, pure-prediction, k=3) disagrees with the
+    exact rational reference by 22.3 s on one job.  Cause, isolated in out_clock.txt: the clock is
+    float64 seconds while the guard accounting is integer microseconds, and a completion that
+    coincides exactly with an arrival can fall on the wrong side by one ulp (1.7e-18 s here).  The
+    same instance in integer microseconds agrees with the exact reference to 0.  On the real k = 1
+    trace, rerunning in exact microsecond units moves no wait by more than 6e-6 s and leaves the
+    p99 unchanged to four decimals.  Both simulators share the convention, so the builder's own
+    cross-check (section 8) cannot detect it.  No reported number is affected.
+
+----------------------------------------------------------------------------------------------------
+C3  HEADLINE NUMBERS -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+  * 1,364 numbers parsed out of out_main_v3.txt sections 3, 4, 5, 6, 7 and 9 were re-derived from
+    the per-cell csv files under the report's own aggregation rule (means over the five overlays,
+    worst over them for max excess / harm / max heavy): 0 mismatches (out_trace.txt).  Of those,
+    1,016 were re-derived a second time from MY OWN simulations of all 16 cells: 0 mismatches
+    (out_trace_mine.txt; the 108 not covered are k = 1 policies I did not simulate).
+  * rho 1.0, from my own runs (out_table_L2.txt): FCFS 273.4974, SJF-ref 43.6292,
+    SPJF-M4 67.2871, SPJF-tweedie 62.9111, CAP-G1200 73.0829, CAP-G600 87.7407, CAP-G300 166.0197,
+    SKIP-G600 272.9089 -- the report prints 273.50 / 43.63 / 67.29 / 62.91 / 73.08 / 87.74 /
+    166.02 / 272.91.  Max excess: SPJF-M4 5882.92, SPJF-tweedie 5904.52, CAP-G1200 1114.69,
+    CAP-G600 523.50, CAP-G300 229.28 (report 5882.9 / 5904.5 / 1114.7 / 523.5 / 229.3).  Harm:
+    708.76 / 520.47 / 113.75 against the report's 708.8 / 520.5 / 113.8.  The rho 0.8 and rho 0.5
+    rows were re-derived the same way with 0 mismatches.
+  * trace table (section 1) confirmed from the artefacts: 17,634,760 jobs, 4,219,556 in the
+    deadline window, 181,720 heavy, busy-hour work 15,247.5 / 14,233.0 / 14,115.0 / ... s,
+    k = 8/5/4 per level (7/5/4 for overlay 4); k = 1 trace 3,209,347 jobs, 768,149 in window.
+  * deadline-window membership is by ARRIVAL only: in_dl = (a_end - arrival <= 86400) &
+    (a_end - arrival >= 0) at service_precheck_v2.py:1898; nothing in the metric refers to the
+    completion time, so jobs that finish after the window still count.  Confirmed as claimed.
+
+----------------------------------------------------------------------------------------------------
+C4  BOOTSTRAP -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+My own implementation (out_boot.txt): 30 whole weeks of the overlay timeline drawn with
+replacement, 2,000 resamples, RNG seed 777 (the builder's is a different seed), my own weighted
+order-statistic code, my own waits.  Pairing: one draw of week multiplicities is applied to every
+policy AND to all five overlays, and the statistic is the mean over the five overlays of
+(FCFS - policy)/(FCFS - SJF-ref) computed inside each resample -- the same pairing the builder
+uses (mv3_gain.py:86-98).
+        SPJF-tweedie gap, rho 1.0   mine 0.9159 [0.8922, 0.9289]   report 0.916 [0.891, 0.929]
+        Tweedie - log M4            mine +0.0182 [+0.0104, +0.0241] report +0.019 [0.011, 0.024]
+        CAP-G600 - SPJF-tweedie     mine -0.1055 [-0.1362, -0.0673] report -0.108 [-0.137, -0.069]
+All three agree within 0.003, well inside the +-0.005 asked for.  The builder's replicate files
+hold 2,000 finite replicates per policy and metric and the gain stage drops none of them
+(out_complete.txt section 4), so the intervals are not thinned by non-finite resamples.
+
+----------------------------------------------------------------------------------------------------
+C5  FINITE-SKIP BASELINE -- PARTIALLY CONFIRMED (F4, NOTE)
+----------------------------------------------------------------------------------------------------
+The baseline is given N = G*k/L - (3k-2) skips (30 at k = 4, G = 600; 9 at k = 1), which follows
+from the kernel's accounting: the count channel charges a skip only when the overtaker COMPLETES
+(guardkern.py docstring, "COUNT CHANNEL"), so up to k-1 overtakers in service plus the one being
+dispatched are uncounted and the conversion needs the extra k*L.  Charging the skip at DISPATCH
+time instead -- the usual reading of "a job may be passed at most N times", and what a position
+counter in the prior art does -- bounds the inserted work by N*L directly and gives
+        W <= W_FCFS + (N + 2k - 2) L / k,
+so the same promise G allows N = G*k/L - (2k-2): 34 instead of 30 at k = 4 / G = 600, and 10
+instead of 9 at k = 1, i.e. 11-13 % more skips.  The baseline is therefore mildly handicapped.
+Measured (my simulator, the looser count, out_cell_primary_rep0_L2.txt and the k = 1 log):
+        primary rep0 level 2   SKIP-G600 p99_dl 262.513 -> 262.545 with N = 34 (max excess 100.6 s)
+        k = 1                  SKIP-G600 p99_dl 219.953 -> 219.885 with N = 10 (max excess 100.9 s)
+The gap closed stays at about 0.002 (k = 4) and 0.008 (k = 1).  The conclusion "position counting
+buys essentially nothing on this load" survives the fairer configuration; the report's own
+sentence about it should nevertheless be stated with the dispatch-time count, or the smaller N
+should be justified in the text.
+
+----------------------------------------------------------------------------------------------------
+C6  ADVERSARIAL PREDICTORS AND k = 1 -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+From my own simulator (out_table_L2.txt, out_cell_primary_rep0_L2.txt, the k = 1 log):
+        top1short, rho 1.0   unguarded p99_dl 523.5182, max excess 6108.86 s
+                             CAP-G600   p99_dl 561.2154, max excess 534.73 s, harm 497.80 s
+        (report: 523.518 / 6108.860 and 561.215 / 534.727 / 497.800)
+        k = 1 CAP-G600       p99_dl 69.5413, harm 119.65 s   vs FIX-G600 68.3147, harm 563.37 s
+        (report: 69.5413 / 119.6503 vs 68.3147 / 563.3744)
+Every guarded adversarial run satisfies my own per-job bound (0 violations); the guarded runs use
+at most 0.891 of the allowed excess at k = 4 and 0.995 at k = 1.
+
+----------------------------------------------------------------------------------------------------
+C7  COMPLETENESS AFTER THE INCIDENT -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+out_complete.txt:
+  * the manifest hash 7d6ed04d... recomputed from the seven mv3_*.py files matches the report
+    header, file by file;
+  * all six stage logs carry that one hash on every invocation (4 + 2 + 2 + 19 + 1 + 1 = 29
+    invocations), each closed by a "## done" line, the earliest at 20:39:04 and the latest at
+    21:05:11, all after the 20:25 incident; the line counts match section 12 exactly;
+  * 19 cells exist: 15 primary (22 policies, 12 guarded, 17,634,760 jobs each), the k = 1 cell
+    (22 policies, 3,209,347 jobs) and 3 validation grid cells (51 policies, 48 guarded); every
+    cell has bound_viol = 0 and used/allowed <= 1, and every bootstrap file holds 2,000 finite
+    replicates for every policy and metric;
+  * the report's "3,212,768,964 per-job bound checks" is exactly 180 x 17,634,760 + 12 x
+    3,209,347, i.e. the 192 main guarded runs; the three validation grid cells add
+    2,541,042,000 further checks, also with 0 violations (F6, NOTE: scope of the count, not an
+    error);
+  * every input cache was last written between 06:00 and 09:00, hours before the incident, so
+    nothing consumed here could have been truncated by it.
+
+----------------------------------------------------------------------------------------------------
+FINDINGS
+----------------------------------------------------------------------------------------------------
+F1  NOTE       reachability: none now.  The manifest covers only mv3_*.py.  The simulator kernel
+               (prechecks/guard_variants/guardkern.py) and the pipeline
+               (prechecks/codebench_service_v2/service_precheck_v2.py) are outside it, and
+               guardkern.py was in fact rewritten at 2026-09-19 21:10:18, three minutes after the
+               report was written (21:07:03).  Diffed against prechecks/firefox_ci/
+               guardkern_snapshot.py, the change is an added argument check plus docstring; the
+               simulation is unchanged, and my independent rerun reproduces every cell.  But
+               main_v3/README.md:46-48 ("a reported number can never come from code that has since
+               changed") is true only of mv3_*.py; say so, or hash the imported modules too.
+F2  NOTE       reachability: none.  mv3_report.py is outside the manifest by design and was
+               rewritten between two report runs (out_main_v3.txt created 21:06:09, mv3_report.py
+               written 21:06:57, report rewritten 21:07:03); report_cap_vs_fix.csv, i.e. section 9,
+               exists only from the second run.  All 1,364 numbers check out, so this is about
+               provenance of the prose, not of the numbers.
+F3  WARNING    reachability: affects what the guard numbers MEAN, not their values.  The guard
+               family and the (B0, eta) grid were tuned on the primary evaluation trace in
+               prechecks/guard_variants before the validation-only selection; the selection rule's
+               pre-registration cannot be established from disk (research_plan.md rewritten at
+               20:52, after the 20:44 selection); and v3 contains no held-out trace at all.
+F4  NOTE       reachability: the SKIP-G* rows only.  The finite-skip baseline is given 11-13 %
+               fewer skips than the same promise G allows under a dispatch-time count.  Measured
+               at the larger count the rows move by <= 0.07 s of p99 and the gap closed does not
+               move; the conclusion stands.
+F5  NOTE       reachability: none measurable.  Float64-seconds clock with microsecond accounting;
+               one coincident completion/arrival in 6,000 small instances resolved against the
+               exact reference; on the real trace no wait moves by more than 6 us.
+F6  NOTE       reachability: none.  The per-job-check count in section 7 covers the main runs
+               only; the validation grid adds 2.54e9 more checks, also clean.
+F7  NOTE       reachability: the wording of the capped-vs-fixed claim.  At G = 600 the capped
+               budget's harm advantage disappears in the worst of the five overlays (level 0 and
+               level 2); it holds in four of five overlays and at every other G.  The report
+               already says this; the paper must not drop it.
+F8  WARNING    reachability: live, the CAP-G600 rows of every table.  On the second validation
+               overlay the builder built but never used, the report's rule picks (120*k/4, 0.75)
+               at G = 600, and the reported (30*k/4, 0.9) fails the very harm constraint the rule
+               is built on (358.9 s against the 300 s limit) for the same objective value.  The
+               G = 300 and G = 1200 choices are stable.  The G = 600 parameters are therefore an
+               artefact of one validation overlay and must not be presented as validated; either
+               re-select over both validation overlays (worst-case over overlays, which is what
+               the rule does over levels) or report G = 600 with the setting that is feasible on
+               both.
+No CRITICAL finding.  No FLAG-HUMAN item.
+
+----------------------------------------------------------------------------------------------------
+WHAT THE PAPER MAY AND MAY NOT CLAIM FROM v3
+----------------------------------------------------------------------------------------------------
+MAY:
+  * The per-job guarantee is empirical fact on this data under an independent implementation:
+    5.7e9 of my own per-job checks (16 reported cells plus a 144-run validation grid), 0
+    violations, including the three adversarial predictors and k = 1.
+  * The scheduling numbers of sections 3-7 and 9 are reproducible: an independently written
+    simulator fed the same traces reproduces every one of them (1,016 of 1,364 checked directly
+    against my own runs, the rest against the stored cells).
+  * At the busiest hour rho ~ 1.0 with k = 4, ranking by the Tweedie expected cost closes
+    0.916 [0.892, 0.929] of the FCFS -> true-size-SJF gap in the deadline window, and beats the
+    log-scale score by +0.018 [0.010, 0.024]; at rho 0.8 the advantage is smaller and at rho 0.5
+    it is unresolved.
+  * The guard converts an unbounded tail into the promised one: worst excess over FCFS 5,905 s
+    unguarded and 6,109 s under the adversarial predictor, at most 523.5 s at G = 600, while
+    giving up about 0.11 of the gap at rho 1.0 (0.808 vs 0.916).
+  * The position-count baseline buys essentially nothing on this workload at equal promise, and
+    this survives giving it the largest skip count a dispatch-time charge would allow.
+  * The capped relative budget cuts the harm to jobs FCFS would have started at once by 1.2-4.7x
+    at G = 300 and G = 1200 and at every G at k = 1, at a gap cost of at most 0.04.
+MAY NOT:
+  * No held-out or test claim of any kind.  Every number is development data; 2022-2 was kept out
+    of the selection trace but never evaluated on its own, the sealed semesters were not opened,
+    and the guard family itself was tuned on the primary trace (F3).  Do not write "held out",
+    "out of sample" or "generalises" about any v3 number.
+  * Do not claim the capped budget beats the fixed budget at G = 600: the worst-overlay harm ties
+    (F7).  The 1.2-4.7x claim is for G = 300, G = 1200 and k = 1.
+  * Do not present the G = 600 guard parameters as validated: on a second validation overlay the
+    same rule rejects them as infeasible and picks (120*k/4, 0.75) instead (F8).  The G = 300 and
+    G = 1200 settings are stable across both validation overlays and may be described as chosen
+    on validation data.
+  * Do not present the intervals as covering anything but time: 30 week blocks, one overlay
+    construction, five overlays that are not five platforms.
+  * Do not claim R1S-Tweedie improves on Tweedie (unresolved at rho 1.0, worse at rho 0.5), and do
+    not claim an end-to-end result: feature and prediction cost is not charged in these runs.
+  * Do not quote the finite-skip row as "the prior-art mechanism at its best" without stating the
+    skip count and the accounting behind it (F4).

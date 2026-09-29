@@ -1,0 +1,251 @@
+
+=== collection stage 'repos' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+window: 2026-08-24T00:00:00Z .. 2026-09-14T00:00:00Z
+-- workers --
+  releng-hardware/gecko-t-osx-1500-m4: 172 workers listed, 0 quarantined now
+  releng-hardware/gecko-t-linux-talos-2404: 107 workers listed, 1 quarantined now
+-- repos --
+  push-id range for 2026-08-21..2026-09-16: 2009581..2039051
+  releng-hardware/gecko-t-osx-1500-m4: repositories that feed it = ['autoland', 'try', 'mozilla-central', 'mozilla-beta', 'mozilla-release', 'mozilla-esr140', 'mozilla-esr153', 'elm', 'comm-central', 'comm-beta']
+     (probed 23 candidates with 4 sample workers; the rest returned no job)
+  releng-hardware/gecko-t-linux-talos-2404: repositories that feed it = ['autoland', 'try', 'mozilla-central', 'mozilla-beta', 'mozilla-release']
+     (probed 23 candidates with 4 sample workers; the rest returned no job)
+done: 147 requests, 6.9 MB downloaded
+
+=== collection stage 'jobs' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+window: 2026-08-24T00:00:00Z .. 2026-09-14T00:00:00Z
+-- jobs --
+  releng-hardware/gecko-t-osx-1500-m4: 172 workers x 10 repos
+    20/172 workers   200 requests  16.7 MB
+    40/172 workers   400 requests  34.2 MB
+    60/172 workers   600 requests  51.0 MB
+    80/172 workers   800 requests  67.9 MB
+    100/172 workers   1000 requests  85.6 MB
+    120/172 workers   1200 requests  103.2 MB
+    140/172 workers   1400 requests  120.7 MB
+    160/172 workers   1600 requests  137.8 MB
+    172/172 workers   1720 requests  148.0 MB
+  releng-hardware/gecko-t-linux-talos-2404: 107 workers x 5 repos
+    20/107 workers   1820 requests  162.0 MB
+    40/107 workers   1920 requests  177.4 MB
+    60/107 workers   2020 requests  192.4 MB
+    80/107 workers   2120 requests  205.1 MB
+    100/107 workers   2220 requests  218.9 MB
+    107/107 workers   2255 requests  224.5 MB
+done: 2255 requests, 224.5 MB downloaded
+
+=== collection stage 'status' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+window: 2026-08-24T00:00:00Z .. 2026-09-14T00:00:00Z
+-- status --
+  releng-hardware/gecko-t-osx-1500-m4: 255059 distinct task ids
+    0/255059   1 requests  0.5 MB decoded / 0.5 MB wire
+    20000/255059   41 requests  21.2 MB decoded / 21.2 MB wire
+    40000/255059   81 requests  41.9 MB decoded / 41.9 MB wire
+    60000/255059   121 requests  62.5 MB decoded / 62.5 MB wire
+    80000/255059   161 requests  83.1 MB decoded / 83.1 MB wire
+    100000/255059   201 requests  103.8 MB decoded / 103.8 MB wire
+    120000/255059   241 requests  124.5 MB decoded / 124.5 MB wire
+    140000/255059   281 requests  145.1 MB decoded / 145.1 MB wire
+    160000/255059   322 requests  165.8 MB decoded / 165.8 MB wire
+    180000/255059   362 requests  186.4 MB decoded / 186.4 MB wire
+    200000/255059   402 requests  207.0 MB decoded / 207.0 MB wire
+
+=== collection stage 'status' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- status --
+  releng-hardware/gecko-t-osx-1500-m4: 255059 distinct task ids
+    220000/255059   442 requests  227.7 MB decoded / 227.7 MB wire
+    220000/255059   6 requests  3.1 MB decoded / 3.1 MB wire
+    240000/255059   46 requests  23.7 MB decoded / 23.7 MB wire
+    240000/255059   482 requests  248.3 MB decoded / 248.3 MB wire
+  releng-hardware/gecko-t-linux-talos-2404: 41317 distinct task ids
+  releng-hardware/gecko-t-linux-talos-2404: 124511 distinct task ids
+    0/41317   77 requests  39.2 MB decoded / 39.2 MB wire
+    0/124511   513 requests  263.8 MB decoded / 263.8 MB wire
+    20000/124511   553 requests  284.5 MB decoded / 284.5 MB wire
+    20000/41317   112 requests  57.9 MB decoded / 57.9 MB wire
+
+=== collection stage 'status' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- status --
+  releng-hardware/gecko-t-osx-1500-m4: 255059 distinct task ids
+  releng-hardware/gecko-t-linux-talos-2404: 41317 distinct task ids
+    40000/124511   593 requests  305.3 MB decoded / 305.3 MB wire
+    40000/41317   18 requests  9.6 MB decoded / 9.6 MB wire
+    40000/41317   149 requests  77.7 MB decoded / 77.7 MB wire
+done: 150 requests, 78.0 MB decoded, 78.0 MB on the wire
+done: 19 requests, 10.1 MB decoded, 10.1 MB on the wire
+
+=== collection stage 'runtime' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- runtime --
+  releng-hardware/gecko-t-osx-1500-m4: 1838 distinct labels, 255086 job rows; sampling maxRunTime for the 434 biggest labels, which carry 95.0% of the rows
+    60000/124511   633 requests  326.0 MB decoded / 326.0 MB wire
+    50/1838 labels  100 requests  0.8 MB decoded / 0.8 MB wire
+
+=== collection stage 'runtime' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- runtime --
+  releng-hardware/gecko-t-osx-1500-m4: 1838 distinct labels, 255086 job rows; sampling maxRunTime for the 434 biggest labels, which carry 95.0% of the rows
+    80000/124511   673 requests  346.8 MB decoded / 346.8 MB wire
+    25/434 labels  50 requests  0.4 MB decoded / 0.4 MB wire
+    100/1838 labels  200 requests  1.7 MB decoded / 1.7 MB wire
+    50/434 labels  100 requests  0.8 MB decoded / 0.8 MB wire
+    100000/124511   714 requests  367.6 MB decoded / 367.6 MB wire
+    150/1838 labels  300 requests  2.6 MB decoded / 2.6 MB wire
+    75/434 labels  150 requests  1.3 MB decoded / 1.3 MB wire
+    100/434 labels  200 requests  1.7 MB decoded / 1.7 MB wire
+    125/434 labels  250 requests  2.2 MB decoded / 2.2 MB wire
+    200/1838 labels  400 requests  3.5 MB decoded / 3.5 MB wire
+    120000/124511   754 requests  388.4 MB decoded / 388.4 MB wire
+done: 763 requests, 392.5 MB decoded, 392.5 MB on the wire
+    150/434 labels  300 requests  2.6 MB decoded / 2.6 MB wire
+    175/434 labels  350 requests  3.1 MB decoded / 3.1 MB wire
+    250/1838 labels  500 requests  4.4 MB decoded / 4.4 MB wire
+
+=== collection stage 'runtime' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- runtime --
+  releng-hardware/gecko-t-osx-1500-m4: resuming, 175 labels already sampled
+  releng-hardware/gecko-t-osx-1500-m4: 1838 distinct labels, 255086 job rows; sampling maxRunTime for the 434 biggest labels, which carry 95.0% of the rows
+    200/434 labels  400 requests  3.5 MB decoded / 3.5 MB wire
+    200/434 labels  50 requests  0.4 MB decoded / 0.4 MB wire
+    225/434 labels  450 requests  3.9 MB decoded / 3.9 MB wire
+    300/1838 labels  600 requests  5.3 MB decoded / 5.3 MB wire
+    225/434 labels  100 requests  0.8 MB decoded / 0.8 MB wire
+    250/434 labels  500 requests  4.4 MB decoded / 4.4 MB wire
+
+=== collection stage 'runtime' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- runtime --
+  releng-hardware/gecko-t-osx-1500-m4: resuming, 250 labels already sampled
+  releng-hardware/gecko-t-osx-1500-m4: 1838 distinct labels, 255086 job rows; sampling maxRunTime for the 200 biggest labels, which carry 69.5% of the rows
+  releng-hardware/gecko-t-linux-talos-2404: 928 distinct labels, 124570 job rows; sampling maxRunTime for the 40 biggest labels, which carry 40.4% of the rows
+    275/434 labels  550 requests  4.9 MB decoded / 4.9 MB wire
+    350/1838 labels  700 requests  6.4 MB decoded / 6.4 MB wire
+
+=== collection stage 'runtime' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- runtime --
+  releng-hardware/gecko-t-osx-1500-m4: maxRunTime map already complete on disk
+  releng-hardware/gecko-t-linux-talos-2404: 928 distinct labels, 124570 job rows; sampling maxRunTime for the 40 biggest labels, which carry 40.4% of the rows
+    25/40 labels  50 requests  0.4 MB decoded / 0.4 MB wire
+    300/434 labels  600 requests  5.3 MB decoded / 5.3 MB wire
+    25/40 labels  50 requests  0.4 MB decoded / 0.4 MB wire
+done: 80 requests, 0.6 MB decoded, 0.6 MB on the wire
+
+=== collection stage 'runtime' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- runtime --
+  releng-hardware/gecko-t-osx-1500-m4: maxRunTime map already complete on disk
+  releng-hardware/gecko-t-linux-talos-2404: maxRunTime map already complete on disk
+done: 0 requests, 0.0 MB decoded, 0.0 MB on the wire
+done: 80 requests, 0.6 MB decoded, 0.6 MB on the wire
+
+=== collection stage 'assemble' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- assemble --
+  releng-hardware/gecko-t-osx-1500-m4: 300 labels with a maxRunTime, 0 labels where the sampled tasks disagreed
+    325/434 labels  650 requests  5.8 MB decoded / 5.8 MB wire
+  releng-hardware/gecko-t-osx-1500-m4: 249686 task statuses (0 in another queue, dropped), 249713 runs before the window filter
+  releng-hardware/gecko-t-osx-1500-m4: 191970 runs inside [2026-08-24T00:00:00Z, 2026-09-14T00:00:00Z) -> <repo-root>\data\mozilla_firefox_ci\runs_releng-hardware__gecko-t-osx-1500-m4.parquet (11.5 MB)
+  releng-hardware/gecko-t-linux-talos-2404: 40 labels with a maxRunTime, 0 labels where the sampled tasks disagreed
+    350/434 labels  700 requests  6.4 MB decoded / 6.4 MB wire
+    375/434 labels  750 requests  6.8 MB decoded / 6.8 MB wire
+
+=== collection stage 'runtime' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- runtime --
+  releng-hardware/gecko-t-osx-1500-m4: maxRunTime map already complete on disk
+  releng-hardware/gecko-t-linux-talos-2404: maxRunTime map already complete on disk
+done: 0 requests, 0.0 MB decoded, 0.0 MB on the wire
+
+=== collection stage 'status' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- status --
+  releng-hardware/gecko-t-osx-1500-m4: 255059 distinct task ids
+  releng-hardware/gecko-t-linux-talos-2404: 41317 distinct task ids
+done: 2 requests, 1.1 MB decoded, 1.1 MB on the wire
+
+=== collection stage 'assemble' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- assemble --
+  releng-hardware/gecko-t-osx-1500-m4: 375 labels with a maxRunTime, 0 labels where the sampled tasks disagreed
+  releng-hardware/gecko-t-osx-1500-m4: 249686 task statuses (0 in another queue, dropped), 249713 runs before the window filter
+  releng-hardware/gecko-t-osx-1500-m4: 191970 runs inside [2026-08-24T00:00:00Z, 2026-09-14T00:00:00Z) -> <repo-root>\data\mozilla_firefox_ci\runs_releng-hardware__gecko-t-osx-1500-m4.parquet (11.5 MB)
+  releng-hardware/gecko-t-linux-talos-2404: 40 labels with a maxRunTime, 0 labels where the sampled tasks disagreed
+  releng-hardware/gecko-t-linux-talos-2404: 122130 task statuses (126 in another queue, dropped), 122067 runs before the window filter
+  releng-hardware/gecko-t-linux-talos-2404: 49119 runs inside [2026-09-07T00:00:00Z, 2026-09-14T00:00:00Z) -> <repo-root>\data\mozilla_firefox_ci\runs_releng-hardware__gecko-t-linux-talos-2404.parquet (2.1 MB)
+done: 0 requests, 0.0 MB decoded, 0.0 MB on the wire
+
+=== collection stage 'coverage' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- coverage --
+  releng-hardware/gecko-t-osx-1500-m4: holding 255059 task ids
+  releng-hardware/gecko-t-linux-talos-2404: holding 41317 task ids
+  checking 9 whole pushes: [('autoland', 2037425), ('autoland', 2041133), ('autoland', 2038761), ('mozilla-central', 2041427), ('mozilla-central', 1940630), ('mozilla-central', 1948432), ('try', 2042538), ('try', 2041297), ('try', 2042393)]
+    autoland push 2037425: 96 tasks; gecko-t-osx-1500-m4: 8 in pool, 8 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+    autoland push 2041133: 137 tasks; gecko-t-osx-1500-m4: 5 in pool, 0 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+    autoland push 2038761: 458 tasks; gecko-t-osx-1500-m4: 25 in pool, 25 held; gecko-t-linux-talos-2404: 9 in pool, 0 held
+    mozilla-central push 2041427: 0 tasks; gecko-t-osx-1500-m4: 0 in pool, 0 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+    mozilla-central push 1940630: 0 tasks; gecko-t-osx-1500-m4: 0 in pool, 0 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+    mozilla-central push 1948432: 0 tasks; gecko-t-osx-1500-m4: 0 in pool, 0 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+    try push 2042538: 32 tasks; gecko-t-osx-1500-m4: 0 in pool, 0 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+    try push 2041297: 63 tasks; gecko-t-osx-1500-m4: 2 in pool, 0 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+    try push 2042393: 13 tasks; gecko-t-osx-1500-m4: 0 in pool, 0 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+  COVERAGE releng-hardware/gecko-t-osx-1500-m4: 33/40 = 82.50% of the pool's tasks in these pushes are in our collection; 0 of the 40 never started a run (0.00%, these are cancelled / superseded / never-claimed tasks and carry no service)
+  COVERAGE releng-hardware/gecko-t-linux-talos-2404: 0/9 = 0.00% of the pool's tasks in these pushes are in our collection; 0 of the 9 never started a run (0.00%, these are cancelled / superseded / never-claimed tasks and carry no service)
+done: 18 requests, 11.1 MB decoded, 11.1 MB on the wire
+
+=== collection stage 'status' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- status --
+  releng-hardware/gecko-t-osx-1500-m4: 255059 distinct task ids
+  releng-hardware/gecko-t-linux-talos-2404: 41317 distinct task ids
+    0/41317   1 requests  0.5 MB decoded / 0.5 MB wire
+    20000/41317   41 requests  21.9 MB decoded / 21.9 MB wire
+    40000/41317   81 requests  43.2 MB decoded / 43.2 MB wire
+done: 83 requests, 44.1 MB decoded, 44.1 MB on the wire
+
+=== collection stage 'coverage' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- coverage --
+  releng-hardware/gecko-t-osx-1500-m4: holding 255059 task ids
+  releng-hardware/gecko-t-linux-talos-2404: holding 41317 task ids
+  checking 3 whole pushes: [('autoland', 2021458), ('autoland', 2028781), ('mozilla-central', 2025520)]
+    autoland push 2021458: 284 tasks; gecko-t-osx-1500-m4: 27 in pool, 26 held; gecko-t-linux-talos-2404: 0 in pool, 0 held
+    autoland push 2028781: 164 tasks; gecko-t-osx-1500-m4: 6 in pool, 0 held; gecko-t-linux-talos-2404: 1 in pool, 0 held
+    mozilla-central push 2025520: 11795 tasks; gecko-t-osx-1500-m4: 323 in pool, 321 held; gecko-t-linux-talos-2404: 295 in pool, 0 held
+  COVERAGE releng-hardware/gecko-t-osx-1500-m4: 347/356 = 97.47% of the pool's tasks in these pushes are in our collection; 6 of the 356 never started a run (1.69%, these are cancelled / superseded / never-claimed tasks and carry no service)
+  COVERAGE releng-hardware/gecko-t-linux-talos-2404: 0/296 = 0.00% of the pool's tasks in these pushes are in our collection; 76 of the 296 never started a run (25.68%, these are cancelled / superseded / never-claimed tasks and carry no service)
+done: 37 requests, 20.8 MB decoded, 20.8 MB on the wire
+
+=== collection stage 'assemble' ===
+pools: ['releng-hardware/gecko-t-osx-1500-m4', 'releng-hardware/gecko-t-linux-talos-2404']
+windows: releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z..2026-09-14T00:00:00Z; releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z..2026-09-14T00:00:00Z
+-- assemble --
+  releng-hardware/gecko-t-osx-1500-m4: 375 labels with a maxRunTime, 0 labels where the sampled tasks disagreed
+  releng-hardware/gecko-t-osx-1500-m4: 249686 task statuses (0 in another queue, dropped), 249713 runs before the window filter
+  releng-hardware/gecko-t-osx-1500-m4: 191970 runs inside [2026-08-24T00:00:00Z, 2026-09-14T00:00:00Z) -> <repo-root>\data\mozilla_firefox_ci\runs_releng-hardware__gecko-t-osx-1500-m4.parquet (11.5 MB)
+  releng-hardware/gecko-t-linux-talos-2404: 40 labels with a maxRunTime, 0 labels where the sampled tasks disagreed
+  releng-hardware/gecko-t-linux-talos-2404: 41317 task statuses (21 in another queue, dropped), 41321 runs before the window filter
+  releng-hardware/gecko-t-linux-talos-2404: 30702 runs inside [2026-09-07T00:00:00Z, 2026-09-14T00:00:00Z) -> <repo-root>\data\mozilla_firefox_ci\runs_releng-hardware__gecko-t-linux-talos-2404.parquet (1.9 MB)
+done: 0 requests, 0.0 MB decoded, 0.0 MB on the wire

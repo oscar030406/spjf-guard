@@ -1,0 +1,128 @@
+{
+  "protocol_hash": "15c3f4ea199828dc44a6539500b4d221f280e4a303f6a6ff8b6d84c3650ccf38",
+  "parameters": {
+    "protocol": "synthetic-short-v3-qpc-occupied-workers",
+    "clock": "time.perf_counter_ns",
+    "source": "six fixed synthetic jobs; no project data",
+    "workers": 2,
+    "window_s": 0.5,
+    "policies": [
+      "FCFS",
+      "SPJF-E",
+      "Guard(300)"
+    ],
+    "requested_service_s": [
+      0.05,
+      0.05,
+      0.08,
+      0.04,
+      0.04,
+      0.04
+    ],
+    "target_release_offset_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "score": [
+      0.0,
+      0.0,
+      100.0,
+      1.0,
+      2.0,
+      3.0
+    ],
+    "guard": {
+      "G_s": 0.5,
+      "formal_L_s": 0.2,
+      "B0_s": 0.01,
+      "eta": 0.0,
+      "gamma_s": 0.0,
+      "Bmax_s": 0.2
+    },
+    "wall_time_target_s": 30.0,
+    "log_path": "out_physical_smoke.txt",
+    "artifact_directory": "physical_smoke/",
+    "expected_guard_behavior": "the first two jobs occupy both workers; rank 2 has the worst score, and completed later-rank work exceeds the 10 ms budget and creates at least one nonempty fired set"
+  },
+  "passed": true,
+  "wall_s": 8.293847599998116,
+  "root_cpu_s": 3.421875,
+  "wall_time_target_met": true,
+  "coverage": {
+    "real_two_worker_dispatcher": true,
+    "workers_stopped_before_each_audit": true,
+    "fcfs_prefix": {
+      "passed": true,
+      "error_count": 0,
+      "error_counts": {},
+      "first_error": null,
+      "event_rows": 22,
+      "dispatches_checked": 6,
+      "event_path": "physical_smoke/records/fcfs_attempt_20260921T101037_54826117337700_events.jsonl",
+      "event_sha256": "8b17da752092c9c117a6adf4aaa71379b2f9615f731357e168a3a3085206d541",
+      "target_release_diagnostic": {
+        "decisions_with_target_due_unenqueued": 0,
+        "decision_target_due_unenqueued_count": 0,
+        "max_target_due_unenqueued_lateness_ns": 0,
+        "first_target_due_unenqueued": null,
+        "interpretation": "target release can pass between the final enqueue scan and the decision clock; scheduling is audited against actual observed enqueue events"
+      }
+    },
+    "spjf_prefix": {
+      "passed": true,
+      "error_count": 0,
+      "error_counts": {},
+      "first_error": null,
+      "event_rows": 22,
+      "dispatches_checked": 6,
+      "event_path": "physical_smoke/records/spjf_e_attempt_20260921T101042_54831085840900_events.jsonl",
+      "event_sha256": "e8b5e1dadc6b9c4904ca91015c6bb3cca39835c0c88a88e390f28f08eb0d6ca5",
+      "target_release_diagnostic": {
+        "decisions_with_target_due_unenqueued": 0,
+        "decision_target_due_unenqueued_count": 0,
+        "max_target_due_unenqueued_lateness_ns": 0,
+        "first_target_due_unenqueued": null,
+        "interpretation": "target release can pass between the final enqueue scan and the decision clock; scheduling is audited against actual observed enqueue events"
+      }
+    },
+    "guard_prefix": {
+      "passed": true,
+      "error_count": 0,
+      "error_counts": {},
+      "first_error": null,
+      "event_rows": 22,
+      "dispatches_checked": 6,
+      "event_path": "physical_smoke/records/guard_300_attempt_20260921T101043_54832721622600_events.jsonl",
+      "event_sha256": "db3f2f60f0954ca056face7e9ade573c8896bdd9404091a9e7ff39e0819b4e1e",
+      "target_release_diagnostic": {
+        "decisions_with_target_due_unenqueued": 0,
+        "decision_target_due_unenqueued_count": 0,
+        "max_target_due_unenqueued_lateness_ns": 0,
+        "first_target_due_unenqueued": null,
+        "interpretation": "target release can pass between the final enqueue scan and the decision clock; scheduling is audited against actual observed enqueue events"
+      }
+    },
+    "guard_ideal_epochs": {
+      "passed": true,
+      "error_count": 0,
+      "first_error": null,
+      "dispatches_checked": 6,
+      "waiting_budget_evaluations_checked": 12,
+      "reconstructed_firing_epochs": 1,
+      "kernel_n_forced": 1
+    },
+    "guard_physical_firing_count": 1,
+    "all_model_premises_hold": true,
+    "guard_production_bound": {
+      "attempted": true,
+      "passed": true,
+      "checked_jobs": 6,
+      "error": null
+    },
+    "guard_physical_bound_violation_count": 0
+  }
+}

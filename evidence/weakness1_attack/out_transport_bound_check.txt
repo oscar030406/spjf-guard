@@ -1,0 +1,175 @@
+transport-bound exact arithmetic verification
+{
+  "k_values": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "arrival_epsilon": "1/3",
+  "service_delta": "1/7",
+  "sjf_H": 60,
+  "sjf_epsilons": [
+    "1/2",
+    "1/16",
+    "1/256",
+    "1/4096"
+  ],
+  "rank_swap_eta": "1/1024",
+  "arithmetic": "fractions.Fraction and integer event times",
+  "numpy_version_environment_only": "2.5.3",
+  "scope": "analytical checks only; no empirical epsilon is estimated"
+}
+{
+  "status": "PASS",
+  "checks": {
+    "same_order_fcfs": {
+      "cases": 264,
+      "factor_two_tight_wait_difference_by_k": {
+        "1": "1/2",
+        "2": "1/2",
+        "3": "1/2",
+        "4": "1/2"
+      }
+    },
+    "cost_prefix_bound": {
+      "cases": 8,
+      "epsilon": "1/4",
+      "per_service_delta": "1/7",
+      "six_predecessor_accumulation_by_k": {
+        "1": "6/7",
+        "2": "6/7",
+        "3": "6/7",
+        "4": "6/7"
+      }
+    },
+    "sjf_same_rank_discontinuity": {
+      "cases": 16,
+      "H": 60,
+      "by_k": {
+        "1": [
+          {
+            "epsilon": "1/2",
+            "mean_wait_gap": "39/2",
+            "later_short_wait_gap": "119/2"
+          },
+          {
+            "epsilon": "1/16",
+            "mean_wait_gap": "943/48",
+            "later_short_wait_gap": "959/16"
+          },
+          {
+            "epsilon": "1/256",
+            "mean_wait_gap": "15103/768",
+            "later_short_wait_gap": "15359/256"
+          },
+          {
+            "epsilon": "1/4096",
+            "mean_wait_gap": "241663/12288",
+            "later_short_wait_gap": "245759/4096"
+          }
+        ],
+        "2": [
+          {
+            "epsilon": "1/2",
+            "mean_wait_gap": "117/8",
+            "later_short_wait_gap": "119/2"
+          },
+          {
+            "epsilon": "1/16",
+            "mean_wait_gap": "943/64",
+            "later_short_wait_gap": "959/16"
+          },
+          {
+            "epsilon": "1/256",
+            "mean_wait_gap": "15103/1024",
+            "later_short_wait_gap": "15359/256"
+          },
+          {
+            "epsilon": "1/4096",
+            "mean_wait_gap": "241663/16384",
+            "later_short_wait_gap": "245759/4096"
+          }
+        ],
+        "3": [
+          {
+            "epsilon": "1/2",
+            "mean_wait_gap": "117/10",
+            "later_short_wait_gap": "119/2"
+          },
+          {
+            "epsilon": "1/16",
+            "mean_wait_gap": "943/80",
+            "later_short_wait_gap": "959/16"
+          },
+          {
+            "epsilon": "1/256",
+            "mean_wait_gap": "15103/1280",
+            "later_short_wait_gap": "15359/256"
+          },
+          {
+            "epsilon": "1/4096",
+            "mean_wait_gap": "241663/20480",
+            "later_short_wait_gap": "245759/4096"
+          }
+        ],
+        "4": [
+          {
+            "epsilon": "1/2",
+            "mean_wait_gap": "39/4",
+            "later_short_wait_gap": "119/2"
+          },
+          {
+            "epsilon": "1/16",
+            "mean_wait_gap": "943/96",
+            "later_short_wait_gap": "959/16"
+          },
+          {
+            "epsilon": "1/256",
+            "mean_wait_gap": "15103/1536",
+            "later_short_wait_gap": "15359/256"
+          },
+          {
+            "epsilon": "1/4096",
+            "mean_wait_gap": "241663/24576",
+            "later_short_wait_gap": "245759/4096"
+          }
+        ]
+      }
+    },
+    "fcfs_rank_swap_counterexample": {
+      "cases": 4,
+      "by_k": {
+        "1": {
+          "epsilon": "1/1024",
+          "short_wait_gap": "61439/1024",
+          "mean_wait_gap": "59/2",
+          "p99_gap": "5841/100"
+        },
+        "2": {
+          "epsilon": "1/1024",
+          "short_wait_gap": "61439/1024",
+          "mean_wait_gap": "59/3",
+          "p99_gap": "2891/50"
+        },
+        "3": {
+          "epsilon": "1/1024",
+          "short_wait_gap": "61439/1024",
+          "mean_wait_gap": "59/4",
+          "p99_gap": "5723/100"
+        },
+        "4": {
+          "epsilon": "1/1024",
+          "short_wait_gap": "61439/1024",
+          "mean_wait_gap": "59/5",
+          "p99_gap": "1416/25"
+        }
+      }
+    }
+  },
+  "error": null,
+  "timing": {
+    "wall_s": 0.011776500003179535,
+    "cpu_s": 0.0
+  }
+}

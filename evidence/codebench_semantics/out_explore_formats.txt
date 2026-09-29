@@ -1,0 +1,191 @@
+
+######## 2018_2  blocks={'TEST': 117029, 'SUBMITION': 46756}
+-- codemirror event types (top):
+    3,578,362  change
+    2,306,906  keyHandled
+      432,179  mousedown
+      221,596  viewportChange
+      151,943  focus
+      150,687  blur
+       41,729  submit
+       17,063  touchstart
+       15,142  copy
+        8,501  dblclick
+        4,798  contextmenu
+        2,865  kill_program
+            2  rename_file
+-- codemirror submit payload templates (>=20 rows, >=5 users):
+      35,396  Your code did not produce the correct output. Please, correct your code and try again.
+       3,281  YouSll be able to hit N% of the question.
+       3,052  Congratulations, your code is correct!
+-- section headers in execution blocks:
+   SUBMITION     87,247  --TEST CASE
+   SUBMITION     87,247  ----input
+   SUBMITION     87,247  ----correct output
+   SUBMITION     87,247  ----user output
+   SUBMITION     46,756  --CODE
+   SUBMITION     46,756  --EXECUTION TIME
+   SUBMITION     36,207  --GRADE
+   SUBMITION     10,549  --ERROR
+   TEST         117,029  --CODE
+   TEST          69,103  --OUTPUT
+   TEST          47,926  --ERROR
+-- EXECUTION TIME decimals: [(('SUBMITION', 1), 2), (('SUBMITION', 2), 11), (('SUBMITION', 3), 120), (('SUBMITION', 4), 673), (('SUBMITION', 5), 5203), (('SUBMITION', 6), 39452), (('SUBMITION', 7), 1295)]
+-- ERROR last-line templates for slow (exec>=30s) or kill/limit-like blocks:
+
+######## 2019_1  blocks={'TEST': 377725, 'SUBMITION': 162121}
+-- codemirror event types (top):
+   11,954,405  change
+    7,277,332  keyHandled
+    1,467,456  mousedown
+      722,334  viewportChange
+      575,739  blur
+      507,465  focus
+      378,109  saida_testar
+      195,027  submit
+       50,422  touchstart
+       48,830  dica_bullet
+       38,029  copy
+       32,009  dblclick
+       20,785  contextmenu
+        4,196  dica_open
+        3,565  dica_close
+        2,311  kill_program
+          185  keyup
+          167  keydown
+          150  keypress
+          118  rename_file
+            1  change%N/N/N@N:N:N:N
+            1  testar
+            1  viewporN/N/N@N:N:N:N
+            1  keyN/N/N@N:N:N:N
+-- codemirror submit payload templates (>=20 rows, >=5 users):
+     171,251  Your code did not produce the correct output. Please, correct your code and try again.
+      15,202  Congratulations, your code is correct!
+       8,574  YouSll be able to hit N% of the question.
+-- section headers in execution blocks:
+   SUBMITION    281,637  --TEST CASE
+   SUBMITION    281,637  ----input
+   SUBMITION    281,637  ----correct output
+   SUBMITION    281,637  ----user output
+   SUBMITION    162,121  --CODE
+   SUBMITION    162,121  --EXECUTION TIME
+   SUBMITION    117,257  --GRADE
+   SUBMITION     44,864  --ERROR
+   TEST         377,725  --CODE
+   TEST         219,143  --ERROR
+   TEST         158,582  --OUTPUT
+-- EXECUTION TIME decimals: [(('SUBMITION', 0), 14), (('SUBMITION', 1), 107), (('SUBMITION', 2), 941), (('SUBMITION', 3), 1194), (('SUBMITION', 4), 3202), (('SUBMITION', 5), 28300), (('SUBMITION', 6), 127179), (('SUBMITION', 7), 1184)]
+-- ERROR last-line templates for slow (exec>=30s) or kill/limit-like blocks:
+   SUBMITION slow    1,122  Killed
+   TEST      kw         32  NameError: name S is not defined
+   TEST      kw         26  OverflowError: factorial() argument should not exceed N
+
+######## 2020_1  blocks={'TEST': 151556, 'SUBMITION': 56213}
+-- codemirror event types (top):
+    9,772,476  keydown
+    7,825,596  keyup
+    6,546,702  change
+    4,794,164  keypress
+    3,149,810  keyHandled
+      590,000  mousedown
+      344,342  viewportChange
+      310,498  blur
+      266,969  focus
+      130,028  saida_testar
+       82,170  tab-click:N
+       76,268  touchstart
+       47,569  submit
+        9,257  dblclick
+        4,828  kill_program
+        2,293  contextmenu
+        1,587  copy
+            5  N/N/N@N:N:N:N
+            2  chanN/N/N@N:N:N:N
+            2  keyuN/N/N@N:N:N:N
+            2  keyHandleN/N/N@N:N:N:N
+            2  rename_file
+            2  ola!"
+            2  ola!" >> */main.py
+            2  ola!" >> $l/main.py; done
+            2  changeN/N/N@N:N:N:N
+            2  kN/N/N@N:N:N:N
+            2  keyHanN/N/N@N:N:N:N
+            1  keyHaN/N/N@N:N:N:N
+            1  testar
+            1  viewportChanN/N/N@N:N:N:N
+            1  keydN/N/N@N:N:N:N
+            1  keydoN/N/N@N:N:N:N
+            1  tN/N/N@N:N:N:N
+            1  chN/N/N@N:N:N:N
+            1  changN/N/N@N:N:N:N
+            1  chaN/N/N@N:N:N:N
+            1  keydown%N/N/N@N:N:N:N
+            1  keypN/N/N@N:N:N:N
+-- codemirror submit payload templates (>=20 rows, >=5 users):
+      37,707  Your code did not produce the correct output. Please, correct your code and try again.
+       5,725  Congratulations, your code is correct!
+       4,129  YouSll be able to hit N% of the question.
+-- section headers in execution blocks:
+   SUBMITION    115,249  --TEST CASE
+   SUBMITION    115,249  ----input
+   SUBMITION    115,249  ----correct output
+   SUBMITION    115,249  ----user output
+   SUBMITION     56,213  --CODE
+   SUBMITION     56,213  --EXECUTION TIME
+   SUBMITION     43,667  --GRADE
+   SUBMITION     12,546  --ERROR
+   TEST         151,556  --CODE
+   TEST          93,424  --OUTPUT
+   TEST          55,726  --ERROR
+-- EXECUTION TIME decimals: [(('SUBMITION', 0), 103), (('SUBMITION', 1), 2), (('SUBMITION', 2), 6), (('SUBMITION', 3), 76), (('SUBMITION', 4), 725), (('SUBMITION', 5), 5205), (('SUBMITION', 6), 50096)]
+-- ERROR last-line templates for slow (exec>=30s) or kill/limit-like blocks:
+   TEST      kw         26  NameError: name S is not defined
+
+######## 2022_2  blocks={'TEST': 122360, 'SUBMITION': 40844}
+-- codemirror event types (top):
+    5,751,631  keydown
+    5,104,147  keyup
+    4,318,312  change
+    2,963,873  keypress
+    2,083,802  keyHandled
+      538,915  mousedown
+      262,133  viewportChange
+      189,394  focus
+      175,353  blur
+       77,858  saida_testar
+       75,199  tab-click:N
+       49,150  touchstart
+       25,809  submit
+       15,028  copy
+        9,830  dblclick
+        6,126  contextmenu
+        2,707  kill_program
+            3  N/N/N@N:N:N:N
+            2  changN/N/N@N:N:N:N
+            2  kN/N/N@N:N:N:N
+            1  keyN/N/N@N:N:N:N
+            1  bl
+            1  
+            1  changeN/N/N@N:N:N:N
+            1  ch
+            1  keN/N/N@N:N:N:N
+-- codemirror submit payload templates (>=20 rows, >=5 users):
+      20,309  Your code did not produce the correct output. Please, correct your code and try again.
+       3,316  YouSll be able to hit N% of the question.
+       2,183  Congratulations, your code is correct!
+-- section headers in execution blocks:
+   SUBMITION     87,021  --TEST CASE
+   SUBMITION     87,021  ----input
+   SUBMITION     87,021  ----correct output
+   SUBMITION     87,021  ----user output
+   SUBMITION     40,844  --CODE
+   SUBMITION     40,844  --EXECUTION TIME
+   SUBMITION     31,903  --GRADE
+   SUBMITION      8,941  --ERROR
+   TEST         122,360  --CODE
+   TEST          70,276  --OUTPUT
+   TEST          52,037  --ERROR
+-- EXECUTION TIME decimals: [(('SUBMITION', 0), 179), (('SUBMITION', 2), 3), (('SUBMITION', 3), 56), (('SUBMITION', 4), 638), (('SUBMITION', 5), 4309), (('SUBMITION', 6), 35641), (('SUBMITION', 7), 18)]
+-- ERROR last-line templates for slow (exec>=30s) or kill/limit-like blocks:
+   TEST      kw         30  MemoryError

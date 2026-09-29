@@ -1,0 +1,3 @@
+LightGBM 300 trees, batch 1, M4 (67 columns): median 0.031 ms  mean 0.033 ms  p99 0.056 ms
+LightGBM 300 trees, batch 1, G3 (67 + 128 columns): median 0.038 ms  mean 0.040 ms  p99 0.075 ms
+LightGBM 300 trees, batch 1, R1S (67 + 64 columns): median 0.034 ms  mean 0.037 ms  p99 0.112 ms

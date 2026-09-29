@@ -1,0 +1,14 @@
+==============================================================================
+C2(b) independent  Theorem R3 relabelling necessity
+==============================================================================
+  k=1 : 573252 relabelling tests, 0 in which the relabelled excess did NOT exceed G, min(excess-G)=1
+  k=2 : 452810 relabelling tests, 416368 in which the relabelled excess did NOT exceed G, min(excess-G)=-5
+      COUNTEREXAMPLE jobs=((0, 1), (0, 1), (0, 1), (0, 1)) ell=(1, 1, 1, 1) G=0 k=2 prefix=() head=0 cand=1 overR[h]=0 exc=0 In_h=1 Out_h=0
+      COUNTEREXAMPLE jobs=((0, 1), (0, 1), (0, 1), (0, 1)) ell=(1, 1, 1, 1) G=0 k=2 prefix=() head=0 cand=2 overR[h]=0 exc=0 In_h=1 Out_h=0
+      COUNTEREXAMPLE jobs=((0, 1), (0, 1), (0, 1), (0, 1)) ell=(1, 1, 1, 1) G=0 k=2 prefix=() head=0 cand=3 overR[h]=0 exc=0 In_h=1 Out_h=0
+      COUNTEREXAMPLE jobs=((0, 1), (0, 1), (0, 1), (0, 1)) ell=(1, 1, 1, 1) G=0 k=2 prefix=(0, 1) head=2 cand=3 overR[h]=0 exc=0 In_h=1 Out_h=0
+  k=3 : 491340 relabelling tests, 481964 in which the relabelled excess did NOT exceed G, min(excess-G)=-7
+      COUNTEREXAMPLE jobs=((0, 1), (0, 1), (0, 1), (0, 1)) ell=(1, 1, 1, 1) G=0 k=3 prefix=() head=0 cand=1 overR[h]=0 exc=0 In_h=1 Out_h=0
+      COUNTEREXAMPLE jobs=((0, 1), (0, 1), (0, 1), (0, 1)) ell=(1, 1, 1, 1) G=0 k=3 prefix=() head=0 cand=2 overR[h]=0 exc=0 In_h=1 Out_h=0
+      COUNTEREXAMPLE jobs=((0, 1), (0, 1), (0, 1), (0, 1)) ell=(1, 1, 1, 1) G=0 k=3 prefix=() head=0 cand=3 overR[h]=0 exc=0 In_h=1 Out_h=0
+      COUNTEREXAMPLE jobs=((0, 1), (0, 1), (0, 1), (0, 1)) ell=(1, 1, 1, 1) G=0 k=3 prefix=(0,) head=1 cand=2 overR[h]=0 exc=0 In_h=1 Out_h=0

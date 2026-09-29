@@ -1,0 +1,92 @@
+{
+  "produced_by": "scripts/select_aging.py",
+  "written_at": "2026-09-21T16:04:25+00:00",
+  "config": {
+    "path": "configs/main_original_84932d9.yaml",
+    "present": true,
+    "bytes": 14369,
+    "sha256": "94c82eabb1428300a6badc037e6fc795e5e451388af9fad83dcc4e1123f153ee"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/overlay_traces/validation_rep0.npz",
+      "present": true,
+      "bytes": 1499925585,
+      "sha256": "77e922f16add33cb53aa1c3df8ad8f6c7f674771038bcf846be4c5e2cd767479"
+    },
+    {
+      "path": "data/derived/overlay_traces/validation_rep1.npz",
+      "present": true,
+      "bytes": 1499925585,
+      "sha256": "62a92f1bbf33fc50dbbac92b66e867965b4b38264efa413edc51d26c0b100440"
+    },
+    {
+      "path": "data/derived/overlay_traces/validation_rep2.npz",
+      "present": true,
+      "bytes": 1499925585,
+      "sha256": "45d531c0beef72fd51e2cdd604443ed968d24d95af5f08e0ddcf4bced656dd9c"
+    },
+    {
+      "path": "data/derived/overlay_traces/validation_rep3.npz",
+      "present": true,
+      "bytes": 1499925585,
+      "sha256": "0b4f2fd7307c8b66176a2bdfc4969b1058eb27bd31530a1961e63ce788e371c4"
+    },
+    {
+      "path": "data/derived/overlay_traces/validation_rep4.npz",
+      "present": true,
+      "bytes": 1499925585,
+      "sha256": "b725aa795c698642f98cbe98fd7c346afe9f26dea0c8f40f388376d542bb4959"
+    },
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "aging_cells.csv",
+      "present": true,
+      "bytes": 16086,
+      "sha256": "6279b897a779ccb10992522f20f29c48b49f3d58fd88c026c9a32f743ffe796e"
+    },
+    {
+      "path": "aging_selection.csv",
+      "present": true,
+      "bytes": 667,
+      "sha256": "d51526778ad6ed79a589d3919035e44bcbabed112c2b0af7982b42eee691a29a"
+    },
+    {
+      "path": "selected_aging.csv",
+      "present": true,
+      "bytes": 126,
+      "sha256": "93ff6f6061ee04a01b9f300c2fbd5e1df79bac86a391b399ea62af3e61492117"
+    },
+    {
+      "path": "aging_protocol.json",
+      "present": true,
+      "bytes": 781,
+      "sha256": "442b6aa23ebaa3a74cddb718f9d7108a2f5be6c2d883e9b0015c13db81fb1d04"
+    }
+  ],
+  "arguments": {
+    "pool": "validation",
+    "overlays": "0,1,2,3,4",
+    "levels": "0,1,2",
+    "score": "spjf_e_conservative"
+  },
+  "notes": {
+    "guarantee": "none",
+    "selected": {
+      "credit_per_s": 0.03,
+      "worst_gap_closed": 0.037527158847150646,
+      "worst_harm_s": 246.359636,
+      "harm_limit_s": 300.0,
+      "feasible": true,
+      "n_cells": 15
+    },
+    "historical_recipe": "Original commit 84932d9 configuration, preserved byte-for-byte. Only its path was relocated after the visibility amendment; output hashes unchanged."
+  }
+}

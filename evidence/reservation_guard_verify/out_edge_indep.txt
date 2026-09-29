@@ -1,0 +1,9 @@
+
+==============================================================================
+EDGE  boundary cases
+==============================================================================
+  (a) head monotonicity: 4000 runs, 0 epochs at which a job that had been the head was waiting behind a lower rank
+  (b) with C_j = 0 allowed: runs 159816  max(In-Z)=0  max(k*exc-Z-(2k-2)L)=0  violations 0/0
+  (c) idle servers (n<=k, sparse arrivals): runs 7938  max(In-Z)=0  max(k*exc-Z-(2k-2)L)=-12  violations 0/0
+  (d) arrivals during an overtaker's run: runs 170756  max(In-Z)=0  max(k*exc-Z-(2k-2)L)=0  violations 0/0
+  (e) equal sizes with unequal caps, C<ell<L: runs 60160  max(In-Z)=0  max(k*exc-Z-(2k-2)L)=0  violations 0/0

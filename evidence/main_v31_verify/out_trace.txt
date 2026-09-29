@@ -1,0 +1,67 @@
+================================================================================================
+1. PRINTED TABLES vs THE BUILDER'S OWN report_*.csv
+================================================================================================
+  section 4: 1116 numbers compared, 0 mismatches
+  section 5: 602 numbers compared, 0 mismatches (rows csv 76 / txt 76)
+  section 6: 242 numbers compared, 0 mismatches (rows csv 19 / txt 19)
+  section 7: 497 numbers compared, 0 mismatches (rows csv 29 / txt 29)
+  section 8: 815 numbers compared, 0 mismatches (rows csv 73 / txt 73)
+  section 9: 159 numbers compared, 0 mismatches (rows csv 13 / txt 13)
+  TOTAL printed-vs-csv: 3431 numbers, 0 mismatches
+
+================================================================================================
+2. report_*.csv vs THE BUILDER'S OWN PER-CELL FILES
+================================================================================================
+  level 0: 28 policies re-derived from 5 overlays
+  level 1: 28 policies re-derived from 5 overlays
+  level 2: 28 policies re-derived from 5 overlays
+  k = 1 cell: 28 policies re-derived
+  2. report_*.csv vs THE BUILDER'S OWN PER-CELL FILES: 1260 numbers, 0 mismatches
+
+================================================================================================
+3. report_*.csv vs MY OWN RE-SIMULATED CELLS
+================================================================================================
+  level 0: 28 policies re-derived from 5 overlays
+  level 1: 28 policies re-derived from 5 overlays
+  level 2: 28 policies re-derived from 5 overlays
+  k = 1 cell: 28 policies re-derived
+  3. report_*.csv vs MY OWN RE-SIMULATED CELLS: 1260 numbers, 0 mismatches
+
+================================================================================================
+4. SECTION 8 COUNTS, AND THE BOUNDS ON MY OWN WAITS (V5)
+================================================================================================
+  builder cells: reported guarded runs 288, per-job checks 4,819,153,446, violations 0
+                 grid guarded runs 720, per-job checks 12,705,210,000, violations 0
+    report says '288'; recomputed 288  MATCH=True
+    report says '4,819,153,446'; recomputed '4,819,153,446'  MATCH=True
+    report says '720'; recomputed 720  MATCH=True
+    report says '12,705,210,000'; recomputed '12,705,210,000'  MATCH=True
+    report worst used/allowed 0.9950 at CAP-G600-top1short / k1 k=1
+
+  MY cells: 20 cells, 324 guarded runs, 5,454,413,946 per-job checks on MY OWN waits
+    violations, combined bound      : 0
+    violations, Theorem A (B_max)   : 0 over 5,454,413,946 checks
+    violations, Theorem B (eta)     : 0 over 1,888,722,482 checks
+    worst used/allowed, combined    : 0.9950 (CAP-G600-top1short, k1 k=1)
+      k = 1: worst used/allowed 0.9950 (Thm A 0.9950, Thm B 0.7942)
+      k = 4: worst used/allowed 0.9304 (Thm A 0.9304, Thm B 0.5689)
+      k = 5: worst used/allowed 0.9258 (Thm A 0.9258, Thm B 0.5390)
+      k = 7: worst used/allowed 0.8989 (Thm A 0.8989, Thm B 0.4879)
+      k = 8: worst used/allowed 0.8958 (Thm A 0.8958, Thm B 0.4838)
+
+================================================================================================
+5. ADVERSARIAL ROWS AT G = 600, rho 1.0 (V6), MY OWN SIMULATIONS
+================================================================================================
+   policy                  p99_dl (builder / mine)     max_excess (builder / mine)    harm (b/m)
+   SPJF-reversed             557.441 /    557.441     6295.652 /   6295.652    5248.836 /  5248.836
+   CAP-G600-reversed         546.479 /    546.479      534.791 /    534.791     309.097 /   309.097
+   SPJF-random               194.775 /    194.775     6235.494 /   6235.494    6173.575 /  6173.575
+   CAP-G600-random           261.933 /    261.933      520.734 /    520.734     332.864 /   332.864
+   SPJF-top1short            523.518 /    523.518     6108.860 /   6108.860    3399.037 /  3399.037
+   CAP-G600-top1short        543.616 /    543.616      534.727 /    534.727     324.589 /   324.589
+   mismatches beyond the printed precision: 0
+   (overlay 0 alone: SPJF-top1short p99_dl 493.4949, max excess 6108.86; CAP-G600-top1short p99_dl 509.2204, max excess 522.92, harm 316.61)
+
+================================================================================================
+SUMMARY  printed-vs-csv 3431 numbers / 0 bad; csv-vs-builder-cells 1260 / 0; csv-vs-MY-cells 1260 / 0
+================================================================================================

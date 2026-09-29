@@ -1,0 +1,19 @@
+G1_core_lr0.0003_sum_wd0.0_dr0.1_s3_sweep  params {'model': 'G1', 'seed': 3, 'lr': 0.0003, 'agg': 'sum', 'variant': 'core', 'epochs': 30, 'batch': 4096, 'patience': 5, 'p_mask': 0.15, 'p_drop': 0.1, 'w_cls': 0.5, 'wd': 0.0, 'drop': 0.1, 'tag': '_sweep', 'save_emb': False}
+tabular block (863149, 86), submission-level block (863149, 102)
+rows train 404,578 valid 51,547 test 40,844
+parameters 168,642
+  epoch  0 train 0.24739 valid 0.08237 (rmse 0.2223) 1s
+  epoch  1 train 0.16533 valid 0.07618 (rmse 0.2216) 2s
+  epoch  2 train 0.14595 valid 0.07622 (rmse 0.2212) 3s
+  epoch  3 train 0.13870 valid 0.07640 (rmse 0.2223) 3s
+  epoch  4 train 0.13276 valid 0.07582 (rmse 0.2218) 4s
+  epoch  5 train 0.12837 valid 0.07546 (rmse 0.2198) 5s
+  epoch  6 train 0.12458 valid 0.07632 (rmse 0.2234) 6s
+  epoch  7 train 0.12115 valid 0.07524 (rmse 0.2207) 7s
+  epoch  8 train 0.11800 valid 0.07633 (rmse 0.2226) 7s
+  epoch  9 train 0.11589 valid 0.08028 (rmse 0.2314) 8s
+  epoch 10 train 0.11401 valid 0.07662 (rmse 0.2218) 9s
+  epoch 11 train 0.11261 valid 0.07862 (rmse 0.2282) 10s
+  epoch 12 train 0.11048 valid 0.07831 (rmse 0.2272) 11s
+  early stop at epoch 12
+{"name": "G1_core_lr0.0003_sum_wd0.0_dr0.1_s3_sweep", "model": "G1", "variant": "core", "seed": 3, "lr": 0.0003, "agg": "sum", "wd": 0.0, "drop": 0.1, "valid_loss": 0.07523766905069351, "valid_rmse": 0.22071999311447144}

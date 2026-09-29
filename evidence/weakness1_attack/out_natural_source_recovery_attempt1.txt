@@ -1,0 +1,46 @@
+{
+  "status": "FAIL",
+  "scope": "source-only Git history recovery; no data artifact accessed",
+  "logical_path": "src/spjf_guard/config.py",
+  "expected_sha256": "b3f13b89d146005fde6056c7c3117473803809fcaccf84c1b949c2434bbdf23c",
+  "current_worktree_sha256": "d9f1918acaa34999e001a91b3cc049bd92bb9a425c91b8402c4aa867c0abc522",
+  "commits_examined": [
+    {
+      "commit": "16b86b7a0dc40249cd6537bb84b7225da7c4a4a8",
+      "representations": [
+        {
+          "name": "git_blob",
+          "sha256": "3f33ec867abd83917c60b60f36221338916c0361b8a9e0a6022766b04a4d547a",
+          "bytes": 7221
+        },
+        {
+          "name": "checkout_crlf",
+          "sha256": "1dd4e1a3df69d6809015d6ee9cc4c8f05361b2f1455a517399339d33438eca1b",
+          "bytes": 7413
+        }
+      ]
+    },
+    {
+      "commit": "bf320ee2fafbd9a13970768f655edad70f1e7b03",
+      "representations": [
+        {
+          "name": "git_blob",
+          "sha256": "3f33ec867abd83917c60b60f36221338916c0361b8a9e0a6022766b04a4d547a",
+          "bytes": 7221
+        },
+        {
+          "name": "checkout_crlf",
+          "sha256": "1dd4e1a3df69d6809015d6ee9cc4c8f05361b2f1455a517399339d33438eca1b",
+          "bytes": 7413
+        }
+      ]
+    }
+  ],
+  "pinned_written": false,
+  "execution": {
+    "python_processes": 1,
+    "git_subprocess_calls": 3,
+    "wall_s": 0.03801829999429174,
+    "cpu_s": 0.0
+  }
+}

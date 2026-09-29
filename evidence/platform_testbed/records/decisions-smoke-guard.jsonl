@@ -1,0 +1,10 @@
+{"cell":"smoke-guard","rank":0,"tUs":13047791133,"guardFired":false,"baseProposalRank":0,"queueLen":1,"epochUs":57,"waitingBefore":[]}
+{"cell":"smoke-guard","rank":1,"tUs":13047792342,"guardFired":false,"baseProposalRank":1,"queueLen":1,"epochUs":10,"waitingBefore":[]}
+{"cell":"smoke-guard","rank":2,"tUs":13051193884,"guardFired":false,"baseProposalRank":2,"queueLen":4,"epochUs":29,"waitingBefore":[]}
+{"cell":"smoke-guard","rank":5,"tUs":13052218335,"guardFired":false,"baseProposalRank":5,"queueLen":3,"epochUs":32,"waitingBefore":[[3,0,0,34423448],[4,0,0,34419838]]}
+{"cell":"smoke-guard","rank":6,"tUs":13057868202,"guardFired":false,"baseProposalRank":6,"queueLen":3,"epochUs":14,"waitingBefore":[[3,0,0,40073315],[4,0,0,40069705]]}
+{"cell":"smoke-guard","rank":3,"tUs":13058364751,"guardFired":false,"baseProposalRank":3,"queueLen":2,"epochUs":17,"waitingBefore":[]}
+{"cell":"smoke-guard","rank":7,"tUs":13061943484,"guardFired":false,"baseProposalRank":7,"queueLen":4,"epochUs":8,"waitingBefore":[[4,10218366,0,44144987]]}
+{"cell":"smoke-guard","rank":9,"tUs":13063578154,"guardFired":false,"baseProposalRank":9,"queueLen":3,"epochUs":8,"waitingBefore":[[4,10218366,0,45779657],[8,0,0,34605924]]}
+{"cell":"smoke-guard","rank":4,"tUs":13066642235,"guardFired":false,"baseProposalRank":4,"queueLen":2,"epochUs":8,"waitingBefore":[]}
+{"cell":"smoke-guard","rank":8,"tUs":13070350017,"guardFired":false,"baseProposalRank":8,"queueLen":1,"epochUs":7,"waitingBefore":[]}

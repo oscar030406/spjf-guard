@@ -1,0 +1,19 @@
+﻿env.exe : Traceback (most recent call last):
+At line:3 char:1
++ & 'C:\Program Files\Git\usr\bin\env.exe' -u PYTHONHOME -u PYTHONPATH  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "<repo-root>\prechecks\weakness1_attack\prepare_physical_input.py", line 51, in <module>
+    main()
+  File "<repo-root>\prechecks\weakness1_attack\prepare_physical_input.py", line 46, in main
+    (HERE/'out_prepare_physical_input.txt').write_text(text,encoding='utf-8')
+  File "<python-root>\Lib\pathlib.py", line 1047, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python-root>\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 
+'<repo-root>\\prechecks\\weakness1_attack\\out_prepare_physical_input.txt'

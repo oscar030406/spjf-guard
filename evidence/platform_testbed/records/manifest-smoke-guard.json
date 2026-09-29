@@ -1,0 +1,24 @@
+{
+  "cell": "smoke-guard",
+  "base": "http://127.0.0.1:3210",
+  "corpus": "ai",
+  "users": [
+    "loadtest_u001",
+    "loadtest_u002",
+    "loadtest_u003",
+    "loadtest_u004",
+    "loadtest_u005",
+    "loadtest_u006"
+  ],
+  "jobsRequested": 10,
+  "jobsIssued": 10,
+  "thinkRule": "independent",
+  "thinkMeanS": 12,
+  "thinkSlope": 0.5,
+  "mix": "guide=0.2,blueprint=0.8",
+  "seed": 20260923,
+  "schedule": null,
+  "startedAtMs": 1790146285904,
+  "finishedAtMs": 1790146333386,
+  "wallSeconds": 47.482
+}

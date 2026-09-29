@@ -1,0 +1,13 @@
+exhaustive: 571,776 (instance, theta) cases, k in (1, 2), n <= 4, L = 3: 0 violations
+  k=1 theta=1: worst excess/bound 0.750  (excess 3 on job 0; arrivals [0, 0], sizes [1, 3], scores [1, 0])
+  k=1 theta=2: worst excess/bound 0.800  (excess 4 on job 0; arrivals [0, 0, 0], sizes [1, 1, 3], scores [2, 0, 1])
+  k=1 theta=3: worst excess/bound 0.833  (excess 5 on job 0; arrivals [0, 0, 0], sizes [1, 2, 3], scores [2, 0, 1])
+  k=2 theta=1: worst excess/bound 0.429  (excess 3 on job 0; arrivals [0, 0, 0], sizes [1, 3, 3], scores [2, 0, 1])
+  k=2 theta=2: worst excess/bound 0.375  (excess 3 on job 0; arrivals [0, 0, 0], sizes [1, 3, 3], scores [2, 0, 1])
+  k=2 theta=3: worst excess/bound 0.333  (excess 3 on job 0; arrivals [0, 0, 0], sizes [1, 3, 3], scores [2, 0, 1])
+randomised: 200,000 instances, k in 1..4, n <= 40: 0 violations
+  k=1: worst excess/bound 0.980
+  k=2: worst excess/bound 0.800
+  k=3: worst excess/bound 0.758
+  k=4: worst excess/bound 0.673
+EXIT 0

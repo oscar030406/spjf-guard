@@ -1,0 +1,4 @@
+policy,n_test,affected_rows,affected_fraction,meaning
+FCFS,116810,2647,0.02266073110178923,source-log history contains an outcome unfinished under this counterfactual; static-only comparator has no such dependency
+SPJF-E,116810,2906,0.024878007019946923,source-log history contains an outcome unfinished under this counterfactual; static-only comparator has no such dependency
+Age-5L,116810,2906,0.024878007019946923,source-log history contains an outcome unfinished under this counterfactual; static-only comparator has no such dependency

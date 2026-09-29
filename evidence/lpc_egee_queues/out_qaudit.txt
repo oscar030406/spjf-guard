@@ -1,0 +1,61 @@
+START 2026-09-23T06:08:30.527107+00:00
+SCRIPT_SHA256 9dd6b16a42108d89ff9f429db3c2cf1daa2910319ed4d94d8b1947cec848bde6
+CELL all all n 206222 L 259200 wait p99 11917.4 top1 0.4071 max concurrent 142
+CELL all test n 41143 L 900 wait p99 21496.6 top1 0.2281 max concurrent 30
+CELL all short n 69446 L 7200 wait p99 4701.0 top1 0.224 max concurrent 86
+CELL all long n 30602 L 86400 wait p99 14211.0 top1 0.2956 max concurrent 83
+CELL all day n 18594 L 129600 wait p99 8382.7 top1 0.1602 max concurrent 81
+CELL all infinite n 44931 L 259200 wait p99 16426.2 top1 0.2089 max concurrent 140
+CELL all batch n 1506 L 3600 wait p99 2860.6 top1 0.6186 max concurrent 4
+CELL GLOP195 all n 34467 L 259200 wait p99 3656.7 top1 0.5435 max concurrent 58
+EMPTY CELL GLOP195 test - this queue never ran on this partition
+CELL GLOP195 short n 17543 L 7200 wait p99 3960.0 top1 0.4327 max concurrent 21
+CELL GLOP195 long n 2349 L 86400 wait p99 1950.0 top1 0.1448 max concurrent 32
+EMPTY CELL GLOP195 day - this queue never ran on this partition
+CELL GLOP195 infinite n 14575 L 259200 wait p99 4118.1 top1 0.3567 max concurrent 58
+EMPTY CELL GLOP195 batch - this queue never ran on this partition
+CELL CE1 all n 111236 L 259200 wait p99 12572.0 top1 0.3727 max concurrent 85
+CELL CE1 test n 21062 L 900 wait p99 24788.2 top1 0.1747 max concurrent 30
+CELL CE1 short n 39857 L 7200 wait p99 6827.1 top1 0.1931 max concurrent 84
+CELL CE1 long n 19697 L 86400 wait p99 12312.8 top1 0.2653 max concurrent 82
+CELL CE1 day n 10299 L 129600 wait p99 11661.1 top1 0.1523 max concurrent 56
+CELL CE1 infinite n 20321 L 259200 wait p99 17024.2 top1 0.1624 max concurrent 85
+EMPTY CELL CE1 batch - this queue never ran on this partition
+CELL CE2 all n 60519 L 259200 wait p99 15825.3 top1 0.4104 max concurrent 56
+CELL CE2 test n 20081 L 900 wait p99 14992.4 top1 0.3557 max concurrent 20
+CELL CE2 short n 12046 L 5400 wait p99 4331.0 top1 0.1776 max concurrent 54
+CELL CE2 long n 8556 L 86400 wait p99 18949.3 top1 0.3536 max concurrent 35
+CELL CE2 day n 8295 L 129600 wait p99 5359.5 top1 0.1702 max concurrent 34
+CELL CE2 infinite n 10035 L 259200 wait p99 83599.0 top1 0.2018 max concurrent 56
+CELL CE2 batch n 1506 L 3600 wait p99 2860.6 top1 0.6186 max concurrent 4
+SHARING {"pool": "CE1", "nominal_cpus": 84, "pool_max_concurrent": 85, "sum_of_queue_maxima": 337, "queues_share_machines": true}
+SHARING {"pool": "CE2", "nominal_cpus": 56, "pool_max_concurrent": 56, "sum_of_queue_maxima": 203, "queues_share_machines": true}
+PARTITION {"part": 1, "pool": "GLOP195", "n": 34467, "first_day": 0.0, "last_day": 76.75748842592593, "n_test": 0, "n_fit_visible": 34467, "max_concurrent": 58}
+PARTITION {"part": 2, "pool": "CE1", "n": 111236, "first_day": 1.5449305555555555, "last_day": 238.64114583333333, "n_test": 66538, "n_fit_visible": 44677, "max_concurrent": 85}
+PARTITION {"part": 3, "pool": "CE2", "n": 60519, "first_day": 77.62689814814814, "last_day": 238.64515046296296, "n_test": 50272, "n_fit_visible": 10212, "max_concurrent": 56}
+   pool queue_name      n      L  wait_p99  recorded_p99_over_L     top1     top5  max_concurrent  concurrent_p99
+    all        all 206222 259200  11917.43             0.045978 0.407117 0.835375             142           134.0
+    all       test  41143    900  21496.64            23.885156 0.228097 0.664862              30             2.0
+    all      short  69446   7200   4701.00             0.652917 0.223983 0.508787              86            11.0
+    all       long  30602  86400  14211.00             0.164479 0.295629 0.673442              83            42.0
+    all        day  18594 129600   8382.73             0.064682 0.160170 0.501456              81            60.0
+    all   infinite  44931 259200  16426.20             0.063373 0.208888 0.598655             140           115.0
+    all      batch   1506   3600   2860.60             0.794611 0.618588 0.946967               4             0.0
+GLOP195        all  34467 259200   3656.68             0.014108 0.543451 0.930126              58            56.0
+GLOP195      short  17543   7200   3960.00             0.550000 0.432679 0.806477              21             1.0
+GLOP195       long   2349  86400   1950.00             0.022569 0.144764 0.326112              32             2.0
+GLOP195   infinite  14575 259200   4118.08             0.015888 0.356687 0.769465              58            56.0
+    CE1        all 111236 259200  12572.00             0.048503 0.372657 0.798117              85            84.0
+    CE1       test  21062    900  24788.24            27.542489 0.174675 0.515195              30             2.0
+    CE1      short  39857   7200   6827.12             0.948211 0.193055 0.434022              84             6.0
+    CE1       long  19697  86400  12312.76             0.142509 0.265336 0.665142              82            33.0
+    CE1        day  10299 129600  11661.10             0.089978 0.152319 0.485383              56            45.0
+    CE1   infinite  20321 259200  17024.20             0.065680 0.162447 0.536757              85            84.0
+    CE2        all  60519 259200  15825.26             0.061054 0.410423 0.857909              56            52.0
+    CE2       test  20081    900  14992.40            16.658222 0.355669 0.510793              20             1.0
+    CE2      short  12046   5400   4331.05             0.802046 0.177630 0.409818              54             5.0
+    CE2       long   8556  86400  18949.30             0.219321 0.353562 0.686557              35            16.0
+    CE2        day   8295 129600   5359.54             0.041354 0.170187 0.519419              34            26.0
+    CE2   infinite  10035 259200  83598.96             0.322527 0.201850 0.564066              56            48.0
+    CE2      batch   1506   3600   2860.60             0.794611 0.618588 0.946967               4             0.0
+TIMING {"stage": "qaudit", "wall_s": 1.7351083000012295, "cpu_s": 1.71875}

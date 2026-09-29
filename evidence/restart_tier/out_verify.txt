@@ -1,0 +1,14 @@
+verification of tierkern.py
+part 1 (tierkern vs guardkern, non-tiered): 400 random instances x 6 configurations, mismatches = 0
+part 2 (tiered kernel vs pure-python simulator): 19200 cases, mismatches = 0
+  real trace k= 4 fcfs  B=None: max |w_tier - w_guardkern| = 0.000e+00  (mean wait 0.1063s)
+  real trace k= 4 pri   B=None: max |w_tier - w_guardkern| = 0.000e+00  (mean wait 0.0984s)
+  real trace k= 4 guard B=600.0: max |w_tier - w_guardkern| = 0.000e+00  (mean wait 0.0984s)
+  real trace k= 4 guard B=60.0: max |w_tier - w_guardkern| = 0.000e+00  (mean wait 0.0989s)
+  real trace k= 8 fcfs  B=None: max |w_tier - w_guardkern| = 0.000e+00  (mean wait 0.0083s)
+  real trace k= 8 pri   B=None: max |w_tier - w_guardkern| = 0.000e+00  (mean wait 0.0077s)
+  real trace k= 8 guard B=600.0: max |w_tier - w_guardkern| = 0.000e+00  (mean wait 0.0077s)
+  real trace k= 8 guard B=60.0: max |w_tier - w_guardkern| = 0.000e+00  (mean wait 0.0078s)
+part 3 (3,000,000 jobs of rep0): mismatches = 0
+
+TOTAL mismatches: 0

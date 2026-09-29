@@ -1,0 +1,66 @@
+== 10.1109/18.61109
+  type: journal-article
+  title: ['A calculus for network delay. I. Network elements in isolation']
+  container-title: ['IEEE Transactions on Information Theory']
+  volume: 37
+  issue: 1
+  page: 114-131
+  publisher: Institute of Electrical and Electronics Engineers (IEEE)
+  authors: ['Cruz, R.L.']
+  published-print: [[1991]]
+  issued: [[1991]]
+== 10.1007/3-540-45318-0
+  type: book
+  title: ['Network Calculus']
+  container-title: ['Lecture Notes in Computer Science']
+  publisher: Springer Berlin Heidelberg
+  ISBN: ['9783540421849', '9783540453185']
+  authors: []
+  editors: ['Le Boudec, Jean-Yves', 'Thiran, Patrick']
+  published-print: [[2001]]
+  published-online: [[2002, 1, 29]]
+  issued: [[2001]]
+== 10.1007/s11241-011-9135-8
+  type: journal-article
+  title: ['Multiprocessor extensions to real-time calculus']
+  container-title: ['Real-Time Systems']
+  volume: 47
+  issue: 6
+  page: 562-617
+  publisher: Springer Science and Business Media LLC
+  authors: ['Leontyev, Hennadiy', 'Chakraborty, Samarjit', 'Anderson, James H.']
+  published-print: [[2011, 12]]
+  published-online: [[2011, 8, 26]]
+  issued: [[2011, 8, 26]]
+== 10.1016/j.peva.2018.10.001
+  type: journal-article
+  title: ['SRPT for multiserver systems']
+  container-title: ['Performance Evaluation']
+  volume: 127-128
+  page: 154-175
+  publisher: Elsevier BV
+  authors: ['Grosof, Isaac', 'Scully, Ziv', 'Harchol-Balter, Mor']
+  published-print: [[2018, 11]]
+  issued: [[2018, 11]]
+== 10.1137/0117039
+  type: journal-article
+  title: ['Bounds on Multiprocessing Timing Anomalies']
+  container-title: ['SIAM Journal on Applied Mathematics']
+  volume: 17
+  issue: 2
+  page: 416-429
+  publisher: Society for Industrial & Applied Mathematics (SIAM)
+  authors: ['Graham, R. L.']
+  published-print: [[1969, 3]]
+  published-online: [[2006, 7, 12]]
+  issued: [[1969, 3]]
+== 10.1109/rtss.2009.29
+  type: proceedings-article
+  title: ['Multiprocessor Extensions to Real-Time Calculus']
+  container-title: ['2009 30th IEEE Real-Time Systems Symposium']
+  page: 410-421
+  publisher: IEEE
+  authors: ['Leontyev, Hennadiy', 'Chakraborty, Samarjit', 'Anderson, James H.']
+  published-print: [[2009, 12]]
+  issued: [[2009, 12]]
+  event: {'name': '2009 IEEE 30th Real-Time Systems Symposium (RTSS)', 'start': {'date-parts': [[2009, 12, 1]]}, 'location': 'Washington DC, USA', 'end': {'date-parts': [[2009, 12, 4]]}}

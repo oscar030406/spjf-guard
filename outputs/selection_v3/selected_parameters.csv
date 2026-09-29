@@ -1,0 +1,13 @@
+family,from_family,promise_s,b0_base_s,eta,gam_base_s,worst_gap_closed,worst_harm_s,worst_promise_s,harm_limit_s,harm_slack_s,n_feasible,n_candidates,next_better_point,note
+fixed,fixed,300.0,329.671,0.0,0.0,0.17611472992081736,131.80208199999998,247.41775,150.0,18.197918000000016,22,27,"fixed B0=inf eta=0 gam=0 (gap 0.3693, harm 212.0 s, infeasible by 62.0 s)",
+capped,capped,300.0,60.0,0.5,0.0,0.42509927930404734,122.75569800000001,300.0,150.0,27.24430199999999,15,54,none: the chosen point has the best worst-cell gap among the candidates,
+hybrid,hybrid,300.0,0.0,0.0,16.0,0.3564805529955681,145.250395,300.0,150.0,4.7496050000000025,7,18,"hybrid B0=0 eta=0.9 gam=1 (gap 0.3722, harm 212.0 s, infeasible by 62.0 s)",
+joint,capped,300.0,60.0,0.5,0.0,0.42509927930404734,122.75569800000001,300.0,150.0,27.24430199999999,44,99,none: the chosen point has the best worst-cell gap among the candidates,
+fixed,fixed,600.0,981.126,0.0,0.0,0.6094577863893511,288.16084600000005,410.2815,300.0,11.83915399999995,31,35,"fixed B0=1692.57 eta=0 gam=0 (gap 0.7244, harm 465.7 s, infeasible by 165.7 s)",
+capped,capped,600.0,120.0,0.75,0.0,0.7215763991634792,293.291067,600.0,300.0,6.708933000000002,30,54,"capped B0=600 eta=0.5 gam=0 (gap 0.7257, harm 382.6 s, infeasible by 82.6 s)",
+hybrid,hybrid,600.0,120.0,0.0,16.0,0.7173025392623642,152.15394899999998,600.0,300.0,147.84605100000002,9,18,"hybrid B0=0 eta=0.9 gam=16 (gap 0.7238, harm 458.1 s, infeasible by 158.1 s)",
+joint,capped,600.0,120.0,0.75,0.0,0.7215763991634792,293.291067,600.0,300.0,6.708933000000002,70,107,"capped B0=600 eta=0.5 gam=0 (gap 0.7257, harm 382.6 s, infeasible by 82.6 s)",
+fixed,fixed,1200.0,2029.958,0.0,0.0,0.7256983671965151,560.261616,672.4895,600.0,39.738383999999996,35,39,"fixed B0=2434.6 eta=0 gam=0 (gap 0.7273, harm 629.6 s, infeasible by 29.6 s)",
+capped,capped,1200.0,360.0,0.75,0.0,0.7272677858264984,483.924829,1020.0,600.0,116.07517100000001,43,54,none: the chosen point has the best worst-cell gap among the candidates,
+hybrid,hybrid,1200.0,0.0,0.0,16.0,0.7283278735312209,145.250395,1200.0,600.0,454.749605,17,18,none: the chosen point has the best worst-cell gap among the candidates,
+joint,hybrid,1200.0,0.0,0.0,16.0,0.7283278735312209,145.250395,1200.0,600.0,454.749605,95,111,none: the chosen point has the best worst-cell gap among the candidates,

@@ -1,0 +1,28 @@
+{
+  "split_days_after_first_cleaned_submit": 120,
+  "outage_original_SWF_days_half_open": [
+    138,
+    153
+  ],
+  "seed": 3,
+  "bootstrap_seed": 20260921,
+  "bootstrap_replicates": 2000,
+  "busy_definition": "arrival count >= fit-part 90th percentile of ALL hourly bins, nonzero arrivals",
+  "k_grid": "every integer 1..nominal independently per physical pool",
+  "capacity_objective": "abs(log((sim_mean+1)/(rec_mean+1))) + abs(log((sim_p90+1)/(rec_p90+1)))",
+  "fit_visibility": "submit < cutoff and recorded completion < cutoff",
+  "shapes": {
+    "constant": "B0=Bmax, eta=0",
+    "age_3.5L_and_5L": "B0=k*L/4, eta=0.5 (paper 5L point transferred to 3.5L)",
+    "age_10L": "B0=k*L/2, eta=0.75 (paper 10L point)"
+  },
+  "promises_L": [
+    3.5,
+    5,
+    10
+  ],
+  "primary": "two disjoint physical pools; queues share each pool; k held fixed on test",
+  "cap": "min(recorded run, documented partition/queue wall limit); CE2 short 5400 s, other short 7200 s; theorem uses maximum queue limit 259200 s",
+  "history": "own-user completions at recorded submit+wait+raw_run <= arrival; frozen scores, open-loop feature stream",
+  "no_test_selection": true
+}

@@ -1,0 +1,23 @@
+started_utc: 2026-09-21T13:50:45.281900+00:00
+pool: releng-hardware/gecko-3-b-osx-arm64
+request cap: 25; minimum interval: 0.26s
+request 1/25: GET https://firefox-ci-tc.services.mozilla.com/api/queue/v1/provisioners/releng-hardware/worker-types/gecko-3-b-osx-arm64/workers?limit=500 -> 200
+current workers: 7
+request 2/25: GET https://firefox-ci-tc.services.mozilla.com/api/queue/v1/provisioners/releng-hardware/worker-types/gecko-3-b-osx-arm64/workers/mdc1/macmini-m4-120 -> 200
+request 3/25: GET https://firefox-ci-tc.services.mozilla.com/api/queue/v1/provisioners/releng-hardware/worker-types/gecko-3-b-osx-arm64/workers/mdc1/macmini-m4-123 -> 200
+request 4/25: GET https://firefox-ci-tc.services.mozilla.com/api/queue/v1/provisioners/releng-hardware/worker-types/gecko-3-b-osx-arm64/workers/mdc1/macmini-m4-124 -> 200
+request 5/25: GET https://firefox-ci-tc.services.mozilla.com/api/queue/v1/provisioners/releng-hardware/worker-types/gecko-3-b-osx-arm64/workers/mdc1/macmini-m4-173 -> 200
+request 6/25: GET https://firefox-ci-tc.services.mozilla.com/api/queue/v1/provisioners/releng-hardware/worker-types/gecko-3-b-osx-arm64/workers/mdc1/macmini-m4-193 -> 200
+request 7/25: GET https://firefox-ci-tc.services.mozilla.com/api/queue/v1/provisioners/releng-hardware/worker-types/gecko-3-b-osx-arm64/workers/mdc1/macmini-m4-195 -> 200
+request 8/25: GET https://firefox-ci-tc.services.mozilla.com/api/queue/v1/provisioners/releng-hardware/worker-types/gecko-3-b-osx-arm64/workers/mdc1/macmini-m4-196 -> 200
+recent claim references: 140; unique task/run pairs: 140; unique tasks: 140
+request 9/25: POST https://firefox-ci-tc.services.mozilla.com/api/queue/v1/tasks/status -> 200
+request 10/25: POST https://firefox-ci-tc.services.mozilla.com/api/queue/v1/tasks -> 200
+completed runs with true wait: 133
+wait p99=11291.5s; L used=15000.0s; p99/L=0.753; 3L=45000.0s
+tail: top 2/133 service share=0.0789; condition >= 0.25: False
+wait condition p99 >= 3.0L: False; maxRunTime coverage complete: True
+service > task maxRunTime: 0/133 among runs with a valid limit; services are reported as recorded and are not capped
+joint screen: the two numerical screens do not both pass in this truncated recency sample; this is triage, not a pool-wide conclusion
+scope warning: last-20 claims per current worker are not a continuous arrival window and cannot establish pool-wide p99 or arrival coverage
+summary: probe_taskcluster_summary.json

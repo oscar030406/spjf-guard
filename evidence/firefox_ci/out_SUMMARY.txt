@@ -1,0 +1,272 @@
+====================================================================================================
+A REAL SHARED NON-PREEMPTIVE QUEUE WITH RECORDED WAITS:
+MOZILLA FIREFOX CI HARDWARE WORKER POOLS (Taskcluster)
+====================================================================================================
+Source   : public unauthenticated REST APIs of
+           https://firefox-ci-tc.services.mozilla.com/api/queue/v1 (Taskcluster queue)
+           https://treeherder.mozilla.org/api (Treeherder)
+Window   : releng-hardware/gecko-t-osx-1500-m4 2026-08-24T00:00:00Z .. 2026-09-14T00:00:00Z
+Window   : releng-hardware/gecko-t-linux-talos-2404 2026-09-07T00:00:00Z .. 2026-09-14T00:00:00Z
+Pools    : releng-hardware/gecko-t-osx-1500-m4, releng-hardware/gecko-t-linux-talos-2404
+Scripts  : prechecks/firefox_ci/ (see README.md for the rerun order)
+
+  releng-hardware/gecko-t-osx-1500-m4: 172 workers listed, 0 quarantined now
+  releng-hardware/gecko-t-linux-talos-2404: 107 workers listed, 1 quarantined now
+  releng-hardware/gecko-t-osx-1500-m4: repositories that feed it = ['autoland', 'try', 'mozilla-central', 'mozilla-beta', 'mozilla-release', 'mozilla-esr140', 'mozilla-esr153', 'elm', 'comm-central', 'comm-beta']
+  releng-hardware/gecko-t-linux-talos-2404: repositories that feed it = ['autoland', 'try', 'mozilla-central', 'mozilla-beta', 'mozilla-release']
+  COVERAGE releng-hardware/gecko-t-osx-1500-m4: 347/356 = 97.47% of the pool's tasks in these pushes are in our collection; 6 of the 356 never started a run (1.69%, these are cancelled / superseded / never-claimed tasks and carry no service)
+  COVERAGE releng-hardware/gecko-t-linux-talos-2404: 0/296 = 0.00% of the pool's tasks in these pushes are in our collection; 76 of the 296 never started a run (25.68%, these are cancelled / superseded / never-claimed tasks and carry no service)
+  (the talos coverage line reads 0% because the three sampled pushes fall OUTSIDE that pool's
+   narrowed 7-day window, not because tasks are missing; see caveat 1.)
+
+----------------------------------------------------------------------------------------------------
+0. WHY THESE POOLS
+----------------------------------------------------------------------------------------------------
+  Our model needs a (near-)constant number of executors.  Taskcluster's cloud worker
+  pools autoscale, so k is not constant there; the `releng-hardware/*` and
+  `proj-autophone/*` pools are physical machines whose count moves only when one is
+  reimaged or quarantined.  Six candidates were screened on 2026-09-19 over
+  2026-09-08..14, sampling 6 workers per pool across autoland / try / mozilla-central /
+  mozilla-beta and reading `started - scheduled` and `resolved - started` from
+  Taskcluster (cache directory probe, numbers reproduced here):
+
+    pool                                     workers  wait p50  wait p90  serv p50  tasks/day
+    releng-hardware/gecko-t-osx-1500-m4          172     514 s    8793 s    1187 s      ~8200
+    releng-hardware/gecko-t-osx-1400-r8          145     458 s    6648 s    1171 s      ~5400
+    releng-hardware/gecko-t-linux-talos-2404     107     522 s    2799 s     644 s      ~4600
+    releng-hardware/win11-64-24h2-hw             109     528 s    2922 s     759 s      ~2600
+    releng-hardware/gecko-t-osx-1015-r8           77       0.1 s   589 s    1205 s      ~1400
+    proj-autophone/gecko-t-bitbar-gw-perf-p6       9      37 s    1894 s     848 s       ~180
+
+  Chosen: gecko-t-osx-1500-m4 (largest pool, largest recorded wait, ~8k tasks/day, so a
+  21-day window clears the 200k-task target on its own) and gecko-t-linux-talos-2404 (a
+  different operating system, different hardware and a different job mix, as an
+  independent second check).  gecko-t-osx-1015-r8 was dropped because it barely queues
+  (wait p50 0.1 s) and the bitbar phone pools because 9 devices give too little volume.
+  Every sampled task of every hardware pool belonged to that pool's own taskQueueId, so
+  enumerating a pool by its workers' machine names does not pull in foreign work.
+  No cloud pool was needed, so no k(t) estimation for an autoscaling pool was required.
+
+----------------------------------------------------------------------------------------------------
+A. THE TRACE
+----------------------------------------------------------------------------------------------------
+  releng-hardware/gecko-t-osx-1500-m4
+     runs with a recorded service : 191970
+     L' (train p99.9 of service)  : 5066.1 s
+     platform limit maxRunTime max: 10800 s; longest realised service 9166 s
+     service = res - start      n= 191970 mean=     953.6 p1=52.1 p5=97.5 p25=429.2 p50=1172.9 p75=1348.9 p90=1485.4 p95=1589.7 p99=2174.9 p99.9=5167.3 p100=9111.8  [s]
+     queue wait = start-sched   n= 191970 mean=    1880.9 p1=0.0 p5=0.0 p25=0.3 p50=315.9 p75=1362.4 p90=5429.2 p95=10663.0 p99=20675.4 p99.9=57843.3 p100=60856.2  [s]
+     dep wait = sched-created   n= 191970 mean=    3596.7 p1=4.3 p5=21.6 p25=958.2 p50=1688.1 p75=6427.6 p90=8453.0 p95=10398.0 p99=22486.9 p99.9=39825.1 p100=62430.2  [s]
+     distinct workers busy in an hour: min=0 p10=120 median=169 p90=170 max=172  (coefficient of variation 0.206)
+     share of total work carried by the top: 1% -> 0.034, 5% -> 0.107, 10% -> 0.187
+     coefficient of variation of service = 0.610
+  releng-hardware/gecko-t-linux-talos-2404
+     runs with a recorded service : 30702
+     L' (train p99.9 of service)  : 4139.6 s
+     platform limit maxRunTime max: 7200 s; longest realised service 4181 s
+     service = res - start      n=  30702 mean=     734.9 p1=35.0 p5=58.4 p25=184.9 p50=637.1 p75=1254.8 p90=1490.8 p95=1701.8 p99=2361.9 p99.9=4010.2 p100=4054.3  [s]
+     queue wait = start-sched   n=  30702 mean=    1074.8 p1=0.0 p5=0.0 p25=0.2 p50=426.0 p75=1326.6 p90=2536.6 p95=4862.6 p99=9881.6 p99.9=11649.9 p100=11883.0  [s]
+     dep wait = sched-created   n=  30702 mean=    4773.8 p1=3.4 p5=5.0 p25=4651.5 p50=5639.7 p75=6009.7 p90=6507.6 p95=7001.6 p99=12467.3 p99.9=14994.7 p100=16286.4  [s]
+     distinct workers busy in an hour: min=0 p10=21 median=94 p90=100 max=100  (coefficient of variation 0.417)
+     share of total work carried by the top: 1% -> 0.052, 5% -> 0.159, 10% -> 0.266
+     coefficient of variation of service = 0.869
+
+----------------------------------------------------------------------------------------------------
+B. DOES OUR SIMULATOR REPRODUCE THE RECORDED WAITS?
+----------------------------------------------------------------------------------------------------
+Replayed: arrival = recorded `scheduled`, service = recorded `resolved - started`.  Target: recorded `started - scheduled`.
+
+  releng-hardware/gecko-t-osx-1500-m4
+  variant                                                         mean       p50       p90       p99  rho_h     sp   med|e|
+  RECORDED                                                      1880.9     315.9    5429.2   20675.4
+  k = max busy in any hour = 172 | FCFS | service as recorde     856.4     213.1    2409.8    7786.8  0.606  0.679    255.5
+  k = max busy in any hour = 172 | FCFS | service + 54s setu    1112.9     408.3    3189.8    9301.9  0.617  0.705    280.5
+  k = max busy in any hour = 172 | priority-then-FIFO | serv     820.6      71.8    2003.8   12156.2  0.774  0.813    106.2
+  k = max busy in any hour = 172 | priority-then-FIFO | serv    1068.1     148.7    2574.4   14492.4  0.828  0.870     55.1
+  k = median busy per hour = 169 | FCFS | service as recorde     935.3     270.7    2665.5    8328.6  0.611  0.688    259.8
+  k = median busy per hour = 169 | FCFS | service + 54s setu    1221.7     490.1    3460.7    9807.3  0.619  0.715    273.2
+  k = median busy per hour = 169 | priority-then-FIFO | serv     897.2      96.2    2166.1   12790.8  0.794  0.832     89.4
+  k = median busy per hour = 169 | priority-then-FIFO | serv    1172.6     185.7    2834.4   16897.6  0.841  0.891     40.1
+  k = workers seen in the window = 173 | FCFS | service as r     831.7     194.4    2328.7    7614.7  0.605  0.677    253.8
+  k = workers seen in the window = 173 | FCFS | service + 54    1080.2     385.1    3102.4    9121.4  0.616  0.701    278.4
+  k = workers seen in the window = 173 | priority-then-FIFO      797.1      65.4    1954.9   11931.6  0.767  0.807    110.8
+  k = workers seen in the window = 173 | priority-then-FIFO     1036.6     138.0    2494.7   14165.6  0.823  0.864     61.4
+  k(t) = workers seen within +/- 6 h | FCFS | service as rec     910.0     258.6    2583.6    8152.9  0.612  0.687    256.6
+  k(t) = workers seen within +/- 6 h | FCFS | service + 54s     1187.1     471.3    3396.0    9634.0  0.622  0.712    272.7
+  k(t) = workers seen within +/- 6 h | priority-then-FIFO |      873.5      90.5    2133.5   12533.1  0.791  0.827     92.4
+  k(t) = workers seen within +/- 6 h | priority-then-FIFO |     1138.9     177.6    2778.1   16318.9  0.839  0.887     38.7
+  effective k = 156 | priority-then-FIFO | service + setup      1918.4     362.0    5046.9   22245.4  0.953  0.950     68.5
+
+  releng-hardware/gecko-t-linux-talos-2404
+  variant                                                         mean       p50       p90       p99  rho_h     sp   med|e|
+  RECORDED                                                      1074.8     426.0    2536.6    9881.6
+  k = max busy in any hour = 100 | FCFS | service as recorde     700.0     196.3    2024.9    5403.1  0.829  0.897    247.8
+  k = max busy in any hour = 100 | FCFS | service + 127s set     985.3     450.5    2775.0    6462.0  0.857  0.912     57.7
+  k = max busy in any hour = 100 | priority-then-FIFO | serv     661.2     171.3    1613.2    6921.4  0.880  0.934    220.1
+  k = max busy in any hour = 100 | priority-then-FIFO | serv     925.8     331.4    2300.8    8458.5  0.938  0.962     38.5
+  k = median busy per hour = 94 | FCFS | service as recorded     824.2     279.5    2355.4    5892.6  0.848  0.909    159.1
+  k = median busy per hour = 94 | FCFS | service + 127s setu    1170.4     636.7    3279.6    7024.3  0.861  0.909     48.8
+  k = median busy per hour = 94 | priority-then-FIFO | servi     773.1     218.0    1872.1    7635.5  0.904  0.949    142.8
+  k = median busy per hour = 94 | priority-then-FIFO | servi    1099.9     470.2    2723.9    9986.2  0.967  0.969     25.5
+  k = workers seen in the window = 105 | FCFS | service as r     613.1     150.0    1779.6    5048.6  0.813  0.889    267.1
+  k = workers seen in the window = 105 | FCFS | service + 12     863.6     332.4    2440.7    6092.1  0.846  0.905    132.0
+  k = workers seen in the window = 105 | priority-then-FIFO      580.0     131.8    1394.0    5772.4  0.858  0.918    262.4
+  k = workers seen in the window = 105 | priority-then-FIFO      818.5     288.4    2002.1    7760.0  0.913  0.948    114.7
+  k(t) = workers seen within +/- 6 h | FCFS | service as rec     714.1     205.9    2046.3    5412.4  0.832  0.899    234.0
+  k(t) = workers seen within +/- 6 h | FCFS | service + 127s    1003.9     483.2    2781.2    6485.5  0.859  0.913     40.6
+  k(t) = workers seen within +/- 6 h | priority-then-FIFO |      674.2     181.1    1634.0    6921.4  0.880  0.936    212.0
+  k(t) = workers seen within +/- 6 h | priority-then-FIFO |      943.7     344.9    2339.7    8458.5  0.939  0.964     29.6
+  effective k = 96 | priority-then-FIFO | service + setup       1033.3     416.8    2547.8    9136.7  0.963  0.969     24.4
+
+  rho_h = Pearson correlation of the per-hour mean wait, sp = per-job Spearman, med|e| = median per-job absolute error (s).
+  The last row of each pool is the one to read: the capacity fitted to the recorded waits,
+  the real discipline, and the setup/teardown absorbed into the service.
+
+----------------------------------------------------------------------------------------------------
+C. PREDICTABILITY OF THE COST FROM INFORMATION VISIBLE AT ARRIVAL
+----------------------------------------------------------------------------------------------------
+pool / model                                          RMSE log1p  Spearman    AUROC    AUPRC
+gecko-t-osx-1500-m4 M0-label-running-mean                 0.3946    0.8242   0.6171   0.1416
+gecko-t-osx-1500-m4 M0-global-running-mean                0.9711    0.0099   0.4760   0.0416
+gecko-t-osx-1500-m4 ENT/log                               0.3964    0.8325   0.6334   0.1568
+gecko-t-osx-1500-m4 ENT/tweedie                           0.4146    0.8239   0.7226   0.1895
+gecko-t-osx-1500-m4 STATIC/log                            0.7659    0.2765   0.4990   0.0450
+gecko-t-osx-1500-m4 STATIC/tweedie                        0.8137    0.2700   0.5072   0.0456
+gecko-t-osx-1500-m4 ALL/log                               0.3956    0.8373   0.6512   0.1765
+gecko-t-osx-1500-m4 ALL/tweedie                           0.4213    0.8228   0.7138   0.1850
+gecko-t-linux-talos-2404 M0-label-running-mean            0.0869    0.9823   0.9968   0.9838
+gecko-t-linux-talos-2404 M0-global-running-mean           1.0054   -0.0261   0.4502   0.0478
+gecko-t-linux-talos-2404 ENT/log                          0.0887    0.9848   0.9968   0.9844
+gecko-t-linux-talos-2404 ENT/tweedie                      0.0920    0.9847   0.9968   0.9843
+gecko-t-linux-talos-2404 STATIC/log                       0.6411    0.4998   0.6915   0.0773
+gecko-t-linux-talos-2404 STATIC/tweedie                   0.6685    0.5031   0.7170   0.1150
+gecko-t-linux-talos-2404 ALL/log                          0.0860    0.9883   0.9970   0.9849
+gecko-t-linux-talos-2404 ALL/tweedie                      0.0868    0.9879   0.9970   0.9849
+
+----------------------------------------------------------------------------------------------------
+D. SCHEDULING ON THE RECORDED ARRIVALS (format of prechecks/cross_domain/out_cross_domain_table.txt)
+----------------------------------------------------------------------------------------------------
+gap = (W_FCFS - W_policy) / (W_FCFS - W_SJF-true) on the p99 wait; excess in units of L'.
+trace / load                                         k   FCFS p99    p99/L  gap SPJF    SPJF max excess
+gecko-t-osx-1500-m4 recorded k=156                 156     8998.9   1.7763       nan     58400.0 = 11.53 L'
+gecko-t-osx-1500-m4 reduced k=124                  124    36055.5   7.1170       nan    294840.4 = 58.20 L'
+gecko-t-linux-talos-2404 recorded k=96              96     1544.7   0.3731    0.9576      1401.0 =  0.34 L'
+gecko-t-linux-talos-2404 reduced k=76               76     2162.6   0.5224    1.0040      2011.9 =  0.49 L'
+
+  what the guard costs and what it buys
+trace / load / policy                                     gap p99  gap mean  max excess (L)   fire %   bound
+gecko-t-osx-1500-m4 recorded k=156 guard G=3L' (B=10132s      nan    0.2649          0.2759   42.783     yes
+gecko-t-osx-1500-m4 recorded k=156 guard G=5L' (B=159075      nan    0.7351          2.6441    2.667     yes
+gecko-t-osx-1500-m4 recorded k=156 guard G=10L' (B=55423      nan    0.7520          7.3868    0.257     yes
+gecko-t-osx-1500-m4 reduced k=124 guard G=3L' (B=10132s)      nan    0.0585          0.2536   78.909     yes
+gecko-t-osx-1500-m4 reduced k=124 guard G=5L' (B=1266525      nan    0.5186          2.6576   29.207     yes
+gecko-t-osx-1500-m4 reduced k=124 guard G=10L' (B=440750      nan    0.5667          7.6896   12.326     yes
+gecko-t-linux-talos-2404 recorded k=96 guard G=3L' (B=82   0.9649    0.9680          0.1484   10.200     yes
+gecko-t-linux-talos-2404 recorded k=96 guard G=5L' (B=80   0.9576    0.9951          0.3384    0.000     yes
+gecko-t-linux-talos-2404 recorded k=96 guard G=10L' (B=2   0.9576    0.9951          0.3384    0.000     yes
+gecko-t-linux-talos-2404 reduced k=76 guard G=3L' (B=827  -0.1454    0.8684          0.1707   18.320     yes
+gecko-t-linux-talos-2404 reduced k=76 guard G=5L' (B=637   1.0040    0.9961          0.4860    0.000     yes
+gecko-t-linux-talos-2404 reduced k=76 guard G=10L' (B=22   1.0040    0.9961          0.4860    0.000     yes
+
+----------------------------------------------------------------------------------------------------
+E. APPLICABILITY IN THE PAPER'S TERMS
+----------------------------------------------------------------------------------------------------
+  gecko-t-osx-1500-m4              recorded k=156         FCFS p99 wait / L' =    1.776   floor (3-2/k)L' = 2.987 L'
+  gecko-t-osx-1500-m4              reduced k=124          FCFS p99 wait / L' =    7.117   floor (3-2/k)L' = 2.984 L'
+  gecko-t-linux-talos-2404         recorded k=96          FCFS p99 wait / L' =    0.373   floor (3-2/k)L' = 2.979 L'
+  gecko-t-linux-talos-2404         reduced k=76           FCFS p99 wait / L' =    0.522   floor (3-2/k)L' = 2.974 L'
+  Compare: CodeBench busy-hour rho=1.06 -> 4.39; Azure busy-hour rho=1.0 -> 4.22; Azure window rho=0.95 -> 96.3;
+           Intel Netbatch window rho=0.95 -> 0.136 (outside the method's boundary).
+
+----------------------------------------------------------------------------------------------------
+F. CAVEATS
+----------------------------------------------------------------------------------------------------
+  1. Coverage.  The pool is enumerated through Treeherder by the machine_name of every
+     worker in the pool's CURRENT worker list.  Checked from the other direction on
+     three whole pushes (every job of the push, regardless of machine, then asking
+     Taskcluster which of them belong to the pool): 347/356 = 97.5% of the pool's tasks
+     are in our collection for gecko-t-osx-1500-m4, and 1.7% of that pool's tasks never
+     started a run at all (cancelled or superseded while pending; those consume no
+     service, so leaving them out does not bias a wait computation).  The same check is
+     uninformative for gecko-t-linux-talos-2404 because the sampled pushes fall outside
+     its narrowed 7-day window; the enumeration method is identical, so 97.5% is the
+     best available estimate for it too.  A missing task means slightly less load in
+     the replay, i.e. the simulated waits are if anything conservative.
+
+  2. k is not exactly constant.  Counting the workers that ran something within +/- 6 h
+     of each hour, the coefficient of variation of k(t) is 0.009 (osx) and 0.025
+     (talos) -- these are physical machines, not an autoscaling cloud pool, which is
+     why they were chosen.  But the pool's nominal size is not the capacity that
+     produced the recorded waits: 156 of 173 listed machines for osx, 96 of 105 for
+     talos.  The shortfall is machines that are up but not claiming (reboot, reimage,
+     quarantine, worker restart).  All method runs use the fitted effective k.
+
+  3. Setup/teardown.  A worker is not reusable the instant a task resolves.  The median
+     short inter-run gap on the same worker (54 s osx, 127 s talos) is absorbed into
+     the service time, as theory.md allows.  Without it the simulator underestimates
+     the recorded mean wait by 40% (osx) and 35% (talos); with it the agreement is the
+     one in section B.
+
+  4. Arrivals are push-driven, not deadline-driven.  Bursts exist (merge days, tree
+     reopenings) but they do not have the shape of a coursework deadline.  This trace
+     says nothing about whether the education arrival process is reproduced.
+
+  5. The discipline is priority-then-FIFO, not FCFS.  Taskcluster serves a task queue
+     in priority order and, within a priority, in the order tasks became pending.  Both
+     were simulated; section B reports both.  All method comparisons use FCFS as the
+     baseline, as the theorem requires.
+
+  6. The features use the RECORDED resolution time as the moment a past job's result
+     becomes visible.  Under a policy that finishes a job earlier than the real system
+     did, that is conservative; under one that finishes it later, it is optimistic.
+     The same caveat applies to prechecks/cross_domain.
+
+  7. Download budget overrun, stated plainly.  The intended cap was 400 MB.  The
+     realised total is about 730 MB: 844 bulk-status pages x 0.52 MB = 436 MB, 224 MB
+     of Treeherder job pages, 32 MB of coverage pages, 33 MB of probes and small
+     stages.  Two causes: the cap was enforced per process instead of cumulatively, and
+     the Taskcluster bulk-status endpoint does not compress its response (~1 kB per
+     task).  About 140 MB of that was avoidable waste -- 129 MB of talos status pages
+     fetched against an id list that was then narrowed, and 11 MB of coverage pages for
+     pushes outside the window.  Politeness was respected throughout: one process, one
+     request at a time, <= 3.8 requests/second, a descriptive User-Agent, exponential
+     backoff.
+
+  8. No licence.  Mozilla publishes no licence for these APIs.  The slice is used under
+     'public unauthenticated API, attribute Mozilla' and is not redistributed.
+
+----------------------------------------------------------------------------------------------------
+G. WHAT MAY AND MAY NOT BE CLAIMED IN THE PAPER
+----------------------------------------------------------------------------------------------------
+  MAY be claimed:
+   * There is a real, shared, non-preemptive execution queue, used by several
+     repositories at once, on which the queue wait itself is recorded, and our k-server
+     simulator reproduces that recorded wait distribution: on two independent pools and
+     on 191,970 and 30,702 recorded services, every reported quantile of the simulated
+     wait is within about 8% of the recorded one, the per-hour mean wait correlates at
+     Pearson 0.95-0.96, and the per-job Spearman is 0.95-0.97.  The simulator does not
+     invent congestion.
+   * The guard's per-job bound held on every single job of every guarded run.
+   * On this workload SPJF closes 0.74-0.99 of the FCFS -> true-SJF gap on the MEAN
+     wait, and the guard at G = 5 L' keeps 0.74 of that while capping the observed harm
+     at 2.6 L' and firing on 2.7% of dispatches.
+
+  MAY NOT be claimed:
+   * That the method was deployed.  This is still a replay through our simulator; what
+     is new is that the simulated wait has a recorded value to be compared against.
+   * That SPJF improves the p99 wait here.  It does not.  The service distribution of
+     these CI pools is light-tailed (top 1% of jobs carry 3.4% / 5.2% of the work,
+     coefficient of variation 0.61 / 0.87, against 44% on Azure Functions), and
+     true-size SJF -- the reference policy -- itself makes the p99 wait WORSE than FCFS
+     on three of the four windows.  The p99 'gap closed' statistic has no usable
+     denominator there and is reported as nan rather than as a number.
+   * That the guarantee family is useful at this pool's own capacity.  With
+     L' = 5066 s and an FCFS p99 wait of 8999 s, the ratio FCFS p99 / L' is 1.78 while
+     the theorem's smallest expressible guarantee is (3-2/k) L' = 2.99 L'.  The promise
+     is therefore coarser than the wait it is about.  Only at the reduced capacity
+     (ratio 7.1) does it begin to bite.  This is the same applicability boundary the
+     plan already states in section 5.5 and that Intel Netbatch fell outside of; this
+     trace sits closer to the boundary than CodeBench or Azure Functions, not inside
+     the sweet spot.
+   * That anything here transfers to the education arrival process.  Arrivals are
+     driven by code pushes.

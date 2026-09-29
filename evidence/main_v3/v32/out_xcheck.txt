@@ -1,0 +1,10 @@
+## 2026-09-20 04:49:46 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--small 3000 --trace primary --rep 0 --level 2
+small instances: 3000 drawn {'fcfs': 545, 'pri': 494, 'cap': 501, 'fix': 469, 'hyb': 499, 'skip': 492}; mismatches and anchor failures: 0; 492 finite-skip instances also reproduced FCFS at N = 0 and the pure predictor order at N >= n; per-job bounds asserted on the independent waits where one exists (and on the kernel's own for the hybrid, which the reference does not implement): worst used/allowed 0.9630 (work budget) and 1.0000 (finite skip)
+[     6s] real primary rep0 L2 (k=4, 17,634,760 jobs) FCFS: vs the project simulator, differing jobs 0, max |diff| 0
+[    13s] real primary rep0 L2 (k=4, 17,634,760 jobs) SPJF-tweedie: vs the project simulator, differing jobs 0, max |diff| 0
+[    53s] real primary rep0 L2 (k=4, 17,634,760 jobs) FIX-G600: vs the project simulator, differing jobs 0, max |diff| 0
+[    54s] real busy slice (1,000 jobs) finite skip N=34: vs the literal reference, differing jobs 0
+[    54s] real busy slice (400 jobs) selected fixed budget (B0=981.126 s, eta=0, Bmax=1800 s): vs the referee's reference simulator, differing jobs 0
+[    54s] real busy slice (400 jobs) selected capped budget (B0=120 s, eta=0.75, Bmax=1800 s): vs the referee's reference simulator, differing jobs 0
+TOTAL disagreements: 0
+## done in 54 s

@@ -1,0 +1,63 @@
+=== G5.1  EXACT: the best a G-guaranteed policy can do, small instances ===
+m large jobs of size L then n small jobs of size 1, all at t=0, k=1.
+optimum over ALL schedules with per-job excess <= G, by exhaustive search.
+  m  n  L   G   sum W FCFS  sum W SJF  sum W best(G)  fraction of gap closed  bound G/(n*1)+1/m
+  2  3  4   0          31         13             31                   0.000              0.500
+  2  3  4   1          31         13             25                   0.333              0.833
+  2  3  4   2          31         13             19                   0.667              1.000
+  2  3  4   4          31         13             13                   1.000              1.000
+  2  3  4   8          31         13             13                   1.000              1.000
+  2  4  4   0          42         18             42                   0.000              0.500
+  2  4  4   1          42         18             36                   0.250              0.750
+  2  4  4   2          42         18             30                   0.500              1.000
+  2  4  4   4          42         18             18                   1.000              1.000
+  2  4  4   8          42         18             18                   1.000              1.000
+  3  3  5   0          63         27             63                   0.000              0.333
+  3  3  5   1          63         27             51                   0.333              0.667
+  3  3  5   2          63         27             39                   0.667              1.000
+  3  3  5   5          63         27             27                   1.000              1.000
+  3  3  5  10          63         27             27                   1.000              1.000
+  2  5  6   0          76         26             76                   0.000              0.500
+  2  5  6   1          76         26             66                   0.200              0.700
+  2  5  6   2          76         26             56                   0.400              0.900
+  2  5  6   6          76         26             26                   1.000              1.000
+  2  5  6  12          76         26             26                   1.000              1.000
+
+=== G5.2  THE FAMILY (larger, guard-based, k=1 and k=4) ===
+m large jobs of size L (ranks 0..m-1) then n small jobs of size s, all at
+t=0.  The base policy is SJF (it wants to serve every small job first);
+the guard with budget B caps how much small work may pass a large job.
+  k   m    n   L   s     B   meanW FCFS  meanW SJF  meanW guard  gap closed  G=B/k+(3-2/k)L  bound kG/(n*s)+1/m
+  1   8   40 100   1     0      741.25      81.25       741.25       0.000           100.0              1.000
+  1   8   40 100   1     5      741.25      81.25       658.75       0.125           105.0              1.000
+  1   8   40 100   1    20      741.25      81.25       411.25       0.500           120.0              1.000
+  1   8   40 100   1    80      741.25      81.25        81.25       1.000           180.0              1.000
+  1   8   40 100  10     0      887.50     287.50       887.50       0.000           100.0              0.375
+  1   8   40 100  10    50      887.50     287.50       812.50       0.125           150.0              0.500
+  1   8   40 100  10   200      887.50     287.50       587.50       0.500           300.0              0.875
+  1   8   40 100  10   800      887.50     287.50       287.50       1.000           900.0              1.000
+  1  20  100 100   5     0     2031.25     447.92      2031.25       0.000           100.0              0.250
+  1  20  100 100   5    62     2031.25     447.92      1825.42       0.130           162.0              0.374
+  1  20  100 100   5   250     2031.25     447.92      1239.58       0.500           350.0              0.750
+  1  20  100 100   5  1000     2031.25     447.92       447.92       1.000          1100.0              1.000
+  4   8   40 100   1     0      178.75      13.75       178.75       0.000           250.0              1.000
+  4   8   40 100   1     5      178.75      13.75       145.75       0.200           251.2              1.000
+  4   8   40 100   1    20      178.75      13.75        96.25       0.500           255.0              1.000
+  4   8   40 100   1    80      178.75      13.75        13.75       1.000           270.0              1.000
+  4   8   40 100  10     0      212.50      62.50       212.50       0.000           250.0              1.000
+  4   8   40 100  10    50      212.50      62.50       182.50       0.200           262.5              1.000
+  4   8   40 100  10   200      212.50      62.50       137.50       0.500           300.0              1.000
+  4   8   40 100  10   800      212.50      62.50        62.50       1.000           450.0              1.000
+  4  20  100 100   5     0      500.00     104.17       500.00       0.000           250.0              1.000
+  4  20  100 100   5    62      500.00     104.17       436.67       0.160           265.5              1.000
+  4  20  100 100   5   250      500.00     104.17       294.17       0.520           312.5              1.000
+  4  20  100 100   5  1000      500.00     104.17       104.17       1.000           500.0              1.000
+
+  the realised 'gap closed' never exceeds the bound kG/(total small work)+1/m.
+=== G5.3  THE TWO INGREDIENTS OF THE BOUND, CHECKED DIRECTLY ===
+(a)  sum_i (W_FCFS[i] - W_P[i]) = (1/k) * sum over inverted pairs (u,v) of
+     (x_u - x_v)  -- exact at k=1, up to 2(k-1)L per job otherwise.
+(b)  for the LAST lower-ranked job to be dispatched, Out = 0, so In <= kG+(3k-2)L:
+     the total higher-ranked work that may pass it is capped by the guarantee.
+(a) at k=1, checked on 150000 instances: mismatches = 0
+

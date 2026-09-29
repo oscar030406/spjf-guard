@@ -1,0 +1,18 @@
+{
+  "k": {
+    "CE1": 83,
+    "old_CE2": 56
+  },
+  "nominal": {
+    "CE1": 84,
+    "old_CE2": 56
+  },
+  "busy_arrivals_per_hour": {
+    "CE1": 30.0,
+    "old_CE2": 33.0
+  },
+  "split_seconds": 10368000,
+  "split_utc": "2005-01-12T22:38:29+00:00",
+  "queue_ceiling_change_seconds": 14948491,
+  "interpretation": "k is an FCFS effective-capacity fit; held-out agreement must be evaluated, not presumed"
+}

@@ -1,0 +1,70 @@
+{
+  "about": "Locked files changed after the sealed run under protocol_lock.json (sha256 f6c1b3af..., tree 2ae513f) had finished on 2026-09-25. Each change is to reporting checks, tests, or a new analysis that reads existing outputs and no sealed data; none touches a file the sealed commands executed differently, and every sealed output was written before these changes. tests/test_sealed_data.py accepts a changed locked file only with its exact current sha256 here. ADR 0010.",
+  "files": [
+    {
+      "path": "scripts/check_paper_numbers.py",
+      "sha256": "4da37c89de93e50ef398c92788ac5af73b671de2469b588e3c9fa4db0837ea85",
+      "why": "Check C looked for every sourced numbers.csv row under \\devnum{}, so a sealed figure quoted in prose (a 'sealed.' key) always failed; it now looks under the key's own macro. run() gains sealed_prose so that a pass that reads no exact or online output can leave the sealed prose to the pass that reads them all. 2026-09-26: run() and --sealed-contrast-dir add the figures of outputs/sealed_dev_contrast/contrast.csv (rows not from the development pool) to the known sources of sealed prose."
+    },
+    {
+      "path": "scripts/check_generated.py",
+      "sha256": "560adb92e63cae2024e1e2c92a750ed6e073de79befaf5767ee7af73e1834798",
+      "why": "The legacy paper-prints pass (outputs/paper_tables) reads no exact or online output; once the sealed exact run exists it leaves the sealed prose to check_exact_paper_prints, which checks it against every sealed output. 2026-09-26: that pass also reads outputs/sealed_dev_contrast when its manifest exists. 2026-09-27: the machine-path gate also looks for D: drive paths and scans paper/*.tex and paper/**/*.md; the one path exception, for a git-ignored file the scan already skips, is removed, so a clean clone passes the hygiene test."
+    },
+    {
+      "path": "tests/test_eval_scores.py",
+      "sha256": "ae228f4666e3bfe8b718d484888356653c877b3211d765b02cea18fe90ed870f",
+      "why": "The refusal test asserted the pre-freeze reason ('no frozen protocol_lock.json'); after the freeze the same call is refused for lacking --unseal. It now asserts the requirement (refused, nothing written) in either state."
+    },
+    {
+      "path": "tests/test_sealed_data.py",
+      "sha256": "c3fdc37480859f4c153f44697c9a831aba6b02c04384a8701dc024bf67921275",
+      "why": "The lock check counted one ledger row per hashed input, which a second freeze breaks by writing the same rows again; it now requires a row for each input. After the freeze it accepts a changed locked file only when this declaration lists it with its current bytes."
+    },
+    {
+      "path": "tests/test_sealed_paper_tables.py",
+      "sha256": "0b8012f8f9dc90b1c4c8b805a3d9efc4a36b483f00620ee26343bd5f7cb4a765",
+      "why": "Tests for the two check_paper_numbers changes: a sourced sealed figure in prose counts as printed under \\sealednum{}, and a pass told to leave the sealed prose alone does not count an unknown figure."
+    },
+    {
+      "path": "scripts/online_paired_differences.py",
+      "sha256": "1752bf41d6339b22e8263a66fd36db8d66be6b7a30d64c33b070effda3ed3cbf",
+      "why": "New on 2026-09-26, after the development comparison suite finished under the online replay: reads that run's checkpoints (development pool only, no sealed data) and states the paired differences of outputs/dev_tables and Guard(G) against Timeout(G) online, for Supplementary Section S11. No sealed command runs it. 2026-09-27: its reference CSV is read from evidence/timeout_rule/, the public copy of prechecks/timeout_rule/ (identical bytes)."
+    },
+    {
+      "path": "scripts/check_reproduction.py",
+      "sha256": "8432e17315b154605faa2c8af487b7ffc2779c0abef195b5e6fdd0a7d5662112",
+      "why": "2026-09-27: the reference kernels and table are read from evidence/ (the public copies of prechecks/main_v3/v31 and prechecks/guard_variants; the kernels are identical up to line endings), so the check runs from a clean clone. No sealed command runs it."
+    },
+    {
+      "path": "scripts/diff_dev_tables.py",
+      "sha256": "aab8861c916834133b35e28b16721ee3cf94f232cf87b9656e5822adefd52d3e",
+      "why": "2026-09-27: the default v3.1 table is read from evidence/main_v3/v31/, the public copy (identical up to line endings). No sealed command runs it."
+    },
+    {
+      "path": "scripts/compare_selection.py",
+      "sha256": "c14652a0718788126db1e9a39f74126561fe467536ef840224b0a395d119a287",
+      "why": "2026-09-27: the default v3.2 directory is evidence/main_v3/v32/, the public copy. No sealed command runs it."
+    },
+    {
+      "path": "tests/test_sim_crosscheck_prechecks.py",
+      "sha256": "50427a5b250a9b428d21c2dabf35d1da729aa1df3fe55ddb4b538de1657898b5",
+      "why": "2026-09-27: imports the two exploratory kernels from evidence/, which the repository carries, and fails instead of skipping when one is absent, so a clean clone runs the seven cross-checks."
+    },
+    {
+      "path": "tests/test_online_paired_differences.py",
+      "sha256": "19cef539f157983a0b5f1c82387b6247f691d086502570ee7bf1833e875320fe",
+      "why": "New on 2026-09-26: tests of scripts/online_paired_differences.py (a paired difference is one resampled quantity; each cross-check catches a changed value)."
+    },
+    {
+      "path": "scripts/sealed_dev_contrast.py",
+      "sha256": "f42393e32f463bb6dbc1897a29e16bb30b477e5a918a4ef83f56a3dd9585741f",
+      "why": "New on 2026-09-26: reads CSVs the development and sealed runs already wrote (no sealed data, no simulation) and states why the sealed terms close more of the gap, for Section 8.2. No sealed command runs it."
+    },
+    {
+      "path": "tests/test_sealed_dev_contrast.py",
+      "sha256": "4cd37e7bef02a41cabed408434a7f03177414db4cd634ea9e29a1bd8fda8b91a",
+      "why": "New on 2026-09-26: tests of scripts/sealed_dev_contrast.py and of the number check accepting its sealed figures but not its development ones."
+    }
+  ]
+}

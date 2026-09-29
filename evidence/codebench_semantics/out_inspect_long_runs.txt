@@ -1,0 +1,129 @@
+=== long runs (>=60 s): error class, grade, empty outputs ===
+            n  users  killed  has_error  grade_recorded  grade_pos  all_outputs_empty
+era                                                                                  
+2018-19  2314    383   0.513      0.515           0.485      0.009              0.099
+
+=== bursts of long runs by one user (header gaps <= 120 s), bursts with >= 3 runs ===
+  bursts: 207  runs in them: 1182
+  spread_header              n=207 p10=0.00 p25=1.00 p50=12.00 p75=116.50 p90=177.40
+  spread_header_plus_exec    n=207 p10=8.65 p25=94.79 p50=205.58 p75=471.22 p90=1059.54
+  spread_header_minus_exec   n=207 p10=5.99 p25=38.36 p50=147.90 p75=414.33 p90=1146.66
+  share of bursts where spread(header+exec) < spread(header-exec): 0.309
+
+=== example timelines (relative seconds; B=block, C=codemirror, L=login record) ===
+
+-- user #0 (2018-19), first long run exec=60.81s; * = same exercise
+      -145.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+       -35.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+        +0.00  B*submit exec=    60.81 grade=0.0 err=none tc=3 empty_out=0
+       +55.00  B test   exec=      nan grade=nan err=none tc=0 empty_out=0
+       +74.00  B*submit exec=     2.30 grade=0.0 err=none tc=3 empty_out=0
+       +75.00  B submit exec=     0.44 grade=100.0 err=none tc=2 empty_out=0
+
+-- user #1 (2018-19), first long run exec=540.51s; * = same exercise
+      -530.46  C*kill_program 
+      -530.46  C*kill_program 
+      -530.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      -468.40  C*kill_program 
+      -343.00  L login
+      -250.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      -215.00  B*submit exec=     0.19 grade=0.0 err=none tc=3 empty_out=0
+      -212.41  C*submit wrong
+      -209.00  B*submit exec=     0.15 grade=0.0 err=none tc=3 empty_out=0
+      -206.25  C*submit wrong
+        +0.00  B*submit exec=   540.51 grade=0.0 err=none tc=3 empty_out=0
+        +1.00  B*submit exec=   480.38 grade=0.0 err=none tc=3 empty_out=2
+        +1.00  B*submit exec=   468.88 grade=0.0 err=none tc=3 empty_out=2
+        +3.12  C*submit wrong
+        +3.33  C*submit wrong
+        +3.34  C*submit wrong
+      +430.00  L login
+      +572.00  B*submit exec=     0.13 grade=0.0 err=none tc=3 empty_out=0
+      +574.92  C*submit wrong
+      +574.92  C*submit wrong
+      +578.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+
+-- user #2 (2018-19), first long run exec=405.79s; * = same exercise
+      -515.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      -469.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+       -20.00  B test   exec=      nan grade=nan err=NameError tc=0 empty_out=0
+        -1.00  B test   exec=      nan grade=nan err=NameError tc=0 empty_out=0
+        -1.00  B*submit exec=     6.20 grade=0.0 err=none tc=3 empty_out=3
+        +0.00  B*submit exec=   405.79 grade=0.0 err=none tc=3 empty_out=2
+        +8.00  B test   exec=      nan grade=nan err=NameError tc=0 empty_out=0
+       +20.00  B test   exec=      nan grade=nan err=NameError tc=0 empty_out=0
+       +88.00  B test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +114.00  B submit exec=     0.16 grade=100.0 err=none tc=3 empty_out=0
+      +132.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +149.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +195.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +201.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +216.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +263.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +349.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +390.00  B*submit exec=    66.97 grade=0.0 err=none tc=3 empty_out=2
+      +390.44  C*submit wrong
+      +393.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      +464.00  B*submit exec=     4.48 grade=0.0 err=none tc=3 empty_out=2
+      +464.00  B*submit exec=     3.36 grade=0.0 err=none tc=3 empty_out=1
+      +464.56  C*kill_program 
+      +464.63  C*submit wrong
+      +464.77  C*submit wrong
+      +507.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+
+-- user #3 (2018-19), first long run exec=386.75s; * = same exercise
+      -476.00  B*submit exec=     4.66 grade=0.0 err=none tc=3 empty_out=0
+      -475.85  C*submit wrong
+      -474.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      -458.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+      -457.00  B*submit exec=     4.63 grade=0.0 err=none tc=3 empty_out=0
+      -456.76  C*kill_program 
+      -456.42  C*submit wrong
+        +0.00  B*submit exec=   386.75 grade=nan err=Killed tc=0 empty_out=0
+        +0.15  C*submit wrong
+       +61.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+       +62.00  B*submit exec=     1.33 grade=0.0 err=none tc=3 empty_out=0
+       +62.42  C*submit wrong
+       +73.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+       +73.00  B*submit exec=     6.72 grade=0.0 err=none tc=3 empty_out=1
+       +73.00  B*submit exec=    65.09 grade=0.0 err=none tc=3 empty_out=0
+       +73.71  C*submit wrong
+       +74.00  B*submit exec=    65.02 grade=0.0 err=none tc=3 empty_out=0
+       +74.07  C*submit wrong
+       +74.11  C*submit wrong
+      +118.29  C*kill_program 
+      +146.00  B*submit exec=    25.26 grade=0.0 err=none tc=3 empty_out=2
+      +146.00  B*submit exec=    23.93 grade=0.0 err=none tc=3 empty_out=0
+      +146.00  L logout
+
+-- user #4 (2020-22), first long run exec=56.04s; * = same exercise
+       -64.96  C*kill_program 
+       -64.96  C*kill_program 
+       -64.84  C*submit wrong
+       -64.84  C*submit wrong
+       -59.00  B*submit exec=    31.86 grade=0.0 err=none tc=3 empty_out=3
+        -6.03  C*kill_program 
+        -5.91  C*submit wrong
+        +0.00  B*submit exec=    56.04 grade=0.0 err=none tc=3 empty_out=3
+
+-- user #5 (2020-22), first long run exec=41.65s; * = same exercise
+        -0.51  C*submit wrong
+        +0.00  B*submit exec=    41.65 grade=0.0 err=none tc=3 empty_out=3
+        +1.00  B*submit exec=     0.19 grade=nan err=NameError tc=0 empty_out=0
+       +90.00  B*submit exec=     0.18 grade=100.0 err=none tc=3 empty_out=0
+
+-- user #6 (2020-22), first long run exec=42.54s; * = same exercise
+      -180.50  C*saida_testar 
+        +0.00  B*test   exec=      nan grade=nan err=SyntaxError tc=0 empty_out=0
+        +0.00  B*submit exec=    42.54 grade=0.0 err=none tc=3 empty_out=3
+        +1.68  C*submit wrong
+        +2.16  C*saida_testar 
+       +37.00  B*test   exec=      nan grade=nan err=SyntaxError tc=0 empty_out=0
+       +37.00  B*submit exec=    27.37 grade=0.0 err=none tc=3 empty_out=3
+       +39.17  C*submit wrong
+       +39.55  C*saida_testar 
+
+-- user #7 (2020-22), first long run exec=43.55s; * = same exercise
+      -137.66  C*kill_program 
+       -93.00  B*test   exec=      nan grade=nan err=none tc=0 empty_out=0
+        +0.00  B*submit exec=    43.55 grade=0.0 err=none tc=3 empty_out=2

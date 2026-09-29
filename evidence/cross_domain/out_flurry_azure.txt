@@ -1,0 +1,25 @@
+hourly work (server-equivalents), sorted:
+  top 12 hours: h310=649.60 h81=43.89 h314=31.04 h83=28.22 h200=20.55 h77=17.29 h80=16.49 h256=14.63 h280=12.72 h2=11.20 h312=10.78 h176=10.54
+  quantiles over 336 hours: p50=2.523 p75=4.219 p90=6.565 p95=8.444 p99=25.532 p100=649.601
+  share of all work in the single busiest hour: 0.3526
+  share of all work in the busiest 5 hours: 0.4198
+
+-- hour 310: jobs=46053 work=2338563s (649.6 server-equivalents)
+   top apps by work: app116=1296591s/25223jobs  app117=1037799s/19824jobs  app6=1921s/134jobs  app4=1077s/46jobs
+   top funcs by work: f408=648618s/12611jobs  f414=519124s/9912jobs  f409=427996s/5341jobs  f416=325322s/3530jobs
+
+-- hour 81: jobs=5989 work=158013s (43.9 server-equivalents)
+   top apps by work: app23=153389s/2902jobs  app4=1798s/74jobs  app37=997s/881jobs  app6=822s/146jobs
+   top funcs by work: f53=153389s/2902jobs  f98=981s/880jobs  f13=779s/12jobs  f8=776s/12jobs
+
+-- hour 314: jobs=4378 work=111728s (31.0 server-equivalents)
+   top apps by work: app118=106783s/893jobs  app6=2171s/39jobs  app4=1306s/74jobs  app26=644s/100jobs
+   top funcs by work: f421=106783s/893jobs  f24=1938s/16jobs  f13=644s/12jobs  f8=554s/12jobs
+
+-- work share by app (whole trace), top 10:
+   app116=0.1960  app117=0.1568  app6=0.1454  app4=0.0967  app1=0.0877  app23=0.0485  app9=0.0284  app37=0.0265  app98=0.0255  app59=0.0223
+   app116: work=1299853s, its busiest hour=360.2 server-equivalents, hours with any job=2
+
+-- without app116: jobs=1955538 (98.72%), work=5332260s
+   hourly server-equivalents: p50=2.523 p90=6.565 p99=25.532 p100=289.437  mean=4.408
+   work share of largest jobs: top0.1%=0.1263  top1%=0.4786  top5%=0.8935  top10%=0.9532

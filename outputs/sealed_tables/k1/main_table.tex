@@ -1,0 +1,44 @@
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Policies at three loads, five overlays. Waits in seconds; intervals are paired week-block bootstrap.}
+\label{tab:main}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrllrrrr}
+\toprule
+Load & Policy & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Mean & Max exc. & Harm & Fired (\%) \\
+\midrule
+$\rho = \sealednum{2.26}$, $k = \sealednum{1}$
+ & FCFS                   & \sealednum{3692.94} & \sealednum{0.000 [0.000, 0.000]} & \sealednum{0.0 [0.0, 0.0]} & \sealednum{173.176} & \sealednum{0.0} & \sealednum{0.0} & \sealednum{100.0} \\
+ & SJF                    & \sealednum{67.16} & \sealednum{1.000 [1.000, 1.000]} & \sealednum{98.2 [97.3, 98.5]} & \sealednum{11.413} & \sealednum{21075.7} & \sealednum{4899.8} & \sealednum{0.0} \\
+ & SPJF-E                 & \sealednum{660.71} & \sealednum{0.836 [0.696, 0.921]} & \sealednum{82.1 [68.1, 90.3]} & \sealednum{32.578} & \sealednum{21429.6} & \sealednum{5766.5} & \sealednum{0.0} \\
+ & SPJF-log               & \sealednum{1029.00} & \sealednum{0.735 [0.533, 0.881]} & \sealednum{72.1 [52.1, 86.4]} & \sealednum{36.361} & \sealednum{20765.7} & \sealednum{2270.8} & \sealednum{0.0} \\
+ & Aging(600)             & \sealednum{3679.03} & \sealednum{0.004 [0.001, 0.012]} & \sealednum{0.4 [0.1, 1.1]} & \sealednum{169.374} & \sealednum{530.9} & \sealednum{286.2} & \sealednum{0.0} \\
+ & Guard(300)             & \sealednum{3627.74} & \sealednum{0.018 [-0.061, 0.082]} & \sealednum{1.8 [-5.9, 8.0]} & \sealednum{125.004} & \sealednum{296.6} & \sealednum{75.9} & \sealednum{62.1} \\
+ & Guard-fixed(300)       & \sealednum{3678.73} & \sealednum{0.004 [-0.022, 0.036]} & \sealednum{0.4 [-2.2, 3.6]} & \sealednum{149.153} & \sealednum{140.9} & \sealednum{122.5} & \sealednum{80.2} \\
+ & Guard-age(300)         & \sealednum{3627.74} & \sealednum{0.018 [-0.061, 0.082]} & \sealednum{1.8 [-5.9, 8.0]} & \sealednum{125.004} & \sealednum{296.6} & \sealednum{75.9} & \sealednum{62.1} \\
+ & Guard-queue(300)       & \sealednum{3624.59} & \sealednum{0.019 [-0.061, 0.082]} & \sealednum{1.9 [-5.9, 8.1]} & \sealednum{127.432} & \sealednum{296.6} & \sealednum{75.9} & \sealednum{61.3} \\
+ & Fixed(300)             & \sealednum{3627.74} & \sealednum{0.018 [-0.061, 0.082]} & \sealednum{1.8 [-5.9, 8.1]} & \sealednum{124.741} & \sealednum{298.0} & \sealednum{272.6} & \sealednum{61.9} \\
+ & Skip(300)              & \sealednum{3694.63} & \sealednum{-0.000 [-0.001, -0.000]} & \sealednum{-0.0 [-0.1, -0.0]} & \sealednum{172.462} & \sealednum{175.6} & \sealednum{53.6} & \sealednum{98.7} \\
+ & Guard(600)             & \sealednum{3543.41} & \sealednum{0.041 [-0.121, 0.149]} & \sealednum{4.0 [-11.8, 14.6]} & \sealednum{96.769} & \sealednum{596.1} & \sealednum{149.6} & \sealednum{40.9} \\
+ & Guard-fixed(600)       & \sealednum{3624.07} & \sealednum{0.019 [-0.062, 0.082]} & \sealednum{1.9 [-6.0, 8.0]} & \sealednum{124.133} & \sealednum{302.6} & \sealednum{272.6} & \sealednum{61.4} \\
+ & Guard-age(600)         & \sealednum{3543.41} & \sealednum{0.041 [-0.121, 0.149]} & \sealednum{4.0 [-11.8, 14.6]} & \sealednum{96.769} & \sealednum{596.1} & \sealednum{149.6} & \sealednum{40.9} \\
+ & Guard-queue(600)       & \sealednum{3545.95} & \sealednum{0.041 [-0.121, 0.147]} & \sealednum{4.0 [-11.8, 14.4]} & \sealednum{99.080} & \sealednum{599.3} & \sealednum{75.9} & \sealednum{40.4} \\
+ & Fixed(600)             & \sealednum{3544.86} & \sealednum{0.041 [-0.121, 0.147]} & \sealednum{4.0 [-11.8, 14.5]} & \sealednum{96.682} & \sealednum{596.1} & \sealednum{555.0} & \sealednum{40.7} \\
+ & Skip(600)              & \sealednum{3693.38} & \sealednum{-0.000 [-0.001, 0.000]} & \sealednum{-0.0 [-0.1, 0.0]} & \sealednum{171.808} & \sealednum{235.4} & \sealednum{54.1} & \sealednum{98.2} \\
+ & Guard(1200)            & \sealednum{3558.60} & \sealednum{0.037 [-0.202, 0.257]} & \sealednum{3.6 [-19.7, 25.3]} & \sealednum{76.556} & \sealednum{1194.4} & \sealednum{75.9} & \sealednum{20.1} \\
+ & Guard-fixed(1200)      & \sealednum{3571.32} & \sealednum{0.034 [-0.114, 0.145]} & \sealednum{3.3 [-11.2, 14.2]} & \sealednum{99.123} & \sealednum{567.0} & \sealednum{507.9} & \sealednum{42.5} \\
+ & Guard-age(1200)        & \sealednum{3555.55} & \sealednum{0.038 [-0.204, 0.263]} & \sealednum{3.7 [-19.9, 25.7]} & \sealednum{71.380} & \sealednum{1194.4} & \sealednum{376.0} & \sealednum{21.0} \\
+ & Guard-queue(1200)      & \sealednum{3558.60} & \sealednum{0.037 [-0.202, 0.257]} & \sealednum{3.6 [-19.7, 25.3]} & \sealednum{76.556} & \sealednum{1194.4} & \sealednum{75.9} & \sealednum{20.1} \\
+ & Fixed(1200)            & \sealednum{3559.78} & \sealednum{0.037 [-0.202, 0.270]} & \sealednum{3.6 [-19.8, 26.5]} & \sealednum{71.009} & \sealednum{1196.7} & \sealednum{1140.3} & \sealednum{21.0} \\
+ & Skip(1200)             & \sealednum{3692.13} & \sealednum{0.000 [-0.001, 0.001]} & \sealednum{0.0 [-0.1, 0.1]} & \sealednum{170.619} & \sealednum{307.8} & \sealednum{54.1} & \sealednum{97.2} \\
+ & SPJF-reversed          & \sealednum{10095.65} & \sealednum{-1.766 [-2.175, -1.449]} & \sealednum{-173.4 [-212.4, -142.1]} & \sealednum{393.421} & \sealednum{21926.1} & \sealednum{6530.7} & \sealednum{0.0} \\
+ & Guard(600)-reversed    & \sealednum{4273.93} & \sealednum{-0.160 [-0.243, -0.131]} & \sealednum{-15.7 [-23.6, -12.9]} & \sealednum{233.419} & \sealednum{599.7} & \sealednum{171.4} & \sealednum{85.5} \\
+ & SPJF-random            & \sealednum{6264.71} & \sealednum{-0.709 [-1.141, -0.384]} & \sealednum{-69.6 [-111.5, -37.6]} & \sealednum{150.267} & \sealednum{21915.2} & \sealednum{10789.2} & \sealednum{0.0} \\
+ & Guard(600)-random      & \sealednum{4024.97} & \sealednum{-0.092 [-0.175, -0.039]} & \sealednum{-9.0 [-17.1, -3.8]} & \sealednum{167.850} & \sealednum{599.5} & \sealednum{172.1} & \sealednum{64.0} \\
+ & SPJF-top1short         & \sealednum{8255.39} & \sealednum{-1.258 [-1.853, -0.886]} & \sealednum{-123.5 [-180.9, -87.3]} & \sealednum{281.554} & \sealednum{22014.0} & \sealednum{12523.2} & \sealednum{0.0} \\
+ & Guard(600)-top1short   & \sealednum{4224.85} & \sealednum{-0.147 [-0.241, -0.123]} & \sealednum{-14.4 [-23.4, -12.1]} & \sealednum{221.573} & \sealednum{599.7} & \sealednum{171.4} & \sealednum{82.6} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: outputs/.../main_table.csv, regenerated by scripts/run_main.py; see GENERATED.md

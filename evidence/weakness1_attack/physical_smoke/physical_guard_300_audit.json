@@ -1,0 +1,151 @@
+{
+  "protocol": "15c3f4ea199828dc44a6539500b4d221f280e4a303f6a6ff8b6d84c3650ccf38",
+  "input_sha256": "15c3f4ea199828dc44a6539500b4d221f280e4a303f6a6ff8b6d84c3650ccf38",
+  "policy": "Guard(300)",
+  "jobs": 6,
+  "physical_time_definition": {
+    "arrival": "dispatcher actual_enqueue_ns",
+    "wait": "worker_start_ns - actual_enqueue_ns",
+    "service_C": "worker_finish_ns - worker_start_ns",
+    "visible_completion": "dispatcher_completion_receipt_ns",
+    "slot_occupancy_diagnostic": "dispatcher_completion_receipt_ns - dispatcher_dispatch_ns"
+  },
+  "prefix_audit_scope": "each decision uses only completion messages already received and jobs already enqueued by the dispatcher; worker finish and completion receipt are both logged",
+  "production_replay_service": "actual enqueue times and measured worker holding C; it excludes dispatcher/IPC overhead and is therefore an ideal work-conserving comparison, not an exact replica",
+  "event_prefix_audit": {
+    "passed": true,
+    "error_count": 0,
+    "error_counts": {},
+    "first_error": null,
+    "event_rows": 22,
+    "dispatches_checked": 6,
+    "event_path": "physical_smoke/records/guard_300_attempt_20260921T101043_54832721622600_events.jsonl",
+    "event_sha256": "db3f2f60f0954ca056face7e9ade573c8896bdd9404091a9e7ff39e0819b4e1e",
+    "target_release_diagnostic": {
+      "decisions_with_target_due_unenqueued": 0,
+      "decision_target_due_unenqueued_count": 0,
+      "max_target_due_unenqueued_lateness_ns": 0,
+      "first_target_due_unenqueued": null,
+      "interpretation": "target release can pass between the final enqueue scan and the decision clock; scheduling is audited against actual observed enqueue events"
+    }
+  },
+  "ideal_guard_epoch_audit": {
+    "passed": true,
+    "error_count": 0,
+    "first_error": null,
+    "dispatches_checked": 6,
+    "waiting_budget_evaluations_checked": 12,
+    "reconstructed_firing_epochs": 1,
+    "kernel_n_forced": 1
+  },
+  "model_L_s": 0.2,
+  "model_assumption_failed": false,
+  "jobs_exceeding_L": 0,
+  "max_measured_worker_holding_s": 0.08032,
+  "wait_comparison": {
+    "mean_physical_minus_production_s": 0.0010065,
+    "max_abs_physical_minus_production_s": 0.001434,
+    "per_job_compared": 6
+  },
+  "physical_wait": {
+    "mean_s": 0.0477966,
+    "p99_s": 0.091964995,
+    "max_s": 0.0919773,
+    "positive_wait_job_count": 6
+  },
+  "release_lateness": {
+    "count": 6,
+    "mean_ms": 7.4522,
+    "p50_ms": 7.465999999999999,
+    "p95_ms": 7.651375,
+    "p99_ms": 7.653555,
+    "max_ms": 7.6541
+  },
+  "dispatch_comparison": {
+    "production_mismatching_jobs": 0,
+    "nominal_mismatching_jobs": 0
+  },
+  "firing_comparison": {
+    "physical_visible_prefix_count": 1,
+    "production_replay_count": 1,
+    "difference": 0,
+    "physical_choice_changed_count": 1,
+    "physical_vs_ideal_per_job_mismatch_count": 0,
+    "physical_vs_ideal_mismatch_jobs": [],
+    "physical_vs_ideal_first_mismatch_job": null,
+    "semantics": "guard firing means E(t) is nonempty; choice_changed separately means the minimum fired rank differs from the base-policy candidate"
+  },
+  "dispatcher_overhead": {
+    "decision_wall_distribution": {
+      "count": 6,
+      "mean_ms": 0.012649999999999996,
+      "p50_ms": 0.0116,
+      "p95_ms": 0.0225,
+      "p99_ms": 0.02338,
+      "max_ms": 0.0236
+    },
+    "decision_cpu_distribution": {
+      "count": 6,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "max_ms": 0.0
+    },
+    "decision_wall_ns_sum": 75900,
+    "decision_cpu_ns_sum": 0,
+    "dispatch_send_wall_ns_sum": 130100,
+    "dispatch_send_cpu_ns_sum": 0,
+    "dispatch_to_start_mean_ms": 0.064,
+    "dispatch_to_start_max_ms": 0.1469,
+    "completion_receipt_lag_mean_ms": 0.18488333333333334,
+    "completion_receipt_lag_max_ms": 0.2596,
+    "slot_overhead_mean_ms": 0.24888333333333335,
+    "slot_overhead_max_ms": 0.31,
+    "worker_idle_gap_from_prior_finish_mean_ms": 0.396575,
+    "worker_idle_gap_from_prior_finish_max_ms": 0.4419,
+    "dispatcher_visible_idle_gap_mean_ms": 0.205325,
+    "dispatcher_visible_idle_gap_max_ms": 0.2481,
+    "sleep_overshoot_mean_ms": 0.38775,
+    "sleep_overshoot_max_ms": 0.6137
+  },
+  "guard_bound": {
+    "physical_violations_against_same_measured_trace_shadow_fcfs": 0,
+    "physical_max_violation_s": 0.0,
+    "production_replay_assertion": {
+      "attempted": true,
+      "passed": true,
+      "checked_jobs": 6,
+      "error": null
+    },
+    "model_premise_failed": false
+  },
+  "independent_physical_fcfs": {
+    "same_requested_jobs": true,
+    "same_realised_service_times": false,
+    "theorem_baseline": false,
+    "mean_wait_difference_s": -0.0068323,
+    "max_wait_difference_s": 0.0405133,
+    "min_wait_difference_s": -0.0411891,
+    "max_abs_worker_holding_difference_s": 0.0002843,
+    "interpretation": "diagnostic comparison with a separate physical FCFS execution; it is not the theorem's same-a/same-C shadow FCFS baseline"
+  },
+  "nominal_replay": {
+    "arrival": "frozen target offsets",
+    "service": "frozen requested C_cap",
+    "mean_physical_minus_nominal_wait_s": 0.0011298333333333332,
+    "max_abs_physical_minus_nominal_wait_s": 0.001977
+  },
+  "run_resources": {
+    "wall_s": 1.6165471,
+    "physical_wall_s_from_origin": 0.5092918,
+    "release_window_s": 0.5,
+    "actual_drain_after_release_window_s": 0.0092918,
+    "dispatcher_cpu_s": 0.03125,
+    "worker_service_interval_cpu_s": 0.0,
+    "worker_cpu_through_last_finish_s": 0.0,
+    "total_measured_cpu_through_last_finish_s": 0.03125,
+    "worker_cpu_scope": "worker_main entry through each worker's last finish; interpreter startup and the final completion send are outside this measurement"
+  },
+  "no_exact_correspondence_claimed": true
+}

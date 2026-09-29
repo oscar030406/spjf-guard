@@ -1,0 +1,167 @@
+====================================================================================
+OULAD procrastination pre-check | dev presentations 2013B+2013J only (9 course-presentations)
+course-presentations: AAA_2013J, BBB_2013B, BBB_2013J, DDD_2013B, DDD_2013J, EEE_2013J, FFF_2013B, FFF_2013J, GGG_2013J
+TMA/CMA with a valid due day: 83 | students (reg u vle): 13529
+seeds [0, 1, 2], bootstrap 2000 resamples, window W_a = D_a-6..D_a
+====================================================================================
+
+####################################################################################
+# PART 1  descriptive: is late submission real, and is it a STUDENT trait?
+####################################################################################
+
+## 1a lead time = due day - submission day (>0 early, <0 late), non-banked TMA/CMA
+        cp   n_sub    q05    q25    med    q75    q95  <=1d share  late share  no-sub share
+ AAA_2013J    1633    -10      0      0      1      4       0.815       0.236         0.147
+ BBB_2013B   11222     -7     -6     -2      1      4       0.863       0.566         0.423
+ BBB_2013J   14109     -7     -2     -2      1      5       0.831       0.545         0.427
+ DDD_2013B    9715     -4     -3     -2      0      4       0.870       0.608         0.426
+ DDD_2013J    6800     -7      0      1      2      9       0.704       0.145         0.415
+ EEE_2013J    2884     -7      0      1      1      4       0.770       0.148         0.315
+ FFF_2013B   12189     -6      0      4     49    187       0.400       0.114         0.371
+ FFF_2013J   16050     -4      1      4     63    201       0.395       0.101         0.414
+ GGG_2013J    5950     -4      2     14     63    132       0.245       0.094         0.306
+       ALL   80552     -6     -2      1      5    133       0.632       0.314         0.399
+
+## 1b within-student consistency of lead time
+        cp  n_pairs  spearman         p  n_stu>=2   ICC_1
+ AAA_2013J     1260     0.507  2.12e-83       345   0.330
+ BBB_2013B     9359     0.031  3.05e-03      1253   0.148
+ BBB_2013J    11887    -0.081  8.54e-19      1551   0.143
+ DDD_2013B     8297    -0.470  0.00e+00       994   0.282
+ DDD_2013J     5226     0.623  0.00e+00      1303   0.462
+ EEE_2013J     2043     0.452 1.72e-103       752   0.353
+ FFF_2013B    10437     0.629  0.00e+00      1265   0.107
+ FFF_2013J    13658     0.642  0.00e+00      1690   0.087
+ GGG_2013J     4800     0.145  7.51e-24       755  -0.010
+    POOLED    66967     0.516  0.00e+00             0.211  (ICC = mean over cps)
+
+## 1c share of deadline-window clicks by tercile of PRIOR mean lead time
+   (terciles among students registered at D_a-7 with >=1 prior submission;
+    'last-minute' = lowest prior lead time; 'unclassified' = no prior submission)
+        cp  n_ass  last-min 1/3  middle 1/3  early 1/3  unclassified
+ AAA_2013J      4         0.361       0.344      0.286         0.008
+ BBB_2013B     10         0.266       0.386      0.345         0.003
+ BBB_2013J     10         0.349       0.312      0.332         0.006
+ DDD_2013B     11         0.283       0.348      0.364         0.006
+ DDD_2013J      5         0.297       0.358      0.335         0.010
+ EEE_2013J      3         0.306       0.334      0.357         0.003
+ FFF_2013B     11         0.418       0.337      0.244         0.001
+ FFF_2013J     11         0.490       0.257      0.250         0.003
+ GGG_2013J      8         0.458       0.330      0.209         0.002
+      MEAN                0.359       0.334      0.302         0.005
+
+####################################################################################
+# PART 2  assessment-level: does the enrolled cohort's profile beat course history?
+####################################################################################
+
+units = 74 assessments with a predecessor in the same cp (9 cps, {'AAA_2013J': 4, 'BBB_2013B': 10, 'BBB_2013J': 10, 'DDD_2013B': 12, 'DDD_2013J': 5, 'EEE_2013J': 3, 'FFF_2013B': 11, 'FFF_2013J': 11, 'GGG_2013J': 8})
+
+## 2a leave-one-course-presentation-out prediction of the NEXT deadline peak
+                          target  model    features      R2       MAE
+                      peak ratio  ridge        hist   0.171    0.5205
+                      peak ratio  ridge   hist+prof  -0.288    0.6400
+                      peak ratio  ridge   hist+SHUF  -0.048    0.5767
+                      peak ratio   lgbm        hist  -0.257    0.6422
+                      peak ratio   lgbm   hist+prof  -0.046    0.5664
+                      peak ratio   lgbm   hist+SHUF   0.093    0.5143
+                      peak ratio  ridge  SHUF mean3  -0.069    0.5800
+                      peak ratio   lgbm  SHUF mean3   0.185    0.4893
+  last-2d share of window clicks  ridge        hist   0.004    0.0225
+  last-2d share of window clicks  ridge   hist+prof   0.030    0.0238
+  last-2d share of window clicks  ridge   hist+SHUF   0.105    0.0225
+  last-2d share of window clicks   lgbm        hist   0.078    0.0211
+  last-2d share of window clicks   lgbm   hist+prof  -0.078    0.0228
+  last-2d share of window clicks   lgbm   hist+SHUF  -0.263    0.0250
+  last-2d share of window clicks  ridge  SHUF mean3   0.123    0.0222
+  last-2d share of window clicks   lgbm  SHUF mean3  -0.179    0.0239
+last-2d submissions / registered  ridge        hist   0.913    0.0485
+last-2d submissions / registered  ridge   hist+prof   0.944    0.0382
+last-2d submissions / registered  ridge   hist+SHUF   0.913    0.0464
+last-2d submissions / registered   lgbm        hist   0.954    0.0305
+last-2d submissions / registered   lgbm   hist+prof   0.955    0.0310
+last-2d submissions / registered   lgbm   hist+SHUF   0.952    0.0303
+last-2d submissions / registered  ridge  SHUF mean3   0.909    0.0475
+last-2d submissions / registered   lgbm  SHUF mean3   0.951    0.0305
+
+## 2b paired bootstrap over assessments, dMAE = MAE(a) - MAE(b), 95% CI (negative = a better)
+                          target  model               contrast      dMAE     95%lo     95%hi  verdict
+                      peak ratio  ridge            prof - hist    0.1195    0.0468    0.1947  CI excludes 0
+                      peak ratio  ridge            SHUF - hist    0.0561   -0.0140    0.1273  CI covers 0
+                      peak ratio  ridge            prof - SHUF    0.0634    0.0261    0.1063  CI excludes 0
+                      peak ratio   lgbm            prof - hist   -0.0758   -0.1466   -0.0065  CI excludes 0
+                      peak ratio   lgbm            SHUF - hist   -0.1279   -0.2215   -0.0293  CI excludes 0
+                      peak ratio   lgbm            prof - SHUF    0.0521   -0.0482    0.1468  CI covers 0
+  last-2d share of window clicks  ridge            prof - hist    0.0013   -0.0012    0.0037  CI covers 0
+  last-2d share of window clicks  ridge            SHUF - hist   -0.0000   -0.0027    0.0025  CI covers 0
+  last-2d share of window clicks  ridge            prof - SHUF    0.0013   -0.0005    0.0033  CI covers 0
+  last-2d share of window clicks   lgbm            prof - hist    0.0016   -0.0013    0.0046  CI covers 0
+  last-2d share of window clicks   lgbm            SHUF - hist    0.0038    0.0001    0.0075  CI excludes 0
+  last-2d share of window clicks   lgbm            prof - SHUF   -0.0022   -0.0053    0.0007  CI covers 0
+last-2d submissions / registered  ridge            prof - hist   -0.0103   -0.0158   -0.0047  CI excludes 0
+last-2d submissions / registered  ridge            SHUF - hist   -0.0021   -0.0099    0.0060  CI covers 0
+last-2d submissions / registered  ridge            prof - SHUF   -0.0082   -0.0141   -0.0029  CI excludes 0
+last-2d submissions / registered   lgbm            prof - hist    0.0005   -0.0042    0.0050  CI covers 0
+last-2d submissions / registered   lgbm            SHUF - hist   -0.0002   -0.0033    0.0031  CI covers 0
+last-2d submissions / registered   lgbm            prof - SHUF    0.0007   -0.0031    0.0043  CI covers 0
+
+####################################################################################
+# PART 3  bottom-up (sum of students) vs top-down (course lags + calendar) load
+####################################################################################
+
+## 3a course-day load, test days 141..240 (TD = F1 of load_forecast_test.py, rebuilt with fixed 400 rounds)
+   BU = sum over the cp's students of a student-day Poisson LightGBM; BU+P adds the profile
+   HYB = TD features + cohort-aggregated profile
+ h split model  RMSEall    MAEall   RMSEdl     MAEdl  peakF1  scale
+ 3  time    TD   0.5927    1726.4   0.3238    2776.9   0.617  1.003
+ 3  time   HYB   0.5946    1679.6   0.3077    2619.5   0.638  1.003
+ 3  time    BU   0.7550    2730.0   0.4564    4356.6   0.316  1.000
+ 3  time  BU+P   0.7365    2663.9   0.4573    4382.0   0.299  1.000
+ 3  loco    TD   0.4621    1526.5   0.2871    2671.9   0.633  1.006
+ 3  loco   HYB   0.4801    1562.7   0.3245    2982.0   0.594  1.006
+ 3  loco    BU   0.6261    2429.3   0.5974    4110.2   0.631  1.000
+ 3  loco  BU+P   0.6361    2265.6   0.5222    3395.2   0.621  1.000
+ 7  time    TD   0.6755    2134.6   0.3815    3313.3   0.504  1.003
+ 7  time   HYB   0.6669    2047.8   0.3550    3149.1   0.517  1.003
+ 7  time    BU   0.7453    2712.0   0.4592    4429.4   0.326  1.000
+ 7  time  BU+P   0.7405    2716.1   0.4121    3976.7   0.352  1.000
+ 7  loco    TD   0.5738    1923.0   0.3808    3473.0   0.578  1.006
+ 7  loco   HYB   0.5861    1912.2   0.4605    3814.5   0.490  1.006
+ 7  loco    BU   0.7104    2637.8   0.6220    4333.8   0.586  1.000
+ 7  loco  BU+P   0.6823    2391.5   0.5428    3581.6   0.601  1.000
+
+## 3b paired block bootstrap on log1p RMSE (2000 resamples; deadline-window days block = (cp, assessment), all days block = (cp, week)); negative = a better
+ h split  days     contrast     dRMSE     95%lo     95%hi  verdict
+ 3  time    dl      BU+P-TD    0.1335    0.0430    0.2302  CI excludes 0
+ 3  time    dl      BU+P-BU    0.0009   -0.0253    0.0349  CI covers 0
+ 3  time    dl       HYB-TD   -0.0161   -0.0305   -0.0002  CI excludes 0
+ 3  time    dl        BU-TD    0.1326    0.0156    0.2456  CI excludes 0
+ 3  time   all      BU+P-TD    0.1439    0.0940    0.1987  CI excludes 0
+ 3  time   all      BU+P-BU   -0.0185   -0.0376   -0.0010  CI excludes 0
+ 3  time   all       HYB-TD    0.0019   -0.0082    0.0108  CI covers 0
+ 3  time   all        BU-TD    0.1624    0.1102    0.2182  CI excludes 0
+ 3  loco    dl      BU+P-TD    0.2351   -0.0309    0.4591  CI covers 0
+ 3  loco    dl      BU+P-BU   -0.0752   -0.1552    0.0393  CI covers 0
+ 3  loco    dl       HYB-TD    0.0374    0.0020    0.0713  CI excludes 0
+ 3  loco    dl        BU-TD    0.3103   -0.0317    0.5937  CI covers 0
+ 3  loco   all      BU+P-TD    0.1740    0.0854    0.2616  CI excludes 0
+ 3  loco   all      BU+P-BU    0.0100   -0.0249    0.0465  CI covers 0
+ 3  loco   all       HYB-TD    0.0180    0.0027    0.0317  CI excludes 0
+ 3  loco   all        BU-TD    0.1640    0.0626    0.2623  CI excludes 0
+ 7  time    dl      BU+P-TD    0.0306   -0.0732    0.1204  CI covers 0
+ 7  time    dl      BU+P-BU   -0.0471   -0.1061    0.0186  CI covers 0
+ 7  time    dl       HYB-TD   -0.0265   -0.0450   -0.0096  CI excludes 0
+ 7  time    dl        BU-TD    0.0777   -0.0605    0.2022  CI covers 0
+ 7  time   all      BU+P-TD    0.0651    0.0056    0.1349  CI excludes 0
+ 7  time   all      BU+P-BU   -0.0047   -0.0255    0.0172  CI covers 0
+ 7  time   all       HYB-TD   -0.0086   -0.0180    0.0003  CI covers 0
+ 7  time   all        BU-TD    0.0698    0.0121    0.1376  CI excludes 0
+ 7  loco    dl      BU+P-TD    0.1620   -0.0944    0.3795  CI covers 0
+ 7  loco    dl      BU+P-BU   -0.0792   -0.1427    0.0370  CI covers 0
+ 7  loco    dl       HYB-TD    0.0797   -0.0215    0.1806  CI covers 0
+ 7  loco    dl        BU-TD    0.2412   -0.0999    0.5103  CI covers 0
+ 7  loco   all      BU+P-TD    0.1084    0.0022    0.2109  CI excludes 0
+ 7  loco   all      BU+P-BU   -0.0281   -0.0630    0.0082  CI covers 0
+ 7  loco   all       HYB-TD    0.0123   -0.0152    0.0383  CI covers 0
+ 7  loco   all        BU-TD    0.1365    0.0118    0.2550  CI excludes 0
+
+runtime 168.8s

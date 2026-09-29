@@ -1,0 +1,153 @@
+=== T3a exec_time of correct submissions (grade 100, no error) by number of test cases ===
+                   n     p1    p10    med    p90
+era     n_tc                                    
+2018-19 1      37074  0.098  0.117  0.170  0.734
+        2      17275  0.098  0.119  0.179  0.726
+        3      68626  0.099  0.121  0.192  0.853
+2020-22 1      22760  0.164  0.176  0.204  0.253
+        2      12815  0.165  0.177  0.207  0.388
+        3     123829  0.166  0.179  0.218  0.424
+  2018-19: median exec = 0.158 + 0.011 * n_tc ; p10 exec = 0.116 + 0.002 * n_tc (n_tc 1..15 with >=200 runs)
+  2020-22: median exec = 0.196 + 0.007 * n_tc ; p10 exec = 0.175 + 0.001 * n_tc (n_tc 1..15 with >=200 runs)
+
+=== T3b load dependence: correct runs, log(exec) vs number of submissions in the same 10-min window (all users), exercise-demeaned ===
+-- era 2018-19 (rel_exec = median exec relative to the same exercise and n_tc)
+                        n  load_med  exec_med  rel_exec
+load_bin                                               
+[0.0, 5.0)          10999       3.0     0.194     1.008
+[5.0, 10.0)         13150       7.0     0.186     1.004
+[10.0, 20.0)        21477      14.0     0.186     0.998
+[20.0, 40.0)        29028      28.0     0.181     0.997
+[40.0, 80.0)        28602      55.0     0.177     0.997
+[80.0, 160.0)       14994     103.0     0.178     1.010
+[160.0, 1000000.0)   4725     202.0     0.182     1.003
+-- era 2020-22 (rel_exec = median exec relative to the same exercise and n_tc)
+                        n  load_med  exec_med  rel_exec
+load_bin                                               
+[0.0, 5.0)          27367       3.0     0.217     0.984
+[5.0, 10.0)         30435       7.0     0.213     0.990
+[10.0, 20.0)        41872      14.0     0.210     0.996
+[20.0, 40.0)        34942      26.0     0.210     1.001
+[40.0, 80.0)        18502      54.0     0.223     1.032
+[80.0, 160.0)        6072     100.0     0.234     1.063
+[160.0, 1000000.0)    214     195.0     0.225     1.050
+
+=== T4a last runs >= 60 s and first date after which none reach 60 s ===
+  last five runs >= 60 s (date, exec): [('2019-08-14 01:38', 637.8), ('2019-08-23 23:35', 391.1), ('2019-08-23 23:46', 368.9), ('2019-08-26 11:39', 447.4), ('2019-08-28 10:32', 233.5)]
+  2019-2 by month: {'2019-08': {'n': 23675, 'mx': 637.75, 'n_ge60': 8}, '2019-09': {'n': 23316, 'mx': 12.44, 'n_ge60': 0}}
+
+=== T4b 2020-22: counts per 1-s bin of exec_time in [40, 62) ===
+  40:25 41:23 42:21 43:35 44:23 45:21 46:25 47:27 48:24 49:19 50:15 51:23 52:22 53:19 54:13 55:12 56:22 57:18 58:11 59:13 60:0 61:0
+  [59,60) by 0.1 s: [3, 0, 1, 1, 1, 1, 2, 1, 1, 2]
+  counts in [10,20) [20,30) [30,40) [40,50) [50,55) [55,58) [58,59) [59,60) [60,inf): [904, 542, 339, 243, 92, 52, 11, 13, 0]
+  runs >= 50 s: n=168, users=133; err_class={'none': 168}; grade recorded=1.000; grade>0=0.006; all outputs empty=0.958
+  runs >= 50 s, exec_time / n_tc: n=168 p1=16.76 p5=16.89 p25=17.49 p50=18.19 p75=19.18 p95=19.91 p99=52.63
+  exec digits after the point, 2020-22: {0: 1172, 1: 7, 2: 52, 3: 663, 4: 6385, 5: 43964, 6: 405807, 7: 22}
+  integer-valued exec_time values (2020-22): {0.0: 1172} err: {'none': 1172}
+  exec_time == 0 by era: {'2018-19': 0, '2020-22': 1172}
+    exec==0 runs: grade={0.0: 1172} n_tc={3: 955, 2: 138, 1: 79} semesters={'2020_ERE': 521, '2021_2': 208, '2022_1': 147, '2022_2': 108, '2021_1': 66, '2020_1': 64, '2020_2': 58}
+
+=== T4d runs whose test-case outputs are all empty (likely non-terminating), grade 0, exec_time by number of test cases ===
+-- 2018-19
+        n   p10    p25    med     p75     p90       mx
+n_tc                                                  
+2      32  6.56   7.72  14.47   79.23  137.05  2987.18
+3     547  7.09  11.79  35.98  166.12  760.36  2353.39
+-- 2020-22
+         n   p10    p25    med    p75    p90     mx
+n_tc                                               
+1       59  7.97  11.44  18.47  29.21  37.70  56.75
+2       25  7.28  10.57  19.86  29.13  37.85  52.49
+3     2707  6.77   9.96  17.26  30.31  44.64  59.97
+  2018-19: share of grade-0 runs with exec>=5 s among all-empty-output runs 0.075 vs runs with some output 0.020
+  2020-22: share of grade-0 runs with exec>=5 s among all-empty-output runs 0.257 vs runs with some output 0.001
+
+=== T4c 2018-19: runs >= 1000 s ===
+  n=940 users=121 err_class={'Killed': 621, 'none': 319}
+  grade recorded=0.339 grade>0=0.000 n_tc dist={0: 621, 3: 295, 2: 24}
+  all 'Killed' runs 2018-19: n=1,189 p1=363.35 p10=399.00 p25=554.18 p50=1064.79 p75=2086.92 p90=2987.54 p99=7848.04
+  'Killed' runs, n_tc distribution: {0: 1189}
+  'Killed' runs 2020-22: n=0
+  2018-19: has_error & n_tc==0 (run aborted before test cases were listed): 102,435; n_tc==0 & no error: 0
+  2020-22: has_error & n_tc==0 (run aborted before test cases were listed): 109,191; n_tc==0 & no error: 0
+
+=== T5a TEST blocks: exec_time present? ===
+  share of TEST blocks with an EXECUTION TIME value: 0.0  n= 1,997,474
+
+=== T5b codemirror events per semester vs TEST / SUBMITION blocks ===
+          cm_kill_program  cm_saida_testar  cm_submit  blocks_submit  blocks_test
+semester                                                                         
+2018_1              15980                0     130318         148710       302940
+2018_2               2865                0      41729          46756       113963
+2019_1               2311           378109     195027         162117       366326
+2019_2                219            82295      45014          46991        77676
+2020_1               4828           130024      47569          56174       150531
+2020_2               2033           104091      40748          49536       121242
+2020_ERE            36199           257719     122096         147220       306086
+2021_1               2178           108967      50397          57068       130694
+2021_2               2396           124535      51125          55872       153315
+2022_1               2411           124149      40968          51429       157035
+2022_2               2707            77858      25809          40773       117666
+
+=== T5c saida_testar vs TEST header, same file pair (nearest event within 1 h) ===
+  nearest  lag = cm_saida_testar - TEST_header: n=1,455,650 p1=-473.00 p5=-33.65 p25=0.92 p50=2.36 p75=12.86 p95=3126.03 p99=3558.23
+  forward  lag = cm_saida_testar - TEST_header: n=1,394,035 p1=0.27 p5=0.80 p25=1.93 p50=5.17 p75=46.81 p95=3193.71 p99=3562.02
+  backward lag = cm_saida_testar - TEST_header: n=1,076,587 p1=-2137.08 p5=-545.59 p25=-89.56 p50=-32.93 p75=-12.40 p95=-1.61 p99=-0.26
+  nearest lag by whether the TEST produced an ERROR section:
+    error=False: n=797,755 p10=-10.41 p25=0.79 p50=2.45 p75=13.04 p90=1238.05
+    error=True: n=657,895 p10=-6.43 p25=1.04 p50=2.29 p75=12.55 p90=620.36
+  reference, same semesters: cm_submit - SUBMITION header (exec<1 s): n=508,248 p10=-39.94 p25=-0.42 p50=0.47 p75=1.56 p90=2222.43
+
+=== L: signed time from the same user's nearest logout record to the header (header - logout) ===
+                                 n  share_abs_le2  share_abs_le10  share_0_to_10  share_m10_to_0
+era     cls                                                                                     
+2018-19 [0.0, 1.0)          370418         0.0005          0.0040         0.0003          0.0037
+        [1.0, 10.0)          30847         0.0048          0.0099         0.0029          0.0070
+        [10.0, 60.0)           995         0.0844          0.0844         0.0724          0.0121
+        [60.0, 1000.0)        1374         0.2256          0.2329         0.1951          0.0378
+        [1000.0, 100000.0)     940         0.2436          0.2500         0.1500          0.1000
+2020-22 [0.0, 1.0)          452227         0.0000          0.0017         0.0000          0.0017
+        [1.0, 10.0)           3649         0.0016          0.0044         0.0003          0.0041
+        [10.0, 60.0)          2196         0.0036          0.0046         0.0027          0.0018
+  long runs (>=60 s) with a logout within 10 s: n=555; header - logout: n=555 p10=-1.00 p25=-1.00 p50=0.00 p75=0.00 p90=0.00
+   their err_class: {'none': 522, 'Killed': 33}
+   runs sharing that logout (same user, |header - logout| <= 10 s), per logout: n=149 p50=2.00 p90=8.00 p99=22.52
+   does the run start (header - exec) precede the logout?  share: 1.0
+
+=== K: codemirror kill_program events around submissions (client clock offset removed) ===
+-- anchor = header
+                               n  share_kill_within_3s  share_kill_within_10s
+era     cls                                                                  
+2018-19 [0.0, 1.0)        323715                0.0068                 0.0116
+        [1.0, 5.0)         24688                0.0102                 0.0180
+        [5.0, 20.0)         3418                0.0451                 0.0620
+        [20.0, 60.0)         419                0.1695                 0.2172
+        [60.0, 100000.0)    2060                0.0209                 0.0335
+2020-22 [0.0, 1.0)        342292                0.0048                 0.0090
+        [1.0, 5.0)          2605                0.0549                 0.0714
+        [5.0, 20.0)         1300                0.3538                 0.4115
+        [20.0, 60.0)         965                0.2487                 0.3016
+-- anchor = header+E
+                               n  share_kill_within_3s  share_kill_within_10s
+era     cls                                                                  
+2018-19 [0.0, 1.0)        323715                0.0063                 0.0115
+        [1.0, 5.0)         24688                0.0058                 0.0166
+        [5.0, 20.0)         3418                0.0105                 0.0427
+        [20.0, 60.0)         419                0.0143                 0.0525
+        [60.0, 100000.0)    2060                0.0024                 0.0044
+2020-22 [0.0, 1.0)        342292                0.0045                 0.0090
+        [1.0, 5.0)          2605                0.0253                 0.0687
+        [5.0, 20.0)         1300                0.0331                 0.2385
+        [20.0, 60.0)         965                0.0197                 0.0580
+-- anchor = header-E
+                               n  share_kill_within_3s  share_kill_within_10s
+era     cls                                                                  
+2018-19 [0.0, 1.0)        323715                0.0071                 0.0116
+        [1.0, 5.0)         24688                0.0099                 0.0183
+        [5.0, 20.0)         3418                0.0120                 0.0562
+        [20.0, 60.0)         419                0.0430                 0.0979
+        [60.0, 100000.0)    2060                0.0350                 0.0874
+2020-22 [0.0, 1.0)        342292                0.0052                 0.0090
+        [1.0, 5.0)          2605                0.0357                 0.0722
+        [5.0, 20.0)         1300                0.0654                 0.2554
+        [20.0, 60.0)         965                0.0528                 0.0974

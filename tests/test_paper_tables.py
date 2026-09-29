@@ -1,0 +1,397 @@
+"""The emitted tables and the map of the paper's numbers.
+
+Two things have to hold.  Every number in an emitted table body is wrapped in
+`\\devnum{}`, so a development figure can never be mistaken for a sealed one in the
+typeset paper.  And every `\\devnum{}` the paper carries appears in `numbers.csv` with
+either a producing artefact or a stated reason why this package does not produce it —
+the list is what stops a number from quietly having no source at all.
+"""
+
+from __future__ import annotations
+
+import csv
+import re
+import sys
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from spjf_guard.experiment import paper_tables as pt  # noqa: E402
+
+DIGITS = re.compile(r"\d")
+DEVNUM = re.compile(r"\\devnum\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}")
+
+
+def _table_rows():
+    return [
+        {
+            "level": 0,
+            "k": 8,
+            "rho_target": 0.5,
+            "policy": name,
+            "p99_dl_s": value,
+            "mean_s": 0.5,
+            "gap_closed": 0.7,
+            "gap_closed_lo": 0.6,
+            "gap_closed_hi": 0.8,
+            "reduction_pct": 40.0,
+            "max_excess_s": 100.0,
+            "harm_s": 50.0,
+            "fired_pct": 1.5,
+        }
+        for name, value in (
+            ("FCFS", 27.64),
+            ("SJF", 10.59),
+            ("SPJF-E", 14.73),
+            ("SPJF-log", 14.8),
+            ("Guard(600)", 14.98),
+            ("SPJF-reversed", 42.72),
+            ("Guard(600)-reversed", 43.39),
+        )
+    ]
+
+
+def _body(text: str) -> list[str]:
+    """The rows between the header rule and the bottom rule."""
+    lines = text.splitlines()
+    start = lines.index(r"\midrule") + 1
+    return lines[start : lines.index(r"\bottomrule")]
+
+
+def _undecorated_digits(text: str) -> list[str]:
+    """Every body row with a digit outside a `\\devnum{}`.
+
+    Two exceptions, both of which the paper also leaves bare: the column count of a
+    `\\multicolumn` and the skip count `$\\kappa=...$`, which is a policy's name, not a
+    result.
+    """
+    bad = []
+    for line in _body(text):
+        stripped = DEVNUM.sub("", line)
+        stripped = re.sub(r"\\multicolumn\{\d+\}\{[a-z]\}", "", stripped)
+        stripped = re.sub(r"\$\\kappa=\d+\$", "", stripped)
+        stripped = stripped.replace("p99", "")
+        if DIGITS.search(stripped):
+            bad.append(line)
+    return bad
+
+
+def test_every_number_of_the_rank_table_is_wrapped():
+    assert _undecorated_digits(pt.rank_table(_table_rows())) == []
+
+
+def test_every_number_of_the_guard_table_is_wrapped():
+    parameters = {
+        (0, "Guard(600)"): {"promise_s": 600.0, "skip_count": 0.0},
+    }
+    text = pt.guard_table(_table_rows(), parameters, ["Guard(600)"])
+    assert _undecorated_digits(text) == []
+    assert r"\label{tab:guard}" in text
+
+
+def test_the_adversarial_table_pairs_each_ranking_with_its_guarded_twin():
+    text = pt.adversarial_table(_table_rows())
+    assert "reversed" in text
+    body = [line for line in text.splitlines() if line.strip().endswith(r"\\")]
+    assert any("42.72" in line and "43.39" in line for line in body)
+
+
+def test_the_residual_table_prints_the_share_as_a_percentage():
+    rows = [
+        {
+            "level": 0,
+            "k": 8,
+            "rho_target": 0.5,
+            "policy": "SPJF-E",
+            "max_abs_residual_L": 6.786,
+            "ratio_to_bound": 0.485,
+            "share_residual_zero": 0.956,
+            "samephase_share_sum_in": 0.0036,
+            "r2_net_over_k": 0.985,
+            "max_abs_error_s": 50.9,
+        }
+    ]
+    text = pt.residual_table(rows, ["SPJF-E"])
+    assert r"\devnum{95.6\%}" in text
+    assert r"\devnum{0.36\%}" in text, "the same-phase share is printed to two decimals"
+    assert _undecorated_digits(text) == []
+
+
+def test_visibility_tables_wrap_comparison_and_exposure_numbers():
+    rows = []
+    for variant, policy in (
+        ("original", "Guard(600)-original"),
+        ("conservative", "Guard(600)"),
+        ("static", "Guard(600)-static"),
+    ):
+        row = dict(_table_rows()[0])
+        row.update({"policy": policy, "variant": variant})
+        rows.append(row)
+    comparison = pt.visibility_table(rows)
+    assert r"\label{tab:visibility}" in comparison
+    assert _undecorated_digits(comparison) == []
+
+    exposure = [
+        {
+            "level": 0,
+            "policy": "Guard(600)",
+            "overall_affected_share": 0.8,
+            "deadline_affected_share": 0.7,
+            "overall_premature_mean": 120.0,
+            "overall_premature_p99": 900.0,
+            "unreplayed_overall_affected_share": 0.95,
+        }
+    ]
+    audit = pt.visibility_audit_table(exposure)
+    assert r"\label{tab:visibility_audit}" in audit
+    assert _undecorated_digits(audit) == []
+
+
+@pytest.mark.skipif(
+    not (ROOT / "outputs" / "paper_tables" / "numbers.csv").is_file(),
+    reason="the numbers map has not been emitted on this machine",
+)
+def test_every_paper_number_has_a_source_or_a_stated_reason():
+    path = ROOT / "outputs" / "paper_tables" / "numbers.csv"
+    rows = list(csv.DictReader(open(path, encoding="utf-8")))
+    assert rows
+    orphans = [r for r in rows if not r["produced_by"] and not r["not_produced"]]
+    assert not orphans, orphans[:5]
+
+
+def test_a_paired_difference_is_indexed_in_both_spellings_the_paper_uses():
+    """The paper quotes a difference and its interval as one `\\devnum{}`, sometimes in
+    math mode and sometimes bare; both have to find the row that produced them."""
+    import emit_paper_tables as emit
+
+    out: dict = {}
+    emit.difference_values(
+        [
+            {
+                "left": "Guard(600)",
+                "right": "SPJF-E",
+                "difference_gap": -0.116,
+                "gap_lo": -0.143,
+                "gap_hi": -0.077,
+                "difference_s": 26.45,
+                "lo": 20.1,
+                "hi": 32.9,
+            }
+        ],
+        out,
+    )
+    where = "dev_tables/paired_differences.csv[Guard(600) - SPJF-E]"
+    assert out["-0.116 [-0.143, -0.077]"] == where
+    assert out["$-0.116$ $[-0.143, -0.077]$"] == where
+    assert out["-0.116"] == where
+
+
+def test_a_number_the_package_should_produce_is_never_called_external():
+    """The classification has to separate three states, not two.
+
+    A number in the experiment section that this package prints differently is a change
+    to report, not a number from somewhere else; a number in a section this package never
+    touches carries that section's reason; a number in neither gets no reason at all, and
+    the generated-artefact check fails on it.
+    """
+    import emit_paper_tables as emit
+
+    assert emit.classify("p99 was 14.98 s", "08_experiments", "tab:rank") == emit.DIFFERS
+    assert emit.classify("the excess reached 1.2 s", "fig_excess", "") == emit.DIFFERS
+    spearman = emit.classify("Spearman 0.41", "08_experiments", "tab:rank")
+    assert spearman == "predictor-comparison"
+    assert emit.classify("six terms", "07_data", "") == "data-description"
+    assert emit.classify("whatever", "11_future_work", "") == ""
+
+
+TINY = r"""
+\section{The guard at three promises}
+The gap closed is \devnum{0.705} and the harm \devnum{132.1} s.
+\begin{table}
+\caption{A table.}
+\label{tab:guard}
+\begin{tabular}{ll}
+Guard($\devnum{300}$) & \devnum{15.58} \\
+\end{tabular}
+\end{table}
+More prose, with \devnum{1.35} in it.
+"""
+
+
+def test_the_numbers_map_is_keyed_by_where_a_number_sits_not_by_its_line(tmp_path):
+    """The paper is re-laid-out between passes: floats move, an appendix becomes a
+    supplementary section.  A key that carried the line number would change under all of
+    that, and every list that names one -- the coincidence list, a report handed to an
+    editor -- would go stale without a single number having moved."""
+    import emit_paper_tables as emit
+
+    paper = tmp_path / "paper"
+    paper.mkdir()
+    (paper / "08_experiments.tex").write_text(TINY, encoding="utf-8")
+    before = [r["key"] for r in emit.paper_numbers(paper, {})]
+    assert before == [
+        "08_experiments:the-guard-at-three-promises:1",
+        "08_experiments:the-guard-at-three-promises:2",
+        "08_experiments:tab:guard:1",
+        "08_experiments:tab:guard:2",
+        "08_experiments:the-guard-at-three-promises:3",
+    ]
+    lines = [r["line"] for r in emit.paper_numbers(paper, {})]
+    (paper / "08_experiments.tex").write_text(
+        "% a comment the float placement left behind\n\n\n" + TINY, encoding="utf-8"
+    )
+    after = emit.paper_numbers(paper, {})
+    assert [r["key"] for r in after] == before, "the keys must survive a re-layout"
+    assert [r["line"] for r in after] == [n + 3 for n in lines], "the line is still recorded"
+
+
+HAVE_PAPER = (
+    (ROOT / "paper" / "supplementary.tex").is_file()
+    and (ROOT / "outputs" / "paper_tables" / "tab_k1.tex").is_file()
+    and (ROOT / "outputs" / "dev_tables" / "identity_residuals.csv").is_file()
+)
+
+
+def _paper_copy(tmp_path):
+    """A writable copy of the paper's sources; the originals are never touched."""
+    import shutil
+
+    paper = tmp_path / "paper"
+    shutil.copytree(
+        ROOT / "paper",
+        paper,
+        ignore=shutil.ignore_patterns("*.pdf", "*.eps", "*.png", "*.bib", "Definitions"),
+    )
+    return paper
+
+
+def _complaints(paper):
+    import check_paper_numbers as cpn
+
+    residuals = cpn.resid_table_rows(
+        cpn.read_rows(ROOT / "outputs" / "dev_tables" / "identity_residuals.csv")
+    )
+    return cpn.check_tables(paper, ROOT / "outputs" / "paper_tables", residuals, {})
+
+
+def _edit(paper, old, new):
+    path = paper / "supplementary.tex"
+    text = path.read_text(encoding="utf-8")
+    assert old in text, old
+    path.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+@pytest.mark.parametrize(
+    "old,new,expected",
+    [
+        (r"\devnum{221.27}", r"\devnum{221.28}", "221.27"),
+        (r"& --- \\", r"& \devnum{100.00} \\", "'---'"),
+        (r"$\kappa=5$", r"$\kappa=6$", "skip counts"),
+    ],
+    ids=["a cell moves", "a convention becomes a number", "a skip count moves"],
+)
+def test_the_table_check_fails_when_the_paper_stops_agreeing(tmp_path, old, new, expected):
+    """The three ways a table body can disagree, each on the real files.
+
+    Without this the exemptions added for the supplement -- a table split in two, a firing
+    rate printed as a rule, a renamed symbol -- could quietly have turned check A into a
+    check that passes on anything.
+    """
+    paper = _paper_copy(tmp_path)
+    assert _complaints(paper) == []
+    _edit(paper, old, new)
+    complaints = _complaints(paper)
+    assert any(expected in c for c in complaints), complaints
+
+
+def _all_complaints(paper):
+    """Checks A, B and C on a copy of the paper, against the tables on disk."""
+    import check_paper_numbers as cpn
+
+    return cpn.run(paper, ROOT / "outputs" / "dev_tables", ROOT / "outputs" / "paper_tables")
+
+
+MOVED_SENTENCE = r"costs \devnum{0.115} of the gap."
+"""A line of section 8 whose figures check B recomputes and whose \\devnum{0.115} the
+paper prints exactly once.  Moving it is what shows the check follows the sentence."""
+
+
+def _shorten_the_manuscript(paper: Path) -> None:
+    """Move one table and one sentence between the manuscript and the supplement.
+
+    The `tab:rank` float went into the supplement for real in the thirteenth pass, as
+    `tab:s_rank`.  The test therefore moves it the other way, back into Section 8 under
+    its manuscript spelling, and moves one sentence of running text into the supplement,
+    so that both directions of the length cuts are exercised.  Not a digit of either
+    changes, and nothing is deleted.
+    """
+    section = paper / "sections" / "08_experiments.tex"
+    supplement = paper / "supplementary.tex"
+    body = supplement.read_text(encoding="utf-8")
+    at = body.index(r"\label{tab:s_rank}")
+    start = body.rindex(r"\begin{table}", 0, at)
+    end = body.index(r"\end{table}", at) + len(r"\end{table}")
+    float_ = body[start:end].replace(r"\label{tab:s_rank}", r"\label{tab:rank}")
+    text = section.read_text(encoding="utf-8")
+    line = next(one for one in text.splitlines() if MOVED_SENTENCE in one)
+    anchor = text.rindex(r"\begin{table}", 0, text.index(r"\label{tab:visibility}"))
+    kept = (text[:anchor] + float_ + "\n\n" + text[anchor:]).replace(line + "\n", "", 1)
+    section.write_text(kept, encoding="utf-8")
+    ends = body.rindex(r"\end{document}")
+    supplement.write_text(
+        body[:start] + body[end:ends] + line + "\n\n" + body[ends:], encoding="utf-8"
+    )
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+def test_every_check_agrees_with_the_paper_as_it_stands(tmp_path):
+    assert _all_complaints(_paper_copy(tmp_path)) == []
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+def test_a_table_and_a_sentence_that_move_into_the_supplement_are_still_checked(tmp_path):
+    """The referee's length cuts are not finished, and `scripts/` will be frozen before
+    they are.  Every check therefore finds a table by its label and a figure by the
+    sources that print it, so that moving either changes nothing here."""
+    paper = _paper_copy(tmp_path)
+    _shorten_the_manuscript(paper)
+    section = (paper / "sections" / "08_experiments.tex").read_text(encoding="utf-8")
+    assert r"\label{tab:rank}" in section
+    assert MOVED_SENTENCE not in section
+    assert _all_complaints(paper) == []
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+def test_a_digit_edited_in_the_moved_table_still_fails(tmp_path):
+    """The move must not cost the comparison: the table is checked where it landed."""
+    paper = _paper_copy(tmp_path)
+    _shorten_the_manuscript(paper)
+    section = paper / "sections" / "08_experiments.tex"
+    text = section.read_text(encoding="utf-8")
+    assert r"\devnum{27.64}" in text
+    section.write_text(text.replace(r"\devnum{27.64}", r"\devnum{27.65}", 1), encoding="utf-8")
+    assert any("27.64" in c or "27.65" in c for c in _all_complaints(paper))
+
+
+@pytest.mark.skipif(not HAVE_PAPER, reason="the paper and the emitted tables are not both here")
+def test_a_sentence_deleted_after_the_move_fails(tmp_path):
+    """A figure printed in none of the sources is still a failure, and says which."""
+    paper = _paper_copy(tmp_path)
+    _shorten_the_manuscript(paper)
+    supplement = paper / "supplementary.tex"
+    text = supplement.read_text(encoding="utf-8")
+    line = next(one for one in text.splitlines() if MOVED_SENTENCE in one)
+    supplement.write_text(text.replace(line + "\n", "", 1), encoding="utf-8")
+    complaints = _all_complaints(paper)
+    assert any("0.115" in c for c in complaints), complaints
+
+
+def test_the_paper_is_never_written_to():
+    """The emitter's own source must not open anything under paper/ for writing."""
+    source = (ROOT / "scripts" / "emit_paper_tables.py").read_text(encoding="utf-8")
+    assert "write_text" not in source.split("def paper_numbers")[0].split("args.paper")[-1]
+    assert "args.paper" in source

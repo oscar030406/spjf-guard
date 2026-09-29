@@ -1,0 +1,36 @@
+==============================================================================
+C3 independent  entry threshold and In = ell*floor(B/ell)
+==============================================================================
+  designed family (k long victims of size L, then shorts of size ell), L=12 B=10
+  ell   In_R (max)     In_C (max)     pred R = ell*floor(B/ell)
+   k=1
+     1     10             10             10              
+     2     10             10             10              
+     3     9              12             9               
+     4     8              12             8               
+     6     6              12             6               
+     12    0              12             0               
+   k=2
+     1     10             10             10              
+     2     10             12             10              
+     3     9              12             9               
+     4     8              16             8               
+     6     6              12             6               
+     12    0              24             0               
+   k=4
+     1     10             12             10              
+     2     10             16             10              
+     3     9              12             9               
+     4     8              16             8               
+     6     6              24             6               
+     12    0              48             0               
+
+  entry thresholds (smallest promise G admitting one overtaker of cap ell = L), in units of L
+  k    rule R: G >= (2-1/k)L      Alg.1: G > (3-2/k)L        difference
+  1    1                          1                          0
+  2    3/2                        2                          1/2
+  3    5/3                        7/3                        2/3
+  4    7/4                        5/2                        3/4
+  8    15/8                       11/4                       7/8
+  16   31/16                      23/8                       15/16
+  difference is (1 - 1/k)L, which is 0 at k=1 and -> L only as k -> infinity; it is NOT L for any finite k.

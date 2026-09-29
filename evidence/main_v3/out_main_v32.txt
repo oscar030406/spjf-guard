@@ -1,0 +1,538 @@
+====================================================================================================
+CONSOLIDATED MAIN EXPERIMENT v3.2 -- CodeBench DEV data
+====================================================================================================
+written 2026-09-20 04:51:21
+
+----------------------------------------------------------------------------------------------------
+1. THE HONEST CONCLUSION
+----------------------------------------------------------------------------------------------------
+v3.2 exists because the independent verifier found (G1, CRITICAL) that v3.1's headline comparison was rigged by an unequal search: the capped relative budget was chosen from 15 points and 'the best feasible fixed budget' from 4, leaving the harm constraint slack at the fixed family's point.  v3.2 gives both families pre-stated grids of comparable density (fixed: 39 budgets, of which 27-41 are admissible per promise; capped: 54 points; plus an 18-point hybrid) and applies the identical rule.  The verifier's prediction is confirmed: a properly searched fixed budget is far better than v3.1 reported.
+
+    fixed family, G =    300 s: worst-cell validation gap 0.1761 on the equal grid, against 0.0057 on v3.1's four-point grid.
+    fixed family, G =    600 s: worst-cell validation gap 0.6095 on the equal grid, against 0.3693 on v3.1's four-point grid.
+    fixed family, G =   1200 s: worst-cell validation gap 0.7257 on the equal grid, against 0.3693 on v3.1's four-point grid.
+
+What that does to the headline, measured on the primary trace (5 overlays, paired week-block bootstrap), CAP - FIXSEL on the deadline-window p99 gap closed:
+    G =    300 s, rho 0.5: +0.006 [-0.003,+0.013]  unresolved
+    G =    300 s, rho 0.8: +0.099 [+0.056,+0.157]  CAP-G300 better
+    G =    300 s, rho 1.0: +0.261 [+0.204,+0.283]  CAP-G300 better
+    G =    600 s, rho 0.5: +0.009 [+0.005,+0.012]  CAP-G600 better
+    G =    600 s, rho 0.8: +0.028 [+0.020,+0.039]  CAP-G600 better
+    G =    600 s, rho 1.0: +0.119 [+0.072,+0.179]  CAP-G600 better
+    G =   1200 s, rho 0.5: +0.007 [+0.003,+0.011]  CAP-G1200 better
+    G =   1200 s, rho 0.8: +0.017 [+0.011,+0.023]  CAP-G1200 better
+    G =   1200 s, rho 1.0: +0.044 [+0.028,+0.058]  CAP-G1200 better
+
+So: the capped relative budget wins 8 of the 9 (promise, load) cells, ties in 1, and loses 0.
+    where it wins, the margin runs from +0.007 to +0.261 of the FCFS->SJF gap;
+    v3.1's claim 'no fixed budget reaches what the capped relative budget reaches' is WITHDRAWN.  The defensible statement is the narrower one below.
+
+Which family the rule actually picks, per promise (validation, worst of 15 cells):
+    G =    300 s: capped 0.4251 (harm 123 s) > hybrid 0.3565 (harm 145 s) > fixed 0.1761 (harm 132 s)
+    G =    600 s: capped 0.7216 (harm 293 s) > hybrid 0.7173 (harm 152 s) > fixed 0.6095 (harm 288 s)
+    G =   1200 s: hybrid 0.7283 (harm 145 s) > capped 0.7273 (harm 484 s) > fixed 0.7257 (harm 560 s)
+
+Does the capped budget buy anything a fixed one cannot, beyond the harm profile?  In principle yes: a constant budget B promises W <= W_FCFS + B/k + (3-2/k)L, the same number of extra seconds whether FCFS would have made the job wait 0 s or 600 s, while the capped relative budget promises (W_FCFS + B0/k + (3-2/k)L)/(1-eta), an allowance that grows with the wait the job already had, up to Bmax.  Measured among the jobs FCFS already makes wait more than 60 s, at rho 1.0 (full table in section 7; excess is W_policy - W_FCFS, so negative means the policy HELPS those jobs):
+    G =    300 s: mean excess   -113.4 s (CAP) vs    -89.8 s (FIXSEL);  p99 excess   158.5 vs    97.7;  worst W/W_FCFS   4.28 vs   3.49
+    G =    600 s: mean excess   -164.3 s (CAP) vs   -137.8 s (FIXSEL);  p99 excess   450.6 vs   248.3;  worst W/W_FCFS   7.95 vs   6.03
+    G =   1200 s: mean excess   -190.6 s (CAP) vs   -168.7 s (FIXSEL);  p99 excess   334.9 vs   508.0;  worst W/W_FCFS  12.18 vs   9.79
+    Read straight off those rows: at all 3 of 3 promises BOTH policies leave these jobs better off on average than FCFS -- prediction-driven ordering helps the jobs that were queued behind long ones, and the guard does not take that back.  The capped budget's worst single ratio W/W_FCFS is larger than the fixed budget's at 3 of 3 promises, which is the multiplicative allowance showing up where the theory says it should; but its p99 excess is larger at only 2 of 3.  So the multiplicative shape is visible in the extreme tail and not in the body of the distribution, and on this workload it is not a practical advantage -- it is a different promise, not a better outcome, for these jobs.
+
+None of this is a held-out result.  See section 2.
+
+manifest of the code that produced every number below: 87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5
+    v32_build.py                                   8ab8d753762cd19e90dc444842e46d0709afae7acc9c672b48e0192180fa254a
+    v32_common.py                                  d359ce93b7fbe3a7fcc3c452b3d2431d4208e5830a931b739a7cbc15031591d8
+    v32_gain.py                                    a0a1c083445a0dd29564c697297d1460ea46dafb81a03e75ba309ec38c0d7895
+    v32_run.py                                     1caa53df8ec84762c244dda00042ef0f67c29b7697ea26490d83f2c5b81bfab3
+    v32_select.py                                  44c0e9e9cd724b669676e453b82c829c663013a9a793c95c898f238450e5a5d1
+    v32_xcheck.py                                  504bf40bee65f8f5b8f3b798bc3c4ed51f67bcc69685ce45e4f7c87e4361f6ba
+    [ext] codebench_service_v2/service_precheck_v2.py 47a1f76355a66684639db9e8e23bb2825e4b3a4438929fab494d65dc2edaa0f0
+    [ext] guard_variants/guardkern.py              e8b8578d5b53874440d2f37f285bc422c127512595b544fe5427b5a3acdd1c58
+    [ext] guard_variants_referee/refsim.py         1195a8983303e8100cd852b2b0e42774bf4ea458d3c3f15a938b82f07ffec656
+    [ext] main_v3/v31/v31_skipkern.py              dbc67deaaa27f524778eef24ddd75199f693841581ac3e5ee1bcf3bce8137636
+    [ext] ranking_score/rs_fit.py                  d4b0475566a74d87abd51363bf5ca5d9915168f81f28cd733aa2c10b1c889866
+    v32_report.py                                  16fad3e0c2eb35f0c926bb982f5cc068c1be942f94820f40daa45fae79c5d0d2   (formats only)
+data artefacts consumed (inputs, not code):
+    cb_v2_cache_r4/ev.parquet                      8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451
+    cb_v2_cache_r4/feat_ires0.parquet              19d0e80453d1428c36354f3772f7c3359bacdd61299466bbf58706eb2aa5f89f
+    cb_v2_cache_r4/forward_ires0.parquet           c2b04f124b82b46110593368fcd263d7bfbdfdce13099dc4a35e5c767d94a1a9
+    mv3/r1s_forward.parquet                        8e55ec1fe8eaa7a905f1ce096da5c27f4ce3ce6c4c784152b365edca394b0b6d
+    rank_score/rs_pred_ires0.parquet               af90bb2d8cee4cf3e6806a3665fae356c1ea7d32cab52c724a7300706763bc92
+
+----------------------------------------------------------------------------------------------------
+2. SELECTION PROVENANCE
+----------------------------------------------------------------------------------------------------
+Unchanged from v3.1 and restated because it bounds everything above.  The guard family and the coarse (B0, eta) grid were explored on the PRIMARY evaluation trace in prechecks/guard_variants before any validation-only selection existed, and the selection rule's pre-registration cannot be established from disk.  The validation pool (the 60 s-regime DEV semesters minus 2022-2) is held out of the SELECTION, not of the development process; the 2022-2-only trace cannot carry load; the sealed semesters 2023-1, 2023-2 and 2024-1 were not opened.  Do not write 'held out', 'out of sample' or 'generalises' about any number here.  The one fresh element in v3.2 is the fixed-budget grid, which was written down in v32_common.py's docstring before any v3.2 number existed.
+
+----------------------------------------------------------------------------------------------------
+3. TRACES
+----------------------------------------------------------------------------------------------------
+  trace  rep  copies  class_semesters   n_jobs  n_weeks  busy_hour_work_s k_per_rho             rho_busy  n_deadline_window  n_heavy  span_days           busy_hour
+primary    0      44               40 17634760       30         15247.543     8/5/4 0.5294/0.8471/1.0589            4219556   181720      208.8 2020-04-13 14:00:00
+primary    1      44               40 17634760       30         14232.983     8/5/4 0.4942/0.7907/0.9884            4219556   181720      208.8 2020-03-30 14:00:00
+primary    2      44               40 17634760       30         14114.958     8/5/4 0.4901/0.7842/0.9802            4219556   181720      208.8 2020-04-13 14:00:00
+primary    3      44               40 17634760       30         13860.254     8/5/4 0.4813/0.7700/0.9625            4219556   181720      208.8 2020-04-06 14:00:00
+primary    4      44               40 17634760       30         13026.087     7/5/4 0.5169/0.7237/0.9046            4219556   181720      208.8 2020-03-30 14:00:00
+  valid    0      49               32 17646125       30         13221.474     7/5/4 0.5247/0.7345/0.9182            3993059   176106      208.8 2020-04-27 14:00:00
+  valid    1      49               32 17646125       30         13819.949     8/5/4 0.4799/0.7678/0.9597            3993059   176106      208.8 2020-03-31 21:00:00
+  valid    2      49               32 17646125       30         14296.749     8/5/4 0.4964/0.7943/0.9928            3993059   176106      208.8 2020-05-11 14:00:00
+  valid    3      49               32 17646125       30         13078.194     7/5/4 0.5190/0.7266/0.9082            3993059   176106      208.8 2020-04-27 14:00:00
+  valid    4      49               32 17646125       30         15204.228     8/5/4 0.5279/0.8447/1.0558            3993059   176106      208.8 2020-04-21 21:00:00
+     k1    0     321               40  3209347       30          2880.047         1               0.8000             768149    33097      208.8 2020-04-13 14:00:00
+
+----------------------------------------------------------------------------------------------------
+4. SELECTION ON EQUAL GRIDS (15 validation cells = 5 overlays x 3 load levels)
+----------------------------------------------------------------------------------------------------
+Rule: feasible = harm <= G/2 in EVERY cell; objective = the deadline-window p99 gap closed in the WORST cell; ties to smaller worst harm, then smaller B0, eta, gam.  Every budget scales with k/4, so one setting serves every load level.
+
+family      G  B0_base  eta  gam_base                policy  worst_gap  worst_harm_s  harm_limit_s  harm_slack_s  binds  worst_promise_s  n_feasible  n_grid
+ fixed  300.0  329.671 0.00       0.0         FIXG-B329.671     0.1761        131.80         150.0         18.20  False            247.4          22      27
+capped  300.0   60.000 0.50       0.0    CAPG-G300-B60-e0.5     0.4251        122.76         150.0         27.24  False            300.0          15      54
+hybrid  300.0    0.000 0.00      16.0   HYBG-G300-B0-g16-e0     0.3565        145.25         150.0          4.75   True            300.0           7      18
+ fixed  600.0  981.126 0.00       0.0         FIXG-B981.126     0.6095        288.16         300.0         11.84   True            410.3          32      36
+capped  600.0  120.000 0.75       0.0  CAPG-G600-B120-e0.75     0.7216        293.29         300.0          6.71   True            600.0          30      54
+hybrid  600.0  120.000 0.00      16.0 HYBG-G600-B120-g16-e0     0.7173        152.15         300.0        147.85  False            600.0           9      18
+ fixed 1200.0 2029.960 0.00       0.0         FIXG-B2029.96     0.7257        560.26         600.0         39.74  False            672.5          37      41
+capped 1200.0  360.000 0.75       0.0 CAPG-G1200-B360-e0.75     0.7273        483.92         600.0        116.08  False           1020.0          43      54
+hybrid 1200.0    0.000 0.00      16.0  HYBG-G1200-B0-g16-e0     0.7283        145.25         600.0        454.75  False           1200.0          17      18
+
+'binds' is True when the chosen point is within 5% of the harm limit.  The next point with a better worst-cell gap, and why it was rejected:
+    G =    300 fixed  : FIXG-B360 (gap 0.1991, harm 151.2 s, infeasible by 1.2 s)
+    G =    300 capped : none: the chosen point has the best worst-cell gap in the family
+    G =    300 hybrid : HYBG-G300-B120-g1-e0.9 (gap 0.3693, harm 212.0 s, infeasible by 62.0 s)
+    G =    600 fixed  : FIXG-B1176.7 (gap 0.6564, harm 345.5 s, infeasible by 45.5 s)
+    G =    600 capped : CAPG-G600-B480-e0.5 (gap 0.7228, harm 328.5 s, infeasible by 28.5 s)
+    G =    600 hybrid : HYBG-G600-B0-g1-e0.9 (gap 0.7225, harm 358.9 s, infeasible by 58.9 s)
+    G =   1200 fixed  : FIXEQ-G1200 (gap 0.7273, harm 1093.8 s, infeasible by 493.8 s)
+    G =   1200 capped : none: the chosen point has the best worst-cell gap in the family
+    G =   1200 hybrid : none: the chosen point has the best worst-cell gap in the family
+
+Sensitivity (verifier G4): the selection when the single validation cell that decided v3.1's G = 600 choice (overlay 1, level 2) is dropped:
+     G family        with_all_cells  gap_all  harm_all         dropping_r1L2  gap_drop  harm_drop  same
+ 300.0  fixed         FIXG-B329.671   0.1761    131.80         FIXG-B329.671    0.1761     129.67  True
+ 300.0 capped    CAPG-G300-B60-e0.5   0.4251    122.76    CAPG-G300-B60-e0.5    0.4251     122.76  True
+ 300.0 hybrid   HYBG-G300-B0-g16-e0   0.3565    145.25   HYBG-G300-B0-g16-e0    0.3565     145.25  True
+ 600.0  fixed         FIXG-B981.126   0.6095    288.16         FIXG-B981.126    0.6095     285.07  True
+ 600.0 capped  CAPG-G600-B120-e0.75   0.7216    293.29    CAPG-G600-B15-e0.9    0.7237     262.24 False
+ 600.0 hybrid HYBG-G600-B120-g16-e0   0.7173    152.15  HYBG-G600-B0-g4-e0.9    0.7233     249.75 False
+1200.0  fixed         FIXG-B2029.96   0.7257    560.26         FIXG-B2029.96    0.7257     560.26  True
+1200.0 capped CAPG-G1200-B360-e0.75   0.7273    483.92 CAPG-G1200-B360-e0.75    0.7273     483.92  True
+1200.0 hybrid  HYBG-G1200-B0-g16-e0   0.7283    145.25  HYBG-G1200-B0-g16-e0    0.7283     145.25  True
+
+Feasible frontier, gap against harm, per promise and family (frontier.csv holds every point; here the feasible ones, best 6 by gap):
+
+  --- G = 300 s ---
+    fixed   [0.176@132s]  [0.133@128s]  [0.101@123s]  [0.093@123s]  [0.062@122s]  [0.037@116s]
+    capped  [0.425@123s]  [0.417@124s]  [0.410@123s]  [0.408@119s]  [0.333@123s]  [0.279@103s]
+    hybrid  [0.356@145s]  [0.354@116s]  [0.326@97s]  [0.306@69s]  [0.267@103s]  [0.195@71s]
+
+  --- G = 600 s ---
+    fixed   [0.609@288s]  [0.530@265s]  [0.424@222s]  [0.369@212s]  [0.369@212s]  [0.353@194s]
+    capped  [0.722@293s]  [0.721@255s]  [0.720@284s]  [0.717@217s]  [0.706@173s]  [0.704@212s]
+    hybrid  [0.717@152s]  [0.700@152s]  [0.694@145s]  [0.536@116s]  [0.486@97s]  [0.465@71s]
+
+  --- G = 1200 s ---
+    fixed   [0.726@560s]  [0.724@466s]  [0.724@491s]  [0.699@405s]  [0.656@345s]  [0.609@288s]
+    capped  [0.727@536s]  [0.727@484s]  [0.727@594s]  [0.727@547s]  [0.727@385s]  [0.727@484s]
+    hybrid  [0.728@145s]  [0.728@152s]  [0.727@527s]  [0.727@536s]  [0.727@458s]  [0.727@578s]
+
+----------------------------------------------------------------------------------------------------
+5. MAIN RESULTS -- primary trace, 5 overlays, pure scheduling
+----------------------------------------------------------------------------------------------------
+gap = fraction of the FCFS -> true-size-SJF gap closed; red% = plain reduction against FCFS.  [95% CI] = 2,000-resample week-block paired bootstrap over the 30 weeks of the overlay timeline; it covers time only.
+PARAMETERS ARE PER OVERLAY (verifier G3): the five overlays do not all run the same k -- overlays 0-3 run k = 8/5/4 by load level and overlay 4 runs k = 7/5/4 -- and every budget and skip count scales with k, so the columns below list one value per overlay in overlay order.
+
+--- level 0: target busy-hour rho 0.5, k per overlay 8/8/8/8/7 ---
+          policy  p99_dl_s          gap_closed          red_pct  mean_s  max_excess_s  harm_s  max_heavy_s  qw_fired                           B0_by_overlay     Ncap_by_overlay                 promise_by_overlay
+            FCFS     27.64 0.000 [0.000,0.000]    0.0 [0.0,0.0]   0.719           0.0     0.0        486.9    1.0000                          -1/-1/-1/-1/-1           0/0/0/0/0                inf/inf/inf/inf/inf
+         SJF-ref     10.59 1.000 [1.000,1.000] 62.0 [58.7,66.4]   0.228        1034.0   595.9       1185.9    0.0000                          -1/-1/-1/-1/-1           0/0/0/0/0                inf/inf/inf/inf/inf
+         SPJF-M4     14.73 0.753 [0.721,0.776] 46.6 [43.9,49.9]   0.295        1244.8   396.4       1365.8    0.0000                          -1/-1/-1/-1/-1           0/0/0/0/0                inf/inf/inf/inf/inf
+    SPJF-M4refit     14.72 0.753 [0.722,0.776] 46.7 [44.0,50.0]   0.295        1234.3   396.5       1380.7    0.0000                          -1/-1/-1/-1/-1           0/0/0/0/0                inf/inf/inf/inf/inf
+    SPJF-tweedie     14.73 0.752 [0.723,0.775] 46.5 [43.7,49.9]   0.292        1242.5   238.1       1369.5    0.0000                          -1/-1/-1/-1/-1           0/0/0/0/0                inf/inf/inf/inf/inf
+SPJF-tweedie_itr     14.69 0.754 [0.724,0.776] 46.7 [43.8,50.0]   0.291        1019.2   248.8       1179.1    0.0000                          -1/-1/-1/-1/-1           0/0/0/0/0                inf/inf/inf/inf/inf
+        SPJF-r1s     14.87 0.741 [0.707,0.767] 45.9 [43.2,48.8]   0.290         990.7   242.8       1178.8    0.0000                          -1/-1/-1/-1/-1           0/0/0/0/0                inf/inf/inf/inf/inf
+        FIX-G300     15.31 0.720 [0.694,0.739] 44.6 [41.7,48.1]   0.348         201.2   187.9        630.3    0.0077                 1080/1080/1080/1080/960           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+     FIXSEL-G300     15.75 0.697 [0.673,0.717] 43.2 [40.4,46.9]   0.384         143.0   134.0        573.4    0.0225 659.342/659.342/659.342/659.342/576.924           0/0/0/0/0      247.4/247.4/247.4/247.4/245.3
+        CAP-G300     15.61 0.703 [0.676,0.723] 43.6 [40.9,46.8]   0.346         193.0   132.1        630.4    0.0135                     120/120/120/120/105           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+        HYB-G300     15.30 0.721 [0.696,0.740] 44.7 [41.9,48.1]   0.346         201.2    94.3        629.9    0.2156                               0/0/0/0/0           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+       SKIP-G300     26.39 0.078 [0.051,0.106]    4.8 [3.2,6.9]   0.669          62.1    59.6        487.6    0.4541                          -1/-1/-1/-1/-1      26/26/26/26/23      300.0/300.0/300.0/300.0/300.0
+        FIX-G600     14.96 0.740 [0.713,0.761] 45.8 [43.0,49.3]   0.309         498.2   238.1        924.2    0.0010                3480/3480/3480/3480/3060           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+     FIXSEL-G600     15.14 0.730 [0.704,0.750] 45.3 [42.4,48.7]   0.325         307.2   238.1        742.9    0.0035 1962.25/1962.25/1962.25/1962.25/1716.97           0/0/0/0/0      410.3/410.3/410.3/410.3/408.1
+        CAP-G600     14.98 0.739 [0.712,0.759] 45.8 [43.0,49.3]   0.311         493.9   238.1        925.8    0.0016                     240/240/240/240/210           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+        HYB-G600     14.92 0.742 [0.715,0.762] 45.9 [43.1,49.4]   0.309         495.1   106.0        931.1    0.0015                     240/240/240/240/210           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+       SKIP-G600     24.64 0.184 [0.135,0.232]  11.5 [8.4,14.9]   0.624         100.2    63.4        488.7    0.3726                          -1/-1/-1/-1/-1      66/66/66/66/58      600.0/600.0/600.0/600.0/600.0
+       FIX-G1200     14.75 0.750 [0.722,0.774] 46.5 [43.6,49.9]   0.293        1073.3   238.1       1249.7    0.0000                8280/8280/8280/8280/7260           0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0
+    FIXSEL-G1200     14.88 0.744 [0.717,0.765] 46.1 [43.2,49.5]   0.304         565.6   238.1       1002.6    0.0006 4059.92/4059.92/4059.92/4059.92/3552.43           0/0/0/0/0      672.5/672.5/672.5/672.5/670.3
+       CAP-G1200     14.75 0.751 [0.723,0.774] 46.5 [43.7,49.9]   0.293        1029.7   238.1       1207.4    0.0002                     720/720/720/720/630           0/0/0/0/0 1020.0/1020.0/1020.0/1020.0/1011.4
+       HYB-G1200     14.88 0.744 [0.717,0.764] 46.1 [43.4,49.4]   0.304         896.9    94.3       1180.1    0.2201                               0/0/0/0/0           0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0
+      SKIP-G1200     21.63 0.366 [0.286,0.432] 22.7 [17.4,28.0]   0.571         102.3    67.7        490.7    0.2880                          -1/-1/-1/-1/-1 146/146/146/146/128 1200.0/1200.0/1200.0/1200.0/1200.0
+
+--- level 1: target busy-hour rho 0.8, k per overlay 5/5/5/5/5 ---
+          policy  p99_dl_s           gap_closed          red_pct  mean_s  max_excess_s  harm_s  max_heavy_s  qw_fired                           B0_by_overlay Ncap_by_overlay                 promise_by_overlay
+            FCFS    119.35  0.000 [0.000,0.000]    0.0 [0.0,0.0]   4.160           0.0     0.0       1022.9    1.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+         SJF-ref     33.55  1.000 [1.000,1.000] 71.8 [67.0,75.1]   0.959        2667.4  1242.3       3072.3    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+         SPJF-M4     44.39  0.873 [0.851,0.887] 62.7 [57.4,66.2]   1.251        3055.1   390.9       3346.7    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+    SPJF-M4refit     44.41  0.873 [0.851,0.886] 62.7 [57.4,66.2]   1.251        3055.1   390.5       3346.7    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+    SPJF-tweedie     43.39  0.885 [0.862,0.898] 63.5 [58.0,67.3]   1.230        3044.5   469.3       3312.8    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+SPJF-tweedie_itr     43.44  0.884 [0.861,0.898] 63.5 [57.9,67.2]   1.232        2691.2   330.4       3131.9    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+        SPJF-r1s     42.82  0.891 [0.870,0.904] 64.0 [58.5,67.7]   1.230        2657.7   889.9       3098.2    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+        FIX-G300     53.97  0.761 [0.720,0.784] 54.7 [50.8,56.5]   2.055         214.1   186.3       1166.9    0.1092                     720/720/720/720/720       0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+     FIXSEL-G300     64.65  0.637 [0.540,0.698] 45.7 [39.7,48.5]   2.372         171.6   152.3       1105.3    0.2078 412.089/412.089/412.089/412.089/412.089       0/0/0/0/0      238.4/238.4/238.4/238.4/238.4
+        CAP-G300     56.13  0.736 [0.693,0.758] 52.8 [48.9,54.8]   2.073         209.8   114.0       1166.9    0.1170                          75/75/75/75/75       0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+        HYB-G300     54.75  0.752 [0.710,0.776] 54.0 [50.2,55.9]   2.058         214.1   117.6       1166.9    0.1767                               0/0/0/0/0       0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+       SKIP-G300    119.21 0.002 [-0.001,0.009]   0.1 [-0.1,0.6]   4.012          64.2    58.8       1023.7    0.8053                          -1/-1/-1/-1/-1  17/17/17/17/17      300.0/300.0/300.0/300.0/300.0
+        FIX-G600     47.05  0.842 [0.824,0.854] 60.4 [55.6,63.6]   1.539         512.9   446.7       1460.8    0.0111                2220/2220/2220/2220/2220       0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+     FIXSEL-G600     49.84  0.809 [0.786,0.824] 58.1 [53.7,60.6]   1.780         315.3   286.5       1281.6    0.0477 1226.41/1226.41/1226.41/1226.41/1226.41       0/0/0/0/0      401.3/401.3/401.3/401.3/401.3
+        CAP-G600     47.44  0.837 [0.815,0.852] 60.1 [55.1,63.2]   1.525         513.8   313.2       1466.8    0.0122                     150/150/150/150/150       0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+        HYB-G600     47.61  0.835 [0.815,0.849] 60.0 [55.0,63.1]   1.531         502.9   110.9       1466.9    0.0131                     150/150/150/150/150       0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+       SKIP-G600    118.66 0.008 [-0.002,0.026]   0.6 [-0.1,1.8]   3.847          97.5    63.5       1024.9    0.7403                          -1/-1/-1/-1/-1  42/42/42/42/42      600.0/600.0/600.0/600.0/600.0
+       FIX-G1200     45.39  0.861 [0.842,0.873] 61.8 [56.7,65.2]   1.387        1110.9   469.3       2063.6    0.0021                5220/5220/5220/5220/5220       0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0
+    FIXSEL-G1200     46.71  0.846 [0.827,0.858] 60.7 [55.8,63.9]   1.503         574.1   469.3       1524.2    0.0082 2537.45/2537.45/2537.45/2537.45/2537.45       0/0/0/0/0      663.5/663.5/663.5/663.5/663.5
+       CAP-G1200     45.23  0.863 [0.843,0.875] 62.0 [56.8,65.4]   1.361        1103.5   373.8       2063.6    0.0027                     450/450/450/450/450       0/0/0/0/0      984.0/984.0/984.0/984.0/984.0
+       HYB-G1200     46.68  0.846 [0.825,0.860] 60.7 [55.5,64.2]   1.405        1101.1   117.6       2063.6    0.0996                               0/0/0/0/0       0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0
+      SKIP-G1200    117.45  0.023 [0.004,0.074]    1.6 [0.3,5.0]   3.608         133.2    83.6       1027.0    0.6610                          -1/-1/-1/-1/-1  92/92/92/92/92 1200.0/1200.0/1200.0/1200.0/1200.0
+
+--- level 2: target busy-hour rho 1.0, k per overlay 4/4/4/4/4 ---
+          policy  p99_dl_s           gap_closed          red_pct  mean_s  max_excess_s  harm_s  max_heavy_s  qw_fired                           B0_by_overlay Ncap_by_overlay                 promise_by_overlay
+            FCFS    273.50  0.000 [0.000,0.000]    0.0 [0.0,0.0]  10.270           0.0     0.0       1542.8    1.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+         SJF-ref     43.63  1.000 [1.000,1.000] 84.0 [79.6,86.8]   1.696        4755.5  1365.9       5299.5    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+         SPJF-M4     67.29  0.897 [0.872,0.913] 75.3 [70.2,78.5]   2.352        5882.9   551.1       6264.1    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+    SPJF-M4refit     67.36  0.896 [0.871,0.913] 75.3 [70.1,78.5]   2.352        5896.6   551.1       6278.3    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+    SPJF-tweedie     62.91  0.916 [0.891,0.929] 77.0 [71.6,80.2]   2.292        5904.5   708.8       6286.2    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+SPJF-tweedie_itr     63.23  0.915 [0.891,0.928] 76.8 [71.5,80.1]   2.298        5448.9   529.0       6085.5    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+        SPJF-r1s     62.71  0.917 [0.895,0.929] 77.0 [71.7,80.3]   2.302        5368.2   879.2       5964.4    0.0000                          -1/-1/-1/-1/-1       0/0/0/0/0                inf/inf/inf/inf/inf
+        FIX-G300    170.14  0.450 [0.363,0.618] 37.8 [30.9,49.9]   5.529         227.9   208.2       1692.9    0.2841                     600/600/600/600/600       0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+     FIXSEL-G300    224.46  0.214 [0.147,0.357] 17.9 [12.5,28.7]   6.399         165.1   158.4       1625.2    0.4156 329.671/329.671/329.671/329.671/329.671       0/0/0/0/0      232.4/232.4/232.4/232.4/232.4
+        CAP-G300    164.37  0.474 [0.379,0.600] 39.8 [32.4,48.3]   5.578         228.9   130.2       1692.9    0.2877                          60/60/60/60/60       0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+        HYB-G300    170.49  0.448 [0.361,0.604] 37.6 [30.7,48.7]   5.549         231.4   145.8       1692.9    0.3107                               0/0/0/0/0       0/0/0/0/0      300.0/300.0/300.0/300.0/300.0
+       SKIP-G300    273.15 0.001 [-0.001,0.003]   0.1 [-0.1,0.2]  10.045          81.3    81.3       1543.6    0.9036                          -1/-1/-1/-1/-1  14/14/14/14/14      300.0/300.0/300.0/300.0/300.0
+        FIX-G600     86.64  0.813 [0.777,0.851] 68.3 [64.7,70.6]   3.867         523.5   520.5       1992.9    0.0720                1800/1800/1800/1800/1800       0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+     FIXSEL-G600    116.96  0.681 [0.597,0.762] 57.2 [51.0,61.6]   4.747         325.4   292.1       1788.2    0.1763 981.126/981.126/981.126/981.126/981.126       0/0/0/0/0      395.3/395.3/395.3/395.3/395.3
+        CAP-G600     89.61  0.800 [0.764,0.840] 67.2 [63.5,69.8]   3.840         515.8   339.1       1993.0    0.0714                     120/120/120/120/120       0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+        HYB-G600     91.21  0.793 [0.757,0.832] 66.6 [62.8,69.3]   3.869         515.8   123.4       1993.0    0.0707                     120/120/120/120/120       0/0/0/0/0      600.0/600.0/600.0/600.0/600.0
+       SKIP-G600    272.94 0.002 [-0.004,0.006]   0.2 [-0.3,0.5]   9.779         112.4    82.4       1544.7    0.8625                          -1/-1/-1/-1/-1  34/34/34/34/34      600.0/600.0/600.0/600.0/600.0
+       FIX-G1200     73.06  0.872 [0.846,0.893] 73.2 [68.8,75.9]   3.055        1116.5   708.8       2597.9    0.0069                4200/4200/4200/4200/4200       0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0
+    FIXSEL-G1200     83.28  0.827 [0.797,0.860] 69.5 [65.9,71.8]   3.699         578.4   564.2       2050.4    0.0572 2029.96/2029.96/2029.96/2029.96/2029.96       0/0/0/0/0      657.5/657.5/657.5/657.5/657.5
+       CAP-G1200     73.15  0.871 [0.847,0.892] 73.2 [68.7,75.9]   2.950        1120.4   567.7       2592.2    0.0081                     360/360/360/360/360       0/0/0/0/0      960.0/960.0/960.0/960.0/960.0
+       HYB-G1200     83.10  0.828 [0.799,0.855] 69.6 [65.0,72.6]   3.140        1110.6   145.8       2591.4    0.0618                               0/0/0/0/0       0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0
+      SKIP-G1200    273.06 0.002 [-0.009,0.013]   0.2 [-0.7,1.1]   9.354         144.5   105.0       1547.5    0.8069                          -1/-1/-1/-1/-1  74/74/74/74/74 1200.0/1200.0/1200.0/1200.0/1200.0
+
+max_excess / harm / max_heavy are the worst over the five overlays; the rest are means.  FIX = the equal-promise fixed budget B0 = Bmax; FIXSEL = the fixed budget the rule selects on the equal grid; CAP = the selected capped relative budget; HYB = the selected hybrid; SKIP = finite skip charged at dispatch.
+
+----------------------------------------------------------------------------------------------------
+6. PAIRED DIFFERENCES (week-block paired bootstrap; resolved = CI excludes 0)
+----------------------------------------------------------------------------------------------------
+ level  rho_target                                pair                                                                   label                  d_gap  resolved               verdict
+     0         0.5              SPJF-tweedie - SPJF-M4                                        ranking score: Tweedie vs log M4  -0.001 [-0.017,0.013]     False            unresolved
+     0         0.5              SPJF-M4refit - SPJF-M4                                                     refit-noise control   0.001 [-0.002,0.002]     False            unresolved
+     0         0.5             SPJF-r1s - SPJF-tweedie                                                  R1S-Tweedie vs Tweedie -0.010 [-0.022,-0.002]      True   SPJF-tweedie better
+     0         0.5              CAP-G300 - FIXSEL-G300    capped relative vs the selected fixed budget, equal grids, G = 300 s   0.006 [-0.003,0.013]     False            unresolved
+     0         0.5                 CAP-G300 - FIX-G300  capped relative vs the equal-promise fixed budget B0 = Bmax, G = 300 s -0.017 [-0.024,-0.010]      True       FIX-G300 better
+     0         0.5                 HYB-G300 - CAP-G300                         hybrid (queue-length term) vs capped, G = 300 s    0.018 [0.012,0.024]      True       HYB-G300 better
+     0         0.5              HYB-G300 - FIXSEL-G300                          hybrid vs the selected fixed budget, G = 300 s    0.024 [0.015,0.032]      True       HYB-G300 better
+     0         0.5              FIXSEL-G300 - FIX-G300                           selected fixed budget vs B0 = Bmax, G = 300 s -0.024 [-0.030,-0.014]      True       FIX-G300 better
+     0         0.5             CAP-G300 - SPJF-tweedie                                           guard vs unguarded, G = 300 s -0.048 [-0.063,-0.034]      True   SPJF-tweedie better
+     0         0.5                CAP-G300 - SKIP-G300                               capped relative vs finite skip, G = 300 s    0.626 [0.589,0.654]      True       CAP-G300 better
+     0         0.5              CAP-G600 - FIXSEL-G600    capped relative vs the selected fixed budget, equal grids, G = 600 s    0.009 [0.005,0.012]      True       CAP-G600 better
+     0         0.5                 CAP-G600 - FIX-G600  capped relative vs the equal-promise fixed budget B0 = Bmax, G = 600 s  -0.001 [-0.003,0.001]     False            unresolved
+     0         0.5                 HYB-G600 - CAP-G600                         hybrid (queue-length term) vs capped, G = 600 s   0.002 [-0.000,0.006]     False            unresolved
+     0         0.5              HYB-G600 - FIXSEL-G600                          hybrid vs the selected fixed budget, G = 600 s    0.011 [0.006,0.017]      True       HYB-G600 better
+     0         0.5              FIXSEL-G600 - FIX-G600                           selected fixed budget vs B0 = Bmax, G = 600 s -0.010 [-0.014,-0.006]      True       FIX-G600 better
+     0         0.5             CAP-G600 - SPJF-tweedie                                           guard vs unguarded, G = 600 s -0.012 [-0.020,-0.006]      True   SPJF-tweedie better
+     0         0.5                CAP-G600 - SKIP-G600                               capped relative vs finite skip, G = 600 s    0.555 [0.500,0.606]      True       CAP-G600 better
+     0         0.5            CAP-G1200 - FIXSEL-G1200   capped relative vs the selected fixed budget, equal grids, G = 1200 s    0.007 [0.003,0.011]      True      CAP-G1200 better
+     0         0.5               CAP-G1200 - FIX-G1200 capped relative vs the equal-promise fixed budget B0 = Bmax, G = 1200 s   0.000 [-0.001,0.002]     False            unresolved
+     0         0.5               HYB-G1200 - CAP-G1200                        hybrid (queue-length term) vs capped, G = 1200 s -0.007 [-0.012,-0.001]      True      CAP-G1200 better
+     0         0.5            HYB-G1200 - FIXSEL-G1200                         hybrid vs the selected fixed budget, G = 1200 s   0.000 [-0.005,0.006]     False            unresolved
+     0         0.5            FIXSEL-G1200 - FIX-G1200                          selected fixed budget vs B0 = Bmax, G = 1200 s -0.006 [-0.011,-0.003]      True      FIX-G1200 better
+     0         0.5            CAP-G1200 - SPJF-tweedie                                          guard vs unguarded, G = 1200 s  -0.001 [-0.002,0.001]     False            unresolved
+     0         0.5              CAP-G1200 - SKIP-G1200                              capped relative vs finite skip, G = 1200 s    0.385 [0.311,0.466]      True      CAP-G1200 better
+     0         0.5   CAP-G600-reversed - SPJF-reversed                         guard vs unguarded under the reversed predictor -0.036 [-0.046,-0.024]      True  SPJF-reversed better
+     0         0.5       CAP-G600-random - SPJF-random                           guard vs unguarded under the random predictor -0.016 [-0.023,-0.012]      True    SPJF-random better
+     0         0.5 CAP-G600-top1short - SPJF-top1short                        guard vs unguarded under the top1short predictor -0.027 [-0.042,-0.019]      True SPJF-top1short better
+     1         0.8              SPJF-tweedie - SPJF-M4                                        ranking score: Tweedie vs log M4    0.012 [0.005,0.018]      True   SPJF-tweedie better
+     1         0.8              SPJF-M4refit - SPJF-M4                                                     refit-noise control  -0.000 [-0.001,0.001]     False            unresolved
+     1         0.8             SPJF-r1s - SPJF-tweedie                                                  R1S-Tweedie vs Tweedie    0.007 [0.003,0.011]      True       SPJF-r1s better
+     1         0.8              CAP-G300 - FIXSEL-G300    capped relative vs the selected fixed budget, equal grids, G = 300 s    0.099 [0.056,0.157]      True       CAP-G300 better
+     1         0.8                 CAP-G300 - FIX-G300  capped relative vs the equal-promise fixed budget B0 = Bmax, G = 300 s -0.025 [-0.033,-0.019]      True       FIX-G300 better
+     1         0.8                 HYB-G300 - CAP-G300                         hybrid (queue-length term) vs capped, G = 300 s    0.016 [0.008,0.026]      True       HYB-G300 better
+     1         0.8              HYB-G300 - FIXSEL-G300                          hybrid vs the selected fixed budget, G = 300 s    0.115 [0.074,0.172]      True       HYB-G300 better
+     1         0.8              FIXSEL-G300 - FIX-G300                           selected fixed budget vs B0 = Bmax, G = 300 s -0.124 [-0.181,-0.082]      True       FIX-G300 better
+     1         0.8             CAP-G300 - SPJF-tweedie                                           guard vs unguarded, G = 300 s -0.149 [-0.192,-0.123]      True   SPJF-tweedie better
+     1         0.8                CAP-G300 - SKIP-G300                               capped relative vs finite skip, G = 300 s    0.734 [0.692,0.754]      True       CAP-G300 better
+     1         0.8              CAP-G600 - FIXSEL-G600    capped relative vs the selected fixed budget, equal grids, G = 600 s    0.028 [0.020,0.039]      True       CAP-G600 better
+     1         0.8                 CAP-G600 - FIX-G600  capped relative vs the equal-promise fixed budget B0 = Bmax, G = 600 s -0.005 [-0.009,-0.001]      True       FIX-G600 better
+     1         0.8                 HYB-G600 - CAP-G600                         hybrid (queue-length term) vs capped, G = 600 s  -0.002 [-0.005,0.002]     False            unresolved
+     1         0.8              HYB-G600 - FIXSEL-G600                          hybrid vs the selected fixed budget, G = 600 s    0.026 [0.018,0.038]      True       HYB-G600 better
+     1         0.8              FIXSEL-G600 - FIX-G600                           selected fixed budget vs B0 = Bmax, G = 600 s -0.032 [-0.044,-0.025]      True       FIX-G600 better
+     1         0.8             CAP-G600 - SPJF-tweedie                                           guard vs unguarded, G = 600 s -0.048 [-0.058,-0.037]      True   SPJF-tweedie better
+     1         0.8                CAP-G600 - SKIP-G600                               capped relative vs finite skip, G = 600 s    0.829 [0.798,0.846]      True       CAP-G600 better
+     1         0.8            CAP-G1200 - FIXSEL-G1200   capped relative vs the selected fixed budget, equal grids, G = 1200 s    0.017 [0.011,0.023]      True      CAP-G1200 better
+     1         0.8               CAP-G1200 - FIX-G1200 capped relative vs the equal-promise fixed budget B0 = Bmax, G = 1200 s   0.002 [-0.000,0.004]     False            unresolved
+     1         0.8               HYB-G1200 - CAP-G1200                        hybrid (queue-length term) vs capped, G = 1200 s -0.017 [-0.023,-0.012]      True      CAP-G1200 better
+     1         0.8            HYB-G1200 - FIXSEL-G1200                         hybrid vs the selected fixed budget, G = 1200 s   0.000 [-0.006,0.005]     False            unresolved
+     1         0.8            FIXSEL-G1200 - FIX-G1200                          selected fixed budget vs B0 = Bmax, G = 1200 s -0.016 [-0.020,-0.011]      True      FIX-G1200 better
+     1         0.8            CAP-G1200 - SPJF-tweedie                                          guard vs unguarded, G = 1200 s -0.022 [-0.027,-0.016]      True   SPJF-tweedie better
+     1         0.8              CAP-G1200 - SKIP-G1200                              capped relative vs finite skip, G = 1200 s    0.841 [0.778,0.864]      True      CAP-G1200 better
+     1         0.8   CAP-G600-reversed - SPJF-reversed                         guard vs unguarded under the reversed predictor  -0.051 [-0.112,0.016]     False            unresolved
+     1         0.8       CAP-G600-random - SPJF-random                           guard vs unguarded under the random predictor -0.115 [-0.155,-0.079]      True    SPJF-random better
+     1         0.8 CAP-G600-top1short - SPJF-top1short                        guard vs unguarded under the top1short predictor -0.116 [-0.145,-0.079]      True SPJF-top1short better
+     2         1.0              SPJF-tweedie - SPJF-M4                                        ranking score: Tweedie vs log M4    0.019 [0.011,0.024]      True   SPJF-tweedie better
+     2         1.0              SPJF-M4refit - SPJF-M4                                                     refit-noise control  -0.000 [-0.001,0.000]     False            unresolved
+     2         1.0             SPJF-r1s - SPJF-tweedie                                                  R1S-Tweedie vs Tweedie   0.001 [-0.002,0.006]     False            unresolved
+     2         1.0              CAP-G300 - FIXSEL-G300    capped relative vs the selected fixed budget, equal grids, G = 300 s    0.261 [0.204,0.283]      True       CAP-G300 better
+     2         1.0                 CAP-G300 - FIX-G300  capped relative vs the equal-promise fixed budget B0 = Bmax, G = 300 s   0.025 [-0.024,0.033]     False            unresolved
+     2         1.0                 HYB-G300 - CAP-G300                         hybrid (queue-length term) vs capped, G = 300 s  -0.026 [-0.035,0.009]     False            unresolved
+     2         1.0              HYB-G300 - FIXSEL-G300                          hybrid vs the selected fixed budget, G = 300 s    0.234 [0.183,0.272]      True       HYB-G300 better
+     2         1.0              FIXSEL-G300 - FIX-G300                           selected fixed budget vs B0 = Bmax, G = 300 s -0.236 [-0.281,-0.187]      True       FIX-G300 better
+     2         1.0             CAP-G300 - SPJF-tweedie                                           guard vs unguarded, G = 300 s -0.442 [-0.534,-0.316]      True   SPJF-tweedie better
+     2         1.0                CAP-G300 - SKIP-G300                               capped relative vs finite skip, G = 300 s    0.473 [0.378,0.598]      True       CAP-G300 better
+     2         1.0              CAP-G600 - FIXSEL-G600    capped relative vs the selected fixed budget, equal grids, G = 600 s    0.119 [0.072,0.179]      True       CAP-G600 better
+     2         1.0                 CAP-G600 - FIX-G600  capped relative vs the equal-promise fixed budget B0 = Bmax, G = 600 s -0.013 [-0.018,-0.008]      True       FIX-G600 better
+     2         1.0                 HYB-G600 - CAP-G600                         hybrid (queue-length term) vs capped, G = 600 s -0.007 [-0.013,-0.002]      True       CAP-G600 better
+     2         1.0              HYB-G600 - FIXSEL-G600                          hybrid vs the selected fixed budget, G = 600 s    0.111 [0.063,0.173]      True       HYB-G600 better
+     2         1.0              FIXSEL-G600 - FIX-G600                           selected fixed budget vs B0 = Bmax, G = 600 s -0.131 [-0.189,-0.085]      True       FIX-G600 better
+     2         1.0             CAP-G600 - SPJF-tweedie                                           guard vs unguarded, G = 600 s -0.116 [-0.143,-0.077]      True   SPJF-tweedie better
+     2         1.0                CAP-G600 - SKIP-G600                               capped relative vs finite skip, G = 600 s    0.797 [0.763,0.839]      True       CAP-G600 better
+     2         1.0            CAP-G1200 - FIXSEL-G1200   capped relative vs the selected fixed budget, equal grids, G = 1200 s    0.044 [0.028,0.058]      True      CAP-G1200 better
+     2         1.0               CAP-G1200 - FIX-G1200 capped relative vs the equal-promise fixed budget B0 = Bmax, G = 1200 s  -0.000 [-0.003,0.004]     False            unresolved
+     2         1.0               HYB-G1200 - CAP-G1200                        hybrid (queue-length term) vs capped, G = 1200 s -0.043 [-0.052,-0.035]      True      CAP-G1200 better
+     2         1.0            HYB-G1200 - FIXSEL-G1200                         hybrid vs the selected fixed budget, G = 1200 s   0.001 [-0.015,0.016]     False            unresolved
+     2         1.0            FIXSEL-G1200 - FIX-G1200                          selected fixed budget vs B0 = Bmax, G = 1200 s -0.045 [-0.058,-0.028]      True      FIX-G1200 better
+     2         1.0            CAP-G1200 - SPJF-tweedie                                          guard vs unguarded, G = 1200 s -0.045 [-0.055,-0.029]      True   SPJF-tweedie better
+     2         1.0              CAP-G1200 - SKIP-G1200                              capped relative vs finite skip, G = 1200 s    0.870 [0.845,0.893]      True      CAP-G1200 better
+     2         1.0   CAP-G600-reversed - SPJF-reversed                         guard vs unguarded under the reversed predictor   0.048 [-0.020,0.172]     False            unresolved
+     2         1.0       CAP-G600-random - SPJF-random                           guard vs unguarded under the random predictor -0.292 [-0.329,-0.242]      True    SPJF-random better
+     2         1.0 CAP-G600-top1short - SPJF-top1short                        guard vs unguarded under the top1short predictor  -0.086 [-0.119,0.036]     False            unresolved
+
+----------------------------------------------------------------------------------------------------
+7. EXCESS AMONG JOBS FCFS ALREADY MAKES WAIT (W_FCFS > 60 s)
+----------------------------------------------------------------------------------------------------
+ level  rho_target             policy  lw_ex_mean  lw_ex_p50  lw_ex_p90  lw_ex_p99  lw_ex_max  lw_ratio_p99  lw_ratio_max
+     0         0.5           FIX-G300    -100.974    -83.728     -2.432    140.527    187.555         2.516         3.632
+     0         0.5        FIXSEL-G300     -87.221    -77.402     32.671     91.447    136.094         2.206         2.804
+     0         0.5           CAP-G300    -101.922    -84.625     -0.038    138.471    192.990         2.405         3.672
+     0         0.5           HYB-G300    -101.601    -84.263     -0.270    139.619    187.168         2.476         3.626
+     0         0.5          SKIP-G300      -4.433      0.735      1.136      3.936     29.580         1.063         1.412
+     0         0.5           FIX-G600    -116.518    -92.127    -19.778    173.620    498.209         3.037         8.292
+     0         0.5        FIXSEL-G600    -110.139    -88.507    -15.450    201.467    307.176         2.725         5.444
+     0         0.5           CAP-G600    -115.310    -91.103    -16.974    174.205    493.897         3.079         7.791
+     0         0.5           HYB-G600    -115.991    -90.938    -19.393    181.837    495.140         2.833         8.293
+     0         0.5          SKIP-G600     -10.742      1.805      3.126      9.513     38.707         1.178         1.493
+     0         0.5          FIX-G1200    -122.732    -96.732    -30.085    156.242   1073.294         2.956        15.965
+     0         0.5       FIXSEL-G1200    -118.586    -93.511    -23.704    169.176    565.229         3.126         9.383
+     0         0.5          CAP-G1200    -122.553    -96.998    -30.788    159.768   1029.672         3.066        10.135
+     0         0.5          HYB-G1200    -117.906    -93.775    -22.086    185.275    896.947         2.866        12.447
+     0         0.5         SKIP-G1200     -22.010      3.889      7.005     20.756     73.557         1.274         1.964
+     0         0.5  CAP-G600-reversed     124.067     73.248    406.906    466.057    497.122         6.456         7.668
+     0         0.5    CAP-G600-random     -50.547    -69.684    139.051    451.575    489.935         5.303         8.008
+     0         0.5 CAP-G600-top1short     101.079     44.541    398.968    472.740    497.109         6.159         7.664
+     1         0.8           FIX-G300    -116.448    -82.600     56.083    150.896    209.719         2.205         4.163
+     1         0.8        FIXSEL-G300     -93.952    -71.017     82.563     94.634    171.631         1.954         3.214
+     1         0.8           CAP-G300    -114.949    -80.903     61.824    150.316    209.824         2.211         3.895
+     1         0.8           HYB-G300    -116.378    -82.403     58.511    150.490    210.675         2.196         4.251
+     1         0.8          SKIP-G300      -3.512      0.745      1.036      3.361     64.150         1.042         1.739
+     1         0.8           FIX-G600    -153.610    -96.751    -29.471    424.366    512.867         2.306         8.914
+     1         0.8        FIXSEL-G600    -136.173    -91.137     -9.963    247.808    315.334         2.273         5.887
+     1         0.8           CAP-G600    -154.402    -96.695    -27.745    399.710    513.833         2.354         7.693
+     1         0.8           HYB-G600    -154.058    -96.147    -25.116    419.779    502.935         2.335         8.469
+     1         0.8          SKIP-G600      -8.482      1.812      2.525      7.369     81.088         1.086         1.984
+     1         0.8          FIX-G1200    -164.676    -98.174    -33.210    213.795   1110.929         2.340        18.955
+     1         0.8       FIXSEL-G1200    -156.276    -97.638    -31.676    377.856    574.134         2.311         9.891
+     1         0.8          CAP-G1200    -166.447    -98.510    -32.669    217.171   1103.450         2.358        11.825
+     1         0.8          HYB-G1200    -163.258    -99.299    -30.153    286.218   1101.072         2.440        12.955
+     1         0.8         SKIP-G1200     -17.504      3.919      5.141     14.167    100.718         1.156         2.517
+     1         0.8  CAP-G600-reversed     139.143     67.956    452.424    482.329    513.549         5.565         8.666
+     1         0.8    CAP-G600-random     -48.525    -67.336    323.826    462.783    504.510         4.596         8.663
+     1         0.8 CAP-G600-top1short     107.492     38.090    451.241    481.516    516.213         5.354         8.749
+     2         1.0           FIX-G300    -114.965    -80.059    146.803    159.735    227.895         2.179         4.237
+     2         1.0        FIXSEL-G300     -89.813    -68.349     82.634     97.711    165.107         1.928         3.493
+     2         1.0           CAP-G300    -113.394    -78.176    140.650    158.466    228.915         2.176         4.285
+     2         1.0           HYB-G300    -114.592    -79.565    147.054    159.834    231.402         2.182         4.391
+     2         1.0          SKIP-G300      -2.943      0.756      1.053      3.081     64.150         1.031         1.880
+     2         1.0           FIX-G600    -163.765    -97.822    -25.252    450.591    523.503         2.252         9.218
+     2         1.0        FIXSEL-G600    -137.840    -89.202     25.617    248.273    325.384         2.264         6.029
+     2         1.0           CAP-G600    -164.291    -97.470    -24.145    450.566    515.843         2.296         7.945
+     2         1.0           HYB-G600    -163.512    -96.233    -19.494    450.594    515.838         2.290         8.793
+     2         1.0          SKIP-G600      -6.988      1.821      2.426      6.764    101.562         1.070         2.125
+     2         1.0          FIX-G1200    -187.572   -103.184    -37.297    383.513   1116.494         2.283        18.756
+     2         1.0       FIXSEL-G1200    -168.663    -98.939    -28.672    507.979    576.266         2.246         9.786
+     2         1.0          CAP-G1200    -190.566   -103.674    -37.535    334.944   1120.430         2.328        12.183
+     2         1.0          HYB-G1200    -185.018   -101.292    -31.471    443.561   1110.640         2.387        13.559
+     2         1.0         SKIP-G1200     -14.464      3.931      5.035     13.003    129.902         1.134         3.139
+     2         1.0  CAP-G600-reversed     142.895     72.922    459.589    488.976    534.791         5.733         9.297
+     2         1.0    CAP-G600-random     -47.374    -67.091    420.131    468.517    520.734         4.788         9.245
+     2         1.0 CAP-G600-top1short     106.446     36.357    457.102    487.224    534.727         5.635         9.403
+lw_ex_* are excesses in seconds over that job's FCFS wait; lw_ratio_* are W_policy / W_FCFS.  Means are over the overlays, maxima are the worst overlay.
+
+----------------------------------------------------------------------------------------------------
+8. ADVERSARIAL PREDICTORS
+----------------------------------------------------------------------------------------------------
+ level  rho_target             policy  p99_dl_s  gap_closed  mean_s  max_excess_s  harm_wf1s_s  lw_ex_max  guar_excess_s  used_over_allowed  qw_fired
+     0         0.5      SPJF-reversed    42.723      -0.862   1.334      1240.127     1240.127   1217.568            inf                NaN     0.000
+     0         0.5  CAP-G600-reversed    43.391      -0.898   1.273       497.122      287.084    497.122          600.0              0.829     0.131
+     0         0.5        SPJF-random    16.822       0.639   0.517      1307.656     1275.991   1307.656            inf                NaN     0.000
+     0         0.5    CAP-G600-random    17.123       0.622   0.538       489.935      323.980    489.935          600.0              0.817     0.023
+     0         0.5     SPJF-top1short    38.256      -0.598   1.137      1307.315     1238.543   1213.478            inf                NaN     0.000
+     0         0.5 CAP-G600-top1short    38.737      -0.624   1.112       497.109      273.424    497.109          600.0              0.829     0.114
+     1         0.8      SPJF-reversed   228.117      -1.277   7.739      3387.891     3387.891   2987.947            inf                NaN     0.000
+     1         0.8  CAP-G600-reversed   232.410      -1.328   7.056       513.549      323.406    513.549          600.0              0.856     0.323
+     1         0.8        SPJF-random    78.517       0.474   2.872      3319.423     3257.854   3186.270            inf                NaN     0.000
+     1         0.8    CAP-G600-random    88.391       0.358   3.272       504.510      352.307    504.510          600.0              0.841     0.136
+     1         0.8     SPJF-top1short   212.555      -1.098   6.514      3292.064     3181.707   3002.434            inf                NaN     0.000
+     1         0.8 CAP-G600-top1short   222.583      -1.214   6.249       516.213      308.475    516.213          600.0              0.860     0.281
+     2         1.0      SPJF-reversed   557.441      -1.235  18.890      6295.652     5248.836   5797.286            inf                NaN     0.000
+     2         1.0  CAP-G600-reversed   546.479      -1.187  16.687       534.791      309.097    534.791          600.0              0.891     0.442
+     2         1.0        SPJF-random   194.775       0.341   6.896      6235.494     6173.575   6030.251            inf                NaN     0.000
+     2         1.0    CAP-G600-random   261.933       0.049   8.311       520.734      332.864    520.734          600.0              0.868     0.252
+     2         1.0     SPJF-top1short   523.518      -1.088  15.562      6108.860     3399.037   5823.922            inf                NaN     0.000
+     2         1.0 CAP-G600-top1short   543.616      -1.175  14.862       534.727      324.589    534.727          600.0              0.891     0.400
+
+----------------------------------------------------------------------------------------------------
+9. SINGLE-SERVER CONFIGURATION (k = 1, busy-hour rho ~ 0.80)
+----------------------------------------------------------------------------------------------------
+            policy   family      G  B0_by_overlay   eta  gam_by_overlay  Ncap_by_overlay  promise_by_overlay  p99_dl_s  gap_closed  gap_lo  gap_hi  mean_s  max_excess_s  harm_wf1s_s  lw_ex_p99  lw_ex_max  used_over_allowed
+              FCFS        -   -1.0        -1.0000 -1.00              -1                0                 inf  221.2744      0.0000  0.0000  0.0000  6.5935        0.0000       0.0000     0.0000     0.0000                NaN
+           SJF-ref        -   -1.0        -1.0000 -1.00              -1                0                 inf   45.3248      1.0000  1.0000  1.0000  1.8713     2054.5023     777.9388    72.2845  2054.5023                NaN
+           SPJF-M4        -   -1.0        -1.0000 -1.00              -1                0                 inf   64.7433      0.8896  0.8309  0.9172  2.5205     2520.2899     400.1355   274.7599  2520.2899                NaN
+      SPJF-M4refit        -   -1.0        -1.0000 -1.00              -1                0                 inf   64.7030      0.8899  0.8311  0.9175  2.5224     2520.2899     400.1355   278.1731  2520.2899                NaN
+      SPJF-tweedie        -   -1.0        -1.0000 -1.00              -1                0                 inf   60.9289      0.9113  0.8542  0.9329  2.4449     2520.2899     656.3650   267.4905  2520.2899                NaN
+  SPJF-tweedie_itr        -   -1.0        -1.0000 -1.00              -1                0                 inf   61.4683      0.9082  0.8500  0.9309  2.4497     2325.4278     375.1261   270.5708  2325.4278                NaN
+          SPJF-r1s        -   -1.0        -1.0000 -1.00              -1                0                 inf   60.7581      0.9123  0.8692  0.9330  2.4221     2325.4278     362.0655   232.7158  2325.4278                NaN
+          FIX-G300 fixed_eq  300.0       240.0000  0.00               0                0               300.0   83.2414      0.7845  0.5861  0.8657  3.0711      295.1349     246.3363   242.1636   295.1349             0.9838
+       FIXSEL-G300    fixed  300.0        82.4177  0.00               0                0               142.4  126.4862      0.5387  0.1953  0.7194  3.7766      140.3158     119.6503    97.8477   140.3158             0.9852
+          CAP-G300   capped  300.0        15.0000  0.50               0                0               150.0   90.3223      0.7443  0.5597  0.8263  3.1735      295.1349      81.7982   240.8521   295.1349             0.9838
+          HYB-G300   hybrid  300.0         0.0000  0.00               4                0               300.0  106.2218      0.6539  0.5109  0.7112  3.4269      295.1349      53.9019   240.8151   295.1349             0.9919
+         SKIP-G300     skip  300.0        -1.0000  0.00               0                5               300.0  220.3199      0.0054 -0.0016  0.0191  6.2841       95.0859      81.7982     4.1390    51.7364             0.3170
+          FIX-G600 fixed_eq  600.0       540.0000  0.00               0                0               600.0   68.3147      0.8693  0.7836  0.9065  2.6920      592.5319     563.3744   526.5055   592.5319             0.9876
+       FIXSEL-G600    fixed  600.0       245.2810  0.00               0                0               305.3   82.2348      0.7902  0.5950  0.8684  3.0524      303.2653     246.3363   245.9105   303.2653             0.9934
+          CAP-G600   capped  600.0        30.0000  0.75               0                0               360.0   70.5637      0.8566  0.7789  0.8978  2.7003      592.5319     165.6877   459.5789   592.5319             0.9876
+          HYB-G600   hybrid  600.0        30.0000  0.00               4                0               600.0   90.5239      0.7431  0.6352  0.8168  3.0440      592.5319      81.7982   402.4921   592.5319             0.9876
+         SKIP-G600     skip  600.0        -1.0000  0.00               0               10               600.0  219.8854      0.0079 -0.0048  0.0373  6.0441      100.8546      83.2046     9.6349    81.0534             0.1681
+         FIX-G1200 fixed_eq 1200.0      1140.0000  0.00               0                0              1200.0   63.1619      0.8986  0.8361  0.9236  2.5530     1171.6655     656.3650   309.7257  1171.6655             0.9764
+      FIXSEL-G1200    fixed 1200.0       507.4900  0.00               0                0               567.5   68.6297      0.8675  0.7858  0.9054  2.7091      558.9396     509.2674   507.5332   558.9396             0.9849
+         CAP-G1200   capped 1200.0        90.0000  0.75               0                0               600.0   63.7131      0.8955  0.8336  0.9208  2.5537     1181.3375     366.4079   329.3005  1181.3375             0.9844
+         HYB-G1200   hybrid 1200.0         0.0000  0.00               4                0              1200.0   98.4228      0.6982  0.6320  0.7422  3.1612     1165.1454      53.9019   327.2923  1165.1454             0.9919
+        SKIP-G1200     skip 1200.0        -1.0000  0.00               0               20              1200.0  217.4201      0.0219 -0.0077  0.0850  5.6772      166.8670      97.6901    16.1663   166.8670             0.1391
+     SPJF-reversed        -   -1.0        -1.0000 -1.00              -1                0                 inf  415.3743     -1.1032 -1.3413 -0.8891 11.4145     2696.1870    2487.0641  1739.4297  2502.9898                NaN
+ CAP-G600-reversed   capped  600.0        30.0000  0.75               0                0               360.0  383.6358     -0.9228 -1.1287 -0.7939 10.4113      596.1245     177.8721   558.1701   596.1245             0.9935
+       SPJF-random        -   -1.0        -1.0000 -1.00              -1                0                 inf  159.7873      0.3495  0.1880  0.4678  5.1441     2662.5581    1600.2566  1000.7069  2488.2746                NaN
+   CAP-G600-random   capped  600.0        30.0000  0.75               0                0               360.0  185.9139      0.2010  0.0499  0.3354  5.5494      596.9447     165.8422   547.1784   596.9447             0.9949
+    SPJF-top1short        -   -1.0        -1.0000 -1.00              -1                0                 inf  382.2755     -0.9150 -1.1181 -0.7406  9.8718     2660.1561    1669.1669  1473.2989  2496.8100                NaN
+CAP-G600-top1short   capped  600.0        30.0000  0.75               0                0               360.0  379.5558     -0.8996 -1.0660 -0.7789  9.5627      597.0194     177.8721   564.9734   597.0194             0.9950
+
+----------------------------------------------------------------------------------------------------
+10. THE PER-JOB THEOREM
+----------------------------------------------------------------------------------------------------
+    work budget  W <= min( (k W_F + C_i + (3k-2)L)/(k - eps), W_F + (Bmax + (3k-2)L)/k )
+    finite skip  W <= W_F + (N + 2k - 2) L / k
+  trace  level             policy      G                           B0_by_overlay  eta gam_by_overlay          Bmax_by_overlay     Ncap_by_overlay                 promise_by_overlay  guar_excess_s  max_excess_s  used_over_allowed
+primary      0           FIX-G300  300.0                 1080/1080/1080/1080/960 0.00      0/0/0/0/0  1080/1080/1080/1080/960           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      201.1524             0.6705
+primary      0        FIXSEL-G300  300.0 659.342/659.342/659.342/659.342/576.924 0.00      0/0/0/0/0  1080/1080/1080/1080/960           0/0/0/0/0      247.4/247.4/247.4/247.4/245.3       246.9892      142.9698             0.5778
+primary      0           CAP-G300  300.0                     120/120/120/120/105 0.50      0/0/0/0/0  1080/1080/1080/1080/960           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      192.9896             0.6433
+primary      0           HYB-G300  300.0                               0/0/0/0/0 0.00 32/32/32/32/28  1080/1080/1080/1080/960           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      201.1524             0.6705
+primary      0          SKIP-G300  300.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0      26/26/26/26/23      300.0/300.0/300.0/300.0/300.0       300.0000       62.1354             0.2071
+primary      0           FIX-G600  600.0                3480/3480/3480/3480/3060 0.00      0/0/0/0/0 3480/3480/3480/3480/3060           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      498.2089             0.8303
+primary      0        FIXSEL-G600  600.0 1962.25/1962.25/1962.25/1962.25/1716.97 0.00      0/0/0/0/0 3480/3480/3480/3480/3060           0/0/0/0/0      410.3/410.3/410.3/410.3/408.1       409.8529      307.1762             0.7487
+primary      0           CAP-G600  600.0                     240/240/240/240/210 0.75      0/0/0/0/0 3480/3480/3480/3480/3060           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      493.8966             0.8232
+primary      0           HYB-G600  600.0                     240/240/240/240/210 0.00 32/32/32/32/28 3480/3480/3480/3480/3060           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      495.1401             0.8252
+primary      0          SKIP-G600  600.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0      66/66/66/66/58      600.0/600.0/600.0/600.0/600.0       600.0000      100.1878             0.1670
+primary      0          FIX-G1200 1200.0                8280/8280/8280/8280/7260 0.00      0/0/0/0/0 8280/8280/8280/8280/7260           0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000     1073.2942             0.8944
+primary      0       FIXSEL-G1200 1200.0 4059.92/4059.92/4059.92/4059.92/3552.43 0.00      0/0/0/0/0 8280/8280/8280/8280/7260           0/0/0/0/0      672.5/672.5/672.5/672.5/670.3       672.0614      565.6172             0.8411
+primary      0          CAP-G1200 1200.0                     720/720/720/720/630 0.75      0/0/0/0/0 8280/8280/8280/8280/7260           0/0/0/0/0 1020.0/1020.0/1020.0/1020.0/1011.4      1200.0000     1029.6724             0.8581
+primary      0          HYB-G1200 1200.0                               0/0/0/0/0 0.00 32/32/32/32/28 8280/8280/8280/8280/7260           0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000      896.9473             0.8735
+primary      0         SKIP-G1200 1200.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0 146/146/146/146/128 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000      102.2701             0.0852
+primary      0  CAP-G600-reversed  600.0                     240/240/240/240/210 0.75      0/0/0/0/0 3480/3480/3480/3480/3060           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      497.1223             0.8285
+primary      0    CAP-G600-random  600.0                     240/240/240/240/210 0.75      0/0/0/0/0 3480/3480/3480/3480/3060           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      489.9349             0.8166
+primary      0 CAP-G600-top1short  600.0                     240/240/240/240/210 0.75      0/0/0/0/0 3480/3480/3480/3480/3060           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      497.1095             0.8285
+primary      1           FIX-G300  300.0                     720/720/720/720/720 0.00      0/0/0/0/0      720/720/720/720/720           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      214.1233             0.7137
+primary      1        FIXSEL-G300  300.0 412.089/412.089/412.089/412.089/412.089 0.00      0/0/0/0/0      720/720/720/720/720           0/0/0/0/0      238.4/238.4/238.4/238.4/238.4       238.4178      171.6314             0.7199
+primary      1           CAP-G300  300.0                          75/75/75/75/75 0.50      0/0/0/0/0      720/720/720/720/720           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      209.8236             0.6994
+primary      1           HYB-G300  300.0                               0/0/0/0/0 0.00 20/20/20/20/20      720/720/720/720/720           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      214.1211             0.7137
+primary      1          SKIP-G300  300.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0      17/17/17/17/17      300.0/300.0/300.0/300.0/300.0       300.0000       64.1504             0.2138
+primary      1           FIX-G600  600.0                2220/2220/2220/2220/2220 0.00      0/0/0/0/0 2220/2220/2220/2220/2220           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      512.8666             0.8548
+primary      1        FIXSEL-G600  600.0 1226.41/1226.41/1226.41/1226.41/1226.41 0.00      0/0/0/0/0 2220/2220/2220/2220/2220           0/0/0/0/0      401.3/401.3/401.3/401.3/401.3       401.2815      315.3342             0.7858
+primary      1           CAP-G600  600.0                     150/150/150/150/150 0.75      0/0/0/0/0 2220/2220/2220/2220/2220           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      513.8331             0.8564
+primary      1           HYB-G600  600.0                     150/150/150/150/150 0.00 20/20/20/20/20 2220/2220/2220/2220/2220           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      502.9354             0.8390
+primary      1          SKIP-G600  600.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0      42/42/42/42/42      600.0/600.0/600.0/600.0/600.0       600.0000       97.5376             0.1626
+primary      1          FIX-G1200 1200.0                5220/5220/5220/5220/5220 0.00      0/0/0/0/0 5220/5220/5220/5220/5220           0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000     1110.9289             0.9258
+primary      1       FIXSEL-G1200 1200.0 2537.45/2537.45/2537.45/2537.45/2537.45 0.00      0/0/0/0/0 5220/5220/5220/5220/5220           0/0/0/0/0      663.5/663.5/663.5/663.5/663.5       663.4900      574.1336             0.8653
+primary      1          CAP-G1200 1200.0                     450/450/450/450/450 0.75      0/0/0/0/0 5220/5220/5220/5220/5220           0/0/0/0/0      984.0/984.0/984.0/984.0/984.0      1200.0000     1103.4500             0.9195
+primary      1          HYB-G1200 1200.0                               0/0/0/0/0 0.00 20/20/20/20/20 5220/5220/5220/5220/5220           0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000     1101.0715             0.9176
+primary      1         SKIP-G1200 1200.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0      92/92/92/92/92 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000      133.1564             0.1110
+primary      1  CAP-G600-reversed  600.0                     150/150/150/150/150 0.75      0/0/0/0/0 2220/2220/2220/2220/2220           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      513.5491             0.8559
+primary      1    CAP-G600-random  600.0                     150/150/150/150/150 0.75      0/0/0/0/0 2220/2220/2220/2220/2220           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      504.5105             0.8409
+primary      1 CAP-G600-top1short  600.0                     150/150/150/150/150 0.75      0/0/0/0/0 2220/2220/2220/2220/2220           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      516.2130             0.8604
+primary      2           FIX-G300  300.0                     600/600/600/600/600 0.00      0/0/0/0/0      600/600/600/600/600           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      227.8946             0.7596
+primary      2        FIXSEL-G300  300.0 329.671/329.671/329.671/329.671/329.671 0.00      0/0/0/0/0      600/600/600/600/600           0/0/0/0/0      232.4/232.4/232.4/232.4/232.4       232.4178      165.1068             0.7104
+primary      2           CAP-G300  300.0                          60/60/60/60/60 0.50      0/0/0/0/0      600/600/600/600/600           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      228.9148             0.7630
+primary      2           HYB-G300  300.0                               0/0/0/0/0 0.00 16/16/16/16/16      600/600/600/600/600           0/0/0/0/0      300.0/300.0/300.0/300.0/300.0       300.0000      231.4024             0.7713
+primary      2          SKIP-G300  300.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0      14/14/14/14/14      300.0/300.0/300.0/300.0/300.0       300.0000       81.2808             0.2709
+primary      2           FIX-G600  600.0                1800/1800/1800/1800/1800 0.00      0/0/0/0/0 1800/1800/1800/1800/1800           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      523.5029             0.8725
+primary      2        FIXSEL-G600  600.0 981.126/981.126/981.126/981.126/981.126 0.00      0/0/0/0/0 1800/1800/1800/1800/1800           0/0/0/0/0      395.3/395.3/395.3/395.3/395.3       395.2815      325.3845             0.8232
+primary      2           CAP-G600  600.0                     120/120/120/120/120 0.75      0/0/0/0/0 1800/1800/1800/1800/1800           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      515.8429             0.8597
+primary      2           HYB-G600  600.0                     120/120/120/120/120 0.00 16/16/16/16/16 1800/1800/1800/1800/1800           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      515.8379             0.8743
+primary      2          SKIP-G600  600.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0      34/34/34/34/34      600.0/600.0/600.0/600.0/600.0       600.0000      112.4402             0.1874
+primary      2          FIX-G1200 1200.0                4200/4200/4200/4200/4200 0.00      0/0/0/0/0 4200/4200/4200/4200/4200           0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000     1116.4944             0.9304
+primary      2       FIXSEL-G1200 1200.0 2029.96/2029.96/2029.96/2029.96/2029.96 0.00      0/0/0/0/0 4200/4200/4200/4200/4200           0/0/0/0/0      657.5/657.5/657.5/657.5/657.5       657.4900      578.4406             0.8798
+primary      2          CAP-G1200 1200.0                     360/360/360/360/360 0.75      0/0/0/0/0 4200/4200/4200/4200/4200           0/0/0/0/0      960.0/960.0/960.0/960.0/960.0      1200.0000     1120.4296             0.9337
+primary      2          HYB-G1200 1200.0                               0/0/0/0/0 0.00 16/16/16/16/16 4200/4200/4200/4200/4200           0/0/0/0/0 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000     1110.6399             0.9255
+primary      2         SKIP-G1200 1200.0                          -1/-1/-1/-1/-1 0.00      0/0/0/0/0                0/0/0/0/0      74/74/74/74/74 1200.0/1200.0/1200.0/1200.0/1200.0      1200.0000      144.5266             0.1204
+primary      2  CAP-G600-reversed  600.0                     120/120/120/120/120 0.75      0/0/0/0/0 1800/1800/1800/1800/1800           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      534.7906             0.8913
+primary      2    CAP-G600-random  600.0                     120/120/120/120/120 0.75      0/0/0/0/0 1800/1800/1800/1800/1800           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      520.7344             0.8679
+primary      2 CAP-G600-top1short  600.0                     120/120/120/120/120 0.75      0/0/0/0/0 1800/1800/1800/1800/1800           0/0/0/0/0      600.0/600.0/600.0/600.0/600.0       600.0000      534.7269             0.8912
+     k1      0           FIX-G300  300.0                                   240.0 0.00              0                      240                   0                              300.0       300.0000      295.1349             0.9838
+     k1      0        FIXSEL-G300  300.0                                 82.4177 0.00              0                      240                   0                              142.4       142.4178      140.3158             0.9852
+     k1      0           CAP-G300  300.0                                    15.0 0.50              0                      240                   0                              150.0       300.0000      295.1349             0.9838
+     k1      0           HYB-G300  300.0                                     0.0 0.00              4                      240                   0                              300.0       300.0000      295.1349             0.9919
+     k1      0          SKIP-G300  300.0                                    -1.0 0.00              0                        0                   5                              300.0       300.0000       95.0859             0.3170
+     k1      0           FIX-G600  600.0                                   540.0 0.00              0                      540                   0                              600.0       600.0000      592.5319             0.9876
+     k1      0        FIXSEL-G600  600.0                                 245.281 0.00              0                      540                   0                              305.3       305.2815      303.2653             0.9934
+     k1      0           CAP-G600  600.0                                    30.0 0.75              0                      540                   0                              360.0       600.0000      592.5319             0.9876
+     k1      0           HYB-G600  600.0                                    30.0 0.00              4                      540                   0                              600.0       600.0000      592.5319             0.9876
+     k1      0          SKIP-G600  600.0                                    -1.0 0.00              0                        0                  10                              600.0       600.0000      100.8546             0.1681
+     k1      0          FIX-G1200 1200.0                                  1140.0 0.00              0                     1140                   0                             1200.0      1200.0000     1171.6655             0.9764
+     k1      0       FIXSEL-G1200 1200.0                                  507.49 0.00              0                     1140                   0                              567.5       567.4900      558.9396             0.9849
+     k1      0          CAP-G1200 1200.0                                    90.0 0.75              0                     1140                   0                              600.0      1200.0000     1181.3375             0.9844
+     k1      0          HYB-G1200 1200.0                                     0.0 0.00              4                     1140                   0                             1200.0      1200.0000     1165.1454             0.9919
+     k1      0         SKIP-G1200 1200.0                                    -1.0 0.00              0                        0                  20                             1200.0      1200.0000      166.8670             0.1391
+     k1      0  CAP-G600-reversed  600.0                                    30.0 0.75              0                      540                   0                              360.0       600.0000      596.1245             0.9935
+     k1      0    CAP-G600-random  600.0                                    30.0 0.75              0                      540                   0                              360.0       600.0000      596.9447             0.9949
+     k1      0 CAP-G600-top1short  600.0                                    30.0 0.75              0                      540                   0                              360.0       600.0000      597.0194             0.9950
+
+reported runs: 288 guarded, 4,819,153,446 per-job checks, violations 0
+selection grid: 3855 guarded configurations, 68,025,811,875 per-job checks, violations 0
+worst used/allowed in the reported runs: 0.9950
+
+----------------------------------------------------------------------------------------------------
+11. SIMULATOR CROSS-CHECK
+----------------------------------------------------------------------------------------------------
+small instances: 3000 drawn {'fcfs': 545, 'pri': 494, 'cap': 501, 'fix': 469, 'hyb': 499, 'skip': 492}; mismatches and anchor failures: 0; 492 finite-skip instances also reproduced FCFS at N = 0 and the pure predictor order at N >= n; per-job bounds asserted on the independent waits where one exists (and on the kernel's own for the hybrid, which the reference does not implement): worst used/allowed 0.9630 (work budget) and 1.0000 (finite skip)
+[     6s] real primary rep0 L2 (k=4, 17,634,760 jobs) FCFS: vs the project simulator, differing jobs 0, max |diff| 0
+[    13s] real primary rep0 L2 (k=4, 17,634,760 jobs) SPJF-tweedie: vs the project simulator, differing jobs 0, max |diff| 0
+[    53s] real primary rep0 L2 (k=4, 17,634,760 jobs) FIX-G600: vs the project simulator, differing jobs 0, max |diff| 0
+[    54s] real busy slice (1,000 jobs) finite skip N=34: vs the literal reference, differing jobs 0
+[    54s] real busy slice (400 jobs) selected fixed budget (B0=981.126 s, eta=0, Bmax=1800 s): vs the referee's reference simulator, differing jobs 0
+[    54s] real busy slice (400 jobs) selected capped budget (B0=120 s, eta=0.75, Bmax=1800 s): vs the referee's reference simulator, differing jobs 0
+TOTAL disagreements: 0
+
+----------------------------------------------------------------------------------------------------
+12. LIMITATIONS
+----------------------------------------------------------------------------------------------------
+  (1) No held-out or test claim of any kind (section 2).
+  (2) The five validation overlays are five draws of the same 32 class-semesters, not five independent tests; section 4's sensitivity table shows which choices a single cell decides.
+  (3) The grids are dense but still grids; the frontier in section 4 shows how flat the objective is near the chosen points, and at several promises the harm constraint binds, so the choice is a constraint corner, not an optimum.
+  (4) The intervals cover time only: 30 week blocks of one overlay construction.
+  (5) Pure scheduling only; feature and prediction cost is not charged.
+  (6) R1S-Tweedie is not claimed to improve on Tweedie.
+  (7) A float64 clock with microsecond budget accounting can resolve a completion coincident with an arrival on either side; both kernels share the convention.
+
+----------------------------------------------------------------------------------------------------
+13. STAGE LOGS
+----------------------------------------------------------------------------------------------------
+    out_build.txt            62 lines
+    out_gain.txt            338 lines
+    out_run.txt             906 lines
+    out_select.txt           58 lines
+    out_xcheck.txt           10 lines

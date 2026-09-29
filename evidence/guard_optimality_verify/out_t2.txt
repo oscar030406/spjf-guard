@@ -1,0 +1,67 @@
+======================================================================
+[0] simulator calibration against previously established results
+======================================================================
+(0a) FCFS has In=Out=0 on 400 random inputs: 0 failures
+(0b) Prop(floor) instance gives excess exactly L: 0 failures
+(0c) |Delta_i| < 2(k-1)L on 4914 job-checks: 0 failures
+(0d) Prop 17 over 630 (family, G) rows: 0 disagreements
+CALIBRATION: PASS
+
+======================================================================
+[A] T2 identity on random instances, many policies
+======================================================================
+job-checks                         : 169736
+law residual != 0                  : 0
+Gam-diff != R-diff                 : 0
+Gam-diff != U-diff                 : 0
+|Gam-diff| > (k-1)L                : 0
+rho outside [0,(k-1)L]             : 0
+|Delta| > 2(k-1)L                  : 0
+
+======================================================================
+[B] T2 identity over EVERY work-conserving schedule, small instances
+======================================================================
+schedules 2073, job-checks 9435, failures 0
+
+======================================================================
+[C] k=1: both corrections identically zero
+======================================================================
+job-checks 35564, failures 0
+
+total T2 identity job-checks: 214735
+
+======================================================================
+[D] the T2 corollary budget rule: promise search
+======================================================================
+runs 16000, promise violations (excess > G): 0
+mean budget gain over static kG-(3k-2)L: 9.862
+
+======================================================================
+[D2] adaptive budget with clamp, including G below the paper threshold
+======================================================================
+runs 18000, job-checks 108177, raw-negative budgets 39090
+promise violations after clamping: 0
+first violation: None
+
+======================================================================
+[E] is Gamma_FCFS(a_i) computable online under size-obliviousness?
+======================================================================
+search: two inputs I, I' differing only in the size of one job j*,
+with P's run identical up to a_i and j* NOT completed under P by
+a_i (so its size is unread), yet D_i = Gam_P(a_i) - Gam_F(a_i)
+different.  Such a pair means D_i is not observable.
+  WITNESS after 412 pairs:
+    k=2 a=[0, 0, 1, 1, 2, 7]
+    I : x=[4, 1, 1, 4, 5, 2]   I': x=[4, 1, 1, 5, 5, 2]   (differ only at job 3)
+    victim arrives at t=7
+    P starts: I [0, 0, 1, 4, 2, 7]   I' [0, 0, 1, 4, 2, 7]   (identical up to t)
+    FCFS starts: I [0, 0, 1, 2, 4, 7]   I' [0, 0, 1, 2, 4, 7]
+    D_i = -1 on I but 0 on I'
+  -> D_i is not a function of what a size-oblivious scheduler has observed by a_i.
+
+======================================================================
+[F] adversarial same-phase dispatch accounting
+======================================================================
+job-checks 15, failures 0
+Same-phase overtakers enter In with full size and rho^P with the
+same remaining size, hence cancel exactly in the identity.

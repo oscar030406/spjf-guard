@@ -1,0 +1,64 @@
+[    1s] rep0 k=4 FCFS           p99_dl 263.1202
+[    2s] rep0 k=4 SJF-ref        p99_dl 42.8808
+[    3s] rep0 k=4 SPJF-tweedie   p99_dl 62.2255
+[    9s] rep0 k=4 CAP-G600       p99_dl 88.0497
+[   14s] rep0 k=4 FIXSEL-G600    p99_dl 163.9905
+[   19s] rep0 k=4 FIX-G600       p99_dl 85.8167
+[   20s] rep0 k=4 SPJF-M4        p99_dl 66.5706
+[   22s] rep0 k=4 SKIP-G600      p99_dl 262.5456
+[   23s] rep1 k=4 FCFS           p99_dl 277.8373
+[   24s] rep1 k=4 SJF-ref        p99_dl 43.3656
+[   25s] rep1 k=4 SPJF-tweedie   p99_dl 60.6784
+[   30s] rep1 k=4 CAP-G600       p99_dl 86.6803
+[   35s] rep1 k=4 FIXSEL-G600    p99_dl 171.5761
+[   40s] rep1 k=4 FIX-G600       p99_dl 84.6555
+[   41s] rep1 k=4 SPJF-M4        p99_dl 65.0198
+[   42s] rep1 k=4 SKIP-G600      p99_dl 277.5881
+[   44s] rep2 k=4 FCFS           p99_dl 264.6694
+[   44s] rep2 k=4 SJF-ref        p99_dl 44.5242
+[   45s] rep2 k=4 SPJF-tweedie   p99_dl 64.9651
+[   51s] rep2 k=4 CAP-G600       p99_dl 91.5526
+[   56s] rep2 k=4 FIXSEL-G600    p99_dl 165.1739
+[   61s] rep2 k=4 FIX-G600       p99_dl 88.2014
+[   62s] rep2 k=4 SPJF-M4        p99_dl 70.0352
+[   63s] rep2 k=4 SKIP-G600      p99_dl 263.9189
+[   64s] rep3 k=4 FCFS           p99_dl 264.6523
+[   65s] rep3 k=4 SJF-ref        p99_dl 43.4878
+[   66s] rep3 k=4 SPJF-tweedie   p99_dl 62.4468
+[   71s] rep3 k=4 CAP-G600       p99_dl 87.7518
+[   76s] rep3 k=4 FIXSEL-G600    p99_dl 167.1172
+[   81s] rep3 k=4 FIX-G600       p99_dl 84.0604
+[   82s] rep3 k=4 SPJF-M4        p99_dl 66.5516
+[   83s] rep3 k=4 SKIP-G600      p99_dl 264.8481
+[   84s] rep4 k=4 FCFS           p99_dl 297.2077
+[   85s] rep4 k=4 SJF-ref        p99_dl 43.8874
+[   86s] rep4 k=4 SPJF-tweedie   p99_dl 64.2397
+[   91s] rep4 k=4 CAP-G600       p99_dl 94.0004
+[   96s] rep4 k=4 FIXSEL-G600    p99_dl 182.8327
+[  101s] rep4 k=4 FIX-G600       p99_dl 90.4884
+[  102s] rep4 k=4 SPJF-M4        p99_dl 68.2583
+[  103s] rep4 k=4 SKIP-G600      p99_dl 295.7882
+  weeks in the overlay timeline: 30
+  2000 resamples, my seed 31337 (the pipeline's is 20260919)
+
+================================================================================================
+GAP CLOSED, level 2 (rho 1.0), 5 overlays
+================================================================================================
+  policy            mine                          report
+  FCFS             0.0000 [0.0000,0.0000]      0.0000 [0.0000,0.0000]
+  SJF-ref          1.0000 [1.0000,1.0000]      1.0000 [1.0000,1.0000]
+  SPJF-tweedie     0.9159 [0.8896,0.9292]      0.9159 [0.8915,0.9289]
+  CAP-G600         0.7997 [0.7619,0.8406]      0.7997 [0.7636,0.8404]
+  FIXSEL-G600      0.4496 [0.3577,0.6159]      0.4496 [0.3630,0.6180]
+  FIX-G600         0.8126 [0.7757,0.8522]      0.8126 [0.7765,0.8509]
+  SPJF-M4          0.8967 [0.8697,0.9141]      0.8967 [0.8721,0.9133]
+  SKIP-G600        0.0024 [-0.0037,0.0062]      0.0024 [-0.0036,0.0062]
+
+================================================================================================
+PAIRED DIFFERENCES
+================================================================================================
+  CAP-G600 - FIXSEL-G600      mine +0.3502 [+0.2162,+0.4128]   report +0.3502 [+0.2177,+0.4108]   resolved_mine=True
+  CAP-G600 - FIX-G600         mine -0.0129 [-0.0179,-0.0075]   report -0.0129 [-0.0176,-0.0076]   resolved_mine=True
+  CAP-G600 - SPJF-tweedie     mine -0.1162 [-0.1441,-0.0766]   report -0.1162 [-0.1430,-0.0774]   resolved_mine=True
+  SPJF-tweedie - SPJF-M4          mine +0.0191 [+0.0112,+0.0240]   report +0.0191 [+0.0111,+0.0238]   resolved_mine=True
+  CAP-G600 - SKIP-G600        mine +0.7974 [+0.7623,+0.8392]   report +0.7974 [+0.7630,+0.8392]   resolved_mine=True

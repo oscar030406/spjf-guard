@@ -1,0 +1,16 @@
+T1  global index assertion over 863,149 rows
+T1  entries pointing at or after the read: 0  -> PASS
+
+T2  brute-force recomputation on 600 random rows (raw float clocks)
+    sampled 600 rows with at least one available exercise result
+T2  root states compared 2400, mismatches 0
+T2  neighbour sets compared 2400, mismatches 0  -> PASS
+
+T3  future-perturbation on a closed sub-dataset
+    sub-dataset: 100,282 rows from 6 classes
+    cut time T at the 60th percentile of arrivals; 60,169 rows at or before T
+T3a outcome of every record after T replaced by noise: early rows unchanged = True; later rows did move = True
+T3b every record after T deleted: early rows unchanged = True
+T3c positive control (one record at the 5th percentile perturbed): later rows moved = True; strictly earlier rows unchanged = True
+
+ALL LEAK TESTS PASS

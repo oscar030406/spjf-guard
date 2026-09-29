@@ -1,0 +1,19 @@
+level 0: k=8, n=17,634,760, sigma=3,648.2 s of work, envelope bound FCFS (sigma+(k-1)L)/k = 508.5 s
+  FCFS         max wait     435.0 s  per-job violations 0  min slack    41.12 s  absolute bound     508.5 s  ratio max_wait/abs_bound 0.855  [7 s]
+  SPJF-E       max wait    1374.8 s  (no bound claimed)  [7 s]
+  Guard(300)   max wait     578.8 s  per-job violations 0  min slack   187.30 s  absolute bound     808.5 s  ratio max_wait/abs_bound 0.716  [13 s]
+  Guard(600)   max wait     867.2 s  per-job violations 0  min slack   176.18 s  absolute bound    1108.5 s  ratio max_wait/abs_bound 0.782  [15 s]
+  Guard(1200)  max wait    1182.8 s  per-job violations 0  min slack   426.51 s  absolute bound    1708.5 s  ratio max_wait/abs_bound 0.692  [13 s]
+level 1: k=5, n=17,634,760, sigma=5,179.1 s of work, envelope bound FCFS (sigma+(k-1)L)/k = 1,083.8 s
+  FCFS         max wait    1023.8 s  per-job violations 0  min slack    36.66 s  absolute bound    1083.8 s  ratio max_wait/abs_bound 0.945  [7 s]
+  SPJF-E       max wait    3312.8 s  (no bound claimed)  [7 s]
+  Guard(300)   max wait    1167.4 s  per-job violations 0  min slack   156.51 s  absolute bound    1383.8 s  ratio max_wait/abs_bound 0.844  [13 s]
+  Guard(600)   max wait    1467.4 s  per-job violations 0  min slack   163.21 s  absolute bound    1683.8 s  ratio max_wait/abs_bound 0.871  [14 s]
+  Guard(1200)  max wait    2074.5 s  per-job violations 0  min slack   167.22 s  absolute bound    2283.8 s  ratio max_wait/abs_bound 0.908  [13 s]
+level 2: k=4, n=17,634,760, sigma=6,234.5 s of work, envelope bound FCFS (sigma+(k-1)L)/k = 1,603.6 s
+  FCFS         max wait    1544.6 s  per-job violations 0  min slack    34.14 s  absolute bound    1603.6 s  ratio max_wait/abs_bound 0.963  [7 s]
+  SPJF-E       max wait    6286.2 s  (no bound claimed)  [7 s]
+  Guard(300)   max wait    1694.5 s  per-job violations 0  min slack   136.46 s  absolute bound    1903.6 s  ratio max_wait/abs_bound 0.890  [14 s]
+  Guard(600)   max wait    1994.5 s  per-job violations 0  min slack   136.84 s  absolute bound    2203.6 s  ratio max_wait/abs_bound 0.905  [14 s]
+  Guard(1200)  max wait    2603.2 s  per-job violations 0  min slack   147.28 s  absolute bound    2803.6 s  ratio max_wait/abs_bound 0.929  [14 s]
+EXIT 0

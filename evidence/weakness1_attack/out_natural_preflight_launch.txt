@@ -1,0 +1,14 @@
+﻿env.exe : Traceback (most recent call last):
+At line:6 char:1
++ & 'C:\Program Files\Git\usr\bin\env.exe' -u PYTHONHOME -u PYTHONPATH  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "<repo-root>\prechecks\weakness1_attack\natural_preflight.py", line 119, in <module>
+    SOURCE_CODE_PROOF = _verify_and_prefer_frozen_source()
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<repo-root>\prechecks\weakness1_attack\natural_preflight.py", line 110, in 
+_verify_and_prefer_frozen_source
+    raise RuntimeError(f"natural-window loader source changed: {relative}")
+RuntimeError: natural-window loader source changed: src/spjf_guard/config.py

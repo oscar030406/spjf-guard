@@ -1,0 +1,58 @@
+quantity,pool,level,policy,value,printed
+gap_dl,dev,0,SPJF-E|online,0.7401110401498168,0.740
+gap_all,dev,0,SPJF-E|online,0.8479838977798672,0.848
+gap_mean,dev,0,SPJF-E|online,0.8575677065594194,0.858
+gap_dl,dev,0,Guard(600)|online,0.7251887926879137,0.725
+gap_all,dev,0,Guard(600)|online,0.8369619373476738,0.837
+gap_mean,dev,0,Guard(600)|online,0.8183266760574681,0.818
+guard_cost,dev,0,Guard(600)|online,0.014922247461903071,0.015
+gap_dl,dev,1,SPJF-E|online,0.860865472863208,0.861
+gap_all,dev,1,SPJF-E|online,0.9226545393886295,0.923
+gap_mean,dev,1,SPJF-E|online,0.8932587991885645,0.893
+gap_dl,dev,1,Guard(600)|online,0.8004294488433106,0.800
+gap_all,dev,1,Guard(600)|online,0.8791093706376583,0.879
+gap_mean,dev,1,Guard(600)|online,0.7849170178997339,0.785
+guard_cost,dev,1,Guard(600)|online,0.06043602401989745,0.060
+gap_dl,dev,2,SPJF-E|online,0.8636125305458812,0.864
+gap_all,dev,2,SPJF-E|online,0.9555461800202533,0.956
+gap_mean,dev,2,SPJF-E|online,0.9025926570188446,0.903
+gap_dl,dev,2,Guard(600)|online,0.7052409375671523,0.705
+gap_all,dev,2,Guard(600)|online,0.9044960307622549,0.904
+gap_mean,dev,2,Guard(600)|online,0.720376897711759,0.720
+guard_cost,dev,2,Guard(600)|online,0.15837159297872883,0.158
+deadline_share_pct,dev,,,23.92749320092817,23.9
+gap_dl,sealed,0,SPJF-E|online,0.8964766032305311,0.896
+gap_all,sealed,0,SPJF-E|online,0.8823231552651198,0.882
+gap_mean,sealed,0,SPJF-E|online,0.6137595336603952,0.614
+gap_dl,sealed,0,Guard(600)|online,0.8952257067857368,0.895
+gap_all,sealed,0,Guard(600)|online,0.8762899852899656,0.876
+gap_mean,sealed,0,Guard(600)|online,0.6137069144624377,0.614
+guard_cost,sealed,0,Guard(600)|online,0.0012508964447943693,0.001
+gap_dl,sealed,1,SPJF-E|online,0.8963782395183741,0.896
+gap_all,sealed,1,SPJF-E|online,0.8893308916461301,0.889
+gap_mean,sealed,1,SPJF-E|online,0.7708669136820437,0.771
+gap_dl,sealed,1,Guard(600)|online,0.8835490187602624,0.884
+gap_all,sealed,1,Guard(600)|online,0.8739500512122963,0.874
+gap_mean,sealed,1,Guard(600)|online,0.7577323487176286,0.758
+guard_cost,sealed,1,Guard(600)|online,0.01282922075811177,0.013
+gap_dl,sealed,2,SPJF-E|online,0.9356695969938867,0.936
+gap_all,sealed,2,SPJF-E|online,0.9316626398108574,0.932
+gap_mean,sealed,2,SPJF-E|online,0.8191335241583614,0.819
+gap_dl,sealed,2,Guard(600)|online,0.8942481217489414,0.894
+gap_all,sealed,2,Guard(600)|online,0.8960396277764093,0.896
+gap_mean,sealed,2,Guard(600)|online,0.7538049951831333,0.754
+guard_cost,sealed,2,Guard(600)|online,0.04142147524494533,0.041
+deadline_share_pct,sealed,,,37.53184803898768,37.5
+difference,sealed-dev,2,Guard(600)|online,0.18900718418178908,0.189
+ranking_part,sealed-dev,2,SPJF-E|online,0.07205706644800558,0.072
+cost_part,sealed-dev,2,Guard(600)|online,0.1169501177337835,0.117
+matched_servers,dev,2,overlay 2,4.0,4
+matched_rho,dev,2,overlay 2,0.980205,0.980
+matched_fcfs_p99_dl,dev,2,overlay 2,264.66936870000046,264.7
+matched_span,dev,2,overlay 2,220.14513420000043,220.1
+matched_guard_gap,dev,2,overlay 2,0.6807704358064325,0.681
+matched_servers,sealed,2,overlay 0,4.0,4
+matched_rho,sealed,2,overlay 0,0.978724,0.979
+matched_fcfs_p99_dl,sealed,2,overlay 0,258.09368499999914,258.1
+matched_span,sealed,2,overlay 0,223.58755439999916,223.6
+matched_guard_gap,sealed,2,overlay 0,0.8894759999217555,0.889

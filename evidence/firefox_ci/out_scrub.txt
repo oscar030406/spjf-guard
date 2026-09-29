@@ -1,0 +1,3 @@
+1038 pages readable, 2 unreadable pages removed, 0 .part files removed
+  status\releng-hardware__gecko-t-linux-talos-2404\00023000.jsonl.gz  BadGzipFile("Not a gzipped file (b'\\x19\\x9f')")
+  status\releng-hardware__gecko-t-linux-talos-2404\00023500.jsonl.gz  BadGzipFile("Not a gzipped file (b'\\x0c\\x0b')")

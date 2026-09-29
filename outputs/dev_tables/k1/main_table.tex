@@ -1,0 +1,44 @@
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Policies at three loads, five overlays. Waits in seconds; intervals are paired week-block bootstrap.}
+\label{tab:main}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrllrrrr}
+\toprule
+Load & Policy & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Mean & Max exc. & Harm & Fired (\%) \\
+\midrule
+$\rho = \devnum{0.8}$, $k = \devnum{1}$
+ & FCFS                   & \devnum{221.27} & \devnum{0.000 [0.000, 0.000]} & \devnum{0.0 [0.0, 0.0]} & \devnum{6.594} & \devnum{0.0} & \devnum{0.0} & \devnum{100.0} \\
+ & SJF                    & \devnum{45.32} & \devnum{1.000 [1.000, 1.000]} & \devnum{79.5 [72.6, 84.5]} & \devnum{1.871} & \devnum{2054.5} & \devnum{777.9} & \devnum{0.0} \\
+ & SPJF-E                 & \devnum{60.91} & \devnum{0.911 [0.854, 0.933]} & \devnum{72.5 [65.4, 76.6]} & \devnum{2.449} & \devnum{2520.3} & \devnum{656.4} & \devnum{0.0} \\
+ & SPJF-log               & \devnum{64.68} & \devnum{0.890 [0.832, 0.917]} & \devnum{70.8 [64.1, 75.1]} & \devnum{2.521} & \devnum{2520.3} & \devnum{400.3} & \devnum{0.0} \\
+ & Aging(600)             & \devnum{200.97} & \devnum{0.115 [0.040, 0.177]} & \devnum{9.2 [3.4, 13.3]} & \devnum{5.738} & \devnum{678.6} & \devnum{93.7} & \devnum{0.0} \\
+ & Guard(300)             & \devnum{89.96} & \devnum{0.746 [0.571, 0.829]} & \devnum{59.3 [48.2, 63.9]} & \devnum{3.163} & \devnum{297.9} & \devnum{81.8} & \devnum{8.2} \\
+ & Guard-fixed(300)       & \devnum{125.68} & \devnum{0.543 [0.207, 0.718]} & \devnum{43.2 [17.4, 53.2]} & \devnum{3.772} & \devnum{140.3} & \devnum{119.5} & \devnum{17.1} \\
+ & Guard-age(300)         & \devnum{89.96} & \devnum{0.746 [0.571, 0.829]} & \devnum{59.3 [48.2, 63.9]} & \devnum{3.163} & \devnum{297.9} & \devnum{81.8} & \devnum{8.2} \\
+ & Guard-queue(300)       & \devnum{117.01} & \devnum{0.593 [0.376, 0.685]} & \devnum{47.1 [31.8, 51.9]} & \devnum{3.527} & \devnum{286.9} & \devnum{81.8} & \devnum{8.8} \\
+ & Fixed(300)             & \devnum{83.18} & \devnum{0.785 [0.584, 0.865]} & \devnum{62.4 [49.4, 67.1]} & \devnum{3.071} & \devnum{297.9} & \devnum{246.3} & \devnum{6.3} \\
+ & Skip(300)              & \devnum{220.39} & \devnum{0.005 [-0.002, 0.019]} & \devnum{0.4 [-0.1, 1.4]} & \devnum{6.284} & \devnum{95.1} & \devnum{81.8} & \devnum{73.2} \\
+ & Guard(600)             & \devnum{71.07} & \devnum{0.854 [0.780, 0.895]} & \devnum{67.9 [62.0, 71.1]} & \devnum{2.729} & \devnum{595.5} & \devnum{165.5} & \devnum{2.5} \\
+ & Guard-fixed(600)       & \devnum{82.10} & \devnum{0.791 [0.602, 0.868]} & \devnum{62.9 [50.9, 67.7]} & \devnum{3.051} & \devnum{303.0} & \devnum{246.3} & \devnum{6.2} \\
+ & Guard-age(600)         & \devnum{71.07} & \devnum{0.854 [0.780, 0.895]} & \devnum{67.9 [62.0, 71.1]} & \devnum{2.729} & \devnum{595.5} & \devnum{165.5} & \devnum{2.5} \\
+ & Guard-queue(600)       & \devnum{91.52} & \devnum{0.737 [0.640, 0.812]} & \devnum{58.6 [52.6, 63.1]} & \devnum{3.058} & \devnum{582.0} & \devnum{81.8} & \devnum{3.4} \\
+ & Fixed(600)             & \devnum{68.48} & \devnum{0.868 [0.783, 0.906]} & \devnum{69.1 [62.8, 72.3]} & \devnum{2.713} & \devnum{593.4} & \devnum{563.6} & \devnum{2.3} \\
+ & Skip(600)              & \devnum{219.89} & \devnum{0.008 [-0.004, 0.037]} & \devnum{0.6 [-0.4, 2.7]} & \devnum{6.044} & \devnum{100.9} & \devnum{83.2} & \devnum{67.0} \\
+ & Guard(1200)            & \devnum{89.73} & \devnum{0.748 [0.661, 0.819]} & \devnum{59.4 [53.7, 64.4]} & \devnum{2.999} & \devnum{1165.1} & \devnum{81.8} & \devnum{2.1} \\
+ & Guard-fixed(1200)      & \devnum{69.03} & \devnum{0.865 [0.789, 0.905]} & \devnum{68.8 [62.9, 72.1]} & \devnum{2.713} & \devnum{564.2} & \devnum{509.3} & \devnum{2.6} \\
+ & Guard-age(1200)        & \devnum{63.80} & \devnum{0.895 [0.835, 0.920]} & \devnum{71.2 [64.5, 75.0]} & \devnum{2.548} & \devnum{1182.3} & \devnum{366.4} & \devnum{0.7} \\
+ & Guard-queue(1200)      & \devnum{89.73} & \devnum{0.748 [0.661, 0.819]} & \devnum{59.4 [53.7, 64.4]} & \devnum{2.999} & \devnum{1165.1} & \devnum{81.8} & \devnum{2.1} \\
+ & Fixed(1200)            & \devnum{63.19} & \devnum{0.898 [0.837, 0.923]} & \devnum{71.4 [64.7, 75.1]} & \devnum{2.565} & \devnum{1180.4} & \devnum{656.4} & \devnum{0.4} \\
+ & Skip(1200)             & \devnum{217.64} & \devnum{0.021 [-0.008, 0.084]} & \devnum{1.6 [-0.7, 6.2]} & \devnum{5.677} & \devnum{168.0} & \devnum{97.7} & \devnum{58.7} \\
+ & SPJF-reversed          & \devnum{415.37} & \devnum{-1.103 [-1.341, -0.889]} & \devnum{-87.7 [-110.3, -69.6]} & \devnum{11.414} & \devnum{2696.2} & \devnum{2487.1} & \devnum{0.0} \\
+ & Guard(600)-reversed    & \devnum{383.64} & \devnum{-0.923 [-1.129, -0.794]} & \devnum{-73.4 [-93.3, -62.9]} & \devnum{10.411} & \devnum{596.1} & \devnum{177.9} & \devnum{26.3} \\
+ & SPJF-random            & \devnum{159.79} & \devnum{0.349 [0.188, 0.468]} & \devnum{27.8 [14.9, 37.4]} & \devnum{5.144} & \devnum{2662.6} & \devnum{1600.3} & \devnum{0.0} \\
+ & Guard(600)-random      & \devnum{185.91} & \devnum{0.201 [0.050, 0.335]} & \devnum{16.0 [3.9, 26.2]} & \devnum{5.549} & \devnum{596.9} & \devnum{165.8} & \devnum{10.2} \\
+ & SPJF-top1short         & \devnum{382.54} & \devnum{-0.917 [-1.121, -0.741]} & \devnum{-72.9 [-88.8, -58.3]} & \devnum{9.872} & \devnum{2660.1} & \devnum{1657.7} & \devnum{0.0} \\
+ & Guard(600)-top1short   & \devnum{379.71} & \devnum{-0.900 [-1.066, -0.779]} & \devnum{-71.6 [-86.6, -60.5]} & \devnum{9.563} & \devnum{597.0} & \devnum{177.9} & \devnum{23.5} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: outputs/.../main_table.csv, regenerated by scripts/run_main.py; see GENERATED.md

@@ -1,0 +1,9 @@
+kept serial jobs with run>0: 8441207/9054066 (93.23%)
+split (by arrival day): train < 18 d (5424503 rows), valid [18,22) (995118), test [22,30) (2021586)
+heavy threshold = train p95 of the cost = 28129.0000 s
+service cap L = train p99.9 = 493857.4580 s (jobs capped in the whole trace: 7696, 0.0912%; work removed by the cap 2.16%)
+[leak test 1] brute-force recomputation of e_n/e_mean/e_max/e_min/e_last on 2500 sampled rows: mismatches = 0
+[prefix check] features on the first 1500000 rows reproduce the full-trace features exactly (max abs diff 0)
+[leak test 2] 623779 jobs with end>cutoff given random durations; 900022 rows arrive at or before the cutoff; feature columns that changed: 0
+leak tests: PASS
+wrote <cache-dir>\cross_domain\netbatch_feats.parquet  (8441207 rows, 34 columns)

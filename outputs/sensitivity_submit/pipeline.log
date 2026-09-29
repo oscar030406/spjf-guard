@@ -1,0 +1,55 @@
+=== submit start Sat Sep 26 17:13:30     2026
+pool development: 11 terms, 2,918,799 events, 58 columns, code features matched on 1.00000 of rows (4 s)
+wrote D:\UserData\Desktop\图神经网络\data\derived\sensitivity_submit\codebench_cache\ev.parquet
+--- cache done Sat Sep 26 17:13:39     2026
+targets ['2020-ERE', '2020-2', '2021-1', '2021-2', '2022-1', '2022-2']
+  [original/2020-ERE] train 404,578 (2018-1..2019-2), target 147,380, cut-offs from development terms (heavy 1.5590 s)
+  [original/2020-2] train 608,171 (2018-1..2020-1), target 49,550, cut-offs from development terms (heavy 1.5590 s)
+  [original/2021-1] train 657,721 (2018-1..2020-2), target 57,080, cut-offs from development terms (heavy 1.5590 s)
+  [original/2021-2] train 714,801 (2018-1..2021-1), target 55,957, cut-offs from development terms (heavy 1.5590 s)
+  [original/2022-1] train 770,758 (2018-1..2021-2), target 51,547, cut-offs from development terms (heavy 1.5590 s)
+  [original/2022-2] train 822,305 (2018-1..2022-1), target 40,844, cut-offs from development terms (heavy 1.5590 s)
+  [conservative/2020-ERE] train 404,578 (2018-1..2019-2), target 147,380, cut-offs from development terms (heavy 1.5590 s)
+  [conservative/2020-2] train 608,171 (2018-1..2020-1), target 49,550, cut-offs from development terms (heavy 1.5590 s)
+  [conservative/2021-1] train 657,721 (2018-1..2020-2), target 57,080, cut-offs from development terms (heavy 1.5590 s)
+  [conservative/2021-2] train 714,801 (2018-1..2021-1), target 55,957, cut-offs from development terms (heavy 1.5590 s)
+  [conservative/2022-1] train 770,758 (2018-1..2021-2), target 51,547, cut-offs from development terms (heavy 1.5590 s)
+  [conservative/2022-2] train 822,305 (2018-1..2022-1), target 40,844, cut-offs from development terms (heavy 1.5590 s)
+  [static/2020-ERE] train 404,578 (2018-1..2019-2), target 147,380, cut-offs from development terms (heavy 1.5590 s)
+  [static/2020-2] train 608,171 (2018-1..2020-1), target 49,550, cut-offs from development terms (heavy 1.5590 s)
+  [static/2021-1] train 657,721 (2018-1..2020-2), target 57,080, cut-offs from development terms (heavy 1.5590 s)
+  [static/2021-2] train 714,801 (2018-1..2021-1), target 55,957, cut-offs from development terms (heavy 1.5590 s)
+  [static/2022-1] train 770,758 (2018-1..2021-2), target 51,547, cut-offs from development terms (heavy 1.5590 s)
+  [static/2022-2] train 822,305 (2018-1..2022-1), target 40,844, cut-offs from development terms (heavy 1.5590 s)
+wrote D:\UserData\Desktop\图神经网络\data\derived\sensitivity_submit\package_ranking_scores\forward_scores.parquet in 267 s
+--- scores done Sat Sep 26 17:18:07     2026
+pool primary: 40 class-terms, {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}
+copies probe stops at 44 copies (7 s)
+week set: 30 whole weeks
+  primary_rep0.npz: 17,634,760 jobs, k = [np.int64(8), np.int64(5), np.int64(4)], busy-hour work 14,964.0 s (5 s)
+  primary_rep1.npz: 17,634,760 jobs, k = [np.int64(8), np.int64(5), np.int64(4)], busy-hour work 14,233.0 s (5 s)
+  primary_rep2.npz: 17,634,760 jobs, k = [np.int64(8), np.int64(5), np.int64(4)], busy-hour work 13,736.8 s (5 s)
+  primary_rep3.npz: 17,634,760 jobs, k = [np.int64(8), np.int64(5), np.int64(4)], busy-hour work 13,765.7 s (5 s)
+  primary_rep4.npz: 17,634,760 jobs, k = [np.int64(7), np.int64(5), np.int64(4)], busy-hour work 13,026.1 s (4 s)
+--- overlays done Sat Sep 26 17:18:48     2026
+pool primary ['2020-ERE', '2020-2', '2021-1', '2021-2', '2022-1', '2022-2']; protocol lock frozen
+  selection read from disk: joint G=1200: B0=120, eta=0, gam=16; joint G=300: B0=60, eta=0.5, gam=0; joint G=600: B0=120, eta=0.75, gam=0
+attaching regenerated scores ['spjf_e', 'spjf_e_conservative', 'spjf_e_static', 'spjf_log', 'spjf_log_conservative', 'spjf_log_static'] by job_row
+overlay 0 level 0: k = 8, 29 policies, 106 s
+overlay 0 level 1: k = 5, 29 policies, 110 s
+overlay 0 level 2: k = 4, 29 policies, 112 s
+overlay 1 level 0: k = 8, 29 policies, 89 s
+overlay 1 level 1: k = 5, 29 policies, 93 s
+overlay 1 level 2: k = 4, 29 policies, 94 s
+overlay 2 level 0: k = 8, 29 policies, 92 s
+overlay 2 level 1: k = 5, 29 policies, 92 s
+overlay 2 level 2: k = 4, 29 policies, 93 s
+overlay 3 level 0: k = 8, 29 policies, 91 s
+overlay 3 level 1: k = 5, 29 policies, 92 s
+overlay 3 level 2: k = 4, 29 policies, 95 s
+overlay 4 level 0: k = 7, 29 policies, 91 s
+overlay 4 level 1: k = 5, 29 policies, 93 s
+overlay 4 level 2: k = 4, 29 policies, 94 s
+
+wrote outputs\sensitivity_submit\main_cells.csv, outputs\sensitivity_submit\main_table.csv, outputs\sensitivity_submit\main_table.tex, outputs\sensitivity_submit\paired_differences.csv, outputs\sensitivity_submit\bound_checks.csv, outputs\sensitivity_submit\identity_residuals.csv, outputs\sensitivity_submit\policy_parameters.csv and outputs\sensitivity_submit\manifest.json
+=== submit done Sat Sep 26 17:42:52     2026

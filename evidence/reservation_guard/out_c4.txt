@@ -1,0 +1,68 @@
+==============================================================================
+C4 part A  a victim with In_i = Out_i = 0 and excess = f = delta/(k-1)
+==============================================================================
+k    L     m    n       delta      f=d/(k-1)  In_i     Out_i    excess_i
+2    8     1    11      4          4          0        0        4
+2    8     2    20      6          6          0        0        6
+2    8     3    29      7          7          0        0        7
+3    27    1    31      18         9          0        0        9
+3    27    2    60      30         15         0        0        15
+3    27    3    89      38         19         0        0        19
+4    64    1    69      48         16         0        0        16
+4    64    2    136     84         28         0        0        28
+4    64    3    203     111        37         0        0        37
+predicted delta after m rounds: (k-1)L(1-((k-1)/k)^m);  rho_m/(k-1) = f
+   k=2 L=8  rho_m = [4, 6, 7] , f = [Fraction(4, 1), Fraction(6, 1), Fraction(7, 1)]
+   k=3 L=27  rho_m = [18, 30, 38] , f = [Fraction(9, 1), Fraction(15, 1), Fraction(19, 1)]
+   k=4 L=64  rho_m = [48, 84, 111] , f = [Fraction(16, 1), Fraction(28, 1), Fraction(37, 1)]
+
+==============================================================================
+C4 part B  the cascade under the guard: reached gap vs budget B
+==============================================================================
+
+k=2 L=8 m=3 n=29   unguarded gap at T_m = 7 , (k-1)L = 8
+  B     maxgap R/L  maxgap R/C  maxgap C    maxexc R/L  maxexc C
+  0     0           0           0           0           0
+  1     0           0           1           0           1
+  2     0           1           2           0           2
+  3     0           2           3           0           3
+  4     0           3           4           0           4
+  6     0           5           6           0           6
+  7     0           6           7           0           7
+  8     0           7           7           0           7
+  9     0           7           7           0           7
+  16    1           7           7           1           7
+  24    7           7           7           7           7
+  reference: (k-1)L = 8 ; unguarded maxgap = 7 ; (k-1)*B is the candidate law for B < L
+
+k=3 L=27 m=3 n=89   unguarded gap at T_m = 38 , (k-1)L = 54
+  B     maxgap R/L  maxgap R/C  maxgap C    maxexc R/L  maxexc C
+  0     0           0           0           0           0
+  1     0           0           2           0           1
+  2     0           2           4           0           2
+  3     0           4           6           0           3
+  4     0           5           8           0           4
+  6     0           8           10          0           5
+  13    0           18          20          0           10
+  26    0           36          38          0           19
+  27    0           38          38          0           19
+  28    0           38          38          0           19
+  54    2           38          38          1           19
+  81    34          38          38          20          19
+  reference: (k-1)L = 54 ; unguarded maxgap = 38 ; (k-1)*B is the candidate law for B < L
+
+==============================================================================
+C4 part C  is the guarded gap O(B) for B < L?
+==============================================================================
+H:  max_t (U_P - U_FCFS) <= (k-1)*min(L,B) for every guarded run.
+exhaustive over ALL base policies, small instances, both rules:
+   n=4 rule R : 9612 runs ;  k=2 worst gap-(k-1)min(L,B) = +0 (gap 0, B 0) ; k=3 worst gap-(k-1)min(L,B) = +0 (gap 0, B 0)
+   n=4 rule C : 22680 runs ;  k=2 worst gap-(k-1)min(L,B) = +0 (gap 0, B 0) ; k=3 worst gap-(k-1)min(L,B) = +0 (gap 0, B 0)
+   n=5 rule R : 71631 runs ;  k=2 worst gap-(k-1)min(L,B) = +0 (gap 0, B 0) ; k=3 worst gap-(k-1)min(L,B) = +0 (gap 0, B 0)
+   n=5 rule C : 271971 runs ;  k=2 worst gap-(k-1)min(L,B) = +0 (gap 0, B 0) ; k=3 worst gap-(k-1)min(L,B) = +0 (gap 0, B 0)
+
+random test of  max_t |U_P - U_FCFS| <= (k-1)*min(L,B)  for rule R
+   k=1  worst (gap - (k-1)min(L,B)) = +0   (gap=0, limit=0, L=12, B=8)
+   k=2  worst (gap - (k-1)min(L,B)) = +0   (gap=0, limit=0, L=6, B=0)
+   k=3  worst (gap - (k-1)min(L,B)) = +0   (gap=0, limit=0, L=6, B=0)
+   k=4  worst (gap - (k-1)min(L,B)) = +0   (gap=0, limit=0, L=8, B=0)

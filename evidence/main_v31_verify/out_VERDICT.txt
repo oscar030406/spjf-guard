@@ -1,0 +1,356 @@
+====================================================================================================
+ADVERSARIAL VERIFICATION OF prechecks/main_v3/out_main_v31.txt AND prechecks/main_v3/v31  -- verdict
+written by an independent verifier; nothing in main_v3, v31 or the paper was modified
+====================================================================================================
+Method.  A dispatch-charged finite-skip simulator written here from paper/sections/06_theory.tex
+(Remark rem:counts, eq:skip), in two implementations -- a literal exact-arithmetic reference that
+recomputes cnt[q] over the whole waiting set and takes min(fired), and a fast kernel that uses
+cnt[head] = TD - head (wskip.py).  The work-budget guard, FCFS and the pure-prediction order are
+REUSED from the v3 verifier's vsim.py, sha256 3a01397a754a98c46062f0c7eb48660c4207ef716d34f1bbee2
+e8e71bd3eb4ee, which was written independently of the builder and which v3.1 does not change; it
+was re-validated here first, against an exact rational brute force written in wrevalidate.py and
+against the builder's guardkern (sha256 e8b8578d..., the hash the v3.1 manifest prints), on 2,500
+random small instances: max |vsim - exact reference| = 0, max |vsim - guardkern| = 0.  Metrics,
+aggregation, the selection rule, the bootstrap, the bound assertions and a finer fixed-budget grid
+are all written here.  Inputs taken from the builder: the overlay traces in <cache-dir>/mv31/
+traces and its per-cell csv files, the latter only as the thing to compare against.
+
+Scale of the re-simulation: all 16 reported cells (primary overlays 0-4 at levels 0, 1, 2 and the
+k = 1 cell) with the full 28-policy set, 4 validation grid cells, and a 16-point fixed-budget grid
+on all 15 validation and all 15 primary cells -- 50 cells, 804 guarded runs, 13,921,826,346
+per-job bound checks on MY OWN waits, 0 violations.
+
+SUMMARY OF CLAIMS
+  V1 selection            CONFIRMED             (rule, grid, both families and the two headline
+                                                 harm numbers reproduced exactly; see G1 and G6
+                                                 for what the rule does NOT establish)
+  V2 skip kernel          CONFIRMED             (N maximal; bound proved and unbroken on 294,000
+                                                 instances; 0 differing jobs on a full rho 1.0 cell)
+  V3 headline rows        CONFIRMED             (3,431 printed numbers vs the csv files and 1,260
+                                                 csv numbers vs my own 16 cells: 0 mismatches)
+  V4 bootstrap            CONFIRMED             (my own RNG: 0.7997 [0.7619,0.8406] vs 0.800
+                                                 [0.764,0.840]; +0.3502 [0.2162,0.4128] vs +0.350
+                                                 [0.218,0.411])
+  V5 bound assertions     CONFIRMED             (0 violations of either form; worst used/allowed
+                                                 0.9950 at k = 1, 0.9304 at k >= 4)
+  V6 adversarial rows     CONFIRMED             (reproduced to the printed precision)
+  V7 manifest             CONFIRMED             (manifest recomputed; 39 invocations, one hash,
+                                                 31 cells, no stale output)
+  paper section 8         PARTIALLY CONFIRMED   (87 rows checked, 2 third-decimal disagreements
+                                                 in tab:k1 -- G2; G1 and G3 are about wording)
+
+----------------------------------------------------------------------------------------------------
+V1  SELECTION -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+Re-derived from the artefacts (out_select.txt), and re-simulated (out_valid.txt).
+
+  * select_grid.csv REBUILT here from the raw cells <cache-dir>/mv31/sim/valid_rep{0..4}_L{0,1,2}
+    _grid.csv: 720 rows = 48 configurations x 15 cells, index identical, max |mine - builder| over
+    every column = 5.7e-14 (harm), 6.9e-17 (gap), 0 (k, G, B0_base, eta, used/allowed); 0
+    disagreements on the feasible_cell flag.  select_worst.csv re-derived the same way: worst_gap
+    6.7e-17, worst_harm 0, n_feasible_cells 0 disagreements.
+  * The rule of section 3, implemented here from its English statement (feasible = harm <= G/2 in
+    every one of the 15 cells; objective = worst-cell deadline-window p99 gap; ties to smaller
+    worst harm, then smaller B0, then smaller eta), applied to both families, reproduces
+    selected_params.csv exactly -- all six picks, all six n_feasible/n_grid counts, all worst_gap
+    and worst_harm values.  The printed section-3 table matches number for number (0 mismatches).
+  * harm IS computed as defined.  I recomputed it independently as max over the jobs with
+    W_FCFS <= 1 s of (W_policy - W_FCFS), from my own waits, in every cell I simulated; it agrees
+    with the builder's harm_wf1s to 5e-9 relative in all 804 guarded runs.  (Code path:
+    v31_run.py:199 arrays["q1"] = wf <= 1.0, v31_run.py:62 harm_wf1s = ex[q1].max().)
+  * The FIX family IS judged by the identical rule -- the same feasibility test, objective and
+    tie-break, in the same code path, with the pool replaced by {B0 = Bmax} together with the
+    eta = 0 points of the capped grid.  FIX (B0 = Bmax) is infeasible at every G: worst-cell harm
+    212.04 / 490.53 / 1093.78 s against limits 150 / 300 / 600 (2, 6 and 10 of 15 cells feasible).
+    FIXSEL = 120 k/4 at G = 300 and 600 k/4 at G = 600 and 1200, as claimed.
+  * RE-SIMULATED with the independent simulator: valid rep1 L2 (the worst cell), valid rep1 L0
+    (the cell that sets the selected setting's objective), valid rep1 L1 and valid rep0 L2, for the
+    three v3.1 picks, the rejected v3 G = 600 pick, both FIXSEL picks and all three FIX baselines
+    -- 360 numbers, 0 mismatches, 0 bound violations.  In particular, on my own waits:
+        rejected v3 setting (30 k/4, eta 0.9) at valid rep1 L2:  harm 358.9207 s  -> INFEASIBLE
+        selected setting   (120 k/4, eta 0.75) at the same cell: harm 293.2911 s  -> feasible
+        selected setting at valid rep1 L0: gap closed 0.7216 (its worst cell, the reported value)
+        rejected setting at the same cell:  gap closed 0.7210
+    So the rejected setting buys 0.0006 of objective for 65.6 s of extra worst-cell harm; the
+    change from v3 to v3.1 at G = 600 is justified by the rule as stated.
+  * The validation overlays contain no 2022-2 job, on the same structural evidence the v3 verifier
+    used, recomputed here: the per-copy service-time multiset of valid rep0 (49 copies x 360,125
+    jobs) is a strict sub-multiset of primary rep0's (44 copies x 400,790 jobs) -- 0 values absent,
+    0 values with a larger count, 40,665 jobs removed per copy -- and trace_summary.csv puts
+    primary at 40 class-semesters, valid at 32 and the 2022-2-only trace at exactly 8.  Code path:
+    v31_common.pool_of drops TEST_SEM = "2022-2" by name.  The npz carries no semester label, so
+    this is a structural plus code check, not a label check.
+  * Order of execution (out_manifest.txt): all 15 validation grid cells ran between 22:10:47 and
+    22:28:20, selection at 22:29:41, all 16 main cells from 22:29:54 -- selection strictly between.
+
+----------------------------------------------------------------------------------------------------
+V2  DISPATCH-CHARGED FINITE-SKIP KERNEL -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+out_skip.txt.
+
+  * N is the LARGEST value eq:skip allows.  (N + 2k - 2)L/k <= G with L = 60 s gives, and the
+    report's Ncap column prints, N = 14 / 34 / 74 at k = 4, 17 / 42 / 92 at k = 5, 23 / 58 / 128 at
+    k = 7, 26 / 66 / 146 at k = 8 and 5 / 10 / 20 at k = 1, for G = 300 / 600 / 1200 s.  Each of
+    those promises is exactly G; N + 1 exceeds it (315 / 615 / 1215 s at k = 4).  0 disagreements
+    with the report over all 15 (k, G) combinations that appear.  The completion charge
+    (N + 3k - 2)L/k <= G gives 30 at k = 4, G = 600, which is what v3 used -- the F4 arithmetic is
+    right.
+  * The proof in the docstring is correct, and I could not break it.  Its two steps are (i) the
+    fired set is non-empty exactly when the head fires, because cnt is non-increasing in rank, and
+    (ii) every overtaker of i is dispatched at an instant at which nothing fires, so cnt[i] < N
+    then and at most N overtakers pass i.  Step (i) is tested rather than assumed: my literal
+    reference takes min(fired) over the whole waiting set and never looks at the head, and it
+    agrees with the head-check kernel job for job on every instance (max |diff| = 0).
+    Attempts to break the bound: 4,000 random small instances with ties, simultaneous arrivals and
+    tied predictions (0 violations); 12,000 structured adversarial instances built to hurt the
+    victim -- everything at t = 0 with service exactly L, k-1 long jobs plus one epsilon job under
+    a longest-first predictor, bursts with 1e-9 and L services (0 violations); and an exhaustive
+    enumeration of 277,992 tiny instances (n <= 4, k <= 3, arrivals in {0,1,2}, services in
+    {1,30,60}, every prediction permutation, N in {0,1,2}) -- 0 violations.  The bound is TIGHT:
+    used/allowed reaches 1.000000 (k = 1, N = 1).  N = 0 reproduces FCFS exactly on all 425
+    instances where it was drawn.
+  * Against the builder's kernel: 0 differing jobs on 4,000 small instances, and on the full
+    primary rep0 level-2 cell (k = 4, 17,634,760 jobs) at all three promises -- N = 14, 34, 74 --
+    differing jobs 0, max |diff| 0, bound violations 0, used/allowed 0.2182 / 0.1674 / 0.0991.
+    My own p99_dl on that cell: 262.8515 / 262.5456 / 262.8495 s against FCFS 263.1202 s.
+  * One presentation consequence, not an error: see G3.
+
+----------------------------------------------------------------------------------------------------
+V3  HEADLINE ROWS -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+out_trace.txt.  Three independent comparisons:
+
+  * 3,431 numbers parsed out of sections 4, 5, 6, 7, 8 and 9 of out_main_v31.txt against the
+    report_*.csv files the same run wrote: 0 mismatches (section 4: 1,116; section 5: 602;
+    section 6: 242; section 7: 497; section 8: 815; section 9: 159).  No hand edit.
+  * 1,260 numbers of table_main_primary.csv and table_main_k1.csv re-derived from the BUILDER's
+    per-cell csv files under the stated aggregation (means over the five overlays for p99_dl,
+    mean, p99_all, fired share, guaranteed excess; worst over them for max excess, harm, max heavy
+    and used/allowed; gap = mean over overlays of the per-overlay ratio): 0 mismatches.
+  * The same 1,260 numbers re-derived from MY OWN simulations of all 16 reported cells -- every
+    primary overlay at rho 1.0, 0.8 and 0.5, and the k = 1 cell, 28 policies each: 0 mismatches at
+    the printed precision.  This covers every row of sections 4, 6, 7 and 9 and the point
+    estimates of section 5.
+    (One convention difference, not a number: the builder scores FCFS's queue-weighted fired share
+    as 1.0 because every FCFS dispatch serves the head; my kernel scores it 0.0.  Excluded.)
+  * Section 8's counts are arithmetic and correct: 288 reported guarded runs = 16 cells x 18
+    guarded policies, 4,819,153,446 per-job checks = 15 x 18 x 17,634,760 + 18 x 3,209,347; 720
+    grid runs = 15 x 48, 12,705,210,000 checks = 720 x 17,646,125.  All four strings match.
+
+----------------------------------------------------------------------------------------------------
+V4  BOOTSTRAP -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+out_boot_L2.txt.  My own waits, my own resampling (seed 31337; the pipeline's is 20260919), my own
+weighted order statistic with numpy's 'linear' interpolation written here, 2,000 resamples of the
+30 whole weeks, one draw applied to every policy and all five overlays.
+
+        CAP-G600 gap, rho 1.0            mine 0.7997 [0.7619, 0.8406]   report 0.800 [0.764, 0.840]
+        CAP-G600 - FIXSEL-G600           mine +0.3502 [+0.2162, +0.4128] report +0.350 [0.218, 0.411]
+        CAP-G600 - FIX-G600              mine -0.0129 [-0.0179, -0.0075] report -0.013 [-0.018,-0.008]
+        CAP-G600 - SPJF-tweedie          mine -0.1162 [-0.1441, -0.0766] report -0.116 [-0.143,-0.077]
+        SPJF-tweedie - SPJF-M4           mine +0.0191 [+0.0112, +0.0240] report +0.019 [0.011, 0.024]
+        SPJF-tweedie gap                 mine 0.9159 [0.8896, 0.9292]    report 0.916 [0.892, 0.929]
+        FIXSEL-G600 gap                  mine 0.4496 [0.3577, 0.6159]    report 0.450 [0.363, 0.618]
+Every point estimate agrees to four decimals; every interval endpoint agrees to within 0.003 under
+a different RNG.  All five differences resolve the same way.
+
+----------------------------------------------------------------------------------------------------
+V5  THE PER-JOB BOUNDS ON MY OWN WAITS -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+out_cells.txt, out_trace.txt.  Both forms asserted separately, per job, on MY waits:
+        Theorem A   W <= W_FCFS + B_eff/k + (3 - 2/k) L,  B_eff = B0 when eta = 0, else B_max
+        Theorem B   W <= (W_FCFS + B0/k + (3 - 2/k) L) / (1 - eta),  for eta > 0
+        eq:skip     W <= W_FCFS + (N + 2k - 2) L / k          (dispatch charge, my kernel)
+        completion  W <= W_FCFS + (N + 3k - 2) L / k          (SKIPC)
+Over 804 guarded runs in 50 cells: 13,921,826,346 checks, 0 violations of the combined bound, 0 of
+the Theorem A form, 0 of the Theorem B form (1.9e9 of the checks are eta > 0 runs, so the eta form
+is exercised on its own).  Worst used/allowed on my waits, by k:
+        k = 1   0.9950  (Thm A 0.9950, Thm B 0.7942)   -- policy CAP-G600-top1short
+        k = 4   0.9304  (Thm A 0.9304, Thm B 0.5689)
+        k = 5   0.9258  (Thm A 0.9258, Thm B 0.5390)
+        k = 7   0.8989  (Thm A 0.8989, Thm B 0.4879)
+        k = 8   0.8958  (Thm A 0.8958, Thm B 0.4838)
+This reproduces the report's 0.9950 worst value at the same policy and trace, and its statement
+(limitation 6) that the (3 - 2/k)L constant is tight only at k = 1.  The eta form is never the
+binding one on these traces.
+
+----------------------------------------------------------------------------------------------------
+V6  ADVERSARIAL ROWS AT G = 600, rho 1.0 -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+out_trace.txt section 5, from my own simulations of all five overlays at level 2:
+        policy               p99_dl (report / mine)   max excess (report / mine)   harm (report/mine)
+        SPJF-reversed          557.441 / 557.441         6295.652 / 6295.652        5248.836/5248.836
+        CAP-G600-reversed      546.479 / 546.479          534.791 /  534.791         309.097/ 309.097
+        SPJF-random            194.775 / 194.775         6235.494 / 6235.494        6173.575/6173.575
+        CAP-G600-random        261.933 / 261.933          520.734 /  520.734         332.864/ 332.864
+        SPJF-top1short         523.518 / 523.518         6108.860 / 6108.860        3399.037/3399.037
+        CAP-G600-top1short     543.616 / 543.616          534.727 /  534.727         324.589/ 324.589
+0 mismatches.  Every guarded adversarial run satisfies both bound forms on my waits; used/allowed
+at most 0.8913 at k = 4 and 0.9950 at k = 1.  The report's own caveat is correct and important:
+the guarded p99 is WORSE than the unguarded one under two of the three corrupted scores at this
+load (261.9 vs 194.8 for random, 543.6 vs 523.5 for top1short), and what the guard removes is the
+worst single job -- 6,109 s of excess down to 535 s.
+
+----------------------------------------------------------------------------------------------------
+V7  MANIFEST AND COMPLETENESS -- CONFIRMED
+----------------------------------------------------------------------------------------------------
+out_manifest.txt.
+  * The manifest 423adbc90d3c1ceb9ab9dcaa2cad7ec224c73f9a7c662f98fd15c070ee8730e0 recomputed here
+    from the 7 v31_*.py core scripts and the 4 external modules, by the definition in
+    v31_common.manifest(), matches the report header exactly; all 11 per-file hashes printed in the
+    header match the files on disk (0 wrong lines).  F1 is genuinely fixed: guardkern.py's hash
+    e8b8578d... is in the manifest and the file has not moved since (mtime 2026-09-19 21:10:18,
+    i.e. before the v3.1 run began at 22:03).
+  * All five data artefacts hash to the values the report prints (0 mismatches); all were written
+    between 05:40 and 20:40, before the run.
+  * 39 invocations across the five stage logs (build 4, gain 2, run 31, select 1, xcheck 1), every
+    one carrying that single manifest, every one closed by a "## done" line, and every log's line
+    count equal to what section 12 prints (88 / 316 / 1430 / 81 / 9).  Each log's creation time
+    equals its first logged invocation, so no earlier invocation was deleted.
+  * 31 cells exist and are complete: 15 validation grid cells (51 policies, 48 guarded,
+    17,646,125 jobs) and 16 main cells (28 policies, 18 guarded; 15 x 17,634,760 primary jobs plus
+    the 3,209,347-job k = 1 cell).  Every cell has bound_viol = 0 and used/allowed <= 1.  All 16
+    bootstrap replicate files hold 2,000 finite replicates for each of 56 (policy, metric) arrays,
+    so no interval is thinned by non-finite resamples.
+  * No stale output.  The only file in v31/ younger than the report is none; v31_report.py was
+    written 6 s before it (see G5), and nothing in main_v3/ was touched after 22:43:53.
+
+----------------------------------------------------------------------------------------------------
+PAPER, SECTION 8 -- PARTIALLY CONFIRMED
+----------------------------------------------------------------------------------------------------
+out_paper.txt.  The paper is being edited in parallel while this verification runs (every
+file in paper/sections/ was rewritten between 00:37 and 00:59 today), so the check is pinned to
+    paper/sections/08_experiments.tex  sha256 f24777ae901466cd8bb70c49b445db17803e82dc5d5664507a8
+    d01ef49d29b54, 48,921 bytes, mtime 2026-09-20 00:59:02
+and must be rerun if the file moves.  87 rows of tab:setup, tab:rank, tab:guard, tab:adv and
+tab:k1 checked value by
+value against selected_params.csv, trace_summary.csv, table_main_primary.csv, table_main_k1.csv and
+report_adversarial.csv.  85 agree exactly, including every promise, every skip count N, every
+gap-with-interval, every max excess, every harm and every fired share.  Two disagreements, both in
+tab:k1 and both a third decimal (G2).  Spot checks of the prose: the guard's cost at rho 1.0
+(0.116 [0.077,0.143] at G = 600, 0.044 [0.028,0.056] at 1200, 0.449 [0.323,0.538] at 300), the
+k = 1 harm ratios 4.53 / 3.40 / 1.94 and the 597.0 s adversarial excess all match.  The caption
+claim that the rule admits only two distinct fixed settings per load is correct (FIXSEL-G600 and
+FIXSEL-G1200 are the same configuration at every load).  tab:scores, tab:resid, tab:cross and
+tab:sens come from other studies and were not checked here.
+
+----------------------------------------------------------------------------------------------------
+FINDINGS
+----------------------------------------------------------------------------------------------------
+G1  CRITICAL   reachability: LIVE.  HEADLINE NUMBER AFFECTED -- section 9, the CAP - FIXSEL rows of
+               section 5, and the "Fixed, admitted" rows of the paper's tab:guard and tab:k1.
+               "The best FEASIBLE fixed budget" is selected from a three-point budget grid
+               (B0 = 30, 120, 600 times k/4, plus B0 = Bmax), and at the chosen point the harm
+               constraint is nowhere near binding: at G = 300 the admitted budget 120 k/4 has
+               worst-cell harm 102.65 s against a 150 s limit, and the next grid point up is
+               212.04 s.  The capped family is searched over 15 points, the fixed family over 4.
+               I ran a 16-point eta = 0 grid on all 15 validation cells with my own simulator and
+               applied the report's OWN rule to it (out_fixgrid.txt):
+                   G =  300  admitted 120 k/4 (worst gap 0.0057) -> 300 k/4 is feasible
+                             (worst harm 131.80 s) with worst gap 0.1535
+                   G =  600  admitted 600 k/4 (0.3693)           -> 900 k/4  (283.46 s)  0.5795
+                   G = 1200  admitted 600 k/4 (0.3693)           -> 1200 k/4 (345.62 s)  0.6620
+               Measured on the primary trace, five overlays (out_fixgrid.txt), the reported margin
+               collapses:
+                   rho 1.0  G = 300   +0.431 -> +0.281      G = 600  +0.350 -> +0.147
+                            G = 1200  +0.422 -> +0.140
+                   rho 0.8  G = 300   +0.413 -> +0.124      G = 600  +0.071 -> +0.032
+                            G = 1200  +0.096 -> +0.038
+                   rho 0.5  G = 300   +0.080 -> -0.009      G = 600  +0.016 -> +0.007
+                            G = 1200  +0.027 -> +0.017
+               At rho 0.5, G = 300 the better fixed budget BEATS the capped one on the objective.
+               What survives: the capped budget still wins the gap in eight of the nine cells, and
+               at G = 300 it wins on harm as well (113.8 s against 150.5 s at rho 1.0).  At
+               G = 1200, rho 1.0 the better fixed budget has LOWER harm than the capped one
+               (355.7 s against 576.0 s) for 0.14 less gap, so the two are on a trade-off curve
+               rather than one dominating.
+               Required: either widen the fixed-budget grid to the density the capped grid gets and
+               re-report section 9, or stop calling FIXSEL "the best feasible fixed budget" and say
+               explicitly that it is the best of three budgets.  The sentence "under a harm
+               constraint, no fixed budget reaches what the capped relative budget reaches" is not
+               supported by the search that was run.
+
+G2  NOTE       reachability: the paper only, version f24777ae... of 08_experiments.tex (the file
+               is being edited concurrently; recheck after the next edit).  Two third-decimal
+               disagreements in tab:k1, both
+               consistent with rounding a second time from the four-decimal print of section 7:
+                   Fixed(600), gap upper bound: paper 0.907, csv 0.9064609 -> 0.906
+                   Fixed, admitted (promise 90), gap: paper 0.244, csv 0.2434891 -> 0.243
+               No other number of tab:setup / tab:rank / tab:guard / tab:adv / tab:k1 disagrees.
+
+G3  NOTE       reachability: presentation, no number wrong.  In section 8's bound table, and in the
+               paper's tab:guard, the B0, Bmax and Ncap columns are taken from overlay 0 while the
+               k column is the MEAN over the five overlays (7.8 at level 0).  Overlay 4 runs
+               level 0 at k = 7, where the skip counts are 23 / 58 / 128 and FIX's B0 is
+               960 / 3060 / 7260 s, not 26 / 66 / 146 and 1080 / 3480 / 8280.  The paper prints
+               "Skip(300), N = 26" for rho = 0.5 without saying that one of the five overlays runs
+               N = 23.  Every simulated run uses its own cell's k, so the numbers are right; only
+               the labels are overlay-0 labels.
+
+G4  WARNING    reachability: what the G = 600 selection MEANS.  The whole G = 600 change from v3 to
+               v3.1 rests on one of the 15 validation cells.  The rejected setting's harm is
+               358.92 s at valid overlay 1, level 2 and 276.36 s at the next-worst cell -- 30 %
+               lower -- and it is feasible in 14 of the 15 cells.  That overlay is only the third
+               heaviest of the five (busy-hour work 13,820 s against 15,204 and 14,297), so the
+               binding cell is not the high-load cell; it is one overlay's idiosyncrasy.  The
+               restated rule is a worst-case rule and is applied correctly, but "chosen on five
+               validation overlays" should not be read as five independent pieces of evidence: the
+               report's own limitation 2 says they are five draws of the same 32 class-semesters,
+               and here a single draw decides the outcome.
+
+G5  NOTE       reachability: provenance of the prose, not of the numbers.  v31_report.py is outside
+               the manifest by design ("formats only") and was written at 22:43:47, six seconds
+               before the report and after every stage log; all six report_*.csv date from that one
+               run.  All 3,431 printed numbers match those csv files and those csv files match the
+               cells, so nothing is affected -- this is the same situation the v3 verifier recorded
+               as F2, unchanged.
+
+G6  NOTE       reachability: none now; it bounds what may be claimed.  Unchanged from the v3
+               verifier's F3, and the report states it plainly in section 1: the guard family and
+               the (B0, eta) grid were tuned on the PRIMARY evaluation trace in
+               prechecks/guard_variants before any validation-only selection existed, and the
+               selection rule's pre-registration cannot be established from disk.  Nothing in v3.1
+               is a held-out or out-of-sample result.  I confirm the report says so and says so
+               correctly; it must not be softened in the paper.
+
+G7  NOTE       reachability: my own footprint.  My first command was run without --no-project and
+               uv created <repo-root>\.venv in the project root (directory
+               timestamps on pyproject.toml, uv.lock, src/ and paper/ also moved at that moment).
+               Every later command used --no-project.  I did not delete it, because removing it is
+               itself a modification and parallel work may now be using it.  Flagging it so the
+               owner can decide.
+No FLAG-HUMAN item other than G7.
+
+----------------------------------------------------------------------------------------------------
+WHAT v3.1 MAY AND MAY NOT CLAIM
+----------------------------------------------------------------------------------------------------
+MAY:
+  * Every number of sections 4-9 is reproducible.  An independently written simulator fed the same
+    traces reproduces all 16 reported cells and every aggregated number at the printed precision,
+    and an independent bootstrap reproduces the intervals to 0.003.
+  * The per-job guarantee is empirical fact on this data under an independent implementation:
+    13.9e9 of my own per-job checks over 804 guarded runs, 0 violations, both bound forms, the
+    three adversarial predictors and k = 1 included.
+  * The finite-skip baseline is now charged the way the prior art charges it, at dispatch, and is
+    given the largest count that promise allows: N = 14 / 34 / 74 at k = 4.  The bound
+    W <= W_FCFS + (N + 2k - 2)L/k is correctly proved, is tight, and survived 294,000 attempts to
+    break it.  The conclusion that position counting buys essentially nothing at equal promise is
+    unaffected by the fairer count: at rho 1.0 the gap closed stays at 0.002.
+  * The G = 600 parameters of v3 really are infeasible under the restated rule, and the v3.1
+    parameters really are feasible in all 15 validation cells for a worst-cell objective 0.0006
+    higher.  The correction the v3 verifier asked for was made correctly (subject to G4).
+  * The guard converts an unbounded tail into the promised one: worst excess over FCFS 5,905 s
+    unguarded and 6,109 s under the adversarial predictor, at most 523.5 s at G = 600.
+
+MAY NOT:
+  * Do not write "the best feasible fixed budget", or "no fixed budget reaches what the capped
+    relative budget reaches under a harm constraint", on the search that was run (G1).  The margin
+    at rho 1.0, G = 600 is +0.147 against a properly searched fixed budget, not +0.350, and at
+    rho 0.5, G = 300 the sign reverses.
+  * Do not present the five validation overlays as five independent tests; at G = 600 one cell
+    decides the outcome (G4).
+  * No held-out or test claim of any kind (G6).  The sealed semesters were not opened.
+  * Do not quote the skip counts or the budget constants of the level-0 rows as if they held on
+    every overlay (G3).
+  * Do not claim R1S-Tweedie improves on Tweedie: section 5 leaves it unresolved at rho 1.0 and
+    worse at rho 0.5, and the report's limitation 3 says so.

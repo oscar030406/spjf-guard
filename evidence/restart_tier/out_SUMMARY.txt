@@ -1,0 +1,81 @@
+VERDICT: REJECT.  Kill-and-restart tiering does not move the Omega(L) barrier, it
+destroys the FCFS-relative guarantee, and on the development trace it is dominated by
+the plain guard at every load.  At most one sentence in the paper's falsified-ideas list.
+(Detail and evidence: notes.md.  One narrow exception is noted at the end.)
+
+1. THE GUARANTEE DIES.  Proposition K (notes.md §3): on n jobs of work L arriving
+   together, EVERY policy that gives each job a tier-1 attempt has some job with
+   excess >= n*tau/k - L over plain FCFS -- unbounded.  The excess is wasted work, not
+   overtaking, so no budget and no base policy can remove it.  Measured exactly
+   (= n*tau/k at k=1,2) in out_brute.txt; the non-tiered SPJF+guard has excess 0.000 on
+   the same instances.  Theorem A's slack B/k + (3-2/k)L is violated on 25,768 of
+   3,000,000 random small instances, worst violation +0.63 L.  Adversarial predictions
+   reproduce the counterexample whatever the skip rule, so the prediction-quality-free
+   character of the paper's guarantee is lost.
+
+2. THE MOTIVATION FAILS.  The hoped-for "Omega(L) -> Omega(tau) for light jobs" does not
+   happen: a tier-2 piece is still an L-long non-preemptive block, and the guard's own
+   budget is what places it at an adversarial instant.  Holding tau = 1 and varying L,
+   the max light-job additive constant is 2.5 / 4.5 / 10 / 18 / 35 at L = 2 / 4 / 8 / 16
+   / 32 -- linear in L (~1.1 L), flat in tau (out_brute.txt, family B).  Keeping a server
+   free of tier-2 work is the only escape and it breaks work conservation, which
+   ../guard_theory/theory.md Prop 10 shows voids every guarantee.
+
+3. WHAT SURVIVES, AND ITS PRICE.  Proposition W (proof sketch + 0 violations in 3,000,000
+   instances and in 12 x 17,634,760 job-level assertions):
+       W[i] <= W_FCFS[i] + (B + Delta_i)/k + (3-2/k)L,
+   Delta_i = tau x (killed jobs arriving in the current busy period).  Delta is measured,
+   not bounded: at k=4, tau=1 s the measured Delta_max is 1,605 s, so a design configured
+   for the paper's G = 300 s actually guarantees 701 s (2.3x worse); at tau = 10 s,
+   1,777 s.  Theorem A does appear to hold against a TIERED-FCFS reference (0 violations
+   in 3,000,000 instances) but is unproved, and that reference is a system already
+   burning 3.4-12.1% of its capacity -- a strictly weaker promise, and it must be
+   labelled as such.
+
+4. THE TRACE AGREES.  rep0, 17,634,760 jobs.  Wasted share of total work: 3.37% at
+   tau = 1 s, 4.55% at 2 s, 8.14% at 5 s, 12.12% at 10 s.  At k=4 (busy-hour rho 1.0589)
+   tiering alone (TFCFS, tau=1) gives deadline-window p99 356.3 s against plain FCFS's
+   263.1 s -- worse than doing nothing.  Compared at the same HONEST guarantee (and at
+   the same measured worst-case excess), every tiered design loses to plain SPJF+guard:
+
+     k=4, rho 1.06   TIER-skip tau=1  guar 573  gap 0.633   SPJF+guard at 573: 0.769
+                     TIER-skip tau=2  guar 664  gap 0.611   SPJF+guard at 664: 0.799
+                     TIER-pred tau=1  guar 701  gap 0.560   SPJF+guard at 701: 0.811
+     deficit in gap closed: -0.14 to -0.62 (k=4), -0.01 to -0.16 (k=8),
+     -0.01 to +0.05 (k=5, i.e. break-even at best).
+   tau = 5 and tau = 10 are worse at every level.
+
+5. NOTHING WOULD BE NEW.  The mechanism is TAGS (Harchol-Balter, JACM 2002,
+   10.1145/506147.506154) with the dedicated hosts dropped; its worst case is already
+   done, and generalised to a geometric cutoff ladder, by Jaeger et al. (Math. Prog. 210,
+   2025, 10.1007/s10107-024-02118-8); the predicted-heavy bypass is SkipPredict (NeurIPS
+   2024, arXiv 2402.03564).  Bachmat-Doncel-Sarfati (Perf. Eval. 2020,
+   10.1016/j.peva.2020.102098) prove the TAGS stability ceiling grows only as ln(range)
+   and NOT with the number of servers, and the 2026 successor SPLIT has replaced the kill
+   with preempt-resume.  The unoccupied cell in this literature is the per-job
+   FCFS-relative deterministic bound -- which the paper already has, and which this idea
+   takes away.
+
+6. THE ONE EXCEPTION, FOR THE RECORD, NOT FOR ADOPTION.  Tiering at tau = 2 s WITH a
+   quarter of the fleet reserved from tier-2 work (a cap on concurrent tier-2 jobs) wins
+   below the busy hour and loses at it:
+       k=8, rho 0.53, m2=6:  p99_dl   5.01 s  gap 1.238  mean-gap 0.985  maxExc  276.6 s
+                             (SPJF+guard at the same excess: 0.715 / 0.82)
+       k=5, rho 0.85, m2=4:  p99_dl  34.92 s  gap 0.990  mean-gap 0.809  maxExc  371.8 s
+                             (SPJF+guard at the same excess: 0.797 / 0.79)
+       k=4, rho 1.06, m2=3:  p99_dl 124.57 s  gap 0.629  mean-gap 0.607  maxExc  582.9 s
+                             (SPJF+guard at the same excess: 0.802 / 0.76)  -- LOSES
+   This is the least-attained-service effect and it is real at low load.  But it has NO
+   guarantee of any kind (not work conserving; neighbouring caps in the same family
+   violate Proposition W on up to 0.42% of the 17.6 M jobs and reach worst-case excesses
+   above 20,000 s), it idles a quarter of the fleet, a gap above 1 only means true-SJF is
+   not a ceiling for p99, and it fails exactly at the load the paper exists for.  The
+   two-queue design was already falsified on capacity grounds (predicted-heavy jobs carry
+   ~88% of the work); kill-restart does not change that arithmetic -- jobs reaching tier 2
+   at tau = 2 s still carry 37.1% of the work, so tier 2 needs 1.57 of 4 servers at the
+   busy hour.
+
+Verified before use: tierkern.py reproduces ../guard_variants/guardkern.py job for job
+(max difference 0.000e+00 over 3,000,000 real-trace jobs at k=4 and k=8, plus 400 random
+instances), and its tiered modes match an independent pure-python simulator on 19,200
+cases (out_verify.txt).

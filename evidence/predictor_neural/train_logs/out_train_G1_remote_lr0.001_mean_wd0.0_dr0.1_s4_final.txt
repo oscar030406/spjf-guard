@@ -1,0 +1,17 @@
+G1_remote_lr0.001_mean_wd0.0_dr0.1_s4_final  params {'model': 'G1', 'seed': 4, 'lr': 0.001, 'agg': 'mean', 'variant': 'remote', 'epochs': 30, 'batch': 4096, 'patience': 5, 'p_mask': 0.15, 'p_drop': 0.1, 'w_cls': 0.5, 'wd': 0.0, 'drop': 0.1, 'tag': '_final', 'save_emb': True}
+tabular block (863149, 86), submission-level block (863149, 102)
+rows train 770,758 valid 51,547 test 40,844
+parameters 168,642
+  epoch  0 train 0.13801 valid 0.07413 (rmse 0.2190) 2s
+  epoch  1 train 0.09656 valid 0.07681 (rmse 0.2226) 3s
+  epoch  2 train 0.09167 valid 0.07409 (rmse 0.2177) 5s
+  epoch  3 train 0.08867 valid 0.07607 (rmse 0.2220) 6s
+  epoch  4 train 0.08683 valid 0.07446 (rmse 0.2181) 8s
+  epoch  5 train 0.08527 valid 0.07376 (rmse 0.2179) 10s
+  epoch  6 train 0.08356 valid 0.07580 (rmse 0.2212) 12s
+  epoch  7 train 0.08260 valid 0.07472 (rmse 0.2202) 14s
+  epoch  8 train 0.08120 valid 0.07827 (rmse 0.2269) 16s
+  epoch  9 train 0.07978 valid 0.07507 (rmse 0.2196) 19s
+  epoch 10 train 0.07894 valid 0.07573 (rmse 0.2199) 21s
+  early stop at epoch 10
+{"name": "G1_remote_lr0.001_mean_wd0.0_dr0.1_s4_final", "model": "G1", "variant": "remote", "seed": 4, "lr": 0.001, "agg": "mean", "wd": 0.0, "drop": 0.1, "valid_loss": 0.073761485517025, "valid_rmse": 0.2179015576839447}

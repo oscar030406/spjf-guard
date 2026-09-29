@@ -1,0 +1,104 @@
+========================================================================================
+OULAD deadline-kernel pre-check | dev presentations 2013B+2013J only (9 course-presentations)
+cps: AAA_2013J, BBB_2013B, BBB_2013J, DDD_2013B, DDD_2013J, EEE_2013J, FFF_2013B, FFF_2013J, GGG_2013J
+assessment types with a due date: ['CMA', 'Exam', 'TMA']; kernel support u=D-t in [-3,21], 25 unit bins
+unit = (cp, day); y = total clicks; n_t = registered students; r = y/n_t; eval days 15..240
+========================================================================================
+
+### PART 1  event study: r / (cp median r) vs u = days-to-deadline, mean over cps
+ type    21    20    19    18    17    16    15    14    13    12    11    10     9     8     7     6     5     4     3     2     1     0    -1    -2    -3
+  CMA  1.28  1.07  1.27  1.33  1.35  1.24  1.19  1.21  0.92  1.03  1.17  1.50  1.50  1.45  1.66  1.24  1.50  1.85  2.32  2.46  2.96  2.57  0.86  0.66  0.54
+   sd  0.23  0.31  0.60  0.57  0.42  0.33  0.24  0.24  0.14  0.15  0.15  0.28  0.32  0.22  0.50  0.22  0.33  0.51  0.71  0.82  0.86  0.44  0.79  0.69  0.47
+ Exam  0.92  0.85  1.16  1.22  1.23  1.20  1.17  1.40  0.80  0.85  0.95  1.21  1.21  1.14  1.30  0.95  1.22  1.60  2.01  2.26  2.70  1.98  0.19  0.13  0.08
+   sd  0.42  0.30  0.72  0.75  0.60  0.42  0.34  0.66  0.17  0.33  0.42  0.63  0.70  0.59  0.87  0.48  0.72  0.93  1.23  1.30  1.48  1.23  0.04  0.05  0.01
+  TMA  1.13  0.95  0.97  1.17  1.45  1.41  1.30  1.21  0.95  0.90  1.09  1.35  1.36  1.29  1.27  1.10  1.14  1.49  1.92  2.08  2.35  1.86  1.00  0.89  1.02
+   sd  0.25  0.23  0.14  0.34  0.42  0.34  0.37  0.41  0.17  0.17  0.26  0.24  0.21  0.27  0.19  0.26  0.20  0.37  0.46  0.49  0.49  0.38  0.19  0.11  0.13
+
+ type  ncp  nass  peak_u   peak  contig>1.1x  nu>1.1x  post(u=-1..-3)  meanCorr  minCorr
+  CMA    6    37       1   2.96           12       19            0.69     0.610    0.000
+ Exam    6     6       1   2.70            6       16            0.13     0.333   -0.569
+  TMA    9    46       1   2.35           11       17            0.97     0.825    0.526
+
+   group    n   spearman(weight, peak)        p
+     ALL   88                   -0.428    0.000
+     CMA   37                   -0.789    0.000
+    Exam    5                      n/a         
+     TMA   46                   -0.275    0.064
+
+### PART 2  Evaluation A: leave-one-cp-out, predict days 15..240 of the held-out cp
+    M / c1 / c2 use NO load of the held-out cp after day 14 (level only, days 0..13);
+    F0/F1 additionally use that cp's own lagged load up to t-h (reference, easier task).
+  model   logRMSE    MAE_raw  logRMSE_dl     MAE_dl  peakF1_rank  peakF1_abs
+  M-add    0.5901     2578.2      0.5450     4265.1        0.657       0.544
+ M-mult    0.6020     2449.5      0.4189     3260.5        0.647       0.481
+     c1    0.9231     5111.8      0.5895     3567.1        0.338       0.261
+     c2    0.5196     2439.7      0.3537     2713.2        0.556       0.495
+   F0h3    0.4329     1943.9      0.4221     3856.2        0.546       0.456
+   F1h3    0.4001     1642.9      0.3294     2611.0        0.662       0.589
+   F0h7    0.5430     2513.4      0.5907     5037.5        0.473       0.323
+   F1h7    0.4858     1934.0      0.4051     2965.4        0.594       0.545
+gamma chosen by inner LOO: M-add [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], M-mult [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] (cp order ['AAA_2013J', 'BBB_2013B', 'BBB_2013J', 'DDD_2013B', 'DDD_2013J', 'EEE_2013J', 'FFF_2013B', 'FFF_2013J', 'GGG_2013J'])
+
+### paired block bootstrap on log1p RMSE, 2000 resamples over (cp, week) blocks (negative = first model wins)
+        contrast     dRMSE     95%lo     95%hi  verdict
+      M-add - c1   -0.3330   -0.3936   -0.2689  CI excludes 0
+      M-add - c2    0.0705    0.0224    0.1230  CI excludes 0
+    M-add - F1h7    0.1043    0.0331    0.1782  CI excludes 0
+    M-add - F0h7    0.0471   -0.0230    0.1207  CI covers 0
+     M-mult - c2    0.0824    0.0507    0.1157  CI excludes 0
+  M-mult - M-add    0.0119   -0.0333    0.0550  CI covers 0
+    M-add - F1h3    0.1900    0.1229    0.2611  CI excludes 0
+
+### Evaluation B: superposition (observed / predicted, M-add LOO predictions)
+                     stratum  ndays  mean_ratio   median
+    no assessment in u=[0,6]   1650       1.253    1.043
+        exactly 1 assessment    281       1.127    1.070
+   >=2 assessments (overlap)    103       0.787    0.640
+
+platform total over 6 2013J cps (deadlines of different modules overlapping)
+                     stratum  ndays  mean_ratio   median
+  0-1 module in deadline win    157       1.119    1.086
+       2 modules overlapping     45       1.126    1.146
+     >=3 modules overlapping     24       1.121    1.134
+
+### PART 3  kernel stability (M-add, gamma=0.0 = modal inner-LOO choice)
+                 split  ncp   mass_CMA  mass_Exam   mass_TMA
+           all dev cps    9    24.1692    13.0084    22.5147
+            2013B only    3    33.5104    49.1184    17.5648
+            2013J only    6    17.6965     9.2372    26.3206
+
+                  pair  type    corr  mass_ratio
+        2013B vs 2013J   CMA   0.882       1.894
+        2013B vs 2013J  Exam   0.412       5.317
+        2013B vs 2013J   TMA   0.941       0.667
+
+per-module kernels vs the pooled all-cp kernel
+ module  ncp  type  corr_vs_pooled  mass_ratio
+    AAA    1   CMA             n/a         n/a
+    AAA    1  Exam             n/a         n/a
+    AAA    1   TMA           0.966       1.426
+    BBB    2   CMA           0.784       0.528
+    BBB    2  Exam             n/a         n/a
+    BBB    2   TMA           0.965       0.397
+    DDD    2   CMA           0.706       0.401
+    DDD    2  Exam           0.202       1.342
+    DDD    2   TMA           0.987       0.731
+    EEE    1   CMA             n/a         n/a
+    EEE    1  Exam           0.829       5.773
+    EEE    1   TMA           0.783       5.091
+    FFF    2   CMA           0.988       1.528
+    FFF    2  Exam             n/a         n/a
+    FFF    2   TMA           0.996       1.931
+    GGG    1   CMA           0.864       0.347
+    GGG    1  Exam             n/a         n/a
+    GGG    1   TMA           0.451       0.090
+pairwise between-module kernel correlation: n=22 mean=0.687 min=-0.173 max=0.980
+
+### PART 4  what-if (MODEL-BASED SANITY ONLY, NOT VALIDATED): shift each 2013J assessment by at most +/-3 days
+                              pred_peak    pred_top3
+           actual calendar       105257       101957
+     greedy +/-3d calendar        91352        90233
+predicted peak reduction 13.2% (top-3 mean 11.5%); 4 of 51 assessments moved, shifts [3]
+This is the model predicting its own counterfactual. No held-out evidence supports it.
+
+runtime 40.2s

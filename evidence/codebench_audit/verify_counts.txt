@@ -1,0 +1,134 @@
+verify_counts.py report, 2026-09-18 22:27. Semesters parsed here: 2016-1, 2016-2, 2017-1, 2017-2, 2018-1, 2018-2, 2019-1, 2019-2, 2020-ERE, 2020-1, 2020-2, 2021-1, 2021-2, 2022-1, 2022-2
+
+== 1. Official v1.81 table (parsed from https://codebench.icomp.ufam.edu.br/dataset/)
+row           16-1     16-2     17-1     17-2     18-1     18-2     19-1     19-2   20-ERE     20-1     20-2     21-1     21-2     22-1     22-2     23-1     23-2     24-1    Total   colsum
+classes          9        5       10        5        9        5        9        7        3        7        6        7        8        8        9        7        7        8      129      129
+students       471      172      463      177      465      180      489      297      492      228      200      224      219      238      196      255      222      241     5229     5229
+hw             681      447     1278      556     1550      893     1559     1116      420     1008      882      962     1180     1158     1257     1009     1157     1192    18553    18305  <-- Total != colsum
+exam           124      110      163      103      182      107      176      138        8       12        8      154      195      188      240      212      208      216     2544     2544
+codes        30140     9501    38304    10942    47969    13458    38417    28348    45491    19246    17848    19022    19627    19457    17403    24834    22880    26928   449815   449815
+execs       322500   126286   419603   125848   455484   163821   540537   308340   457404   214208   177364   191238   226982   210502   166694   244538   213190   243025  4561318  4807564  <-- Total != colsum
+
+== 2. Independent counts vs official (official / ours; rule named in the header)
+sem      cls:ass cls:all  stu:dist  stu:dirs  hw:sumTE  ex:sumTE   hw:listed  hw:dist_id     codes     codes_off        blocks    Δblk%
+2016-1     9/9     9/9    471/471   471/535   681/681   124/124          675          74     29991         30140        321722    -0.24
+2016-2     5/5     5/5    172/172   172/176   447/447   110/110          447         100      9489          9501        126180    -0.08
+2017-1    10/10   10/10   463/463   463/482  1278/1278  163/163         1278         129     38248         38304        419165    -0.10
+2017-2     5/5     5/5    177/177   177/190   556/556   103/103          556         127     10927         10942        125791    -0.05
+2018-1     9/9     9/9    465/465   465/486  1550/1550  182/182         1548         183     47943         47969        455353    -0.03
+2018-2     5/5     5/5    180/180   180/190   893/893   107/107          893         181     13448         13458        163785    -0.02
+2019-1     9/9     9/10   489/489   489/507  1559/1559  176/176         1559         181     38357         38417        539846    -0.13
+2019-2     7/7     7/7    297/282   297/297  1116/441   138/25           438          70     12202         28348        128729   -58.25
+2020-ERE   3/3     3/3    492/492   492/509   420/420     8/8            420         139     45467         45491        457064    -0.07
+2020-1     7/7     7/7    228/227   228/229  1008/977    12/8            973         188     18681         19246        207769    -3.01
+2020-2     6/6     6/6    200/200   200/206   882/882     8/8            875         173     17793         17848        177134    -0.13
+2021-1     7/7     7/7    224/224   224/227   962/962   154/154          957         172     18978         19022        188967    -1.19
+2021-2     8/8     8/8    219/219   219/226  1180/1180  195/195         1177         162     19583         19627        226602    -0.17
+2022-1     8/8     8/8    238/238   238/241  1158/1158  188/188         1158         150     19438         19457        210346    -0.07
+2022-2     9/9     9/9    196/196   196/203  1257/1257  240/240         1257         178     17363         17403        163204    -2.09
+  (cls:ass = class dirs holding assessment files; cls:all = every entry at level 2 of the tar)
+
+== 3. Rule checks per semester
+sem      exact:cls  stu  hw exam codes execs  Δcodes%   Δexec%  stu_alt(dirs/ud/exec)
+2016-1        True True True True False False    -0.49    -0.24  535/471/471
+2016-2        True True True True False False    -0.13    -0.08  176/172/172
+2017-1        True True True True False False    -0.15    -0.10  482/463/463
+2017-2        True True True True False False    -0.14    -0.05  190/177/177
+2018-1        True True True True False False    -0.05    -0.03  486/465/465
+2018-2        True True True True False False    -0.07    -0.02  190/180/180
+2019-1        True True True True False False    -0.16    -0.13  507/489/489
+2019-2        True False False False False False   -56.96   -58.25  297/282/282
+2020-ERE      True True True True False False    -0.05    -0.07  509/492/492
+2020-1        True False False False False False    -2.94    -3.01  229/227/227
+2020-2        True True True True False False    -0.31    -0.13  206/200/200
+2021-1        True True True True False False    -0.23    -1.19  227/224/224
+2021-2        True True True True False False    -0.22    -0.17  226/219/219
+2022-1        True True True True False False    -0.10    -0.07  241/238/238
+2022-2        True True True True False False    -0.23    -2.09  203/196/196
+
+== 4. Archive integrity and parser cross-check
+sem       gzM  trail  dupP     blocks    hdr_any    parquet    pre  mhdr  noCS emptyC    unc_MB  non-standard members
+2016-1      1      0     0     321722     321722     321722      0     0     0     48    1617.9  -
+2016-2      1      0     0     126180     126180     126180      0     0     0      0     547.0  -
+2017-1      1      0     0     419165     419165     419165      0     0     0      0    1932.6  -
+2017-2      1      0     0     125791     125791     125791      0     0     0      0     587.8  -
+2018-1      1      0     0     455353     455353     455353      0     0     0      0    2672.6  -
+2018-2      1      0     0     163785     163785     163785      0     0     0      0     785.6  -
+2019-1      1      0     0     539846     539846     539846      0     0     0      0    2632.0  {'stray:2019-1/cb_dataset_2019_1_v1.10.tar.gz': 1}
+2019-2      1      0     0     128729     128729     128729      0     0     0      0    2979.4  {'user_other:mousemove': 1378}
+2020-ERE    1      0     0     457064     457064     457064      0     0     0      0    5253.6  -
+2020-1      1      0     0     207769     207769     207769      0     0     0      0    2295.4  -
+2020-2      1      0     0     177134     177134     177134      0     0     0      0    4658.8  {'user_other:eventos.log:depth3': 206, 'user_other:mousemove': 1181}
+2021-1      1      0     0     188967     188967     188967      0     0     0      0    6706.9  {'user_other:mousemove': 1679, 'user_other:eventos.log:depth3': 227}
+2021-2      1      0     0     226602     226602     226602      0     0     0      0    7529.5  {'user_other:eventos.log:depth3': 226, 'user_other:mousemove': 2818}
+2022-1      1      0     0     210346     210346     210346      0     0     0      0    2125.0  {'user_other:eventos.log:depth3': 241, 'user_other:mousemove': 34}
+2022-2      1      0     0     163204     163204     163204      0     0     0      0    2658.8  {'user_other:mousemove': 756, 'user_other:eventos.log:depth3': 203}
+
+== 5. Duplicates inside (class,user,assessment,exercise,ts,kind) groups
+sem       key_dup   byteId   onlyET   sameCd   diffCd    adjac  sub:byte    sub:ET   ETfill in_window test:byte t:byte% inGroups  f0blk
+2016-1      21775    20166        0     1514       95    19534     14936         0    0.000    307572      5230    3.12    33473    880
+2016-2       4986     4756        0      190       40     4666      2380         0    0.000     94716      2376    2.72     7604    266
+2017-1      13522    13102        0      355       65    12821      5763         0    0.000    385263      7339    2.45    21054    936
+2017-2       4643     4571       19       25       28     4567         5        19    0.736    121370      4566    4.65     7562    255
+2018-1      14062     3657     5286     4950      169     3554         0      5286    1.000    428648      3657    1.19    21403   1033
+2018-2       6245     3015     1525     1617       88     2958         0      1525    1.000    150782      3015    2.58     9231    307
+2019-1      29839    11301    11220     6901      417    10912         3     11220    1.000    506705     11298    2.99    42763   1217
+2019-2       8019     4021     2645     1290       63     3946         0      2645    1.000    125434      4021    4.92    12159    235
+2020-ERE     7003     3710     1611     1630       52     3642       159      1611    1.000    456975      3551    1.15    10552    613
+2020-1       1623     1056      236      317       14     1041        39       236    1.000    207383      1017    0.67     2514    667
+2020-2       6937     6337      347      230       23     6320        14       347    1.000    176963      6323    4.96     8315    475
+2021-1       1883     1190      347      312       34     1173        11       347    1.000    153651      1179    0.89     2838    826
+2021-2      18913    17371      703      774       65    17292        85       703    1.000    223195     17286   10.13    22007    766
+2022-1       2925     1793      502      519      111     1736       118       502    1.000    195935      1675    1.05     4230    722
+2022-2       5309     4732      251      285       41     4694        71       251    1.000    161015      4661    3.81     7156    836
+sum      blocks=3911657, submit=1203357, test=2708300, key_dup=147684, byte_ident=100778, only_exectime=24692, same_code_diff_out=20909, diff_code=1305, byte_ident_adjacent=98856, code_empty=48, code_files=357908, user_dirs=4704, distinct_uid=4495, in_window=3695607, test_byte_ident=77194, sub_byte_ident=23584, rows_in_dup_groups=212861, exec_files_no_block=10034, sub_byte_ET_era=500, sub_onlyET_ET_era=24673
+
+== 6. Semester-specific claims
+2016-1: exec header ts not zero-padded=0, user dirs minus distinct ids=64
+2016-1: uid in 2+ classes=57, shared exec file names across those classes=0, exec files with unlisted exercise=4544 (15.2%), union code/exec/cm keys=29991, code exts={'py': 29991}
+2016-2: exec header ts not zero-padded=0, user dirs minus distinct ids=4
+2016-2: uid in 2+ classes=4, shared exec file names across those classes=0, exec files with unlisted exercise=1566 (16.5%), union code/exec/cm keys=9489, code exts={'py': 9489}
+2017-1: exec header ts not zero-padded=0, user dirs minus distinct ids=19
+2017-1: uid in 2+ classes=16, shared exec file names across those classes=0, exec files with unlisted exercise=4724 (12.4%), union code/exec/cm keys=38248, code exts={'py': 38248}
+2017-2: exec header ts not zero-padded=0, user dirs minus distinct ids=13
+2017-2: uid in 2+ classes=12, shared exec file names across those classes=0, exec files with unlisted exercise=1384 (12.7%), union code/exec/cm keys=10927, code exts={'py': 10927}
+2018-1: exec header ts not zero-padded=0, user dirs minus distinct ids=21
+2018-1: uid in 2+ classes=14, shared exec file names across those classes=0, exec files with unlisted exercise=5887 (12.3%), union code/exec/cm keys=47943, code exts={'py': 47943}
+2018-2: exec header ts not zero-padded=0, user dirs minus distinct ids=10
+2018-2: uid in 2+ classes=9, shared exec file names across those classes=0, exec files with unlisted exercise=1607 (11.9%), union code/exec/cm keys=13448, code exts={'py': 13448}
+2019-1 stray files: ['stray:2019-1/cb_dataset_2019_1_v1.10.tar.gz'] (bytes [45]); level-2 entries=10, of which tar dir members=9
+2019-1: exec header ts not zero-padded=0, user dirs minus distinct ids=18
+2019-1: uid in 2+ classes=8, shared exec file names across those classes=0, exec files with unlisted exercise=4309 (11.2%), union code/exec/cm keys=38357, code exts={'py': 38357}
+2019-2 last exec ts per class: 258:2019-09-18 15:32:28, 259:2019-09-18 23:07:33, 260:2019-09-18 21:03:36, 261:2019-09-18 22:43:16, 262:2019-09-19 00:54:50, 263:2019-09-19 00:42:06, 264:2019-09-19 02:18:50
+2019-2 last codemirror ts per class: 258:2019-09-18 15:32:28, 259:2019-09-18 23:39:45, 260:2019-09-18 21:03:35, 261:2019-09-18 22:42:25, 262:2019-09-19 00:54:00, 263:2019-09-19 00:42:15, 264:2019-09-19 03:18:53
+2019-2 last login ts per class: 258:2019-09-18 15:51:22, 259:2019-09-18 23:16:11, 260:2019-09-18 23:06:20, 261:2019-09-18 22:56:22, 262:2019-09-19 00:04:47, 263:2019-09-19 00:43:03, 264:2019-09-19 02:19:52
+2019-2 last mousemove ts per class: 258:2019-09-18 15:32:22, 259:2019-09-18 23:40:24, 260:2019-09-18 20:54:34, 261:2019-09-18 22:44:14, 262:2019-09-19 00:50:23, 263:2019-09-18 19:46:59, 264:2019-09-19 03:19:45
+2019-2 unmatched codemirror line shapes (masked, top4): [('cm_unmatched_shape:aaaa "aaaa.aa", aaaa 9', 12809), ('cm_unmatched_shape:aaaaaaaaaaa: aaaaaaa aaaaaa', 11260), ('cm_unmatched_shape:aaaa "aaaa.aa", aaaa 9, aa <aaaa', 3803), ('cm_unmatched_shape:aaaaaaaaa (aaaa aaaaaa aaaa aaaa', 3801)]
+2019-2 codemirror events by month (zero-padded): [('2019-08', 4654380), ('2019-09', 7013284)]
+2019-2 mousemove last-line shapes (masked, top3): [('mm_last_line_shape:{"aaaa":"99/9/9999@99:99:99:999"', 231), ('mm_last_line_shape:{"aaaa":"9/9/9999@99:99:99:999",', 98), ('mm_last_line_shape:{"aaaa":"99/9/9999@9:99:99:999",', 64)]; files with a date-time stamp: 1140; stamps with month field >12: 0, with day field >12: 39078
+2019-2 assessments=48, end range 2019-09-02 08:00..2019-12-23 00:00, ends after 2019-09-19: 20; types={'homework': 37, 'exam': 11}
+2019-2 uncompressed MB by kind: {'cm': 747.7, 'userdata': 0.3, 'logins': 0.8, 'exec': 50.6, 'user_other:mousemove': 2178.1, 'code': 1.9, 'grade': 0.1, 'assessment': 0.0}
+2019-2 codemirror MB by event type (top5): change=343.4, keydown=141.9, keyup=111.4, keypress=62.9, keyHandled=50.1
+2019-2: exec header ts not zero-padded=0, user dirs minus distinct ids=15
+2019-2: uid in 2+ classes=11, shared exec file names across those classes=0, exec files with unlisted exercise=705 (5.8%), union code/exec/cm keys=12202, code exts={'py': 12202}
+2020-ERE: exec header ts not zero-padded=0, user dirs minus distinct ids=17
+2020-ERE: uid in 2+ classes=16, shared exec file names across those classes=0, exec files with unlisted exercise=183 (0.4%), union code/exec/cm keys=45467, code exts={'py': 45467}
+2020-1 assessments per class: 319:10(2021-07-15 12:00), 322:9(2021-07-12 16:00), 323:8(2021-07-13 00:00), 324:9(2021-07-15 20:00), 326:9(2021-07-15 10:10), 327:9(2021-07-12 23:00), 328:6(2021-06-16 16:00)
+2020-1: exec header ts not zero-padded=0, user dirs minus distinct ids=2
+2020-1: uid in 2+ classes=2, shared exec file names across those classes=0, exec files with unlisted exercise=56 (0.3%), union code/exec/cm keys=18681, code exts={'py': 18681}
+2020-2: exec header ts not zero-padded=0, user dirs minus distinct ids=6
+2020-2: uid in 2+ classes=6, shared exec file names across those classes=0, exec files with unlisted exercise=46 (0.3%), union code/exec/cm keys=17793, code exts={'py': 17793}
+2021-1: exec header ts not zero-padded=0, user dirs minus distinct ids=3
+2021-1: uid in 2+ classes=3, shared exec file names across those classes=0, exec files with unlisted exercise=1215 (6.4%), union code/exec/cm keys=18978, code exts={'py': 18978}
+2021-2: exec header ts not zero-padded=0, user dirs minus distinct ids=7
+2021-2: uid in 2+ classes=7, shared exec file names across those classes=0, exec files with unlisted exercise=2929 (15.0%), union code/exec/cm keys=19583, code exts={'py': 19583}
+2022-1: exec header ts not zero-padded=0, user dirs minus distinct ids=3
+2022-1: uid in 2+ classes=3, shared exec file names across those classes=0, exec files with unlisted exercise=2750 (14.1%), union code/exec/cm keys=19438, code exts={'py': 19438}
+2022-2 classes with assessments but no users: ['489'] (n_assess=[4])
+2022-2: exec header ts not zero-padded=0, user dirs minus distinct ids=7
+2022-2: uid in 2+ classes=6, shared exec file names across those classes=0, exec files with unlisted exercise=2786 (16.0%), union code/exec/cm keys=17363, code exts={'py': 17363}
+
+== 7. Cross-semester ids (DEV only), parquet key-dup cross-check, server sizes
+DEV: distinct ids=3363, student-semesters=4495, ids in 2+ semesters=781 | with >=1 block: ids=3331, student-semesters=4445
+parquet key dups / ours: 2016-1:21775/21775, 2016-2:4986/4986, 2017-1:13522/13522, 2017-2:4643/4643, 2018-1:14062/14062, 2018-2:6245/6245, 2019-1:29839/29839, 2019-2:8019/8019, 2020-ERE:7003/7003, 2020-1:1623/1623, 2020-2:6937/6937, 2021-1:1883/1883, 2021-2:18913/18913, 2022-1:2925/2925, 2022-2:5309/5309
+server Content-Length vs local size: 2016-1:=@12 Aug 2022, 2016-2:=@12 Aug 2022, 2017-1:=@12 Aug 2022, 2017-2:=@12 Aug 2022, 2018-1:=@12 Aug 2022, 2018-2:=@12 Aug 2022, 2019-1:=@12 Aug 2022, 2019-2:=@12 Aug 2022, 2020-ERE:=@12 Aug 2022, 2020-1:=@24 Oct 2024, 2020-2:=@24 Oct 2024, 2021-1:=@24 Oct 2024, 2021-2:=@21 Oct 2022, 2022-1:=@24 Oct 2024, 2022-2:=@24 Oct 2024

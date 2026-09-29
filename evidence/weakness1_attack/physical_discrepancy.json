@@ -1,0 +1,608 @@
+{
+  "status": "PASS",
+  "method": "artifact-only reconstruction from stored physical and production-replay fields; no scheduler simulation and no NPZ access",
+  "inputs": [
+    {
+      "path": "physical_spjf_e_jobs.jsonl",
+      "bytes": 3636144,
+      "sha256": "d93a335549368402bfea079483ebfb7fe36acdb92fbf7e8258719a064d50fc2d"
+    },
+    {
+      "path": "physical_spjf_e_decisions.jsonl",
+      "bytes": 4747411,
+      "sha256": "029cdfff5500ee8382a01cb11c80626df0a501bf5f329195add4cbee6325930f"
+    },
+    {
+      "path": "physical_spjf_e_audit.json",
+      "bytes": 5255,
+      "sha256": "80d000ee5be3a610e9d2f1ddc9e4ac320ab0d0ef5c514266452a3f154004a703"
+    },
+    {
+      "path": "physical_records/spjf_e_attempt_20260921T104529_56918181265900_events.jsonl",
+      "bytes": 1599393,
+      "sha256": "cfec599acccc5c71b0b3ff27d9679ea9aa427ca6e153306b9a65d88f713d9b46"
+    },
+    {
+      "path": "physical_fcfs_jobs.jsonl",
+      "bytes": 3652783,
+      "sha256": "4715b7352f3c71defad3a36b861fd37ca6e5a15a6e81370feb389603655629bf"
+    },
+    {
+      "path": "physical_fcfs_audit.json",
+      "bytes": 5233,
+      "sha256": "2502f085788c68566b75374cb0fabf59dfd8b693f02453696cf441113cca8cb5"
+    }
+  ],
+  "spjf_e": {
+    "jobs": 2151,
+    "dispatch_index_mismatching_jobs": 1401,
+    "mean_physical_minus_ideal_wait_s": 0.31539123570432354,
+    "max_abs_physical_minus_ideal_wait_s": 392.836259,
+    "p50_abs_wait_discrepancy_s": 0.110207,
+    "p95_abs_wait_discrepancy_s": 0.429925,
+    "p99_abs_wait_discrepancy_s": 0.642782,
+    "counts_abs_wait_discrepancy_above_s": {
+      "0.001": 2115,
+      "0.1": 1096,
+      "1.0": 10,
+      "10.0": 2,
+      "60.0": 1,
+      "300.0": 1
+    }
+  },
+  "fcfs_control": {
+    "jobs": 2151,
+    "dispatch_index_mismatching_jobs": 0,
+    "mean_physical_minus_ideal_wait_s": 0.24812438400743841,
+    "max_abs_physical_minus_ideal_wait_s": 0.486214,
+    "p50_abs_wait_discrepancy_s": 0.246264,
+    "p95_abs_wait_discrepancy_s": 0.4656975,
+    "p99_abs_wait_discrepancy_s": 0.479359,
+    "counts_abs_wait_discrepancy_above_s": {
+      "0.001": 2128,
+      "0.1": 1696,
+      "1.0": 0,
+      "10.0": 0,
+      "60.0": 0,
+      "300.0": 0
+    }
+  },
+  "choice_checks": {
+    "physical_score_choices_checked": 2151,
+    "physical_bad_choices": 0,
+    "stored_ideal_score_choices_checked": 2151,
+    "stored_ideal_bad_choices": 0,
+    "mismatch_epochs_with_both_choices_available_to_both": 0
+  },
+  "first_divergence": {
+    "dispatch_index": 130,
+    "physical_choice": 158,
+    "physical_choice_score": 0.2844021503004826,
+    "ideal_choice": 128,
+    "ideal_choice_score": 0.886561234165988,
+    "cause": "later_arrival_crossed_into_physical_decision",
+    "physical_decision_minus_mapped_ideal_epoch_ms": 24.7613,
+    "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 1.1282,
+    "physical_decision_minus_physical_choice_enqueue_ms": 23.6331,
+    "physical_waiting_jobs": 29,
+    "ideal_waiting_jobs": 28,
+    "physical_minus_ideal_waiting_count": 1,
+    "ideal_minus_physical_waiting_count": 0,
+    "physical_only_waiting_job_ids": [
+      158
+    ],
+    "ideal_only_waiting_job_ids": [],
+    "physical_choice_in_ideal_waiting": false,
+    "ideal_choice_in_physical_waiting": true,
+    "both_choices_available_to_both": false,
+    "events_since_previous_physical_dispatch": {
+      "event_type_counts": {
+        "arrival_enqueued": 8,
+        "completion_visible": 1
+      },
+      "arrival_job_ids": [
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158
+      ],
+      "completion_job_ids": [
+        79
+      ]
+    }
+  },
+  "permutation_episodes": {
+    "count": 8,
+    "mismatching_positions": 1401,
+    "longest_dispatch_positions": 1401,
+    "max_prefix_symmetric_difference_jobs": 6,
+    "mismatch_epoch_causes": {
+      "later_arrival_crossed_into_physical_decision": 39,
+      "cascade_from_prior_order_difference": 1362
+    },
+    "starts_by_cause": {
+      "later_arrival_crossed_into_physical_decision": 8
+    },
+    "episodes": [
+      {
+        "start": 130,
+        "start_detail": {
+          "dispatch_index": 130,
+          "physical_choice": 158,
+          "physical_choice_score": 0.2844021503004826,
+          "ideal_choice": 128,
+          "ideal_choice_score": 0.886561234165988,
+          "cause": "later_arrival_crossed_into_physical_decision",
+          "physical_decision_minus_mapped_ideal_epoch_ms": 24.7613,
+          "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 1.1282,
+          "physical_decision_minus_physical_choice_enqueue_ms": 23.6331,
+          "physical_waiting_jobs": 29,
+          "ideal_waiting_jobs": 28,
+          "physical_minus_ideal_waiting_count": 1,
+          "ideal_minus_physical_waiting_count": 0,
+          "physical_only_waiting_job_ids": [
+            158
+          ],
+          "ideal_only_waiting_job_ids": [],
+          "physical_choice_in_ideal_waiting": false,
+          "ideal_choice_in_physical_waiting": true,
+          "both_choices_available_to_both": false,
+          "events_since_previous_physical_dispatch": {
+            "event_type_counts": {
+              "arrival_enqueued": 8,
+              "completion_visible": 1
+            },
+            "arrival_job_ids": [
+              151,
+              152,
+              153,
+              154,
+              155,
+              156,
+              157,
+              158
+            ],
+            "completion_job_ids": [
+              79
+            ]
+          }
+        },
+        "mismatches": 2,
+        "end": 131,
+        "dispatch_positions": 2
+      },
+      {
+        "start": 233,
+        "start_detail": {
+          "dispatch_index": 233,
+          "physical_choice": 325,
+          "physical_choice_score": 0.17460096350575327,
+          "ideal_choice": 312,
+          "ideal_choice_score": 0.21609155524647217,
+          "cause": "later_arrival_crossed_into_physical_decision",
+          "physical_decision_minus_mapped_ideal_epoch_ms": 67.3359,
+          "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 34.5897,
+          "physical_decision_minus_physical_choice_enqueue_ms": 32.7462,
+          "physical_waiting_jobs": 96,
+          "ideal_waiting_jobs": 92,
+          "physical_minus_ideal_waiting_count": 4,
+          "ideal_minus_physical_waiting_count": 0,
+          "physical_only_waiting_job_ids": [
+            325,
+            326,
+            327,
+            328
+          ],
+          "ideal_only_waiting_job_ids": [],
+          "physical_choice_in_ideal_waiting": false,
+          "ideal_choice_in_physical_waiting": true,
+          "both_choices_available_to_both": false
+        },
+        "mismatches": 5,
+        "end": 237,
+        "dispatch_positions": 5
+      },
+      {
+        "start": 245,
+        "start_detail": {
+          "dispatch_index": 245,
+          "physical_choice": 344,
+          "physical_choice_score": 0.17561920869488593,
+          "ideal_choice": 340,
+          "ideal_choice_score": 0.2050395132997622,
+          "cause": "later_arrival_crossed_into_physical_decision",
+          "physical_decision_minus_mapped_ideal_epoch_ms": 71.265,
+          "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 67.3536,
+          "physical_decision_minus_physical_choice_enqueue_ms": 3.9114,
+          "physical_waiting_jobs": 101,
+          "ideal_waiting_jobs": 99,
+          "physical_minus_ideal_waiting_count": 2,
+          "ideal_minus_physical_waiting_count": 0,
+          "physical_only_waiting_job_ids": [
+            344,
+            345
+          ],
+          "ideal_only_waiting_job_ids": [],
+          "physical_choice_in_ideal_waiting": false,
+          "ideal_choice_in_physical_waiting": true,
+          "both_choices_available_to_both": false
+        },
+        "mismatches": 3,
+        "end": 247,
+        "dispatch_positions": 3
+      },
+      {
+        "start": 259,
+        "start_detail": {
+          "dispatch_index": 259,
+          "physical_choice": 364,
+          "physical_choice_score": 0.175838120795745,
+          "ideal_choice": 359,
+          "ideal_choice_score": 0.2070278671796971,
+          "cause": "later_arrival_crossed_into_physical_decision",
+          "physical_decision_minus_mapped_ideal_epoch_ms": 75.8637,
+          "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 40.5271,
+          "physical_decision_minus_physical_choice_enqueue_ms": 35.3366,
+          "physical_waiting_jobs": 107,
+          "ideal_waiting_jobs": 105,
+          "physical_minus_ideal_waiting_count": 2,
+          "ideal_minus_physical_waiting_count": 0,
+          "physical_only_waiting_job_ids": [
+            364,
+            365
+          ],
+          "ideal_only_waiting_job_ids": [],
+          "physical_choice_in_ideal_waiting": false,
+          "ideal_choice_in_physical_waiting": true,
+          "both_choices_available_to_both": false
+        },
+        "mismatches": 3,
+        "end": 261,
+        "dispatch_positions": 3
+      },
+      {
+        "start": 297,
+        "start_detail": {
+          "dispatch_index": 297,
+          "physical_choice": 386,
+          "physical_choice_score": 0.21486169790652263,
+          "ideal_choice": 274,
+          "ideal_choice_score": 0.541242973932675,
+          "cause": "later_arrival_crossed_into_physical_decision",
+          "physical_decision_minus_mapped_ideal_epoch_ms": 41.1726,
+          "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 5.154,
+          "physical_decision_minus_physical_choice_enqueue_ms": 36.0186,
+          "physical_waiting_jobs": 94,
+          "ideal_waiting_jobs": 89,
+          "physical_minus_ideal_waiting_count": 5,
+          "ideal_minus_physical_waiting_count": 0,
+          "physical_only_waiting_job_ids": [
+            386,
+            387,
+            388,
+            389,
+            390
+          ],
+          "ideal_only_waiting_job_ids": [],
+          "physical_choice_in_ideal_waiting": false,
+          "ideal_choice_in_physical_waiting": true,
+          "both_choices_available_to_both": false
+        },
+        "mismatches": 6,
+        "end": 302,
+        "dispatch_positions": 6
+      },
+      {
+        "start": 305,
+        "start_detail": {
+          "dispatch_index": 305,
+          "physical_choice": 398,
+          "physical_choice_score": 0.17330989758801774,
+          "ideal_choice": 283,
+          "ideal_choice_score": 0.6048257611297593,
+          "cause": "later_arrival_crossed_into_physical_decision",
+          "physical_decision_minus_mapped_ideal_epoch_ms": 75.2695,
+          "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 16.6298,
+          "physical_decision_minus_physical_choice_enqueue_ms": 58.6397,
+          "physical_waiting_jobs": 98,
+          "ideal_waiting_jobs": 86,
+          "physical_minus_ideal_waiting_count": 12,
+          "ideal_minus_physical_waiting_count": 0,
+          "physical_only_waiting_job_ids": [
+            391,
+            392,
+            393,
+            394,
+            395,
+            396,
+            397,
+            398,
+            399,
+            400,
+            401,
+            402
+          ],
+          "ideal_only_waiting_job_ids": [],
+          "physical_choice_in_ideal_waiting": false,
+          "ideal_choice_in_physical_waiting": true,
+          "both_choices_available_to_both": false
+        },
+        "mismatches": 8,
+        "end": 312,
+        "dispatch_positions": 8
+      },
+      {
+        "start": 343,
+        "start_detail": {
+          "dispatch_index": 343,
+          "physical_choice": 490,
+          "physical_choice_score": 0.3531491077722651,
+          "ideal_choice": 393,
+          "ideal_choice_score": 0.8070300235450814,
+          "cause": "later_arrival_crossed_into_physical_decision",
+          "physical_decision_minus_mapped_ideal_epoch_ms": 72.7183,
+          "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 44.6597,
+          "physical_decision_minus_physical_choice_enqueue_ms": 28.0586,
+          "physical_waiting_jobs": 154,
+          "ideal_waiting_jobs": 147,
+          "physical_minus_ideal_waiting_count": 7,
+          "ideal_minus_physical_waiting_count": 0,
+          "physical_only_waiting_job_ids": [
+            490,
+            491,
+            492,
+            493,
+            494,
+            495,
+            496
+          ],
+          "ideal_only_waiting_job_ids": [],
+          "physical_choice_in_ideal_waiting": false,
+          "ideal_choice_in_physical_waiting": true,
+          "both_choices_available_to_both": false
+        },
+        "mismatches": 11,
+        "end": 359,
+        "dispatch_positions": 17
+      },
+      {
+        "start": 361,
+        "start_detail": {
+          "dispatch_index": 361,
+          "physical_choice": 528,
+          "physical_choice_score": 0.20503758924233664,
+          "ideal_choice": 395,
+          "ideal_choice_score": 0.8070300235450814,
+          "cause": "later_arrival_crossed_into_physical_decision",
+          "physical_decision_minus_mapped_ideal_epoch_ms": 32.1262,
+          "physical_choice_enqueue_minus_mapped_ideal_epoch_ms": 17.212,
+          "physical_decision_minus_physical_choice_enqueue_ms": 14.9142,
+          "physical_waiting_jobs": 170,
+          "ideal_waiting_jobs": 167,
+          "physical_minus_ideal_waiting_count": 3,
+          "ideal_minus_physical_waiting_count": 0,
+          "physical_only_waiting_job_ids": [
+            528,
+            529,
+            530
+          ],
+          "ideal_only_waiting_job_ids": [],
+          "physical_choice_in_ideal_waiting": false,
+          "ideal_choice_in_physical_waiting": true,
+          "both_choices_available_to_both": false
+        },
+        "mismatches": 1363,
+        "end": 1761,
+        "dispatch_positions": 1401
+      }
+    ]
+  },
+  "extreme_jobs": {
+    "largest_positive": {
+      "job_id": 395,
+      "score": 0.8070300235450814,
+      "physical_minus_ideal_wait_s": 392.836259,
+      "physical_wait_s": 400.1894386,
+      "ideal_wait_s": 7.35318,
+      "physical_dispatch_index": 1761,
+      "ideal_dispatch_index": 361,
+      "dispatch_index_shift": 1400,
+      "physical_start_minus_mapped_ideal_start_s": 392.836259,
+      "extra_jobs_before_physical_count": 1400,
+      "extra_jobs_before_physical_measured_work_s": 785.0139944,
+      "extra_jobs_before_ideal_count": 0,
+      "extra_jobs_before_ideal_measured_work_s": 0.0,
+      "episode_at_earlier_position": 7
+    },
+    "largest_negative": {
+      "job_id": 1353,
+      "score": 0.4377545149888052,
+      "physical_minus_ideal_wait_s": -2.509642,
+      "physical_wait_s": 0.0748074,
+      "ideal_wait_s": 2.584449,
+      "physical_dispatch_index": 968,
+      "ideal_dispatch_index": 986,
+      "dispatch_index_shift": -18,
+      "physical_start_minus_mapped_ideal_start_s": -2.5096411,
+      "extra_jobs_before_physical_count": 0,
+      "extra_jobs_before_physical_measured_work_s": 0.0,
+      "extra_jobs_before_ideal_count": 18,
+      "extra_jobs_before_ideal_measured_work_s": 5.3810029,
+      "episode_at_earlier_position": 7
+    },
+    "top_by_absolute_discrepancy": [
+      {
+        "job_id": 395,
+        "score": 0.8070300235450814,
+        "physical_minus_ideal_wait_s": 392.836259,
+        "physical_wait_s": 400.1894386,
+        "ideal_wait_s": 7.35318,
+        "physical_dispatch_index": 1761,
+        "ideal_dispatch_index": 361,
+        "dispatch_index_shift": 1400,
+        "physical_start_minus_mapped_ideal_start_s": 392.836259,
+        "extra_jobs_before_physical_count": 1400,
+        "extra_jobs_before_physical_measured_work_s": 785.0139944,
+        "extra_jobs_before_ideal_count": 0,
+        "extra_jobs_before_ideal_measured_work_s": 0.0,
+        "episode_at_earlier_position": 7
+      },
+      {
+        "job_id": 1220,
+        "score": 0.5361107957642157,
+        "physical_minus_ideal_wait_s": 16.47469,
+        "physical_wait_s": 39.6067986,
+        "ideal_wait_s": 23.132109,
+        "physical_dispatch_index": 1074,
+        "ideal_dispatch_index": 968,
+        "dispatch_index_shift": 106,
+        "physical_start_minus_mapped_ideal_start_s": 16.4746892,
+        "extra_jobs_before_physical_count": 107,
+        "extra_jobs_before_physical_measured_work_s": 32.6893051,
+        "extra_jobs_before_ideal_count": 1,
+        "extra_jobs_before_ideal_measured_work_s": 0.2252172,
+        "episode_at_earlier_position": 7
+      },
+      {
+        "job_id": 1219,
+        "score": 0.5361107957642157,
+        "physical_minus_ideal_wait_s": 3.426628,
+        "physical_wait_s": 22.8974115,
+        "ideal_wait_s": 19.470784,
+        "physical_dispatch_index": 966,
+        "ideal_dispatch_index": 951,
+        "dispatch_index_shift": 15,
+        "physical_start_minus_mapped_ideal_start_s": 3.4266279,
+        "extra_jobs_before_physical_count": 16,
+        "extra_jobs_before_physical_measured_work_s": 5.4492893,
+        "extra_jobs_before_ideal_count": 1,
+        "extra_jobs_before_ideal_measured_work_s": 0.2252172,
+        "episode_at_earlier_position": 7
+      },
+      {
+        "job_id": 1353,
+        "score": 0.4377545149888052,
+        "physical_minus_ideal_wait_s": -2.509642,
+        "physical_wait_s": 0.0748074,
+        "ideal_wait_s": 2.584449,
+        "physical_dispatch_index": 968,
+        "ideal_dispatch_index": 986,
+        "dispatch_index_shift": -18,
+        "physical_start_minus_mapped_ideal_start_s": -2.5096411,
+        "extra_jobs_before_physical_count": 0,
+        "extra_jobs_before_physical_measured_work_s": 0.0,
+        "extra_jobs_before_ideal_count": 18,
+        "extra_jobs_before_ideal_measured_work_s": 5.3810029,
+        "episode_at_earlier_position": 7
+      },
+      {
+        "job_id": 393,
+        "score": 0.8070300235450814,
+        "physical_minus_ideal_wait_s": 2.058045,
+        "physical_wait_s": 7.0943922,
+        "ideal_wait_s": 5.036347,
+        "physical_dispatch_index": 359,
+        "ideal_dispatch_index": 343,
+        "dispatch_index_shift": 16,
+        "physical_start_minus_mapped_ideal_start_s": 2.0580449,
+        "extra_jobs_before_physical_count": 16,
+        "extra_jobs_before_physical_measured_work_s": 4.1854978,
+        "extra_jobs_before_ideal_count": 0,
+        "extra_jobs_before_ideal_measured_work_s": 0.0,
+        "episode_at_earlier_position": 6
+      },
+      {
+        "job_id": 1415,
+        "score": 0.518291898134307,
+        "physical_minus_ideal_wait_s": 1.957502,
+        "physical_wait_s": 7.5486121,
+        "ideal_wait_s": 5.59111,
+        "physical_dispatch_index": 1050,
+        "ideal_dispatch_index": 1039,
+        "dispatch_index_shift": 11,
+        "physical_start_minus_mapped_ideal_start_s": 1.9575023,
+        "extra_jobs_before_physical_count": 13,
+        "extra_jobs_before_physical_measured_work_s": 4.057398,
+        "extra_jobs_before_ideal_count": 2,
+        "extra_jobs_before_ideal_measured_work_s": 0.5735154,
+        "episode_at_earlier_position": 7
+      },
+      {
+        "job_id": 1686,
+        "score": 0.30328137803555477,
+        "physical_minus_ideal_wait_s": 1.577043,
+        "physical_wait_s": 1.7421906,
+        "ideal_wait_s": 0.165148,
+        "physical_dispatch_index": 1255,
+        "ideal_dispatch_index": 1242,
+        "dispatch_index_shift": 13,
+        "physical_start_minus_mapped_ideal_start_s": 1.5770427,
+        "extra_jobs_before_physical_count": 14,
+        "extra_jobs_before_physical_measured_work_s": 2.9396961,
+        "extra_jobs_before_ideal_count": 1,
+        "extra_jobs_before_ideal_measured_work_s": 0.2252172,
+        "episode_at_earlier_position": 7
+      },
+      {
+        "job_id": 1443,
+        "score": 0.3883882220167625,
+        "physical_minus_ideal_wait_s": -1.26056,
+        "physical_wait_s": 0.0227135,
+        "ideal_wait_s": 1.283274,
+        "physical_dispatch_index": 1037,
+        "ideal_dispatch_index": 1048,
+        "dispatch_index_shift": -11,
+        "physical_start_minus_mapped_ideal_start_s": -1.26056,
+        "extra_jobs_before_physical_count": 0,
+        "extra_jobs_before_physical_measured_work_s": 0.0,
+        "extra_jobs_before_ideal_count": 11,
+        "extra_jobs_before_ideal_measured_work_s": 2.8612247,
+        "episode_at_earlier_position": 7
+      },
+      {
+        "job_id": 1444,
+        "score": 0.3883882220167625,
+        "physical_minus_ideal_wait_s": -1.215967,
+        "physical_wait_s": 0.1027701,
+        "ideal_wait_s": 1.318737,
+        "physical_dispatch_index": 1038,
+        "ideal_dispatch_index": 1049,
+        "dispatch_index_shift": -11,
+        "physical_start_minus_mapped_ideal_start_s": -1.2159669,
+        "extra_jobs_before_physical_count": 0,
+        "extra_jobs_before_physical_measured_work_s": 0.0,
+        "extra_jobs_before_ideal_count": 11,
+        "extra_jobs_before_ideal_measured_work_s": 2.8612247,
+        "episode_at_earlier_position": 7
+      },
+      {
+        "job_id": 1399,
+        "score": 0.4518283359568018,
+        "physical_minus_ideal_wait_s": -1.203559,
+        "physical_wait_s": 0.5283792,
+        "ideal_wait_s": 1.731938,
+        "physical_dispatch_index": 989,
+        "ideal_dispatch_index": 1000,
+        "dispatch_index_shift": -11,
+        "physical_start_minus_mapped_ideal_start_s": -1.2035593,
+        "extra_jobs_before_physical_count": 0,
+        "extra_jobs_before_physical_measured_work_s": 0.0,
+        "extra_jobs_before_ideal_count": 11,
+        "extra_jobs_before_ideal_measured_work_s": 2.7096683,
+        "episode_at_earlier_position": 7
+      }
+    ],
+    "work_set_note": "extra-before work is descriptive measured service, not an additive delay decomposition on two servers"
+  },
+  "interpretation_rule": "zero bad-choice counts and zero both-available conflicts reject a score-choice formula mismatch in these artifacts; direct episode starts caused by a job arriving between the mapped ideal epoch and the later physical decision are arrival crossings, while later positions in that episode are priority cascades",
+  "execution": {
+    "processes": 1,
+    "children": 0,
+    "wall_s": 0.19706150000274647,
+    "cpu_s": 0.1875
+  }
+}

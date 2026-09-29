@@ -1,0 +1,122 @@
+==============================================================================
+THE GENERAL WRAPPER THEOREM -- numerical attack
+==============================================================================
+
+rules: 0 constant | 1 age-relative common B0 | 2 queue-length + age |
+       3 DECREASING in time | 4 per-job constant | 5 adversarial per
+       (job, dispatch epoch), redrawn every epoch
+all clamped into [0, Bmax]; every comparison is exact integer.
+
+------------------------------------------------------------------------------
+PROBE 1  budget == 0 must reduce the wrapper to FCFS
+  360000 (instance, base tape) pairs, k <= 4, n <= 6: 0 mismatches
+
+PROBE 2  the MIN-rank tie-break inside E is load-bearing
+  the same wrapper serving the MAX-rank member of E instead,
+  1536000 (schedule, parameter) combinations, 7680000 job-checks:
+    (A1) In_i < Bmax + kL              : 112 failures
+    (A2) k W <= k W_F + Bmax + (3k-2)L : 0 failures
+  plus 1,000,000 random instances (n <= 16, k <= 4) with the same
+  wrong tie-break, 1000000 schedules, 9995105 job-checks:
+    (A1) In_i < Bmax + kL              : 121918 failures
+    (A2) k W <= k W_F + Bmax + (3k-2)L : 75211 failures
+  (failures here are EXPECTED: they are the point of the probe)
+
+------------------------------------------------------------------------------
+EXHAUSTIVE  k <= 3, n <= 5, EVERY base tape (hence every
+  work-conserving schedule the base could produce), 6 rules, 9
+  parameter settings: 720 instances, 44167680 (schedule, rule, parameter)
+  combinations, 216820800 job-checks
+    (A1) In_i < Bmax + kL              : 0 failures
+    (A2) k W <= k W_F + Bmax + (3k-2)L : 0 failures
+    (A2) strictness                    : 0 failures
+    identity |D_i| <= 2(k-1)L          : 0 failures
+    (M2) with the per-job B_{0,i}      : 0 failures
+    (M1) In_i < B_{0,i} + eta k W + kL : 0 failures
+    (M2) with the COMMON B0            : 99005 failures  <- rules 2 and 4
+    worst (k*excess - Bmax) observed   : 4
+
+------------------------------------------------------------------------------
+n = 6 and 7, k <= 3, 1,500 base tapes per shape, 6 rules, 4
+  parameter settings: 480 instances, 17280000 combinations, 112320000 job-checks
+    (A1) 0   (A2) 0   strictness 0   identity 0
+    (M2) per-job B_{0,i} 0   (M1) 0   (M2) common B0 22975
+
+------------------------------------------------------------------------------
+RANDOM  1,000,000 instances, k <= 5, n <= 12, rule drawn uniformly
+  from the six, every parameter random: 1000000 schedules, 6993818 job-checks
+    (A1) In_i < Bmax + kL              : 0 failures
+    (A2) k W <= k W_F + Bmax + (3k-2)L : 0 failures
+    (A2) strictness                    : 0 failures
+    identity |D_i| <= 2(k-1)L          : 0 failures
+    (M2) with the per-job B_{0,i}      : 0 failures
+    (M1) In_i < B_{0,i} + eta k W + kL : 0 failures
+    (M2) with the COMMON B0            : 1693 failures  <- rules 2, 4
+    worst (k*excess - Bmax) observed   : 28
+
+------------------------------------------------------------------------------
+COUNTEREXAMPLE  the multiplicative bound stated with the COMMON B0
+fails for gamma > 0 (equivalently for a per-job B_{0,i}).
+
+  n = 12, k = 1, L = 1, B0 = 0, gamma = 8, Bmax = 8, eta free
+  arrivals  a = [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  services  x = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  n_q at the victim's arrival = 1, so budget_victim = 8
+  guard start times  = [0, 9, 1, 2, 3, 4, 5, 6, 7, 8, 11, 10]
+  FCFS  start times  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  victim: W = 9, W_FCFS = 1, excess = 8
+
+  the GENERAL additive bound still holds:
+    W < W_F + Bmax/k + (3-2/k)L = 1 + 9 = 10   ->   9 < 10 : True
+
+  the multiplicative bound with the common B0 = 0, at gamma = 8:
+    eta = 0         RHS = (W_F + B0/k + (3-2/k)L)/(1-eta) = 2           W = 9  VIOLATED: True
+    eta = 1/2       RHS = (W_F + B0/k + (3-2/k)L)/(1-eta) = 4           W = 9  VIOLATED: True
+    eta = 3/4       RHS = (W_F + B0/k + (3-2/k)L)/(1-eta) = 8           W = 9  VIOLATED: True
+    eta = 9/10      RHS = (W_F + B0/k + (3-2/k)L)/(1-eta) = 20          W = 9  VIOLATED: False
+    eta = 99/100    RHS = (W_F + B0/k + (3-2/k)L)/(1-eta) = 200         W = 9  VIOLATED: False
+
+  gamma is free, so the bound fails for EVERY eta in [0,1): the
+  excess is exactly gamma, and W = gamma + 1 against a fixed RHS of
+  2/(1-eta).  Taking gamma = ceil(2/(1-eta)):
+    eta        gamma    RHS        W        W_FCFS   violated
+    0          3        2          4        1        True    
+    1/2        5        4          6        1        True    
+    3/4        9        8          10       1        True    
+    9/10       21       20         22       1        True    
+    99/100     201      200        202      1        True    
+
+  the excess is exactly gamma, so the violation is unbounded:
+    gamma    W        W_FCFS   excess  
+    1        2        1        1       
+    2        3        1        2       
+    4        5        1        4       
+    8        9        1        8       
+    16       17       1        16      
+    32       33       1        32      
+    64       65       1        64      
+    128      129      1        128     
+
+  the PER-JOB form does hold on the same instance,
+  with B_{0,i} = B0 + gamma n_i = 8:
+    eta = 0       (1-eta)W = 9        <= 10       : True
+    eta = 1/2     (1-eta)W = 9/2      <= 10       : True
+    eta = 3/4     (1-eta)W = 9/4      <= 10       : True
+
+------------------------------------------------------------------------------
+THEOREM 4C's family, replayed through the GENERAL kernel
+  (a constant budget is the general rule with budget == B0 == Bmax)
+
+  k   L      m   n      B      excess   c(k) measured        3k-2  
+  2   64     6   396    128    191      127/32 = 3.9688      4     
+  2   128    7   909    256    383      255/64 = 3.9844      4     
+  3   81     4   340    147    227      178/27 = 6.5926      7     
+  3   243    5   1233   455    697      1636/243 = 6.7325    7     
+  4   64     3   211    102    165      279/32 = 8.7188      10    
+  4   256    4   1046   432    687      579/64 = 9.0469      10    
+  5   125    3   399    187    311      1368/125 = 10.9440   13    
+  6   216    3   677    308    523      1415/108 = 13.1019   16    
+
+  every row satisfies c < 3k-2 strictly: True
+  (same numbers as theory.md's table -- the general statement covers
+   the constant budget verbatim, so Theorem 4C is unaffected)

@@ -1,0 +1,33 @@
+[    2s] rep0 FCFS            p99dl 263.1202
+[    3s] rep0 SJF-ref         p99dl 42.8808
+[    4s] rep0 SPJF-tweedie    p99dl 62.2255
+[    5s] rep0 SPJF-M4         p99dl 66.5706
+[    9s] rep0 CAP-G600        p99dl 86.9605
+[   10s] rep1 FCFS            p99dl 277.8373
+[   11s] rep1 SJF-ref         p99dl 43.3656
+[   12s] rep1 SPJF-tweedie    p99dl 60.6784
+[   13s] rep1 SPJF-M4         p99dl 65.0198
+[   17s] rep1 CAP-G600        p99dl 85.0003
+[   19s] rep2 FCFS            p99dl 264.6694
+[   20s] rep2 SJF-ref         p99dl 44.5242
+[   21s] rep2 SPJF-tweedie    p99dl 64.9651
+[   22s] rep2 SPJF-M4         p99dl 70.0352
+[   26s] rep2 CAP-G600        p99dl 89.6724
+[   27s] rep3 FCFS            p99dl 264.6523
+[   28s] rep3 SJF-ref         p99dl 43.4878
+[   29s] rep3 SPJF-tweedie    p99dl 62.4468
+[   30s] rep3 SPJF-M4         p99dl 66.5516
+[   35s] rep3 CAP-G600        p99dl 85.2246
+[   36s] rep4 FCFS            p99dl 297.2077
+[   37s] rep4 SJF-ref         p99dl 43.8874
+[   38s] rep4 SPJF-tweedie    p99dl 64.2397
+[   39s] rep4 SPJF-M4         p99dl 68.2583
+[   43s] rep4 CAP-G600        p99dl 91.8455
+weeks in the overlay timeline: 30
+FCFS            gap 0.0000 [0.0000, 0.0000]   (bootstrap median 0.0000)
+SJF-ref         gap 1.0000 [1.0000, 1.0000]   (bootstrap median 1.0000)
+SPJF-tweedie    gap 0.9159 [0.8922, 0.9289]   (bootstrap median 0.9151)
+SPJF-M4         gap 0.8967 [0.8725, 0.9138]   (bootstrap median 0.8969)
+CAP-G600        gap 0.8078 [0.7711, 0.8483]   (bootstrap median 0.8084)
+SPJF-tweedie - SPJF-M4: +0.0182 [+0.0104, +0.0241]
+CAP-G600 - SPJF-tweedie: -0.1055 [-0.1362, -0.0673]

@@ -1,0 +1,47 @@
+START 2026-09-23T06:08:34.550983+00:00
+SCRIPT_SHA256 f83bab52adca5d62a2af844a403ffaef6e144dd6972eb990a8d8b58fbf85d3f2
+FROZEN CE1|1 test L 900 | k_fit 1 | k_obs 10 of 84 | fit rows 1927 | busy arrivals/h 14.0 
+HELD-OUT CE1|1 {"offered_load": 0.0957, "recorded_mean": 238.9364, "sim_mean": 697.2007, "recorded_p90": 6.0, "sim_p90": 862.6, "recorded_p99": 6815.44, "sim_p99": 16710.66, "hourly_pearson": -0.0269}
+FROZEN CE1|2 short L 7200 | k_fit 67 | k_obs 84 of 84 | fit rows 29838 | busy arrivals/h 13.0 
+HELD-OUT CE1|2 {"offered_load": 0.0034, "recorded_mean": 519.9189, "sim_mean": 0.0, "recorded_p90": 6.0, "sim_p90": 0.0, "recorded_p99": 14288.96, "sim_p99": 0.0, "hourly_pearson": NaN}
+FROZEN CE1|3 long L 86400 | k_fit 38 | k_obs 82 of 84 | fit rows 5345 | busy arrivals/h 3.0 
+HELD-OUT CE1|3 {"offered_load": 0.1305, "recorded_mean": 648.1635, "sim_mean": 724.7456, "recorded_p90": 321.5, "sim_p90": 0.0, "recorded_p99": 22860.05, "sim_p99": 29091.45, "hourly_pearson": 0.2263}
+FROZEN CE1|4 day L 129600 | k_fit 7 | k_obs 11 of 84 | fit rows 67 | busy arrivals/h 1.0 | THIN FIT
+HELD-OUT CE1|4 {"offered_load": 1.097, "recorded_mean": 495.2216, "sim_mean": 1772677.4797, "recorded_p90": 461.9, "sim_p90": 3909078.9, "recorded_p99": 11646.18, "sim_p99": 4035464.48, "hourly_pearson": 0.2108}
+FROZEN CE1|5 infinite L 259200 | k_fit 83 | k_obs 84 of 84 | fit rows 7500 | busy arrivals/h 11.0 
+HELD-OUT CE1|5 {"offered_load": 0.1847, "recorded_mean": 891.8663, "sim_mean": 382.8749, "recorded_p90": 1321.5, "sim_p90": 0.0, "recorded_p99": 12405.8, "sim_p99": 10899.95, "hourly_pearson": 0.1228}
+FROZEN CE2|1 test L 900 | k_fit 1 | k_obs 6 of 56 | fit rows 4509 | busy arrivals/h 24.900000000000034 
+HELD-OUT CE2|1 {"offered_load": 0.0248, "recorded_mean": 419.7368, "sim_mean": 57.4472, "recorded_p90": 3.0, "sim_p90": 22.0, "recorded_p99": 16807.61, "sim_p99": 2202.9, "hourly_pearson": -0.0083}
+FROZEN CE2|2 short L 5400 | k_fit 46 | k_obs 54 of 56 | fit rows 2712 | busy arrivals/h 8.0 
+HELD-OUT CE2|2 {"offered_load": 0.0046, "recorded_mean": 117.7258, "sim_mean": 0.0, "recorded_p90": 3.0, "sim_p90": 0.0, "recorded_p99": 726.38, "sim_p99": 0.0, "hourly_pearson": NaN}
+FROZEN CE2|3 long L 86400 | k_fit 20 | k_obs 31 of 56 | fit rows 1667 | busy arrivals/h 3.7000000000000455 
+HELD-OUT CE2|3 {"offered_load": 0.0633, "recorded_mean": 418.5237, "sim_mean": 189.0704, "recorded_p90": 3.0, "sim_p90": 0.0, "recorded_p99": 20547.8, "sim_p99": 8265.36, "hourly_pearson": 0.2831}
+FROZEN CE2|4 day L 129600 | k_fit 12 | k_obs 21 of 56 | fit rows 270 | busy arrivals/h 2.0 | THIN FIT
+HELD-OUT CE2|4 {"offered_load": 0.311, "recorded_mean": 193.8337, "sim_mean": 72765.1743, "recorded_p90": 3.0, "sim_p90": 454741.4, "recorded_p99": 5255.4, "sim_p99": 565956.3, "hourly_pearson": 0.2655}
+FROZEN CE2|5 infinite L 259200 | k_fit 43 | k_obs 52 of 56 | fit rows 1054 | busy arrivals/h 4.0 
+HELD-OUT CE2|5 {"offered_load": 0.1625, "recorded_mean": 2025.384, "sim_mean": 2203.5905, "recorded_p90": 67.8, "sim_p90": 0.0, "recorded_p99": 83621.7, "sim_p99": 81279.0, "hourly_pearson": 0.3637}
+NO CAPACITY FIT CE2|6 batch - no arrival both submitted and completed before the cutoff; the cell is dropped
+FCFS EXACT AGREEMENT WITH THE PRODUCTION KERNEL on every cell and both capacities
+pool queue_name     n      L  k  corner  thin_fit   fcfs_p99  fcfs_p99_over_L  condition1_3L     top1  condition2_proxy_25pct
+ CE1       test 19135    900  1    True     False   16710.66        18.567400           True 0.166717                   False
+ CE1      short 10019   7200 67   False     False       0.00         0.000000          False 0.280484                    True
+ CE1       long 14346  86400 38   False     False   29091.45         0.336707          False 0.242595                   False
+ CE1        day 10232 129600  7   False      True 4035464.48        31.137843           True 0.151244                   False
+ CE1   infinite 12806 259200 83   False     False   10899.95         0.042052          False 0.162359                   False
+ CE2       test 15572    900  1    True     False    2202.90         2.447667          False 0.350288                    True
+ CE2      short  9334   5400 46   False     False       0.00         0.000000          False 0.192768                   False
+ CE2       long  6889  86400 20   False     False    8265.36         0.095664          False 0.319498                    True
+ CE2        day  8004 129600 12   False      True  565956.30         4.366947           True 0.168545                   False
+ CE2   infinite  8967 259200 43   False     False   81279.00         0.313576          False 0.219711                   False
+pool queue_name     n      L  k   fcfs_p99  fcfs_p99_over_L  condition1_3L
+ CE1       test 19135    900 10       0.00         0.000000          False
+ CE1      short 10019   7200 84       0.00         0.000000          False
+ CE1       long 14346  86400 82       0.00         0.000000          False
+ CE1        day 10232 129600 11 1371323.61        10.581201           True
+ CE1   infinite 12806 259200 84   10862.00         0.041906          False
+ CE2       test 15572    900  6       0.00         0.000000          False
+ CE2      short  9334   5400 54       0.00         0.000000          False
+ CE2       long  6889  86400 31    4020.36         0.046532          False
+ CE2        day  8004 129600 21   36590.52         0.282334          False
+ CE2   infinite  8967 259200 52   59885.26         0.231039          False
+TIMING {"stage": "qvalidate", "wall_s": 2.599773500000083, "cpu_s": 2.546875}

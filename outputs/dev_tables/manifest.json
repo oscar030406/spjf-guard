@@ -1,0 +1,147 @@
+{
+  "produced_by": "scripts/run_main.py",
+  "written_at": "2026-09-24T12:59:58+00:00",
+  "config": {
+    "path": "configs/main_frozen_1289aa2.yaml",
+    "present": true,
+    "bytes": 18770,
+    "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/overlay_traces/primary_rep0.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "78d063485a4281f6fd07560a717ee3d9440a93ac11912e8f74f934d8009061c8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep1.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "71a75d2b6df5c46912e00898c55f6e20cf56350f46c61db3fc40d309e622c81d"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep2.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8f021068e70ef21ec6b1a8b1ca1ae327ac6fb7811f61a4cffa6d1697c74d07eb"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep3.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "f59edee819e5e3a87c5d012171b197f2e7239f9e74ea44a4514507cc5040eea8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep4.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8fd652d5874ef30bb7675e56f6360768e368c47cd67b674567c83e7a10a4a8be"
+    },
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "main_cells.csv",
+      "present": true,
+      "bytes": 88375,
+      "sha256": "112dadbca81272f270b0b824809c0cce2ba1f797918437aa87f4561e98917a9a"
+    },
+    {
+      "path": "main_table.csv",
+      "present": true,
+      "bytes": 23955,
+      "sha256": "64963711d9061f362879e5bec42fe322c6fd742531803d9e00adc0a13b67e1ea"
+    },
+    {
+      "path": "main_table.tex",
+      "present": true,
+      "bytes": 15905,
+      "sha256": "229c57fe489bd6f45c4dbf553ad284540fcaf8f647c1b3937096b77d324390f9"
+    },
+    {
+      "path": "paired_differences.csv",
+      "present": true,
+      "bytes": 5577,
+      "sha256": "7478ce48bce138a177b585e4c205c9a2f5f7882bf709a23ce74a83bba9ad1371"
+    },
+    {
+      "path": "bound_checks.csv",
+      "present": true,
+      "bytes": 24735,
+      "sha256": "f9152525f2d65a390a467627ba468680d6b031bcbf99b24a4d0164ca16e486dc"
+    },
+    {
+      "path": "identity_residuals.csv",
+      "present": true,
+      "bytes": 23193,
+      "sha256": "f3c519027aecb323f1257a0461406b254a28e1bdd002f470cbe8bab6fa7541e6"
+    },
+    {
+      "path": "policy_parameters.csv",
+      "present": true,
+      "bytes": 13775,
+      "sha256": "0162d2b6462505018d9803480e3f224462878007ed9ed7d9e0d33c8444349c84"
+    }
+  ],
+  "arguments": {
+    "pool": "primary",
+    "prefix": null,
+    "reps": "0,1,2,3,4",
+    "levels": "0,1,2",
+    "score_array": "tweedie",
+    "score_parquet": "data/derived/package_ranking_scores/forward_scores.parquet",
+    "selection": "outputs/selection_v4/selected_parameters.csv",
+    "bootstrap": true,
+    "unseal": false
+  },
+  "notes": {
+    "protocol_lock": "not frozen (development run)",
+    "terms": [
+      "2020-ERE",
+      "2020-2",
+      "2021-1",
+      "2021-2",
+      "2022-1",
+      "2022-2"
+    ],
+    "policies": [
+      "FCFS",
+      "SJF",
+      "SPJF-E",
+      "SPJF-log",
+      "Aging(600)",
+      "Guard(300)",
+      "Guard-fixed(300)",
+      "Guard-age(300)",
+      "Guard-queue(300)",
+      "Fixed(300)",
+      "Skip(300)",
+      "Guard(600)",
+      "Guard-fixed(600)",
+      "Guard-age(600)",
+      "Guard-queue(600)",
+      "Fixed(600)",
+      "Skip(600)",
+      "Guard(1200)",
+      "Guard-fixed(1200)",
+      "Guard-age(1200)",
+      "Guard-queue(1200)",
+      "Fixed(1200)",
+      "Skip(1200)",
+      "SPJF-reversed",
+      "Guard(600)-reversed",
+      "SPJF-random",
+      "Guard(600)-random",
+      "SPJF-top1short",
+      "Guard(600)-top1short"
+    ],
+    "resamples": 2000,
+    "historical_recipe": "The configuration this run read, preserved byte-for-byte as configs/main_frozen_1289aa2.yaml. Only its path was relocated after configs/main.yaml was amended; output hashes unchanged."
+  }
+}

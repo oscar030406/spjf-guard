@@ -1,0 +1,48 @@
+check_union_rule.py: guard OR clock, head-first (UN) against guard-first (UG)
+-- Part 1: the refuter's witnesses (refutation.md, P-union), delta = 0
+   witness 1: k=1 L=3 theta=4 (refuter: 3.5; same schedule, integer time), budget min(3 n_q, 5)
+   GFEX k=1 (gamma shape)             UN  starts [0, 1, 6, 7, 2, 3]  FCFS [0, 1, 2, 3, 6, 7]  max excess 4 (job 2)  clock bound 7.00  violations none
+   GFEX k=1 (gamma shape)             UG  starts [0, 1, 9, 6, 2, 3]  FCFS [0, 1, 2, 3, 6, 7]  max excess 7 (job 2)  clock bound 7.00  violations CLOCK=1 CLKIN=1
+   witness 2: k=1 L=3 theta=0, budget min(k age / 4, 6), base SJF
+   eta witness k=1 (eta shape)        UN  starts [0, 2, 5]  FCFS [0, 2, 5]  max excess 0 (job 0)  clock bound 3.00  violations none
+   eta witness k=1 (eta shape)        UG  starts [0, 5, 2]  FCFS [0, 2, 5]  max excess 3 (job 1)  clock bound 3.00  violations CLOCK=1 CLKIN=1
+-- Part 2: 200000 random instances, seed 20260924, each run under UN and UG;
+   k in 1..4, n in 2..40, L in {3,4,6,10}, theta in 0..3L, delta 0 / 1..2L / INF (one third each)
+   ratio: max over jobs of excess / (theta + (3-2/k)L); CLOCK and CLKIN are the clock half,
+   EXCESS/IN/GUARD/... the guard half with late charges (vacuous at delta = INF)
+   rule  shape  k    runs  worst ratio  violations(by check)
+   UN    const  1   12447       0.9737  none
+   UN    const  2   12721       0.7708  none
+   UN    const  3   12477       0.7095  none
+   UN    const  4   12399       0.6970  none
+   UN    gamma  1   12489       0.9714  none
+   UN    gamma  2   12535       0.7755  none
+   UN    gamma  3   12512       0.7097  none
+   UN    gamma  4   12511       0.6818  none
+   UN    eta    1   12501       0.9737  none
+   UN    eta    2   12603       0.7667  none
+   UN    eta    3   12329       0.7208  none
+   UN    eta    4   12549       0.6818  none
+   UN    mixed  1   12555       0.9750  none
+   UN    mixed  2   12507       0.7708  none
+   UN    mixed  3   12448       0.7097  none
+   UN    mixed  4   12417       0.6818  none
+   UG    const  1   12447       0.9737  none
+   UG    const  2   12721       0.7708  none
+   UG    const  3   12477       0.7095  none
+   UG    const  4   12399       0.6970  none
+   UG    gamma  1   12489       0.9714  none
+   UG    gamma  2   12535       0.7755  none
+   UG    gamma  3   12512       0.7097  none
+   UG    gamma  4   12511       0.6818  none
+   UG    eta    1   12501       4.3333  CLOCK=988 CLKIN=1001
+   UG    eta    2   12603       1.0000  CLOCK=1 CLKIN=191
+   UG    eta    3   12329       0.7208  CLKIN=52
+   UG    eta    4   12549       0.6818  CLKIN=32
+   UG    mixed  1   12555       0.9750  none
+   UG    mixed  2   12507       0.7708  none
+   UG    mixed  3   12448       0.7097  none
+   UG    mixed  4   12417       0.6818  none
+   TOTAL UN: runs 200000, violations 0
+   TOTAL UG: runs 200000, violations 2265
+   wall 3.3 s

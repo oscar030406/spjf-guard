@@ -1,0 +1,58 @@
+{
+  "produced_by": "scripts/eval_scores.py",
+  "written_at": "2026-09-21T16:13:57+00:00",
+  "config": {
+    "path": "configs/main_original_84932d9.yaml",
+    "present": true,
+    "bytes": 14369,
+    "sha256": "94c82eabb1428300a6badc037e6fc795e5e451388af9fad83dcc4e1123f153ee"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    },
+    {
+      "path": "data/derived/codebench_cache_r4/ev.parquet",
+      "present": true,
+      "bytes": 67391982,
+      "sha256": "8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "predictor_metrics.csv",
+      "present": true,
+      "bytes": 11962,
+      "sha256": "778f706d8eb2c445300a0fd7a695a5d1c9dbc51d688ac6bd079f1604e9f92da5"
+    }
+  ],
+  "arguments": {
+    "pool": "primary",
+    "targets": [
+      "2020-ERE",
+      "2020-2",
+      "2021-1",
+      "2021-2",
+      "2022-1",
+      "2022-2"
+    ],
+    "scores": "data/derived/package_ranking_scores/forward_scores.parquet",
+    "unseal": false
+  },
+  "notes": {
+    "protocol_lock": "not frozen (development run)",
+    "heavy_threshold_s": 1.559043,
+    "heavy_reference_semesters": [
+      "2018-1",
+      "2018-2",
+      "2019-1",
+      "2019-2"
+    ],
+    "bootstrap_block": "user",
+    "resamples": 2000,
+    "historical_recipe": "Original commit 84932d9 configuration, preserved byte-for-byte. Only its path was relocated after the visibility amendment; output hashes unchanged."
+  }
+}

@@ -1,0 +1,646 @@
+
+========================================================================
+RR-1  the wrapper bounds need Lambda(s^P_i), not Lambda(a_i)
+========================================================================
+
+The referee's counterexample, reproduced with sim_core:
+  k = 1, constant budget B = 2, no global size bound.
+  rank 0 = victim i (a=0, C=1); rank 1 = A (a=0, C=1); rank 2 = Z (a=1, C=M).
+  base policy: the static priority 'A, then Z, then i'.
+
+  M   W_FCFS  W_P   In_i  excess  Lam(a_i)  Lam(s^P_i)   B+k*Lam(a_i)  B+k*Lam(s^P)  add(a_i)  add(s^P)
+  1    0       2     2     2       1         1           3             3             3         3        
+  2    0       3     3     3       1         2           3             4             3         4        
+  3    0       4     4     4       1         3           3             5             3         5        
+  5    0       6     6     6       1         5           3             7             3         7        
+  10   0       11    11    11      1         10          3             12            3         12       
+  100  0       101   101   101     1         100         3             102           3         102      
+  1000 0       1001  1001  1001    1         1000        3             1002          3         1002     
+
+  rows violating the Lambda(a_i) form of (guardin)/(guardadd): M = [2, 3, 5, 10, 100, 1000]
+  rows violating the Lambda(s^P_i) form:                       M = [] (empty = the corrected placement holds)
+
+  NOTE the referee writes 'violated for every M > 2'; the first violation is
+  at M = 2, where In_i = 3 is not < 3 and excess = 3 is not < 3.
+
+Brute force of the corrected statement, random instances, sizes UNBOUNDED
+(Pareto-like integer sizes, no cap; k = 1..4; constant budget):
+
+   k   instances  job-checks   fail Lam(a_i)[In]  fail Lam(a_i)[add]  fail Lam(s^P)[In]  fail Lam(s^P)[add]
+   1   400        925          126                126                 0                  0                 
+   2   400        555          23                 0                   0                  0                 
+   3   400        307          7                  0                   0                  0                 
+   4   400        287          0                  0                   0                  0                 
+
+  total job-checks: 2074
+  Lambda(a_i) fails in both wrapper bounds; Lambda(s^P_i) never fails.
+  The sharp form proved below is
+      In_i      <  Bmax + k*Lambda(s^P_i)
+      excess_i  <  Bmax/k + Lambda(s^P_i) + (2-2/k)*Lambda(a_i)
+  and since Lambda(a_i) <= Lambda(s^P_i) it implies the uniform statement
+  with Lambda(s^P_i) in both terms.
+
+========================================================================
+RR-2  Impossibility is a statement about wrappers; the exact hypothesis
+========================================================================
+
+(a) FCFS is a counterexample to the proposition as printed (universally
+    quantified over non-preemptive work-conserving policies that read a
+    service time only at completion):
+    k=1  max excess under FCFS = 0
+    k=2  max excess under FCFS = 0
+    k=3  max excess under FCFS = 0
+    FCFS is non-preemptive, work-conserving, reads no service time, and has
+    excess == 0 on every input.  So does every rank-ordered policy.
+
+(b) Instance I1: victim + k jobs, all of service L, all at t = 0.
+    Any wrapper whose budget is POSITIVE at the first dispatch epoch is
+    forced to excess >= L; a wrapper whose budget is 0 there dispatches the
+    victim at once.
+
+     k   L   budget(i,0)   excess of the victim
+     1   10  0             0
+     1   10  1             10
+     1   10  5             10
+     2   10  0             0
+     2   10  1             10
+     2   10  5             10
+     3   10  0             0
+     3   10  1             10
+     3   10  5             10
+     4   10  0             0
+     4   10  1             10
+     4   10  5             10
+
+(c) 'zero at the first epoch but positive later' does NOT escape.
+    Instance I2, for the age-relative shape budget = min(B0 + eta*k*(t-a_q), Bmax)
+    with B0 = 0 and eta > 0:
+      t=0   : k jobs of service L (ranks 0..k-1) -- the wrapper is FCFS here,
+              every budget being 0 at age 0;
+      t=1   : the victim i (rank k), which waits behind them, exactly as it
+              would under FCFS;
+      t=L-1 : k jobs of service L (ranks k+1..2k), the overtakers.
+    At t = L the victim has age L-1 > 0, so its budget is positive, the guard
+    does not fire, and the base fills every server with the overtakers.
+
+     k   L   eta      W_FCFS[i]  W_P[i]   excess   >= L ?
+     1   10  1/2      9          19       10       True
+     1   10  1/10     9          19       10       True
+     2   10  1/2      9          19       10       True
+     2   10  1/10     9          19       10       True
+     3   10  1/2      9          19       10       True
+     3   10  1/10     9          19       10       True
+
+(d) The only budget rules that escape BOTH instances are the degenerate ones,
+    and they reproduce first-come first-served exactly.  If budget(q,t) = 0
+    whenever over[q](t) = 0, then at every dispatch epoch the lowest-ranked
+    waiting job h has over[h] = 0 (by induction: nothing has ever overtaken
+    anything), hence h is in E(t) and is its minimum-rank member, hence h is
+    dispatched.  Checked on random instances against the FCFS order:
+    600 instances, 0 disagreements with the FCFS dispatch order.
+
+========================================================================
+RR-4  at k = 1 the achievable fraction is min(1, floor(G/s)/n), not min(1, G/(ns))
+========================================================================
+
+Exhaustive over EVERY work-conserving schedule of the two-class batch
+(m jobs of service L ranked first, n jobs of service s, all at t = 0, k = 1).
+'realised' is the largest (mean W_FCFS - mean W_P)/(mean W_FCFS - mean W_SJF)
+over the schedules with excess <= G for every job.
+
+   m  n  L  s   G    realised    floor(G/s)/n cap 1   G/(ns) cap 1   agree?
+   1  2  4  1   0    0           0                   0              yes
+   1  2  4  1   1    1/2         1/2                 1/2            yes
+   1  2  4  1   2    1           1                   1              yes
+   1  2  4  1   3    1           1                   1              yes
+   1  2  5  2   0    0           0                   0              yes
+   1  2  5  2   1    0           0                   1/4            yes
+   1  2  5  2   2    1/2         1/2                 1/2            yes
+   1  2  5  2   3    1/2         1/2                 3/4            yes
+   1  2  5  2   4    1           1                   1              yes
+   1  2  5  2   5    1           1                   1              yes
+   1  2  6  2   0    0           0                   0              yes
+   1  2  6  2   1    0           0                   1/4            yes
+   1  2  6  2   2    1/2         1/2                 1/2            yes
+   1  2  6  2   3    1/2         1/2                 3/4            yes
+   1  2  6  2   4    1           1                   1              yes
+   1  2  6  2   5    1           1                   1              yes
+   1  2  7  3   0    0           0                   0              yes
+   1  2  7  3   2    0           0                   1/3            yes
+   1  2  7  3   3    1/2         1/2                 1/2            yes
+   1  2  7  3   5    1/2         1/2                 5/6            yes
+   1  2  7  3   6    1           1                   1              yes
+   1  2  7  3   7    1           1                   1              yes
+   1  2  9  4   0    0           0                   0              yes
+   1  2  9  4   3    0           0                   3/8            yes
+   1  2  9  4   4    1/2         1/2                 1/2            yes
+   1  2  9  4   7    1/2         1/2                 7/8            yes
+   1  2  9  4   8    1           1                   1              yes
+   1  2  9  4   9    1           1                   1              yes
+   1  2  10 3   0    0           0                   0              yes
+   1  2  10 3   2    0           0                   1/3            yes
+   1  2  10 3   3    1/2         1/2                 1/2            yes
+   1  2  10 3   5    1/2         1/2                 5/6            yes
+   1  2  10 3   6    1           1                   1              yes
+   1  2  10 3   7    1           1                   1              yes
+   1  3  4  1   0    0           0                   0              yes
+   1  3  4  1   1    1/3         1/3                 1/3            yes
+   1  3  4  1   2    2/3         2/3                 2/3            yes
+   1  3  4  1   3    1           1                   1              yes
+   1  3  4  1   4    1           1                   1              yes
+   1  3  5  2   0    0           0                   0              yes
+   1  3  5  2   1    0           0                   1/6            yes
+   1  3  5  2   2    1/3         1/3                 1/3            yes
+   1  3  5  2   3    1/3         1/3                 1/2            yes
+   1  3  5  2   4    2/3         2/3                 2/3            yes
+   1  3  5  2   6    1           1                   1              yes
+   1  3  5  2   7    1           1                   1              yes
+   1  3  6  2   0    0           0                   0              yes
+   1  3  6  2   1    0           0                   1/6            yes
+   1  3  6  2   2    1/3         1/3                 1/3            yes
+   1  3  6  2   3    1/3         1/3                 1/2            yes
+   1  3  6  2   4    2/3         2/3                 2/3            yes
+   1  3  6  2   6    1           1                   1              yes
+   1  3  6  2   7    1           1                   1              yes
+   1  3  7  3   0    0           0                   0              yes
+   1  3  7  3   2    0           0                   2/9            yes
+   1  3  7  3   3    1/3         1/3                 1/3            yes
+   1  3  7  3   5    1/3         1/3                 5/9            yes
+   1  3  7  3   6    2/3         2/3                 2/3            yes
+   1  3  7  3   9    1           1                   1              yes
+   1  3  7  3   10   1           1                   1              yes
+   1  3  9  4   0    0           0                   0              yes
+   1  3  9  4   3    0           0                   1/4            yes
+   1  3  9  4   4    1/3         1/3                 1/3            yes
+   1  3  9  4   7    1/3         1/3                 7/12           yes
+   1  3  9  4   8    2/3         2/3                 2/3            yes
+   1  3  9  4   12   1           1                   1              yes
+   1  3  9  4   13   1           1                   1              yes
+   1  3  10 3   0    0           0                   0              yes
+   1  3  10 3   2    0           0                   2/9            yes
+   1  3  10 3   3    1/3         1/3                 1/3            yes
+   1  3  10 3   5    1/3         1/3                 5/9            yes
+   1  3  10 3   6    2/3         2/3                 2/3            yes
+   1  3  10 3   9    1           1                   1              yes
+   1  3  10 3   10   1           1                   1              yes
+   1  4  4  1   0    0           0                   0              yes
+   1  4  4  1   1    1/4         1/4                 1/4            yes
+   1  4  4  1   2    1/2         1/2                 1/2            yes
+   1  4  4  1   4    1           1                   1              yes
+   1  4  4  1   5    1           1                   1              yes
+   1  4  5  2   0    0           0                   0              yes
+   1  4  5  2   1    0           0                   1/8            yes
+   1  4  5  2   2    1/4         1/4                 1/4            yes
+   1  4  5  2   3    1/4         1/4                 3/8            yes
+   1  4  5  2   4    1/2         1/2                 1/2            yes
+   1  4  5  2   8    1           1                   1              yes
+   1  4  5  2   9    1           1                   1              yes
+   1  4  6  2   0    0           0                   0              yes
+   1  4  6  2   1    0           0                   1/8            yes
+   1  4  6  2   2    1/4         1/4                 1/4            yes
+   1  4  6  2   3    1/4         1/4                 3/8            yes
+   1  4  6  2   4    1/2         1/2                 1/2            yes
+   1  4  6  2   8    1           1                   1              yes
+   1  4  6  2   9    1           1                   1              yes
+   1  4  7  3   0    0           0                   0              yes
+   1  4  7  3   2    0           0                   1/6            yes
+   1  4  7  3   3    1/4         1/4                 1/4            yes
+   1  4  7  3   5    1/4         1/4                 5/12           yes
+   1  4  7  3   6    1/2         1/2                 1/2            yes
+   1  4  7  3   12   1           1                   1              yes
+   1  4  7  3   13   1           1                   1              yes
+   1  4  9  4   0    0           0                   0              yes
+   1  4  9  4   3    0           0                   3/16           yes
+   1  4  9  4   4    1/4         1/4                 1/4            yes
+   1  4  9  4   7    1/4         1/4                 7/16           yes
+   1  4  9  4   8    1/2         1/2                 1/2            yes
+   1  4  9  4   16   1           1                   1              yes
+   1  4  9  4   17   1           1                   1              yes
+   1  4  10 3   0    0           0                   0              yes
+   1  4  10 3   2    0           0                   1/6            yes
+   1  4  10 3   3    1/4         1/4                 1/4            yes
+   1  4  10 3   5    1/4         1/4                 5/12           yes
+   1  4  10 3   6    1/2         1/2                 1/2            yes
+   1  4  10 3   12   1           1                   1              yes
+   1  4  10 3   13   1           1                   1              yes
+   2  2  4  1   0    0           0                   0              yes
+   2  2  4  1   1    1/2         1/2                 1/2            yes
+   2  2  4  1   2    1           1                   1              yes
+   2  2  4  1   3    1           1                   1              yes
+   2  2  5  2   0    0           0                   0              yes
+   2  2  5  2   1    0           0                   1/4            yes
+   2  2  5  2   2    1/2         1/2                 1/2            yes
+   2  2  5  2   3    1/2         1/2                 3/4            yes
+   2  2  5  2   4    1           1                   1              yes
+   2  2  5  2   5    1           1                   1              yes
+   2  2  6  2   0    0           0                   0              yes
+   2  2  6  2   1    0           0                   1/4            yes
+   2  2  6  2   2    1/2         1/2                 1/2            yes
+   2  2  6  2   3    1/2         1/2                 3/4            yes
+   2  2  6  2   4    1           1                   1              yes
+   2  2  6  2   5    1           1                   1              yes
+   2  2  7  3   0    0           0                   0              yes
+   2  2  7  3   2    0           0                   1/3            yes
+   2  2  7  3   3    1/2         1/2                 1/2            yes
+   2  2  7  3   5    1/2         1/2                 5/6            yes
+   2  2  7  3   6    1           1                   1              yes
+   2  2  7  3   7    1           1                   1              yes
+   2  2  9  4   0    0           0                   0              yes
+   2  2  9  4   3    0           0                   3/8            yes
+   2  2  9  4   4    1/2         1/2                 1/2            yes
+   2  2  9  4   7    1/2         1/2                 7/8            yes
+   2  2  9  4   8    1           1                   1              yes
+   2  2  9  4   9    1           1                   1              yes
+   2  2  10 3   0    0           0                   0              yes
+   2  2  10 3   2    0           0                   1/3            yes
+   2  2  10 3   3    1/2         1/2                 1/2            yes
+   2  2  10 3   5    1/2         1/2                 5/6            yes
+   2  2  10 3   6    1           1                   1              yes
+   2  2  10 3   7    1           1                   1              yes
+   2  3  4  1   0    0           0                   0              yes
+   2  3  4  1   1    1/3         1/3                 1/3            yes
+   2  3  4  1   2    2/3         2/3                 2/3            yes
+   2  3  4  1   3    1           1                   1              yes
+   2  3  4  1   4    1           1                   1              yes
+   2  3  5  2   0    0           0                   0              yes
+   2  3  5  2   1    0           0                   1/6            yes
+   2  3  5  2   2    1/3         1/3                 1/3            yes
+   2  3  5  2   3    1/3         1/3                 1/2            yes
+   2  3  5  2   4    2/3         2/3                 2/3            yes
+   2  3  5  2   6    1           1                   1              yes
+   2  3  5  2   7    1           1                   1              yes
+   2  3  6  2   0    0           0                   0              yes
+   2  3  6  2   1    0           0                   1/6            yes
+   2  3  6  2   2    1/3         1/3                 1/3            yes
+   2  3  6  2   3    1/3         1/3                 1/2            yes
+   2  3  6  2   4    2/3         2/3                 2/3            yes
+   2  3  6  2   6    1           1                   1              yes
+   2  3  6  2   7    1           1                   1              yes
+   2  3  7  3   0    0           0                   0              yes
+   2  3  7  3   2    0           0                   2/9            yes
+   2  3  7  3   3    1/3         1/3                 1/3            yes
+   2  3  7  3   5    1/3         1/3                 5/9            yes
+   2  3  7  3   6    2/3         2/3                 2/3            yes
+   2  3  7  3   9    1           1                   1              yes
+   2  3  7  3   10   1           1                   1              yes
+   2  3  9  4   0    0           0                   0              yes
+   2  3  9  4   3    0           0                   1/4            yes
+   2  3  9  4   4    1/3         1/3                 1/3            yes
+   2  3  9  4   7    1/3         1/3                 7/12           yes
+   2  3  9  4   8    2/3         2/3                 2/3            yes
+   2  3  9  4   12   1           1                   1              yes
+   2  3  9  4   13   1           1                   1              yes
+   2  3  10 3   0    0           0                   0              yes
+   2  3  10 3   2    0           0                   2/9            yes
+   2  3  10 3   3    1/3         1/3                 1/3            yes
+   2  3  10 3   5    1/3         1/3                 5/9            yes
+   2  3  10 3   6    2/3         2/3                 2/3            yes
+   2  3  10 3   9    1           1                   1              yes
+   2  3  10 3   10   1           1                   1              yes
+   2  4  4  1   0    0           0                   0              yes
+   2  4  4  1   1    1/4         1/4                 1/4            yes
+   2  4  4  1   2    1/2         1/2                 1/2            yes
+   2  4  4  1   4    1           1                   1              yes
+   2  4  4  1   5    1           1                   1              yes
+   2  4  5  2   0    0           0                   0              yes
+   2  4  5  2   1    0           0                   1/8            yes
+   2  4  5  2   2    1/4         1/4                 1/4            yes
+   2  4  5  2   3    1/4         1/4                 3/8            yes
+   2  4  5  2   4    1/2         1/2                 1/2            yes
+   2  4  5  2   8    1           1                   1              yes
+   2  4  5  2   9    1           1                   1              yes
+   2  4  6  2   0    0           0                   0              yes
+   2  4  6  2   1    0           0                   1/8            yes
+   2  4  6  2   2    1/4         1/4                 1/4            yes
+   2  4  6  2   3    1/4         1/4                 3/8            yes
+   2  4  6  2   4    1/2         1/2                 1/2            yes
+   2  4  6  2   8    1           1                   1              yes
+   2  4  6  2   9    1           1                   1              yes
+   2  4  7  3   0    0           0                   0              yes
+   2  4  7  3   2    0           0                   1/6            yes
+   2  4  7  3   3    1/4         1/4                 1/4            yes
+   2  4  7  3   5    1/4         1/4                 5/12           yes
+   2  4  7  3   6    1/2         1/2                 1/2            yes
+   2  4  7  3   12   1           1                   1              yes
+   2  4  7  3   13   1           1                   1              yes
+   2  4  9  4   0    0           0                   0              yes
+   2  4  9  4   3    0           0                   3/16           yes
+   2  4  9  4   4    1/4         1/4                 1/4            yes
+   2  4  9  4   7    1/4         1/4                 7/16           yes
+   2  4  9  4   8    1/2         1/2                 1/2            yes
+   2  4  9  4   16   1           1                   1              yes
+   2  4  9  4   17   1           1                   1              yes
+   2  4  10 3   0    0           0                   0              yes
+   2  4  10 3   2    0           0                   1/6            yes
+   2  4  10 3   3    1/4         1/4                 1/4            yes
+   2  4  10 3   5    1/4         1/4                 5/12           yes
+   2  4  10 3   6    1/2         1/2                 1/2            yes
+   2  4  10 3   12   1           1                   1              yes
+   2  4  10 3   13   1           1                   1              yes
+   3  2  4  1   0    0           0                   0              yes
+   3  2  4  1   1    1/2         1/2                 1/2            yes
+   3  2  4  1   2    1           1                   1              yes
+   3  2  4  1   3    1           1                   1              yes
+   3  2  5  2   0    0           0                   0              yes
+   3  2  5  2   1    0           0                   1/4            yes
+   3  2  5  2   2    1/2         1/2                 1/2            yes
+   3  2  5  2   3    1/2         1/2                 3/4            yes
+   3  2  5  2   4    1           1                   1              yes
+   3  2  5  2   5    1           1                   1              yes
+   3  2  6  2   0    0           0                   0              yes
+   3  2  6  2   1    0           0                   1/4            yes
+   3  2  6  2   2    1/2         1/2                 1/2            yes
+   3  2  6  2   3    1/2         1/2                 3/4            yes
+   3  2  6  2   4    1           1                   1              yes
+   3  2  6  2   5    1           1                   1              yes
+   3  2  7  3   0    0           0                   0              yes
+   3  2  7  3   2    0           0                   1/3            yes
+   3  2  7  3   3    1/2         1/2                 1/2            yes
+   3  2  7  3   5    1/2         1/2                 5/6            yes
+   3  2  7  3   6    1           1                   1              yes
+   3  2  7  3   7    1           1                   1              yes
+   3  2  9  4   0    0           0                   0              yes
+   3  2  9  4   3    0           0                   3/8            yes
+   3  2  9  4   4    1/2         1/2                 1/2            yes
+   3  2  9  4   7    1/2         1/2                 7/8            yes
+   3  2  9  4   8    1           1                   1              yes
+   3  2  9  4   9    1           1                   1              yes
+   3  2  10 3   0    0           0                   0              yes
+   3  2  10 3   2    0           0                   1/3            yes
+   3  2  10 3   3    1/2         1/2                 1/2            yes
+   3  2  10 3   5    1/2         1/2                 5/6            yes
+   3  2  10 3   6    1           1                   1              yes
+   3  2  10 3   7    1           1                   1              yes
+   3  3  4  1   0    0           0                   0              yes
+   3  3  4  1   1    1/3         1/3                 1/3            yes
+   3  3  4  1   2    2/3         2/3                 2/3            yes
+   3  3  4  1   3    1           1                   1              yes
+   3  3  4  1   4    1           1                   1              yes
+   3  3  5  2   0    0           0                   0              yes
+   3  3  5  2   1    0           0                   1/6            yes
+   3  3  5  2   2    1/3         1/3                 1/3            yes
+   3  3  5  2   3    1/3         1/3                 1/2            yes
+   3  3  5  2   4    2/3         2/3                 2/3            yes
+   3  3  5  2   6    1           1                   1              yes
+   3  3  5  2   7    1           1                   1              yes
+   3  3  6  2   0    0           0                   0              yes
+   3  3  6  2   1    0           0                   1/6            yes
+   3  3  6  2   2    1/3         1/3                 1/3            yes
+   3  3  6  2   3    1/3         1/3                 1/2            yes
+   3  3  6  2   4    2/3         2/3                 2/3            yes
+   3  3  6  2   6    1           1                   1              yes
+   3  3  6  2   7    1           1                   1              yes
+   3  3  7  3   0    0           0                   0              yes
+   3  3  7  3   2    0           0                   2/9            yes
+   3  3  7  3   3    1/3         1/3                 1/3            yes
+   3  3  7  3   5    1/3         1/3                 5/9            yes
+   3  3  7  3   6    2/3         2/3                 2/3            yes
+   3  3  7  3   9    1           1                   1              yes
+   3  3  7  3   10   1           1                   1              yes
+   3  3  9  4   0    0           0                   0              yes
+   3  3  9  4   3    0           0                   1/4            yes
+   3  3  9  4   4    1/3         1/3                 1/3            yes
+   3  3  9  4   7    1/3         1/3                 7/12           yes
+   3  3  9  4   8    2/3         2/3                 2/3            yes
+   3  3  9  4   12   1           1                   1              yes
+   3  3  9  4   13   1           1                   1              yes
+   3  3  10 3   0    0           0                   0              yes
+   3  3  10 3   2    0           0                   2/9            yes
+   3  3  10 3   3    1/3         1/3                 1/3            yes
+   3  3  10 3   5    1/3         1/3                 5/9            yes
+   3  3  10 3   6    2/3         2/3                 2/3            yes
+   3  3  10 3   9    1           1                   1              yes
+   3  3  10 3   10   1           1                   1              yes
+   3  4  4  1   0    0           0                   0              yes
+   3  4  4  1   1    1/4         1/4                 1/4            yes
+   3  4  4  1   2    1/2         1/2                 1/2            yes
+   3  4  4  1   4    1           1                   1              yes
+   3  4  4  1   5    1           1                   1              yes
+   3  4  5  2   0    0           0                   0              yes
+   3  4  5  2   1    0           0                   1/8            yes
+   3  4  5  2   2    1/4         1/4                 1/4            yes
+   3  4  5  2   3    1/4         1/4                 3/8            yes
+   3  4  5  2   4    1/2         1/2                 1/2            yes
+   3  4  5  2   8    1           1                   1              yes
+   3  4  5  2   9    1           1                   1              yes
+   3  4  6  2   0    0           0                   0              yes
+   3  4  6  2   1    0           0                   1/8            yes
+   3  4  6  2   2    1/4         1/4                 1/4            yes
+   3  4  6  2   3    1/4         1/4                 3/8            yes
+   3  4  6  2   4    1/2         1/2                 1/2            yes
+   3  4  6  2   8    1           1                   1              yes
+   3  4  6  2   9    1           1                   1              yes
+   3  4  7  3   0    0           0                   0              yes
+   3  4  7  3   2    0           0                   1/6            yes
+   3  4  7  3   3    1/4         1/4                 1/4            yes
+   3  4  7  3   5    1/4         1/4                 5/12           yes
+   3  4  7  3   6    1/2         1/2                 1/2            yes
+   3  4  7  3   12   1           1                   1              yes
+   3  4  7  3   13   1           1                   1              yes
+   3  4  9  4   0    0           0                   0              yes
+   3  4  9  4   3    0           0                   3/16           yes
+   3  4  9  4   4    1/4         1/4                 1/4            yes
+   3  4  9  4   7    1/4         1/4                 7/16           yes
+   3  4  9  4   8    1/2         1/2                 1/2            yes
+   3  4  9  4   16   1           1                   1              yes
+   3  4  9  4   17   1           1                   1              yes
+   3  4  10 3   0    0           0                   0              yes
+   3  4  10 3   2    0           0                   1/6            yes
+   3  4  10 3   3    1/4         1/4                 1/4            yes
+   3  4  10 3   5    1/4         1/4                 5/12           yes
+   3  4  10 3   6    1/2         1/2                 1/2            yes
+   3  4  10 3   12   1           1                   1              yes
+   3  4  10 3   13   1           1                   1              yes
+
+  1161 (m,n,L,s,G) cases, 0 disagreements with min(1, floor(G/s)/n).
+  The paper's min(1, G/(ns)) is strictly larger whenever s does not divide G
+  and G < n s, so it overstates what any G-feasible policy can reach.
+
+  Proof of the upper bound, for the record (three lines, k = 1):
+    every short job ranks above every long job, so Out_u of a long u contains
+    only long jobs, and a long-long inversion (p,q) puts L into In_p and L
+    into Out_q; summing over the long jobs those terms cancel and
+        sum_{u long} excess[u] = sum_{u long} (In_u - Out_u) = s * sum_u r_u,
+    r_u = number of short jobs dispatched before u.  Let u* be the long job
+    dispatched LAST among the long ones: it has no lower-ranked long job
+    after it, so excess[u*] >= s * r_{u*} = s * max_u r_u, whence
+    max_u r_u <= floor(G/s) and sum_u r_u <= m*floor(G/s).  The saving is
+    (L-s) * sum_u r_u against SJF's (L-s) * m n, so the fraction is at most
+    min(1, floor(G/s)/n); dispatching floor(G/s) short jobs, then the long
+    jobs in rank order, then the rest attains it.
+
+  Check of the load-bearing step (r_u is non-decreasing along the dispatch
+  order, so the LAST long job carries the largest r and pays for all):
+    monotonicity violations over all schedules of three families: 0
+
+========================================================================
+RR-7  Lemma 1's strictness holds only for k >= 2
+========================================================================
+
+At k = 1 every work-conserving policy executes the same work at every
+instant, so U_A == U_B and |U_A - U_B| = 0 = (k-1)L: the bound is ATTAINED,
+and the strict form reads 0 < 0.  Checked on random instances:
+    max |U_A(t) - U_B(t)| over 300 instances at k = 1: 0
+    (k-1)L = 0, so the non-strict bound is tight and the strict one is false.)
+
+========================================================================
+RR-8  over[q](t) <= In^exec_q <= In_q : completed work bounds both
+========================================================================
+
+A job j of rank above q completed by t <= s^P_q has a_j >= a_q and is
+dispatched at s^P_j >= a_j >= a_q, so its whole service is executed inside
+[a_q, s^P_q) and is counted in full by the executed-work variant.  Hence
+over[q](t) <= In^exec_q for every t <= s^P_q, and In^exec_q <= In_q always.
+The manuscript's stated reason for the dispatch-sequence convention -- that
+completed work lower-bounds In_i 'but not its executed-work variant' -- is
+therefore false.  Checked:
+
+   k    instances   (q,t) checks   over > In^exec   In^exec > In
+   1    250         6536           0                0
+   2    250         4911           0                0
+   3    250         3707           0                0
+   4    250         3534           0                0
+
+========================================================================
+RR-19  Remark 3's counterexample, with W_FCFS and the violated inequality
+========================================================================
+
+Instance (k = 1, eta in [0,1), common B0 = 0, Bmax = gamma, queue-length
+shape B0_q = B0 + gamma * n_q with n_q the number waiting when q arrives):
+    t = 0  : job 0, service L            -- dispatched at once, n_0 = 0
+    t = 1  : job 1, service L            -- waits,              n_1 = 0
+    t = 1  : the victim i, service L     -- waits behind job 1, n_i = 1
+    t = 2L : gamma jobs of service 1, ranks above i
+FCFS: job 0 on [0,L], job 1 on [L,2L], i at 2L, so W_FCFS[i] = 2L - 1.
+The wrapper: at t = L job 1 has budget 0 (n_1 = 0) and over = 0, so it is in
+E and is dispatched; at t = 2L the victim has budget gamma and over = 0, so
+the guard does not fire and the base spends the whole budget on the stream.
+
+    L    gamma   W_FCFS[i]  W_P[i]  excess  RHS of (guardmult) at eta=0  violated?
+    4    1       7          8       1       11                           no
+    4    2       7          9       2       11                           no
+    4    4       7          11      4       11                           no
+    4    8       7          15      8       11                           YES
+    4    16      7          23      16      11                           YES
+    4    32      7          39      32      11                           YES
+    8    1       15         16      1       23                           no
+    8    2       15         17      2       23                           no
+    8    4       15         19      4       23                           no
+    8    8       15         23      8       23                           no
+    8    16      15         31      16      23                           YES
+    8    32      15         47      32      23                           YES
+
+  The bound of (guardmult) stated with the COMMON B0 = 0 is
+      (1-eta) W_P[i] <= W_FCFS[i] + B0/k + (3-2/k) L = (2L-1) + L = 3L-1,
+  while W_P[i] = 2L - 1 + gamma; it is violated as soon as
+      gamma > (3L-1)/(1-eta) - (2L-1),   i.e. gamma > L at eta = 0,
+  and the margin grows without bound in gamma, for every eta.
+
+========================================================================
+RR-25  over[i] in the tightness family of the guard bound
+========================================================================
+
+Rebuilt from the construction of Appendix A.4 (k, L=k^m, budget B=f+L+1).
+The dispatch epochs of the finale and over[i] at each of them:
+
+   k  m   L     f     B     epoch            over[i]   B - over[i]   servers taken
+   2  6   64    63    128   T_m              0         128           1
+   2  6   64    63    128   T_m + f          63        65            2
+   2  6   64    63    128   T_m + f + L      127       1             2
+   2  6   64    63    128   T_m + f + 2L     255       -127          guard fires
+   3  4   81    65    147   T_m              0         147           1
+   3  4   81    65    147   T_m + f          65        82            3
+   3  4   81    65    147   T_m + f + L      146       1             3
+   3  4   81    65    147   T_m + f + 2L     389       -242          guard fires
+   4  3   64    37    102   T_m              0         102           1
+   4  3   64    37    102   T_m + f          37        65            4
+   4  3   64    37    102   T_m + f + L      101       1             4
+   4  3   64    37    102   T_m + f + 2L     357       -255          guard fires
+
+  over[i] stays below the budget at THREE successive epochs -- by B, by L+1,
+  and by exactly 1 -- and the base takes every free server three times before
+  the guard fires.  It does not 'stop one unit short twice in succession'.
+
+========================================================================
+RR-26  the implied constant in epsilon = O((m+n)/(mn))
+========================================================================
+
+With  N = (1/k) m (L-s)(kG + (3k-2)L)/s,  D = (1/k) m n (L-s),
+      E = 2(1-1/k) L (m+n),  the proof gives  ratio <= (N+E)/(D-E),  so
+      epsilon = (N+E)/(D-E) - N/D = E (N+D) / (D (D-E)),
+      epsilon ~ (E/D)(1 + N/D) = [2(k-1)L(m+n)/(m n (L-s))] * (1 + N/D).
+So the implied constant is
+      C = 2(k-1) L (1 + (kG+(3k-2)L)/(n s)) / (L - s),
+NOT the referee's 2(1-1/k) L (1 + ...)/(L-s): E/D carries a factor k, because
+D itself has the 1/k.  (The two agree at k = 1, where both vanish.)
+
+   k  L  s  G   m    n    epsilon exact      C(m+n)/(mn)     ratio
+   2  100 10 40  50   50   0.19121951         0.17422222      1.097561
+   2  100 10 40  200  200  0.02818182         0.02755556      1.022727
+   2  100 10 40  1000 1000 0.00467857         0.00465778      1.004464
+   2  100 10 40  2000 5000 0.00157294         0.00157049      1.001558
+   3  100 10 40  50   50   0.57081081         0.46933333      1.216216
+   3  100 10 40  200  200  0.06558140         0.06266667      1.046512
+   3  100 10 40  1000 1000 0.00970404         0.00961778      1.008969
+   3  100 10 40  2000 5000 0.00317200         0.00316213      1.003121
+   5  100 10 40  50   50   2.20689655         1.42222222      1.551724
+   5  100 10 40  200  200  0.17073171         0.15555556      1.097561
+   5  100 10 40  1000 1000 0.02081448         0.02044444      1.018100
+   5  100 10 40  2000 5000 0.00644902         0.00640889      1.006261
+
+========================================================================
+RR-30  the short class must be taken in rank order in Theorem 5(i)'s family
+========================================================================
+
+The family: k jobs of service L, the victim i, then at least B+k jobs of
+service 1, all at t = 0; base priority 'the k long jobs, then the short ones,
+then i'; constant budget B.  The proof's step -- 'the waiting jobs of rank
+above i have no completed job of still higher rank ahead of them' -- is true
+only if the short class is taken in rank order.  Both readings, measured:
+
+   k  L   B   short order    excess   ceil(B/k)   matches?
+   1  6   0   rank           0        0           yes
+   1  6   0   reversed       0        0           yes
+   1  6   1   rank           1        1           yes
+   1  6   1   reversed       1        1           yes
+   1  6   4   rank           4        4           yes
+   1  6   4   reversed       4        4           yes
+   1  6   7   rank           7        7           yes
+   1  6   7   reversed       7        7           yes
+   2  6   0   rank           0        0           yes
+   2  6   0   reversed       0        0           yes
+   2  6   1   rank           1        1           yes
+   2  6   1   reversed       1        1           yes
+   2  6   4   rank           2        2           yes
+   2  6   4   reversed       2        2           yes
+   2  6   7   rank           4        4           yes
+   2  6   7   reversed       4        4           yes
+   3  6   0   rank           0        0           yes
+   3  6   0   reversed       0        0           yes
+   3  6   1   rank           1        1           yes
+   3  6   1   reversed       1        1           yes
+   3  6   4   rank           2        2           yes
+   3  6   4   reversed       2        2           yes
+   3  6   7   rank           3        3           yes
+   3  6   7   reversed       3        3           yes
+
+========================================================================
+RR-31  inverting (skip): kappa = floor(Gk/L) - (2k-2)
+========================================================================
+
+(kappa + 2k - 2) L / k <= G  <=>  kappa <= Gk/L - (2k-2), and 2k-2 is an
+integer, so the largest admissible integer is floor(Gk/L) - (2k-2).
+
+   k  L   G     Gk/L - (2k-2)   floor(Gk/L)-(2k-2)   (kappa+2k-2)L/k <= G ?
+   1  60  300   5               5                    yes
+   1  60  250   25/6            4                    yes
+   1  100 640   32/5            6                    yes
+   1  7   100   100/7           14                   yes
+   2  60  300   8               8                    yes
+   2  60  250   19/3            6                    yes
+   2  100 640   54/5            10                   yes
+   2  7   100   186/7           26                   yes
+   4  60  300   14              14                   yes
+   4  60  250   32/3            10                   yes
+   4  100 640   98/5            19                   yes
+   4  7   100   358/7           51                   yes

@@ -1,0 +1,56 @@
+primary_rep0.npz
+  a                        float64 (17634760,)
+  svc                      float64 (17634760,)
+  dl                       bool (17634760,)
+  exam                     bool (17634760,)
+  hvt                      bool (17634760,)
+  wk                       int16 (17634760,)
+  weeks                    int64 (30,)
+  K                        int64 (3,) values=[8, 5, 4]
+  W                        float64 () values=15247.543180003762
+  copies                   int64 () values=44
+  job_row                  int64 (17634760,)
+  copy_entry               int32 (17634760,)
+  copy_round               int32 (17634760,)
+  tweedie                  float64 (17634760,)
+  log                      float64 (17634760,)
+  tweedie_conservative     float64 (17634760,)
+  log_conservative         float64 (17634760,)
+  tweedie_static           float64 (17634760,)
+  log_static               float64 (17634760,)
+validation_rep0.npz
+  a                        float64 (17646125,)
+  svc                      float64 (17646125,)
+  dl                       bool (17646125,)
+  exam                     bool (17646125,)
+  hvt                      bool (17646125,)
+  wk                       int16 (17646125,)
+  weeks                    int64 (30,)
+  K                        int64 (3,) values=[7, 5, 4]
+  W                        float64 () values=13221.47379128635
+  copies                   int64 () values=49
+  job_row                  int64 (17646125,)
+  copy_entry               int32 (17646125,)
+  copy_round               int32 (17646125,)
+  tweedie                  float64 (17646125,)
+  log                      float64 (17646125,)
+  tweedie_conservative     float64 (17646125,)
+  log_conservative         float64 (17646125,)
+  tweedie_static           float64 (17646125,)
+  log_static               float64 (17646125,)
+k1_rep0.npz
+  a                        float64 (3209347,)
+  svc                      float64 (3209347,)
+  dl                       bool (3209347,)
+  exam                     bool (3209347,)
+  hvt                      bool (3209347,)
+  wk                       int16 (3209347,)
+  weeks                    int64 (30,)
+  K                        int64 (1,) values=[1]
+  W                        float64 () values=2880.0468156412244
+  copies                   int64 () values=321
+  job_row                  int64 (3209347,)
+  copy_entry               int32 (3209347,)
+  copy_round               int32 (3209347,)
+  tweedie                  float64 (3209347,)
+  log                      float64 (3209347,)

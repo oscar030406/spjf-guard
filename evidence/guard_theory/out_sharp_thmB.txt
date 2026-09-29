@@ -1,0 +1,18 @@
+THEOREM B (capped relative budget) -- numerical attack
+
+EVERY base tape (hence every work-conserving schedule), eta in
+  {0, 1/2, 3/4}, caps in {none, 0, kL, 3kL}, B0 in {0, L, 2L},
+  k<=3, n<=5, L<=3:
+  2520 instances, 103057920 (schedule, parameter) combinations, 505915200 job-checks
+  (B1) (k-eta*k)W <= kW_F + B0 + (3k-2)L : 0 failures
+  (B2) capped form W <= W_F + Bmax/k + (3-2/k)L : 0 failures
+  (B4) In_i < B0 + eta*k*W + kL (and In < Bmax + kL) : 0 failures
+
+random: 120,000 instances, 840959 job-checks, k<=5, eta = en/ed in [0,1)
+  (B1) 0 failures   (B2) 0 failures   (B4) 0 failures
+  (B4a) In_i < B0_i + eta*k*W + kL : 0 failures
+  (B4b) under a cap, In_i < Bmax + kL : 0 failures
+  worst observed (k*excess - Bmax)/L under a cap: 15/7 = 2.1429   (bound 3k-2 <= 13)
+
+design rule: Bmax = k(G - (3-2/k)L) makes (B2) read excess <= G;
+it is usable only when G > (3-2/k)L, i.e. G > 3L is always safe.

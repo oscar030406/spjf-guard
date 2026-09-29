@@ -1,0 +1,30 @@
+[     1s] rep0 level2: k=4 rho_busy=1.0589 n=17,634,760 predictor=M4 groups=skip
+[     2s]   FCFS p99_dl 263.1202s mean 10.0987s | SJF-ref p99_dl 42.8808s mean 1.6498s | gap 220.2394s / 8.4488s
+[     2s]   jobs with FCFS wait <= 1 s: 15,184,765 (86.1%); <= 10 s: 15,917,167 (90.3%)
+[    11s]   SKIP-N1                  9.6s p99_dl   263.114 gap  0.000 | max_excess      58.5 guar@0    165.0 guar@p99     165.0 guarmax     165.0 used 0.355 | exc|wf<1s     58.5 | maxheavy   1543.0 | forced 13.527% qw  93.81%
+[    21s]   SKIP-N2                  9.8s p99_dl   263.125 gap -0.000 | max_excess      66.4 guar@0    180.0 guar@p99     180.0 guarmax     180.0 used 0.369 | exc|wf<1s     58.5 | maxheavy   1543.0 | forced 13.227% qw  93.52%
+[    31s]   SKIP-N5                  9.8s p99_dl   263.141 gap -0.000 | max_excess      93.0 guar@0    225.0 guar@p99     225.0 guarmax     225.0 used 0.413 | exc|wf<1s     58.7 | maxheavy   1543.0 | forced 11.348% qw  92.45%
+[    41s]   SKIP-N10                10.0s p99_dl   262.983 gap  0.001 | max_excess      96.8 guar@0    300.0 guar@p99     300.0 guarmax     300.0 used 0.323 | exc|wf<1s     59.0 | maxheavy   1543.4 | forced  9.855% qw  90.90%
+[    51s]   SKIP-N20                 9.8s p99_dl   262.989 gap  0.001 | max_excess     104.2 guar@0    450.0 guar@p99     450.0 guarmax     450.0 used 0.231 | exc|wf<1s     61.9 | maxheavy   1543.9 | forced  8.225% qw  88.40%
+[    60s]   SKIP-N50                 9.7s p99_dl   263.953 gap -0.004 | max_excess     105.0 guar@0    900.0 guar@p99     900.0 guarmax     900.0 used 0.117 | exc|wf<1s     63.9 | maxheavy   1545.5 | forced  5.807% qw  83.08%
+[    60s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L2_M4.csv
+[     1s] rep0 level1: k=5 rho_busy=0.8471 n=17,634,760 predictor=M4 groups=skip
+[     2s]   FCFS p99_dl 109.7080s mean 4.1060s | SJF-ref p99_dl 34.1863s mean 0.9655s | gap 75.5217s / 3.1405s
+[     2s]   jobs with FCFS wait <= 1 s: 16,013,840 (90.8%); <= 10 s: 16,649,505 (94.4%)
+[    11s]   SKIP-N1                  9.5s p99_dl   109.674 gap  0.000 | max_excess      56.9 guar@0    168.0 guar@p99     168.0 guarmax     168.0 used 0.339 | exc|wf<1s     56.9 | maxheavy   1023.0 | forced  8.613% qw  86.50%
+[    21s]   SKIP-N2                 10.2s p99_dl   109.670 gap  0.001 | max_excess      57.0 guar@0    180.0 guar@p99     180.0 guarmax     180.0 used 0.317 | exc|wf<1s     57.0 | maxheavy   1023.1 | forced  8.376% qw  86.08%
+[    31s]   SKIP-N5                 10.0s p99_dl   109.616 gap  0.001 | max_excess      63.6 guar@0    216.0 guar@p99     216.0 guarmax     216.0 used 0.294 | exc|wf<1s     57.0 | maxheavy   1023.2 | forced  7.279% qw  84.60%
+[    41s]   SKIP-N10                 9.3s p99_dl   109.681 gap  0.000 | max_excess      66.0 guar@0    276.0 guar@p99     276.0 guarmax     276.0 used 0.239 | exc|wf<1s     57.3 | maxheavy   1023.4 | forced  6.011% qw  82.25%
+[    51s]   SKIP-N20                10.1s p99_dl   109.739 gap -0.000 | max_excess      66.7 guar@0    396.0 guar@p99     396.0 guarmax     396.0 used 0.168 | exc|wf<1s     57.7 | maxheavy   1023.9 | forced  4.803% qw  78.63%
+[    60s]   SKIP-N50                 9.5s p99_dl   108.824 gap  0.012 | max_excess      77.2 guar@0    756.0 guar@p99     756.0 guarmax     756.0 used 0.102 | exc|wf<1s     59.7 | maxheavy   1025.2 | forced  3.118% qw  71.32%
+[    60s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L1_M4.csv
+[     1s] rep0 level0: k=8 rho_busy=0.5294 n=17,634,760 predictor=M4 groups=skip
+[     1s]   FCFS p99_dl 22.1704s mean 0.6024s | SJF-ref p99_dl 8.3100s mean 0.1884s | gap 13.8604s / 0.4140s
+[     1s]   jobs with FCFS wait <= 1 s: 17,156,990 (97.3%); <= 10 s: 17,437,587 (98.9%)
+[    12s]   SKIP-N1                 10.2s p99_dl    22.034 gap  0.010 | max_excess      36.0 guar@0    172.5 guar@p99     172.5 guarmax     172.5 used 0.209 | exc|wf<1s     36.0 | maxheavy    435.2 | forced  2.482% qw  51.72%
+[    22s]   SKIP-N2                 10.1s p99_dl    22.012 gap  0.011 | max_excess      36.1 guar@0    180.0 guar@p99     180.0 guarmax     180.0 used 0.201 | exc|wf<1s     36.1 | maxheavy    435.2 | forced  2.392% qw  51.21%
+[    31s]   SKIP-N5                  8.9s p99_dl    21.862 gap  0.022 | max_excess      36.3 guar@0    202.5 guar@p99     202.5 guarmax     202.5 used 0.179 | exc|wf<1s     36.3 | maxheavy    435.3 | forced  1.953% qw  49.35%
+[    40s]   SKIP-N10                 9.9s p99_dl    21.616 gap  0.040 | max_excess      44.3 guar@0    240.0 guar@p99     240.0 guarmax     240.0 used 0.185 | exc|wf<1s     44.3 | maxheavy    435.4 | forced  1.527% qw  46.74%
+[    50s]   SKIP-N20                 9.4s p99_dl    21.223 gap  0.068 | max_excess      52.4 guar@0    315.0 guar@p99     315.0 guarmax     315.0 used 0.166 | exc|wf<1s     45.9 | maxheavy    435.6 | forced  1.130% qw  43.01%
+[    60s]   SKIP-N50                10.2s p99_dl    19.897 gap  0.164 | max_excess      61.5 guar@0    540.0 guar@p99     540.0 guarmax     540.0 used 0.114 | exc|wf<1s     46.7 | maxheavy    436.4 | forced  0.644% qw  36.19%
+[    60s] wrote <repo-root>\prechecks\guard_variants\results\grid_rep0_L0_M4.csv

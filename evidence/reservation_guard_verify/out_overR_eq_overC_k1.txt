@@ -1,0 +1,2 @@
+k=1 : 255861 (q,epoch) readings, 0 where overR != overC
+k>=2: 110503 (q,epoch) readings, 8277 where overR != overC

@@ -1,0 +1,17 @@
+================================================================================================
+REUSED CODE, AND ITS RE-VALIDATION
+================================================================================================
+  reused  prechecks\main_v3_verify\vsim.py   sha256 3a01397a754a98c46062f0c7eb48660c4207ef716d34f1bbee2e8e71bd3eb4ee
+  reused  prechecks\main_v3_verify\vboot.py   sha256 6aed8d1ebe081a6260e75a430080f3f8eb9848e5fb4d138c319d7554b1450d35
+  mine    wskip.py                         sha256 2b89ccea6a778703bb9edaa2e9250ac6ef58c01f8ff45492ed2d7af5370c978e
+  compared against  prechecks/guard_variants/guardkern.py  sha256 e8b8578d5b53874440d2f37f285bc422c127512595b544fe5427b5a3acdd1c58
+                    prechecks/main_v3/v31/v31_skipkern.py  sha256 dbc67deaaa27f524778eef24ddd75199f693841581ac3e5ee1bcf3bce8137636
+  (the last two hashes are the ones the v3.1 manifest prints)
+
+  random small instances 2500 ({'fcfs': 423, 'pri': 397, 'cap': 844, 'fix': 407, 'skipc': 429}), jobs 18,835
+  max |vsim - my exact rational brute force| = 0
+  max |vsim - the builder's guardkern|       = 0
+  per-job bound violations on vsim's waits   = 0
+  worst used/allowed on vsim's waits         = 0.9317
+  VERDICT: the reused simulator reproduces an independent exact reference and
+           the builder's kernel job for job; it is admissible here.

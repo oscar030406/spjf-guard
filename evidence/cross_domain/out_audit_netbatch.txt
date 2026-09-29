@@ -1,0 +1,43 @@
+=== Intel Netbatch pool D, Oct 31 - Nov 30 2012 (SWF conversion 1) ===
+file: <repo-root>\data\intel_netbatch_2012\Intel-NetbatchD-2012-1.swf.gz
+rows=9054066
+SWF fields used: submit (s from UnixStartTime 1351728003), wait (s), run (s), nproc, status, uid, gid, exe (anonymised command), queue
+nproc: n_unique=4 top -> {1: np.int64(9046299), 2: np.int64(7615), 4: np.int64(124), 8: np.int64(28)}
+status: n_unique=2 top -> {1: np.int64(7483395), 0: np.int64(1570671)}
+queue: n_unique=1 top -> {-1: np.int64(9054066)}
+gid: n_unique=20 top -> {15: np.int64(2392648), 1: np.int64(1226772), 2: np.int64(944062), 5: np.int64(738990), 4: np.int64(731280), 11: np.int64(715976)}
+uid: n_unique=862   exe: n_unique=9354
+run<=0: 605118  run<0: 0  wait<0: 0
+submit span: 0 .. 2591939 s = 30.00 days
+serial jobs (nproc==1): 9046299 (99.91%)
+serial with run>0: 8441207 (93.31% of serial)
+real system wait: mean=122.1s p50=8 p99=1546 max=524758
+
+-- run time (s), serial jobs with run>0: n=8441207  mean=6875.0399  sum=58033634831.0
+   percentiles: p0=1.0000  p1=1.0000  p5=3.0000  p10=8.0000  p25=36.0000  p50=486.0000  p75=3312.0000  p90=14814.0000  p95=28595.0000  p99=93481.8800  p99.9=476256.5580  p99.99=863368.2476  p100=2399482.0000
+   work share of largest: top0.1%=0.0933  top1%=0.3720  top5%=0.6285  top10%=0.7789
+   mean/median=14.15  cv=4.62  gini=0.8660
+granularity: integer seconds; rows at run==1: 279861; max=2399482s (666.52 h)
+  rows with run>=3600s: 2010154 (23.8136%), share of work 0.9288
+  rows with run>=7200s: 1351409 (16.0097%), share of work 0.8718
+  rows with run>=86400s: 90374 (1.0706%), share of work 0.3813
+  rows with run>=172800s: 51632 (0.6117%), share of work 0.3009
+variance of log1p(run) explained by identity: exe eta^2=0.6379, uid eta^2=0.6136, uid x exe eta^2=0.7124
+jobs per exe: p50=1  p90=6  p99=416  p100=2288115
+jobs per uid: p50=903  p90=15312  p99=125614  p100=1670714
+
+-- burstiness per hour (720 bins of 3600s)
+   count/bin: mean=11723.9 max=85397 peak/mean=7.28 IoD(var/mean)=9788.7
+   work/bin (server-equivalents a[h]=work/3600): mean=22389.520 max=157163.691 peak/mean=7.02 p99=79641.558
+
+-- burstiness per minute (43199 bins of 60s)
+   count/bin: mean=195.4 max=4345 peak/mean=22.24 IoD(var/mean)=226.6
+   work/bin (server-equivalents a[h]=work/60): mean=22390.038 max=1176010.800 peak/mean=52.52 p99=164537.155
+
+-- profile within a 24 h period (bin = 1 h of the period, origin = trace start)
+   counts: 4.8 4.9 4.2 4.1 4.2 4.8 4.5 4.7 3.4 3.0 3.0 3.2 3.3 3.4 3.6 3.7 3.7 4.1 5.0 5.3 4.6 4.9 5.0 4.7   (% of jobs)
+   work  : 5.3 4.6 3.6 4.0 4.6 4.4 4.1 6.0 4.2 3.5 3.3 3.5 3.4 3.6 3.5 4.0 4.6 3.8 4.1 4.9 4.0 4.3 4.7 3.8   (% of work)
+   peak/mean count = 1.28, peak/mean work = 1.43
+
+busiest hour: index=240 work=565789287s -> 157163.7 server-equivalents; whole-trace mean 22389.5
+L (service cap) candidates: p99=93482 p99.9=476257  p99.99=863368  max=2399482

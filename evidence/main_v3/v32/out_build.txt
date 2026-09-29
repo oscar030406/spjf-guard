@@ -1,0 +1,62 @@
+## 2026-09-20 03:14:01 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--traces primary --reps 0,1,2
+    input cb_v2_cache_r4/ev.parquet                    8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451
+    input cb_v2_cache_r4/feat_ires0.parquet            19d0e80453d1428c36354f3772f7c3359bacdd61299466bbf58706eb2aa5f89f
+    input cb_v2_cache_r4/forward_ires0.parquet         c2b04f124b82b46110593368fcd263d7bfbdfdce13099dc4a35e5c767d94a1a9
+    input mv3/r1s_forward.parquet                      8e55ec1fe8eaa7a905f1ce096da5c27f4ce3ce6c4c784152b365edca394b0b6d
+    input rank_score/rs_pred_ires0.parquet             af90bb2d8cee4cf3e6806a3665fae356c1ea7d32cab52c724a7300706763bc92
+[     6s] p2_inputs ires0: {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}; heavy_thr=1.5590 s
+[    10s] primary rep0: n=17,634,760 W=15,247.5s k=[8, 5, 4] weeks=30 dl=4,219,556
+[    14s] primary rep1: n=17,634,760 W=14,233.0s k=[8, 5, 4] weeks=30 dl=4,219,556
+[    18s] primary rep2: n=17,634,760 W=14,115.0s k=[8, 5, 4] weeks=30 dl=4,219,556
+
+  trace  rep  copies  class_semesters   n_jobs  n_weeks  busy_hour_work_s k_per_rho             rho_busy  n_deadline_window  n_heavy  span_days           busy_hour
+primary    0      44               40 17634760       30         15247.543     8/5/4 0.5294/0.8471/1.0589            4219556   181720      208.8 2020-04-13 14:00:00
+primary    1      44               40 17634760       30         14232.983     8/5/4 0.4942/0.7907/0.9884            4219556   181720      208.8 2020-03-30 14:00:00
+primary    2      44               40 17634760       30         14114.958     8/5/4 0.4901/0.7842/0.9802            4219556   181720      208.8 2020-04-13 14:00:00
+## done in 18 s
+## 2026-09-20 03:14:21 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--traces primary --reps 3,4
+    input cb_v2_cache_r4/ev.parquet                    8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451
+    input cb_v2_cache_r4/feat_ires0.parquet            19d0e80453d1428c36354f3772f7c3359bacdd61299466bbf58706eb2aa5f89f
+    input cb_v2_cache_r4/forward_ires0.parquet         c2b04f124b82b46110593368fcd263d7bfbdfdce13099dc4a35e5c767d94a1a9
+    input mv3/r1s_forward.parquet                      8e55ec1fe8eaa7a905f1ce096da5c27f4ce3ce6c4c784152b365edca394b0b6d
+    input rank_score/rs_pred_ires0.parquet             af90bb2d8cee4cf3e6806a3665fae356c1ea7d32cab52c724a7300706763bc92
+[     6s] p2_inputs ires0: {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}; heavy_thr=1.5590 s
+[    10s] primary rep3: n=17,634,760 W=13,860.3s k=[8, 5, 4] weeks=30 dl=4,219,556
+[    14s] primary rep4: n=17,634,760 W=13,026.1s k=[7, 5, 4] weeks=30 dl=4,219,556
+
+  trace  rep  copies  class_semesters   n_jobs  n_weeks  busy_hour_work_s k_per_rho             rho_busy  n_deadline_window  n_heavy  span_days           busy_hour
+primary    0      44               40 17634760       30         15247.543     8/5/4 0.5294/0.8471/1.0589            4219556   181720      208.8 2020-04-13 14:00:00
+primary    1      44               40 17634760       30         14232.983     8/5/4 0.4942/0.7907/0.9884            4219556   181720      208.8 2020-03-30 14:00:00
+primary    2      44               40 17634760       30         14114.958     8/5/4 0.4901/0.7842/0.9802            4219556   181720      208.8 2020-04-13 14:00:00
+primary    3      44               40 17634760       30         13860.254     8/5/4 0.4813/0.7700/0.9625            4219556   181720      208.8 2020-04-06 14:00:00
+primary    4      44               40 17634760       30         13026.087     7/5/4 0.5169/0.7237/0.9046            4219556   181720      208.8 2020-03-30 14:00:00
+## done in 14 s
+## 2026-09-20 03:14:36 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--traces valid,k1 --reps 0,1,2,3,4
+    input cb_v2_cache_r4/ev.parquet                    8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451
+    input cb_v2_cache_r4/feat_ires0.parquet            19d0e80453d1428c36354f3772f7c3359bacdd61299466bbf58706eb2aa5f89f
+    input cb_v2_cache_r4/forward_ires0.parquet         c2b04f124b82b46110593368fcd263d7bfbdfdce13099dc4a35e5c767d94a1a9
+    input mv3/r1s_forward.parquet                      8e55ec1fe8eaa7a905f1ce096da5c27f4ce3ce6c4c784152b365edca394b0b6d
+    input rank_score/rs_pred_ires0.parquet             af90bb2d8cee4cf3e6806a3665fae356c1ea7d32cab52c724a7300706763bc92
+[     6s] p2_inputs ires0: {'rows': 402358, 'zero_dropped': 1568, 'jobs': 400790, 'work_s': 160199.1}; heavy_thr=1.5590 s
+[    13s] valid: 32 class-semesters, 49 copies, 30 weeks (union over overlays [0, 1, 2, 3, 4])
+[    17s] valid rep0: n=17,646,125 W=13,221.5s k=[7, 5, 4] weeks=30 dl=3,993,059
+[    21s] valid rep1: n=17,646,125 W=13,819.9s k=[8, 5, 4] weeks=30 dl=3,993,059
+[    25s] valid rep2: n=17,646,125 W=14,296.7s k=[8, 5, 4] weeks=30 dl=3,993,059
+[    29s] valid rep3: n=17,646,125 W=13,078.2s k=[7, 5, 4] weeks=30 dl=3,993,059
+[    32s] valid rep4: n=17,646,125 W=15,204.2s k=[8, 5, 4] weeks=30 dl=3,993,059
+[    33s] k1: 321 copies, busy-hour rho = 0.8000
+[    33s] k1 rep0: n=3,209,347 W=2,880.0s k=[1] weeks=30 dl=768,149
+
+  trace  rep  copies  class_semesters   n_jobs  n_weeks  busy_hour_work_s k_per_rho             rho_busy  n_deadline_window  n_heavy  span_days           busy_hour
+primary    0      44               40 17634760       30         15247.543     8/5/4 0.5294/0.8471/1.0589            4219556   181720      208.8 2020-04-13 14:00:00
+primary    1      44               40 17634760       30         14232.983     8/5/4 0.4942/0.7907/0.9884            4219556   181720      208.8 2020-03-30 14:00:00
+primary    2      44               40 17634760       30         14114.958     8/5/4 0.4901/0.7842/0.9802            4219556   181720      208.8 2020-04-13 14:00:00
+primary    3      44               40 17634760       30         13860.254     8/5/4 0.4813/0.7700/0.9625            4219556   181720      208.8 2020-04-06 14:00:00
+primary    4      44               40 17634760       30         13026.087     7/5/4 0.5169/0.7237/0.9046            4219556   181720      208.8 2020-03-30 14:00:00
+  valid    0      49               32 17646125       30         13221.474     7/5/4 0.5247/0.7345/0.9182            3993059   176106      208.8 2020-04-27 14:00:00
+  valid    1      49               32 17646125       30         13819.949     8/5/4 0.4799/0.7678/0.9597            3993059   176106      208.8 2020-03-31 21:00:00
+  valid    2      49               32 17646125       30         14296.749     8/5/4 0.4964/0.7943/0.9928            3993059   176106      208.8 2020-05-11 14:00:00
+  valid    3      49               32 17646125       30         13078.194     7/5/4 0.5190/0.7266/0.9082            3993059   176106      208.8 2020-04-27 14:00:00
+  valid    4      49               32 17646125       30         15204.228     8/5/4 0.5279/0.8447/1.0558            3993059   176106      208.8 2020-04-21 21:00:00
+     k1    0     321               40  3209347       30          2880.047         1               0.8000             768149    33097      208.8 2020-04-13 14:00:00
+## done in 33 s

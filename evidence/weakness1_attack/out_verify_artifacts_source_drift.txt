@@ -1,0 +1,13 @@
+﻿env.exe : Traceback (most recent call last):
+At line:2 char:1
++ & 'C:\Program Files\Git\usr\bin\env.exe' -u PYTHONHOME -u PYTHONPATH  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "<repo-root>\prechecks\weakness1_attack\verify_artifacts.py", line 230, in <module>
+    main()
+  File "<repo-root>\prechecks\weakness1_attack\verify_artifacts.py", line 187, in main
+    assert digest(ROOT/entry['path'])==entry['sha256'], entry['path']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: src/spjf_guard/sim/runner.py

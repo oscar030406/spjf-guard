@@ -1,0 +1,12 @@
+N0_core_lr0.001_mean_wd0.0001_dr0.1_s3_sweep  params {'model': 'N0', 'seed': 3, 'lr': 0.001, 'agg': 'mean', 'variant': 'core', 'epochs': 30, 'batch': 4096, 'patience': 5, 'p_mask': 0.15, 'p_drop': 0.1, 'w_cls': 0.5, 'wd': 0.0001, 'drop': 0.1, 'tag': '_sweep', 'save_emb': False}
+tabular block (863149, 86), submission-level block (863149, 102)
+rows train 404,578 valid 51,547 test 40,844
+parameters 55,426
+  epoch  0 train 0.21931 valid 0.08124 (rmse 0.2332) 1s
+  epoch  1 train 0.14461 valid 0.08325 (rmse 0.2374) 1s
+  epoch  2 train 0.13423 valid 0.08343 (rmse 0.2374) 1s
+  epoch  3 train 0.12776 valid 0.08425 (rmse 0.2397) 1s
+  epoch  4 train 0.12321 valid 0.08769 (rmse 0.2458) 1s
+  epoch  5 train 0.12038 valid 0.08532 (rmse 0.2412) 1s
+  early stop at epoch 5
+{"name": "N0_core_lr0.001_mean_wd0.0001_dr0.1_s3_sweep", "model": "N0", "variant": "core", "seed": 3, "lr": 0.001, "agg": "mean", "wd": 0.0001, "drop": 0.1, "valid_loss": 0.08124015480279922, "valid_rmse": 0.23322871327400208}

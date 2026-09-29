@@ -1,0 +1,31 @@
+events 2,918,799  semesters ['2018-1', '2018-2', '2019-1', '2019-2', '2020-1', '2020-2', '2020-ERE', '2021-1', '2021-2', '2022-1', '2022-2']
+submission rows 863,149
+event ranks: 2,589,447 distinct (time,type) points over 2,589,447 points
+nodes: exercise 1,133  user 2,390  class 77  assessment 1,351
+heavy threshold (train-core p95 of C_cap) = 1.559043 s
+replaying the event stream to recompute ex_*/u_* node statistics ...
+  match ex_n             OK
+  match ex_mean_log      OK
+  match ex_sd_log        OK
+  match ex_p50_log       OK
+  match ex_p90_log       OK
+  match ex_max_log       OK
+  match ex_err_rate      OK
+  match ex_heavy_rate    OK
+  match ex_ntc_mean      OK
+  match u_n              OK
+  match u_mean_log       OK
+  match u_sd_log         OK
+  match u_p50_log        OK
+  match u_p90_log        OK
+  match u_err_rate       OK
+  match u_heavy_rate     OK
+  match ex_nres          OK
+  match u_nres           OK
+clock, jitter and availability rule reproduce the verified cache exactly.
+X (863149, 77) columns 77
+wrote <cache-dir>\pn
+  train_core     n=404,578  heavy rate 5.0000%
+  remote+        n=770,758  heavy rate 3.0361%
+  valid 2022-1   n= 51,547  heavy rate 1.6276%
+  test 2022-2    n= 40,844  heavy rate 1.3123%

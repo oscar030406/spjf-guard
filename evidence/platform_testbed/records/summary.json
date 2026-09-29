@@ -1,0 +1,770 @@
+[
+  {
+    "cell": "full-fcfs-r2",
+    "policy": "fcfs",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000,
+      "practice-guide": 170000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 100,
+    "classes": {
+      "blueprint": {
+        "n": 74,
+        "serviceS": {
+          "min": 3.15,
+          "median": 6.41,
+          "p90": 14.47,
+          "max": 25.01,
+          "mean": 8.2,
+          "cv": 0.683
+        },
+        "timedOut": 6,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 10.26,
+        "httpOk": 68
+      },
+      "practice-guide": {
+        "n": 26,
+        "serviceS": {
+          "min": 80.8,
+          "median": 124.54,
+          "p90": 170.01,
+          "max": 170.01,
+          "mean": 127.02,
+          "cv": 0.216
+        },
+        "timedOut": 4,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 13.06,
+        "httpOk": 22
+      }
+    },
+    "load": {
+      "makespanS": 1955.15,
+      "meanExecutedS": 39.09,
+      "arrivalsPerS": 0.05115,
+      "rho": 1
+    },
+    "waitS": {
+      "mean": 308.84,
+      "median": 337.78,
+      "p90": 479.36,
+      "max": 533.29
+    },
+    "replayFcfsWaitS": {
+      "mean": 308.76,
+      "max": 533.24
+    },
+    "excessS": {
+      "mean": 0.08,
+      "max": 0.17
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 0.17,
+      "ratio": 0.0004,
+      "jobsOverPromise": 0,
+      "passed": true
+    },
+    "guardFirings": 0,
+    "dispatchEpochUs": {
+      "mean": 10.01,
+      "max": 58
+    },
+    "bytes": {
+      "requestTotal": 4483,
+      "responseTotal": 94181
+    }
+  },
+  {
+    "cell": "full-guard-completed-r1open",
+    "policy": "guard",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "practice-guide": 170000,
+      "blueprint": 25000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 100,
+    "classes": {
+      "practice-guide": {
+        "n": 26,
+        "serviceS": {
+          "min": 76.04,
+          "median": 123.32,
+          "p90": 168.77,
+          "max": 170.02,
+          "mean": 125.38,
+          "cv": 0.235
+        },
+        "timedOut": 3,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 16.12,
+        "httpOk": 23
+      },
+      "blueprint": {
+        "n": 74,
+        "serviceS": {
+          "min": 3.42,
+          "median": 7.58,
+          "p90": 10.74,
+          "max": 16.1,
+          "mean": 7.7,
+          "cv": 0.272
+        },
+        "timedOut": 0,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0,
+        "httpOk": 74
+      }
+    },
+    "load": {
+      "makespanS": 2753.36,
+      "meanExecutedS": 38.29,
+      "arrivalsPerS": 0.03632,
+      "rho": 0.695
+    },
+    "waitS": {
+      "mean": 70.33,
+      "median": 52.93,
+      "p90": 177.32,
+      "max": 324.42
+    },
+    "replayFcfsWaitS": {
+      "mean": 141.92,
+      "max": 321.1
+    },
+    "excessS": {
+      "mean": -71.59,
+      "max": 184.02
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 184.02,
+      "ratio": 0.4601,
+      "jobsOverPromise": 0,
+      "passed": true
+    },
+    "guardFirings": 5,
+    "dispatchEpochUs": {
+      "mean": 11.05,
+      "max": 61
+    },
+    "bytes": {
+      "requestTotal": 4485,
+      "responseTotal": 103815
+    }
+  },
+  {
+    "cell": "full-guard-completed-r2",
+    "policy": "guard",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000,
+      "practice-guide": 170000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 100,
+    "classes": {
+      "blueprint": {
+        "n": 74,
+        "serviceS": {
+          "min": 3.07,
+          "median": 5.63,
+          "p90": 8.6,
+          "max": 25,
+          "mean": 6.27,
+          "cv": 0.511
+        },
+        "timedOut": 1,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 1.85,
+        "httpOk": 73
+      },
+      "practice-guide": {
+        "n": 26,
+        "serviceS": {
+          "min": 74.96,
+          "median": 111.57,
+          "p90": 170,
+          "max": 170.01,
+          "mean": 118.06,
+          "cv": 0.268
+        },
+        "timedOut": 4,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 13.64,
+        "httpOk": 22
+      }
+    },
+    "load": {
+      "makespanS": 1776.72,
+      "meanExecutedS": 35.34,
+      "arrivalsPerS": 0.05628,
+      "rho": 0.994
+    },
+    "waitS": {
+      "mean": 235.19,
+      "median": 127.18,
+      "p90": 680.25,
+      "max": 789.72
+    },
+    "replayFcfsWaitS": {
+      "mean": 483.69,
+      "max": 807.82
+    },
+    "excessS": {
+      "mean": -248.5,
+      "max": 151.66
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 151.66,
+      "ratio": 0.3791,
+      "jobsOverPromise": 0,
+      "passed": true
+    },
+    "guardFirings": 24,
+    "dispatchEpochUs": {
+      "mean": 12.24,
+      "max": 67
+    },
+    "bytes": {
+      "requestTotal": 4487,
+      "responseTotal": 88533
+    }
+  },
+  {
+    "cell": "full-guard-completed-r3",
+    "policy": "guard",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000,
+      "practice-guide": 170000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 100,
+    "classes": {
+      "blueprint": {
+        "n": 74,
+        "serviceS": {
+          "min": 5.44,
+          "median": 9.12,
+          "p90": 14.75,
+          "max": 21.37,
+          "mean": 10.27,
+          "cv": 0.33
+        },
+        "timedOut": 0,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0,
+        "httpOk": 74
+      },
+      "practice-guide": {
+        "n": 26,
+        "serviceS": {
+          "min": 70.82,
+          "median": 111.32,
+          "p90": 170.01,
+          "max": 170.01,
+          "mean": 116.29,
+          "cv": 0.27
+        },
+        "timedOut": 4,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 14.54,
+        "httpOk": 22
+      }
+    },
+    "load": {
+      "makespanS": 1905.76,
+      "meanExecutedS": 37.83,
+      "arrivalsPerS": 0.05247,
+      "rho": 0.993
+    },
+    "waitS": {
+      "mean": 205.66,
+      "median": 191.57,
+      "p90": 433.83,
+      "max": 634.61
+    },
+    "replayFcfsWaitS": {
+      "mean": 346.74,
+      "max": 632.82
+    },
+    "excessS": {
+      "mean": -141.08,
+      "max": 184.78
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 184.78,
+      "ratio": 0.4619,
+      "jobsOverPromise": 0,
+      "passed": true
+    },
+    "guardFirings": 21,
+    "dispatchEpochUs": {
+      "mean": 12.13,
+      "max": 57
+    },
+    "bytes": {
+      "requestTotal": 4485,
+      "responseTotal": 95409
+    }
+  },
+  {
+    "cell": "full-guard-reservation-r2",
+    "policy": "guard",
+    "charging": "reservation",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000,
+      "practice-guide": 170000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 460000,
+    "jobs": 100,
+    "classes": {
+      "blueprint": {
+        "n": 74,
+        "serviceS": {
+          "min": 3.66,
+          "median": 6.1,
+          "p90": 7.69,
+          "max": 10.73,
+          "mean": 6.03,
+          "cv": 0.224
+        },
+        "timedOut": 0,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0,
+        "httpOk": 74
+      },
+      "practice-guide": {
+        "n": 26,
+        "serviceS": {
+          "min": 64,
+          "median": 124.47,
+          "p90": 151.87,
+          "max": 170.01,
+          "mean": 123.15,
+          "cv": 0.197
+        },
+        "timedOut": 1,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 6.01,
+        "httpOk": 25
+      }
+    },
+    "load": {
+      "makespanS": 1868.11,
+      "meanExecutedS": 36.48,
+      "arrivalsPerS": 0.05353,
+      "rho": 0.976
+    },
+    "waitS": {
+      "mean": 206.66,
+      "median": 28.32,
+      "p90": 896.81,
+      "max": 1148.03
+    },
+    "replayFcfsWaitS": {
+      "mean": 652.63,
+      "max": 1082.7
+    },
+    "excessS": {
+      "mean": -445.98,
+      "max": 205.52
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 205.52,
+      "ratio": 0.5138,
+      "jobsOverPromise": 0,
+      "passed": true
+    },
+    "guardFirings": 20,
+    "dispatchEpochUs": {
+      "mean": 11.22,
+      "max": 57
+    },
+    "bytes": {
+      "requestTotal": 4485,
+      "responseTotal": 116258
+    }
+  },
+  {
+    "cell": "full-spjf-r2",
+    "policy": "spjf",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000,
+      "practice-guide": 170000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 100,
+    "classes": {
+      "blueprint": {
+        "n": 74,
+        "serviceS": {
+          "min": 2.87,
+          "median": 6.24,
+          "p90": 13.3,
+          "max": 18.67,
+          "mean": 7.54,
+          "cv": 0.493
+        },
+        "timedOut": 0,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0,
+        "httpOk": 74
+      },
+      "practice-guide": {
+        "n": 26,
+        "serviceS": {
+          "min": 86.29,
+          "median": 136.36,
+          "p90": 170,
+          "max": 170.01,
+          "mean": 135.64,
+          "cv": 0.225
+        },
+        "timedOut": 6,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 11.37,
+        "httpOk": 20
+      }
+    },
+    "load": {
+      "makespanS": 2103.67,
+      "meanExecutedS": 40.84,
+      "arrivalsPerS": 0.04754,
+      "rho": 0.971
+    },
+    "waitS": {
+      "mean": 227.41,
+      "median": 24.59,
+      "p90": 1083.33,
+      "max": 1933.61
+    },
+    "replayFcfsWaitS": {
+      "mean": 725.24,
+      "max": 1203.18
+    },
+    "excessS": {
+      "mean": -497.84,
+      "max": 1869.86
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 1869.86,
+      "ratio": 4.6746,
+      "jobsOverPromise": 7,
+      "passed": false
+    },
+    "guardFirings": 0,
+    "dispatchEpochUs": {
+      "mean": 12.13,
+      "max": 75
+    },
+    "bytes": {
+      "requestTotal": 4481,
+      "responseTotal": 87340
+    }
+  },
+  {
+    "cell": "smoke-fcfs",
+    "policy": "fcfs",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000,
+      "practice-guide": 170000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 10,
+    "classes": {
+      "blueprint": {
+        "n": 7,
+        "serviceS": {
+          "min": 4.16,
+          "median": 6.05,
+          "p90": 25,
+          "max": 25.01,
+          "mean": 12.7,
+          "cv": 0.696
+        },
+        "timedOut": 2,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 6.65,
+        "httpOk": 5
+      },
+      "practice-guide": {
+        "n": 3,
+        "serviceS": {
+          "min": 119.78,
+          "median": 134.01,
+          "p90": 150.26,
+          "max": 154.33,
+          "mean": 136.04,
+          "cv": 0.104
+        },
+        "timedOut": 0,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0,
+        "httpOk": 3
+      }
+    },
+    "waitS": {
+      "mean": 13.64,
+      "median": 2.04,
+      "max": 97.62
+    },
+    "replayFcfsWaitS": {
+      "mean": 13.64,
+      "max": 97.62
+    },
+    "excessS": {
+      "mean": 0,
+      "max": 0.01
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 0.01,
+      "passed": true
+    },
+    "guardFirings": 0,
+    "dispatchEpochUs": {
+      "mean": 14.4,
+      "max": 32
+    },
+    "bytes": {
+      "requestTotal": 510,
+      "responseTotal": 16330
+    }
+  },
+  {
+    "cell": "smoke-guard",
+    "policy": "guard",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 10,
+    "classes": {
+      "blueprint": {
+        "n": 10,
+        "serviceS": {
+          "min": 3.4,
+          "median": 4.95,
+          "p90": 9.49,
+          "max": 24.88,
+          "mean": 7.1,
+          "cv": 0.855
+        },
+        "timedOut": 0,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0,
+        "httpOk": 10
+      }
+    },
+    "waitS": {
+      "mean": 5.61,
+      "median": 3.31,
+      "max": 18.84
+    },
+    "replayFcfsWaitS": {
+      "mean": 5.17,
+      "max": 10.06
+    },
+    "excessS": {
+      "mean": 0.44,
+      "max": 9.22
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 9.22,
+      "passed": true
+    },
+    "guardFirings": 0,
+    "dispatchEpochUs": {
+      "mean": 19,
+      "max": 57
+    },
+    "bytes": {
+      "requestTotal": 0,
+      "responseTotal": 0
+    }
+  },
+  {
+    "cell": "smoke-guard2",
+    "policy": "guard",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000,
+      "practice-guide": 170000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 8,
+    "classes": {
+      "blueprint": {
+        "n": 6,
+        "serviceS": {
+          "min": 3.13,
+          "median": 4.32,
+          "p90": 10.81,
+          "max": 14.94,
+          "mean": 6.14,
+          "cv": 0.67
+        },
+        "timedOut": 0,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0,
+        "httpOk": 6
+      },
+      "practice-guide": {
+        "n": 2,
+        "serviceS": {
+          "min": 101.85,
+          "median": 135.92,
+          "p90": 163.19,
+          "max": 170,
+          "mean": 135.92,
+          "cv": 0.251
+        },
+        "timedOut": 1,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0.97,
+        "httpOk": 1
+      }
+    },
+    "waitS": {
+      "mean": 6.11,
+      "median": 3.35,
+      "max": 30.14
+    },
+    "replayFcfsWaitS": {
+      "mean": 28.27,
+      "max": 102.71
+    },
+    "excessS": {
+      "mean": -22.15,
+      "max": 20.45
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 20.45,
+      "passed": true
+    },
+    "guardFirings": 1,
+    "dispatchEpochUs": {
+      "mean": 23.88,
+      "max": 59
+    },
+    "bytes": {
+      "requestTotal": 352,
+      "responseTotal": 3834
+    }
+  },
+  {
+    "cell": "smoke-spjf",
+    "policy": "spjf",
+    "charging": "completed",
+    "scoreMode": "proxy",
+    "k": 2,
+    "limitMsByClass": {
+      "blueprint": 25000,
+      "practice-guide": 170000
+    },
+    "promiseMs": 400000,
+    "budgetCapMs": 120000,
+    "jobs": 10,
+    "classes": {
+      "blueprint": {
+        "n": 7,
+        "serviceS": {
+          "min": 3.39,
+          "median": 5.23,
+          "p90": 8.46,
+          "max": 11.39,
+          "mean": 5.93,
+          "cv": 0.408
+        },
+        "timedOut": 0,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 0,
+        "httpOk": 7
+      },
+      "practice-guide": {
+        "n": 3,
+        "serviceS": {
+          "min": 137.38,
+          "median": 148.07,
+          "p90": 165.62,
+          "max": 170.01,
+          "mean": 151.82,
+          "cv": 0.089
+        },
+        "timedOut": 1,
+        "engineDeadlineHit": 0,
+        "capExceededMsMax": 9.32,
+        "httpOk": 2
+      }
+    },
+    "waitS": {
+      "mean": 11.79,
+      "median": 0,
+      "max": 110.86
+    },
+    "replayFcfsWaitS": {
+      "mean": 11.79,
+      "max": 110.86
+    },
+    "excessS": {
+      "mean": 0,
+      "max": 0.02
+    },
+    "boundCheck": {
+      "promiseS": 400,
+      "maxExcessS": 0.02,
+      "passed": true
+    },
+    "guardFirings": 0,
+    "dispatchEpochUs": {
+      "mean": 15.4,
+      "max": 54
+    },
+    "bytes": {
+      "requestTotal": 509,
+      "responseTotal": 9287
+    }
+  }
+]

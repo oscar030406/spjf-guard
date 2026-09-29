@@ -1,0 +1,21 @@
+{
+  "cell": "smoke-fcfs",
+  "base": "http://127.0.0.1:3210",
+  "corpus": "ai",
+  "users": [
+    "loadtest_u001",
+    "loadtest_u002",
+    "loadtest_u003"
+  ],
+  "jobsRequested": 10,
+  "jobsIssued": 10,
+  "thinkRule": "independent",
+  "thinkMeanS": 20,
+  "thinkSlope": 0.5,
+  "mix": "guide=0.3,blueprint=0.7",
+  "seed": 20260923,
+  "schedule": null,
+  "startedAtMs": 1790145497423,
+  "finishedAtMs": 1790145795116,
+  "wallSeconds": 297.693
+}

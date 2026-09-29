@@ -1,0 +1,24 @@
+exhaustive: every work-conserving schedule of random small instances
+  columns: max D, min D, max De, min De   (units of L)
+  k=1 L= 2  maxD=0      minD=0      maxDe=0      minDe=0      (k-1)L=0  [117024 instances, 3128371 schedules]
+  k=1 L= 3  maxD=0      minD=0      maxDe=0      minDe=0      (k-1)L=0  [89651 instances, 3175498 schedules]
+  k=1 L= 4  maxD=0      minD=0      maxDe=0      minDe=0      (k-1)L=0  [78157 instances, 3154603 schedules]
+  k=1 L= 6  maxD=0      minD=0      maxDe=0      minDe=0      (k-1)L=0  [67599 instances, 3089511 schedules]
+  k=2 L= 2  maxD=3/2    minD=-3/2   maxDe=3/2    minDe=-3/2   (k-1)L=2  [324679 instances, 2768505 schedules]
+        maxD witness > (k-1)L: a=[np.int64(0), np.int64(0), np.int64(0), np.int64(2), np.int64(2), np.int64(2)] x=[np.int64(2), np.int64(1), np.int64(1), np.int64(2), np.int64(2), np.int64(1)] order=[1, 2, 0, 3, 5, 4] i=4
+        maxDe witness > (k-1)L: a=[np.int64(0), np.int64(0), np.int64(0), np.int64(2), np.int64(2), np.int64(2)] x=[np.int64(2), np.int64(1), np.int64(1), np.int64(2), np.int64(2), np.int64(1)] order=[1, 2, 0, 3, 5, 4] i=4
+  k=2 L= 3  maxD=4/3    minD=-4/3   maxDe=4/3    minDe=-4/3   (k-1)L=3  [256771 instances, 2848466 schedules]
+        maxD witness > (k-1)L: a=[np.int64(0), np.int64(0), np.int64(0), np.int64(2), np.int64(2), np.int64(3)] x=[np.int64(3), np.int64(1), np.int64(1), np.int64(1), np.int64(3), np.int64(2)] order=[1, 2, 0, 4, 3, 5] i=5
+        maxDe witness > (k-1)L: a=[np.int64(0), np.int64(0), np.int64(0), np.int64(2), np.int64(2), np.int64(3)] x=[np.int64(3), np.int64(1), np.int64(1), np.int64(1), np.int64(3), np.int64(2)] order=[1, 2, 0, 4, 3, 5] i=5
+  k=2 L= 4  maxD=5/4    minD=-1     maxDe=5/4    minDe=-1     (k-1)L=4  [225343 instances, 2906305 schedules]
+        maxD witness > (k-1)L: a=[np.int64(0), np.int64(0), np.int64(0), np.int64(3), np.int64(3), np.int64(3)] x=[np.int64(4), np.int64(2), np.int64(2), np.int64(4), np.int64(4), np.int64(1)] order=[1, 2, 0, 3, 5, 4] i=4
+        maxDe witness > (k-1)L: a=[np.int64(0), np.int64(0), np.int64(0), np.int64(3), np.int64(3), np.int64(3)] x=[np.int64(4), np.int64(2), np.int64(2), np.int64(4), np.int64(4), np.int64(1)] order=[1, 2, 0, 3, 5, 4] i=4
+  k=2 L= 6  maxD=1      minD=-1     maxDe=1      minDe=-1     (k-1)L=6  [188952 instances, 2882265 schedules]
+  k=3 L= 2  maxD=2      minD=-2     maxDe=2      minDe=-2     (k-1)L=4  [450876 instances, 2699121 schedules]
+  k=3 L= 3  maxD=2      minD=-2     maxDe=2      minDe=-2     (k-1)L=6  [413064 instances, 2665488 schedules]
+  k=3 L= 4  maxD=2      minD=-2     maxDe=2      minDe=-2     (k-1)L=8  [400985 instances, 2757481 schedules]
+  k=3 L= 6  maxD=2      minD=-2     maxDe=2      minDe=-2     (k-1)L=12  [348616 instances, 2657932 schedules]
+  k=4 L= 2  maxD=3      minD=-3     maxDe=3      minDe=-3     (k-1)L=6  [467736 instances, 2618470 schedules]
+  k=4 L= 3  maxD=3      minD=-3     maxDe=3      minDe=-3     (k-1)L=9  [481327 instances, 2720382 schedules]
+  k=4 L= 4  maxD=3      minD=-3     maxDe=3      minDe=-3     (k-1)L=12  [474487 instances, 2712047 schedules]
+  k=4 L= 6  maxD=3      minD=-3     maxDe=3      minDe=-3     (k-1)L=18  [435238 instances, 2520196 schedules]

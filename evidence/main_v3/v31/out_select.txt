@@ -1,0 +1,81 @@
+## 2026-09-19 22:29:41 manifest=423adbc90d3c1ceb9ab9dcaa2cad7ec224c73f9a7c662f98fd15c070ee8730e0 argv=
+selection cells: 15 = 5 validation overlays x 3 load levels; 51 policies each; k per cell {(0, 0): 7, (0, 1): 5, (0, 2): 4, (1, 0): 8, (1, 1): 5, (1, 2): 4, (2, 0): 8, (2, 1): 5, (2, 2): 4, (3, 0): 7, (3, 1): 5, (3, 2): 4, (4, 0): 8, (4, 1): 5, (4, 2): 4}
+
+=== G = 300 s   (harm limit 150 s, 15 validation cells) ===
+guard    B0  eta  worst_gap  worst_harm  n_feasible_cells  feasible
+  cap  30.0 0.00    -0.0103     71.3179                15      True
+  cap  30.0 0.25     0.2469    101.6440                15      True
+  cap  30.0 0.50     0.4102    122.7405                15      True
+  cap  30.0 0.75     0.4009    212.0439                 9     False
+  cap  30.0 0.90     0.3719    212.0439                 4     False
+  cap 120.0 0.00     0.0057    102.6526                15      True
+  cap 120.0 0.25     0.3328    122.5641                15      True
+  cap 120.0 0.50     0.4040    171.6147                13     False
+  cap 120.0 0.75     0.3712    212.0439                 2     False
+  cap 120.0 0.90     0.3693    212.0439                 2     False
+  cap 600.0 0.00     0.3693    212.0439                 2     False
+  cap 600.0 0.25     0.3693    212.0439                 2     False
+  cap 600.0 0.50     0.3693    212.0439                 2     False
+  cap 600.0 0.75     0.3693    212.0439                 2     False
+  cap 600.0 0.90     0.3693    212.0439                 2     False
+  fix   inf 0.00     0.3693    212.0439                 2     False
+-> [cap] B0 = 30 * k/4 s, eta = 0.5: worst-cell gap 0.4102, worst-cell harm 122.74 s (5 of 15 feasible) 
+-> [fixsel] B0 = 120 * k/4 s, eta = 0: worst-cell gap 0.0057, worst-cell harm 102.65 s (2 of 4 feasible) 
+   equal-G fixed baseline FIX (eta = 0, B0 = Bmax): worst gap 0.3693, worst harm 212.04 s, feasible=False (2/15 cells)
+   v3's choice (30*k/4, eta 0.5) under the new rule: worst gap 0.4102, worst harm 122.74 s, feasible=True (15/15 cells)
+
+=== G = 600 s   (harm limit 300 s, 15 validation cells) ===
+guard    B0  eta  worst_gap  worst_harm  n_feasible_cells  feasible
+  cap  30.0 0.00    -0.0103     71.3179                15      True
+  cap  30.0 0.25     0.2798    101.6440                15      True
+  cap  30.0 0.50     0.5858    122.7405                15      True
+  cap  30.0 0.75     0.7172    216.8147                15      True
+  cap  30.0 0.90     0.7210    358.9207                14     False
+  cap 120.0 0.00     0.0057    102.6526                15      True
+  cap 120.0 0.25     0.3941    122.5641                15      True
+  cap 120.0 0.50     0.6311    171.6147                15      True
+  cap 120.0 0.75     0.7216    293.2911                15      True
+  cap 120.0 0.90     0.7238    483.9248                 6     False
+  cap 600.0 0.00     0.3693    212.0439                15      True
+  cap 600.0 0.25     0.6767    283.4579                15      True
+  cap 600.0 0.50     0.7257    382.5833                 6     False
+  cap 600.0 0.75     0.7238    490.5264                 6     False
+  cap 600.0 0.90     0.7238    490.5264                 6     False
+  fix   inf 0.00     0.7238    490.5264                 6     False
+-> [cap] B0 = 120 * k/4 s, eta = 0.75: worst-cell gap 0.7216, worst-cell harm 293.29 s (10 of 15 feasible) 
+-> [fixsel] B0 = 600 * k/4 s, eta = 0: worst-cell gap 0.3693, worst-cell harm 212.04 s (3 of 4 feasible) 
+   equal-G fixed baseline FIX (eta = 0, B0 = Bmax): worst gap 0.7238, worst harm 490.53 s, feasible=False (6/15 cells)
+   v3's choice (30*k/4, eta 0.9) under the new rule: worst gap 0.7210, worst harm 358.92 s, feasible=False (14/15 cells)
+
+=== G = 1200 s   (harm limit 600 s, 15 validation cells) ===
+guard    B0  eta  worst_gap  worst_harm  n_feasible_cells  feasible
+  cap  30.0 0.00    -0.0103     71.3179                15      True
+  cap  30.0 0.25     0.2798    101.6440                15      True
+  cap  30.0 0.50     0.6103    122.7405                15      True
+  cap  30.0 0.75     0.7184    216.8147                15      True
+  cap  30.0 0.90     0.7233    358.9207                15      True
+  cap 120.0 0.00     0.0057    102.6526                15      True
+  cap 120.0 0.25     0.3941    122.5641                15      True
+  cap 120.0 0.50     0.6663    171.6147                15      True
+  cap 120.0 0.75     0.7236    293.2911                15      True
+  cap 120.0 0.90     0.7273    536.0654                15      True
+  cap 600.0 0.00     0.3693    212.0439                15      True
+  cap 600.0 0.25     0.6820    283.4579                15      True
+  cap 600.0 0.50     0.7257    382.5833                15      True
+  cap 600.0 0.75     0.7273    692.9160                10     False
+  cap 600.0 0.90     0.7273   1093.7809                10     False
+  fix   inf 0.00     0.7273   1093.7809                10     False
+-> [cap] B0 = 120 * k/4 s, eta = 0.9: worst-cell gap 0.7273, worst-cell harm 536.07 s (13 of 15 feasible) 
+-> [fixsel] B0 = 600 * k/4 s, eta = 0: worst-cell gap 0.3693, worst-cell harm 212.04 s (3 of 4 feasible) 
+   equal-G fixed baseline FIX (eta = 0, B0 = Bmax): worst gap 0.7273, worst harm 1093.78 s, feasible=False (10/15 cells)
+   v3's choice (120*k/4, eta 0.9) under the new rule: worst gap 0.7273, worst harm 536.07 s, feasible=True (15/15 cells)
+
+=== selected parameters (validation overlays only) ===
+family      G  B0_base  eta     B0_rule              Bmax_rule  worst_gap  worst_red_pct  worst_harm_s  harm_limit_s  n_feasible  n_grid        v3_choice  v3_worst_gap  v3_worst_harm_s  v3_feasible_now  same_as_v3 note
+   cap  300.0     30.0 0.50  30 * k/4 s k*(G - (3 - 2/k)*60) s     0.4102         33.395        122.74         150.0           5      15  30*k/4, eta 0.5        0.4102           122.74             True        True     
+fixsel  300.0    120.0 0.00 120 * k/4 s k*(G - (3 - 2/k)*60) s     0.0057          0.469        102.65         150.0           2       4  30*k/4, eta 0.5        0.4102           122.74             True       False     
+   cap  600.0    120.0 0.75 120 * k/4 s k*(G - (3 - 2/k)*60) s     0.7216         40.914        293.29         300.0          10      15  30*k/4, eta 0.9        0.7210           358.92            False       False     
+fixsel  600.0    600.0 0.00 600 * k/4 s k*(G - (3 - 2/k)*60) s     0.3693         30.063        212.04         300.0           3       4  30*k/4, eta 0.9        0.7210           358.92            False       False     
+   cap 1200.0    120.0 0.90 120 * k/4 s k*(G - (3 - 2/k)*60) s     0.7273         41.159        536.07         600.0          13      15 120*k/4, eta 0.9        0.7273           536.07             True        True     
+fixsel 1200.0    600.0 0.00 600 * k/4 s k*(G - (3 - 2/k)*60) s     0.3693         30.063        212.04         600.0           3       4 120*k/4, eta 0.9        0.7273           536.07             True       False     
+## done in 0 s

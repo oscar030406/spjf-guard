@@ -1,0 +1,8 @@
+{
+  "protocol_hash": "5ab9756c90b4b26f1caf39844c58531b875962fc51f2d0098ed7ba6928c2ae9c",
+  "passed": false,
+  "wall_s": 8.331772700003057,
+  "error_type": "AssertionError",
+  "error": "Guard: synthetic production replay did not fire",
+  "traceback": "Traceback (most recent call last):\n  File \"<repo-root>\\prechecks\\weakness1_attack\\physical_smoke.py\", line 132, in main\n    raise AssertionError(\"Guard: synthetic production replay did not fire\")\nAssertionError: Guard: synthetic production replay did not fire\n"
+}

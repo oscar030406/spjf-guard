@@ -1,0 +1,54 @@
+rep0 level0 k=8 G=300 theta=135.000s gap=0.6380 max_exc=143.3
+rep0 level0 k=8 G=600 theta=435.000s gap=0.7065 max_exc=430.0
+rep0 level0 k=8 G=1200 theta=1035.000s gap=0.7213 max_exc=992.9
+rep0 level1 k=5 G=300 theta=144.000s gap=0.2978 max_exc=177.1
+rep0 level1 k=5 G=600 theta=444.000s gap=0.7668 max_exc=435.3
+rep0 level1 k=5 G=1200 theta=1044.000s gap=0.8403 max_exc=1012.5
+rep0 level2 k=4 G=300 theta=150.000s gap=0.0405 max_exc=188.5
+rep0 level2 k=4 G=600 theta=450.000s gap=0.4130 max_exc=462.1
+rep0 level2 k=4 G=1200 theta=1050.000s gap=0.8186 max_exc=1058.8
+rep1 level0 k=8 G=300 theta=135.000s gap=0.6875 max_exc=140.9
+rep1 level0 k=8 G=600 theta=435.000s gap=0.7475 max_exc=391.1
+rep1 level0 k=8 G=1200 theta=1035.000s gap=0.7576 max_exc=1001.8
+rep1 level1 k=5 G=300 theta=144.000s gap=0.2748 max_exc=179.6
+rep1 level1 k=5 G=600 theta=444.000s gap=0.7792 max_exc=436.1
+rep1 level1 k=5 G=1200 theta=1044.000s gap=0.8551 max_exc=1067.6
+rep1 level2 k=4 G=300 theta=150.000s gap=0.0298 max_exc=180.6
+rep1 level2 k=4 G=600 theta=450.000s gap=0.4323 max_exc=482.9
+rep1 level2 k=4 G=1200 theta=1050.000s gap=0.8376 max_exc=1048.8
+rep2 level0 k=8 G=300 theta=135.000s gap=0.6581 max_exc=148.0
+rep2 level0 k=8 G=600 theta=435.000s gap=0.7307 max_exc=408.5
+rep2 level0 k=8 G=1200 theta=1035.000s gap=0.7474 max_exc=871.6
+rep2 level1 k=5 G=300 theta=144.000s gap=0.2385 max_exc=175.4
+rep2 level1 k=5 G=600 theta=444.000s gap=0.7849 max_exc=444.9
+rep2 level1 k=5 G=1200 theta=1044.000s gap=0.8501 max_exc=1024.8
+rep2 level2 k=4 G=300 theta=150.000s gap=0.0348 max_exc=195.1
+rep2 level2 k=4 G=600 theta=450.000s gap=0.4180 max_exc=465.0
+rep2 level2 k=4 G=1200 theta=1050.000s gap=0.8138 max_exc=1052.2
+rep3 level0 k=8 G=300 theta=135.000s gap=0.6566 max_exc=148.3
+rep3 level0 k=8 G=600 theta=435.000s gap=0.7269 max_exc=397.6
+rep3 level0 k=8 G=1200 theta=1035.000s gap=0.7432 max_exc=926.8
+rep3 level1 k=5 G=300 theta=144.000s gap=0.2512 max_exc=165.2
+rep3 level1 k=5 G=600 theta=444.000s gap=0.8182 max_exc=436.8
+rep3 level1 k=5 G=1200 theta=1044.000s gap=0.8701 max_exc=1045.8
+rep3 level2 k=4 G=300 theta=150.000s gap=0.0244 max_exc=181.0
+rep3 level2 k=4 G=600 theta=450.000s gap=0.4403 max_exc=488.7
+rep3 level2 k=4 G=1200 theta=1050.000s gap=0.8359 max_exc=1049.3
+rep4 level0 k=7 G=300 theta=137.143s gap=0.6223 max_exc=151.6
+rep4 level0 k=7 G=600 theta=437.143s gap=0.7585 max_exc=427.6
+rep4 level0 k=7 G=1200 theta=1037.143s gap=0.7908 max_exc=992.6
+rep4 level1 k=5 G=300 theta=144.000s gap=0.1582 max_exc=175.1
+rep4 level1 k=5 G=600 theta=444.000s gap=0.7964 max_exc=449.5
+rep4 level1 k=5 G=1200 theta=1044.000s gap=0.8682 max_exc=1035.6
+rep4 level2 k=4 G=300 theta=150.000s gap=0.0255 max_exc=188.8
+rep4 level2 k=4 G=600 theta=450.000s gap=0.3963 max_exc=469.9
+rep4 level2 k=4 G=1200 theta=1050.000s gap=0.8304 max_exc=1047.8
+{'level': 0, 'promise_s': 300, 'theta_s_by_k': 'k7:137.143;k8:135.000', 'maxwait_p99_dl_s': 16.590594350000075, 'maxwait_gap_closed': 0.6524883918233048, 'maxwait_gap_min_overlay': 0.622287706018119, 'maxwait_max_excess_s': 151.578042, 'maxwait_harm_s': 147.961951, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 15.575089580000064, 'guard_gap_closed': 0.7051584559579581, 'guard_max_excess_s': 192.45230500000002, 'guard_harm_s': 132.113597}
+{'level': 0, 'promise_s': 600, 'theta_s_by_k': 'k7:437.143;k8:435.000', 'maxwait_p99_dl_s': 15.06531156000005, 'maxwait_gap_closed': 0.734006064393849, 'maxwait_gap_min_overlay': 0.7064507456939821, 'maxwait_max_excess_s': 429.981669, 'maxwait_harm_s': 237.038507, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 14.96743452000003, 'guard_gap_closed': 0.739757074694442, 'guard_max_excess_s': 492.21445700000004, 'guard_harm_s': 237.038507}
+{'level': 0, 'promise_s': 1200, 'theta_s_by_k': 'k7:1037.143;k8:1035.000', 'maxwait_p99_dl_s': 14.721265070000072, 'maxwait_gap_closed': 0.7520649728059449, 'maxwait_gap_min_overlay': 0.7213315778387279, 'maxwait_max_excess_s': 1001.7501169999999, 'maxwait_harm_s': 237.038507, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 14.842540390000034, 'guard_gap_closed': 0.7460231529105679, 'guard_max_excess_s': 907.755186, 'guard_harm_s': 94.311603}
+{'level': 1, 'promise_s': 300, 'theta_s_by_k': 'k5:144.000', 'maxwait_p99_dl_s': 98.7589048400004, 'maxwait_gap_closed': 0.24406531900308792, 'maxwait_gap_min_overlay': 0.15815056885401546, 'maxwait_max_excess_s': 179.61020200000002, 'maxwait_harm_s': 177.062498, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 55.94171068000016, 'guard_gap_closed': 0.7381500713196467, 'guard_max_excess_s': 209.736647, 'guard_harm_s': 114.105582}
+{'level': 1, 'promise_s': 600, 'theta_s_by_k': 'k5:444.000', 'maxwait_p99_dl_s': 51.55108873000014, 'maxwait_gap_closed': 0.7890721744621079, 'maxwait_gap_min_overlay': 0.7667673636696709, 'maxwait_max_excess_s': 449.47673100000003, 'maxwait_harm_s': 443.656554, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 47.472024400000215, 'guard_gap_closed': 0.8368350538271218, 'guard_max_excess_s': 507.80325700000003, 'guard_harm_s': 319.640469}
+{'level': 1, 'promise_s': 1200, 'theta_s_by_k': 'k5:1044.000', 'maxwait_p99_dl_s': 45.76991078000007, 'maxwait_gap_closed': 0.8567597408618445, 'maxwait_gap_min_overlay': 0.8403111975823162, 'maxwait_max_excess_s': 1067.625853, 'maxwait_harm_s': 469.22679700000003, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 46.85413925000008, 'guard_gap_closed': 0.8440157595386715, 'guard_max_excess_s': 1104.920212, 'guard_harm_s': 117.58659800000001}
+{'level': 2, 'promise_s': 300, 'theta_s_by_k': 'k4:150.000', 'maxwait_p99_dl_s': 266.4124284100007, 'maxwait_gap_closed': 0.031000501350810155, 'maxwait_gap_min_overlay': 0.024417547106429162, 'maxwait_max_excess_s': 195.124862, 'maxwait_harm_s': 182.278357, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 163.39912372000074, 'guard_gap_closed': 0.4784705150761506, 'guard_max_excess_s': 229.05280399999998, 'guard_harm_s': 134.822787}
+{'level': 2, 'promise_s': 600, 'theta_s_by_k': 'k4:450.000', 'maxwait_p99_dl_s': 177.0797289400016, 'maxwait_gap_closed': 0.4199598063707596, 'maxwait_gap_min_overlay': 0.39628181621508524, 'maxwait_max_excess_s': 488.67674, 'maxwait_harm_s': 456.682561, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 89.23815463000031, 'guard_gap_closed': 0.8013141740724661, 'guard_max_excess_s': 523.6675650000001, 'guard_harm_s': 339.882}
+{'level': 2, 'promise_s': 1200, 'theta_s_by_k': 'k4:1050.000', 'maxwait_p99_dl_s': 83.29033740000054, 'maxwait_gap_closed': 0.827235495537313, 'maxwait_gap_min_overlay': 0.8137702947694732, 'maxwait_max_excess_s': 1058.8163140000001, 'maxwait_harm_s': 708.755315, 'maxwait_jobs_excess_ge_promise': 0, 'guard_p99_dl_s': 82.67464703000033, 'guard_gap_closed': 0.8297614658552259, 'guard_max_excess_s': 1110.4275499999999, 'guard_harm_s': 144.813784}

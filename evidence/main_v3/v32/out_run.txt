@@ -1,0 +1,906 @@
+## 2026-09-20 03:15:18 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 0 --level 0 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep0_L0_grid: k=7 rho_busy=0.5247 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,834,032 (95.4%); with W_FCFS > 60 s: 65,479 (0.37%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   172s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           46.8103     0.0000  1.1117      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        20.5381     1.0000  0.4140    775.8893   551.0178   131.7148   756.4351       13.2817              inf                NaN             0.0          -1
+SPJF-tweedie   26.6946     0.7657  0.5280   1098.8544   213.3007   190.0895  1098.8544       12.7721              inf                NaN             0.0          -1
+## done in 173 s
+## 2026-09-20 03:18:12 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 0 --level 0 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep0_L0_grid: k=7 rho_busy=0.5247 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,834,032 (95.4%); with W_FCFS > 60 s: 65,479 (0.37%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   192s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           46.8103     0.0000  1.1117      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        20.5381     1.0000  0.4140    775.8893   551.0178   131.7148   756.4351       13.2817              inf                NaN             0.0          -1
+SPJF-tweedie   26.6946     0.7657  0.5280   1098.8544   213.3007   190.0895  1098.8544       12.7721              inf                NaN             0.0          -1
+## done in 192 s
+## 2026-09-20 03:21:38 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 0 --level 1 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep0_L1_grid: k=5 rho_busy=0.7345 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,981,322 (90.6%); with W_FCFS > 60 s: 243,580 (1.38%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   186s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          130.6271     0.0000  3.7579      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        37.5760     1.0000  1.1071   1191.7443   590.2714   102.2997  1191.7443       16.0334              inf                NaN             0.0          -1
+SPJF-tweedie   49.7242     0.8694  1.4308   1811.9476   441.2419   211.7798  1811.9476       25.0152              inf                NaN             0.0          -1
+## done in 186 s
+## 2026-09-20 03:24:46 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 0 --level 1 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep0_L1_grid: k=5 rho_busy=0.7345 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,981,322 (90.6%); with W_FCFS > 60 s: 243,580 (1.38%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   170s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          130.6271     0.0000  3.7579      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        37.5760     1.0000  1.1071   1191.7443   590.2714   102.2997  1191.7443       16.0334              inf                NaN             0.0          -1
+SPJF-tweedie   49.7242     0.8694  1.4308   1811.9476   441.2419   211.7798  1811.9476       25.0152              inf                NaN             0.0          -1
+## done in 170 s
+## 2026-09-20 03:27:49 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 0 --level 2 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep0_L2_grid: k=4 rho_busy=0.9182 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,199,383 (86.1%); with W_FCFS > 60 s: 624,936 (3.54%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   188s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          248.5769     0.0000  8.4074      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        46.2252     1.0000  1.7928   1635.4256   197.6589    42.9379  1635.4256       23.2780              inf                NaN             0.0          -1
+SPJF-tweedie   75.4841     0.8554  2.4390   2806.8079   678.5047   199.5051  2806.8079       38.8378              inf                NaN             0.0          -1
+## done in 188 s
+## 2026-09-20 03:30:59 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 0 --level 2 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep0_L2_grid: k=4 rho_busy=0.9182 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,199,383 (86.1%); with W_FCFS > 60 s: 624,936 (3.54%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   191s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          248.5769     0.0000  8.4074      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        46.2252     1.0000  1.7928   1635.4256   197.6589    42.9379  1635.4256       23.2780              inf                NaN             0.0          -1
+SPJF-tweedie   75.4841     0.8554  2.4390   2806.8079   678.5047   199.5051  2806.8079       38.8378              inf                NaN             0.0          -1
+## done in 191 s
+## 2026-09-20 03:34:18 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 1 --level 0 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep1_L0_grid: k=8 rho_busy=0.4799 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,090,461 (96.9%); with W_FCFS > 60 s: 41,136 (0.23%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   191s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           29.3215     0.0000  0.6714      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        12.5744     1.0000  0.2580    582.3123   137.2863    93.1036   479.5713        6.6992              inf                NaN             0.0          -1
+SPJF-tweedie   17.1419     0.7273  0.3296    619.7311   165.8880   188.3176   619.7311        9.6382              inf                NaN             0.0          -1
+## done in 191 s
+## 2026-09-20 03:37:31 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 1 --level 0 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep1_L0_grid: k=8 rho_busy=0.4799 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,090,461 (96.9%); with W_FCFS > 60 s: 41,136 (0.23%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   186s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           29.3215     0.0000  0.6714      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        12.5744     1.0000  0.2580    582.3123   137.2863    93.1036   479.5713        6.6992              inf                NaN             0.0          -1
+SPJF-tweedie   17.1419     0.7273  0.3296    619.7311   165.8880   188.3176   619.7311        9.6382              inf                NaN             0.0          -1
+## done in 187 s
+## 2026-09-20 03:40:51 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 1 --level 1 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep1_L1_grid: k=5 rho_busy=0.7678 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,998,125 (90.7%); with W_FCFS > 60 s: 252,636 (1.43%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   164s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          120.8107     0.0000  3.7918      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        35.6278     1.0000  1.0390   1293.3232   175.9726    76.2083  1293.3232       16.9118              inf                NaN             0.0          -1
+SPJF-tweedie   47.5315     0.8603  1.3410   1754.0521   488.6251   171.0250  1754.0521       22.6798              inf                NaN             0.0          -1
+## done in 164 s
+## 2026-09-20 03:43:36 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 1 --level 1 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep1_L1_grid: k=5 rho_busy=0.7678 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,998,125 (90.7%); with W_FCFS > 60 s: 252,636 (1.43%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   193s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          120.8107     0.0000  3.7918      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        35.6278     1.0000  1.0390   1293.3232   175.9726    76.2083  1293.3232       16.9118              inf                NaN             0.0          -1
+SPJF-tweedie   47.5315     0.8603  1.3410   1754.0521   488.6251   171.0250  1754.0521       22.6798              inf                NaN             0.0          -1
+## done in 193 s
+## 2026-09-20 03:47:04 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 1 --level 2 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep1_L2_grid: k=4 rho_busy=0.9597 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,214,306 (86.2%); with W_FCFS > 60 s: 621,736 (3.52%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   182s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          261.1865     0.0000  8.8831      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        46.1729     1.0000  1.7711   2253.1549   621.2005    34.9692  2253.1549       21.5174              inf                NaN             0.0          -1
+SPJF-tweedie   72.1720     0.8791  2.3972   2959.7349   633.5771   181.2184  2959.7349       34.3698              inf                NaN             0.0          -1
+## done in 182 s
+## 2026-09-20 03:50:07 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 1 --level 2 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep1_L2_grid: k=4 rho_busy=0.9597 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,214,306 (86.2%); with W_FCFS > 60 s: 621,736 (3.52%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   146s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          261.1865     0.0000  8.8831      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        46.1729     1.0000  1.7711   2253.1549   621.2005    34.9692  2253.1549       21.5174              inf                NaN             0.0          -1
+SPJF-tweedie   72.1720     0.8791  2.3972   2959.7349   633.5771   181.2184  2959.7349       34.3698              inf                NaN             0.0          -1
+## done in 146 s
+## 2026-09-20 03:52:41 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 2 --level 0 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep2_L0_grid: k=8 rho_busy=0.4964 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,123,126 (97.0%); with W_FCFS > 60 s: 35,129 (0.20%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   144s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           26.1892     0.0000  0.6412      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        10.5167     1.0000  0.2220    644.9932   170.3398   108.7753   644.9932        7.7864              inf                NaN             0.0          -1
+SPJF-tweedie   14.5701     0.7414  0.2846   1019.5449   121.5563   212.1595  1019.5449       12.2793              inf                NaN             0.0          -1
+## done in 144 s
+## 2026-09-20 03:55:06 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 2 --level 0 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep2_L0_grid: k=8 rho_busy=0.4964 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,123,126 (97.0%); with W_FCFS > 60 s: 35,129 (0.20%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   144s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           26.1892     0.0000  0.6412      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        10.5167     1.0000  0.2220    644.9932   170.3398   108.7753   644.9932        7.7864              inf                NaN             0.0          -1
+SPJF-tweedie   14.5701     0.7414  0.2846   1019.5449   121.5563   212.1595  1019.5449       12.2793              inf                NaN             0.0          -1
+## done in 144 s
+## 2026-09-20 03:57:44 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 2 --level 1 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep2_L1_grid: k=5 rho_busy=0.7943 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,977,919 (90.5%); with W_FCFS > 60 s: 226,798 (1.29%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   145s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          109.0342     0.0000  3.7019      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        37.2474     1.0000  1.0891   1373.9181   483.7447    84.3215  1373.9181       17.3745              inf                NaN             0.0          -1
+SPJF-tweedie   47.9743     0.8506  1.3774   2015.3040   261.7017   192.0491  2015.3040       22.5238              inf                NaN             0.0          -1
+## done in 145 s
+## 2026-09-20 04:00:10 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 2 --level 1 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep2_L1_grid: k=5 rho_busy=0.7943 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,977,919 (90.5%); with W_FCFS > 60 s: 226,798 (1.29%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   147s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          109.0342     0.0000  3.7019      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        37.2474     1.0000  1.0891   1373.9181   483.7447    84.3215  1373.9181       17.3745              inf                NaN             0.0          -1
+SPJF-tweedie   47.9743     0.8506  1.3774   2015.3040   261.7017   192.0491  2015.3040       22.5238              inf                NaN             0.0          -1
+## done in 147 s
+## 2026-09-20 04:02:51 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 2 --level 2 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep2_L2_grid: k=4 rho_busy=0.9928 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,207,278 (86.2%); with W_FCFS > 60 s: 564,779 (3.20%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   143s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          212.4606     0.0000  8.1651      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        45.1214     1.0000  1.7251   2122.3331   297.1641    42.4298  2122.3331       22.3830              inf                NaN             0.0          -1
+SPJF-tweedie   67.6752     0.8652  2.3160   2985.8313  1339.3417   181.1010  2985.8313       37.5421              inf                NaN             0.0          -1
+## done in 143 s
+## 2026-09-20 04:05:16 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 2 --level 2 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep2_L2_grid: k=4 rho_busy=0.9928 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,207,278 (86.2%); with W_FCFS > 60 s: 564,779 (3.20%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   150s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          212.4606     0.0000  8.1651      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        45.1214     1.0000  1.7251   2122.3331   297.1641    42.4298  2122.3331       22.3830              inf                NaN             0.0          -1
+SPJF-tweedie   67.6752     0.8652  2.3160   2985.8313  1339.3417   181.1010  2985.8313       37.5421              inf                NaN             0.0          -1
+## done in 150 s
+## 2026-09-20 04:07:59 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 3 --level 0 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep3_L0_grid: k=7 rho_busy=0.5190 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,871,964 (95.6%); with W_FCFS > 60 s: 58,345 (0.33%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   144s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           40.9388     0.0000  1.0275      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        18.0807     1.0000  0.3709    596.7495   172.1125   122.8193   484.8287        6.1196              inf                NaN             0.0          -1
+SPJF-tweedie   24.0887     0.7372  0.4736    838.2449   218.7796   200.3555   838.2449       11.4579              inf                NaN             0.0          -1
+## done in 144 s
+## 2026-09-20 04:10:25 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 3 --level 0 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep3_L0_grid: k=7 rho_busy=0.5190 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,871,964 (95.6%); with W_FCFS > 60 s: 58,345 (0.33%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   148s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           40.9388     0.0000  1.0275      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        18.0807     1.0000  0.3709    596.7495   172.1125   122.8193   484.8287        6.1196              inf                NaN             0.0          -1
+SPJF-tweedie   24.0887     0.7372  0.4736    838.2449   218.7796   200.3555   838.2449       11.4579              inf                NaN             0.0          -1
+## done in 148 s
+## 2026-09-20 04:13:06 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 3 --level 1 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep3_L1_grid: k=5 rho_busy=0.7266 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,007,520 (90.7%); with W_FCFS > 60 s: 230,679 (1.31%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   142s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          109.8529     0.0000  3.5811      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        36.2799     1.0000  1.0419   1104.3792   367.3275    90.7135  1046.7217       15.4272              inf                NaN             0.0          -1
+SPJF-tweedie   48.1448     0.8387  1.3459   1652.7468   335.4583   191.4780  1652.7468       20.6324              inf                NaN             0.0          -1
+## done in 142 s
+## 2026-09-20 04:15:30 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 3 --level 1 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep3_L1_grid: k=5 rho_busy=0.7266 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,007,520 (90.7%); with W_FCFS > 60 s: 230,679 (1.31%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   147s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          109.8529     0.0000  3.5811      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        36.2799     1.0000  1.0419   1104.3792   367.3275    90.7135  1046.7217       15.4272              inf                NaN             0.0          -1
+SPJF-tweedie   48.1448     0.8387  1.3459   1652.7468   335.4583   191.4780  1652.7468       20.6324              inf                NaN             0.0          -1
+## done in 148 s
+## 2026-09-20 04:18:11 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 3 --level 2 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep3_L2_grid: k=4 rho_busy=0.9082 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,219,197 (86.2%); with W_FCFS > 60 s: 582,184 (3.30%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   149s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          213.2628     0.0000  8.0028      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        45.9475     1.0000  1.7254   1799.4353   439.9633    42.3855  1799.4353       23.8683              inf                NaN             0.0          -1
+SPJF-tweedie   70.9774     0.8504  2.3259   2685.5602   676.3017   188.0225  2685.5602       36.3134              inf                NaN             0.0          -1
+## done in 149 s
+## 2026-09-20 04:20:42 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 3 --level 2 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep3_L2_grid: k=4 rho_busy=0.9082 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,219,197 (86.2%); with W_FCFS > 60 s: 582,184 (3.30%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   151s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          213.2628     0.0000  8.0028      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        45.9475     1.0000  1.7254   1799.4353   439.9633    42.3855  1799.4353       23.8683              inf                NaN             0.0          -1
+SPJF-tweedie   70.9774     0.8504  2.3259   2685.5602   676.3017   188.0225  2685.5602       36.3134              inf                NaN             0.0          -1
+## done in 151 s
+## 2026-09-20 04:23:27 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 4 --level 0 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep4_L0_grid: k=8 rho_busy=0.5279 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,081,262 (96.8%); with W_FCFS > 60 s: 34,155 (0.19%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   146s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           28.1276     0.0000  0.6498      0.0000     0.0000      0.000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        11.3677     1.0000  0.2323    566.1046   423.1142    111.118   390.8594        6.4805              inf                NaN             0.0          -1
+SPJF-tweedie   15.9149     0.7287  0.2993    718.1255   186.7735    192.680   718.1255        9.9416              inf                NaN             0.0          -1
+## done in 146 s
+## 2026-09-20 04:25:54 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 4 --level 0 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep4_L0_grid: k=8 rho_busy=0.5279 (target 0.5) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,081,262 (96.8%); with W_FCFS > 60 s: 34,155 (0.19%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   149s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS           28.1276     0.0000  0.6498      0.0000     0.0000      0.000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        11.3677     1.0000  0.2323    566.1046   423.1142    111.118   390.8594        6.4805              inf                NaN             0.0          -1
+SPJF-tweedie   15.9149     0.7287  0.2993    718.1255   186.7735    192.680   718.1255        9.9416              inf                NaN             0.0          -1
+## done in 149 s
+## 2026-09-20 04:28:38 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 4 --level 1 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep4_L1_grid: k=5 rho_busy=0.8447 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,999,358 (90.7%); with W_FCFS > 60 s: 248,250 (1.41%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   153s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          119.5916     0.0000  3.7295      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        35.7861     1.0000  1.0408   1042.7584   157.5034    78.2748  1042.7584       16.4104              inf                NaN             0.0          -1
+SPJF-tweedie   47.8878     0.8556  1.3412   1885.4607   410.1963   196.1115  1885.4607       26.9181              inf                NaN             0.0          -1
+## done in 153 s
+## 2026-09-20 04:31:12 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 4 --level 1 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep4_L1_grid: k=5 rho_busy=0.8447 (target 0.8) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,999,358 (90.7%); with W_FCFS > 60 s: 248,250 (1.41%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   151s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          119.5916     0.0000  3.7295      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        35.7861     1.0000  1.0408   1042.7584   157.5034    78.2748  1042.7584       16.4104              inf                NaN             0.0          -1
+SPJF-tweedie   47.8878     0.8556  1.3412   1885.4607   410.1963   196.1115  1885.4607       26.9181              inf                NaN             0.0          -1
+## done in 151 s
+## 2026-09-20 04:33:58 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 4 --level 2 --set grid --workers 6 --part 1 --nparts 2
+[     1s] valid_rep4_L2_grid: k=4 rho_busy=1.0558 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,219,320 (86.2%); with W_FCFS > 60 s: 624,298 (3.54%)
+[     4s] 260 configurations -> 246 distinct schedules; part 1/2 covers 123, 123 still to run (0 policies already on disk)
+[   147s] cell now holds 137 of 260 policies; still missing 123
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          262.2438     0.0000  8.6520      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        46.0389     1.0000  1.7298   2486.7759   302.6694    41.2868  2486.7759       23.1477              inf                NaN             0.0          -1
+SPJF-tweedie   73.2540     0.8741  2.3725   4070.9296  1515.0461   200.9425  3661.4749       39.5659              inf                NaN             0.0          -1
+## done in 147 s
+## 2026-09-20 04:36:26 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace valid --rep 4 --level 2 --set grid --workers 6 --part 2 --nparts 2
+[     1s] valid_rep4_L2_grid: k=4 rho_busy=1.0558 (target 1.0) n=17,646,125 weeks=30 policies=260
+[     4s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,219,320 (86.2%); with W_FCFS > 60 s: 624,298 (3.54%)
+[     4s] 260 configurations -> 246 distinct schedules; part 2/2 covers 123, 123 still to run (137 policies already on disk)
+[   154s] cell now holds 260 of 260 policies; COMPLETE
+              w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                              
+FCFS          262.2438     0.0000  8.6520      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN             1.0          -1
+SJF-ref        46.0389     1.0000  1.7298   2486.7759   302.6694    41.2868  2486.7759       23.1477              inf                NaN             0.0          -1
+SPJF-tweedie   73.2540     0.8741  2.3725   4070.9296  1515.0461   200.9425  3661.4749       39.5659              inf                NaN             0.0          -1
+## done in 154 s
+## 2026-09-20 04:39:23 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 0 --level 0 --set main --workers 6
+[     2s] primary_rep0_L0_main: k=8 rho_busy=0.5294 (target 0.5) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,156,990 (97.3%); with W_FCFS > 60 s: 35,541 (0.20%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    36s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                 22.1704     0.0000  0.6024      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref               8.3100     1.0000  0.1884   1034.0367   595.9372    69.5882  1034.0367        7.8443              inf                NaN          0.0000          -1
+SPJF-M4              11.9787     0.7353  0.2402   1244.8206   140.7798   112.6599  1244.8206       18.3894              inf                NaN          0.0000          -1
+SPJF-M4refit         11.9157     0.7399  0.2398   1234.3419   142.1805   112.3980  1234.3419       18.2666              inf                NaN          0.0000          -1
+SPJF-tweedie         12.1893     0.7201  0.2397   1242.4782   238.0610   110.9305  1226.5673       17.9912              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     12.1660     0.7218  0.2401   1019.2273   244.9642   108.6474  1019.2273       12.1952              inf                NaN          0.0000          -1
+SPJF-r1s             12.1829     0.7206  0.2385    990.6786   242.7750   124.5463   990.6786        8.7690              inf                NaN          0.0000          -1
+FIX-G300             12.6130     0.6895  0.2867    187.5548   181.7761   138.1343   187.5548        3.5570         300.0000             0.6252          0.0047           0
+FIXSEL-G300          12.8928     0.6694  0.3184    142.9698   132.1101    93.2945   133.3552        2.7496         247.4178             0.5778          0.0186           0
+CAP-G300             12.8444     0.6729  0.2850    189.2976   132.1101   136.5393   189.2976        3.4335         300.0000             0.6310          0.0080           0
+HYB-G300             12.5834     0.6917  0.2829    187.1676    63.5673   138.2351   187.1676        3.3320         300.0000             0.6239          0.2283           0
+SKIP-G300            21.1383     0.0745  0.5588     46.2844    46.2844     4.3855    12.3203        1.1749         300.0000             0.1543          0.4202           0
+FIX-G600             12.3215     0.7106  0.2542    488.1709   238.0610   119.8208   488.1709        7.6640         600.0000             0.8136          0.0008           0
+FIXSEL-G600          12.4820     0.6990  0.2699    295.2978   238.0610   150.9108   295.2978        5.3956         410.2815             0.7197          0.0019           0
+CAP-G600             12.3144     0.7111  0.2593    489.0894   238.0610   121.4475   489.0894        7.7909         600.0000             0.8151          0.0011           0
+HYB-G600             12.3658     0.7074  0.2651    472.8706    93.2162   142.4816   472.8706        6.8445         600.0000             0.7881          0.0018           0
+SKIP-G600            19.6420     0.1824  0.5211     70.2223    59.8118     8.7108    31.1325        1.4002         600.0000             0.1170          0.3409           0
+FIX-G1200            12.2175     0.7181  0.2409   1062.1160   238.0610   110.9305  1059.7349       15.6708        1200.0000             0.8851          0.0000           0
+FIXSEL-G1200         12.3263     0.7102  0.2538    565.2291   238.0610   115.6444   565.2291        8.6244         672.4900             0.8405          0.0008           0
+CAP-G1200            12.1837     0.7205  0.2402    976.6300   238.0610   111.8296   976.6300       10.1347        1200.0000             0.8139          0.0001           0
+HYB-G1200            12.2368     0.7167  0.2489    823.7304    63.5673   144.2589   823.7304        8.4558        1200.0000             0.7892          0.2352           0
+SKIP-G1200           16.9696     0.3752  0.4766     73.9846    64.8169    22.2659    42.5304        1.6435        1200.0000             0.0617          0.2593           0
+SPJF-reversed        33.2242    -0.7975  1.1428   1217.5678   812.1861  1089.7773  1217.5678       12.0221              inf                NaN          0.0000          -1
+CAP-G600-reversed    33.6592    -0.8289  1.0809    486.0615   264.6864   471.2714   486.0615        7.6393         600.0000             0.8101          0.1488           0
+SPJF-random          12.8886     0.6697  0.4265   1307.6556  1250.2017   635.2282  1307.6556       19.3003              inf                NaN          0.0000          -1
+CAP-G600-random      13.1412     0.6514  0.4506    482.1683   261.9240   454.7378   482.1683        7.9913         600.0000             0.8036          0.0243           0
+SPJF-top1short       29.7510    -0.5469  0.9878   1307.3153   826.5737   997.2629  1213.4781       12.3405              inf                NaN          0.0000          -1
+CAP-G600-top1short   30.0296    -0.5670  0.9589    494.1345   270.0305   473.0035   494.1345        7.6406         600.0000             0.8236          0.1343           0
+## done in 36 s
+## 2026-09-20 04:40:01 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 0 --level 1 --set main --workers 6
+[     2s] primary_rep0_L1_main: k=5 rho_busy=0.8471 (target 0.8) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,013,840 (90.8%); with W_FCFS > 60 s: 236,468 (1.34%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    36s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                109.7080     0.0000  4.1060      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              34.1863     1.0000  0.9655   2667.4241   774.8472    45.5815  2667.4241       19.5630              inf                NaN          0.0000          -1
+SPJF-M4              44.6934     0.8609  1.2398   3055.1176   241.4443   158.4125  3055.1176       33.8104              inf                NaN          0.0000          -1
+SPJF-M4refit         44.7664     0.8599  1.2418   3055.1233   241.4295   158.5032  3055.1233       33.8103              inf                NaN          0.0000          -1
+SPJF-tweedie         43.8625     0.8719  1.2304   3044.4703   249.1842   146.5855  3044.4703       36.9333              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     43.8706     0.8718  1.2302   2691.2412   222.6900   144.0363  2691.2412       31.3718              inf                NaN          0.0000          -1
+SPJF-r1s             43.1173     0.8817  1.2284   2657.6554   250.5962   159.2707  2657.6554       19.1491              inf                NaN          0.0000          -1
+FIX-G300             53.5977     0.7430  2.0493    214.1233   177.0591   150.0240   205.7737        3.8618         300.0000             0.7137          0.1144           0
+FIXSEL-G300          62.3090     0.6276  2.3603    155.6305   120.1755    93.3571   146.1746        3.1236         238.4178             0.6528          0.2112           0
+CAP-G300             55.9740     0.7115  2.0722    202.5536    86.6528   148.9061   202.5536        3.5250         300.0000             0.6752          0.1219           0
+HYB-G300             55.0322     0.7240  2.0643    214.1211   117.5523   149.7063   205.8074        3.7563         300.0000             0.7137          0.1837           0
+SKIP-G300           109.3178     0.0052  3.9592     57.4421    53.1605     3.2987    29.4408        1.4673         300.0000             0.1915          0.8018           0
+FIX-G600             47.4309     0.8246  1.5509    507.9580   249.1842   419.6235   507.9580        8.4155         600.0000             0.8466          0.0118           0
+FIXSEL-G600          49.7215     0.7943  1.7979    306.1960   248.9780   247.3152   306.1960        5.3010         401.2815             0.7630          0.0563           0
+CAP-G600             47.8387     0.8192  1.5309    513.8331   188.8502   381.3331   513.8331        7.2151         600.0000             0.8564          0.0123           0
+HYB-G600             47.8339     0.8193  1.5248    496.4557   106.1074   397.7684   496.4557        8.4054         600.0000             0.8274          0.0130           0
+SKIP-G600           108.9690     0.0098  3.7963     76.3636    54.1788     7.6269    58.4771        1.9465         600.0000             0.1273          0.7337           0
+FIX-G1200            45.8177     0.8460  1.3869   1103.9312   249.1842   196.8475  1103.9312       18.3790        1200.0000             0.9199          0.0024           0
+FIXSEL-G1200         47.1654     0.8281  1.5093    574.1336   249.1842   329.6575   574.1336        9.5499         663.4900             0.8653          0.0092           0
+CAP-G1200            45.7655     0.8467  1.3662   1099.9828   249.1842   193.4281  1099.9828       10.6492        1200.0000             0.9167          0.0027           0
+HYB-G1200            47.5853     0.8226  1.4188   1086.6666   117.5523   256.3221  1086.6666        9.3797        1200.0000             0.9056          0.1000           0
+SKIP-G1200          107.5325     0.0288  3.5585    103.3365    60.8476    14.4034    86.7875        2.4054        1200.0000             0.0861          0.6512           0
+SPJF-reversed       218.0718    -1.4349  7.6156   3387.8909  3387.8909  1663.3006  2987.9469       21.1166              inf                NaN          0.0000          -1
+CAP-G600-reversed   220.5381    -1.4675  6.9289    512.4809   314.0001   481.0504   512.4809        8.4864         600.0000             0.8541          0.3143           0
+SPJF-random          75.4636     0.4534  2.7737   3319.4227  3257.8537  1071.7753  3186.2705       34.9458              inf                NaN          0.0000          -1
+CAP-G600-random      84.0051     0.3403  3.1923    501.2349   337.5131   462.7205   501.2349        8.2837         600.0000             0.8354          0.1382           0
+SPJF-top1short      207.0599    -1.2891  6.4524   3292.0641  3181.7069  1524.9568  3002.4336       21.1691              inf                NaN          0.0000          -1
+CAP-G600-top1short  211.9869    -1.3543  6.1584    512.2293   308.4754   482.9872   512.2293        8.2157         600.0000             0.8537          0.2763           0
+## done in 36 s
+## 2026-09-20 04:40:39 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 0 --level 2 --set main --workers 6
+[     2s] primary_rep0_L2_main: k=4 rho_busy=1.0589 (target 1.0) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,184,765 (86.1%); with W_FCFS > 60 s: 599,175 (3.40%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    37s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl   w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                     
+FCFS                263.1202     0.0000  10.0987      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              42.8808     1.0000   1.6498   4755.4670  1101.4794    14.8511  4755.4670       50.3630              inf                NaN          0.0000          -1
+SPJF-M4              66.5706     0.8924   2.2955   5882.9188   483.2014   162.2047  5882.9188       43.2827              inf                NaN          0.0000          -1
+SPJF-M4refit         66.7525     0.8916   2.3003   5896.5786   479.3118   163.0974  5896.5786       43.2827              inf                NaN          0.0000          -1
+SPJF-tweedie         62.2255     0.9122   2.2402   5904.5174   462.7203   155.0541  5904.5174       78.2995              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     62.1832     0.9124   2.2401   5448.9042   355.7582   153.9975  5448.9042       65.0823              inf                NaN          0.0000          -1
+SPJF-r1s             61.2577     0.9166   2.2516   5368.1557   372.5808   165.9260  5368.1557       26.5832              inf                NaN          0.0000          -1
+FIX-G300            163.9905     0.4501   5.3885    214.1944   198.7915   159.3404   212.8159        4.2091         300.0000             0.7140          0.2787           0
+FIXSEL-G300         209.4680     0.2436   6.2552    163.0335   116.8746    99.3114   163.0335        3.1739         232.4178             0.7015          0.4100           0
+CAP-G300            159.2606     0.4716   5.4755    226.1264   103.3667   157.9173   226.1264        3.8643         300.0000             0.7538          0.2866           0
+HYB-G300            165.3374     0.4440   5.4200    214.1952    99.4546   159.6328   209.6629        4.3912         300.0000             0.7140          0.3062           0
+SKIP-G300           262.8515     0.0012   9.8735     65.4711    45.8400     3.1643    48.4463        1.5580         300.0000             0.2182          0.9013           0
+FIX-G600             85.8167     0.8050   3.8242    510.6829   450.3380   450.3441   510.6829        8.7870         600.0000             0.8511          0.0793           0
+FIXSEL-G600         114.1014     0.6766   4.6396    308.7480   267.3512   247.2487   308.7480        5.6085         395.2815             0.7811          0.1688           0
+CAP-G600             88.0497     0.7949   3.7637    510.6834   259.3807   450.3030   510.6834        7.4818         600.0000             0.8511          0.0781           0
+HYB-G600             89.8919     0.7865   3.8194    510.6833   103.2411   450.3148   510.6833        8.7888         600.0000             0.8511          0.0807           0
+SKIP-G600           262.5456     0.0026   9.6076    100.4235    62.5342     6.6527    79.0192        1.9102         600.0000             0.1674          0.8587           0
+FIX-G1200            72.2769     0.8665   2.9910   1107.6817   462.7203   339.8813  1107.6817       18.2550        1200.0000             0.9231          0.0082           0
+FIXSEL-G1200         82.4048     0.8205   3.6167    564.4761   462.7203   507.7434   564.4761        9.4663         657.4900             0.8585          0.0622           0
+CAP-G1200            72.3154     0.8664   2.9395   1107.2055   370.4060   334.1243  1107.2055       10.9963        1200.0000             0.9227          0.0097           0
+HYB-G1200            81.5934     0.8242   3.0138   1107.2001    99.4546   403.8677  1107.2001       13.5591        1200.0000             0.9227          0.0643           0
+SKIP-G1200          262.8495     0.0012   9.1808    118.8931    84.7016    11.9468    86.1344        2.4033        1200.0000             0.0991          0.8014           0
+SPJF-reversed       521.0554    -1.1712  18.7076   6295.6521  5248.8356  2379.0193  5797.2856       45.9718              inf                NaN          0.0000          -1
+CAP-G600-reversed   505.4991    -1.1005  16.4704    530.9414   278.3106   487.6114   530.9414        8.5849         600.0000             0.8849          0.4416           0
+SPJF-random         183.8038     0.3601   6.6550   6235.4935  6173.5747  1436.4968  6030.2507       84.7346              inf                NaN          0.0000          -1
+CAP-G600-random     248.4216     0.0667   8.1231    520.7344   328.1226   467.1069   520.7344        8.3940         600.0000             0.8679          0.2526           0
+SPJF-top1short      493.4949    -1.0460  15.3477   6108.8603  3244.2250  2033.0221  5823.9221       76.3846              inf                NaN          0.0000          -1
+CAP-G600-top1short  509.2204    -1.1174  14.6918    522.9176   316.6096   487.0126   522.9176        8.3834         600.0000             0.8715          0.4050           0
+## done in 37 s
+## 2026-09-20 04:41:17 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 1 --level 0 --set main --workers 6
+[     2s] primary_rep1_L0_main: k=8 rho_busy=0.4942 (target 0.5) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,182,836 (97.4%); with W_FCFS > 60 s: 38,816 (0.22%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    34s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                 21.2035     0.0000  0.5806      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref               7.5627     1.0000  0.1767    854.0661   442.0649    61.1868   854.0661        9.0442              inf                NaN          0.0000          -1
+SPJF-M4              10.8169     0.7614  0.2249   1077.8610   148.0077   107.6471  1077.8610       14.0631              inf                NaN          0.0000          -1
+SPJF-M4refit         10.8041     0.7624  0.2253   1077.9504   147.9171   108.7913  1077.9504       14.0234              inf                NaN          0.0000          -1
+SPJF-tweedie         10.8987     0.7554  0.2234   1083.2970    89.7864   116.7898  1083.2970       14.1078              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     10.8415     0.7596  0.2220    864.3125   123.4612   102.9814   864.3125       10.6557              inf                NaN          0.0000          -1
+SPJF-r1s             11.2011     0.7333  0.2238    862.9927   152.3750   120.1909   862.9927        8.1870              inf                NaN          0.0000          -1
+FIX-G300             11.2226     0.7317  0.2668    183.9105    89.7864   140.2350   183.9105        3.5804         300.0000             0.6130          0.0050           0
+FIXSEL-G300          11.3578     0.7218  0.2878    136.0944    89.7864    92.8926   136.0944        2.7612         247.4178             0.5501          0.0145           0
+CAP-G300             11.3852     0.7198  0.2594    183.9284    89.7864   138.2252   183.9284        3.6715         300.0000             0.6131          0.0087           0
+HYB-G300             11.1872     0.7343  0.2629    183.9490    61.2194   138.6508   183.9490        3.5895         300.0000             0.6132          0.2342           0
+SKIP-G300            19.9478     0.0921  0.5372     46.2082    46.2082     4.3946    12.3203        1.1749         300.0000             0.1540          0.4280           0
+FIX-G600             10.9913     0.7487  0.2367    491.2094    89.7864   119.8536   491.2094        7.7552         600.0000             0.8187          0.0007           0
+FIXSEL-G600          10.9803     0.7495  0.2417    307.1762    89.7864   139.7168   307.1762        5.4443         410.2815             0.7487          0.0015           0
+CAP-G600             10.9632     0.7507  0.2379    489.2681    89.7864   120.5803   489.2681        6.4526         600.0000             0.8154          0.0008           0
+HYB-G600             10.9280     0.7533  0.2312    470.0933    83.6931   133.8598   470.0933        6.5525         600.0000             0.7835          0.0009           0
+SKIP-G600            17.9716     0.2369  0.4985     71.0109    50.6830    12.6312    31.3604        1.4389         600.0000             0.1184          0.3501           0
+FIX-G1200            10.9020     0.7552  0.2235   1065.2785    89.7864   116.7898  1065.2785       14.1078        1200.0000             0.8877          0.0000           0
+FIXSEL-G1200         10.9423     0.7522  0.2304    565.6172    89.7864   117.6872   563.1605        8.4923         672.4900             0.8411          0.0004           0
+CAP-G1200            10.8832     0.7566  0.2241    814.1358    89.7864   117.3743   814.1358       10.1175        1200.0000             0.6784          0.0001           0
+HYB-G1200            10.9531     0.7515  0.2299    871.4608    61.2194   143.6614   871.4608       12.4468        1200.0000             0.8600          0.2415           0
+SKIP-G1200           15.4574     0.4212  0.4549     85.6100    54.6639    19.7630    73.5570        1.9642        1200.0000             0.0713          0.2688           0
+SPJF-reversed        31.7388    -0.7723  1.1506   1114.7644   958.2591   905.3941  1114.7644       14.7621              inf                NaN          0.0000          -1
+CAP-G600-reversed    32.1638    -0.8035  1.0975    489.8949   230.9364   470.4329   489.8949        7.5541         600.0000             0.8165          0.1324           0
+SPJF-random          12.2006     0.6600  0.4118   1113.3099   950.6230   610.4698  1113.3099       15.1192              inf                NaN          0.0000          -1
+CAP-G600-random      12.3839     0.6466  0.4255    489.9349   269.0737   451.4182   489.9349        7.7827         600.0000             0.8166          0.0183           0
+SPJF-top1short       28.4836    -0.5337  0.9788   1096.7220  1076.4828   798.9349  1081.7568       14.0506              inf                NaN          0.0000          -1
+CAP-G600-top1short   28.9600    -0.5686  0.9526    493.6506   227.9034   474.5895   493.6506        7.6639         600.0000             0.8228          0.1180           0
+## done in 34 s
+## 2026-09-20 04:41:53 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 1 --level 1 --set main --workers 6
+[     2s] primary_rep1_L1_main: k=5 rho_busy=0.7907 (target 0.8) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,023,981 (90.9%); with W_FCFS > 60 s: 249,075 (1.41%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    39s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                111.4636     0.0000  4.2733      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              32.2131     1.0000  0.9177   2410.5084   255.4372    51.4468  2410.5084       24.9661              inf                NaN          0.0000          -1
+SPJF-M4              42.6237     0.8686  1.1919   2814.9300   390.8841   149.9904  2814.9300       30.2517              inf                NaN          0.0000          -1
+SPJF-M4refit         42.6273     0.8686  1.1924   2814.9129   390.4717   149.0017  2814.9129       30.2516              inf                NaN          0.0000          -1
+SPJF-tweedie         41.2068     0.8865  1.1733   2846.3936   264.4993   140.7059  2846.3936       46.1513              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     41.0501     0.8885  1.1723   2512.3208   208.3600   135.5429  2512.3208       40.9581              inf                NaN          0.0000          -1
+SPJF-r1s             40.8208     0.8914  1.1714   2483.0791   266.3374   150.4247  2483.0791       25.5345              inf                NaN          0.0000          -1
+FIX-G300             50.9633     0.7634  2.0794    198.2737   174.0038   149.8985   196.7825        3.9127         300.0000             0.6609          0.1205           0
+FIXSEL-G300          61.2352     0.6338  2.4291    153.8710   140.5702    94.2905   153.8710        3.1803         238.4178             0.6454          0.2303           0
+CAP-G300             53.2617     0.7344  2.0842    207.1406   113.9905   148.6635   207.1406        3.5681         300.0000             0.6905          0.1232           0
+HYB-G300             51.3267     0.7588  2.0674    198.2923   108.7653   148.9390   196.6151        3.9128         300.0000             0.6614          0.1839           0
+SKIP-G300           111.1096     0.0045  4.1297     64.1504    58.7767     3.4740    64.1504        1.7389         300.0000             0.2138          0.8225           0
+FIX-G600             44.9646     0.8391  1.5114    511.3087   264.4993   443.1481   511.3087        8.8789         600.0000             0.8522          0.0122           0
+FIXSEL-G600          47.5458     0.8065  1.7693    296.1367   252.9020   248.3052   295.2034        5.2764         401.2815             0.7380          0.0505           0
+CAP-G600             45.3351     0.8344  1.4751    489.4102   206.8726   438.7539   489.4102        7.4249         600.0000             0.8157          0.0129           0
+HYB-G600             45.5941     0.8312  1.4774    495.0967   109.9314   443.9560   495.0967        8.4218         600.0000             0.8390          0.0143           0
+SKIP-G600           110.6205     0.0106  3.9693     97.5376    63.5414     7.0463    81.0884        1.9340         600.0000             0.1626          0.7633           0
+FIX-G1200            43.3750     0.8592  1.3378   1110.9289   264.4993   178.8553  1110.9289       18.4620        1200.0000             0.9258          0.0024           0
+FIXSEL-G1200         44.6865     0.8426  1.4700    565.3482   264.4993   439.5600   565.3482        9.5505         663.4900             0.8521          0.0088           0
+CAP-G1200            43.1706     0.8617  1.3149   1098.6158   264.4993   200.6807  1098.6158       10.5434        1200.0000             0.9155          0.0026           0
+HYB-G1200            44.3026     0.8475  1.3482   1080.6291   108.7653   283.7341  1080.6291        8.5305        1200.0000             0.9005          0.1012           0
+SKIP-G1200          109.1059     0.0298  3.7368    113.9551    83.5539    13.8556   100.7176        2.4778        1200.0000             0.0950          0.6910           0
+SPJF-reversed       218.5583    -1.3513  8.1292   3076.3412  1820.9504  1762.8882  2816.4979       37.4975              inf                NaN          0.0000          -1
+CAP-G600-reversed   227.3489    -1.4623  7.3205    513.5491   323.4062   480.5489   513.5491        8.6658         600.0000             0.8559          0.3736           0
+SPJF-random          74.6205     0.4649  2.9548   3074.0481  2161.8949  1169.4579  2850.0898       36.4053              inf                NaN          0.0000          -1
+CAP-G600-random      84.9322     0.3348  3.4326    504.5105   325.9795   463.1432   504.5105        8.6628         600.0000             0.8409          0.1657           0
+SPJF-top1short      204.3433    -1.1720  6.8203   2948.2476  1539.1425  1577.3725  2787.8557       45.0394              inf                NaN          0.0000          -1
+CAP-G600-top1short  218.4433    -1.3499  6.5232    508.8908   305.6148   482.8890   508.8908        8.7486         600.0000             0.8482          0.3376           0
+## done in 40 s
+## 2026-09-20 04:42:39 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 1 --level 2 --set main --workers 6
+[     6s] primary_rep1_L2_main: k=4 rho_busy=0.9884 (target 1.0) n=17,634,760 weeks=30 policies=28
+[    12s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,176,210 (86.1%); with W_FCFS > 60 s: 599,340 (3.40%)
+[    13s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    43s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl   w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                     
+FCFS                277.8373     0.0000  10.8652      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              43.3656     1.0000   1.6852   4030.3125   379.8092    14.6291  4030.3125       40.3499              inf                NaN          0.0000          -1
+SPJF-M4              65.0198     0.9076   2.3102   5103.4421   352.1729   170.7830  5103.4421       45.6976              inf                NaN          0.0000          -1
+SPJF-M4refit         65.1128     0.9073   2.3144   5103.3779   352.0779   172.5425  5103.3779       45.6976              inf                NaN          0.0000          -1
+SPJF-tweedie         60.6784     0.9262   2.2662   5099.8912   646.8714   157.7870  5099.8912       54.8060              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     61.2449     0.9237   2.2781   4678.8165   493.0048   164.2657  4678.8165       49.5810              inf                NaN          0.0000          -1
+SPJF-r1s             60.6976     0.9261   2.2765   4605.3305   622.0065   172.2997  4605.3305       26.1403              inf                NaN          0.0000          -1
+FIX-G300            171.5761     0.4532   6.0214    215.5266   208.1596   161.3994   214.1899        4.1820         300.0000             0.7184          0.3229           0
+FIXSEL-G300         227.9917     0.2126   6.9506    165.1068   150.4639    93.9371   165.1068        3.4930         232.4178             0.7104          0.4551           0
+CAP-G300            163.3806     0.4881   6.0705    217.9889   104.6878   160.4908   217.9889        3.7814         300.0000             0.7266          0.3219           0
+HYB-G300            171.2498     0.4546   6.0418    214.6109    98.0633   161.7368   214.6109        4.0106         300.0000             0.7229          0.3446           0
+SKIP-G300           277.5520     0.0012  10.6457     65.4817    52.7216     3.0991    64.1504        1.7389         300.0000             0.2183          0.9147           0
+FIX-G600             84.6555     0.8239   4.1010    515.8403   450.9349   450.3756   515.8403        8.8866         600.0000             0.8597          0.0784           0
+FIXSEL-G600         112.8206     0.7038   5.1010    306.3967   277.4872   246.9273   306.3967        5.4264         395.2815             0.7751          0.1993           0
+CAP-G600             86.6803     0.8153   4.0375    515.8429   233.1097   450.3700   515.8429        7.4162         600.0000             0.8597          0.0752           0
+HYB-G600             88.0641     0.8094   4.0773    515.8379   123.4190   450.3942   515.8379        8.5238         600.0000             0.8597          0.0750           0
+SKIP-G600           277.5881     0.0011  10.3904    107.2558    54.1412     6.8777   101.5615        2.1130         600.0000             0.1788          0.8779           0
+FIX-G1200            69.7913     0.8873   3.0938   1116.4944   646.8714   407.5897  1116.4944       18.6403        1200.0000             0.9304          0.0077           0
+FIXSEL-G1200         80.6915     0.8408   3.9147    567.1123   510.8773   507.8284   567.1123        9.7139         657.4900             0.8625          0.0647           0
+CAP-G1200            69.9974     0.8864   2.9757   1110.6431   444.7943   356.7927  1110.6431       11.6800        1200.0000             0.9255          0.0080           0
+HYB-G1200            79.3623     0.8465   3.2342   1110.6399    98.0633   490.8158  1110.6399       12.8570        1200.0000             0.9255          0.0605           0
+SKIP-G1200          277.8684    -0.0001   9.9806    144.4814    84.8390    12.5161   114.0710        2.2624        1200.0000             0.1204          0.8281           0
+SPJF-reversed       567.1998    -1.2341  20.1704   5432.9949  3749.2119  2462.8961  5089.7910       62.6259              inf                NaN          0.0000          -1
+CAP-G600-reversed   565.7295    -1.2278  17.6078    525.0135   289.9067   490.2938   525.0135        9.0873         600.0000             0.8750          0.4786           0
+SPJF-random         191.8163     0.3669   7.3465   5420.3787  3772.1538  1629.0697  5057.5402       57.4226              inf                NaN          0.0000          -1
+CAP-G600-random     264.1506     0.0584   9.0006    510.8985   331.1086   470.0892   510.8985        8.8632         600.0000             0.8515          0.2818           0
+SPJF-top1short      537.8297    -1.1088  16.5830   5458.6544  3399.0374  2180.6021  5032.1102       61.4492              inf                NaN          0.0000          -1
+CAP-G600-top1short  565.7118    -1.2278  15.6793    523.1898   296.3080   488.8066   523.1898        9.0207         600.0000             0.8720          0.4346           0
+## done in 43 s
+## 2026-09-20 04:43:31 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 2 --level 0 --set main --workers 6
+[     2s] primary_rep2_L0_main: k=8 rho_busy=0.4901 (target 0.5) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,130,247 (97.1%); with W_FCFS > 60 s: 40,709 (0.23%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    37s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                 26.8419     0.0000  0.6604      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              10.4898     1.0000  0.2211    695.6382   476.8432    78.3350   695.6382        7.2896              inf                NaN          0.0000          -1
+SPJF-M4              14.6350     0.7465  0.2854    869.3420   396.4446   140.5126   869.3420       11.9761              inf                NaN          0.0000          -1
+SPJF-M4refit         14.6416     0.7461  0.2859    863.6946   396.4730   139.4392   863.6946       12.2989              inf                NaN          0.0000          -1
+SPJF-tweedie         14.6193     0.7475  0.2826    861.4499   229.0067   132.6042   861.4499       12.0871              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     14.6602     0.7450  0.2823    649.9013   248.7665   123.3754   649.9013        9.2240              inf                NaN          0.0000          -1
+SPJF-r1s             14.8562     0.7330  0.2817    658.6688   236.5741   128.0407   658.6688        8.9472              inf                NaN          0.0000          -1
+FIX-G300             15.0617     0.7204  0.3284    201.1524   187.8596   142.1969   185.7061        3.5779         300.0000             0.6705          0.0067           0
+FIXSEL-G300          15.5157     0.6926  0.3611    134.0477   134.0477    88.3874   123.0629        2.7166         247.4178             0.5418          0.0192           0
+CAP-G300             15.4529     0.6965  0.3287    192.9896    98.9070   137.8577   192.9896        3.5019         300.0000             0.6433          0.0148           0
+HYB-G300             15.0367     0.7219  0.3288    201.1524    71.3143   140.5657   185.7159        3.4540         300.0000             0.6705          0.2117           0
+SKIP-G300            25.4283     0.0864  0.6125     51.6510    36.8592     3.7190    18.7144        1.2406         300.0000             0.1722          0.4436           0
+FIX-G600             14.7698     0.7383  0.2926    472.7865   229.0067   138.6002   472.7865        8.0330         600.0000             0.7880          0.0005           0
+FIXSEL-G600          14.8975     0.7305  0.3055    290.1073   229.0067   237.6956   290.1073        5.2439         410.2815             0.7071          0.0032           0
+CAP-G600             14.7903     0.7370  0.2954    488.6210   229.0067   139.2274   488.6210        6.9504         600.0000             0.8144          0.0015           0
+HYB-G600             14.7491     0.7395  0.2910    489.9211   105.9849   153.7561   489.9211        6.7992         600.0000             0.8165          0.0009           0
+SKIP-G600            24.0128     0.1730  0.5712     63.0977    40.2699     8.6742    35.8001        1.4545         600.0000             0.1052          0.3609           0
+FIX-G1200            14.6193     0.7475  0.2826    861.4499   229.0067   132.6042   861.4499       12.0871        1200.0000             0.7179          0.0000           0
+FIXSEL-G1200         14.6842     0.7435  0.2868    544.3142   229.0067   134.4519   540.3273        8.8550         672.4900             0.8094          0.0002           0
+CAP-G1200            14.6299     0.7468  0.2826    820.3616   229.0067   132.9235   820.3616        9.9822        1200.0000             0.6836          0.0000           0
+HYB-G1200            14.6831     0.7436  0.2882    595.3151    71.3143   148.3522   595.3151        6.7992        1200.0000             0.8225          0.2173           0
+SKIP-G1200           20.7839     0.3705  0.5236     78.2332    57.6752    20.1488    38.0977        1.5757        1200.0000             0.0652          0.2765           0
+SPJF-reversed        40.1379    -0.8131  1.1833    861.2511   618.1519   757.7588   861.2511       12.2918              inf                NaN          0.0000          -1
+CAP-G600-reversed    40.6574    -0.8449  1.1420    497.1223   231.9390   459.4829   497.1223        7.3986         600.0000             0.8285          0.1155           0
+SPJF-random          16.7078     0.6197  0.4784    956.7599   956.7599   572.5460   841.2338       11.7406              inf                NaN          0.0000          -1
+CAP-G600-random      16.9205     0.6067  0.4908    476.8967   323.9798   447.1450   476.8967        6.9559         600.0000             0.7948          0.0206           0
+SPJF-top1short       35.4042    -0.5236  1.0025    919.7150   498.9730   702.4103   853.7259       12.0876              inf                NaN          0.0000          -1
+CAP-G600-top1short   35.7166    -0.5427  0.9903    495.7049   228.8678   468.6179   495.7049        6.9233         600.0000             0.8262          0.0970           0
+## done in 37 s
+## 2026-09-20 04:44:10 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 2 --level 1 --set main --workers 6
+[     2s] primary_rep2_L1_main: k=5 rho_busy=0.7842 (target 0.8) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,018,471 (90.8%); with W_FCFS > 60 s: 254,363 (1.44%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    35s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                120.1386     0.0000  4.1611      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              33.3534     1.0000  0.9491   1837.9739   578.0904    64.0384  1837.9739       22.1017              inf                NaN          0.0000          -1
+SPJF-M4              45.1012     0.8646  1.2504   2438.9160   259.3722   164.6835  2438.9160       37.1948              inf                NaN          0.0000          -1
+SPJF-M4refit         45.0807     0.8649  1.2477   2438.9186   259.3623   164.4414  2438.9186       37.1950              inf                NaN          0.0000          -1
+SPJF-tweedie         44.2265     0.8747  1.2304   2418.9025   469.2562   155.2298  2418.9025       36.4340              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     44.3295     0.8735  1.2325   2144.3708   235.3579   150.7281  2144.3708       34.4771              inf                NaN          0.0000          -1
+SPJF-r1s             43.6326     0.8816  1.2302   2104.9821   380.4443   158.8892  2104.9821       14.4952              inf                NaN          0.0000          -1
+FIX-G300             54.8679     0.7521  2.0194    210.9248   175.2516   149.5670   202.1949        4.1632         300.0000             0.7031          0.0974           0
+FIXSEL-G300          65.4875     0.6297  2.3173    145.5268   110.9330    93.1105   144.0799        3.0090         238.4178             0.6104          0.2019           0
+CAP-G300             56.3742     0.7347  2.0288    205.0736   110.9330   148.7620   205.0736        3.8950         300.0000             0.6836          0.1085           0
+HYB-G300             55.8154     0.7412  2.0219    205.0873    94.3969   149.2995   205.0873        3.9355         300.0000             0.6836          0.1636           0
+SKIP-G300           120.1986    -0.0007  4.0118     64.1504    57.3012     3.3959    64.1504        1.7389         300.0000             0.2138          0.8069           0
+FIX-G600             47.7314     0.8343  1.5184    502.5814   446.7270   434.2259   502.5814        8.5102         600.0000             0.8376          0.0101           0
+FIXSEL-G600          50.5820     0.8015  1.7739    315.3342   256.8601   247.1566   315.3342        5.8867         401.2815             0.7858          0.0439           0
+CAP-G600             48.2667     0.8282  1.5395    492.1145   162.1491   372.3185   492.1145        7.2813         600.0000             0.8202          0.0119           0
+HYB-G600             48.5262     0.8252  1.5459    502.9354   110.9330   407.8958   502.9354        8.3613         600.0000             0.8382          0.0129           0
+SKIP-G600           119.5309     0.0070  3.8437     97.5376    60.9545     7.0997    81.0884        1.9619         600.0000             0.1626          0.7436           0
+FIX-G1200            45.9034     0.8554  1.3911   1095.4009   469.2562   228.9885  1095.4009       18.9552        1200.0000             0.9128          0.0019           0
+FIXSEL-G1200         47.4878     0.8371  1.4865    562.7007   469.2562   359.2244   562.7007        9.7361         663.4900             0.8481          0.0076           0
+CAP-G1200            45.7793     0.8568  1.3648   1102.3187   373.7508   206.1002  1102.3187       10.9644        1200.0000             0.9186          0.0024           0
+HYB-G1200            47.5182     0.8368  1.3942   1101.0715    94.3969   252.3470  1101.0715        8.7548        1200.0000             0.9176          0.0981           0
+SKIP-G1200          118.3514     0.0206  3.5969    128.6483    66.8189    14.4673    82.9724        2.0060        1200.0000             0.1072          0.6644           0
+SPJF-reversed       231.2665    -1.2805  7.6455   2708.6386  2484.8489  1545.6657  2411.6981       30.2193              inf                NaN          0.0000          -1
+CAP-G600-reversed   234.4914    -1.3177  7.0237    506.4097   300.9574   484.1782   506.4097        7.8259         600.0000             0.8440          0.3033           0
+SPJF-random          83.1431     0.4263  2.8693   2678.5732  2451.9623  1011.1822  2376.5409       34.7532              inf                NaN          0.0000          -1
+CAP-G600-random      92.9081     0.3138  3.2361    493.1651   352.3067   462.2417   493.1651        8.5264         600.0000             0.8219          0.1225           0
+SPJF-top1short      216.6067    -1.1116  6.4124   2627.7651  1956.2024  1359.1331  2384.0385       37.3998              inf                NaN          0.0000          -1
+CAP-G600-top1short  224.9229    -1.2074  6.1699    507.8832   293.3508   482.6395   507.8832        8.6111         600.0000             0.8465          0.2592           0
+## done in 35 s
+## 2026-09-20 04:44:47 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 2 --level 2 --set main --workers 6
+[     2s] primary_rep2_L2_main: k=4 rho_busy=0.9802 (target 1.0) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,170,667 (86.0%); with W_FCFS > 60 s: 631,298 (3.58%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    36s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl   w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                     
+FCFS                264.6694     0.0000  10.3078      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              44.5242     1.0000   1.7451   3571.4015   960.8376    28.5407  3571.4015       32.5287              inf                NaN          0.0000          -1
+SPJF-M4              70.0352     0.8841   2.4213   4196.5655   455.6722   171.4263  4196.5655       45.4980              inf                NaN          0.0000          -1
+SPJF-M4refit         70.2667     0.8831   2.4217   4196.5476   455.8806   172.1184  4196.5476       45.4980              inf                NaN          0.0000          -1
+SPJF-tweedie         64.9651     0.9071   2.3549   4196.4788   708.7601   164.4280  4196.4788       54.4849              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     65.0259     0.9069   2.3615   3860.0983   529.0085   167.5555  3860.0983       44.6943              inf                NaN          0.0000          -1
+SPJF-r1s             65.0526     0.9068   2.3632   3603.9892   879.1565   173.5766  3603.9892       24.5164              inf                NaN          0.0000          -1
+FIX-G300            165.1739     0.4520   5.5085    212.0101   202.3430   156.1806   212.0101        4.2369         300.0000             0.7067          0.2782           0
+FIXSEL-G300         218.4288     0.2100   6.3579    164.0629   158.4219    95.3938   164.0629        3.0161         232.4178             0.7059          0.4131           0
+CAP-G300            162.6778     0.4633   5.5453    228.9148   118.8212   154.7266   228.9148        3.7780         300.0000             0.7630          0.2819           0
+HYB-G300            166.5697     0.4456   5.5112    231.4024    91.7142   156.1705   231.4024        4.2759         300.0000             0.7713          0.3054           0
+SKIP-G300           264.5754     0.0004  10.0831     80.4702    46.0040     3.0847    64.1504        1.7389         300.0000             0.2682          0.9042           0
+FIX-G600             88.2014     0.8016   3.8903    510.4146   460.8261   450.7086   510.4146        9.2175         600.0000             0.8507          0.0732           0
+FIXSEL-G600         117.5969     0.6681   4.6754    310.3445   292.0873   247.0214   310.3445        5.9965         395.2815             0.7851          0.1652           0
+CAP-G600             91.5526     0.7864   3.8893    510.8701   339.0565   450.6520   510.8701        7.7840         600.0000             0.8515          0.0716           0
+HYB-G600             94.3157     0.7738   3.8908    508.9109   118.2856   450.7115   508.9109        8.5178         600.0000             0.8482          0.0704           0
+SKIP-G600           263.9189     0.0034   9.8159    107.4236    63.2299     7.1874   101.5615        2.1246         600.0000             0.1790          0.8636           0
+FIX-G1200            75.2248     0.8605   3.0995   1096.9930   708.7601   367.4233  1096.9930       18.2976        1200.0000             0.9142          0.0066           0
+FIXSEL-G1200         85.3954     0.8143   3.7531    566.1236   520.3953   507.9283   566.1236        9.7857         657.4900             0.8610          0.0584           0
+CAP-G1200            75.9276     0.8574   2.9998   1120.4296   423.8312   305.8808  1120.4296       12.1825        1200.0000             0.9337          0.0076           0
+HYB-G1200            85.5470     0.8137   3.2132   1106.8075    91.7142   427.5361  1106.8075       11.9351        1200.0000             0.9223          0.0608           0
+SKIP-G1200          263.7461     0.0042   9.3870    142.6720    96.9087    13.5721   129.9017        3.1395        1200.0000             0.1189          0.8076           0
+SPJF-reversed       542.8002    -1.2634  18.7597   4594.5523  3626.8357  2205.6530  4178.1946       62.3706              inf                NaN          0.0000          -1
+CAP-G600-reversed   526.6558    -1.1901  16.7482    526.6140   259.6761   488.7659   526.6140        8.6967         600.0000             0.8777          0.4331           0
+SPJF-random         203.8521     0.2763   6.9219   4528.7565  3637.0265  1386.5993  4141.4159       62.4289              inf                NaN          0.0000          -1
+CAP-G600-random     266.4885    -0.0083   8.3119    513.1294   332.8642   468.1064   513.1294        9.0292         600.0000             0.8552          0.2462           0
+SPJF-top1short      510.2246    -1.1154  15.4356   4622.2762  3320.6186  1912.8196  4136.1106       53.9995              inf                NaN          0.0000          -1
+CAP-G600-top1short  522.3496    -1.1705  14.8587    527.2780   324.5892   486.8220   527.2780        8.6691         600.0000             0.8788          0.3838           0
+## done in 36 s
+## 2026-09-20 04:45:24 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 3 --level 0 --set main --workers 6
+[     2s] primary_rep3_L0_main: k=8 rho_busy=0.4813 (target 0.5) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 17,162,678 (97.3%); with W_FCFS > 60 s: 42,043 (0.24%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    35s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                 24.0551     0.0000  0.6490      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref               9.3150     1.0000  0.1986    796.5416    67.1412    87.0928   796.5416        7.9974              inf                NaN          0.0000          -1
+SPJF-M4              13.2031     0.7362  0.2607    939.2336   146.2166   133.4407   939.2336       12.3071              inf                NaN          0.0000          -1
+SPJF-M4refit         13.2184     0.7352  0.2609    939.2408   146.2178   133.4428   939.2408       12.9680              inf                NaN          0.0000          -1
+SPJF-tweedie         13.1167     0.7421  0.2575    932.9352    89.3280   149.0605   932.9352       12.8432              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     13.0740     0.7450  0.2573    745.4318   122.8558   134.5607   745.4318        9.3330              inf                NaN          0.0000          -1
+SPJF-r1s             13.3740     0.7246  0.2555    742.3197    69.9567   146.3537   742.3197        6.5390              inf                NaN          0.0000          -1
+FIX-G300             13.4386     0.7202  0.3080    191.5020    89.3280   138.0051   175.0326        3.3086         300.0000             0.6383          0.0064           0
+FIXSEL-G300          13.7428     0.6996  0.3440    132.5995    89.3280    91.3264   132.5995        2.6891         247.4178             0.5359          0.0201           0
+CAP-G300             13.6434     0.7064  0.3059    181.0717    89.3280   136.0378   181.0717        3.1811         300.0000             0.6036          0.0130           0
+HYB-G300             13.5004     0.7161  0.3072    175.3901    62.5879   138.1615   174.8283        3.2463         300.0000             0.5846          0.2178           0
+SKIP-G300            22.8064     0.0847  0.6032     59.6172    59.6172     2.9878    11.3239        1.1725         300.0000             0.1987          0.4546           0
+FIX-G600             13.2129     0.7356  0.2688    485.6461    89.3280   155.3220   485.6461        7.7363         600.0000             0.8094          0.0005           0
+FIXSEL-G600          13.3629     0.7254  0.2910    284.0320    89.3280   232.3058   284.0320        5.0582         410.2815             0.6923          0.0032           0
+CAP-G600             13.2172     0.7353  0.2718    481.2218    89.3280   159.3347   481.2218        7.1776         600.0000             0.8020          0.0012           0
+HYB-G600             13.1953     0.7368  0.2686    455.7978    85.7989   172.2388   455.7978        7.4823         600.0000             0.7597          0.0010           0
+SKIP-G600            21.1523     0.1969  0.5617     70.7684    63.4131     7.0001    27.5775        1.3606         600.0000             0.1179          0.3785           0
+FIX-G1200            13.1167     0.7421  0.2575    932.9352    89.3280   149.0605   932.9352       12.8432        1200.0000             0.7774          0.0000           0
+FIXSEL-G1200         13.1822     0.7376  0.2659    556.1034    89.3280   154.0041   548.3214        8.7310         672.4900             0.8269          0.0004           0
+CAP-G1200            13.1219     0.7417  0.2591    824.5504    89.3280   149.0605   824.5504        9.5183        1200.0000             0.6871          0.0001           0
+HYB-G1200            13.2598     0.7324  0.2714    528.3359    62.5879   177.7706   528.3359        7.4823        1200.0000             0.7897          0.2247           0
+SKIP-G1200           18.3744     0.3854  0.5141    102.2701    67.6604    17.4676    35.0178        1.4655        1200.0000             0.0852          0.2993           0
+SPJF-reversed        37.5868    -0.9180  1.1506   1103.3870   535.4726   756.4166   947.5532        9.6345              inf                NaN          0.0000          -1
+CAP-G600-reversed    38.0084    -0.9466  1.1118    478.8339   245.9769   459.4108   478.8339        6.8813         600.0000             0.7981          0.1134           0
+SPJF-random          14.8162     0.6268  0.4560   1111.8037   912.9409   560.2992   938.5918       13.1551              inf                NaN          0.0000          -1
+CAP-G600-random      14.9940     0.6147  0.4739    478.3856   255.8511   450.2989   478.3856        7.0376         600.0000             0.7973          0.0198           0
+SPJF-top1short       33.0454    -0.6099  0.9869   1080.2970   623.2950   680.2963   925.5484        9.3713              inf                NaN          0.0000          -1
+CAP-G600-top1short   33.3399    -0.6299  0.9758    482.1630   262.2217   473.5108   482.1630        6.9982         600.0000             0.8036          0.1070           0
+## done in 35 s
+## 2026-09-20 04:46:01 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 3 --level 1 --set main --workers 6
+[     2s] primary_rep3_L1_main: k=5 rho_busy=0.7700 (target 0.8) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,012,654 (90.8%); with W_FCFS > 60 s: 242,698 (1.38%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    36s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                124.2571     0.0000  4.2194      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              34.3595     1.0000  0.9922   2181.6360   289.6859    64.3656  2181.6360       23.1864              inf                NaN          0.0000          -1
+SPJF-M4              44.9226     0.8825  1.2938   2538.7714   355.7907   192.1721  2538.7714       26.8029              inf                NaN          0.0000          -1
+SPJF-M4refit         44.9177     0.8826  1.2942   2538.7652   355.7894   192.4400  2538.7652       26.8029              inf                NaN          0.0000          -1
+SPJF-tweedie         43.9630     0.8932  1.2676   2545.1898   342.3372   169.6787  2545.1898       40.6361              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     43.8945     0.8939  1.2700   2233.7284   330.4255   174.0848  2233.7284       29.8624              inf                NaN          0.0000          -1
+SPJF-r1s             43.3546     0.8999  1.2722   2208.6250   889.8689   187.6720  2208.6250       19.7001              inf                NaN          0.0000          -1
+FIX-G300             53.5883     0.7861  2.1344    202.2040   165.5106   150.5744   202.2040        3.7539         300.0000             0.6740          0.1304           0
+FIXSEL-G300          64.2005     0.6681  2.4548    165.0471   117.2856    92.3890   165.0471        3.0057         238.4178             0.6923          0.2326           0
+CAP-G300             56.5074     0.7536  2.1693    202.2024   102.3109   150.3829   202.2024        3.6132         300.0000             0.6740          0.1381           0
+HYB-G300             54.8327     0.7723  2.1416    210.6745    85.2187   150.0120   210.6745        4.2510         300.0000             0.7022          0.1937           0
+SKIP-G300           124.2182     0.0004  4.0704     56.4338    45.9192     3.2741    30.7941        1.4388         300.0000             0.1881          0.8112           0
+FIX-G600             47.1954     0.8572  1.6145    497.2890   342.3372   444.0191   497.2890        8.9140         600.0000             0.8288          0.0125           0
+FIXSEL-G600          49.7967     0.8283  1.8420    300.1456   286.4892   247.9339   300.1456        5.6936         401.2815             0.7480          0.0551           0
+CAP-G600             47.8641     0.8498  1.5843    501.9244   160.3543   439.7464   501.9244        6.7627         600.0000             0.8365          0.0126           0
+HYB-G600             47.5666     0.8531  1.5832    499.1061   107.3137   444.1779   499.1061        8.4686         600.0000             0.8318          0.0148           0
+SKIP-G600           123.3119     0.0105  3.9056     73.7130    51.2391     6.9996    46.1527        1.7375         600.0000             0.1229          0.7480           0
+FIX-G1200            45.6094     0.8749  1.4320   1099.6003   342.3372   233.8211  1099.6003       18.4896        1200.0000             0.9163          0.0019           0
+FIXSEL-G1200         46.7419     0.8623  1.5705    561.6114   342.3372   419.4777   561.6114        9.8915         663.4900             0.8465          0.0084           0
+CAP-G1200            45.4758     0.8763  1.4006   1083.1641   342.3372   231.9661  1083.1641       11.0044        1200.0000             0.9026          0.0025           0
+HYB-G1200            47.0082     0.8593  1.4471   1070.8051    85.2187   296.0455  1070.8051        9.4772        1200.0000             0.8923          0.0980           0
+SKIP-G1200          123.0029     0.0140  3.6687    130.6746    60.2005    13.4640    66.9772        2.0447        1200.0000             0.1089          0.6721           0
+SPJF-reversed       229.7790    -1.1738  7.6856   2838.4636  2838.4636  1476.2092  2518.7066       25.6169              inf                NaN          0.0000          -1
+CAP-G600-reversed   232.7538    -1.2069  7.0715    507.8345   277.6430   484.7624   507.8345        8.1566         600.0000             0.8464          0.3236           0
+SPJF-random          79.8602     0.4939  2.9004   2827.7744  2581.2233  1021.4705  2526.4901       40.6534              inf                NaN          0.0000          -1
+CAP-G600-random      89.2888     0.3890  3.3045    496.8879   327.1372   461.8217   496.8879        8.3482         600.0000             0.8281          0.1368           0
+SPJF-top1short      212.1353    -0.9775  6.5096   2743.5025  2743.5025  1364.3964  2492.5957       41.3781              inf                NaN          0.0000          -1
+CAP-G600-top1short  220.9177    -1.0752  6.2755    502.5355   260.7419   480.4578   502.5355        8.4549         600.0000             0.8376          0.2746           0
+## done in 37 s
+## 2026-09-20 04:46:40 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 3 --level 2 --set main --workers 6
+[     2s] primary_rep3_L2_main: k=4 rho_busy=0.9625 (target 1.0) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,192,423 (86.2%); with W_FCFS > 60 s: 589,921 (3.35%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    36s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl   w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                     
+FCFS                264.6523     0.0000  10.1174      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              43.4878     1.0000   1.6810   3430.8254  1362.1930    27.4858  3430.8254       37.6033              inf                NaN          0.0000          -1
+SPJF-M4              66.5516     0.8957   2.3238   4022.8309   551.1004   187.2186  4022.8309       39.6104              inf                NaN          0.0000          -1
+SPJF-M4refit         66.3424     0.8967   2.3195   4015.7920   551.0830   188.4881  4015.7920       39.2175              inf                NaN          0.0000          -1
+SPJF-tweedie         62.4468     0.9143   2.2617   3980.5764   611.5342   178.0655  3980.5764       52.6953              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     63.0130     0.9117   2.2681   3614.8625   488.4971   180.3065  3614.8625       44.1734              inf                NaN          0.0000          -1
+SPJF-r1s             62.2558     0.9151   2.2718   3628.1885   607.0501   182.7324  3628.1885       33.6242              inf                NaN          0.0000          -1
+FIX-G300            167.1172     0.4410   5.4954    227.8946   201.9140   158.8695   227.8946        4.1598         300.0000             0.7596          0.3044           0
+FIXSEL-G300         221.0735     0.1970   6.3248    149.0864   145.2642   101.0360   149.0864        3.3463         232.4178             0.6415          0.4366           0
+CAP-G300            163.1005     0.4592   5.5174    219.5226   130.2164   157.2506   219.5226        3.5359         300.0000             0.7317          0.3090           0
+HYB-G300            167.5390     0.4391   5.5036    219.5224   145.7678   159.1730   219.5224        4.1277         300.0000             0.7317          0.3301           0
+SKIP-G300           264.6807    -0.0001   9.8924     81.2808    81.2808     2.9929    24.8136        1.2975         300.0000             0.2709          0.9044           0
+FIX-G600             84.0604     0.8166   3.8489    523.5029   520.4700   451.1535   523.5029        8.6099         600.0000             0.8725          0.0792           0
+FIXSEL-G600         111.8229     0.6910   4.7342    314.3689   290.4466   247.7476   303.6266        5.9952         395.2815             0.7953          0.1975           0
+CAP-G600             87.7518     0.7999   3.8375    512.4737   299.7823   451.1495   512.4737        7.6261         600.0000             0.8541          0.0803           0
+HYB-G600             89.3750     0.7925   3.8582    508.6919   102.2902   451.1639   508.6919        8.6099         600.0000             0.8743          0.0755           0
+SKIP-G600           264.8481    -0.0009   9.6257     95.7374    82.3517     5.9784    57.9001        1.8035         600.0000             0.1596          0.8637           0
+FIX-G1200            71.3955     0.8738   3.0682   1113.7313   611.5342   436.1976  1113.7313       16.8971        1200.0000             0.9281          0.0070           0
+FIXSEL-G1200         81.2510     0.8293   3.7146    578.4406   564.2496   508.6352   574.2467        9.4963         657.4900             0.8798          0.0631           0
+CAP-G1200            71.3352     0.8741   2.9077   1104.5709   567.7245   352.8121  1104.5709       11.0658        1200.0000             0.9205          0.0081           0
+HYB-G1200            82.8640     0.8220   3.1702   1102.2880   145.7678   491.1232  1102.2880       12.1056        1200.0000             0.9186          0.0622           0
+SKIP-G1200          265.2775    -0.0028   9.2024    135.1905   105.0331    13.7004    98.2840        1.9372        1200.0000             0.1127          0.8094           0
+SPJF-reversed       542.8863    -1.2580  18.3700   4577.7924  4071.0367  2170.3246  4102.2761       44.0889              inf                NaN          0.0000          -1
+CAP-G600-reversed   536.9220    -1.2311  16.4015    525.8061   284.2155   487.2319   525.8061        9.1464         600.0000             0.8763          0.4410           0
+SPJF-random         194.1559     0.3188   6.7514   4576.9471  4291.9881  1422.0993  4147.0600       52.9189              inf                NaN          0.0000          -1
+CAP-G600-random     259.2036     0.0246   8.1609    512.2228   328.2974   469.0710   512.2228        8.4929         600.0000             0.8537          0.2590           0
+SPJF-top1short      510.0429    -1.1095  15.1148   4168.4933  3142.0874  1918.6050  3930.6226       52.7763              inf                NaN          0.0000          -1
+CAP-G600-top1short  527.6472    -1.1891  14.5687    514.8479   263.7678   487.1724   514.8479        9.2212         600.0000             0.8581          0.3972           0
+## done in 36 s
+## 2026-09-20 04:47:32 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 4 --level 0 --set main --workers 6
+[     2s] primary_rep4_L0_main: k=7 rho_busy=0.5169 (target 0.5) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,901,952 (95.8%); with W_FCFS > 60 s: 66,074 (0.37%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    35s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                 43.9520     0.0000  1.1022      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              17.2601     1.0000  0.3560   1002.8059   543.7981   120.4933  1002.8059       10.4221              inf                NaN          0.0000          -1
+SPJF-M4              23.0052     0.7848  0.4642   1168.7664   136.8996   272.8426  1168.7664       17.2462              inf                NaN          0.0000          -1
+SPJF-M4refit         23.0398     0.7835  0.4652   1168.7595   136.9276   274.0205  1168.7595       17.2461              inf                NaN          0.0000          -1
+SPJF-tweedie         22.8015     0.7924  0.4582   1161.8977   126.0128   271.8243  1161.8977       17.1508              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     22.6866     0.7967  0.4546    960.9838   116.8039   293.9766   960.9838       12.1600              inf                NaN          0.0000          -1
+SPJF-r1s             22.7536     0.7942  0.4512    953.5226   118.3931   186.3019   953.5226       11.1629              inf                NaN          0.0000          -1
+FIX-G300             24.2032     0.7399  0.5505    199.9340   126.0128   144.0639   186.3101        3.6321         300.0000             0.6664          0.0157           0
+FIXSEL-G300          25.2538     0.7005  0.6093    140.0244    95.2038    91.3318   131.6424        2.8042         245.2749             0.5709          0.0402           0
+CAP-G300             24.7091     0.7209  0.5486    182.9853    68.2797   143.6942   182.9853        3.3598         300.0000             0.6100          0.0228           0
+HYB-G300             24.1787     0.7408  0.5491    182.3113    94.3116   142.4797   182.3113        3.6262         300.0000             0.6077          0.1860           0
+SKIP-G300            42.6104     0.0503  1.0325     62.1354    44.6721     4.1947    29.5799        1.4118         300.0000             0.2071          0.5241           0
+FIX-G600             23.4961     0.7664  0.4941    498.2089   126.0128   334.5022   498.2089        8.2916         600.0000             0.8303          0.0024           0
+FIXSEL-G600          23.9988     0.7475  0.5162    298.8758   126.0128   246.7057   292.7737        5.0717         408.1386             0.7323          0.0077           0
+CAP-G600             23.6146     0.7619  0.4927    493.8966   126.0128   330.4343   493.8966        7.2594         600.0000             0.8232          0.0036           0
+HYB-G600             23.3675     0.7712  0.4905    495.1401    95.1292   306.8499   495.1401        8.2932         600.0000             0.8252          0.0028           0
+SKIP-G600            40.4328     0.1318  0.9659    100.1878    46.9734    10.5484    38.7069        1.4929         600.0000             0.1670          0.4327           0
+FIX-G1200            22.9151     0.7881  0.4616   1073.2942   126.0128   271.8243  1073.2942       15.9652        1200.0000             0.8944          0.0001           0
+FIXSEL-G1200         23.2495     0.7756  0.4815    555.0150   126.0128   324.0905   555.0150        9.3827         670.3471             0.8280          0.0010           0
+CAP-G1200            22.9317     0.7875  0.4604   1029.6724   126.0128   287.6529  1029.6724       10.0355        1200.0000             0.8581          0.0005           0
+HYB-G1200            23.2606     0.7752  0.4840    896.9473    94.3116   312.3300   896.9473        9.3826        1200.0000             0.8735          0.1817           0
+SKIP-G1200           36.5433     0.2776  0.8847    101.9684    53.9614    24.1333    41.5469        1.6027        1200.0000             0.0850          0.3364           0
+SPJF-reversed        70.9272    -1.0106  2.0430   1240.1266  1240.1266   996.4505  1146.6920       18.2720              inf                NaN          0.0000          -1
+CAP-G600-reversed    72.4638    -1.0682  1.9323    489.0946   287.0839   469.6887   489.0946        7.6682         600.0000             0.8152          0.1473           0
+SPJF-random          27.4959     0.6165  0.8135   1275.9909  1275.9909   641.5085  1201.1671       18.2220              inf                NaN          0.0000          -1
+CAP-G600-random      28.1757     0.5911  0.8495    488.1438   295.1385   454.2739   488.1438        8.0083         600.0000             0.8136          0.0333           0
+SPJF-top1short       64.5963    -0.7734  1.7273   1238.5434  1238.5434   928.8004  1147.5574       17.4166              inf                NaN          0.0000          -1
+CAP-G600-top1short   65.6411    -0.8126  1.6825    497.1095   273.4239   473.9788   497.1095        7.5794         600.0000             0.8285          0.1147           0
+## done in 35 s
+## 2026-09-20 04:48:09 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 4 --level 1 --set main --workers 6
+[     2s] primary_rep4_L1_main: k=5 rho_busy=0.7237 (target 0.8) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 16,027,735 (90.9%); with W_FCFS > 60 s: 244,786 (1.39%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    36s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl  w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                    
+FCFS                131.1919     0.0000  4.0410      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              33.6506     1.0000  0.9696   2004.8767  1242.3067    75.2992  2004.8767       20.4302              inf                NaN          0.0000          -1
+SPJF-M4              44.6315     0.8874  1.2778   2439.2210   356.2940   239.0715  2429.5762       35.8526              inf                NaN          0.0000          -1
+SPJF-M4refit         44.6418     0.8873  1.2785   2459.4810   297.6268   239.2093  2459.4810       35.8622              inf                NaN          0.0000          -1
+SPJF-tweedie         43.6878     0.8971  1.2469   2459.7067   292.8259   188.5996  2459.7067       33.6383              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     44.0501     0.8934  1.2533   2133.6127   281.7843   181.4039  2133.6127       29.0615              inf                NaN          0.0000          -1
+SPJF-r1s             43.1957     0.9021  1.2489   2066.3010   266.3269   187.7386  2066.3010       15.7872              inf                NaN          0.0000          -1
+FIX-G300             56.8373     0.7623  1.9912    209.7195   186.3498   154.4171   209.7195        4.0281         300.0000             0.6991          0.0834           0
+FIXSEL-G300          70.0220     0.6271  2.2971    171.6314   152.3331   100.0235   171.6314        3.2138         238.4178             0.7199          0.1631           0
+CAP-G300             58.5082     0.7452  2.0129    209.8236   113.3865   154.8646   209.8236        3.5100         300.0000             0.6994          0.0933           0
+HYB-G300             56.7407     0.7633  1.9955    209.7569    72.5932   154.4919   209.7569        3.9108         300.0000             0.6992          0.1587           0
+SKIP-G300           131.1853     0.0001  3.8887     58.9943    46.4402     3.3625    29.7010        1.4919         300.0000             0.1966          0.7840           0
+FIX-G600             47.9073     0.8538  1.5013    512.8666   292.8259   380.8152   512.8666        8.8101         600.0000             0.8548          0.0091           0
+FIXSEL-G600          51.5338     0.8167  1.7158    308.5233   276.8505   248.3272   302.5125        5.4617         401.2815             0.7688          0.0325           0
+CAP-G600             47.8848     0.8541  1.4945    508.8523   313.2108   366.3985   508.8523        7.6930         600.0000             0.8481          0.0113           0
+HYB-G600             48.5270     0.8475  1.5236    500.3722   106.7250   405.0961   500.3722        8.3857         600.0000             0.8340          0.0107           0
+SKIP-G600           130.8910     0.0031  3.7194     89.8707    52.9825     8.0741    59.4375        1.9838         600.0000             0.1498          0.7128           0
+FIX-G1200            46.2242     0.8711  1.3872   1092.7912   292.8259   230.4642  1092.7912       18.7228        1200.0000             0.9107          0.0018           0
+FIXSEL-G1200         47.4889     0.8581  1.4790    561.2804   292.8259   341.3585   561.2804        9.4074         663.4900             0.8460          0.0069           0
+CAP-G1200            45.9777     0.8736  1.3587   1103.4500   292.8259   253.6780  1103.4500       11.8253        1200.0000             0.9195          0.0034           0
+HYB-G1200            47.0010     0.8631  1.4160   1095.9323    72.5932   342.6412  1095.9323       12.9553        1200.0000             0.9133          0.1009           0
+SKIP-G1200          129.2821     0.0196  3.4769    133.1564    61.5931    14.6434    91.7076        2.5168        1200.0000             0.1110          0.6261           0
+SPJF-reversed       242.9095    -1.1453  7.6205   2577.9734  2471.5452  1553.0368  2391.3939       28.6012              inf                NaN          0.0000          -1
+CAP-G600-reversed   246.9160    -1.1864  6.9339    512.5868   302.8401   481.1056   512.5868        8.1084         600.0000             0.8543          0.2996           0
+SPJF-random          79.4984     0.5300  2.8636   2581.2754  2152.5145  1072.3171  2448.5430       28.8862              inf                NaN          0.0000          -1
+CAP-G600-random      90.8225     0.4139  3.1941    501.6599   325.9159   463.9867   501.6599        8.4079         600.0000             0.8361          0.1187           0
+SPJF-top1short      222.6286    -0.9374  6.3744   2522.2754  2131.0384  1379.5052  2404.7845       28.9898              inf                NaN          0.0000          -1
+CAP-G600-top1short  236.6451    -1.0811  6.1182    516.2130   303.9713   478.6083   516.2130        8.1252         600.0000             0.8604          0.2580           0
+## done in 36 s
+## 2026-09-20 04:48:46 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace primary --rep 4 --level 2 --set main --workers 6
+[     2s] primary_rep4_L2_main: k=4 rho_busy=0.9046 (target 1.0) n=17,634,760 weeks=30 policies=28
+[     6s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 15,208,397 (86.2%); with W_FCFS > 60 s: 595,764 (3.38%)
+[     7s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[    37s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl   w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                     
+FCFS                297.2077     0.0000   9.9611      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              43.8874     1.0000   1.7165   3324.4413  1365.9006    25.1331  3324.4413       41.4845              inf                NaN          0.0000          -1
+SPJF-M4              68.2583     0.9038   2.4088   3921.9325   392.7954   186.8673  3921.9325       57.9934              inf                NaN          0.0000          -1
+SPJF-M4refit         68.3012     0.9036   2.4041   3932.6674   392.7956   185.2912  3932.6674       57.6160              inf                NaN          0.0000          -1
+SPJF-tweedie         64.2397     0.9197   2.3347   3911.2700   387.0397   180.5852  3911.2700       64.1069              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     64.6794     0.9179   2.3438   3476.8846   462.8597   177.8748  3476.8846       57.4241              inf                NaN          0.0000          -1
+SPJF-r1s             64.2876     0.9195   2.3470   3436.4305   368.9498   186.1461  3436.4305       34.0709              inf                NaN          0.0000          -1
+FIX-G300            182.8327     0.4515   5.2334    224.3724   175.9449   162.8855   224.3724        4.1808         300.0000             0.7479          0.2361           0
+FIXSEL-G300         245.3590     0.2047   6.1081    159.0469   125.2478    98.8749   156.8867        3.4205         232.4178             0.6843          0.3634           0
+CAP-G300            173.4283     0.4886   5.2816    216.9901   110.5149   161.9448   216.9901        4.2848         300.0000             0.7233          0.2392           0
+HYB-G300            181.7502     0.4558   5.2693    224.3105    63.2550   162.4551   224.3105        4.0214         300.0000             0.7477          0.2670           0
+SKIP-G300           296.0676     0.0045   9.7295     72.6530    54.2813     3.0641    53.9318        1.8795         300.0000             0.2422          0.8936           0
+FIX-G600             90.4884     0.8160   3.6688    513.9782   387.0397   450.3750   508.9091        9.0356         600.0000             0.8566          0.0500           0
+FIXSEL-G600         128.4567     0.6662   4.5869    325.3845   268.1641   252.4186   325.3845        6.0290         395.2815             0.8232          0.1507           0
+CAP-G600             94.0004     0.8022   3.6716    512.8403   174.8079   450.3556   512.8403        7.9451         600.0000             0.8547          0.0515           0
+HYB-G600             94.3960     0.8006   3.7004    513.9782   117.1744   450.3868   508.8361        8.7933         600.0000             0.8566          0.0519           0
+SKIP-G600           295.7882     0.0056   9.4550    112.4402    62.4084     7.1226    60.4724        1.9901         600.0000             0.1874          0.8486           0
+FIX-G1200            76.6215     0.8708   3.0202   1109.4167   387.0397   366.4707  1109.4167       18.7557        1200.0000             0.9245          0.0051           0
+FIXSEL-G1200         86.6448     0.8312   3.4978    576.2665   387.0397   507.7600   576.2665        9.7739         657.4900             0.8765          0.0374           0
+CAP-G1200            76.1601     0.8726   2.9252   1114.0689   363.1930   325.1109  1114.0689       12.1095        1200.0000             0.9284          0.0069           0
+HYB-G1200            86.1322     0.8332   3.0677   1099.2115    63.2550   404.4619  1099.2115       13.2141        1200.0000             0.9160          0.0611           0
+SKIP-G1200          295.5717     0.0065   9.0194    144.5266    75.1005    13.2809    93.2173        2.3084        1200.0000             0.1204          0.7881           0
+SPJF-reversed       613.2645    -1.2477  18.4399   4058.6230  3166.5694  2186.1416  3828.9306       54.7900              inf                NaN          0.0000          -1
+CAP-G600-reversed   597.5872    -1.1858  16.2056    534.7906   309.0970   490.9755   534.7906        9.2965         600.0000             0.8913          0.4173           0
+SPJF-random         200.2482     0.3828   6.8027   4057.0287  3427.7513  1435.5914  3896.1508       52.7743              inf                NaN          0.0000          -1
+CAP-G600-random     271.3987     0.1019   7.9589    512.3368   330.3172   468.2134   512.3368        9.2446         600.0000             0.8539          0.2218           0
+SPJF-top1short      565.9989    -1.0611  15.3270   4002.2431  3034.4355  1920.6701  3867.9425       51.4570              inf                NaN          0.0000          -1
+CAP-G600-top1short  593.1499    -1.1683  14.5125    534.7269   215.5476   486.3040   534.7269        9.4027         600.0000             0.8912          0.3785           0
+## done in 37 s
+## 2026-09-20 04:49:25 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=--trace k1 --rep 0 --level 0 --set main --workers 6
+[     0s] k1_rep0_L0_main: k=1 rho_busy=0.8000 (target 0.8) n=3,209,347 weeks=30 policies=28
+[     1s] FCFS == Kiefer-Wolfowitz; jobs with W_FCFS <= 1 s: 2,851,036 (88.8%); with W_FCFS > 60 s: 84,509 (2.63%)
+[     1s] 28 configurations -> 28 distinct schedules; part 1/1 covers 28, 28 still to run (0 policies already on disk)
+[     8s] cell now holds 28 of 28 policies; COMPLETE
+                    w_p99_dl  gap_p99dl   w_mean  max_excess  harm_wf1s  lw_ex_p99  lw_ex_max  lw_ratio_max  guar_excess_max  used_over_allowed  qw_forced_frac  bound_viol
+policy                                                                                                                                                                     
+FCFS                221.2744     0.0000   6.5935      0.0000     0.0000     0.0000     0.0000        1.0000              inf                NaN          1.0000          -1
+SJF-ref              45.3248     1.0000   1.8713   2054.5023   777.9388    72.2845  2054.5023       18.9350              inf                NaN          0.0000          -1
+SPJF-M4              64.7433     0.8896   2.5205   2520.2899   400.1355   274.7599  2520.2899       35.4914              inf                NaN          0.0000          -1
+SPJF-M4refit         64.7030     0.8899   2.5224   2520.2899   400.1355   278.1731  2520.2899       35.4914              inf                NaN          0.0000          -1
+SPJF-tweedie         60.9289     0.9113   2.4449   2520.2899   656.3650   267.4905  2520.2899       35.4914              inf                NaN          0.0000          -1
+SPJF-tweedie_itr     61.4683     0.9082   2.4497   2325.4278   375.1261   270.5708  2325.4278       28.7332              inf                NaN          0.0000          -1
+SPJF-r1s             60.7581     0.9123   2.4221   2325.4278   362.0655   232.7158  2325.4278       21.3676              inf                NaN          0.0000          -1
+FIX-G300             83.2414     0.7845   3.0711    295.1349   246.3363   242.1636   295.1349        5.2312         300.0000             0.9838          0.0633           0
+FIXSEL-G300         126.4862     0.5387   3.7766    140.3158   119.6503    97.8477   140.3158        3.3121         142.4178             0.9852          0.1721           0
+CAP-G300             90.3223     0.7443   3.1735    295.1349    81.7982   240.8521   295.1349        3.3121         300.0000             0.9838          0.0813           0
+HYB-G300            106.2218     0.6539   3.4269    295.1349    53.9019   240.8151   295.1349        4.9518         300.0000             0.9919          0.2905           0
+SKIP-G300           220.3199     0.0054   6.2841     95.0859    81.7982     4.1390    51.7364        1.7307         300.0000             0.3170          0.7318           0
+FIX-G600             68.3147     0.8693   2.6920    592.5319   563.3744   526.5055   592.5319        9.4429         600.0000             0.9876          0.0226           0
+FIXSEL-G600          82.2348     0.7902   3.0524    303.2653   246.3363   245.9105   303.2653        5.2312         305.2815             0.9934          0.0617           0
+CAP-G600             70.5637     0.8566   2.7003    592.5319   165.6877   459.5789   592.5319        6.0742         600.0000             0.9876          0.0252           0
+HYB-G600             90.5239     0.7431   3.0440    592.5319    81.7982   402.4921   592.5319        4.6765         600.0000             0.9876          0.0344           0
+SKIP-G600           219.8854     0.0079   6.0441    100.8546    83.2046     9.6349    81.0534        2.2238         600.0000             0.1681          0.6700           0
+FIX-G1200            63.1619     0.8986   2.5530   1171.6655   656.3650   309.7257  1171.6655       17.0958        1200.0000             0.9764          0.0044           0
+FIXSEL-G1200         68.6297     0.8675   2.7091    558.9396   509.2674   507.5332   558.9396        9.3594         567.4900             0.9849          0.0256           0
+CAP-G1200            63.7131     0.8955   2.5537   1181.3375   366.4079   329.3005  1181.3375        9.4429        1200.0000             0.9844          0.0068           0
+HYB-G1200            98.4228     0.6982   3.1612   1165.1454    53.9019   327.2923  1165.1454        5.2216        1200.0000             0.9919          0.2613           0
+SKIP-G1200          217.4201     0.0219   5.6772    166.8670    97.6901    16.1663   166.8670        3.4166        1200.0000             0.1391          0.5866           0
+SPJF-reversed       415.3743    -1.1032  11.4145   2696.1870  2487.0641  1739.4297  2502.9898       31.2626              inf                NaN          0.0000          -1
+CAP-G600-reversed   383.6358    -0.9228  10.4113    596.1245   177.8721   558.1701   596.1245        6.5284         600.0000             0.9935          0.2629           0
+SPJF-random         159.7873     0.3495   5.1441   2662.5581  1600.2566  1000.7069  2488.2746       40.4297              inf                NaN          0.0000          -1
+CAP-G600-random     185.9139     0.2010   5.5494    596.9447   165.8422   547.1784   596.9447        6.6408         600.0000             0.9949          0.1022           0
+SPJF-top1short      382.2755    -0.9150   9.8718   2660.1561  1669.1669  1473.2989  2496.8100       32.5569              inf                NaN          0.0000          -1
+CAP-G600-top1short  379.5558    -0.8996   9.5627    597.0194   177.8721   564.9734   597.0194        6.3803         600.0000             0.9950          0.2348           0
+## done in 8 s

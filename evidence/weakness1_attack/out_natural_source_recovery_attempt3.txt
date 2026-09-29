@@ -1,0 +1,118 @@
+{
+  "status": "FAIL",
+  "scope": "source-only Git history recovery; no data artifact accessed",
+  "logical_path": "src/spjf_guard/config.py",
+  "expected_sha256": "b3f13b89d146005fde6056c7c3117473803809fcaccf84c1b949c2434bbdf23c",
+  "current_worktree_sha256": "d9f1918acaa34999e001a91b3cc049bd92bb9a425c91b8402c4aa867c0abc522",
+  "commits_examined": [
+    {
+      "commit": "16b86b7a0dc40249cd6537bb84b7225da7c4a4a8",
+      "representations": [
+        {
+          "name": "git_blob_terminal_newline_no_bom",
+          "sha256": "3f33ec867abd83917c60b60f36221338916c0361b8a9e0a6022766b04a4d547a",
+          "bytes": 7221
+        },
+        {
+          "name": "git_blob_terminal_newline_utf8_bom",
+          "sha256": "8ceb9c631da9138969caaeae16084b166f4170e4bbf7a1ab316b1177ec0aedb3",
+          "bytes": 7224
+        },
+        {
+          "name": "git_blob_no_terminal_newline_no_bom",
+          "sha256": "e4992fb545be7905d01f1ef954f887cde4226a3196868c62068f20a78c86fdcc",
+          "bytes": 7220
+        },
+        {
+          "name": "git_blob_no_terminal_newline_utf8_bom",
+          "sha256": "a10315879a47c164eaf9e77044f97977e3f4feb24148544727cadd29b49ce884",
+          "bytes": 7223
+        },
+        {
+          "name": "checkout_crlf_terminal_newline_no_bom",
+          "sha256": "1dd4e1a3df69d6809015d6ee9cc4c8f05361b2f1455a517399339d33438eca1b",
+          "bytes": 7413
+        },
+        {
+          "name": "checkout_crlf_terminal_newline_utf8_bom",
+          "sha256": "ec4ad5e7c32185d45d49070d04f050a98de0a295edbaddda4ef00c6f710c4b02",
+          "bytes": 7416
+        },
+        {
+          "name": "checkout_crlf_no_terminal_newline_no_bom",
+          "sha256": "7d484b1a4ce0b7052b654a91211f127a5d4bd888121386b5fc684a3f3dec76c8",
+          "bytes": 7411
+        },
+        {
+          "name": "checkout_crlf_no_terminal_newline_utf8_bom",
+          "sha256": "b971b8180c062385c8eb1c2555b0c83bae11effc641ab5103cb2d5619316f50d",
+          "bytes": 7414
+        }
+      ]
+    },
+    {
+      "commit": "bf320ee2fafbd9a13970768f655edad70f1e7b03",
+      "representations": [
+        {
+          "name": "git_blob_terminal_newline_no_bom",
+          "sha256": "3f33ec867abd83917c60b60f36221338916c0361b8a9e0a6022766b04a4d547a",
+          "bytes": 7221
+        },
+        {
+          "name": "git_blob_terminal_newline_utf8_bom",
+          "sha256": "8ceb9c631da9138969caaeae16084b166f4170e4bbf7a1ab316b1177ec0aedb3",
+          "bytes": 7224
+        },
+        {
+          "name": "git_blob_no_terminal_newline_no_bom",
+          "sha256": "e4992fb545be7905d01f1ef954f887cde4226a3196868c62068f20a78c86fdcc",
+          "bytes": 7220
+        },
+        {
+          "name": "git_blob_no_terminal_newline_utf8_bom",
+          "sha256": "a10315879a47c164eaf9e77044f97977e3f4feb24148544727cadd29b49ce884",
+          "bytes": 7223
+        },
+        {
+          "name": "checkout_crlf_terminal_newline_no_bom",
+          "sha256": "1dd4e1a3df69d6809015d6ee9cc4c8f05361b2f1455a517399339d33438eca1b",
+          "bytes": 7413
+        },
+        {
+          "name": "checkout_crlf_terminal_newline_utf8_bom",
+          "sha256": "ec4ad5e7c32185d45d49070d04f050a98de0a295edbaddda4ef00c6f710c4b02",
+          "bytes": 7416
+        },
+        {
+          "name": "checkout_crlf_no_terminal_newline_no_bom",
+          "sha256": "7d484b1a4ce0b7052b654a91211f127a5d4bd888121386b5fc684a3f3dec76c8",
+          "bytes": 7411
+        },
+        {
+          "name": "checkout_crlf_no_terminal_newline_utf8_bom",
+          "sha256": "b971b8180c062385c8eb1c2555b0c83bae11effc641ab5103cb2d5619316f50d",
+          "bytes": 7414
+        }
+      ]
+    }
+  ],
+  "working_tree_minus_aging_candidates": [
+    {
+      "name": "working_tree_minus_aging_lf",
+      "sha256": "da28da20e1a0b43424e011a47fe6346cacfc5a0f778c52a04bde8ab087f9b219",
+      "bytes": 7473
+    },
+    {
+      "name": "working_tree_minus_aging_crlf",
+      "sha256": "8b8a51a71cdafb52c38aedd792a5dca87f12363888c4fdbb9570670d09f2a2e9",
+      "bytes": 7671
+    }
+  ],
+  "pinned_written": false,
+  "execution": {
+    "python_processes": 1,
+    "git_subprocess_calls": 3,
+    "wall_s": 0.041826500004390255,
+    "cpu_s": 0.0
+  }
+}

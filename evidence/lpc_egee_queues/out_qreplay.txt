@@ -1,0 +1,50 @@
+START 2026-09-23T06:08:55.220317+00:00
+SCRIPT_SHA256 8d551c83b484ba373d6f37c6f5326f7c4830f5810e1c57f0ac2e85152f252e64
+REPLAY CE1|1 test segment 1 k 1 L 900 jobs 21062
+REPLAY CE1|2 short segment 0 k 67 L 7200 jobs 29693
+REPLAY CE1|2 short segment 1 k 67 L 7200 jobs 10164
+REPLAY CE1|3 long segment 0 k 38 L 86400 jobs 4364
+REPLAY CE1|3 long segment 1 k 38 L 86400 jobs 15333
+REPLAY CE1|4 day segment 1 k 7 L 129600 jobs 10299
+REPLAY CE1|5 infinite segment 0 k 83 L 259200 jobs 6991
+REPLAY CE1|5 infinite segment 1 k 83 L 259200 jobs 13330
+REPLAY CE2|1 test segment 0 k 1 L 900 jobs 1023
+REPLAY CE2|1 test segment 1 k 1 L 900 jobs 19058
+REPLAY CE2|2 short segment 0 k 46 L 5400 jobs 1954
+REPLAY CE2|2 short segment 1 k 46 L 5400 jobs 10092
+REPLAY CE2|3 long segment 0 k 20 L 86400 jobs 1617
+REPLAY CE2|3 long segment 1 k 20 L 86400 jobs 6939
+REPLAY CE2|4 day segment 0 k 12 L 129600 jobs 260
+REPLAY CE2|4 day segment 1 k 12 L 129600 jobs 8035
+REPLAY CE2|5 infinite segment 0 k 43 L 259200 jobs 898
+REPLAY CE2|5 infinite segment 1 k 43 L 259200 jobs 9137
+REPLAYED 170249 of 206222 retained jobs; the rest are the early clrglop195 partition and the batch queue, neither of which has a capacity fit
+FCFS REPLAY MATCHES THE VALIDATED FITTED-CAPACITY WAITS on 170249 jobs
+WEIGHTED-QUANTILE BOOTSTRAP CHECKED against explicitly duplicated weeks
+BOOTSTRAP test 17 week blocks, 2000 draws
+BOOTSTRAP short 17 week blocks, 2000 draws
+BOOTSTRAP long 17 week blocks, 2000 draws
+BOOTSTRAP day 17 week blocks, 2000 draws
+BOOTSTRAP infinite 17 week blocks, 2000 draws
+BOOTSTRAP CE1|test 17 week blocks, 2000 draws
+BOOTSTRAP CE1|short 17 week blocks, 2000 draws
+BOOTSTRAP CE1|long 17 week blocks, 2000 draws
+BOOTSTRAP CE1|day 17 week blocks, 2000 draws
+BOOTSTRAP CE1|infinite 17 week blocks, 2000 draws
+BOOTSTRAP CE2|test 17 week blocks, 2000 draws
+BOOTSTRAP CE2|short 17 week blocks, 2000 draws
+BOOTSTRAP CE2|long 17 week blocks, 2000 draws
+BOOTSTRAP CE2|day 17 week blocks, 2000 draws
+BOOTSTRAP CE2|infinite 17 week blocks, 2000 draws
+       policy       mean      p99  p99_busy  p99_busy_gap  max_excess   harm
+         FCFS 410.162302 12386.68  13412.76      0.000000         0.0    0.0
+          SJF 245.672285  3766.04   8340.64      1.000000    112805.0 1539.0
+       SPJF-E 298.688593  5264.80   9967.52      0.679250     77467.0   25.0
+Constant-3.5L 316.584263  9849.94  13933.44     -0.102655      3129.0   25.0
+     Age-3.5L 314.868586  9849.94  13933.44     -0.102655      3082.0   25.0
+  Constant-5L 310.280837  9974.90  13478.56     -0.012973      4444.0   25.0
+       Age-5L 311.116864  9973.64  13478.56     -0.012973      4338.0   25.0
+ Constant-10L 304.596594 10477.58  13965.24     -0.108925      8726.0   25.0
+      Age-10L 304.127208 10317.50  13940.20     -0.103988      8765.0   25.0
+BOUND CHECKS 1021494 violations 0 worst ratio 0.9933333333333333
+TIMING {"stage": "qreplay", "wall_s": 8.749895800001468, "cpu_s": 8.609375}

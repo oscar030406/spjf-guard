@@ -1,0 +1,48 @@
+{
+  "protocol_hash": "1a38e3c0893b0f11d404dbf7d8af335da21024d85d04d6f517f84e351facaf7e",
+  "protocol": "synthetic-short-v1",
+  "source": "six fixed synthetic jobs; no project data",
+  "workers": 2,
+  "window_s": 0.5,
+  "policies": [
+    "FCFS",
+    "SPJF-E",
+    "Guard(300)"
+  ],
+  "requested_service_s": [
+    0.05,
+    0.05,
+    0.08,
+    0.04,
+    0.04,
+    0.04
+  ],
+  "target_release_offset_s": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "score": [
+    100.0,
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0
+  ],
+  "guard": {
+    "G_s": 0.5,
+    "formal_L_s": 0.2,
+    "B0_s": 0.01,
+    "eta": 0.0,
+    "gamma_s": 0.0,
+    "Bmax_s": 0.2
+  },
+  "wall_time_target_s": 30.0,
+  "log_path": "out_physical_smoke.txt",
+  "artifact_directory": "physical_smoke/",
+  "expected_guard_behavior": "rank 0 has the worst score; completed later-rank work exceeds the 10 ms budget and creates at least one nonempty fired set"
+}

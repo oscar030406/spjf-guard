@@ -1,0 +1,147 @@
+{
+  "produced_by": "scripts/run_consistent_visibility.py",
+  "written_at": "2026-09-25T05:14:30+00:00",
+  "config": {
+    "path": "configs/visibility_development_20260924.yaml",
+    "present": true,
+    "bytes": 16641,
+    "sha256": "4f54bd492aa4817afde4d9c994001396a0364d850699be31ef715da4f55ca704"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/codebench_cache_r4/ev.parquet",
+      "present": true,
+      "bytes": 67391982,
+      "sha256": "8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451"
+    },
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep0.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "78d063485a4281f6fd07560a717ee3d9440a93ac11912e8f74f934d8009061c8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep1.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "71a75d2b6df5c46912e00898c55f6e20cf56350f46c61db3fc40d309e622c81d"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep2.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8f021068e70ef21ec6b1a8b1ca1ae327ac6fb7811f61a4cffa6d1697c74d07eb"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep3.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "f59edee819e5e3a87c5d012171b197f2e7239f9e74ea44a4514507cc5040eea8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep4.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8fd652d5874ef30bb7675e56f6360768e368c47cd67b674567c83e7a10a4a8be"
+    },
+    {
+      "path": "data/derived/package_ranking_scores/consistent_controls_20260924.npz",
+      "present": true,
+      "bytes": 22875549,
+      "sha256": "967befaeefdc51feb3d03d27ffb062bfe3d34856b110d909148abf2e0aed4a10"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "exact_cells.csv",
+      "present": true,
+      "bytes": 67704,
+      "sha256": "7e3bc1339d53b774363a8d77b3647ea0e999b175c491be408e978620081e3569"
+    },
+    {
+      "path": "exact_comparison.csv",
+      "present": true,
+      "bytes": 18075,
+      "sha256": "c87bd92ce119bbac728f45531343a65b43582fcb8bac84946c6dfbfc6ea6037a"
+    },
+    {
+      "path": "exact_passes.csv",
+      "present": true,
+      "bytes": 141078,
+      "sha256": "e1445cebf396325a388750532c9bfa84945c5c62d79c7797130dc57dfd0eafcf"
+    },
+    {
+      "path": "same_copy_exposure_cells.csv",
+      "present": true,
+      "bytes": 27880,
+      "sha256": "11d33268ab24ba807371fb209b88833d9286ff1f7c5dad6186f8bfba72611a74"
+    },
+    {
+      "path": "same_copy_exposure.csv",
+      "present": true,
+      "bytes": 6302,
+      "sha256": "0970996d32579e52170565d710b57f7d4410ad036974eebcfbb6d0d908eb5b93"
+    },
+    {
+      "path": "attribution_cells.csv",
+      "present": true,
+      "bytes": 41973,
+      "sha256": "dfb0507056893113c3dc586e49fb06d0d6087fe8100895b6efb7f56d2ffa5c29"
+    },
+    {
+      "path": "attribution_comparison.csv",
+      "present": true,
+      "bytes": 10895,
+      "sha256": "e03031d4785036385fe0d5b8d45a117c7e9a7633283e301c37c9b37887fd805a"
+    },
+    {
+      "path": "exact_delta_manifest.csv",
+      "present": true,
+      "bytes": 13763,
+      "sha256": "e228090a6e2b9d7a0c6527c41d0cc04b5a385e0af63dde8d7fdaa6ce17c52137"
+    },
+    {
+      "path": "exact_costs.csv",
+      "present": true,
+      "bytes": 20791,
+      "sha256": "e27b2cadd7b3a9c467814593199bfc9135bc410425ebb2d834cf8ff8b8462b16"
+    },
+    {
+      "path": "exact_sensitivity_cells.csv",
+      "present": true,
+      "bytes": 7896,
+      "sha256": "0f4e739edff0ae2339ed3949ca7d3e6a033bec659d2df56830a0aba9c44e1779"
+    },
+    {
+      "path": "exact_sensitivity_comparison.csv",
+      "present": true,
+      "bytes": 2220,
+      "sha256": "2f62a809e90c603220e96b3be893e97a003e38dc4b13c6354c87904330470560"
+    }
+  ],
+  "arguments": {
+    "pool": "primary",
+    "reps": "0,1,2,3,4",
+    "levels": "0,1,2",
+    "workers": 2,
+    "policy": null,
+    "skip_controls": false,
+    "resume": true,
+    "unseal": false
+  },
+  "notes": {
+    "implementation_sha256": "e784c8af838f650dbba57f2a32a05b888069c069e27dd900b220b390a56e5c7a",
+    "model_weights": "frozen original M4 rolling-origin LightGBM",
+    "other_class_terms": "exogenous on their original relative clock",
+    "other_class_sensitivity": "same-semester other-class history withheld",
+    "terminal_assertion": "every exact policy/cell ends with zero new violation",
+    "dense_policy_scores_written": false,
+    "delta_integrity": "NPZ files are explicitly hashed by exact_delta_manifest.csv"
+  }
+}

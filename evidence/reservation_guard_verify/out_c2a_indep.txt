@@ -1,0 +1,4 @@
+==============================================================================
+C2(a) independent  Prop. R4 closure formula, k=1, base = exact SJF
+==============================================================================
+  rows 848, formula mismatches 0, promise violations 0

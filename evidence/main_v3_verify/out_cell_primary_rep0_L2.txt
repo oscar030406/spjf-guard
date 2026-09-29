@@ -1,0 +1,53 @@
+primary rep0 level2: k=4 n=17,634,760 dl=4,219,556 heavy=181,720 W=15,247.5
+[    1s] FCFS done
+FCFS vs an independent recursion on the first 2,000,000 jobs: max |diff| 0
+[    3s] FCFS                   p99dl  263.1202  mean  10.0987  maxex      0.00  harm     0.00  viol -
+[    4s] SJF-ref                p99dl   42.8808  mean   1.6498  maxex   4755.47  harm  1101.48  viol -
+[    5s] SPJF-M4                p99dl   66.5706  mean   2.2955  maxex   5882.92  harm   483.20  viol -
+[    6s] SPJF-M4refit           p99dl   66.7525  mean   2.3003  maxex   5896.58  harm   479.31  viol -
+[    7s] SPJF-tweedie           p99dl   62.2255  mean   2.2402  maxex   5904.52  harm   462.72  viol -
+[    7s] SPJF-tweedie_itr       p99dl   62.1832  mean   2.2401  maxex   5448.90  harm   355.76  viol -
+[    8s] SPJF-r1s               p99dl   61.2577  mean   2.2516  maxex   5368.16  harm   372.58  viol -
+[   13s] FIX-G300               p99dl  163.9905  mean   5.3885  maxex    214.19  harm   198.79  viol 0
+[   18s] CAP-G300               p99dl  159.1120  mean   5.4914  maxex    212.84  harm   103.34  viol 0
+[   23s] SKIP-G300              p99dl  262.8425  mean   9.9118  maxex     63.89  harm    45.84  viol 0
+[   28s] FIX-G600               p99dl   85.8167  mean   3.8242  maxex    510.68  harm   450.34  viol 0
+[   34s] CAP-G600               p99dl   86.9605  mean   3.7990  maxex    510.68  harm   262.19  viol 0
+[   39s] SKIP-G600              p99dl  262.5130  mean   9.6381  maxex     94.75  harm    62.51  viol 0
+[   44s] FIX-G1200              p99dl   72.2769  mean   2.9910  maxex   1107.68  harm   462.72  viol 0
+[   49s] CAP-G1200              p99dl   71.9845  mean   2.9237  maxex   1114.69  harm   318.52  viol 0
+[   54s] SKIP-G1200             p99dl  262.7231  mean   9.2033  maxex    118.69  harm    84.65  viol 0
+[   59s] XSKIP-G600             p99dl  262.5449  mean   9.5891  maxex    100.57  harm    63.24  viol 0
+[   61s] SPJF-top1short         p99dl  493.4949  mean  15.3477  maxex   6108.86  harm  3244.22  viol -
+[   67s] CAP-G600-top1short     p99dl  534.1660  mean  14.7438  maxex    522.92  harm   421.12  viol 0
+[   68s] SPJF-reversed          p99dl  521.0554  mean  18.7076  maxex   6295.65  harm  5248.84  viol -
+[   74s] CAP-G600-reversed      p99dl  546.1064  mean  16.6390  maxex    522.92  harm   397.57  viol 0
+[   75s] SPJF-random            p99dl  183.8038  mean   6.6550  maxex   6235.49  harm  6173.57  viol -
+[   81s] CAP-G600-random        p99dl  243.8592  mean   8.1072  maxex    520.74  harm   434.30  viol 0
+
+policy                             w_p99_dl              w_mean               w_p99          max_excess           harm_wf1s           max_heavy      qw_forced_frac   used_over_allowed
+FCFS                                    +0                  +0                  +0                  +0                  +0                  +0                  +0                   -
+SJF-ref                                 +0                  +0                  +0                  +0                  +0                  +0                  +0                   -
+SPJF-M4                                 +0                  +0                  +0                  +0                  +0                  +0                  +0                   -
+SPJF-M4refit                            +0                  +0                  +0                  +0                  +0                  +0                  +0                   -
+SPJF-tweedie                            +0    -4.440892099e-16                  +0                  +0                  +0                  +0                  +0                   -
+SPJF-tweedie_itr                        +0                  +0    -7.105427358e-15                  +0                  +0                  +0                  +0                   -
+SPJF-r1s                                +0                  +0                  +0                  +0                  +0                  +0                  +0                   -
+FIX-G300                                +0                  +0                  +0                  +0                  +0                  +0                  +0                  +0
+CAP-G300                                +0                  +0                  +0                  +0    -1.421085472e-14                  +0                  +0                  +0
+SKIP-G300                               +0    -1.776356839e-15                  +0                  +0                  +0                  +0    +1.110223025e-16    +2.775557562e-17
+FIX-G600                                +0                  +0    -7.105427358e-15                  +0                  +0    +2.273736754e-13    +5.551115123e-17                  +0
+CAP-G600                                +0                  +0                  +0                  +0                  +0                  +0    +6.938893904e-17                  +0
+SKIP-G600                               +0    +1.776356839e-15                  +0                  +0                  +0                  +0                  +0                  +0
+FIX-G1200                               +0                  +0    -7.105427358e-15                  +0                  +0                  +0    +1.040834086e-17                  +0
+CAP-G1200                               +0                  +0                  +0                  +0                  +0                  +0    +6.071532166e-17    -1.110223025e-16
+SKIP-G1200                -5.684341886e-14                  +0    -2.842170943e-14                  +0                  +0                  +0                  +0    +5.551115123e-17
+XSKIP-G600             not in the builder's cell
+SPJF-top1short            -5.684341886e-14                  +0                  +0                  +0                  +0                  +0                  +0                   -
+CAP-G600-top1short                      +0                  +0                  +0                  +0                  +0    +2.273736754e-13    +5.551115123e-17                  +0
+SPJF-reversed                           +0                  +0    -5.684341886e-14                  +0                  +0                  +0                  +0                   -
+CAP-G600-reversed                       +0                  +0                  +0                  +0                  +0                  +0    +5.551115123e-17                  +0
+SPJF-random                             +0                  +0                  +0                  +0                  +0                  +0                  +0                   -
+CAP-G600-random           +2.842170943e-14                  +0                  +0                  +0                  +0                  +0    +5.551115123e-17                  +0
+
+wrote <cache-dir>\mv3_verify\vcell_primary_rep0_L2.csv

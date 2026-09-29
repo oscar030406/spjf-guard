@@ -1,0 +1,81 @@
+## 2026-09-19 23:44:58 manifest=13f008341ed7748ee65052f6e2203b0e943b43b0203de62cf386537f8357c141 argv=releng-hardware__gecko-t-linux-talos-2404
+    fch_common.py                                                          b3c9dadc19eeb73c542607bf88e7426bd63553d3d432ae63396073fb96389f3a
+    fch_holdout.py                                                         4b58b0f6bb64d2c5d523f8b87e927520b1cb41783942cf0d7c52affbb07ba8e1
+    [imported] firefox_ci/fci_collect.py                                   f7331c4c516d7dd3593570b6e475ca9bf164711a6c3cef05c3777d8c1a44b4db
+    [imported] firefox_ci/fci_common.py                                    d500f24287b057196c062dd3875f6dd802a9a5d02fc7ac18b44342739d9620bf
+    [imported] firefox_ci/fci_simval.py                                    18b4a4fc8ee24a1f2535750553e71000bf4a77f096b84316020cd5eed01b1c1f
+    [imported] firefox_ci/guardkern_snapshot.py                            5579cbb61837a07e218fc7ed85da8b34191676b12e689e254af3354d40114c12
+    [imported] firefox_ci/keff_releng-hardware__gecko-t-linux-talos-2404.csv 83210fcf192f316ac7800334a96e680c191e9cb73150fd9e62de208859feeab6
+    [imported] firefox_ci/keff_releng-hardware__gecko-t-osx-1500-m4.csv    211aaa0cb9b093ea4988b6055357f0509812332f5d8a51de28c249180179c645
+    [data] data/mozilla_firefox_ci/runs_releng-hardware__gecko-t-linux-talos-2404.parquet ff35f4e35f764a2bff11c6c82ff638fe22b8169a020cff52d08e73049408e7c5
+    [data] data/mozilla_firefox_ci/runs_releng-hardware__gecko-t-osx-1500-m4.parquet ae1376d4a54f621125bfc28d66f89673d4110679c356c286f014477378e8f85e
+
+================ releng-hardware/gecko-t-linux-talos-2404 ================
+  window 2026-09-07T00:00:00Z .. 2026-09-14T00:00:00Z  (7 d), 30,702 runs, 105 distinct workers, recorded wait mean 1074.8 s p90 2536.6 s
+  ../firefox_ci fitted on the WHOLE window: k_eff = 96, setup = 126.8 s  <- the circular fit this study replaces
+  k search grid (the original's): [52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104]
+
+  ---- split fwd-half: fit days [0,3.5) = 18,824 runs -> test days [3.5,7) = 11,878 runs ----
+    setup/teardown fitted on the fit part: 126.2 s (whole-window value 126.8 s)
+    k_eff fitted on the fit part: 96 on the original's coarse grid (objective 0.0430); 96 on the step-1 grid (objective 0.0430)
+    HELD OUT  k_eff=96 (coarse grid, fit part) + setup 126s     TEST  mean    842.5 (rec    940.8, x0.90)  p90 x0.93  p99 x0.86  rho_h 0.981  sp 0.963  med|e| 16s
+    HELD OUT  k_eff=96 (step-1 grid, fit part) + setup 126s     TEST  mean    842.5 (rec    940.8, x0.90)  p90 x0.93  p99 x0.86  rho_h 0.981  sp 0.963  med|e| 16s
+    no fit    k = nominal machines = 105 + setup 126s           TEST  mean    684.9 (rec    940.8, x0.73)  p90 x0.73  p99 x0.78  rho_h 0.952  sp 0.943  med|e| 103s
+    no fit    k = nominal machines = 105, no setup              TEST  mean    494.8 (rec    940.8, x0.53)  p90 x0.48  p99 x0.67  rho_h 0.891  sp 0.919  med|e| 215s
+    circular  k_eff=96 (whole window) + setup 127s              TEST  mean    843.7 (rec    940.8, x0.90)  p90 x0.93  p99 x0.86  rho_h 0.981  sp 0.963  med|e| 16s
+
+  ---- split rev-half: fit days [3.5,7) = 11,878 runs -> test days [0,3.5) = 18,824 runs ----
+    setup/teardown fitted on the fit part: 128.6 s (whole-window value 126.8 s)
+    k_eff fitted on the fit part: 92 on the original's coarse grid (objective 0.0242); 92 on the step-1 grid (objective 0.0242)
+    HELD OUT  k_eff=92 (coarse grid, fit part) + setup 129s     TEST  mean   1323.1 (rec   1159.4, x1.14)  p90 x1.21  p99 x1.16  rho_h 0.958  sp 0.962  med|e| 65s
+    HELD OUT  k_eff=92 (step-1 grid, fit part) + setup 129s     TEST  mean   1323.1 (rec   1159.4, x1.14)  p90 x1.21  p99 x1.16  rho_h 0.958  sp 0.962  med|e| 65s
+    no fit    k = nominal machines = 105 + setup 129s           TEST  mean    906.3 (rec   1159.4, x0.78)  p90 x0.83  p99 x0.93  rho_h 0.889  sp 0.949  med|e| 117s
+    no fit    k = nominal machines = 105, no setup              TEST  mean    633.8 (rec   1159.4, x0.55)  p90 x0.58  p99 x0.64  rho_h 0.836  sp 0.917  med|e| 292s
+    circular  k_eff=96 (whole window) + setup 127s              TEST  mean   1153.0 (rec   1159.4, x0.99)  p90 x1.04  p99 x1.02  rho_h 0.954  sp 0.972  med|e| 30s
+[     2s] wrote <repo-root>\prechecks\firefox_ci_holdout\holdout.csv (30 rows) and <repo-root>\prechecks\firefox_ci_holdout\ksearch.csv (136 rows)
+## done in 2 s
+## 2026-09-19 23:45:10 manifest=13f008341ed7748ee65052f6e2203b0e943b43b0203de62cf386537f8357c141 argv=releng-hardware__gecko-t-osx-1500-m4
+    fch_common.py                                                          b3c9dadc19eeb73c542607bf88e7426bd63553d3d432ae63396073fb96389f3a
+    fch_holdout.py                                                         4b58b0f6bb64d2c5d523f8b87e927520b1cb41783942cf0d7c52affbb07ba8e1
+    [imported] firefox_ci/fci_collect.py                                   f7331c4c516d7dd3593570b6e475ca9bf164711a6c3cef05c3777d8c1a44b4db
+    [imported] firefox_ci/fci_common.py                                    d500f24287b057196c062dd3875f6dd802a9a5d02fc7ac18b44342739d9620bf
+    [imported] firefox_ci/fci_simval.py                                    18b4a4fc8ee24a1f2535750553e71000bf4a77f096b84316020cd5eed01b1c1f
+    [imported] firefox_ci/guardkern_snapshot.py                            5579cbb61837a07e218fc7ed85da8b34191676b12e689e254af3354d40114c12
+    [imported] firefox_ci/keff_releng-hardware__gecko-t-linux-talos-2404.csv 83210fcf192f316ac7800334a96e680c191e9cb73150fd9e62de208859feeab6
+    [imported] firefox_ci/keff_releng-hardware__gecko-t-osx-1500-m4.csv    211aaa0cb9b093ea4988b6055357f0509812332f5d8a51de28c249180179c645
+    [data] data/mozilla_firefox_ci/runs_releng-hardware__gecko-t-linux-talos-2404.parquet ff35f4e35f764a2bff11c6c82ff638fe22b8169a020cff52d08e73049408e7c5
+    [data] data/mozilla_firefox_ci/runs_releng-hardware__gecko-t-osx-1500-m4.parquet ae1376d4a54f621125bfc28d66f89673d4110679c356c286f014477378e8f85e
+
+================ releng-hardware/gecko-t-osx-1500-m4 ================
+  window 2026-08-24T00:00:00Z .. 2026-09-14T00:00:00Z  (21 d), 191,970 runs, 173 distinct workers, recorded wait mean 1880.9 s p90 5429.2 s
+  ../firefox_ci fitted on the WHOLE window: k_eff = 156, setup = 54.2 s  <- the circular fit this study replaces
+  k search grid (the original's): [86, 93, 100, 107, 114, 121, 128, 135, 142, 149, 156, 163, 170]
+
+  ---- split fwd-half: fit days [0,10.5) = 96,595 runs -> test days [10.5,21) = 95,375 runs ----
+    setup/teardown fitted on the fit part: 54.2 s (whole-window value 54.2 s)
+    k_eff fitted on the fit part: 156 on the original's coarse grid (objective 0.1080); 155 on the step-1 grid (objective 0.0912)
+    HELD OUT  k_eff=156 (coarse grid, fit part) + setup 54s     TEST  mean   1958.6 (rec   1896.2, x1.03)  p90 x0.93  p99 x1.08  rho_h 0.971  sp 0.959  med|e| 72s
+    HELD OUT  k_eff=155 (step-1 grid, fit part) + setup 54s     TEST  mean   2043.6 (rec   1896.2, x1.08)  p90 x0.98  p99 x1.13  rho_h 0.973  sp 0.958  med|e| 84s
+    no fit    k = nominal machines = 173 + setup 54s            TEST  mean    984.0 (rec   1896.2, x0.52)  p90 x0.47  p99 x0.53  rho_h 0.872  sp 0.867  med|e| 60s
+    no fit    k = nominal machines = 173, no setup              TEST  mean    722.1 (rec   1896.2, x0.38)  p90 x0.36  p99 x0.39  rho_h 0.803  sp 0.816  med|e| 111s
+    circular  k_eff=156 (whole window) + setup 54s              TEST  mean   1958.7 (rec   1896.2, x1.03)  p90 x0.93  p99 x1.07  rho_h 0.971  sp 0.959  med|e| 72s
+
+  ---- split rev-half: fit days [10.5,21) = 95,375 runs -> test days [0,10.5) = 96,595 runs ----
+    setup/teardown fitted on the fit part: 54.2 s (whole-window value 54.2 s)
+    k_eff fitted on the fit part: 156 on the original's coarse grid (objective 0.1101); 155 on the step-1 grid (objective 0.0978)
+    HELD OUT  k_eff=156 (coarse grid, fit part) + setup 54s     TEST  mean   1878.6 (rec   1865.8, x1.01)  p90 x0.90  p99 x1.09  rho_h 0.934  sp 0.940  med|e| 65s
+    HELD OUT  k_eff=155 (step-1 grid, fit part) + setup 54s     TEST  mean   1947.5 (rec   1865.8, x1.04)  p90 x0.95  p99 x1.11  rho_h 0.936  sp 0.940  med|e| 69s
+    no fit    k = nominal machines = 173 + setup 54s            TEST  mean   1088.5 (rec   1865.8, x0.58)  p90 x0.44  p99 x0.78  rho_h 0.801  sp 0.860  med|e| 64s
+    no fit    k = nominal machines = 173, no setup              TEST  mean    871.2 (rec   1865.8, x0.47)  p90 x0.35  p99 x0.63  rho_h 0.780  sp 0.798  med|e| 111s
+    circular  k_eff=156 (whole window) + setup 54s              TEST  mean   1878.5 (rec   1865.8, x1.01)  p90 x0.90  p99 x1.09  rho_h 0.934  sp 0.940  med|e| 65s
+
+  ---- split fit7-test14: fit days [0,7) = 56,726 runs -> test days [7,21) = 135,244 runs ----
+    setup/teardown fitted on the fit part: 55.3 s (whole-window value 54.2 s)
+    k_eff fitted on the fit part: 156 on the original's coarse grid (objective 0.1516); 157 on the step-1 grid (objective 0.1057)
+    HELD OUT  k_eff=156 (coarse grid, fit part) + setup 55s     TEST  mean   2248.5 (rec   2231.6, x1.01)  p90 x0.88  p99 x1.09  rho_h 0.951  sp 0.949  med|e| 88s
+    HELD OUT  k_eff=157 (step-1 grid, fit part) + setup 55s     TEST  mean   2161.4 (rec   2231.6, x0.97)  p90 x0.81  p99 x1.08  rho_h 0.950  sp 0.947  med|e| 82s
+    no fit    k = nominal machines = 173 + setup 55s            TEST  mean   1209.1 (rec   2231.6, x0.54)  p90 x0.42  p99 x0.76  rho_h 0.810  sp 0.863  med|e| 73s
+    no fit    k = nominal machines = 173, no setup              TEST  mean    924.5 (rec   2231.6, x0.41)  p90 x0.32  p99 x0.63  rho_h 0.749  sp 0.807  med|e| 133s
+    circular  k_eff=156 (whole window) + setup 54s              TEST  mean   2234.2 (rec   2231.6, x1.00)  p90 x0.87  p99 x1.09  rho_h 0.951  sp 0.949  med|e| 87s
+[    15s] wrote <repo-root>\prechecks\firefox_ci_holdout\holdout.csv (75 rows) and <repo-root>\prechecks\firefox_ci_holdout\ksearch.csv (439 rows)
+## done in 15 s

@@ -1,0 +1,13 @@
+occupancy = service + 126.8 s of setup/teardown (from keff_releng-hardware__gecko-t-linux-talos-2404.csv; 0 means fci_simval.py has not been run yet)
+=== releng-hardware__gecko-t-linux-talos-2404 ===
+runs with a service time: 30702/30702 (100.00%); the rest never started
+entities: 531 labels, 516 families
+split (by arrival day from 2026-09-07T00:00:00Z): train < 4 d (21539 runs), valid [4,5) (5271), test [5,7) (3892)
+heavy threshold = train p95 of the service = 1823.2 s
+service cap L' = train p99.9 = 4139.6 s (runs capped in the window: 27, 0.0879%; work removed by the cap 0.001%)
+the platform's own per-task limits payload.maxRunTime: min=900 median=3000 max=7200 s over 9 distinct values; prefix-max of the realised service over the window = 4181.2 s
+  (theory.md Prop 8 allows L to be the running prefix maximum, so the theorem also holds with the heterogeneous maxRunTime; the frozen L' above is used for the reported guarantees so that the numbers are comparable with prechecks/cross_domain, and every service is capped at it, which makes the theorem apply verbatim.)
+[leak test 1] brute-force recomputation of e_n/e_mean/e_max/e_min/e_last on 2500 sampled rows: mismatches = 0
+[leak test 2] 12421 runs with end>cutoff given random service; 18421 rows arrive at or before the cutoff; feature columns that changed: 0
+leak tests: PASS
+wrote <cache-dir>\firefox_ci\releng-hardware__gecko-t-linux-talos-2404_feats.parquet (30702 rows, 38 columns)

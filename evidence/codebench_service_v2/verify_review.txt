@@ -1,0 +1,233 @@
+verify_review.txt -- reviewer's independent checks of service_precheck_v2 (script: verify_review.py; stage logs in run order)
+==============================================================================
+DATA: DEV event order rebuilt from the raw parquet tables
+==============================================================================
+events 2,918,799; ts with a sub-second part: 0.000000 (the scripts floor ts to whole seconds)
+row-by-row equal to cb_v2_cache/ev.parquet (merged copy's event table): {'semester': True, 'class': True, 'user': True, 'assessment': True, 'exercise': True, 'kind': True, 'ts': True, 'exec_time': True, 'has_error': True, 'n_testcases': True}
+row-by-row equal to cb_v2_cache_r3/ev.parquet (this folder's copy): True
+submissions with an execution time: 863,149; submit rows without one (treated like TEST rows by both copies): 0
+                         cut-offs fitted on      n  heavy_p95_Ccap  tercile_lo  tercile_hi
+TRAIN_CORE 2018-1..2019-2 (used everywhere) 404578          1.5590      0.1426      0.2553
+2018-1..2018-2 (known before 2019-1 starts) 195466          0.4990      0.1283      0.1769
+2018-1..2019-1 (known before 2019-2 starts) 357587          1.1588      0.1373      0.1889
+  share of 2019-1 submissions labelled heavy: with the used cut-off 0.0538; with the cut-off known at its start 0.2117
+  share of 2019-2 submissions labelled heavy: with the used cut-off 0.1587; with the cut-off known at its start 0.1868
+
+==============================================================================
+FEATURES: brute force, 200 random 2022-2 + 200 random DEV submissions (seeds 20260919, 20260920), rule as stated
+==============================================================================
+heavy cut-off 1.5590, tercile cuts 0.1426 0.2553 (recomputed in stage data)
+  2022-2 ires0: brute force 0.4 s
+  2022-2 ires600: brute force 0.4 s
+  2022-2 ires0_t600: brute force 0.4 s
+  2022-2 isub0: brute force 0.4 s
+  2022-2 isub600: brute force 0.4 s
+  all DEV ires0: brute force 0.4 s
+  all DEV ires600: brute force 0.4 s
+  all DEV ires0_t600: brute force 0.4 s
+  all DEV isub0: brute force 0.4 s
+  all DEV isub600: brute force 0.4 s
+ sample     config                 cache  rows_failing  cells_failing max_abs_diff  rows_failing_vs_no_done_rule (power)
+ 2022-2      ires0    merged/cb_v2_cache             0              0     8.17e-07                                    29
+ 2022-2      ires0 folder/cb_v2_cache_r3             0              0     8.17e-07                                    29
+ 2022-2    ires600    merged/cb_v2_cache             0              0     8.17e-07                                   177
+ 2022-2    ires600 folder/cb_v2_cache_r3             0              0     8.17e-07                                   177
+ 2022-2 ires0_t600    merged/cb_v2_cache             0              0     8.17e-07                                    24
+ 2022-2 ires0_t600 folder/cb_v2_cache_r3             0              0     8.17e-07                                    24
+ 2022-2      isub0    merged/cb_v2_cache             0              0     8.10e-07                                    23
+ 2022-2      isub0 folder/cb_v2_cache_r3             0              0     8.10e-07                                    23
+ 2022-2    isub600    merged/cb_v2_cache             0              0     8.10e-07                                   177
+ 2022-2    isub600 folder/cb_v2_cache_r3             0              0     8.10e-07                                   177
+all DEV      ires0    merged/cb_v2_cache             0              0     4.86e-07                                    50
+all DEV      ires0 folder/cb_v2_cache_r3             0              0     4.86e-07                                    50
+all DEV    ires600    merged/cb_v2_cache             0              0     4.86e-07                                   190
+all DEV    ires600 folder/cb_v2_cache_r3             0              0     4.86e-07                                   190
+all DEV ires0_t600    merged/cb_v2_cache             0              0     4.86e-07                                    42
+all DEV ires0_t600 folder/cb_v2_cache_r3             0              0     4.86e-07                                    42
+all DEV      isub0    merged/cb_v2_cache             0              0     4.84e-07                                    42
+all DEV      isub0 folder/cb_v2_cache_r3             0              0     4.84e-07                                    42
+all DEV    isub600    merged/cb_v2_cache             0              0     4.84e-07                                   190
+all DEV    isub600 folder/cb_v2_cache_r3             0              0     4.84e-07                                   190
+28 features per row: 21 history (all but u_p90_log), the 5 relational ones, and the two
+available-result counts; ex_p50/p90/max and u_p50 use the last 120 results in availability order.
+
+==============================================================================
+GUARD: per-job bound at k = 1 on fresh traces, adversarial predictors
+==============================================================================
+                         trace     predictor     B    n  max_excess_ref  bound  folder_differs  merged_differs  merged_start_differs  unguarded_max_excess
+              synthetic seed-1      reversed  30.0 1500          77.281   90.0               0               0                     0                6984.9
+              synthetic seed-1      reversed 120.0 1500         137.281  180.0               0               0                     0                6984.9
+              synthetic seed-1      reversed 600.0 1500         618.594  660.0               0               0                     0                6984.9
+              synthetic seed-1          lifo  30.0 1500          85.734   90.0               0               0                     0                7025.4
+              synthetic seed-1          lifo 120.0 1500         155.031  180.0               0               0                     0                7025.4
+              synthetic seed-1          lifo 600.0 1500         656.938  660.0               0               0                     0                7025.4
+              synthetic seed-1        random  30.0 1500          89.203   90.0               0               0                     0                6843.7
+              synthetic seed-1        random 120.0 1500         179.391  180.0               0               0                     0                6843.7
+              synthetic seed-1        random 600.0 1500         659.688  660.0               0               0                     0                6843.7
+              synthetic seed-1     top1short  30.0 1500          60.094   90.0               0               0                     0                3318.5
+              synthetic seed-1     top1short 120.0 1500         136.438  180.0               0               0                     0                3318.5
+              synthetic seed-1     top1short 600.0 1500         615.875  660.0               0               0                     0                3318.5
+              synthetic seed-1 long5pct_as_0  30.0 1500          79.781   90.0               0               0                     0                6474.8
+              synthetic seed-1 long5pct_as_0 120.0 1500         159.547  180.0               0               0                     0                6474.8
+              synthetic seed-1 long5pct_as_0 600.0 1500         659.172  660.0               0               0                     0                6474.8
+              synthetic seed-2      reversed  30.0 1500          76.203   90.0               0               0                     0                7980.8
+              synthetic seed-2      reversed 120.0 1500         136.203  180.0               0               0                     0                7980.8
+              synthetic seed-2      reversed 600.0 1500         616.203  660.0               0               0                     0                7980.8
+              synthetic seed-2          lifo  30.0 1500          40.750   90.0               0               0                     0                7995.1
+              synthetic seed-2          lifo 120.0 1500         166.109  180.0               0               0                     0                7995.1
+              synthetic seed-2          lifo 600.0 1500         657.141  660.0               0               0                     0                7995.1
+              synthetic seed-2        random  30.0 1500          89.969   90.0               0               0                     0                7544.4
+              synthetic seed-2        random 120.0 1500         179.656  180.0               0               0                     0                7544.4
+              synthetic seed-2        random 600.0 1500         659.594  660.0               0               0                     0                7544.4
+              synthetic seed-2     top1short  30.0 1500          68.250   90.0               0               0                     0                3394.0
+              synthetic seed-2     top1short 120.0 1500         135.438  180.0               0               0                     0                3394.0
+              synthetic seed-2     top1short 600.0 1500         616.250  660.0               0               0                     0                3394.0
+              synthetic seed-2 long5pct_as_0  30.0 1500          68.250   90.0               0               0                     0                6994.0
+              synthetic seed-2 long5pct_as_0 120.0 1500         135.438  180.0               0               0                     0                6994.0
+              synthetic seed-2 long5pct_as_0 600.0 1500         613.672  660.0               0               0                     0                6994.0
+real 2022-2 slice (ires0, /10)    M4_forward  30.0 1500          65.939   90.0               0               0                     0                 453.1
+real 2022-2 slice (ires0, /10)    M4_forward 120.0 1500         145.568  180.0               0               0                     0                 453.1
+real 2022-2 slice (ires0, /10)    M4_forward 600.0 1500         453.139  660.0               0               0                     0                 453.1
+real 2022-2 slice (ires0, /10)      reversed  30.0 1500          55.274   90.0               0               0                     0                 587.4
+real 2022-2 slice (ires0, /10)      reversed 120.0 1500         152.264  180.0               0               0                     0                 587.4
+real 2022-2 slice (ires0, /10)      reversed 600.0 1500         587.368  660.0               0               0                     0                 587.4
+real 2022-2 slice (ires0, /10)          lifo  30.0 1500          68.081   90.0               0               0                     0                 605.1
+real 2022-2 slice (ires0, /10)          lifo 120.0 1500         147.228  180.0               0               0                     0                 605.1
+real 2022-2 slice (ires0, /10)          lifo 600.0 1500         600.644  660.0               0               0                     0                 605.1
+real 2022-2 slice (ires0, /10)        random  30.0 1500          67.351   90.0               0               0                     0                 503.3
+real 2022-2 slice (ires0, /10)        random 120.0 1500         166.264  180.0               0               0                     0                 503.3
+real 2022-2 slice (ires0, /10)        random 600.0 1500         503.295  660.0               0               0                     0                 503.3
+real 2022-2 slice (ires0, /10)     top1short  30.0 1500          53.492   90.0               0               0                     0                 496.2
+real 2022-2 slice (ires0, /10)     top1short 120.0 1500         160.921  180.0               0               0                     0                 496.2
+real 2022-2 slice (ires0, /10)     top1short 600.0 1500         496.185  660.0               0               0                     0                 496.2
+real 2022-2 slice (ires0, /10) long5pct_as_0  30.0 1500          65.171   90.0               0               0                     0                 554.5
+real 2022-2 slice (ires0, /10) long5pct_as_0 120.0 1500         148.938  180.0               0               0                     0                 554.5
+real 2022-2 slice (ires0, /10) long5pct_as_0 600.0 1500         554.502  660.0               0               0                     0                 554.5
+=> asserted W_guard[i] <= W_FCFS[i] + B + 60 for every job in 48 (trace, predictor, B) runs; own guard vs folder copy: 0 runs differ, vs merged copy: 0, vs merged start-time accounting: 0.
+
+k = 2 (reported only; Proposition 3 is a k = 1 claim):
+           trace     predictor     B  max_excess_k2  B+60  folder_differs  merged_differs
+synthetic seed-3      reversed  30.0          89.77  90.0               0               0
+synthetic seed-3      reversed 120.0         119.77 180.0               0               0
+synthetic seed-3          lifo  30.0          68.08  90.0               0               0
+synthetic seed-3          lifo 120.0         112.98 180.0               0               0
+synthetic seed-3        random  30.0          86.96  90.0               0               0
+synthetic seed-3        random 120.0         116.91 180.0               0               0
+synthetic seed-3     top1short  30.0          65.83  90.0               0               0
+synthetic seed-3     top1short 120.0         108.98 180.0               0               0
+synthetic seed-3 long5pct_as_0  30.0          89.77  90.0               0               0
+synthetic seed-3 long5pct_as_0 120.0         119.77 180.0               0               0
+synthetic seed-4      reversed  30.0          88.41  90.0               0               0
+synthetic seed-4      reversed 120.0         118.41 180.0               0               0
+synthetic seed-4          lifo  30.0          72.56  90.0               0               0
+synthetic seed-4          lifo 120.0          94.41 180.0               0               0
+synthetic seed-4        random  30.0          90.14  90.0               0               0
+synthetic seed-4        random 120.0         121.94 180.0               0               0
+synthetic seed-4     top1short  30.0          72.59  90.0               0               0
+synthetic seed-4     top1short 120.0         102.59 180.0               0               0
+synthetic seed-4 long5pct_as_0  30.0          89.86  90.0               0               0
+synthetic seed-4 long5pct_as_0 120.0         123.56 180.0               0               0
+k = 2 runs above B + 60: 1 of 20
+
+==============================================================================
+AUROC: M4 heavy classifier refit, config isub0, seed 3, train 2018-1..2021-2, test 2022-2
+==============================================================================
+train rows 770,758 (heavy 0.0304), test rows 40,844 (heavy 0.0131); 67 columns = 37 code + 8 context (rebuilt here from arrival) + 22 history (cached)
+refit here: test AUROC 0.9327 (4 s)
+merged copy's p1_isub0.csv, remote M4: seed 3 0.9327, 3-seed mean 0.9302; AUROC recomputed from its cached predictions 0.9327, 0.9330, 0.9250 (mean 0.9302)
+refit vs cached seed-3 prediction: max |diff| of P(heavy) 0.00e+00
+
+==============================================================================
+AUROC: M4 heavy classifier refit, config ires0, seed 3, train 2018-1..2021-2, test 2022-2
+==============================================================================
+train rows 770,758 (heavy 0.0304), test rows 40,844 (heavy 0.0131); 67 columns = 37 code + 8 context (rebuilt here from arrival) + 22 history (cached)
+refit here: test AUROC 0.9364 (4 s)
+merged copy's p1_ires0.csv, remote M4: seed 3 0.9364, 3-seed mean 0.9334; AUROC recomputed from its cached predictions 0.9364, 0.9306, 0.9333 (mean 0.9334)
+refit vs cached seed-3 prediction: max |diff| of P(heavy) 0.00e+00
+
+==============================================================================
+FWDLEAK: forward M4 for 2019-1 / 2019-2 with cut-offs fitted on data before the target
+==============================================================================
+  2019-1: heavy cut-off 0.4990, tercile cuts 0.1283 0.1769; 21 s
+  2019-2: heavy cut-off 1.1588, tercile cuts 0.1373 0.1889; 21 s
+target                                 predictions  n_train  n_target   rmse  spearman  auroc(C_cap>1.559)  spearman_vs_cached
+2019-1 cached forward M4 (cut-offs 2018-1..2019-2)   195466    162121 0.4286    0.6090              0.9523              1.0000
+2019-1    refit here, same cut-offs (reproduction)   195466    162121 0.4286    0.6090              0.9523              1.0000
+2019-1         refit, cut-offs from 2018-1..2018-2   195466    162121 0.4371    0.5980              0.9460              0.9213
+2019-2 cached forward M4 (cut-offs 2018-1..2019-2)   357587     46991 0.2567    0.4304              0.9531              1.0000
+2019-2    refit here, same cut-offs (reproduction)   357587     46991 0.2567    0.4304              0.9531              1.0000
+2019-2         refit, cut-offs from 2018-1..2019-1   357587     46991 0.2560    0.4276              0.9466              0.8807
+
+==============================================================================
+FWDSIM: P2 ires0 pure, SPJF-M4 with cached vs look-ahead-free 2019 forward predictions
+==============================================================================
+              k    fcfs  sjf_ref  spjf_m4_cached  spjf_m4_nolookahead  gain_cached  gain_nolookahead
+rho_target                                                                                          
+0.5         7.0  0.0989   0.0595          0.0704               0.0718       0.6919            0.6128
+0.8         4.6  0.4567   0.2122          0.2686               0.2816       0.7564            0.6875
+1.0         3.4  1.6738   0.5890          0.8258               0.8784       0.7495            0.6827
+
+==============================================================================
+TABLES: reported numbers recomputed from the merged copy's cached CSVs
+==============================================================================
+P1 AUROC, train incl. remote, 3-seed mean:
+    config     M1     M2     M4     M5     M6
+        v1 0.8662 0.8999 0.9442 0.9478 0.9444
+     ires0 0.8730 0.8820 0.9334 0.9370 0.9286
+   ires600 0.8471 0.8278 0.9169 0.9206 0.9173
+ires0_t600 0.8730 0.8821 0.9338 0.9362 0.9320
+     isub0 0.8707 0.8670 0.9302 0.9351 0.9345
+    isub60 0.8585 0.8384 0.9259 0.9289 0.9219
+   isub600 0.8449 0.8000 0.9169 0.9207 0.9167
+  isub3600 0.8370 0.7810 0.9123 0.9129 0.9092
+
+P2 ires0 pure, gain on mean wait (mean over 5 overlays):
+rho_target        0.5    0.8    1.0
+policy                             
+SPJF-M1         0.301  0.344  0.274
+SPJF-M4         0.692  0.756  0.749
+SPJF-M5         0.652  0.709  0.702
+SPJF-M4-d600    0.731  0.758  0.778
+SPJF-M4-v1feat  0.912  0.919  0.946
+GUARD-M4-B30    0.588  0.532  0.450
+GUARD-M4-B120   0.626  0.593  0.510
+GUARD-M4-B600   0.687  0.695  0.640
+ADV-rev        -1.320 -1.536 -1.626
+ADV-rev+G30    -0.784 -0.519 -0.362
+FCFS per target level: mean k, realised busy-hour rho, mean wait:
+              k  rho_busy  w_mean
+rho_target                       
+0.5         7.0     0.414   0.099
+0.8         4.6     0.625   0.457
+1.0         3.4     0.861   1.674
+max per-job excess over FCFS at k > 1 (pure): ADV-rand+G120 141.3, ADV-rand+G30 102.2, ADV-rand+G600 383.2, ADV-rev+G120 142.6, ADV-rev+G30 92.1, ADV-rev+G600 378.3, ADV-top1short+G120 143.9, ADV-top1short+G30 91.8, ADV-top1short+G600 382.7, GUARD-M4-B120 141.0, GUARD-M4-B120-startacct 111.5, GUARD-M4-B30 100.8, GUARD-M4-B30-startacct 72.8, GUARD-M4-B600 387.0, GUARD-M4-B600-startacct 355.2
+
+P2 isub0 pure, gain on mean wait (mean over 5 overlays):
+rho_target        0.5    0.8    1.0
+policy                             
+SPJF-M1         0.346  0.438  0.504
+SPJF-M4         0.812  0.836  0.849
+SPJF-M5         0.831  0.852  0.859
+SPJF-M4-v1feat  0.912  0.934  0.939
+GUARD-M4-B30    0.496  0.456  0.422
+GUARD-M4-B120   0.561  0.619  0.599
+GUARD-M4-B600   0.669  0.751  0.760
+ADV-rev        -0.989 -0.919 -0.725
+ADV-rev+G30    -0.216 -0.167 -0.147
+FCFS per target level: mean k, realised busy-hour rho, mean wait:
+              k  rho_busy  w_mean
+rho_target                       
+0.5         7.0     0.496   0.313
+0.8         4.6     0.748   0.948
+1.0         3.4     1.031   2.436
+max per-job excess over FCFS at k > 1 (pure): ADV-rand+G120 142.0, ADV-rand+G30 93.4, ADV-rand+G600 387.1, ADV-rev+G120 143.0, ADV-rev+G30 101.7, ADV-rev+G600 381.0, ADV-top1short+G120 138.3, ADV-top1short+G30 98.7, ADV-top1short+G600 377.3, GUARD-M4-B120 145.8, GUARD-M4-B120-startacct 118.8, GUARD-M4-B30 98.5, GUARD-M4-B30-startacct 73.4, GUARD-M4-B600 381.2, GUARD-M4-B600-startacct 356.3
+
+guardk1.csv, max excess per B over predictors: B30_max_excess 89.996, B120_max_excess 179.964, B600_max_excess 659.998
+
+I-res reconstruction: arrival = ts - C orders same-second members by cost.  ue_log_sec_since
+(time since the user's previous same-exercise arrival) vs the row's own cost, test 2022-2:
+config                                       rows     n  share_with_prev  spearman(gap, logC)  AUROC(gap -> heavy)  heavy_share
+ ires0 same-second (user, exercise) group members   936            0.974                0.192                0.817       0.0780
+ ires0                            other test rows 39908            0.652               -0.006                0.457       0.0116
+ isub0 same-second (user, exercise) group members   936            0.950                0.103                0.786       0.0780
+ isub0                            other test rows 39908            0.652               -0.002                0.479       0.0116

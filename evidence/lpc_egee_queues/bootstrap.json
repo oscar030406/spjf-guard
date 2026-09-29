@@ -1,0 +1,7 @@
+{
+  "n_weeks": 17,
+  "replicates": 2000,
+  "seed": 20260921,
+  "method": "paired resampling of arrival-week blocks, one multiplicity vector shared by every queue and policy; exact expanded-sample linear quantiles",
+  "limits": "conditional on the trace, the fitted capacity and the frozen model"
+}

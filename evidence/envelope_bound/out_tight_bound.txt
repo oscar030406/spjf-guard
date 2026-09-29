@@ -1,0 +1,336 @@
+[a] tight absolute bound, per (overlay, level, policy)
+  ov k1_rep0 lv 0 k=1 FCFS                              bound   1428.6 s (old   1428.6) max wait   1427.3 ratio 0.9990 min slack     0.00 viol 0
+  ov k1_rep0 lv 0 k=1 Guard(300)              B_max=240 bound   1728.6 s (old   1728.6) max wait   1672.9 ratio 0.9677 min slack     4.87 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-age(300)          B_max=240 bound   1728.6 s (old   1728.6) max wait   1672.9 ratio 0.9677 min slack     4.87 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-fixed(300)        B_max=240 bound   1728.6 s (old   1728.6) max wait   1520.8 ratio 0.8798 min slack   159.68 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-queue(300)        B_max=240 bound   1728.6 s (old   1728.6) max wait   1672.9 ratio 0.9677 min slack     4.87 viol 0
+  ov k1_rep0 lv 0 k=1 Fixed(300)              B_max=240 bound   1728.6 s (old   1728.6) max wait   1672.9 ratio 0.9677 min slack     4.87 viol 0
+  ov k1_rep0 lv 0 k=1 Skip(300)                     N=5 bound   1728.6 s (old   1728.6) max wait   1428.4 ratio 0.8263 min slack   204.91 viol 0
+  ov k1_rep0 lv 0 k=1 Guard(600)              B_max=540 bound   2028.6 s (old   2028.6) max wait   1979.8 ratio 0.9759 min slack     7.47 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-age(600)          B_max=540 bound   2028.6 s (old   2028.6) max wait   1979.8 ratio 0.9759 min slack     7.47 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-fixed(600)        B_max=540 bound   2028.6 s (old   2028.6) max wait   1672.7 ratio 0.8246 min slack   296.73 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-queue(600)        B_max=540 bound   2028.6 s (old   2028.6) max wait   1979.8 ratio 0.9759 min slack     7.47 viol 0
+  ov k1_rep0 lv 0 k=1 Fixed(600)              B_max=540 bound   2028.6 s (old   2028.6) max wait   1979.8 ratio 0.9759 min slack     7.47 viol 0
+  ov k1_rep0 lv 0 k=1 Skip(600)                    N=10 bound   2028.6 s (old   2028.6) max wait   1429.5 ratio 0.7046 min slack   499.15 viol 0
+  ov k1_rep0 lv 0 k=1 Guard(1200)            B_max=1140 bound   2628.6 s (old   2628.6) max wait   2205.2 ratio 0.8389 min slack    34.85 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-queue(1200)      B_max=1140 bound   2628.6 s (old   2628.6) max wait   2205.2 ratio 0.8389 min slack    34.85 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-fixed(1200)      B_max=1140 bound   2628.6 s (old   2628.6) max wait   1936.7 ratio 0.7368 min slack   641.06 viol 0
+  ov k1_rep0 lv 0 k=1 Guard-age(1200)        B_max=1140 bound   2628.6 s (old   2628.6) max wait   2205.2 ratio 0.8389 min slack    18.66 viol 0
+  ov k1_rep0 lv 0 k=1 Fixed(1200)            B_max=1140 bound   2628.6 s (old   2628.6) max wait   2205.2 ratio 0.8389 min slack    28.33 viol 0
+  ov k1_rep0 lv 0 k=1 Skip(1200)                   N=20 bound   2628.6 s (old   2628.6) max wait   1431.9 ratio 0.5447 min slack  1033.13 viol 0
+  ov       0 lv 0 k=8 FCFS                              bound    508.5 s (old    508.5) max wait    435.0 ratio 0.8555 min slack    41.12 viol 0
+  ov       0 lv 0 k=8 Guard(300)             B_max=1080 bound    703.5 s (old    808.5) max wait    578.8 ratio 0.8227 min slack    82.30 viol 0
+  ov       0 lv 0 k=8 Guard-age(300)         B_max=1080 bound    703.5 s (old    808.5) max wait    578.8 ratio 0.8227 min slack    82.30 viol 0
+  ov       0 lv 0 k=8 Guard-fixed(300)       B_max=1080 bound    703.5 s (old    808.5) max wait    535.6 ratio 0.7613 min slack   121.93 viol 0
+  ov       0 lv 0 k=8 Guard-queue(300)       B_max=1080 bound    703.5 s (old    808.5) max wait    579.2 ratio 0.8232 min slack    83.87 viol 0
+  ov       0 lv 0 k=8 Fixed(300)             B_max=1080 bound    703.5 s (old    808.5) max wait    579.1 ratio 0.8231 min slack    83.87 viol 0
+  ov       0 lv 0 k=8 Skip(300)                    N=26 bound    703.5 s (old    808.5) max wait    435.8 ratio 0.6194 min slack   254.20 viol 0
+  ov       0 lv 0 k=8 Guard(600)             B_max=3480 bound   1003.5 s (old   1108.5) max wait    867.2 ratio 0.8642 min slack    71.18 viol 0
+  ov       0 lv 0 k=8 Guard-age(600)         B_max=3480 bound   1003.5 s (old   1108.5) max wait    867.2 ratio 0.8642 min slack    71.18 viol 0
+  ov       0 lv 0 k=8 Guard-fixed(600)       B_max=3480 bound   1003.5 s (old   1108.5) max wait    691.3 ratio 0.6888 min slack   273.06 viol 0
+  ov       0 lv 0 k=8 Guard-queue(600)       B_max=3480 bound   1003.5 s (old   1108.5) max wait    862.0 ratio 0.8590 min slack    77.81 viol 0
+  ov       0 lv 0 k=8 Fixed(600)             B_max=3480 bound   1003.5 s (old   1108.5) max wait    870.5 ratio 0.8674 min slack    76.30 viol 0
+  ov       0 lv 0 k=8 Skip(600)                    N=66 bound   1003.5 s (old   1108.5) max wait    436.8 ratio 0.4353 min slack   530.38 viol 0
+  ov       0 lv 0 k=8 Guard(1200)            B_max=8280 bound   1603.5 s (old   1708.5) max wait   1182.8 ratio 0.7376 min slack   321.51 viol 0
+  ov       0 lv 0 k=8 Guard-queue(1200)      B_max=8280 bound   1603.5 s (old   1708.5) max wait   1182.8 ratio 0.7376 min slack   321.51 viol 0
+  ov       0 lv 0 k=8 Guard-fixed(1200)      B_max=8280 bound   1603.5 s (old   1708.5) max wait    933.0 ratio 0.5818 min slack   611.44 viol 0
+  ov       0 lv 0 k=8 Guard-age(1200)        B_max=8280 bound   1603.5 s (old   1708.5) max wait   1177.0 ratio 0.7340 min slack   171.89 viol 0
+  ov       0 lv 0 k=8 Fixed(1200)            B_max=8280 bound   1603.5 s (old   1708.5) max wait   1200.4 ratio 0.7486 min slack   102.12 viol 0
+  ov       0 lv 0 k=8 Skip(1200)                  N=146 bound   1603.5 s (old   1708.5) max wait    438.9 ratio 0.2737 min slack  1126.62 viol 0
+  ov       0 lv 1 k=5 FCFS                              bound   1083.8 s (old   1083.8) max wait   1023.8 ratio 0.9446 min slack    36.66 viol 0
+  ov       0 lv 1 k=5 Guard(300)              B_max=720 bound   1287.8 s (old   1383.8) max wait   1167.4 ratio 0.9065 min slack    60.51 viol 0
+  ov       0 lv 1 k=5 Guard-age(300)          B_max=720 bound   1287.8 s (old   1383.8) max wait   1167.4 ratio 0.9065 min slack    60.51 viol 0
+  ov       0 lv 1 k=5 Guard-fixed(300)        B_max=720 bound   1287.8 s (old   1383.8) max wait   1105.8 ratio 0.8586 min slack   114.11 viol 0
+  ov       0 lv 1 k=5 Guard-queue(300)        B_max=720 bound   1287.8 s (old   1383.8) max wait   1167.4 ratio 0.9065 min slack    55.56 viol 0
+  ov       0 lv 1 k=5 Fixed(300)              B_max=720 bound   1287.8 s (old   1383.8) max wait   1167.4 ratio 0.9065 min slack    55.54 viol 0
+  ov       0 lv 1 k=5 Skip(300)                    N=17 bound   1287.8 s (old   1383.8) max wait   1024.6 ratio 0.7956 min slack   242.74 viol 0
+  ov       0 lv 1 k=5 Guard(600)             B_max=2220 bound   1587.8 s (old   1683.8) max wait   1467.4 ratio 0.9241 min slack    67.21 viol 0
+  ov       0 lv 1 k=5 Guard-age(600)         B_max=2220 bound   1587.8 s (old   1683.8) max wait   1467.4 ratio 0.9241 min slack    67.21 viol 0
+  ov       0 lv 1 k=5 Guard-fixed(600)       B_max=2220 bound   1587.8 s (old   1683.8) max wait   1277.8 ratio 0.8047 min slack   257.40 viol 0
+  ov       0 lv 1 k=5 Guard-queue(600)       B_max=2220 bound   1587.8 s (old   1683.8) max wait   1467.4 ratio 0.9242 min slack    70.38 viol 0
+  ov       0 lv 1 k=5 Fixed(600)             B_max=2220 bound   1587.8 s (old   1683.8) max wait   1474.8 ratio 0.9288 min slack    71.77 viol 0
+  ov       0 lv 1 k=5 Skip(600)                    N=42 bound   1587.8 s (old   1683.8) max wait   1025.8 ratio 0.6461 min slack   523.88 viol 0
+  ov       0 lv 1 k=5 Guard(1200)            B_max=5220 bound   2187.8 s (old   2283.8) max wait   2074.5 ratio 0.9482 min slack    71.22 viol 0
+  ov       0 lv 1 k=5 Guard-queue(1200)      B_max=5220 bound   2187.8 s (old   2283.8) max wait   2074.5 ratio 0.9482 min slack    71.22 viol 0
+  ov       0 lv 1 k=5 Guard-fixed(1200)      B_max=5220 bound   2187.8 s (old   2283.8) max wait   1552.2 ratio 0.7095 min slack   597.07 viol 0
+  ov       0 lv 1 k=5 Guard-age(1200)        B_max=5220 bound   2187.8 s (old   2283.8) max wait   2079.7 ratio 0.9506 min slack    79.21 viol 0
+  ov       0 lv 1 k=5 Fixed(1200)            B_max=5220 bound   2187.8 s (old   2283.8) max wait   2069.9 ratio 0.9461 min slack    67.10 viol 0
+  ov       0 lv 1 k=5 Skip(1200)                   N=92 bound   2187.8 s (old   2283.8) max wait   1028.0 ratio 0.4699 min slack  1096.87 viol 0
+  ov       0 lv 2 k=4 FCFS                              bound   1603.6 s (old   1603.6) max wait   1544.6 ratio 0.9632 min slack    34.14 viol 0
+  ov       0 lv 2 k=4 Guard(300)              B_max=600 bound   1813.6 s (old   1903.6) max wait   1694.5 ratio 0.9343 min slack    46.46 viol 0
+  ov       0 lv 2 k=4 Guard-age(300)          B_max=600 bound   1813.6 s (old   1903.6) max wait   1694.5 ratio 0.9343 min slack    46.46 viol 0
+  ov       0 lv 2 k=4 Guard-fixed(300)        B_max=600 bound   1813.6 s (old   1903.6) max wait   1627.1 ratio 0.8971 min slack   113.35 viol 0
+  ov       0 lv 2 k=4 Guard-queue(300)        B_max=600 bound   1813.6 s (old   1903.6) max wait   1694.6 ratio 0.9344 min slack    46.46 viol 0
+  ov       0 lv 2 k=4 Fixed(300)              B_max=600 bound   1813.6 s (old   1903.6) max wait   1694.7 ratio 0.9344 min slack    46.46 viol 0
+  ov       0 lv 2 k=4 Skip(300)                    N=14 bound   1813.6 s (old   1903.6) max wait   1545.4 ratio 0.8521 min slack   234.70 viol 0
+  ov       0 lv 2 k=4 Guard(600)             B_max=1800 bound   2113.6 s (old   2203.6) max wait   1994.5 ratio 0.9436 min slack    46.84 viol 0
+  ov       0 lv 2 k=4 Guard-age(600)         B_max=1800 bound   2113.6 s (old   2203.6) max wait   1994.5 ratio 0.9436 min slack    46.84 viol 0
+  ov       0 lv 2 k=4 Guard-fixed(600)       B_max=1800 bound   2113.6 s (old   2203.6) max wait   1789.6 ratio 0.8467 min slack   251.88 viol 0
+  ov       0 lv 2 k=4 Guard-queue(600)       B_max=1800 bound   2113.6 s (old   2203.6) max wait   1994.5 ratio 0.9436 min slack    55.03 viol 0
+  ov       0 lv 2 k=4 Fixed(600)             B_max=1800 bound   2113.6 s (old   2203.6) max wait   1994.4 ratio 0.9436 min slack    46.30 viol 0
+  ov       0 lv 2 k=4 Skip(600)                    N=34 bound   2113.6 s (old   2203.6) max wait   1546.8 ratio 0.7318 min slack   499.62 viol 0
+  ov       0 lv 2 k=4 Guard(1200)            B_max=4200 bound   2713.6 s (old   2803.6) max wait   2603.2 ratio 0.9593 min slack    57.28 viol 0
+  ov       0 lv 2 k=4 Guard-queue(1200)      B_max=4200 bound   2713.6 s (old   2803.6) max wait   2603.2 ratio 0.9593 min slack    57.28 viol 0
+  ov       0 lv 2 k=4 Guard-fixed(1200)      B_max=4200 bound   2713.6 s (old   2803.6) max wait   2051.9 ratio 0.7562 min slack   590.07 viol 0
+  ov       0 lv 2 k=4 Guard-age(1200)        B_max=4200 bound   2713.6 s (old   2803.6) max wait   2605.0 ratio 0.9600 min slack    57.28 viol 0
+  ov       0 lv 2 k=4 Fixed(1200)            B_max=4200 bound   2713.6 s (old   2803.6) max wait   2603.7 ratio 0.9595 min slack    47.99 viol 0
+  ov       0 lv 2 k=4 Skip(1200)                   N=74 bound   2713.6 s (old   2803.6) max wait   1549.6 ratio 0.5710 min slack  1084.35 viol 0
+  ov       1 lv 0 k=8 FCFS                              bound    421.3 s (old    421.3) max wait    352.7 ratio 0.8373 min slack    41.10 viol 0
+  ov       1 lv 0 k=8 Guard(300)             B_max=1080 bound    616.3 s (old    721.3) max wait    508.1 ratio 0.8245 min slack    76.91 viol 0
+  ov       1 lv 0 k=8 Guard-age(300)         B_max=1080 bound    616.3 s (old    721.3) max wait    508.1 ratio 0.8245 min slack    76.91 viol 0
+  ov       1 lv 0 k=8 Guard-fixed(300)       B_max=1080 bound    616.3 s (old    721.3) max wait    461.7 ratio 0.7492 min slack   129.14 viol 0
+  ov       1 lv 0 k=8 Guard-queue(300)       B_max=1080 bound    616.3 s (old    721.3) max wait    500.5 ratio 0.8122 min slack    74.79 viol 0
+  ov       1 lv 0 k=8 Fixed(300)             B_max=1080 bound    616.3 s (old    721.3) max wait    499.5 ratio 0.8105 min slack    74.79 viol 0
+  ov       1 lv 0 k=8 Skip(300)                    N=26 bound    616.3 s (old    721.3) max wait    353.8 ratio 0.5740 min slack   254.77 viol 0
+  ov       1 lv 0 k=8 Guard(600)             B_max=3480 bound    916.3 s (old   1021.3) max wait    781.4 ratio 0.8528 min slack    83.21 viol 0
+  ov       1 lv 0 k=8 Guard-age(600)         B_max=3480 bound    916.3 s (old   1021.3) max wait    781.4 ratio 0.8528 min slack    83.21 viol 0
+  ov       1 lv 0 k=8 Guard-fixed(600)       B_max=3480 bound    916.3 s (old   1021.3) max wait    615.3 ratio 0.6715 min slack   261.35 viol 0
+  ov       1 lv 0 k=8 Guard-queue(600)       B_max=3480 bound    916.3 s (old   1021.3) max wait    797.0 ratio 0.8698 min slack    80.88 viol 0
+  ov       1 lv 0 k=8 Fixed(600)             B_max=3480 bound    916.3 s (old   1021.3) max wait    793.2 ratio 0.8657 min slack    79.56 viol 0
+  ov       1 lv 0 k=8 Skip(600)                    N=66 bound    916.3 s (old   1021.3) max wait    355.1 ratio 0.3875 min slack   529.50 viol 0
+  ov       1 lv 0 k=8 Guard(1200)            B_max=8280 bound   1516.3 s (old   1621.3) max wait   1015.6 ratio 0.6698 min slack   271.20 viol 0
+  ov       1 lv 0 k=8 Guard-queue(1200)      B_max=8280 bound   1516.3 s (old   1621.3) max wait   1015.6 ratio 0.6698 min slack   271.20 viol 0
+  ov       1 lv 0 k=8 Guard-fixed(1200)      B_max=8280 bound   1516.3 s (old   1621.3) max wait    847.2 ratio 0.5588 min slack   614.80 viol 0
+  ov       1 lv 0 k=8 Guard-age(1200)        B_max=8280 bound   1516.3 s (old   1621.3) max wait    977.6 ratio 0.6448 min slack   316.73 viol 0
+  ov       1 lv 0 k=8 Fixed(1200)            B_max=8280 bound   1516.3 s (old   1621.3) max wait   1159.5 ratio 0.7647 min slack   101.05 viol 0
+  ov       1 lv 0 k=8 Skip(1200)                  N=146 bound   1516.3 s (old   1621.3) max wait    357.3 ratio 0.2356 min slack  1127.94 viol 0
+  ov       1 lv 1 k=5 FCFS                              bound    905.7 s (old    905.7) max wait    850.5 ratio 0.9391 min slack    36.65 viol 0
+  ov       1 lv 1 k=5 Guard(300)              B_max=720 bound   1109.7 s (old   1205.7) max wait    994.6 ratio 0.8963 min slack    69.17 viol 0
+  ov       1 lv 1 k=5 Guard-age(300)          B_max=720 bound   1109.7 s (old   1205.7) max wait    994.6 ratio 0.8963 min slack    69.17 viol 0
+  ov       1 lv 1 k=5 Guard-fixed(300)        B_max=720 bound   1109.7 s (old   1205.7) max wait    933.1 ratio 0.8409 min slack   110.66 viol 0
+  ov       1 lv 1 k=5 Guard-queue(300)        B_max=720 bound   1109.7 s (old   1205.7) max wait    994.1 ratio 0.8958 min slack    65.82 viol 0
+  ov       1 lv 1 k=5 Fixed(300)              B_max=720 bound   1109.7 s (old   1205.7) max wait    994.1 ratio 0.8958 min slack    61.77 viol 0
+  ov       1 lv 1 k=5 Skip(300)                    N=17 bound   1109.7 s (old   1205.7) max wait    851.2 ratio 0.7671 min slack   238.18 viol 0
+  ov       1 lv 1 k=5 Guard(600)             B_max=2220 bound   1409.7 s (old   1505.7) max wait   1292.4 ratio 0.9168 min slack    68.57 viol 0
+  ov       1 lv 1 k=5 Guard-age(600)         B_max=2220 bound   1409.7 s (old   1505.7) max wait   1292.4 ratio 0.9168 min slack    68.57 viol 0
+  ov       1 lv 1 k=5 Guard-fixed(600)       B_max=2220 bound   1409.7 s (old   1505.7) max wait   1095.6 ratio 0.7772 min slack   260.64 viol 0
+  ov       1 lv 1 k=5 Guard-queue(600)       B_max=2220 bound   1409.7 s (old   1505.7) max wait   1297.8 ratio 0.9206 min slack    61.57 viol 0
+  ov       1 lv 1 k=5 Fixed(600)             B_max=2220 bound   1409.7 s (old   1505.7) max wait   1297.8 ratio 0.9206 min slack    64.01 viol 0
+  ov       1 lv 1 k=5 Skip(600)                    N=42 bound   1409.7 s (old   1505.7) max wait    852.4 ratio 0.6047 min slack   521.06 viol 0
+  ov       1 lv 1 k=5 Guard(1200)            B_max=5220 bound   2009.7 s (old   2105.7) max wait   1897.9 ratio 0.9444 min slack    65.53 viol 0
+  ov       1 lv 1 k=5 Guard-queue(1200)      B_max=5220 bound   2009.7 s (old   2105.7) max wait   1897.9 ratio 0.9444 min slack    65.53 viol 0
+  ov       1 lv 1 k=5 Guard-fixed(1200)      B_max=5220 bound   2009.7 s (old   2105.7) max wait   1389.4 ratio 0.6914 min slack   599.89 viol 0
+  ov       1 lv 1 k=5 Guard-age(1200)        B_max=5220 bound   2009.7 s (old   2105.7) max wait   1899.4 ratio 0.9451 min slack    64.70 viol 0
+  ov       1 lv 1 k=5 Fixed(1200)            B_max=5220 bound   2009.7 s (old   2105.7) max wait   1899.4 ratio 0.9451 min slack    64.24 viol 0
+  ov       1 lv 1 k=5 Skip(1200)                   N=92 bound   2009.7 s (old   2105.7) max wait    854.5 ratio 0.4252 min slack  1091.52 viol 0
+  ov       1 lv 2 k=4 FCFS                              bound   1331.5 s (old   1331.5) max wait   1285.3 ratio 0.9653 min slack    33.66 viol 0
+  ov       1 lv 2 k=4 Guard(300)              B_max=600 bound   1541.5 s (old   1631.5) max wait   1435.7 ratio 0.9314 min slack    47.54 viol 0
+  ov       1 lv 2 k=4 Guard-age(300)          B_max=600 bound   1541.5 s (old   1631.5) max wait   1435.7 ratio 0.9314 min slack    47.54 viol 0
+  ov       1 lv 2 k=4 Guard-fixed(300)        B_max=600 bound   1541.5 s (old   1631.5) max wait   1368.1 ratio 0.8875 min slack   113.49 viol 0
+  ov       1 lv 2 k=4 Guard-queue(300)        B_max=600 bound   1541.5 s (old   1631.5) max wait   1435.7 ratio 0.9314 min slack    47.56 viol 0
+  ov       1 lv 2 k=4 Fixed(300)              B_max=600 bound   1541.5 s (old   1631.5) max wait   1435.5 ratio 0.9312 min slack    47.56 viol 0
+  ov       1 lv 2 k=4 Skip(300)                    N=14 bound   1541.5 s (old   1631.5) max wait   1286.3 ratio 0.8344 min slack   234.63 viol 0
+  ov       1 lv 2 k=4 Guard(600)             B_max=1800 bound   1841.5 s (old   1931.5) max wait   1735.6 ratio 0.9425 min slack    47.85 viol 0
+  ov       1 lv 2 k=4 Guard-age(600)         B_max=1800 bound   1841.5 s (old   1931.5) max wait   1735.6 ratio 0.9425 min slack    47.85 viol 0
+  ov       1 lv 2 k=4 Guard-fixed(600)       B_max=1800 bound   1841.5 s (old   1931.5) max wait   1530.7 ratio 0.8312 min slack   252.84 viol 0
+  ov       1 lv 2 k=4 Guard-queue(600)       B_max=1800 bound   1841.5 s (old   1931.5) max wait   1735.6 ratio 0.9425 min slack    47.85 viol 0
+  ov       1 lv 2 k=4 Fixed(600)             B_max=1800 bound   1841.5 s (old   1931.5) max wait   1735.6 ratio 0.9425 min slack    49.59 viol 0
+  ov       1 lv 2 k=4 Skip(600)                    N=34 bound   1841.5 s (old   1931.5) max wait   1287.5 ratio 0.6991 min slack   506.62 viol 0
+  ov       1 lv 2 k=4 Guard(1200)            B_max=4200 bound   2441.5 s (old   2531.5) max wait   2350.0 ratio 0.9625 min slack    61.64 viol 0
+  ov       1 lv 2 k=4 Guard-queue(1200)      B_max=4200 bound   2441.5 s (old   2531.5) max wait   2350.0 ratio 0.9625 min slack    61.64 viol 0
+  ov       1 lv 2 k=4 Guard-fixed(1200)      B_max=4200 bound   2441.5 s (old   2531.5) max wait   1793.1 ratio 0.7344 min slack   597.11 viol 0
+  ov       1 lv 2 k=4 Guard-age(1200)        B_max=4200 bound   2441.5 s (old   2531.5) max wait   2334.6 ratio 0.9562 min slack    59.27 viol 0
+  ov       1 lv 2 k=4 Fixed(1200)            B_max=4200 bound   2441.5 s (old   2531.5) max wait   2348.4 ratio 0.9619 min slack    59.57 viol 0
+  ov       1 lv 2 k=4 Skip(1200)                   N=74 bound   2441.5 s (old   2531.5) max wait   1290.2 ratio 0.5285 min slack  1040.13 viol 0
+  ov       2 lv 0 k=8 FCFS                              bound    443.0 s (old    443.0) max wait    379.8 ratio 0.8573 min slack    41.87 viol 0
+  ov       2 lv 0 k=8 Guard(300)             B_max=1080 bound    638.0 s (old    743.0) max wait    552.8 ratio 0.8665 min slack    68.48 viol 0
+  ov       2 lv 0 k=8 Guard-age(300)         B_max=1080 bound    638.0 s (old    743.0) max wait    552.8 ratio 0.8665 min slack    68.48 viol 0
+  ov       2 lv 0 k=8 Guard-fixed(300)       B_max=1080 bound    638.0 s (old    743.0) max wait    483.0 ratio 0.7571 min slack   123.06 viol 0
+  ov       2 lv 0 k=8 Guard-queue(300)       B_max=1080 bound    638.0 s (old    743.0) max wait    552.7 ratio 0.8664 min slack    68.87 viol 0
+  ov       2 lv 0 k=8 Fixed(300)             B_max=1080 bound    638.0 s (old    743.0) max wait    552.8 ratio 0.8664 min slack    68.50 viol 0
+  ov       2 lv 0 k=8 Skip(300)                    N=26 bound    638.0 s (old    743.0) max wait    380.5 ratio 0.5964 min slack   248.35 viol 0
+  ov       2 lv 0 k=8 Guard(600)             B_max=3480 bound    938.0 s (old   1043.0) max wait    738.9 ratio 0.7878 min slack    85.02 viol 0
+  ov       2 lv 0 k=8 Guard-age(600)         B_max=3480 bound    938.0 s (old   1043.0) max wait    738.9 ratio 0.7878 min slack    85.02 viol 0
+  ov       2 lv 0 k=8 Guard-fixed(600)       B_max=3480 bound    938.0 s (old   1043.0) max wait    636.8 ratio 0.6789 min slack   255.07 viol 0
+  ov       2 lv 0 k=8 Guard-queue(600)       B_max=3480 bound    938.0 s (old   1043.0) max wait    739.0 ratio 0.7878 min slack    81.97 viol 0
+  ov       2 lv 0 k=8 Fixed(600)             B_max=3480 bound    938.0 s (old   1043.0) max wait    736.4 ratio 0.7851 min slack    74.63 viol 0
+  ov       2 lv 0 k=8 Skip(600)                    N=66 bound    938.0 s (old   1043.0) max wait    381.5 ratio 0.4067 min slack   537.48 viol 0
+  ov       2 lv 0 k=8 Guard(1200)            B_max=8280 bound   1538.0 s (old   1643.0) max wait    772.2 ratio 0.5021 min slack   575.66 viol 0
+  ov       2 lv 0 k=8 Guard-queue(1200)      B_max=8280 bound   1538.0 s (old   1643.0) max wait    772.2 ratio 0.5021 min slack   575.66 viol 0
+  ov       2 lv 0 k=8 Guard-fixed(1200)      B_max=8280 bound   1538.0 s (old   1643.0) max wait    783.0 ratio 0.5091 min slack   610.54 viol 0
+  ov       2 lv 0 k=8 Guard-age(1200)        B_max=8280 bound   1538.0 s (old   1643.0) max wait    973.6 ratio 0.6330 min slack   331.21 viol 0
+  ov       2 lv 0 k=8 Fixed(1200)            B_max=8280 bound   1538.0 s (old   1643.0) max wait    963.4 ratio 0.6264 min slack   292.49 viol 0
+  ov       2 lv 0 k=8 Skip(1200)                  N=146 bound   1538.0 s (old   1643.0) max wait    383.8 ratio 0.2496 min slack  1121.96 viol 0
+  ov       2 lv 1 k=5 FCFS                              bound    866.9 s (old    866.9) max wait    806.7 ratio 0.9306 min slack    36.67 viol 0
+  ov       2 lv 1 k=5 Guard(300)              B_max=720 bound   1070.9 s (old   1166.9) max wait    952.3 ratio 0.8893 min slack    58.39 viol 0
+  ov       2 lv 1 k=5 Guard-age(300)          B_max=720 bound   1070.9 s (old   1166.9) max wait    952.3 ratio 0.8893 min slack    58.39 viol 0
+  ov       2 lv 1 k=5 Guard-fixed(300)        B_max=720 bound   1070.9 s (old   1166.9) max wait    888.6 ratio 0.8298 min slack   112.21 viol 0
+  ov       2 lv 1 k=5 Guard-queue(300)        B_max=720 bound   1070.9 s (old   1166.9) max wait    950.2 ratio 0.8873 min slack    58.38 viol 0
+  ov       2 lv 1 k=5 Fixed(300)              B_max=720 bound   1070.9 s (old   1166.9) max wait    950.2 ratio 0.8873 min slack    61.35 viol 0
+  ov       2 lv 1 k=5 Skip(300)                    N=17 bound   1070.9 s (old   1166.9) max wait    807.4 ratio 0.7540 min slack   238.18 viol 0
+  ov       2 lv 1 k=5 Guard(600)             B_max=2220 bound   1370.9 s (old   1466.9) max wait   1266.5 ratio 0.9239 min slack    64.29 viol 0
+  ov       2 lv 1 k=5 Guard-age(600)         B_max=2220 bound   1370.9 s (old   1466.9) max wait   1266.5 ratio 0.9239 min slack    64.29 viol 0
+  ov       2 lv 1 k=5 Guard-fixed(600)       B_max=2220 bound   1370.9 s (old   1466.9) max wait   1051.6 ratio 0.7671 min slack   250.99 viol 0
+  ov       2 lv 1 k=5 Guard-queue(600)       B_max=2220 bound   1370.9 s (old   1466.9) max wait   1263.3 ratio 0.9216 min slack    64.00 viol 0
+  ov       2 lv 1 k=5 Fixed(600)             B_max=2220 bound   1370.9 s (old   1466.9) max wait   1253.3 ratio 0.9142 min slack    62.94 viol 0
+  ov       2 lv 1 k=5 Skip(600)                    N=42 bound   1370.9 s (old   1466.9) max wait    808.6 ratio 0.5898 min slack   521.06 viol 0
+  ov       2 lv 1 k=5 Guard(1200)            B_max=5220 bound   1970.9 s (old   2066.9) max wait   1854.8 ratio 0.9411 min slack    62.34 viol 0
+  ov       2 lv 1 k=5 Guard-queue(1200)      B_max=5220 bound   1970.9 s (old   2066.9) max wait   1854.8 ratio 0.9411 min slack    62.34 viol 0
+  ov       2 lv 1 k=5 Guard-fixed(1200)      B_max=5220 bound   1970.9 s (old   2066.9) max wait   1320.0 ratio 0.6698 min slack   599.91 viol 0
+  ov       2 lv 1 k=5 Guard-age(1200)        B_max=5220 bound   1970.9 s (old   2066.9) max wait   1840.6 ratio 0.9339 min slack    57.30 viol 0
+  ov       2 lv 1 k=5 Fixed(1200)            B_max=5220 bound   1970.9 s (old   2066.9) max wait   1840.5 ratio 0.9339 min slack    71.38 viol 0
+  ov       2 lv 1 k=5 Skip(1200)                   N=92 bound   1970.9 s (old   2066.9) max wait    810.7 ratio 0.4113 min slack  1043.05 viol 0
+  ov       2 lv 2 k=4 FCFS                              bound   1189.6 s (old   1189.6) max wait   1130.6 ratio 0.9504 min slack    32.63 viol 0
+  ov       2 lv 2 k=4 Guard(300)              B_max=600 bound   1399.6 s (old   1489.6) max wait   1280.7 ratio 0.9150 min slack    47.20 viol 0
+  ov       2 lv 2 k=4 Guard-age(300)          B_max=600 bound   1399.6 s (old   1489.6) max wait   1280.7 ratio 0.9150 min slack    47.20 viol 0
+  ov       2 lv 2 k=4 Guard-fixed(300)        B_max=600 bound   1399.6 s (old   1489.6) max wait   1213.2 ratio 0.8668 min slack   116.54 viol 0
+  ov       2 lv 2 k=4 Guard-queue(300)        B_max=600 bound   1399.6 s (old   1489.6) max wait   1280.7 ratio 0.9150 min slack    47.92 viol 0
+  ov       2 lv 2 k=4 Fixed(300)              B_max=600 bound   1399.6 s (old   1489.6) max wait   1280.7 ratio 0.9150 min slack    47.93 viol 0
+  ov       2 lv 2 k=4 Skip(300)                    N=14 bound   1399.6 s (old   1489.6) max wait   1131.9 ratio 0.8087 min slack   219.61 viol 0
+  ov       2 lv 2 k=4 Guard(600)             B_max=1800 bound   1699.6 s (old   1789.6) max wait   1579.7 ratio 0.9294 min slack    49.35 viol 0
+  ov       2 lv 2 k=4 Guard-age(600)         B_max=1800 bound   1699.6 s (old   1789.6) max wait   1579.7 ratio 0.9294 min slack    49.35 viol 0
+  ov       2 lv 2 k=4 Guard-fixed(600)       B_max=1800 bound   1699.6 s (old   1789.6) max wait   1381.4 ratio 0.8128 min slack   252.30 viol 0
+  ov       2 lv 2 k=4 Guard-queue(600)       B_max=1800 bound   1699.6 s (old   1789.6) max wait   1579.8 ratio 0.9295 min slack    49.41 viol 0
+  ov       2 lv 2 k=4 Fixed(600)             B_max=1800 bound   1699.6 s (old   1789.6) max wait   1582.1 ratio 0.9309 min slack    46.79 viol 0
+  ov       2 lv 2 k=4 Skip(600)                    N=34 bound   1699.6 s (old   1789.6) max wait   1133.0 ratio 0.6666 min slack   496.91 viol 0
+  ov       2 lv 2 k=4 Guard(1200)            B_max=4200 bound   2299.6 s (old   2389.6) max wait   2180.9 ratio 0.9484 min slack    57.73 viol 0
+  ov       2 lv 2 k=4 Guard-queue(1200)      B_max=4200 bound   2299.6 s (old   2389.6) max wait   2180.9 ratio 0.9484 min slack    57.73 viol 0
+  ov       2 lv 2 k=4 Guard-fixed(1200)      B_max=4200 bound   2299.6 s (old   2389.6) max wait   1637.9 ratio 0.7122 min slack   588.90 viol 0
+  ov       2 lv 2 k=4 Guard-age(1200)        B_max=4200 bound   2299.6 s (old   2389.6) max wait   2175.7 ratio 0.9461 min slack    48.84 viol 0
+  ov       2 lv 2 k=4 Fixed(1200)            B_max=4200 bound   2299.6 s (old   2389.6) max wait   2175.7 ratio 0.9461 min slack    57.72 viol 0
+  ov       2 lv 2 k=4 Skip(1200)                   N=74 bound   2299.6 s (old   2389.6) max wait   1135.3 ratio 0.4937 min slack  1039.80 viol 0
+  ov       3 lv 0 k=8 FCFS                              bound    448.4 s (old    448.4) max wait    392.8 ratio 0.8760 min slack    42.30 viol 0
+  ov       3 lv 0 k=8 Guard(300)             B_max=1080 bound    643.4 s (old    748.4) max wait    530.2 ratio 0.8240 min slack    79.06 viol 0
+  ov       3 lv 0 k=8 Guard-age(300)         B_max=1080 bound    643.4 s (old    748.4) max wait    530.2 ratio 0.8240 min slack    79.06 viol 0
+  ov       3 lv 0 k=8 Guard-fixed(300)       B_max=1080 bound    643.4 s (old    748.4) max wait    462.1 ratio 0.7183 min slack   129.33 viol 0
+  ov       3 lv 0 k=8 Guard-queue(300)       B_max=1080 bound    643.4 s (old    748.4) max wait    531.8 ratio 0.8266 min slack    83.85 viol 0
+  ov       3 lv 0 k=8 Fixed(300)             B_max=1080 bound    643.4 s (old    748.4) max wait    530.1 ratio 0.8240 min slack    79.32 viol 0
+  ov       3 lv 0 k=8 Skip(300)                    N=26 bound    643.4 s (old    748.4) max wait    393.5 ratio 0.6116 min slack   242.45 viol 0
+  ov       3 lv 0 k=8 Guard(600)             B_max=3480 bound    943.4 s (old   1048.4) max wait    786.1 ratio 0.8332 min slack    84.11 viol 0
+  ov       3 lv 0 k=8 Guard-age(600)         B_max=3480 bound    943.4 s (old   1048.4) max wait    786.1 ratio 0.8332 min slack    84.11 viol 0
+  ov       3 lv 0 k=8 Guard-fixed(600)       B_max=3480 bound    943.4 s (old   1048.4) max wait    640.7 ratio 0.6791 min slack   271.67 viol 0
+  ov       3 lv 0 k=8 Guard-queue(600)       B_max=3480 bound    943.4 s (old   1048.4) max wait    785.7 ratio 0.8329 min slack    78.39 viol 0
+  ov       3 lv 0 k=8 Fixed(600)             B_max=3480 bound    943.4 s (old   1048.4) max wait    741.4 ratio 0.7859 min slack    86.14 viol 0
+  ov       3 lv 0 k=8 Skip(600)                    N=66 bound    943.4 s (old   1048.4) max wait    394.6 ratio 0.4183 min slack   529.60 viol 0
+  ov       3 lv 0 k=8 Guard(1200)            B_max=8280 bound   1543.4 s (old   1648.4) max wait    831.7 ratio 0.5389 min slack   612.41 viol 0
+  ov       3 lv 0 k=8 Guard-queue(1200)      B_max=8280 bound   1543.4 s (old   1648.4) max wait    831.7 ratio 0.5389 min slack   612.41 viol 0
+  ov       3 lv 0 k=8 Guard-fixed(1200)      B_max=8280 bound   1543.4 s (old   1648.4) max wait    824.9 ratio 0.5345 min slack   607.21 viol 0
+  ov       3 lv 0 k=8 Guard-age(1200)        B_max=8280 bound   1543.4 s (old   1648.4) max wait    974.4 ratio 0.6313 min slack   317.44 viol 0
+  ov       3 lv 0 k=8 Fixed(1200)            B_max=8280 bound   1543.4 s (old   1648.4) max wait   1078.5 ratio 0.6988 min slack   217.64 viol 0
+  ov       3 lv 0 k=8 Skip(1200)                  N=146 bound   1543.4 s (old   1648.4) max wait    396.6 ratio 0.2570 min slack  1097.94 viol 0
+  ov       3 lv 1 k=5 FCFS                              bound    875.5 s (old    875.5) max wait    825.0 ratio 0.9423 min slack    36.66 viol 0
+  ov       3 lv 1 k=5 Guard(300)              B_max=720 bound   1079.5 s (old   1175.5) max wait    965.7 ratio 0.8946 min slack    46.34 viol 0
+  ov       3 lv 1 k=5 Guard-age(300)          B_max=720 bound   1079.5 s (old   1175.5) max wait    965.7 ratio 0.8946 min slack    46.34 viol 0
+  ov       3 lv 1 k=5 Guard-fixed(300)        B_max=720 bound   1079.5 s (old   1175.5) max wait    906.9 ratio 0.8401 min slack   118.87 viol 0
+  ov       3 lv 1 k=5 Guard-queue(300)        B_max=720 bound   1079.5 s (old   1175.5) max wait    965.7 ratio 0.8946 min slack    46.34 viol 0
+  ov       3 lv 1 k=5 Fixed(300)              B_max=720 bound   1079.5 s (old   1175.5) max wait    965.8 ratio 0.8946 min slack    46.34 viol 0
+  ov       3 lv 1 k=5 Skip(300)                    N=17 bound   1079.5 s (old   1175.5) max wait    825.8 ratio 0.7649 min slack   243.57 viol 0
+  ov       3 lv 1 k=5 Guard(600)             B_max=2220 bound   1379.5 s (old   1475.5) max wait   1269.4 ratio 0.9202 min slack    46.49 viol 0
+  ov       3 lv 1 k=5 Guard-age(600)         B_max=2220 bound   1379.5 s (old   1475.5) max wait   1269.4 ratio 0.9202 min slack    46.49 viol 0
+  ov       3 lv 1 k=5 Guard-fixed(600)       B_max=2220 bound   1379.5 s (old   1475.5) max wait   1067.0 ratio 0.7735 min slack   259.37 viol 0
+  ov       3 lv 1 k=5 Guard-queue(600)       B_max=2220 bound   1379.5 s (old   1475.5) max wait   1266.8 ratio 0.9183 min slack    46.48 viol 0
+  ov       3 lv 1 k=5 Fixed(600)             B_max=2220 bound   1379.5 s (old   1475.5) max wait   1264.0 ratio 0.9163 min slack    46.50 viol 0
+  ov       3 lv 1 k=5 Skip(600)                    N=42 bound   1379.5 s (old   1475.5) max wait    826.9 ratio 0.5994 min slack   531.08 viol 0
+  ov       3 lv 1 k=5 Guard(1200)            B_max=5220 bound   1979.5 s (old   2075.5) max wait   1867.5 ratio 0.9434 min slack    62.06 viol 0
+  ov       3 lv 1 k=5 Guard-queue(1200)      B_max=5220 bound   1979.5 s (old   2075.5) max wait   1867.5 ratio 0.9434 min slack    62.06 viol 0
+  ov       3 lv 1 k=5 Guard-fixed(1200)      B_max=5220 bound   1979.5 s (old   2075.5) max wait   1333.0 ratio 0.6734 min slack   603.85 viol 0
+  ov       3 lv 1 k=5 Guard-age(1200)        B_max=5220 bound   1979.5 s (old   2075.5) max wait   1863.8 ratio 0.9415 min slack    61.78 viol 0
+  ov       3 lv 1 k=5 Fixed(1200)            B_max=5220 bound   1979.5 s (old   2075.5) max wait   1875.5 ratio 0.9474 min slack    71.07 viol 0
+  ov       3 lv 1 k=5 Skip(1200)                   N=92 bound   1979.5 s (old   2075.5) max wait    829.0 ratio 0.4188 min slack  1040.15 viol 0
+  ov       3 lv 2 k=4 FCFS                              bound   1229.3 s (old   1229.3) max wait   1177.1 ratio 0.9576 min slack    34.81 viol 0
+  ov       3 lv 2 k=4 Guard(300)              B_max=600 bound   1439.3 s (old   1529.3) max wait   1328.4 ratio 0.9230 min slack    44.01 viol 0
+  ov       3 lv 2 k=4 Guard-age(300)          B_max=600 bound   1439.3 s (old   1529.3) max wait   1328.4 ratio 0.9230 min slack    44.01 viol 0
+  ov       3 lv 2 k=4 Guard-fixed(300)        B_max=600 bound   1439.3 s (old   1529.3) max wait   1260.7 ratio 0.8759 min slack   110.80 viol 0
+  ov       3 lv 2 k=4 Guard-queue(300)        B_max=600 bound   1439.3 s (old   1529.3) max wait   1328.4 ratio 0.9230 min slack    44.83 viol 0
+  ov       3 lv 2 k=4 Fixed(300)              B_max=600 bound   1439.3 s (old   1529.3) max wait   1328.4 ratio 0.9229 min slack    44.00 viol 0
+  ov       3 lv 2 k=4 Skip(300)                    N=14 bound   1439.3 s (old   1529.3) max wait   1177.9 ratio 0.8184 min slack   218.72 viol 0
+  ov       3 lv 2 k=4 Guard(600)             B_max=1800 bound   1739.3 s (old   1829.3) max wait   1628.3 ratio 0.9362 min slack    47.20 viol 0
+  ov       3 lv 2 k=4 Guard-age(600)         B_max=1800 bound   1739.3 s (old   1829.3) max wait   1628.3 ratio 0.9362 min slack    47.20 viol 0
+  ov       3 lv 2 k=4 Guard-fixed(600)       B_max=1800 bound   1739.3 s (old   1829.3) max wait   1423.6 ratio 0.8185 min slack   249.46 viol 0
+  ov       3 lv 2 k=4 Guard-queue(600)       B_max=1800 bound   1739.3 s (old   1829.3) max wait   1628.4 ratio 0.9362 min slack    46.10 viol 0
+  ov       3 lv 2 k=4 Fixed(600)             B_max=1800 bound   1739.3 s (old   1829.3) max wait   1628.4 ratio 0.9362 min slack    47.63 viol 0
+  ov       3 lv 2 k=4 Skip(600)                    N=34 bound   1739.3 s (old   1829.3) max wait   1178.9 ratio 0.6778 min slack   515.32 viol 0
+  ov       3 lv 2 k=4 Guard(1200)            B_max=4200 bound   2339.3 s (old   2429.3) max wait   2235.0 ratio 0.9554 min slack    52.79 viol 0
+  ov       3 lv 2 k=4 Guard-queue(1200)      B_max=4200 bound   2339.3 s (old   2429.3) max wait   2235.0 ratio 0.9554 min slack    52.79 viol 0
+  ov       3 lv 2 k=4 Guard-fixed(1200)      B_max=4200 bound   2339.3 s (old   2429.3) max wait   1685.8 ratio 0.7206 min slack   588.78 viol 0
+  ov       3 lv 2 k=4 Guard-age(1200)        B_max=4200 bound   2339.3 s (old   2429.3) max wait   2228.3 ratio 0.9525 min slack    48.93 viol 0
+  ov       3 lv 2 k=4 Fixed(1200)            B_max=4200 bound   2339.3 s (old   2429.3) max wait   2234.9 ratio 0.9554 min slack    48.95 viol 0
+  ov       3 lv 2 k=4 Skip(1200)                   N=74 bound   2339.3 s (old   2429.3) max wait   1181.3 ratio 0.5050 min slack  1039.37 viol 0
+  ov       4 lv 0 k=7 FCFS                              bound    558.3 s (old    558.3) max wait    491.7 ratio 0.8807 min slack    39.54 viol 0
+  ov       4 lv 0 k=7 Guard(300)              B_max=960 bound    755.5 s (old    858.3) max wait    630.7 ratio 0.8348 min slack    73.24 viol 0
+  ov       4 lv 0 k=7 Guard-age(300)          B_max=960 bound    755.5 s (old    858.3) max wait    630.7 ratio 0.8348 min slack    73.24 viol 0
+  ov       4 lv 0 k=7 Guard-fixed(300)        B_max=960 bound    755.5 s (old    858.3) max wait    589.6 ratio 0.7804 min slack   120.44 viol 0
+  ov       4 lv 0 k=7 Guard-queue(300)        B_max=960 bound    755.5 s (old    858.3) max wait    628.8 ratio 0.8324 min slack    71.09 viol 0
+  ov       4 lv 0 k=7 Fixed(300)              B_max=960 bound    755.5 s (old    858.3) max wait    630.5 ratio 0.8345 min slack    73.25 viol 0
+  ov       4 lv 0 k=7 Skip(300)                    N=23 bound    755.5 s (old    858.3) max wait    492.5 ratio 0.6519 min slack   238.02 viol 0
+  ov       4 lv 0 k=7 Guard(600)             B_max=3060 bound   1055.5 s (old   1158.3) max wait    935.1 ratio 0.8860 min slack    78.36 viol 0
+  ov       4 lv 0 k=7 Guard-age(600)         B_max=3060 bound   1055.5 s (old   1158.3) max wait    935.1 ratio 0.8860 min slack    78.36 viol 0
+  ov       4 lv 0 k=7 Guard-fixed(600)       B_max=3060 bound   1055.5 s (old   1158.3) max wait    742.5 ratio 0.7034 min slack   265.89 viol 0
+  ov       4 lv 0 k=7 Guard-queue(600)       B_max=3060 bound   1055.5 s (old   1158.3) max wait    931.0 ratio 0.8821 min slack    71.30 viol 0
+  ov       4 lv 0 k=7 Fixed(600)             B_max=3060 bound   1055.5 s (old   1158.3) max wait    931.6 ratio 0.8826 min slack    74.34 viol 0
+  ov       4 lv 0 k=7 Skip(600)                    N=58 bound   1055.5 s (old   1158.3) max wait    493.6 ratio 0.4677 min slack   499.87 viol 0
+  ov       4 lv 0 k=7 Guard(1200)            B_max=7260 bound   1655.5 s (old   1758.3) max wait   1142.6 ratio 0.6902 min slack   361.61 viol 0
+  ov       4 lv 0 k=7 Guard-queue(1200)      B_max=7260 bound   1655.5 s (old   1758.3) max wait   1142.6 ratio 0.6902 min slack   361.61 viol 0
+  ov       4 lv 0 k=7 Guard-fixed(1200)      B_max=7260 bound   1655.5 s (old   1758.3) max wait    945.3 ratio 0.5710 min slack   610.21 viol 0
+  ov       4 lv 0 k=7 Guard-age(1200)        B_max=7260 bound   1655.5 s (old   1758.3) max wait   1234.0 ratio 0.7454 min slack   122.06 viol 0
+  ov       4 lv 0 k=7 Fixed(1200)            B_max=7260 bound   1655.5 s (old   1758.3) max wait   1248.1 ratio 0.7539 min slack    89.39 viol 0
+  ov       4 lv 0 k=7 Skip(1200)                  N=128 bound   1655.5 s (old   1758.3) max wait    495.6 ratio 0.2994 min slack  1098.27 viol 0
+  ov       4 lv 1 k=5 FCFS                              bound    880.0 s (old    880.0) max wait    830.1 ratio 0.9434 min slack    37.20 viol 0
+  ov       4 lv 1 k=5 Guard(300)              B_max=720 bound   1084.0 s (old   1180.0) max wait    978.7 ratio 0.9029 min slack    49.80 viol 0
+  ov       4 lv 1 k=5 Guard-age(300)          B_max=720 bound   1084.0 s (old   1180.0) max wait    978.7 ratio 0.9029 min slack    49.80 viol 0
+  ov       4 lv 1 k=5 Guard-fixed(300)        B_max=720 bound   1084.0 s (old   1180.0) max wait    925.1 ratio 0.8535 min slack   111.65 viol 0
+  ov       4 lv 1 k=5 Guard-queue(300)        B_max=720 bound   1084.0 s (old   1180.0) max wait    976.9 ratio 0.9013 min slack    49.80 viol 0
+  ov       4 lv 1 k=5 Fixed(300)              B_max=720 bound   1084.0 s (old   1180.0) max wait    977.2 ratio 0.9015 min slack    49.80 viol 0
+  ov       4 lv 1 k=5 Skip(300)                    N=17 bound   1084.0 s (old   1180.0) max wait    831.2 ratio 0.7668 min slack   241.17 viol 0
+  ov       4 lv 1 k=5 Guard(600)             B_max=2220 bound   1384.0 s (old   1480.0) max wait   1280.4 ratio 0.9252 min slack    54.55 viol 0
+  ov       4 lv 1 k=5 Guard-age(600)         B_max=2220 bound   1384.0 s (old   1480.0) max wait   1280.4 ratio 0.9252 min slack    54.55 viol 0
+  ov       4 lv 1 k=5 Guard-fixed(600)       B_max=2220 bound   1384.0 s (old   1480.0) max wait   1075.1 ratio 0.7768 min slack   249.30 viol 0
+  ov       4 lv 1 k=5 Guard-queue(600)       B_max=2220 bound   1384.0 s (old   1480.0) max wait   1280.4 ratio 0.9252 min slack    54.55 viol 0
+  ov       4 lv 1 k=5 Fixed(600)             B_max=2220 bound   1384.0 s (old   1480.0) max wait   1289.0 ratio 0.9314 min slack    54.71 viol 0
+  ov       4 lv 1 k=5 Skip(600)                    N=42 bound   1384.0 s (old   1480.0) max wait    832.3 ratio 0.6014 min slack   520.77 viol 0
+  ov       4 lv 1 k=5 Guard(1200)            B_max=5220 bound   1984.0 s (old   2080.0) max wait   1864.1 ratio 0.9396 min slack    50.52 viol 0
+  ov       4 lv 1 k=5 Guard-queue(1200)      B_max=5220 bound   1984.0 s (old   2080.0) max wait   1864.1 ratio 0.9396 min slack    50.52 viol 0
+  ov       4 lv 1 k=5 Guard-fixed(1200)      B_max=5220 bound   1984.0 s (old   2080.0) max wait   1353.4 ratio 0.6822 min slack   591.18 viol 0
+  ov       4 lv 1 k=5 Guard-age(1200)        B_max=5220 bound   1984.0 s (old   2080.0) max wait   1833.4 ratio 0.9241 min slack    56.29 viol 0
+  ov       4 lv 1 k=5 Fixed(1200)            B_max=5220 bound   1984.0 s (old   2080.0) max wait   1833.3 ratio 0.9240 min slack    50.05 viol 0
+  ov       4 lv 1 k=5 Skip(1200)                   N=92 bound   1984.0 s (old   2080.0) max wait    834.3 ratio 0.4205 min slack  1077.58 viol 0
+  ov       4 lv 2 k=4 FCFS                              bound   1212.3 s (old   1212.3) max wait   1167.2 ratio 0.9628 min slack    32.54 viol 0
+  ov       4 lv 2 k=4 Guard(300)              B_max=600 bound   1422.3 s (old   1512.3) max wait   1320.9 ratio 0.9287 min slack    47.49 viol 0
+  ov       4 lv 2 k=4 Guard-age(300)          B_max=600 bound   1422.3 s (old   1512.3) max wait   1320.9 ratio 0.9287 min slack    47.49 viol 0
+  ov       4 lv 2 k=4 Guard-fixed(300)        B_max=600 bound   1422.3 s (old   1512.3) max wait   1251.8 ratio 0.8801 min slack   111.20 viol 0
+  ov       4 lv 2 k=4 Guard-queue(300)        B_max=600 bound   1422.3 s (old   1512.3) max wait   1320.9 ratio 0.9287 min slack    47.48 viol 0
+  ov       4 lv 2 k=4 Fixed(300)              B_max=600 bound   1422.3 s (old   1512.3) max wait   1321.7 ratio 0.9293 min slack    47.48 viol 0
+  ov       4 lv 2 k=4 Skip(300)                    N=14 bound   1422.3 s (old   1512.3) max wait   1168.0 ratio 0.8212 min slack   228.46 viol 0
+  ov       4 lv 2 k=4 Guard(600)             B_max=1800 bound   1722.3 s (old   1812.3) max wait   1609.3 ratio 0.9343 min slack    46.64 viol 0
+  ov       4 lv 2 k=4 Guard-age(600)         B_max=1800 bound   1722.3 s (old   1812.3) max wait   1609.3 ratio 0.9343 min slack    46.64 viol 0
+  ov       4 lv 2 k=4 Guard-fixed(600)       B_max=1800 bound   1722.3 s (old   1812.3) max wait   1420.5 ratio 0.8247 min slack   252.62 viol 0
+  ov       4 lv 2 k=4 Guard-queue(600)       B_max=1800 bound   1722.3 s (old   1812.3) max wait   1609.2 ratio 0.9343 min slack    46.67 viol 0
+  ov       4 lv 2 k=4 Fixed(600)             B_max=1800 bound   1722.3 s (old   1812.3) max wait   1612.1 ratio 0.9360 min slack    46.29 viol 0
+  ov       4 lv 2 k=4 Skip(600)                    N=34 bound   1722.3 s (old   1812.3) max wait   1169.2 ratio 0.6788 min slack   487.79 viol 0
+  ov       4 lv 2 k=4 Guard(1200)            B_max=4200 bound   2322.3 s (old   2412.3) max wait   2221.2 ratio 0.9565 min slack    44.62 viol 0
+  ov       4 lv 2 k=4 Guard-queue(1200)      B_max=4200 bound   2322.3 s (old   2412.3) max wait   2221.2 ratio 0.9565 min slack    44.62 viol 0
+  ov       4 lv 2 k=4 Guard-fixed(1200)      B_max=4200 bound   2322.3 s (old   2412.3) max wait   1666.9 ratio 0.7178 min slack   587.43 viol 0
+  ov       4 lv 2 k=4 Guard-age(1200)        B_max=4200 bound   2322.3 s (old   2412.3) max wait   2209.2 ratio 0.9513 min slack    44.56 viol 0
+  ov       4 lv 2 k=4 Fixed(1200)            B_max=4200 bound   2322.3 s (old   2412.3) max wait   2209.2 ratio 0.9513 min slack    44.73 viol 0
+  ov       4 lv 2 k=4 Skip(1200)                   N=74 bound   2322.3 s (old   2412.3) max wait   1171.2 ratio 0.5043 min slack  1056.92 viol 0
+  summary fcfs: rows 16, rerun needed 0, min tight slack 0.000 s at ov k1_rep0 lv 0 FCFS; max ratio 0.9990 at ov k1_rep0 lv 0 FCFS
+  summary work: rows 240, rerun needed 0, min tight slack 4.865 s at ov k1_rep0 lv 0 Guard(300); max ratio 0.9759 at ov k1_rep0 lv 0 Guard(600)
+  summary skip: rows 48, rerun needed 0, min tight slack 204.914 s at ov k1_rep0 lv 0 Skip(300); max ratio 0.8521 at ov 0 lv 2 Skip(300)
+
+[b] validation sigma as a forecast of primary sigma (same k)
+  cells 15; ratio val/prim min 0.7377 max 1.5733; under-forecast cells 10
+  multiplicative margin to cover every cell from its paired validation: x1.3555
+  level 0 (k=8 on primary; cells with other k: ['4']): max additive shortfall 342.8 s of work = 42.9 s of promise; max-of-5 validation 4914.6 vs max primary 3648.2 (covers True)
+  level 1 (k=5 on primary; cells with other k: []): max additive shortfall 903.3 s of work = 180.7 s of promise; max-of-5 validation 5861.8 vs max primary 5179.1 (covers True)
+  level 2 (k=4 on primary; cells with other k: []): max additive shortfall 1635.2 s of work = 408.8 s of promise; max-of-5 validation 6197.0 vs max primary 6234.5 (covers False)
+
+  quoted promise from paired validation sigma, tight form, against realised max wait
+    ov 0 lv 1 FCFS         quote    903.2 realised   1023.8 short   120.7 s
+    ov 0 lv 1 Guard(300)   quote   1107.2 realised   1167.4 short    60.2 s
+    ov 0 lv 1 Guard(600)   quote   1407.2 realised   1467.4 short    60.2 s
+    ov 0 lv 1 Guard(1200)  quote   2007.2 realised   2074.5 short    67.4 s
+    ov 0 lv 2 FCFS         quote   1194.8 realised   1544.6 short   349.8 s
+    ov 0 lv 2 Guard(300)   quote   1404.8 realised   1694.5 short   289.6 s
+    ov 0 lv 2 Guard(600)   quote   1704.8 realised   1994.5 short   289.7 s
+    ov 0 lv 2 Guard(1200)  quote   2304.8 realised   2603.2 short   298.3 s
+    ov 1 lv 1 FCFS         quote    847.7 realised    850.5 short     2.8 s
+    ov 1 lv 2 FCFS         quote   1110.6 realised   1285.3 short   174.6 s
+    ov 1 lv 2 Guard(300)   quote   1320.6 realised   1435.7 short   115.1 s
+    ov 1 lv 2 Guard(600)   quote   1620.6 realised   1735.6 short   115.0 s
+    ov 1 lv 2 Guard(1200)  quote   2220.6 realised   2350.0 short   129.3 s
+    ov 3 lv 1 FCFS         quote    816.4 realised    825.0 short     8.6 s
+    ov 3 lv 2 FCFS         quote   1090.3 realised   1177.1 short    86.8 s
+    ov 3 lv 2 Guard(300)   quote   1300.3 realised   1328.4 short    28.1 s
+    ov 3 lv 2 Guard(600)   quote   1600.3 realised   1628.3 short    28.0 s
+    ov 3 lv 2 Guard(1200)  quote   2200.3 realised   2235.0 short    34.7 s
+  realised max wait at or above the paired-validation quote: 18 of 60 rows

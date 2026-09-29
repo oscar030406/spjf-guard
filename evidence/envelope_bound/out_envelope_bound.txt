@@ -1,0 +1,469 @@
+L = 60.0 s; promises [300.0, 600.0, 1200.0]
+
+[b] sigma, primary against validation, at the primary k of each level
+  overlay 0 level 0 k=8: sigma primary    3648.2 s, validation    3305.3 s, ratio 0.906; validation at its own k=7:    3628.8 s
+  overlay 0 level 1 k=5: sigma primary    5179.1 s, validation    4275.8 s, ratio 0.826; validation at its own k=5:    4275.8 s
+  overlay 0 level 2 k=4: sigma primary    6234.5 s, validation    4599.3 s, ratio 0.738; validation at its own k=4:    4599.3 s
+  overlay 1 level 0 k=8: sigma primary    2950.1 s, validation    3285.9 s, ratio 1.114; validation at its own k=8:    3285.9 s
+  overlay 1 level 1 k=5: sigma primary    4288.4 s, validation    3998.7 s, ratio 0.932; validation at its own k=5:    3998.7 s
+  overlay 1 level 2 k=4: sigma primary    5146.1 s, validation    4262.6 s, ratio 0.828; validation at its own k=4:    4262.6 s
+  overlay 2 level 0 k=8: sigma primary    3123.9 s, validation    4914.6 s, ratio 1.573; validation at its own k=8:    4914.6 s
+  overlay 2 level 1 k=5: sigma primary    4094.3 s, validation    5861.8 s, ratio 1.432; validation at its own k=5:    5861.8 s
+  overlay 2 level 2 k=4: sigma primary    4578.4 s, validation    6197.0 s, ratio 1.354; validation at its own k=4:    6197.0 s
+  overlay 3 level 0 k=8: sigma primary    3167.2 s, validation    3000.9 s, ratio 0.948; validation at its own k=7:    3238.5 s
+  overlay 3 level 1 k=5: sigma primary    4137.6 s, validation    3842.2 s, ratio 0.929; validation at its own k=5:    3842.2 s
+  overlay 3 level 2 k=4: sigma primary    4737.1 s, validation    4181.3 s, ratio 0.883; validation at its own k=4:    4181.3 s
+  overlay 4 level 0 k=7: sigma primary    3548.4 s, validation    3541.2 s, ratio 0.998; validation at its own k=8:    3202.1 s
+  overlay 4 level 1 k=5: sigma primary    4159.8 s, validation    4219.3 s, ratio 1.014; validation at its own k=5:    4219.3 s
+  overlay 4 level 2 k=4: sigma primary    4669.4 s, validation    4558.4 s, ratio 0.976; validation at its own k=4:    4558.4 s
+
+[k1] single server
+k1_rep0: n=3,209,347, sigma=1,428.6 s; FCFS wait - (V_i - C_i): max |diff| = 0 us, nonzero jobs 0
+  k1 policies skipped for want of their score array: ['Aging(600)']
+  FCFS               max wait    1427.3 s  abs bound    1428.6 s  ratio 0.999  violations 0 (own constant 0)  ties 3209347  min slack     0.00 s
+  SJF                max wait    2366.7 s  (no bound claimed)
+  SPJF-E             max wait    2698.2 s  (no bound claimed)
+  Guard(300)         max wait    1672.9 s  abs bound    1728.6 s  ratio 0.968  violations 0 (own constant 0)  ties 0  min slack     4.87 s
+  Guard-age(300)     max wait    1672.9 s  abs bound    1728.6 s  ratio 0.968  violations 0 (own constant 0)  ties 0  min slack     4.87 s
+  Guard-fixed(300)   max wait    1520.8 s  abs bound    1728.6 s  ratio 0.880  violations 0 (own constant 0)  ties 0  min slack   159.68 s
+  Guard-queue(300)   max wait    1672.9 s  abs bound    1728.6 s  ratio 0.968  violations 0 (own constant 0)  ties 0  min slack     4.87 s
+  Fixed(300)         max wait    1672.9 s  abs bound    1728.6 s  ratio 0.968  violations 0 (own constant 0)  ties 0  min slack     4.87 s
+  Skip(300)          max wait    1428.4 s  abs bound    1728.6 s  ratio 0.826  violations 0 (own constant 0)  ties 0  min slack   204.91 s
+  Guard(600)         max wait    1979.8 s  abs bound    2028.6 s  ratio 0.976  violations 0 (own constant 0)  ties 0  min slack     7.47 s
+  Guard-age(600)     max wait    1979.8 s  abs bound    2028.6 s  ratio 0.976  violations 0 (own constant 0)  ties 0  min slack     7.47 s
+  Guard-fixed(600)   max wait    1672.7 s  abs bound    2028.6 s  ratio 0.825  violations 0 (own constant 0)  ties 0  min slack   296.73 s
+  Guard-queue(600)   max wait    1979.8 s  abs bound    2028.6 s  ratio 0.976  violations 0 (own constant 0)  ties 0  min slack     7.47 s
+  Fixed(600)         max wait    1979.8 s  abs bound    2028.6 s  ratio 0.976  violations 0 (own constant 0)  ties 0  min slack     7.47 s
+  Skip(600)          max wait    1429.5 s  abs bound    2028.6 s  ratio 0.705  violations 0 (own constant 0)  ties 0  min slack   499.15 s
+  Guard(1200)        max wait    2205.2 s  abs bound    2628.6 s  ratio 0.839  violations 0 (own constant 0)  ties 0  min slack    34.85 s
+  Guard-queue(1200)  max wait    2205.2 s  abs bound    2628.6 s  ratio 0.839  violations 0 (own constant 0)  ties 0  min slack    34.85 s
+  Guard-fixed(1200)  max wait    1936.7 s  abs bound    2628.6 s  ratio 0.737  violations 0 (own constant 0)  ties 0  min slack   641.06 s
+  Guard-age(1200)    max wait    2205.2 s  abs bound    2628.6 s  ratio 0.839  violations 0 (own constant 0)  ties 0  min slack    18.66 s
+  Fixed(1200)        max wait    2205.2 s  abs bound    2628.6 s  ratio 0.839  violations 0 (own constant 0)  ties 0  min slack    28.33 s
+  Skip(1200)         max wait    1431.9 s  abs bound    2628.6 s  ratio 0.545  violations 0 (own constant 0)  ties 0  min slack  1033.13 s
+
+[a] primary overlays
+primary overlay 0 level 0: k=8, n=17,634,760
+  FCFS               max wait     435.0 s  abs bound     508.5 s  ratio 0.855  violations 0 (own constant 0)  ties 0  min slack    41.12 s
+  SJF                max wait    1185.9 s  (no bound claimed)
+  SPJF-E             max wait    1374.8 s  (no bound claimed)
+  Aging(600)         max wait     502.1 s  (no bound claimed)
+  Guard(300)         max wait     578.8 s  abs bound     808.5 s  ratio 0.716  violations 0 (own constant 0)  ties 0  min slack   187.30 s
+  Guard-age(300)     max wait     578.8 s  abs bound     808.5 s  ratio 0.716  violations 0 (own constant 0)  ties 0  min slack   187.30 s
+  Guard-fixed(300)   max wait     535.6 s  abs bound     808.5 s  ratio 0.662  violations 0 (own constant 0)  ties 0  min slack   226.93 s
+  Guard-queue(300)   max wait     579.2 s  abs bound     808.5 s  ratio 0.716  violations 0 (own constant 0)  ties 0  min slack   188.87 s
+  Fixed(300)         max wait     579.1 s  abs bound     808.5 s  ratio 0.716  violations 0 (own constant 0)  ties 0  min slack   188.87 s
+  Skip(300)          max wait     435.8 s  abs bound     808.5 s  ratio 0.539  violations 0 (own constant 0)  ties 0  min slack   306.70 s
+  Guard(600)         max wait     867.2 s  abs bound    1108.5 s  ratio 0.782  violations 0 (own constant 0)  ties 0  min slack   176.18 s
+  Guard-age(600)     max wait     867.2 s  abs bound    1108.5 s  ratio 0.782  violations 0 (own constant 0)  ties 0  min slack   176.18 s
+  Guard-fixed(600)   max wait     691.3 s  abs bound    1108.5 s  ratio 0.624  violations 0 (own constant 0)  ties 0  min slack   378.06 s
+  Guard-queue(600)   max wait     862.0 s  abs bound    1108.5 s  ratio 0.778  violations 0 (own constant 0)  ties 0  min slack   182.81 s
+  Fixed(600)         max wait     870.5 s  abs bound    1108.5 s  ratio 0.785  violations 0 (own constant 0)  ties 0  min slack   181.30 s
+  Skip(600)          max wait     436.8 s  abs bound    1108.5 s  ratio 0.394  violations 0 (own constant 0)  ties 0  min slack   582.88 s
+  Guard(1200)        max wait    1182.8 s  abs bound    1708.5 s  ratio 0.692  violations 0 (own constant 0)  ties 0  min slack   426.51 s
+  Guard-queue(1200)  max wait    1182.8 s  abs bound    1708.5 s  ratio 0.692  violations 0 (own constant 0)  ties 0  min slack   426.51 s
+  Guard-fixed(1200)  max wait     933.0 s  abs bound    1708.5 s  ratio 0.546  violations 0 (own constant 0)  ties 0  min slack   716.44 s
+  Guard-age(1200)    max wait    1177.0 s  abs bound    1708.5 s  ratio 0.689  violations 0 (own constant 0)  ties 0  min slack   276.89 s
+  Fixed(1200)        max wait    1200.4 s  abs bound    1708.5 s  ratio 0.703  violations 0 (own constant 0)  ties 0  min slack   207.12 s
+  Skip(1200)         max wait     438.9 s  abs bound    1708.5 s  ratio 0.257  violations 0 (own constant 0)  ties 0  min slack  1179.12 s
+primary overlay 0 level 1: k=5, n=17,634,760
+  FCFS               max wait    1023.8 s  abs bound    1083.8 s  ratio 0.945  violations 0 (own constant 0)  ties 0  min slack    36.66 s
+  SJF                max wait    3072.3 s  (no bound claimed)
+  SPJF-E             max wait    3312.8 s  (no bound claimed)
+  Aging(600)         max wait    1065.1 s  (no bound claimed)
+  Guard(300)         max wait    1167.4 s  abs bound    1383.8 s  ratio 0.844  violations 0 (own constant 0)  ties 0  min slack   156.51 s
+  Guard-age(300)     max wait    1167.4 s  abs bound    1383.8 s  ratio 0.844  violations 0 (own constant 0)  ties 0  min slack   156.51 s
+  Guard-fixed(300)   max wait    1105.8 s  abs bound    1383.8 s  ratio 0.799  violations 0 (own constant 0)  ties 0  min slack   210.11 s
+  Guard-queue(300)   max wait    1167.4 s  abs bound    1383.8 s  ratio 0.844  violations 0 (own constant 0)  ties 0  min slack   151.56 s
+  Fixed(300)         max wait    1167.4 s  abs bound    1383.8 s  ratio 0.844  violations 0 (own constant 0)  ties 0  min slack   151.54 s
+  Skip(300)          max wait    1024.6 s  abs bound    1383.8 s  ratio 0.740  violations 0 (own constant 0)  ties 0  min slack   290.74 s
+  Guard(600)         max wait    1467.4 s  abs bound    1683.8 s  ratio 0.871  violations 0 (own constant 0)  ties 0  min slack   163.21 s
+  Guard-age(600)     max wait    1467.4 s  abs bound    1683.8 s  ratio 0.871  violations 0 (own constant 0)  ties 0  min slack   163.21 s
+  Guard-fixed(600)   max wait    1277.8 s  abs bound    1683.8 s  ratio 0.759  violations 0 (own constant 0)  ties 0  min slack   353.40 s
+  Guard-queue(600)   max wait    1467.4 s  abs bound    1683.8 s  ratio 0.871  violations 0 (own constant 0)  ties 0  min slack   166.38 s
+  Fixed(600)         max wait    1474.8 s  abs bound    1683.8 s  ratio 0.876  violations 0 (own constant 0)  ties 0  min slack   167.77 s
+  Skip(600)          max wait    1025.8 s  abs bound    1683.8 s  ratio 0.609  violations 0 (own constant 0)  ties 0  min slack   571.88 s
+  Guard(1200)        max wait    2074.5 s  abs bound    2283.8 s  ratio 0.908  violations 0 (own constant 0)  ties 0  min slack   167.22 s
+  Guard-queue(1200)  max wait    2074.5 s  abs bound    2283.8 s  ratio 0.908  violations 0 (own constant 0)  ties 0  min slack   167.22 s
+  Guard-fixed(1200)  max wait    1552.2 s  abs bound    2283.8 s  ratio 0.680  violations 0 (own constant 0)  ties 0  min slack   693.07 s
+  Guard-age(1200)    max wait    2079.7 s  abs bound    2283.8 s  ratio 0.911  violations 0 (own constant 0)  ties 0  min slack   175.21 s
+  Fixed(1200)        max wait    2069.9 s  abs bound    2283.8 s  ratio 0.906  violations 0 (own constant 0)  ties 0  min slack   163.10 s
+  Skip(1200)         max wait    1028.0 s  abs bound    2283.8 s  ratio 0.450  violations 0 (own constant 0)  ties 0  min slack  1144.87 s
+primary overlay 0 level 2: k=4, n=17,634,760
+  FCFS               max wait    1544.6 s  abs bound    1603.6 s  ratio 0.963  violations 0 (own constant 0)  ties 0  min slack    34.14 s
+  SJF                max wait    5299.5 s  (no bound claimed)
+  SPJF-E             max wait    6286.2 s  (no bound claimed)
+  Aging(600)         max wait    1584.5 s  (no bound claimed)
+  Guard(300)         max wait    1694.5 s  abs bound    1903.6 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   136.46 s
+  Guard-age(300)     max wait    1694.5 s  abs bound    1903.6 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   136.46 s
+  Guard-fixed(300)   max wait    1627.1 s  abs bound    1903.6 s  ratio 0.855  violations 0 (own constant 0)  ties 0  min slack   203.35 s
+  Guard-queue(300)   max wait    1694.6 s  abs bound    1903.6 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   136.46 s
+  Fixed(300)         max wait    1694.7 s  abs bound    1903.6 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   136.46 s
+  Skip(300)          max wait    1545.4 s  abs bound    1903.6 s  ratio 0.812  violations 0 (own constant 0)  ties 0  min slack   279.70 s
+  Guard(600)         max wait    1994.5 s  abs bound    2203.6 s  ratio 0.905  violations 0 (own constant 0)  ties 0  min slack   136.84 s
+  Guard-age(600)     max wait    1994.5 s  abs bound    2203.6 s  ratio 0.905  violations 0 (own constant 0)  ties 0  min slack   136.84 s
+  Guard-fixed(600)   max wait    1789.6 s  abs bound    2203.6 s  ratio 0.812  violations 0 (own constant 0)  ties 0  min slack   341.88 s
+  Guard-queue(600)   max wait    1994.5 s  abs bound    2203.6 s  ratio 0.905  violations 0 (own constant 0)  ties 0  min slack   145.03 s
+  Fixed(600)         max wait    1994.4 s  abs bound    2203.6 s  ratio 0.905  violations 0 (own constant 0)  ties 0  min slack   136.30 s
+  Skip(600)          max wait    1546.8 s  abs bound    2203.6 s  ratio 0.702  violations 0 (own constant 0)  ties 0  min slack   544.62 s
+  Guard(1200)        max wait    2603.2 s  abs bound    2803.6 s  ratio 0.929  violations 0 (own constant 0)  ties 0  min slack   147.28 s
+  Guard-queue(1200)  max wait    2603.2 s  abs bound    2803.6 s  ratio 0.929  violations 0 (own constant 0)  ties 0  min slack   147.28 s
+  Guard-fixed(1200)  max wait    2051.9 s  abs bound    2803.6 s  ratio 0.732  violations 0 (own constant 0)  ties 0  min slack   680.07 s
+  Guard-age(1200)    max wait    2605.0 s  abs bound    2803.6 s  ratio 0.929  violations 0 (own constant 0)  ties 0  min slack   147.28 s
+  Fixed(1200)        max wait    2603.7 s  abs bound    2803.6 s  ratio 0.929  violations 0 (own constant 0)  ties 0  min slack   137.99 s
+  Skip(1200)         max wait    1549.6 s  abs bound    2803.6 s  ratio 0.553  violations 0 (own constant 0)  ties 0  min slack  1129.35 s
+primary overlay 1 level 0: k=8, n=17,634,760
+  FCFS               max wait     352.7 s  abs bound     421.3 s  ratio 0.837  violations 0 (own constant 0)  ties 0  min slack    41.10 s
+  SJF                max wait     960.3 s  (no bound claimed)
+  SPJF-E             max wait    1182.0 s  (no bound claimed)
+  Aging(600)         max wait     410.9 s  (no bound claimed)
+  Guard(300)         max wait     508.1 s  abs bound     721.3 s  ratio 0.704  violations 0 (own constant 0)  ties 0  min slack   181.91 s
+  Guard-age(300)     max wait     508.1 s  abs bound     721.3 s  ratio 0.704  violations 0 (own constant 0)  ties 0  min slack   181.91 s
+  Guard-fixed(300)   max wait     461.7 s  abs bound     721.3 s  ratio 0.640  violations 0 (own constant 0)  ties 0  min slack   234.14 s
+  Guard-queue(300)   max wait     500.5 s  abs bound     721.3 s  ratio 0.694  violations 0 (own constant 0)  ties 0  min slack   179.79 s
+  Fixed(300)         max wait     499.5 s  abs bound     721.3 s  ratio 0.692  violations 0 (own constant 0)  ties 0  min slack   179.79 s
+  Skip(300)          max wait     353.8 s  abs bound     721.3 s  ratio 0.490  violations 0 (own constant 0)  ties 0  min slack   307.27 s
+  Guard(600)         max wait     781.4 s  abs bound    1021.3 s  ratio 0.765  violations 0 (own constant 0)  ties 0  min slack   188.21 s
+  Guard-age(600)     max wait     781.4 s  abs bound    1021.3 s  ratio 0.765  violations 0 (own constant 0)  ties 0  min slack   188.21 s
+  Guard-fixed(600)   max wait     615.3 s  abs bound    1021.3 s  ratio 0.602  violations 0 (own constant 0)  ties 0  min slack   366.35 s
+  Guard-queue(600)   max wait     797.0 s  abs bound    1021.3 s  ratio 0.780  violations 0 (own constant 0)  ties 0  min slack   185.88 s
+  Fixed(600)         max wait     793.2 s  abs bound    1021.3 s  ratio 0.777  violations 0 (own constant 0)  ties 0  min slack   184.56 s
+  Skip(600)          max wait     355.1 s  abs bound    1021.3 s  ratio 0.348  violations 0 (own constant 0)  ties 0  min slack   582.00 s
+  Guard(1200)        max wait    1015.6 s  abs bound    1621.3 s  ratio 0.626  violations 0 (own constant 0)  ties 0  min slack   376.20 s
+  Guard-queue(1200)  max wait    1015.6 s  abs bound    1621.3 s  ratio 0.626  violations 0 (own constant 0)  ties 0  min slack   376.20 s
+  Guard-fixed(1200)  max wait     847.2 s  abs bound    1621.3 s  ratio 0.523  violations 0 (own constant 0)  ties 0  min slack   719.80 s
+  Guard-age(1200)    max wait     977.6 s  abs bound    1621.3 s  ratio 0.603  violations 0 (own constant 0)  ties 0  min slack   421.73 s
+  Fixed(1200)        max wait    1159.5 s  abs bound    1621.3 s  ratio 0.715  violations 0 (own constant 0)  ties 0  min slack   206.05 s
+  Skip(1200)         max wait     357.3 s  abs bound    1621.3 s  ratio 0.220  violations 0 (own constant 0)  ties 0  min slack  1180.44 s
+primary overlay 1 level 1: k=5, n=17,634,760
+  FCFS               max wait     850.5 s  abs bound     905.7 s  ratio 0.939  violations 0 (own constant 0)  ties 0  min slack    36.65 s
+  SJF                max wait    2755.9 s  (no bound claimed)
+  SPJF-E             max wait    3048.7 s  (no bound claimed)
+  Aging(600)         max wait     868.4 s  (no bound claimed)
+  Guard(300)         max wait     994.6 s  abs bound    1205.7 s  ratio 0.825  violations 0 (own constant 0)  ties 0  min slack   165.17 s
+  Guard-age(300)     max wait     994.6 s  abs bound    1205.7 s  ratio 0.825  violations 0 (own constant 0)  ties 0  min slack   165.17 s
+  Guard-fixed(300)   max wait     933.1 s  abs bound    1205.7 s  ratio 0.774  violations 0 (own constant 0)  ties 0  min slack   206.66 s
+  Guard-queue(300)   max wait     994.1 s  abs bound    1205.7 s  ratio 0.824  violations 0 (own constant 0)  ties 0  min slack   161.82 s
+  Fixed(300)         max wait     994.1 s  abs bound    1205.7 s  ratio 0.824  violations 0 (own constant 0)  ties 0  min slack   157.77 s
+  Skip(300)          max wait     851.2 s  abs bound    1205.7 s  ratio 0.706  violations 0 (own constant 0)  ties 0  min slack   286.18 s
+  Guard(600)         max wait    1292.4 s  abs bound    1505.7 s  ratio 0.858  violations 0 (own constant 0)  ties 0  min slack   164.57 s
+  Guard-age(600)     max wait    1292.4 s  abs bound    1505.7 s  ratio 0.858  violations 0 (own constant 0)  ties 0  min slack   164.57 s
+  Guard-fixed(600)   max wait    1095.6 s  abs bound    1505.7 s  ratio 0.728  violations 0 (own constant 0)  ties 0  min slack   356.64 s
+  Guard-queue(600)   max wait    1297.8 s  abs bound    1505.7 s  ratio 0.862  violations 0 (own constant 0)  ties 0  min slack   157.57 s
+  Fixed(600)         max wait    1297.8 s  abs bound    1505.7 s  ratio 0.862  violations 0 (own constant 0)  ties 0  min slack   160.01 s
+  Skip(600)          max wait     852.4 s  abs bound    1505.7 s  ratio 0.566  violations 0 (own constant 0)  ties 0  min slack   569.06 s
+  Guard(1200)        max wait    1897.9 s  abs bound    2105.7 s  ratio 0.901  violations 0 (own constant 0)  ties 0  min slack   161.53 s
+  Guard-queue(1200)  max wait    1897.9 s  abs bound    2105.7 s  ratio 0.901  violations 0 (own constant 0)  ties 0  min slack   161.53 s
+  Guard-fixed(1200)  max wait    1389.4 s  abs bound    2105.7 s  ratio 0.660  violations 0 (own constant 0)  ties 0  min slack   695.89 s
+  Guard-age(1200)    max wait    1899.4 s  abs bound    2105.7 s  ratio 0.902  violations 0 (own constant 0)  ties 0  min slack   160.70 s
+  Fixed(1200)        max wait    1899.4 s  abs bound    2105.7 s  ratio 0.902  violations 0 (own constant 0)  ties 0  min slack   160.24 s
+  Skip(1200)         max wait     854.5 s  abs bound    2105.7 s  ratio 0.406  violations 0 (own constant 0)  ties 0  min slack  1139.52 s
+primary overlay 1 level 2: k=4, n=17,634,760
+  FCFS               max wait    1285.3 s  abs bound    1331.5 s  ratio 0.965  violations 0 (own constant 0)  ties 0  min slack    33.66 s
+  SJF                max wait    4497.8 s  (no bound claimed)
+  SPJF-E             max wait    5393.4 s  (no bound claimed)
+  Aging(600)         max wait    1334.4 s  (no bound claimed)
+  Guard(300)         max wait    1435.7 s  abs bound    1631.5 s  ratio 0.880  violations 0 (own constant 0)  ties 0  min slack   137.54 s
+  Guard-age(300)     max wait    1435.7 s  abs bound    1631.5 s  ratio 0.880  violations 0 (own constant 0)  ties 0  min slack   137.54 s
+  Guard-fixed(300)   max wait    1368.1 s  abs bound    1631.5 s  ratio 0.839  violations 0 (own constant 0)  ties 0  min slack   203.49 s
+  Guard-queue(300)   max wait    1435.7 s  abs bound    1631.5 s  ratio 0.880  violations 0 (own constant 0)  ties 0  min slack   137.56 s
+  Fixed(300)         max wait    1435.5 s  abs bound    1631.5 s  ratio 0.880  violations 0 (own constant 0)  ties 0  min slack   137.56 s
+  Skip(300)          max wait    1286.3 s  abs bound    1631.5 s  ratio 0.788  violations 0 (own constant 0)  ties 0  min slack   279.63 s
+  Guard(600)         max wait    1735.6 s  abs bound    1931.5 s  ratio 0.899  violations 0 (own constant 0)  ties 0  min slack   137.85 s
+  Guard-age(600)     max wait    1735.6 s  abs bound    1931.5 s  ratio 0.899  violations 0 (own constant 0)  ties 0  min slack   137.85 s
+  Guard-fixed(600)   max wait    1530.7 s  abs bound    1931.5 s  ratio 0.792  violations 0 (own constant 0)  ties 0  min slack   342.84 s
+  Guard-queue(600)   max wait    1735.6 s  abs bound    1931.5 s  ratio 0.899  violations 0 (own constant 0)  ties 0  min slack   137.85 s
+  Fixed(600)         max wait    1735.6 s  abs bound    1931.5 s  ratio 0.899  violations 0 (own constant 0)  ties 0  min slack   139.59 s
+  Skip(600)          max wait    1287.5 s  abs bound    1931.5 s  ratio 0.667  violations 0 (own constant 0)  ties 0  min slack   551.62 s
+  Guard(1200)        max wait    2350.0 s  abs bound    2531.5 s  ratio 0.928  violations 0 (own constant 0)  ties 0  min slack   151.64 s
+  Guard-queue(1200)  max wait    2350.0 s  abs bound    2531.5 s  ratio 0.928  violations 0 (own constant 0)  ties 0  min slack   151.64 s
+  Guard-fixed(1200)  max wait    1793.1 s  abs bound    2531.5 s  ratio 0.708  violations 0 (own constant 0)  ties 0  min slack   687.11 s
+  Guard-age(1200)    max wait    2334.6 s  abs bound    2531.5 s  ratio 0.922  violations 0 (own constant 0)  ties 0  min slack   149.27 s
+  Fixed(1200)        max wait    2348.4 s  abs bound    2531.5 s  ratio 0.928  violations 0 (own constant 0)  ties 0  min slack   149.57 s
+  Skip(1200)         max wait    1290.2 s  abs bound    2531.5 s  ratio 0.510  violations 0 (own constant 0)  ties 0  min slack  1085.13 s
+primary overlay 2 level 0: k=8, n=17,634,760
+  FCFS               max wait     379.8 s  abs bound     443.0 s  ratio 0.857  violations 0 (own constant 0)  ties 0  min slack    41.87 s
+  SJF                max wait     806.2 s  (no bound claimed)
+  SPJF-E             max wait     963.4 s  (no bound claimed)
+  Aging(600)         max wait     445.4 s  (no bound claimed)
+  Guard(300)         max wait     552.8 s  abs bound     743.0 s  ratio 0.744  violations 0 (own constant 0)  ties 0  min slack   173.48 s
+  Guard-age(300)     max wait     552.8 s  abs bound     743.0 s  ratio 0.744  violations 0 (own constant 0)  ties 0  min slack   173.48 s
+  Guard-fixed(300)   max wait     483.0 s  abs bound     743.0 s  ratio 0.650  violations 0 (own constant 0)  ties 0  min slack   228.06 s
+  Guard-queue(300)   max wait     552.7 s  abs bound     743.0 s  ratio 0.744  violations 0 (own constant 0)  ties 0  min slack   173.87 s
+  Fixed(300)         max wait     552.8 s  abs bound     743.0 s  ratio 0.744  violations 0 (own constant 0)  ties 0  min slack   173.50 s
+  Skip(300)          max wait     380.5 s  abs bound     743.0 s  ratio 0.512  violations 0 (own constant 0)  ties 0  min slack   300.85 s
+  Guard(600)         max wait     738.9 s  abs bound    1043.0 s  ratio 0.708  violations 0 (own constant 0)  ties 0  min slack   190.02 s
+  Guard-age(600)     max wait     738.9 s  abs bound    1043.0 s  ratio 0.708  violations 0 (own constant 0)  ties 0  min slack   190.02 s
+  Guard-fixed(600)   max wait     636.8 s  abs bound    1043.0 s  ratio 0.611  violations 0 (own constant 0)  ties 0  min slack   360.07 s
+  Guard-queue(600)   max wait     739.0 s  abs bound    1043.0 s  ratio 0.709  violations 0 (own constant 0)  ties 0  min slack   186.97 s
+  Fixed(600)         max wait     736.4 s  abs bound    1043.0 s  ratio 0.706  violations 0 (own constant 0)  ties 0  min slack   179.63 s
+  Skip(600)          max wait     381.5 s  abs bound    1043.0 s  ratio 0.366  violations 0 (own constant 0)  ties 0  min slack   589.98 s
+  Guard(1200)        max wait     772.2 s  abs bound    1643.0 s  ratio 0.470  violations 0 (own constant 0)  ties 0  min slack   680.66 s
+  Guard-queue(1200)  max wait     772.2 s  abs bound    1643.0 s  ratio 0.470  violations 0 (own constant 0)  ties 0  min slack   680.66 s
+  Guard-fixed(1200)  max wait     783.0 s  abs bound    1643.0 s  ratio 0.477  violations 0 (own constant 0)  ties 0  min slack   715.54 s
+  Guard-age(1200)    max wait     973.6 s  abs bound    1643.0 s  ratio 0.593  violations 0 (own constant 0)  ties 0  min slack   436.21 s
+  Fixed(1200)        max wait     963.4 s  abs bound    1643.0 s  ratio 0.586  violations 0 (own constant 0)  ties 0  min slack   397.49 s
+  Skip(1200)         max wait     383.8 s  abs bound    1643.0 s  ratio 0.234  violations 0 (own constant 0)  ties 0  min slack  1174.46 s
+primary overlay 2 level 1: k=5, n=17,634,760
+  FCFS               max wait     806.7 s  abs bound     866.9 s  ratio 0.931  violations 0 (own constant 0)  ties 0  min slack    36.67 s
+  SJF                max wait    2130.3 s  (no bound claimed)
+  SPJF-E             max wait    2666.1 s  (no bound claimed)
+  Aging(600)         max wait     867.3 s  (no bound claimed)
+  Guard(300)         max wait     952.3 s  abs bound    1166.9 s  ratio 0.816  violations 0 (own constant 0)  ties 0  min slack   154.39 s
+  Guard-age(300)     max wait     952.3 s  abs bound    1166.9 s  ratio 0.816  violations 0 (own constant 0)  ties 0  min slack   154.39 s
+  Guard-fixed(300)   max wait     888.6 s  abs bound    1166.9 s  ratio 0.762  violations 0 (own constant 0)  ties 0  min slack   208.21 s
+  Guard-queue(300)   max wait     950.2 s  abs bound    1166.9 s  ratio 0.814  violations 0 (own constant 0)  ties 0  min slack   154.38 s
+  Fixed(300)         max wait     950.2 s  abs bound    1166.9 s  ratio 0.814  violations 0 (own constant 0)  ties 0  min slack   157.35 s
+  Skip(300)          max wait     807.4 s  abs bound    1166.9 s  ratio 0.692  violations 0 (own constant 0)  ties 0  min slack   286.18 s
+  Guard(600)         max wait    1266.5 s  abs bound    1466.9 s  ratio 0.863  violations 0 (own constant 0)  ties 0  min slack   160.29 s
+  Guard-age(600)     max wait    1266.5 s  abs bound    1466.9 s  ratio 0.863  violations 0 (own constant 0)  ties 0  min slack   160.29 s
+  Guard-fixed(600)   max wait    1051.6 s  abs bound    1466.9 s  ratio 0.717  violations 0 (own constant 0)  ties 0  min slack   346.99 s
+  Guard-queue(600)   max wait    1263.3 s  abs bound    1466.9 s  ratio 0.861  violations 0 (own constant 0)  ties 0  min slack   160.00 s
+  Fixed(600)         max wait    1253.3 s  abs bound    1466.9 s  ratio 0.854  violations 0 (own constant 0)  ties 0  min slack   158.94 s
+  Skip(600)          max wait     808.6 s  abs bound    1466.9 s  ratio 0.551  violations 0 (own constant 0)  ties 0  min slack   569.06 s
+  Guard(1200)        max wait    1854.8 s  abs bound    2066.9 s  ratio 0.897  violations 0 (own constant 0)  ties 0  min slack   158.34 s
+  Guard-queue(1200)  max wait    1854.8 s  abs bound    2066.9 s  ratio 0.897  violations 0 (own constant 0)  ties 0  min slack   158.34 s
+  Guard-fixed(1200)  max wait    1320.0 s  abs bound    2066.9 s  ratio 0.639  violations 0 (own constant 0)  ties 0  min slack   695.91 s
+  Guard-age(1200)    max wait    1840.6 s  abs bound    2066.9 s  ratio 0.891  violations 0 (own constant 0)  ties 0  min slack   153.30 s
+  Fixed(1200)        max wait    1840.5 s  abs bound    2066.9 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   167.38 s
+  Skip(1200)         max wait     810.7 s  abs bound    2066.9 s  ratio 0.392  violations 0 (own constant 0)  ties 0  min slack  1091.05 s
+primary overlay 2 level 2: k=4, n=17,634,760
+  FCFS               max wait    1130.6 s  abs bound    1189.6 s  ratio 0.950  violations 0 (own constant 0)  ties 0  min slack    32.63 s
+  SJF                max wait    3995.2 s  (no bound claimed)
+  SPJF-E             max wait    4565.0 s  (no bound claimed)
+  Aging(600)         max wait    1160.2 s  (no bound claimed)
+  Guard(300)         max wait    1280.7 s  abs bound    1489.6 s  ratio 0.860  violations 0 (own constant 0)  ties 0  min slack   137.20 s
+  Guard-age(300)     max wait    1280.7 s  abs bound    1489.6 s  ratio 0.860  violations 0 (own constant 0)  ties 0  min slack   137.20 s
+  Guard-fixed(300)   max wait    1213.2 s  abs bound    1489.6 s  ratio 0.814  violations 0 (own constant 0)  ties 0  min slack   206.54 s
+  Guard-queue(300)   max wait    1280.7 s  abs bound    1489.6 s  ratio 0.860  violations 0 (own constant 0)  ties 0  min slack   137.92 s
+  Fixed(300)         max wait    1280.7 s  abs bound    1489.6 s  ratio 0.860  violations 0 (own constant 0)  ties 0  min slack   137.93 s
+  Skip(300)          max wait    1131.9 s  abs bound    1489.6 s  ratio 0.760  violations 0 (own constant 0)  ties 0  min slack   264.61 s
+  Guard(600)         max wait    1579.7 s  abs bound    1789.6 s  ratio 0.883  violations 0 (own constant 0)  ties 0  min slack   139.35 s
+  Guard-age(600)     max wait    1579.7 s  abs bound    1789.6 s  ratio 0.883  violations 0 (own constant 0)  ties 0  min slack   139.35 s
+  Guard-fixed(600)   max wait    1381.4 s  abs bound    1789.6 s  ratio 0.772  violations 0 (own constant 0)  ties 0  min slack   342.30 s
+  Guard-queue(600)   max wait    1579.8 s  abs bound    1789.6 s  ratio 0.883  violations 0 (own constant 0)  ties 0  min slack   139.41 s
+  Fixed(600)         max wait    1582.1 s  abs bound    1789.6 s  ratio 0.884  violations 0 (own constant 0)  ties 0  min slack   136.79 s
+  Skip(600)          max wait    1133.0 s  abs bound    1789.6 s  ratio 0.633  violations 0 (own constant 0)  ties 0  min slack   541.91 s
+  Guard(1200)        max wait    2180.9 s  abs bound    2389.6 s  ratio 0.913  violations 0 (own constant 0)  ties 0  min slack   147.73 s
+  Guard-queue(1200)  max wait    2180.9 s  abs bound    2389.6 s  ratio 0.913  violations 0 (own constant 0)  ties 0  min slack   147.73 s
+  Guard-fixed(1200)  max wait    1637.9 s  abs bound    2389.6 s  ratio 0.685  violations 0 (own constant 0)  ties 0  min slack   678.90 s
+  Guard-age(1200)    max wait    2175.7 s  abs bound    2389.6 s  ratio 0.911  violations 0 (own constant 0)  ties 0  min slack   138.84 s
+  Fixed(1200)        max wait    2175.7 s  abs bound    2389.6 s  ratio 0.910  violations 0 (own constant 0)  ties 0  min slack   147.72 s
+  Skip(1200)         max wait    1135.3 s  abs bound    2389.6 s  ratio 0.475  violations 0 (own constant 0)  ties 0  min slack  1084.80 s
+primary overlay 3 level 0: k=8, n=17,634,760
+  FCFS               max wait     392.8 s  abs bound     448.4 s  ratio 0.876  violations 0 (own constant 0)  ties 0  min slack    42.30 s
+  SJF                max wait     910.4 s  (no bound claimed)
+  SPJF-E             max wait    1078.5 s  (no bound claimed)
+  Aging(600)         max wait     451.0 s  (no bound claimed)
+  Guard(300)         max wait     530.2 s  abs bound     748.4 s  ratio 0.708  violations 0 (own constant 0)  ties 0  min slack   184.06 s
+  Guard-age(300)     max wait     530.2 s  abs bound     748.4 s  ratio 0.708  violations 0 (own constant 0)  ties 0  min slack   184.06 s
+  Guard-fixed(300)   max wait     462.1 s  abs bound     748.4 s  ratio 0.618  violations 0 (own constant 0)  ties 0  min slack   234.33 s
+  Guard-queue(300)   max wait     531.8 s  abs bound     748.4 s  ratio 0.711  violations 0 (own constant 0)  ties 0  min slack   188.85 s
+  Fixed(300)         max wait     530.1 s  abs bound     748.4 s  ratio 0.708  violations 0 (own constant 0)  ties 0  min slack   184.32 s
+  Skip(300)          max wait     393.5 s  abs bound     748.4 s  ratio 0.526  violations 0 (own constant 0)  ties 0  min slack   294.95 s
+  Guard(600)         max wait     786.1 s  abs bound    1048.4 s  ratio 0.750  violations 0 (own constant 0)  ties 0  min slack   189.11 s
+  Guard-age(600)     max wait     786.1 s  abs bound    1048.4 s  ratio 0.750  violations 0 (own constant 0)  ties 0  min slack   189.11 s
+  Guard-fixed(600)   max wait     640.7 s  abs bound    1048.4 s  ratio 0.611  violations 0 (own constant 0)  ties 0  min slack   376.67 s
+  Guard-queue(600)   max wait     785.7 s  abs bound    1048.4 s  ratio 0.749  violations 0 (own constant 0)  ties 0  min slack   183.39 s
+  Fixed(600)         max wait     741.4 s  abs bound    1048.4 s  ratio 0.707  violations 0 (own constant 0)  ties 0  min slack   191.14 s
+  Skip(600)          max wait     394.6 s  abs bound    1048.4 s  ratio 0.376  violations 0 (own constant 0)  ties 0  min slack   582.10 s
+  Guard(1200)        max wait     831.7 s  abs bound    1648.4 s  ratio 0.505  violations 0 (own constant 0)  ties 0  min slack   717.41 s
+  Guard-queue(1200)  max wait     831.7 s  abs bound    1648.4 s  ratio 0.505  violations 0 (own constant 0)  ties 0  min slack   717.41 s
+  Guard-fixed(1200)  max wait     824.9 s  abs bound    1648.4 s  ratio 0.500  violations 0 (own constant 0)  ties 0  min slack   712.21 s
+  Guard-age(1200)    max wait     974.4 s  abs bound    1648.4 s  ratio 0.591  violations 0 (own constant 0)  ties 0  min slack   422.44 s
+  Fixed(1200)        max wait    1078.5 s  abs bound    1648.4 s  ratio 0.654  violations 0 (own constant 0)  ties 0  min slack   322.64 s
+  Skip(1200)         max wait     396.6 s  abs bound    1648.4 s  ratio 0.241  violations 0 (own constant 0)  ties 0  min slack  1150.44 s
+primary overlay 3 level 1: k=5, n=17,634,760
+  FCFS               max wait     825.0 s  abs bound     875.5 s  ratio 0.942  violations 0 (own constant 0)  ties 0  min slack    36.66 s
+  SJF                max wait    2483.5 s  (no bound claimed)
+  SPJF-E             max wait    2794.7 s  (no bound claimed)
+  Aging(600)         max wait     894.1 s  (no bound claimed)
+  Guard(300)         max wait     965.7 s  abs bound    1175.5 s  ratio 0.822  violations 0 (own constant 0)  ties 0  min slack   142.34 s
+  Guard-age(300)     max wait     965.7 s  abs bound    1175.5 s  ratio 0.822  violations 0 (own constant 0)  ties 0  min slack   142.34 s
+  Guard-fixed(300)   max wait     906.9 s  abs bound    1175.5 s  ratio 0.771  violations 0 (own constant 0)  ties 0  min slack   214.87 s
+  Guard-queue(300)   max wait     965.7 s  abs bound    1175.5 s  ratio 0.822  violations 0 (own constant 0)  ties 0  min slack   142.34 s
+  Fixed(300)         max wait     965.8 s  abs bound    1175.5 s  ratio 0.822  violations 0 (own constant 0)  ties 0  min slack   142.34 s
+  Skip(300)          max wait     825.8 s  abs bound    1175.5 s  ratio 0.702  violations 0 (own constant 0)  ties 0  min slack   291.57 s
+  Guard(600)         max wait    1269.4 s  abs bound    1475.5 s  ratio 0.860  violations 0 (own constant 0)  ties 0  min slack   142.49 s
+  Guard-age(600)     max wait    1269.4 s  abs bound    1475.5 s  ratio 0.860  violations 0 (own constant 0)  ties 0  min slack   142.49 s
+  Guard-fixed(600)   max wait    1067.0 s  abs bound    1475.5 s  ratio 0.723  violations 0 (own constant 0)  ties 0  min slack   355.37 s
+  Guard-queue(600)   max wait    1266.8 s  abs bound    1475.5 s  ratio 0.859  violations 0 (own constant 0)  ties 0  min slack   142.48 s
+  Fixed(600)         max wait    1264.0 s  abs bound    1475.5 s  ratio 0.857  violations 0 (own constant 0)  ties 0  min slack   142.50 s
+  Skip(600)          max wait     826.9 s  abs bound    1475.5 s  ratio 0.560  violations 0 (own constant 0)  ties 0  min slack   579.08 s
+  Guard(1200)        max wait    1867.5 s  abs bound    2075.5 s  ratio 0.900  violations 0 (own constant 0)  ties 0  min slack   158.06 s
+  Guard-queue(1200)  max wait    1867.5 s  abs bound    2075.5 s  ratio 0.900  violations 0 (own constant 0)  ties 0  min slack   158.06 s
+  Guard-fixed(1200)  max wait    1333.0 s  abs bound    2075.5 s  ratio 0.642  violations 0 (own constant 0)  ties 0  min slack   699.85 s
+  Guard-age(1200)    max wait    1863.8 s  abs bound    2075.5 s  ratio 0.898  violations 0 (own constant 0)  ties 0  min slack   157.78 s
+  Fixed(1200)        max wait    1875.5 s  abs bound    2075.5 s  ratio 0.904  violations 0 (own constant 0)  ties 0  min slack   167.07 s
+  Skip(1200)         max wait     829.0 s  abs bound    2075.5 s  ratio 0.399  violations 0 (own constant 0)  ties 0  min slack  1088.15 s
+primary overlay 3 level 2: k=4, n=17,634,760
+  FCFS               max wait    1177.1 s  abs bound    1229.3 s  ratio 0.958  violations 0 (own constant 0)  ties 0  min slack    34.81 s
+  SJF                max wait    3890.6 s  (no bound claimed)
+  SPJF-E             max wait    4336.2 s  (no bound claimed)
+  Aging(600)         max wait    1221.7 s  (no bound claimed)
+  Guard(300)         max wait    1328.4 s  abs bound    1529.3 s  ratio 0.869  violations 0 (own constant 0)  ties 0  min slack   134.01 s
+  Guard-age(300)     max wait    1328.4 s  abs bound    1529.3 s  ratio 0.869  violations 0 (own constant 0)  ties 0  min slack   134.01 s
+  Guard-fixed(300)   max wait    1260.7 s  abs bound    1529.3 s  ratio 0.824  violations 0 (own constant 0)  ties 0  min slack   200.80 s
+  Guard-queue(300)   max wait    1328.4 s  abs bound    1529.3 s  ratio 0.869  violations 0 (own constant 0)  ties 0  min slack   134.83 s
+  Fixed(300)         max wait    1328.4 s  abs bound    1529.3 s  ratio 0.869  violations 0 (own constant 0)  ties 0  min slack   134.00 s
+  Skip(300)          max wait    1177.9 s  abs bound    1529.3 s  ratio 0.770  violations 0 (own constant 0)  ties 0  min slack   263.72 s
+  Guard(600)         max wait    1628.3 s  abs bound    1829.3 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   137.20 s
+  Guard-age(600)     max wait    1628.3 s  abs bound    1829.3 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   137.20 s
+  Guard-fixed(600)   max wait    1423.6 s  abs bound    1829.3 s  ratio 0.778  violations 0 (own constant 0)  ties 0  min slack   339.46 s
+  Guard-queue(600)   max wait    1628.4 s  abs bound    1829.3 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   136.10 s
+  Fixed(600)         max wait    1628.4 s  abs bound    1829.3 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   137.63 s
+  Skip(600)          max wait    1178.9 s  abs bound    1829.3 s  ratio 0.644  violations 0 (own constant 0)  ties 0  min slack   560.32 s
+  Guard(1200)        max wait    2235.0 s  abs bound    2429.3 s  ratio 0.920  violations 0 (own constant 0)  ties 0  min slack   142.79 s
+  Guard-queue(1200)  max wait    2235.0 s  abs bound    2429.3 s  ratio 0.920  violations 0 (own constant 0)  ties 0  min slack   142.79 s
+  Guard-fixed(1200)  max wait    1685.8 s  abs bound    2429.3 s  ratio 0.694  violations 0 (own constant 0)  ties 0  min slack   678.78 s
+  Guard-age(1200)    max wait    2228.3 s  abs bound    2429.3 s  ratio 0.917  violations 0 (own constant 0)  ties 0  min slack   138.93 s
+  Fixed(1200)        max wait    2234.9 s  abs bound    2429.3 s  ratio 0.920  violations 0 (own constant 0)  ties 0  min slack   138.95 s
+  Skip(1200)         max wait    1181.3 s  abs bound    2429.3 s  ratio 0.486  violations 0 (own constant 0)  ties 0  min slack  1084.37 s
+primary overlay 4 level 0: k=7, n=17,634,760
+  FCFS               max wait     491.7 s  abs bound     558.3 s  ratio 0.881  violations 0 (own constant 0)  ties 0  min slack    39.54 s
+  SJF                max wait    1162.9 s  (no bound claimed)
+  SPJF-E             max wait    1343.6 s  (no bound claimed)
+  Aging(600)         max wait     548.3 s  (no bound claimed)
+  Guard(300)         max wait     630.7 s  abs bound     858.3 s  ratio 0.735  violations 0 (own constant 0)  ties 0  min slack   176.09 s
+  Guard-age(300)     max wait     630.7 s  abs bound     858.3 s  ratio 0.735  violations 0 (own constant 0)  ties 0  min slack   176.09 s
+  Guard-fixed(300)   max wait     589.6 s  abs bound     858.3 s  ratio 0.687  violations 0 (own constant 0)  ties 0  min slack   223.30 s
+  Guard-queue(300)   max wait     628.8 s  abs bound     858.3 s  ratio 0.733  violations 0 (own constant 0)  ties 0  min slack   173.95 s
+  Fixed(300)         max wait     630.5 s  abs bound     858.3 s  ratio 0.735  violations 0 (own constant 0)  ties 0  min slack   176.11 s
+  Skip(300)          max wait     492.5 s  abs bound     858.3 s  ratio 0.574  violations 0 (own constant 0)  ties 0  min slack   289.45 s
+  Guard(600)         max wait     935.1 s  abs bound    1158.3 s  ratio 0.807  violations 0 (own constant 0)  ties 0  min slack   181.21 s
+  Guard-age(600)     max wait     935.1 s  abs bound    1158.3 s  ratio 0.807  violations 0 (own constant 0)  ties 0  min slack   181.21 s
+  Guard-fixed(600)   max wait     742.5 s  abs bound    1158.3 s  ratio 0.641  violations 0 (own constant 0)  ties 0  min slack   368.75 s
+  Guard-queue(600)   max wait     931.0 s  abs bound    1158.3 s  ratio 0.804  violations 0 (own constant 0)  ties 0  min slack   174.16 s
+  Fixed(600)         max wait     931.6 s  abs bound    1158.3 s  ratio 0.804  violations 0 (own constant 0)  ties 0  min slack   177.19 s
+  Skip(600)          max wait     493.6 s  abs bound    1158.3 s  ratio 0.426  violations 0 (own constant 0)  ties 0  min slack   551.30 s
+  Guard(1200)        max wait    1142.6 s  abs bound    1758.3 s  ratio 0.650  violations 0 (own constant 0)  ties 0  min slack   464.47 s
+  Guard-queue(1200)  max wait    1142.6 s  abs bound    1758.3 s  ratio 0.650  violations 0 (own constant 0)  ties 0  min slack   464.47 s
+  Guard-fixed(1200)  max wait     945.3 s  abs bound    1758.3 s  ratio 0.538  violations 0 (own constant 0)  ties 0  min slack   713.07 s
+  Guard-age(1200)    max wait    1234.0 s  abs bound    1758.3 s  ratio 0.702  violations 0 (own constant 0)  ties 0  min slack   224.92 s
+  Fixed(1200)        max wait    1248.1 s  abs bound    1758.3 s  ratio 0.710  violations 0 (own constant 0)  ties 0  min slack   192.25 s
+  Skip(1200)         max wait     495.6 s  abs bound    1758.3 s  ratio 0.282  violations 0 (own constant 0)  ties 0  min slack  1149.70 s
+primary overlay 4 level 1: k=5, n=17,634,760
+  FCFS               max wait     830.1 s  abs bound     880.0 s  ratio 0.943  violations 0 (own constant 0)  ties 0  min slack    37.20 s
+  SJF                max wait    2260.9 s  (no bound claimed)
+  SPJF-E             max wait    2580.9 s  (no bound claimed)
+  Aging(600)         max wait     874.7 s  (no bound claimed)
+  Guard(300)         max wait     978.7 s  abs bound    1180.0 s  ratio 0.829  violations 0 (own constant 0)  ties 0  min slack   145.80 s
+  Guard-age(300)     max wait     978.7 s  abs bound    1180.0 s  ratio 0.829  violations 0 (own constant 0)  ties 0  min slack   145.80 s
+  Guard-fixed(300)   max wait     925.1 s  abs bound    1180.0 s  ratio 0.784  violations 0 (own constant 0)  ties 0  min slack   207.65 s
+  Guard-queue(300)   max wait     976.9 s  abs bound    1180.0 s  ratio 0.828  violations 0 (own constant 0)  ties 0  min slack   145.80 s
+  Fixed(300)         max wait     977.2 s  abs bound    1180.0 s  ratio 0.828  violations 0 (own constant 0)  ties 0  min slack   145.80 s
+  Skip(300)          max wait     831.2 s  abs bound    1180.0 s  ratio 0.704  violations 0 (own constant 0)  ties 0  min slack   289.17 s
+  Guard(600)         max wait    1280.4 s  abs bound    1480.0 s  ratio 0.865  violations 0 (own constant 0)  ties 0  min slack   150.55 s
+  Guard-age(600)     max wait    1280.4 s  abs bound    1480.0 s  ratio 0.865  violations 0 (own constant 0)  ties 0  min slack   150.55 s
+  Guard-fixed(600)   max wait    1075.1 s  abs bound    1480.0 s  ratio 0.726  violations 0 (own constant 0)  ties 0  min slack   345.30 s
+  Guard-queue(600)   max wait    1280.4 s  abs bound    1480.0 s  ratio 0.865  violations 0 (own constant 0)  ties 0  min slack   150.55 s
+  Fixed(600)         max wait    1289.0 s  abs bound    1480.0 s  ratio 0.871  violations 0 (own constant 0)  ties 0  min slack   150.71 s
+  Skip(600)          max wait     832.3 s  abs bound    1480.0 s  ratio 0.562  violations 0 (own constant 0)  ties 0  min slack   568.77 s
+  Guard(1200)        max wait    1864.1 s  abs bound    2080.0 s  ratio 0.896  violations 0 (own constant 0)  ties 0  min slack   146.52 s
+  Guard-queue(1200)  max wait    1864.1 s  abs bound    2080.0 s  ratio 0.896  violations 0 (own constant 0)  ties 0  min slack   146.52 s
+  Guard-fixed(1200)  max wait    1353.4 s  abs bound    2080.0 s  ratio 0.651  violations 0 (own constant 0)  ties 0  min slack   687.18 s
+  Guard-age(1200)    max wait    1833.4 s  abs bound    2080.0 s  ratio 0.881  violations 0 (own constant 0)  ties 0  min slack   152.29 s
+  Fixed(1200)        max wait    1833.3 s  abs bound    2080.0 s  ratio 0.881  violations 0 (own constant 0)  ties 0  min slack   146.05 s
+  Skip(1200)         max wait     834.3 s  abs bound    2080.0 s  ratio 0.401  violations 0 (own constant 0)  ties 0  min slack  1125.58 s
+primary overlay 4 level 2: k=4, n=17,634,760
+  FCFS               max wait    1167.2 s  abs bound    1212.3 s  ratio 0.963  violations 0 (own constant 0)  ties 0  min slack    32.54 s
+  SJF                max wait    3682.7 s  (no bound claimed)
+  SPJF-E             max wait    4078.1 s  (no bound claimed)
+  Aging(600)         max wait    1187.7 s  (no bound claimed)
+  Guard(300)         max wait    1320.9 s  abs bound    1512.3 s  ratio 0.873  violations 0 (own constant 0)  ties 0  min slack   137.49 s
+  Guard-age(300)     max wait    1320.9 s  abs bound    1512.3 s  ratio 0.873  violations 0 (own constant 0)  ties 0  min slack   137.49 s
+  Guard-fixed(300)   max wait    1251.8 s  abs bound    1512.3 s  ratio 0.828  violations 0 (own constant 0)  ties 0  min slack   201.20 s
+  Guard-queue(300)   max wait    1320.9 s  abs bound    1512.3 s  ratio 0.873  violations 0 (own constant 0)  ties 0  min slack   137.48 s
+  Fixed(300)         max wait    1321.7 s  abs bound    1512.3 s  ratio 0.874  violations 0 (own constant 0)  ties 0  min slack   137.48 s
+  Skip(300)          max wait    1168.0 s  abs bound    1512.3 s  ratio 0.772  violations 0 (own constant 0)  ties 0  min slack   273.46 s
+  Guard(600)         max wait    1609.3 s  abs bound    1812.3 s  ratio 0.888  violations 0 (own constant 0)  ties 0  min slack   136.64 s
+  Guard-age(600)     max wait    1609.3 s  abs bound    1812.3 s  ratio 0.888  violations 0 (own constant 0)  ties 0  min slack   136.64 s
+  Guard-fixed(600)   max wait    1420.5 s  abs bound    1812.3 s  ratio 0.784  violations 0 (own constant 0)  ties 0  min slack   342.62 s
+  Guard-queue(600)   max wait    1609.2 s  abs bound    1812.3 s  ratio 0.888  violations 0 (own constant 0)  ties 0  min slack   136.67 s
+  Fixed(600)         max wait    1612.1 s  abs bound    1812.3 s  ratio 0.890  violations 0 (own constant 0)  ties 0  min slack   136.29 s
+  Skip(600)          max wait    1169.2 s  abs bound    1812.3 s  ratio 0.645  violations 0 (own constant 0)  ties 0  min slack   532.79 s
+  Guard(1200)        max wait    2221.2 s  abs bound    2412.3 s  ratio 0.921  violations 0 (own constant 0)  ties 0  min slack   134.62 s
+  Guard-queue(1200)  max wait    2221.2 s  abs bound    2412.3 s  ratio 0.921  violations 0 (own constant 0)  ties 0  min slack   134.62 s
+  Guard-fixed(1200)  max wait    1666.9 s  abs bound    2412.3 s  ratio 0.691  violations 0 (own constant 0)  ties 0  min slack   677.43 s
+  Guard-age(1200)    max wait    2209.2 s  abs bound    2412.3 s  ratio 0.916  violations 0 (own constant 0)  ties 0  min slack   134.56 s
+  Fixed(1200)        max wait    2209.2 s  abs bound    2412.3 s  ratio 0.916  violations 0 (own constant 0)  ties 0  min slack   134.73 s
+  Skip(1200)         max wait    1171.2 s  abs bound    2412.3 s  ratio 0.486  violations 0 (own constant 0)  ties 0  min slack  1101.92 s
+
+[a] summary: 285 checked (cell, policy) rows, per-job violations 0, own-constant violations 0, ties 0; max ratio 0.9653; min slack 32.545 s
+
+advance quote from validation sigma (paired overlay, and max over the five):
+  overlay 0 level 0 FCFS         realised max    435.0 s | primary bound    508.5 | validation-quoted    465.7 (off    -42.9, covers True) | max-of-5 quote    666.8 (covers True)
+  overlay 0 level 0 Guard(300)   realised max    578.8 s | primary bound    808.5 | validation-quoted    765.7 (off    -42.9, covers True) | max-of-5 quote    966.8 (covers True)
+  overlay 0 level 0 Guard(600)   realised max    867.2 s | primary bound   1108.5 | validation-quoted   1065.7 (off    -42.9, covers True) | max-of-5 quote   1266.8 (covers True)
+  overlay 0 level 0 Guard(1200)  realised max   1182.8 s | primary bound   1708.5 | validation-quoted   1665.7 (off    -42.9, covers True) | max-of-5 quote   1866.8 (covers True)
+  overlay 1 level 0 FCFS         realised max    352.7 s | primary bound    421.3 | validation-quoted    463.2 (off    +42.0, covers True) | max-of-5 quote    666.8 (covers True)
+  overlay 1 level 0 Guard(300)   realised max    508.1 s | primary bound    721.3 | validation-quoted    763.2 (off    +42.0, covers True) | max-of-5 quote    966.8 (covers True)
+  overlay 1 level 0 Guard(600)   realised max    781.4 s | primary bound   1021.3 | validation-quoted   1063.2 (off    +42.0, covers True) | max-of-5 quote   1266.8 (covers True)
+  overlay 1 level 0 Guard(1200)  realised max   1015.6 s | primary bound   1621.3 | validation-quoted   1663.2 (off    +42.0, covers True) | max-of-5 quote   1866.8 (covers True)
+  overlay 2 level 0 FCFS         realised max    379.8 s | primary bound    443.0 | validation-quoted    666.8 (off   +223.8, covers True) | max-of-5 quote    666.8 (covers True)
+  overlay 2 level 0 Guard(300)   realised max    552.8 s | primary bound    743.0 | validation-quoted    966.8 (off   +223.8, covers True) | max-of-5 quote    966.8 (covers True)
+  overlay 2 level 0 Guard(600)   realised max    738.9 s | primary bound   1043.0 | validation-quoted   1266.8 (off   +223.8, covers True) | max-of-5 quote   1266.8 (covers True)
+  overlay 2 level 0 Guard(1200)  realised max    772.2 s | primary bound   1643.0 | validation-quoted   1866.8 (off   +223.8, covers True) | max-of-5 quote   1866.8 (covers True)
+  overlay 3 level 0 FCFS         realised max    392.8 s | primary bound    448.4 | validation-quoted    427.6 (off    -20.8, covers True) | max-of-5 quote    666.8 (covers True)
+  overlay 3 level 0 Guard(300)   realised max    530.2 s | primary bound    748.4 | validation-quoted    727.6 (off    -20.8, covers True) | max-of-5 quote    966.8 (covers True)
+  overlay 3 level 0 Guard(600)   realised max    786.1 s | primary bound   1048.4 | validation-quoted   1027.6 (off    -20.8, covers True) | max-of-5 quote   1266.8 (covers True)
+  overlay 3 level 0 Guard(1200)  realised max    831.7 s | primary bound   1648.4 | validation-quoted   1627.6 (off    -20.8, covers True) | max-of-5 quote   1866.8 (covers True)
+  overlay 4 level 0 FCFS         realised max    491.7 s | primary bound    558.3 | validation-quoted    557.3 (off     -1.0, covers True) | max-of-5 quote    753.5 (covers True)
+  overlay 4 level 0 Guard(300)   realised max    630.7 s | primary bound    858.3 | validation-quoted    857.3 (off     -1.0, covers True) | max-of-5 quote   1053.5 (covers True)
+  overlay 4 level 0 Guard(600)   realised max    935.1 s | primary bound   1158.3 | validation-quoted   1157.3 (off     -1.0, covers True) | max-of-5 quote   1353.5 (covers True)
+  overlay 4 level 0 Guard(1200)  realised max   1142.6 s | primary bound   1758.3 | validation-quoted   1757.3 (off     -1.0, covers True) | max-of-5 quote   1953.5 (covers True)
+  overlay 0 level 1 FCFS         realised max   1023.8 s | primary bound   1083.8 | validation-quoted    903.2 (off   -180.7, covers False) | max-of-5 quote   1220.4 (covers True)
+  overlay 0 level 1 Guard(300)   realised max   1167.4 s | primary bound   1383.8 | validation-quoted   1203.2 (off   -180.7, covers True) | max-of-5 quote   1520.4 (covers True)
+  overlay 0 level 1 Guard(600)   realised max   1467.4 s | primary bound   1683.8 | validation-quoted   1503.2 (off   -180.7, covers True) | max-of-5 quote   1820.4 (covers True)
+  overlay 0 level 1 Guard(1200)  realised max   2074.5 s | primary bound   2283.8 | validation-quoted   2103.2 (off   -180.7, covers True) | max-of-5 quote   2420.4 (covers True)
+  overlay 1 level 1 FCFS         realised max    850.5 s | primary bound    905.7 | validation-quoted    847.7 (off    -58.0, covers False) | max-of-5 quote   1220.4 (covers True)
+  overlay 1 level 1 Guard(300)   realised max    994.6 s | primary bound   1205.7 | validation-quoted   1147.7 (off    -58.0, covers True) | max-of-5 quote   1520.4 (covers True)
+  overlay 1 level 1 Guard(600)   realised max   1292.4 s | primary bound   1505.7 | validation-quoted   1447.7 (off    -58.0, covers True) | max-of-5 quote   1820.4 (covers True)
+  overlay 1 level 1 Guard(1200)  realised max   1897.9 s | primary bound   2105.7 | validation-quoted   2047.7 (off    -58.0, covers True) | max-of-5 quote   2420.4 (covers True)
+  overlay 2 level 1 FCFS         realised max    806.7 s | primary bound    866.9 | validation-quoted   1220.4 (off   +353.5, covers True) | max-of-5 quote   1220.4 (covers True)
+  overlay 2 level 1 Guard(300)   realised max    952.3 s | primary bound   1166.9 | validation-quoted   1520.4 (off   +353.5, covers True) | max-of-5 quote   1520.4 (covers True)
+  overlay 2 level 1 Guard(600)   realised max   1266.5 s | primary bound   1466.9 | validation-quoted   1820.4 (off   +353.5, covers True) | max-of-5 quote   1820.4 (covers True)
+  overlay 2 level 1 Guard(1200)  realised max   1854.8 s | primary bound   2066.9 | validation-quoted   2420.4 (off   +353.5, covers True) | max-of-5 quote   2420.4 (covers True)
+  overlay 3 level 1 FCFS         realised max    825.0 s | primary bound    875.5 | validation-quoted    816.4 (off    -59.1, covers False) | max-of-5 quote   1220.4 (covers True)
+  overlay 3 level 1 Guard(300)   realised max    965.7 s | primary bound   1175.5 | validation-quoted   1116.4 (off    -59.1, covers True) | max-of-5 quote   1520.4 (covers True)
+  overlay 3 level 1 Guard(600)   realised max   1269.4 s | primary bound   1475.5 | validation-quoted   1416.4 (off    -59.1, covers True) | max-of-5 quote   1820.4 (covers True)
+  overlay 3 level 1 Guard(1200)  realised max   1867.5 s | primary bound   2075.5 | validation-quoted   2016.4 (off    -59.1, covers True) | max-of-5 quote   2420.4 (covers True)
+  overlay 4 level 1 FCFS         realised max    830.1 s | primary bound    880.0 | validation-quoted    891.9 (off    +11.9, covers True) | max-of-5 quote   1220.4 (covers True)
+  overlay 4 level 1 Guard(300)   realised max    978.7 s | primary bound   1180.0 | validation-quoted   1191.9 (off    +11.9, covers True) | max-of-5 quote   1520.4 (covers True)
+  overlay 4 level 1 Guard(600)   realised max   1280.4 s | primary bound   1480.0 | validation-quoted   1491.9 (off    +11.9, covers True) | max-of-5 quote   1820.4 (covers True)
+  overlay 4 level 1 Guard(1200)  realised max   1864.1 s | primary bound   2080.0 | validation-quoted   2091.9 (off    +11.9, covers True) | max-of-5 quote   2420.4 (covers True)
+  overlay 0 level 2 FCFS         realised max   1544.6 s | primary bound   1603.6 | validation-quoted   1194.8 (off   -408.8, covers False) | max-of-5 quote   1594.3 (covers True)
+  overlay 0 level 2 Guard(300)   realised max   1694.5 s | primary bound   1903.6 | validation-quoted   1494.8 (off   -408.8, covers False) | max-of-5 quote   1894.3 (covers True)
+  overlay 0 level 2 Guard(600)   realised max   1994.5 s | primary bound   2203.6 | validation-quoted   1794.8 (off   -408.8, covers False) | max-of-5 quote   2194.3 (covers True)
+  overlay 0 level 2 Guard(1200)  realised max   2603.2 s | primary bound   2803.6 | validation-quoted   2394.8 (off   -408.8, covers False) | max-of-5 quote   2794.3 (covers True)
+  overlay 1 level 2 FCFS         realised max   1285.3 s | primary bound   1331.5 | validation-quoted   1110.6 (off   -220.9, covers False) | max-of-5 quote   1594.3 (covers True)
+  overlay 1 level 2 Guard(300)   realised max   1435.7 s | primary bound   1631.5 | validation-quoted   1410.6 (off   -220.9, covers False) | max-of-5 quote   1894.3 (covers True)
+  overlay 1 level 2 Guard(600)   realised max   1735.6 s | primary bound   1931.5 | validation-quoted   1710.6 (off   -220.9, covers False) | max-of-5 quote   2194.3 (covers True)
+  overlay 1 level 2 Guard(1200)  realised max   2350.0 s | primary bound   2531.5 | validation-quoted   2310.6 (off   -220.9, covers False) | max-of-5 quote   2794.3 (covers True)
+  overlay 2 level 2 FCFS         realised max   1130.6 s | primary bound   1189.6 | validation-quoted   1594.3 (off   +404.7, covers True) | max-of-5 quote   1594.3 (covers True)
+  overlay 2 level 2 Guard(300)   realised max   1280.7 s | primary bound   1489.6 | validation-quoted   1894.3 (off   +404.7, covers True) | max-of-5 quote   1894.3 (covers True)
+  overlay 2 level 2 Guard(600)   realised max   1579.7 s | primary bound   1789.6 | validation-quoted   2194.3 (off   +404.7, covers True) | max-of-5 quote   2194.3 (covers True)
+  overlay 2 level 2 Guard(1200)  realised max   2180.9 s | primary bound   2389.6 | validation-quoted   2794.3 (off   +404.7, covers True) | max-of-5 quote   2794.3 (covers True)
+  overlay 3 level 2 FCFS         realised max   1177.1 s | primary bound   1229.3 | validation-quoted   1090.3 (off   -139.0, covers False) | max-of-5 quote   1594.3 (covers True)
+  overlay 3 level 2 Guard(300)   realised max   1328.4 s | primary bound   1529.3 | validation-quoted   1390.3 (off   -139.0, covers True) | max-of-5 quote   1894.3 (covers True)
+  overlay 3 level 2 Guard(600)   realised max   1628.3 s | primary bound   1829.3 | validation-quoted   1690.3 (off   -139.0, covers True) | max-of-5 quote   2194.3 (covers True)
+  overlay 3 level 2 Guard(1200)  realised max   2235.0 s | primary bound   2429.3 | validation-quoted   2290.3 (off   -139.0, covers True) | max-of-5 quote   2794.3 (covers True)
+  overlay 4 level 2 FCFS         realised max   1167.2 s | primary bound   1212.3 | validation-quoted   1184.6 (off    -27.7, covers True) | max-of-5 quote   1594.3 (covers True)
+  overlay 4 level 2 Guard(300)   realised max   1320.9 s | primary bound   1512.3 | validation-quoted   1484.6 (off    -27.7, covers True) | max-of-5 quote   1894.3 (covers True)
+  overlay 4 level 2 Guard(600)   realised max   1609.3 s | primary bound   1812.3 | validation-quoted   1784.6 (off    -27.7, covers True) | max-of-5 quote   2194.3 (covers True)
+  overlay 4 level 2 Guard(1200)  realised max   2221.2 s | primary bound   2412.3 | validation-quoted   2384.6 (off    -27.7, covers True) | max-of-5 quote   2794.3 (covers True)
+
+input hashes (this run / outputs/dev_tables/manifest.json):
+  data/derived/overlay_traces/primary_rep0.npz: 78d063485a4281f6  manifest 78d063485a4281f6
+  data/derived/overlay_traces/primary_rep1.npz: 71a75d2b6df5c469  manifest 71a75d2b6df5c469
+  data/derived/overlay_traces/primary_rep2.npz: 8f021068e70ef21e  manifest 8f021068e70ef21e
+  data/derived/overlay_traces/primary_rep3.npz: f59edee819e5e3a8  manifest f59edee819e5e3a8
+  data/derived/overlay_traces/primary_rep4.npz: 8fd652d5874ef30b  manifest 8fd652d5874ef30b
+  data/derived/overlay_traces/validation_rep0.npz: 77e922f16add33cb  manifest None
+  data/derived/overlay_traces/validation_rep1.npz: 62a92f1bbf33fc50  manifest None
+  data/derived/overlay_traces/validation_rep2.npz: 45d531c0beef72fd  manifest None
+  data/derived/overlay_traces/validation_rep3.npz: 0b4f2fd7307c8b66  manifest None
+  data/derived/overlay_traces/validation_rep4.npz: b725aa795c698642  manifest None
+  data/derived/overlay_traces/k1_rep0.npz: bff92632842a813a  manifest None
+
+total 4377 s

@@ -1,0 +1,49 @@
+==========================================================================================
+1. MANIFEST
+  mv3_build.py           635776d58ad83c35...  matches the report
+  mv3_common.py          cd98031cf33223f0...  matches the report
+  mv3_gain.py            095aa06d043b8568...  matches the report
+  mv3_r1s.py             5e99e0bcb14cf3f4...  matches the report
+  mv3_run.py             13b90d4e42bbb983...  matches the report
+  mv3_select.py          b49f99cc9bb1e4d5...  matches the report
+  mv3_xcheck.py          9aad4c22a69a76a6...  matches the report
+  combined: report 7d6ed04de3219c6982328c8d...  recomputed 7d6ed04de3219c6982328c8d...  MATCH
+  mv3_report.py: e0874e2b3588f76e... (formats only, not in the manifest)
+  OUTSIDE the manifest: guardkern.py (the simulator kernel) sha e8b8578d5b538744... last written 2026-09-20 09:10:18
+  OUTSIDE the manifest: service_precheck_v2.py (pipeline) sha 47a1f76355a66684... last written 2026-09-19 17:26:53
+==========================================================================================
+2. STAGE LOGS
+  out_build.txt      invocations  4  done  4  manifests one, matching  first 2026-09-19 20:40:26  last 2026-09-19 20:41:20  after the incident: True  lines 62 (report says 62)
+  out_gain.txt       invocations  2  done  2  manifests one, matching  first 2026-09-19 21:05:06  last 2026-09-19 21:05:09  after the incident: True  lines 368 (report says 368)
+  out_r1s.txt        invocations  2  done  2  manifests one, matching  first 2026-09-19 20:39:04  last 2026-09-19 20:39:30  after the incident: True  lines 26 (report says 26)
+  out_run.txt        invocations 19  done 19  manifests one, matching  first 2026-09-19 20:41:33  last 2026-09-19 20:53:30  after the incident: True  lines 638 (report says 638)
+  out_select.txt     invocations  1  done  1  manifests one, matching  first 2026-09-19 20:44:47  last 2026-09-19 20:44:47  after the incident: True  lines 68 (report says 68)
+  out_xcheck.txt     invocations  1  done  1  manifests one, matching  first 2026-09-19 21:05:11  last 2026-09-19 21:05:11  after the incident: True  lines 7 (report says 7)
+==========================================================================================
+3. CELLS
+  primary rep0 L0 main: policies 22 guarded 12 n_jobs 17,634,760 k 8 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep0 L1 main: policies 22 guarded 12 n_jobs 17,634,760 k 5 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep0 L2 main: policies 22 guarded 12 n_jobs 17,634,760 k 4 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep1 L0 main: policies 22 guarded 12 n_jobs 17,634,760 k 8 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep1 L1 main: policies 22 guarded 12 n_jobs 17,634,760 k 5 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep1 L2 main: policies 22 guarded 12 n_jobs 17,634,760 k 4 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep2 L0 main: policies 22 guarded 12 n_jobs 17,634,760 k 8 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep2 L1 main: policies 22 guarded 12 n_jobs 17,634,760 k 5 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep2 L2 main: policies 22 guarded 12 n_jobs 17,634,760 k 4 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep3 L0 main: policies 22 guarded 12 n_jobs 17,634,760 k 8 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep3 L1 main: policies 22 guarded 12 n_jobs 17,634,760 k 5 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep3 L2 main: policies 22 guarded 12 n_jobs 17,634,760 k 4 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep4 L0 main: policies 22 guarded 12 n_jobs 17,634,760 k 7 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep4 L1 main: policies 22 guarded 12 n_jobs 17,634,760 k 5 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  primary rep4 L2 main: policies 22 guarded 12 n_jobs 17,634,760 k 4 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  k1 rep0 L0 main: policies 22 guarded 12 n_jobs 3,209,347 k 1 bound_viol max 0 used<=1 True boot [(2000,)] min finite 2000
+  valid rep0 L0 grid: policies 51 guarded 48 n_jobs 17,646,125 k 7 bound_viol max 0 used<=1 True boot -1
+  valid rep0 L1 grid: policies 51 guarded 48 n_jobs 17,646,125 k 5 bound_viol max 0 used<=1 True boot -1
+  valid rep0 L2 grid: policies 51 guarded 48 n_jobs 17,646,125 k 4 bound_viol max 0 used<=1 True boot -1
+  per-job bound checks over the guarded runs: 5,753,810,964
+  the report claims: 192 guarded runs, 3,212,768,964 checks, 0 violations
+==========================================================================================
+4. HOW MANY BOOTSTRAP REPLICATES THE GAIN STAGE DROPS
+  level 0: non-finite gap replicates per overlay {0: 0, 1: 0, 2: 0, 3: 0, 4: 0} of 2000
+  level 1: non-finite gap replicates per overlay {0: 0, 1: 0, 2: 0, 3: 0, 4: 0} of 2000
+  level 2: non-finite gap replicates per overlay {0: 0, 1: 0, 2: 0, 3: 0, 4: 0} of 2000

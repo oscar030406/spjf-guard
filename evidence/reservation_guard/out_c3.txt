@@ -1,0 +1,33 @@
+==============================================================================
+C3  two cap classes, L = 12, allowance B = 10, only short-class jobs overtake
+==============================================================================
+
+k = 1   uniform bounds: rule R  k*exc <= B+(2k-2)L = 10 ;  rule C  k*exc < B+(3k-2)L = 22
+  ell    family In (R / C)      family exc (R / C)     random In (R / C)      pred In (R / C)
+  1      10 / 10                10 / 10                7 / 7                  10 / 10
+  2      10 / 10                10 / 10                10 / 11                10 / 10
+  3      9 / 12                 9 / 12                 10 / 12                9 / 12
+  4      8 / 12                 8 / 12                 10 / 13                8 / 12
+  6      6 / 12                 6 / 12                 10 / 15                6 / 12
+  12     0 / 12                 0 / 12                 0 / 21                 0 / 12
+
+k = 2   uniform bounds: rule R  k*exc <= B+(2k-2)L = 34 ;  rule C  k*exc < B+(3k-2)L = 58
+  ell    family In (R / C)      family exc (R / C)     random In (R / C)      pred In (R / C)
+  1      10 / 10                5 / 5                  6 / 6                  10 / 11
+  2      10 / 12                6 / 6                  10 / 11                10 / 12
+  3      9 / 12                 6 / 6                  10 / 15                9 / 15
+  4      8 / 16                 4 / 8                  10 / 17                8 / 16
+  6      6 / 12                 6 / 6                  9 / 20                 6 / 18
+  12     0 / 24                 0 / 12                 0 / 30                 0 / 24
+
+k = 4   uniform bounds: rule R  k*exc <= B+(2k-2)L = 82 ;  rule C  k*exc < B+(3k-2)L = 130
+  ell    family In (R / C)      family exc (R / C)     random In (R / C)      pred In (R / C)
+  1      10 / 12                3 / 3                  2 / 2                  10 / 13
+  2      10 / 16                4 / 4                  6 / 6                  10 / 16
+  3      9 / 12                 3 / 3                  5 / 5                  9 / 21
+  4      8 / 16                 4 / 4                  6 / 7                  8 / 24
+  6      6 / 24                 6 / 6                  6 / 12                 6 / 30
+  12     0 / 48                 0 / 12                 0 / 20                 0 / 48
+
+Reading: rule R's In never exceeds B for any cap profile, so its promise at k=1 is B and never mentions L.
+Rule C's In exceeds B by up to k*ell on the same instances; the L-scale term of the published bound is the ell = L corner.

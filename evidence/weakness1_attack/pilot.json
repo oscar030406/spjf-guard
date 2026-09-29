@@ -1,0 +1,93 @@
+{
+  "terms": [
+    "2020-ERE",
+    "2020-2",
+    "2021-1",
+    "2021-2",
+    "2022-1",
+    "2022-2"
+  ],
+  "rep": 0,
+  "n": 17634760,
+  "n_deadline": 4219556,
+  "span_s": 17998890.298648,
+  "busy_hour_work_s": 14705.304742999862,
+  "no_wait_capacity": 76,
+  "n_weeks": 30,
+  "fcfs": [
+    {
+      "k": 1,
+      "p99_deadline_s": 110194.2548486,
+      "p99_all_s": 108410.21942924,
+      "max_wait_s": 125374.723699,
+      "positive_wait_jobs": 16446806,
+      "runtime_s": 11.761326799998642
+    },
+    {
+      "k": 4,
+      "p99_deadline_s": 263.1202411500015,
+      "p99_all_s": 210.5271226000006,
+      "max_wait_s": 1544.602708,
+      "positive_wait_jobs": 6645297,
+      "runtime_s": 7.539125500006776
+    },
+    {
+      "k": 8,
+      "p99_deadline_s": 22.170393000000068,
+      "p99_all_s": 11.831768400000007,
+      "max_wait_s": 435.022874,
+      "positive_wait_jobs": 1613690,
+      "runtime_s": 7.001428899995517
+    },
+    {
+      "k": 16,
+      "p99_deadline_s": 0.222518,
+      "p99_all_s": 0.0,
+      "max_wait_s": 107.00429,
+      "positive_wait_jobs": 154144,
+      "runtime_s": 6.765671799999836
+    },
+    {
+      "k": 32,
+      "p99_deadline_s": 0.0,
+      "p99_all_s": 0.0,
+      "max_wait_s": 36.986895,
+      "positive_wait_jobs": 9837,
+      "runtime_s": 6.706944300000032
+    },
+    {
+      "k": 64,
+      "p99_deadline_s": 0.0,
+      "p99_all_s": 0.0,
+      "max_wait_s": 0.443741,
+      "positive_wait_jobs": 59,
+      "runtime_s": 6.745517300005304
+    },
+    {
+      "k": 75,
+      "p99_deadline_s": 0.0,
+      "p99_all_s": 0.0,
+      "max_wait_s": 0.114066,
+      "positive_wait_jobs": 1,
+      "runtime_s": 6.644497499997669
+    },
+    {
+      "k": 76,
+      "p99_deadline_s": 0.0,
+      "p99_all_s": 0.0,
+      "max_wait_s": 0.0,
+      "positive_wait_jobs": 0,
+      "runtime_s": 6.666988600001787
+    },
+    {
+      "k": 128,
+      "p99_deadline_s": 0.0,
+      "p99_all_s": 0.0,
+      "max_wait_s": 0.0,
+      "positive_wait_jobs": 0,
+      "runtime_s": 6.629251199999999
+    }
+  ],
+  "wall_s": 96.94055359999766,
+  "cpu_s": 94.234375
+}

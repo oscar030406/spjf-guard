@@ -1,0 +1,45 @@
+{
+  "terms": [
+    "2020-ERE",
+    "2020-2",
+    "2021-1",
+    "2021-2",
+    "2022-1",
+    "2022-2"
+  ],
+  "pool": "primary",
+  "unseal": false,
+  "basis": "outputs/dev_tables/manifest.json, development input entries inspected on 2026-09-21",
+  "inputs": [
+    {
+      "rep": 0,
+      "path": "data/derived/overlay_traces/primary_rep0.npz",
+      "bytes": 793567608,
+      "sha256": "4f5a6c84a59d1e60342593d26a81e92a38cb76a2b730c69a6babaffc983d4971"
+    },
+    {
+      "rep": 1,
+      "path": "data/derived/overlay_traces/primary_rep1.npz",
+      "bytes": 793567608,
+      "sha256": "f300b3195d03bad713951bcf7051610ae6b7eb99753c61e85465299b9737b720"
+    },
+    {
+      "rep": 2,
+      "path": "data/derived/overlay_traces/primary_rep2.npz",
+      "bytes": 793567608,
+      "sha256": "053b24fa860f2595ea2c0427945d107dabab1e65abf2e46a264678834dd3d981"
+    },
+    {
+      "rep": 3,
+      "path": "data/derived/overlay_traces/primary_rep3.npz",
+      "bytes": 793567608,
+      "sha256": "84e95b15b9da99a4d6d6a9606c835db7396b552448995312bc238e2a3b4191e4"
+    },
+    {
+      "rep": 4,
+      "path": "data/derived/overlay_traces/primary_rep4.npz",
+      "bytes": 793567608,
+      "sha256": "5581859bdf016c22f105563b43711543e4db908d3874ac1549d6a0adb454c1aa"
+    }
+  ]
+}

@@ -1,0 +1,258 @@
+Dedicated per-student containers vs a shared executor pool, on one demand trace
+==============================================================================
+
+Trace: the paper's primary overlay, replicate 0 -- 44 copies of the 40 
+class-semesters of the 60-second-regime development semesters (2020-ERE, 2020-2,
+2021-1, 2021-2, 2022-1, 2022-2), each copy shifted by whole weeks.
+  simulated jobs              17,634,760
+  of them in a deadline window (0..24 h before an assessment end)  4,219,556
+  executed work, sum of C_cap = min(C, 60 s)                       7,048,761 s
+  job arrival span                                                 208.32 d
+  busiest arrival hour of C_cap work                               15247.5 s
+  pool sizes the paper uses (busy-hour rho 0.5 / 0.8 / 1.0)        k = 8, 5, 4
+
+0  Check that this is the same trace and the same queue as the paper's
+------------------------------------------------------------------------------
+
+At k = 8, prechecks/guard_variants/pareto_tables.txt (rep0, predictor M4, level 0,
+produced by a different script on a separately built copy of the overlay) reports
+deadline-window p99 waits of FCFS 22.17 s, SPJF 11.979 s, SJF-ref 8.31 s,
+FIX-B300 13.312 s.  This run gets FCFS 22.170, SPJF-M4 11.979, SJF-ref 8.310,
+SPJF+G300 13.312.  Same numbers, so the k sweep below extends the paper's own
+table rather than starting a new one.
+
+1  Dedicated design: containers alive at once, and what they do with that time
+------------------------------------------------------------------------------
+
+Per semester (one copy, the real calendar), time-weighted over the semester's own
+event window.  'util' = executing seconds inside the alive intervals / alive
+seconds; executing time is the union of [ts - C_cap, ts] over the student's
+submissions, so overlapping runs of one student count once.
+
+semester   users  definition       mean    p95    p99    max   alive (s)   exec in (s)     util
+2020-ERE    489  login_obs        0.84      4      8     18   1.023e+07        9716   0.00095
+                 login_act        4.62     21     38     76   6.105e+07       53628   0.00088
+                 proxy600         2.25     10     19     48   2.967e+07       53651   0.00181
+                 proxy1800        3.41     15     29     64   4.498e+07       53651   0.00119
+                 proxy3600        4.02     18     34     68   5.306e+07       53651   0.00101
+                 proxy1800_lg     4.14     18     34     68   5.465e+07       53651   0.00098
+2020-2      197  login_obs        0.45      2      3      6   4.659e+06        2006   0.00043
+                 login_act        2.98     10     15     26   3.125e+07       21359   0.00068
+                 proxy600         1.14      5      7     14   1.199e+07       21369   0.00178
+                 proxy1800        1.74      6     10     18   1.830e+07       21369   0.00117
+                 proxy3600        2.07      7     11     19   2.169e+07       21369   0.00099
+                 proxy1800_lg     2.01      7     11     20   2.106e+07       21369   0.00101
+2021-1      215  login_obs        0.54      3      8     21   5.458e+06        4332   0.00079
+                 login_act        3.26     13     20     36   3.268e+07       21423   0.00066
+                 proxy600         1.26      5      9     21   1.262e+07       21509   0.00170
+                 proxy1800        1.90      8     13     29   1.905e+07       21509   0.00113
+                 proxy3600        2.27      9     15     29   2.274e+07       21509   0.00095
+                 proxy1800_lg     2.25      9     15     32   2.256e+07       21509   0.00095
+2021-2      217  login_obs        1.34      9     18     34   1.347e+07        8832   0.00066
+                 login_act        2.84     14     25     45   2.929e+07       21021   0.00072
+                 proxy600         1.20      6     14     40   1.237e+07       21049   0.00170
+                 proxy1800        1.70      8     18     43   1.754e+07       21049   0.00120
+                 proxy3600        1.92      9     19     43   1.986e+07       21049   0.00106
+                 proxy1800_lg     2.12     11     21     47   2.184e+07       21049   0.00096
+2022-1      234  login_obs        0.75      5     11     18   1.546e+07        8782   0.00057
+                 login_act        1.56     10     18     28   3.217e+07       19750   0.00061
+                 proxy600         0.61      4      9     26   1.246e+07       19788   0.00159
+                 proxy1800        0.85      5     12     26   1.758e+07       19788   0.00113
+                 proxy3600        0.97      6     13     27   1.994e+07       19788   0.00099
+                 proxy1800_lg     1.07      7     15     28   2.204e+07       19788   0.00090
+2022-2      193  login_obs        1.14      7     12     20   1.067e+07        7695   0.00072
+                 login_act        2.32     11     19     27   2.173e+07       16479   0.00076
+                 proxy600         1.00      5     10     23   9.391e+06       16626   0.00177
+                 proxy1800        1.40      7     13     26   1.312e+07       16626   0.00127
+                 proxy3600        1.58      8     14     26   1.476e+07       16626   0.00113
+                 proxy1800_lg     1.73      8     15     28   1.616e+07       16626   0.00103
+
+Overlay pool (the demand the paper replays; 44 container-bearing copies):
+
+definition       sessions        mean    p95    p99    max   span(d)   alive (s)    exec in (s)     util
+login_obs          876,348       96.79    533   1003   1856    315.47   2.638e+09   1,819,934   0.00069
+login_act        4,030,532      332.36   1622   2525   4302    318.97   9.159e+09   6,761,030   0.00074
+proxy600         4,065,996      142.65    691   1130   1969    315.92   3.894e+09   6,775,662   0.00174
+proxy1800        2,155,208      210.48   1023   1636   2725    315.92   5.745e+09   6,775,662   0.00118
+proxy3600        1,775,840      245.10   1194   1874   3091    315.92   6.690e+09   6,775,662   0.00101
+proxy1800_lg     3,870,196      252.74   1245   1957   3150    318.97   6.965e+09   6,775,662   0.00097
+
+Reading of the definitions (containers.py's docstring has the full rule):
+  login_obs     only the logins whose next row in logins.log is a logout.  It
+                covers 26.9% of the executed seconds, so it is a lower bound, not
+                a measurement.
+  login_act     every login, a censored close filled from the last event inside
+                the window.  It covers 99.8% of the executed seconds, and it is
+                the upper reading: when a student never logs out and comes back
+                to the same session hours later, the container stays open for the
+                whole stretch.  That is why login_act sits above proxy3600.
+  proxy600/1800/3600   activity proxy at a 10 / 30 / 60 min idle gap; they cover
+                100% of the executed seconds by construction.
+  proxy1800_lg  the 30 min proxy with the login and logout instants added to the
+                activity set.
+  The primary number quoted below is proxy1800.
+
+The 19,917 login->logout pairs that the platform did write have these durations (s):
+
+semester   logins  logouts  paired   p10     p50     p90      p99      max
+2020-ERE    31557     4943    4943    29     650    6128    14710    39327
+2020-2      10558     1189    1188    35    1573   10992    24148    34997
+2021-1      12105     1797    1795    35    1531    7015    20040    41917
+2021-2      13518     4191    4189    53    2576    6861    12923    26737
+2022-1      14552     4536    4528    73    2922    6938    13569    35214
+2022-2       9313     3289    3274    74    2671    6809    12347    27361
+
+Across all six definitions the overlay's p99 concurrent container count lies
+between 1003 and 2525, and the utilisation between 0.07% and 0.17%.
+
+2  Shared pool: the smallest k that meets a deadline-window p99 wait target
+------------------------------------------------------------------------------
+
+Wait = time from arrival to the start of service in a k-server non-preemptive
+queue.  The statistic is the p99 over the 4,219,556 jobs that arrive within 24 h of an
+assessment end -- the paper's own deadline window.  SPJF-M4 orders by the
+development forward predictor; +G300 is the overtake-budget guard at B = 5 L.
+
+policy       p99_dl at the paper's k        smallest k for p99_dl <=
+             k=8      k=5      k=4           30 s     5 s     1 s
+FCFS            22.17   109.71   263.12          8      11      14
+SPJF-M4         11.98    44.69    66.57          7      10      13
+SPJF+G300       13.31    69.93   217.56          7      10      13
+SJF-ref          8.31    34.19    42.88          6       9      12
+
+At every target the predictor saves one executor against FCFS, and the guard
+costs nothing at the k where it matters (same k as ungated SPJF at all three
+targets).  True SJF, which no scheduler can reach, saves one more.
+
+3  The ratios
+------------------------------------------------------------------------------
+
+(a) concurrent dedicated containers per pooled executor, proxy1800:
+
+target p99_dl   FCFS k   p99 ded / k   max ded / k   SPJF k   p99 ded / k
+      30 s        8         204.5         340.6        7         233.7
+       5 s       11         148.7         247.7       10         163.6
+       1 s       14         116.9         194.6       13         125.8
+
+Same ratios with the other container definitions, at the 1 s target (FCFS k = 14):
+  login_obs     p99  1003 ->   71.6 x ;  max  1856 ->  132.6 x
+  login_act     p99  2525 ->  180.4 x ;  max  4302 ->  307.3 x
+  proxy600      p99  1130 ->   80.7 x ;  max  1969 ->  140.6 x
+  proxy1800     p99  1636 ->  116.9 x ;  max  2725 ->  194.6 x
+  proxy3600     p99  1874 ->  133.9 x ;  max  3091 ->  220.8 x
+  proxy1800_lg  p99  1957 ->  139.8 x ;  max  3150 ->  225.0 x
+
+(b) executor-seconds provisioned per executed second.
+
+    A dedicated container is provisioned only while it is alive, so its number is
+    1 / utilisation and does not depend on a window.  A pool of k executors is
+    provisioned continuously; the number is given over two windows -- the job
+    arrival span (208.3 d) and the container span (315.9 d), the second being the
+    conservative one, since the pool has to exist whenever a student may submit.
+
+    dedicated, login_obs         1449.6 executor-seconds per executed second
+    dedicated, login_act         1354.7 executor-seconds per executed second
+    dedicated, proxy600           574.7 executor-seconds per executed second
+    dedicated, proxy1800          847.9 executor-seconds per executed second
+    dedicated, proxy3600          987.4 executor-seconds per executed second
+    dedicated, proxy1800_lg      1028.0 executor-seconds per executed second
+
+    login_obs's figure is not comparable with the rest: it divides by the 27% of
+    executed seconds that fall inside an observed login-logout pair.
+
+    pooled            over 208.3 d   over 315.9 d
+    k=8   (FCFS,    p99_dl<=30 s)     20.43       30.98
+    k=7   (SPJF-M4, p99_dl<=30 s)     17.87       27.11
+    k=11  (FCFS,    p99_dl<= 5 s)     28.09       42.60
+    k=10  (SPJF-M4, p99_dl<= 5 s)     25.53       38.72
+    k=14  (FCFS,    p99_dl<= 1 s)     35.75       54.21
+    k=13  (SPJF-M4, p99_dl<= 1 s)     33.20       50.34
+
+    ratio at the 30 s target (proxy1800 / pooled FCFS k=8): 42 x over the arrival
+      span, 27 x over the container span.
+    ratio at the  1 s target (proxy1800 / pooled FCFS k=14): 24 x over the arrival
+      span, 16 x over the container span.
+
+4  Caveats that have to be stated with any of these numbers
+------------------------------------------------------------------------------
+
+  1) A dedicated container also serves the interactive IDE session, not only
+     judging. Container-alive time is therefore an upper bound on what judging
+     alone needs, and the utilisation below 0.2% is the utilisation of a
+     container that is doing editing, reading and idling as well as running
+     code. The comparison is between two architectures, not between two ways
+     of running the same judge.
+
+  2) A pooled executor still needs a sandbox start per job. C already includes
+     interpreter start-up per the plan's field semantics (2.2), and the pool
+     is charged the same C_cap the dedicated container was charged, so no
+     start-up cost is omitted on either side -- but neither is the extra cost
+     of a cold container that the dedicated design pays only once per login.
+
+  3) Concurrency is counted from end-time logs at 1-second resolution. The log
+     timestamp is the end of a run; the arrival is reconstructed as end - C.
+     Two events one second apart cannot be separated, and a container's true
+     creation and teardown instants are not recorded at all.
+
+  4) logins.log is a per-user global history copied into every class
+     directory: the same rows appear in several class-semesters and reach
+     years outside the archive's own semester. They are deduplicated by (user,
+     timestamp, kind) and clipped to the semester's event window. Only 11% to
+     35% of logins have a logout written after them (per semester), so the
+     observed close time is missing for most sessions; login_act fills those
+     from activity and login_obs drops them.
+
+  5) TEST blocks carry no execution time, so the time a container spends
+     running a student's interactive test is counted as idle. Utilisation is a
+     lower bound on 'container busy running code' for that reason, and the
+     number of TEST blocks is 2.5 x the number of submissions in this pool.
+
+  6) The overlay is a construction: the same six semesters replicated 44 times
+     with week shifts, not 44 independent platforms. Both sides of every ratio
+     are computed on that same construction, so the ratio is a property of the
+     construction as much as of CodeBench.
+
+  7) One overlay replicate (rep 0), no bootstrap interval. The paper's own
+     tables carry week-block bootstrap intervals for the wait statistics; the
+     k values here are point estimates on one trace.
+
+5  What the paper can say, and what it cannot
+------------------------------------------------------------------------------
+
+CAN (one sentence):
+
+  On the same replayed demand, CodeBench's per-student design keeps a p99 of 1636
+  containers alive at once (max 2725) and each container executes code for 0.12% of
+  the time it is alive, whereas a shared non-preemptive pool holds the p99 wait of
+  deadline-window jobs under 1 s with k = 14 executors under FCFS and k = 13 under
+  the predictor-ordered policy -- a factor of 117 fewer executors and 24 x fewer
+  provisioned executor-seconds per executed second.
+
+CANNOT:
+
+  - Cannot claim CodeBench ever queued: it has no shared queue, and nothing
+    here measures a wait on the real platform. The pooled side is entirely
+    simulated.
+
+  - Cannot claim the dedicated containers are 24 x too large a provision for
+    the platform as a whole -- they also run the IDE, which the pool does not
+    replace.
+
+  - Cannot claim a container count for the real single-course semesters that a
+    reader may compare with a real deployment: the per-semester p99 is 10 to
+    29 containers, and the large numbers here come from the 44-fold overlay.
+
+  - Cannot claim the scheduler saves many executors: at every target tested it
+    saves exactly one against FCFS (14 -> 13 at 1 s, 11 -> 10 at 5 s, 8 -> 7
+    at 30 s). The saving from pooling is two orders of magnitude; the saving
+    from ordering inside the pool is one executor.
+
+  - Cannot claim a measured container lifetime: the platform writes a logout
+    for only a minority of logins, so every alive-time number here is
+    reconstructed, and the spread across the six definitions (p99 1003 to
+    2525) is the honest uncertainty band.
+
+  - Cannot report the ratio as a cost saving without a cost model: a container
+    and an executor are not the same unit of hardware, and nothing here
+    measures memory, CPU shares or price.
+

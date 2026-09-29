@@ -1,0 +1,33 @@
+<repo-root>\prechecks\guard_variants\guardkern.py:37: SyntaxWarning: "\-" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\-"? A raw string is also an option.
+  \--------- Z(q), suffix range-add -/    \--- T(t), recomputed per decision ---/
+[   0.0s] warming up the kernel
+[   4.1s] family uniform : 240 instances passed, worst used/allowed = 0.867
+[   4.4s] family burst   : 240 instances passed, worst used/allowed = 0.900
+[   4.6s] family ties    : 240 instances passed, worst used/allowed = 0.833
+[   4.9s] family heavy   : 240 instances passed, worst used/allowed = 0.900
+[   5.1s] family zero    : 240 instances passed, worst used/allowed = 0.857
+[   5.1s] random phase: 1200 instances, 16154 guard kernel-vs-naive comparisons, 3600 head-check equivalences, 16154 bound checks; worst used/allowed 0.900
+[   5.1s] hill-climbing search for a violation / for tightness (fixed budget)
+[   5.2s]   k=1 B=0: best excess / (B/k + (3-2/k)L) found = 0.000
+[   5.3s]   k=1 B=1: best excess / (B/k + (3-2/k)L) found = 0.900
+[   5.4s]   k=1 B=4: best excess / (B/k + (3-2/k)L) found = 0.938
+[   5.5s]   k=2 B=0: best excess / (B/k + (3-2/k)L) found = 0.000
+[   5.6s]   k=2 B=1: best excess / (B/k + (3-2/k)L) found = 0.647
+[   5.6s]   k=2 B=4: best excess / (B/k + (3-2/k)L) found = 0.600
+[   5.7s]   k=3 B=0: best excess / (B/k + (3-2/k)L) found = 0.000
+[   5.8s]   k=3 B=1: best excess / (B/k + (3-2/k)L) found = 0.414
+[   5.9s]   k=3 B=4: best excess / (B/k + (3-2/k)L) found = 0.375
+[   6.0s]   k=4 B=0: best excess / (B/k + (3-2/k)L) found = 0.000
+[   6.0s]   k=4 B=1: best excess / (B/k + (3-2/k)L) found = 0.390
+[   6.1s]   k=4 B=4: best excess / (B/k + (3-2/k)L) found = 0.364
+[   6.1s] counterexamples for the designs that have NO per-job bound
+[   6.1s]   age-blend alpha=0.1, 200 overtakers inside the window P/alpha=100s: W[0]=200.0s vs FCFS 0.0s, excess 200.0s -> grows linearly in m, no per-job bound
+[   6.1s]   age-blend alpha=0.1, 400 overtakers inside the window P/alpha=100s: W[0]=400.0s vs FCFS 0.0s, excess 400.0s -> grows linearly in m, no per-job bound
+[   6.1s]   age-blend alpha=0.1, 800 overtakers inside the window P/alpha=100s: W[0]=800.0s vs FCFS 0.0s, excess 800.0s -> grows linearly in m, no per-job bound
+[   6.1s]   age-blend alpha=1.0, 200 overtakers inside the window P/alpha=10s: W[0]=200.0s vs FCFS 0.0s, excess 200.0s -> grows linearly in m, no per-job bound
+[   6.1s]   age-blend alpha=1.0, 400 overtakers inside the window P/alpha=10s: W[0]=400.0s vs FCFS 0.0s, excess 400.0s -> grows linearly in m, no per-job bound
+[   6.1s]   age-blend alpha=1.0, 800 overtakers inside the window P/alpha=10s: W[0]=800.0s vs FCFS 0.0s, excess 800.0s -> grows linearly in m, no per-job bound
+[   6.2s]   free-short (theta=1.0, no count cap): W[0]=250.0s vs FCFS 0.0s, excess 250.0s (grows with the stream); with a count cap N=4: W[0]=2.0s, excess 2.0s, bound B + N*theta + L = 7.0s
+[   6.2s] cross-check: eps=0 guard / pri / fcfs against prechecks/codebench_service_v2
+[   8.6s]   1500 comparisons against the project simulator, all identical
+[   8.7s] wrote brute_results.csv (16154 rows); totals: 16154 guard comparisons, 16154 bound checks, 3600 head-check equivalences, 0 violations

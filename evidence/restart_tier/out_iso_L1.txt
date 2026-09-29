@@ -1,0 +1,48 @@
+[     0s] rep0 level1: k=5 rho_busy=0.8471 n=17,634,760 (3-2/k)L = 156.0s
+[     2s]   FCFS p99_dl 109.708s mean 4.1060s | true-SJF p99_dl 34.186s mean 0.9655s
+[     2s] 
+-- reference curve: SPJF + guard, no tiering (the paper's method) --
+[     2s]   FCFS                       guar       0.0 (claimed      0.0)  maxExc       0.0  p99_dl   109.708 gap  0.000 gapM  0.000  waste  0.00% D      0.0  PropW_viol -1
+[     3s]   SJF-ref                    guar       inf (claimed      inf)  maxExc    2667.4  p99_dl    34.186 gap  1.000 gapM  1.000  waste  0.00% D      0.0  PropW_viol -1
+[     4s]   SPJF                       guar       inf (claimed      inf)  maxExc    3055.1  p99_dl    44.693 gap  0.861 gapM  0.913  waste  0.00% D      0.0  PropW_viol -1
+[     5s]   SPJF+guard-G200            guar     200.0 (claimed    200.0)  maxExc     109.9  p99_dl    77.136 gap  0.431 gapM  0.436  waste  0.00% D      0.0  PropW_viol -1
+[     7s]   SPJF+guard-G300            guar     300.0 (claimed    300.0)  maxExc     209.3  p99_dl    54.530 gap  0.731 gapM  0.639  waste  0.00% D      0.0  PropW_viol -1
+[     8s]   SPJF+guard-G400            guar     400.0 (claimed    400.0)  maxExc     302.8  p99_dl    50.607 gap  0.783 gapM  0.727  waste  0.00% D      0.0  PropW_viol -1
+[    10s]   SPJF+guard-G500            guar     500.0 (claimed    500.0)  maxExc     404.1  p99_dl    48.976 gap  0.804 gapM  0.774  waste  0.00% D      0.0  PropW_viol -1
+[    11s]   SPJF+guard-G700            guar     700.0 (claimed    700.0)  maxExc     617.1  p99_dl    47.550 gap  0.823 gapM  0.831  waste  0.00% D      0.0  PropW_viol -1
+[    13s]   SPJF+guard-G1000           guar    1000.0 (claimed   1000.0)  maxExc     898.0  p99_dl    46.447 gap  0.838 gapM  0.869  waste  0.00% D      0.0  PropW_viol -1
+[    14s]   SPJF+guard-G1500           guar    1500.0 (claimed   1500.0)  maxExc    1390.7  p99_dl    45.581 gap  0.849 gapM  0.895  waste  0.00% D      0.0  PropW_viol -1
+[    16s]   SPJF+guard-G2000           guar    2000.0 (claimed   2000.0)  maxExc    1895.9  p99_dl    45.291 gap  0.853 gapM  0.902  waste  0.00% D      0.0  PropW_viol -1
+[    17s]   SPJF+guard-G3000           guar    3000.0 (claimed   3000.0)  maxExc    2869.0  p99_dl    44.818 gap  0.859 gapM  0.910  waste  0.00% D      0.0  PropW_viol -1
+[    17s] 
+-- kill-and-restart tiering, guard budget B = k(300 - (3-2/k)L) --
+[    18s]   TIER-blind-t1+guard        guar     593.0 (claimed    300.0)  maxExc     400.2  p99_dl    48.747 gap  0.807 gapM  0.568  waste  3.37% D   1465.0  PropW_viol 0
+[    20s]   TIER-pred-t1+guard         guar     593.0 (claimed    300.0)  maxExc     400.0  p99_dl    47.979 gap  0.817 gapM  0.670  waste  3.37% D   1465.0  PropW_viol 0
+[    22s]   TIER-skip-t1+guard         guar     511.6 (claimed    300.0)  maxExc     287.0  p99_dl    48.058 gap  0.816 gapM  0.705  waste  2.34% D   1058.0  PropW_viol 0
+[    23s]   TIER-blind-t2+guard        guar     543.2 (claimed    300.0)  maxExc     358.2  p99_dl    51.110 gap  0.776 gapM  0.467  waste  4.55% D   1216.0  PropW_viol 0
+[    25s]   TIER-pred-t2+guard         guar     543.2 (claimed    300.0)  maxExc     358.4  p99_dl    46.373 gap  0.839 gapM  0.644  waste  4.55% D   1216.0  PropW_viol 0
+[    26s]   TIER-skip-t2+guard         guar     526.4 (claimed    300.0)  maxExc     338.0  p99_dl    46.292 gap  0.840 gapM  0.656  waste  4.38% D   1132.0  PropW_viol 0
+[    26s] 
+-- reserved-server designs (NOT work conserving: no guarantee survives) --
+[    28s]   !! TIER-cap1-t1+guard: Proposition W violated on 66,313 jobs (0.3760%) -- expected: a server cap is not work conserving, and Proposition 10 of ../guard_theory/theory.md shows that voids every guarantee.
+[    28s]   TIER-cap1-t1+guard         guar    1231.6 (claimed      nan)  maxExc   22529.5  p99_dl   943.217 gap -11.037 gapM -6.720  waste  3.37% D   4658.0  PropW_viol 66313
+[    30s]   !! TIER-cap2-t1+guard: Proposition W violated on 7,201 jobs (0.0408%) -- expected: a server cap is not work conserving, and Proposition 10 of ../guard_theory/theory.md shows that voids every guarantee.
+[    30s]   TIER-cap2-t1+guard         guar     623.8 (claimed      nan)  maxExc    2536.9  p99_dl    86.484 gap  0.308 gapM  0.741  waste  3.37% D   1619.0  PropW_viol 7201
+[    31s]   !! TIER-cap3-t1+guard: Proposition W violated on 619 jobs (0.0035%) -- expected: a server cap is not work conserving, and Proposition 10 of ../guard_theory/theory.md shows that voids every guarantee.
+[    31s]   TIER-cap3-t1+guard         guar     599.0 (claimed      nan)  maxExc     876.8  p99_dl    40.859 gap  0.912 gapM  1.008  waste  3.37% D   1495.0  PropW_viol 619
+[    33s]   TIER-cap4-t1+guard         guar     594.2 (claimed      nan)  maxExc     407.1  p99_dl    39.112 gap  0.935 gapM  0.848  waste  3.37% D   1471.0  PropW_viol 0
+[    33s] 
+== iso-comparison: what SPJF+guard alone achieves at the same worst case ==
+[    33s] tiered design                  guar    gap  SPJFg@guar    dgap |   maxExc    gap  SPJFg@maxExc    dgap
+[    33s] TIER-blind-t1+guard           593.0  0.807       0.813  -0.006 |    400.2  0.807         0.803  +0.004
+[    33s] TIER-pred-t1+guard            593.0  0.817       0.813  +0.004 |    400.0  0.817         0.803  +0.014
+[    33s] TIER-skip-t1+guard            511.6  0.816       0.805  +0.011 |    287.0  0.816         0.774  +0.043
+[    33s] TIER-blind-t2+guard           543.2  0.776       0.808  -0.032 |    358.2  0.776         0.794  -0.018
+[    33s] TIER-pred-t2+guard            543.2  0.839       0.808  +0.030 |    358.4  0.839         0.794  +0.044
+[    33s] TIER-skip-t2+guard            526.4  0.840       0.807  +0.033 |    338.0  0.840         0.790  +0.050
+[    33s] TIER-cap1-t1+guard           1231.6 -11.037       0.843 -11.880 |  22529.5 -11.037         0.859 -11.896
+[    33s] TIER-cap2-t1+guard            623.8  0.308       0.816  -0.508 |   2536.9  0.308         0.857  -0.550
+[    33s] TIER-cap3-t1+guard            599.0  0.912       0.814  +0.098 |    876.8  0.912         0.837  +0.075
+[    33s] TIER-cap4-t1+guard            594.2  0.935       0.813  +0.122 |    407.1  0.935         0.804  +0.130
+[    33s] (mean-wait axis: SPJF+guard gapMean at guar = [0.8, 0.8, 0.777, 0.786, 0.786, 0.781, 0.881, 0.809, 0.802, 0.801])
+[    33s] wrote <repo-root>\prechecks\restart_tier\iso_L1.csv

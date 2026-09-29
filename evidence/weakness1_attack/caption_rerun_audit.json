@@ -1,0 +1,14 @@
+{
+    "before_table_sha256":  {
+                                "extension_curve.csv":  "b15adbc84b6464c4d2357ed04b088abda2e4f47de4f98b91518e896c237669d4",
+                                "capacity_curve.csv":  "e28e8987d3c2f7c3cbb586d52a416e11900d9f3141051a3d5d0c2f0c2cd0d2be"
+                            },
+    "before_utc":  "2026-09-21T15:54:09.9470900Z",
+    "purpose":  "Figure captions only; numerical CSV files must remain byte-identical.",
+    "after_table_sha256":  {
+                               "extension_curve.csv":  "b15adbc84b6464c4d2357ed04b088abda2e4f47de4f98b91518e896c237669d4",
+                               "capacity_curve.csv":  "e28e8987d3c2f7c3cbb586d52a416e11900d9f3141051a3d5d0c2f0c2cd0d2be"
+                           },
+    "after_utc":  "2026-09-21T15:58:53.0082680Z",
+    "status":  "PASS: numerical CSVs byte-identical"
+}

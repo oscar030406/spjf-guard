@@ -1,0 +1,58 @@
+## 2026-09-20 04:39:03 manifest=87e8eb390b3e6c0d8c94c2dc1c8d361a79878f3dd5aa6dc89a88a5c11690a4d5 argv=
+15 validation cells, 257 guarded configurations each, 3,855 rows, 0 bound violations; k per cell {'r0L0': 7, 'r0L1': 5, 'r0L2': 4, 'r1L0': 8, 'r1L1': 5, 'r1L2': 4, 'r2L0': 8, 'r2L1': 5, 'r2L2': 4, 'r3L0': 7, 'r3L1': 5, 'r3L2': 4, 'r4L0': 8, 'r4L1': 5, 'r4L2': 4}
+self-test: 345 (cell, G, B0) pairs where the capped family at eta = 0 and the fixed family carry the same budget; max relative metric difference 2.65e-16 at ('r2L2', 600.0, 60.0, 'w_p99_dl', 60.0, 1800.0, 4200.0)
+  exact check on that pair (re-simulated, 17,646,125 jobs, k=4): differing jobs 0, max |diff| 0 -- the schedules are identical; the metric difference is float noise in a quantile/mean over 17.6 M values, not a policy difference
+
+=== G = 300 s   (harm limit 150 s, 15 cells) ===
+  [fixed  ] grid  27 points,  22 feasible -> FIXG-B329.671: worst-cell gap 0.1761, harm 131.80 s (limit 150, slack 18.20 s), promise 247.4 s 
+            next point with a better worst-cell gap: FIXG-B360 (gap 0.1991, harm 151.2 s, infeasible by 1.2 s)
+  [capped ] grid  54 points,  15 feasible -> CAPG-G300-B60-e0.5: worst-cell gap 0.4251, harm 122.76 s (limit 150, slack 27.24 s), promise 300.0 s 
+            next point with a better worst-cell gap: none: the chosen point has the best worst-cell gap in the family
+  [hybrid ] grid  18 points,   7 feasible -> HYBG-G300-B0-g16-e0: worst-cell gap 0.3565, harm 145.25 s (limit 150, slack 4.75 s), promise 300.0 s 
+            next point with a better worst-cell gap: HYBG-G300-B120-g1-e0.9 (gap 0.3693, harm 212.0 s, infeasible by 62.0 s)
+
+=== G = 600 s   (harm limit 300 s, 15 cells) ===
+  [fixed  ] grid  36 points,  32 feasible -> FIXG-B981.126: worst-cell gap 0.6095, harm 288.16 s (limit 300, slack 11.84 s), promise 410.3 s 
+            next point with a better worst-cell gap: FIXG-B1176.7 (gap 0.6564, harm 345.5 s, infeasible by 45.5 s)
+  [capped ] grid  54 points,  30 feasible -> CAPG-G600-B120-e0.75: worst-cell gap 0.7216, harm 293.29 s (limit 300, slack 6.71 s), promise 600.0 s 
+            next point with a better worst-cell gap: CAPG-G600-B480-e0.5 (gap 0.7228, harm 328.5 s, infeasible by 28.5 s)
+  [hybrid ] grid  18 points,   9 feasible -> HYBG-G600-B120-g16-e0: worst-cell gap 0.7173, harm 152.15 s (limit 300, slack 147.85 s), promise 600.0 s 
+            next point with a better worst-cell gap: HYBG-G600-B0-g1-e0.9 (gap 0.7225, harm 358.9 s, infeasible by 58.9 s)
+
+=== G = 1200 s   (harm limit 600 s, 15 cells) ===
+  [fixed  ] grid  41 points,  37 feasible -> FIXG-B2029.96: worst-cell gap 0.7257, harm 560.26 s (limit 600, slack 39.74 s), promise 672.5 s 
+            next point with a better worst-cell gap: FIXEQ-G1200 (gap 0.7273, harm 1093.8 s, infeasible by 493.8 s)
+  [capped ] grid  54 points,  43 feasible -> CAPG-G1200-B360-e0.75: worst-cell gap 0.7273, harm 483.92 s (limit 600, slack 116.08 s), promise 1020.0 s 
+            next point with a better worst-cell gap: none: the chosen point has the best worst-cell gap in the family
+  [hybrid ] grid  18 points,  17 feasible -> HYBG-G1200-B0-g16-e0: worst-cell gap 0.7283, harm 145.25 s (limit 600, slack 454.75 s), promise 1200.0 s 
+            next point with a better worst-cell gap: none: the chosen point has the best worst-cell gap in the family
+
+=== selected parameters (validation overlays only) ===
+family      G  B0_base  eta  gam_base                policy  worst_gap  worst_harm_s  harm_limit_s  harm_slack_s  binds  worst_promise_s  n_feasible  n_grid note
+ fixed  300.0  329.671 0.00       0.0         FIXG-B329.671     0.1761        131.80         150.0         18.20  False            247.4          22      27     
+capped  300.0   60.000 0.50       0.0    CAPG-G300-B60-e0.5     0.4251        122.76         150.0         27.24  False            300.0          15      54     
+hybrid  300.0    0.000 0.00      16.0   HYBG-G300-B0-g16-e0     0.3565        145.25         150.0          4.75   True            300.0           7      18     
+ fixed  600.0  981.126 0.00       0.0         FIXG-B981.126     0.6095        288.16         300.0         11.84   True            410.3          32      36     
+capped  600.0  120.000 0.75       0.0  CAPG-G600-B120-e0.75     0.7216        293.29         300.0          6.71   True            600.0          30      54     
+hybrid  600.0  120.000 0.00      16.0 HYBG-G600-B120-g16-e0     0.7173        152.15         300.0        147.85  False            600.0           9      18     
+ fixed 1200.0 2029.960 0.00       0.0         FIXG-B2029.96     0.7257        560.26         600.0         39.74  False            672.5          37      41     
+capped 1200.0  360.000 0.75       0.0 CAPG-G1200-B360-e0.75     0.7273        483.92         600.0        116.08  False           1020.0          43      54     
+hybrid 1200.0    0.000 0.00      16.0  HYBG-G1200-B0-g16-e0     0.7283        145.25         600.0        454.75  False           1200.0          17      18     
+
+=== sensitivity: selection with the single flagged cell (overlay 1, level 2) dropped ===
+     G family        with_all_cells  gap_all  harm_all         dropping_r1L2  gap_drop  harm_drop  same
+ 300.0  fixed         FIXG-B329.671   0.1761    131.80         FIXG-B329.671    0.1761     129.67  True
+ 300.0 capped    CAPG-G300-B60-e0.5   0.4251    122.76    CAPG-G300-B60-e0.5    0.4251     122.76  True
+ 300.0 hybrid   HYBG-G300-B0-g16-e0   0.3565    145.25   HYBG-G300-B0-g16-e0    0.3565     145.25  True
+ 600.0  fixed         FIXG-B981.126   0.6095    288.16         FIXG-B981.126    0.6095     285.07  True
+ 600.0 capped  CAPG-G600-B120-e0.75   0.7216    293.29    CAPG-G600-B15-e0.9    0.7237     262.24 False
+ 600.0 hybrid HYBG-G600-B120-g16-e0   0.7173    152.15  HYBG-G600-B0-g4-e0.9    0.7233     249.75 False
+1200.0  fixed         FIXG-B2029.96   0.7257    560.26         FIXG-B2029.96    0.7257     560.26  True
+1200.0 capped CAPG-G1200-B360-e0.75   0.7273    483.92 CAPG-G1200-B360-e0.75    0.7273     483.92  True
+1200.0 hybrid  HYBG-G1200-B0-g16-e0   0.7283    145.25  HYBG-G1200-B0-g16-e0    0.7283     145.25  True
+
+=== winner across the three families, per G ===
+  G =    300: capped(CAPG-G300-B60-e0.5, gap 0.4251, harm 122.8) > hybrid(HYBG-G300-B0-g16-e0, gap 0.3565, harm 145.2) > fixed(FIXG-B329.671, gap 0.1761, harm 131.8)
+  G =    600: capped(CAPG-G600-B120-e0.75, gap 0.7216, harm 293.3) > hybrid(HYBG-G600-B120-g16-e0, gap 0.7173, harm 152.2) > fixed(FIXG-B981.126, gap 0.6095, harm 288.2)
+  G =   1200: hybrid(HYBG-G1200-B0-g16-e0, gap 0.7283, harm 145.2) > capped(CAPG-G1200-B360-e0.75, gap 0.7273, harm 483.9) > fixed(FIXG-B2029.96, gap 0.7257, harm 560.3)
+## done in 11 s

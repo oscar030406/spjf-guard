@@ -1,0 +1,76 @@
+level,pair,label,d_gap,resolved,verdict
+0,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,"-0.001 [-0.017,0.013]",False,unresolved
+0,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit","0.001 [-0.002,0.002]",False,unresolved
+0,SPJF-r1s - SPJF-tweedie,R1S-Tweedie vs Tweedie,"-0.010 [-0.022,-0.002]",True,SPJF-tweedie better
+0,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control on the same 90% of rows,"-0.012 [-0.023,-0.004]",True,SPJF-tweedie_itr better
+0,CAP-G300 - FIXSEL-G300,"capped relative vs the BEST FEASIBLE fixed budget, G = 300 s","0.080 [0.063,0.104]",True,CAP-G300 better
+0,CAP-G300 - FIX-G300,capped relative vs B0 = Bmax at G = 300 s,"-0.040 [-0.051,-0.028]",True,FIX-G300 better
+0,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s","-0.071 [-0.090,-0.054]",True,SPJF-tweedie better
+0,SKIP-G300 - SPJF-tweedie,finite skip vs unguarded at G = 300 s,"-0.674 [-0.712,-0.628]",True,SPJF-tweedie better
+0,CAP-G300 - SKIP-G300,capped relative vs finite skip at G = 300 s,"0.602 [0.567,0.631]",True,CAP-G300 better
+0,SKIP-G300 - SKIPC-G300,"finite skip: dispatch vs completion charge, G = 300 s","0.015 [0.011,0.022]",True,SKIP-G300 better
+0,CAP-G600 - FIXSEL-G600,"capped relative vs the BEST FEASIBLE fixed budget, G = 600 s","0.016 [0.011,0.021]",True,CAP-G600 better
+0,CAP-G600 - FIX-G600,capped relative vs B0 = Bmax at G = 600 s,"-0.001 [-0.003,0.001]",False,unresolved
+0,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s","-0.012 [-0.020,-0.006]",True,SPJF-tweedie better
+0,SKIP-G600 - SPJF-tweedie,finite skip vs unguarded at G = 600 s,"-0.567 [-0.623,-0.509]",True,SPJF-tweedie better
+0,CAP-G600 - SKIP-G600,capped relative vs finite skip at G = 600 s,"0.555 [0.500,0.606]",True,CAP-G600 better
+0,SKIP-G600 - SKIPC-G600,"finite skip: dispatch vs completion charge, G = 600 s","0.013 [0.008,0.017]",True,SKIP-G600 better
+0,CAP-G1200 - FIXSEL-G1200,"capped relative vs the BEST FEASIBLE fixed budget, G = 1200 s","0.027 [0.017,0.038]",True,CAP-G1200 better
+0,CAP-G1200 - FIX-G1200,capped relative vs B0 = Bmax at G = 1200 s,"0.000 [-0.001,0.002]",False,unresolved
+0,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s","-0.001 [-0.002,0.001]",False,unresolved
+0,SKIP-G1200 - SPJF-tweedie,finite skip vs unguarded at G = 1200 s,"-0.386 [-0.467,-0.312]",True,SPJF-tweedie better
+0,CAP-G1200 - SKIP-G1200,capped relative vs finite skip at G = 1200 s,"0.384 [0.311,0.466]",True,CAP-G1200 better
+0,SKIP-G1200 - SKIPC-G1200,"finite skip: dispatch vs completion charge, G = 1200 s","0.009 [0.006,0.011]",True,SKIP-G1200 better
+0,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,"-0.036 [-0.046,-0.024]",True,SPJF-reversed better
+0,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,"-0.016 [-0.023,-0.012]",True,SPJF-random better
+0,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,"-0.027 [-0.042,-0.019]",True,SPJF-top1short better
+1,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,"0.012 [0.005,0.018]",True,SPJF-tweedie better
+1,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit","-0.000 [-0.001,0.001]",False,unresolved
+1,SPJF-r1s - SPJF-tweedie,R1S-Tweedie vs Tweedie,"0.007 [0.003,0.011]",True,SPJF-r1s better
+1,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control on the same 90% of rows,"0.007 [0.003,0.012]",True,SPJF-r1s better
+1,CAP-G300 - FIXSEL-G300,"capped relative vs the BEST FEASIBLE fixed budget, G = 300 s","0.413 [0.278,0.490]",True,CAP-G300 better
+1,CAP-G300 - FIX-G300,capped relative vs B0 = Bmax at G = 300 s,"-0.033 [-0.042,-0.025]",True,FIX-G300 better
+1,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s","-0.157 [-0.197,-0.131]",True,SPJF-tweedie better
+1,SKIP-G300 - SPJF-tweedie,finite skip vs unguarded at G = 300 s,"-0.883 [-0.897,-0.856]",True,SPJF-tweedie better
+1,CAP-G300 - SKIP-G300,capped relative vs finite skip at G = 300 s,"0.726 [0.686,0.745]",True,CAP-G300 better
+1,SKIP-G300 - SKIPC-G300,"finite skip: dispatch vs completion charge, G = 300 s","-0.001 [-0.001,0.002]",False,unresolved
+1,CAP-G600 - FIXSEL-G600,"capped relative vs the BEST FEASIBLE fixed budget, G = 600 s","0.071 [0.053,0.104]",True,CAP-G600 better
+1,CAP-G600 - FIX-G600,capped relative vs B0 = Bmax at G = 600 s,"-0.005 [-0.009,-0.001]",True,FIX-G600 better
+1,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s","-0.048 [-0.058,-0.037]",True,SPJF-tweedie better
+1,SKIP-G600 - SPJF-tweedie,finite skip vs unguarded at G = 600 s,"-0.876 [-0.895,-0.840]",True,SPJF-tweedie better
+1,CAP-G600 - SKIP-G600,capped relative vs finite skip at G = 600 s,"0.829 [0.798,0.846]",True,CAP-G600 better
+1,SKIP-G600 - SKIPC-G600,"finite skip: dispatch vs completion charge, G = 600 s","0.000 [-0.000,0.002]",False,unresolved
+1,CAP-G1200 - FIXSEL-G1200,"capped relative vs the BEST FEASIBLE fixed budget, G = 1200 s","0.096 [0.075,0.131]",True,CAP-G1200 better
+1,CAP-G1200 - FIX-G1200,capped relative vs B0 = Bmax at G = 1200 s,"0.000 [-0.001,0.001]",False,unresolved
+1,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s","-0.023 [-0.029,-0.016]",True,SPJF-tweedie better
+1,SKIP-G1200 - SPJF-tweedie,finite skip vs unguarded at G = 1200 s,"-0.862 [-0.889,-0.797]",True,SPJF-tweedie better
+1,CAP-G1200 - SKIP-G1200,capped relative vs finite skip at G = 1200 s,"0.839 [0.778,0.862]",True,CAP-G1200 better
+1,SKIP-G1200 - SKIPC-G1200,"finite skip: dispatch vs completion charge, G = 1200 s","0.001 [-0.000,0.003]",False,unresolved
+1,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,"-0.051 [-0.112,0.016]",False,unresolved
+1,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,"-0.115 [-0.155,-0.079]",True,SPJF-random better
+1,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,"-0.116 [-0.145,-0.079]",True,SPJF-top1short better
+2,SPJF-tweedie - SPJF-M4,ranking score: Tweedie vs current log M4,"0.019 [0.011,0.024]",True,SPJF-tweedie better
+2,SPJF-M4refit - SPJF-M4,"refit-noise control: same score, refit","-0.000 [-0.001,0.000]",False,unresolved
+2,SPJF-r1s - SPJF-tweedie,R1S-Tweedie vs Tweedie,"0.001 [-0.002,0.006]",False,unresolved
+2,SPJF-r1s - SPJF-tweedie_itr,R1S vs the Tweedie control on the same 90% of rows,"0.002 [-0.001,0.008]",False,unresolved
+2,CAP-G300 - FIXSEL-G300,"capped relative vs the BEST FEASIBLE fixed budget, G = 300 s","0.431 [0.345,0.529]",True,CAP-G300 better
+2,CAP-G300 - FIX-G300,capped relative vs B0 = Bmax at G = 300 s,"0.017 [-0.030,0.027]",False,unresolved
+2,CAP-G300 - SPJF-tweedie,"guard vs unguarded, G = 300 s","-0.449 [-0.538,-0.323]",True,SPJF-tweedie better
+2,SKIP-G300 - SPJF-tweedie,finite skip vs unguarded at G = 300 s,"-0.914 [-0.928,-0.891]",True,SPJF-tweedie better
+2,CAP-G300 - SKIP-G300,capped relative vs finite skip at G = 300 s,"0.466 [0.374,0.591]",True,CAP-G300 better
+2,SKIP-G300 - SKIPC-G300,"finite skip: dispatch vs completion charge, G = 300 s","0.000 [-0.000,0.001]",False,unresolved
+2,CAP-G600 - FIXSEL-G600,"capped relative vs the BEST FEASIBLE fixed budget, G = 600 s","0.350 [0.218,0.411]",True,CAP-G600 better
+2,CAP-G600 - FIX-G600,capped relative vs B0 = Bmax at G = 600 s,"-0.013 [-0.018,-0.008]",True,FIX-G600 better
+2,CAP-G600 - SPJF-tweedie,"guard vs unguarded, G = 600 s","-0.116 [-0.143,-0.077]",True,SPJF-tweedie better
+2,SKIP-G600 - SPJF-tweedie,finite skip vs unguarded at G = 600 s,"-0.914 [-0.929,-0.891]",True,SPJF-tweedie better
+2,CAP-G600 - SKIP-G600,capped relative vs finite skip at G = 600 s,"0.797 [0.763,0.839]",True,CAP-G600 better
+2,SKIP-G600 - SKIPC-G600,"finite skip: dispatch vs completion charge, G = 600 s","-0.000 [-0.000,0.001]",False,unresolved
+2,CAP-G1200 - FIXSEL-G1200,"capped relative vs the BEST FEASIBLE fixed budget, G = 1200 s","0.422 [0.268,0.498]",True,CAP-G1200 better
+2,CAP-G1200 - FIX-G1200,capped relative vs B0 = Bmax at G = 1200 s,"-0.000 [-0.001,0.002]",False,unresolved
+2,CAP-G1200 - SPJF-tweedie,"guard vs unguarded, G = 1200 s","-0.044 [-0.056,-0.028]",True,SPJF-tweedie better
+2,SKIP-G1200 - SPJF-tweedie,finite skip vs unguarded at G = 1200 s,"-0.914 [-0.932,-0.889]",True,SPJF-tweedie better
+2,CAP-G1200 - SKIP-G1200,capped relative vs finite skip at G = 1200 s,"0.870 [0.844,0.895]",True,CAP-G1200 better
+2,SKIP-G1200 - SKIPC-G1200,"finite skip: dispatch vs completion charge, G = 1200 s","-0.000 [-0.001,0.001]",False,unresolved
+2,CAP-G600-reversed - SPJF-reversed,guard vs unguarded under the reversed predictor,"0.048 [-0.020,0.172]",False,unresolved
+2,CAP-G600-random - SPJF-random,guard vs unguarded under the random predictor,"-0.292 [-0.329,-0.242]",True,SPJF-random better
+2,CAP-G600-top1short - SPJF-top1short,guard vs unguarded under the top1short predictor,"-0.086 [-0.119,0.036]",False,unresolved

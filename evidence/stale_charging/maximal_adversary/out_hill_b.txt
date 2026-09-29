@@ -1,0 +1,12 @@
+rbp 1 restarts 3274 evals 1312874 viol 0
+  best W 0.9888 n 36 B 77 d 3 max
+  best In 0.9888 n 36 B 77 d 3 max
+rbp 2 restarts 3217 evals 1290017 viol 0
+  best W 0.8713 n 40 B 53 d 12 max
+  best In 0.9891 n 36 B 68 d 1 max
+rbp 3 restarts 3199 evals 1282799 viol 0
+  best W 0.7984 n 24 B 40 d 6 max
+  best In 0.9891 n 38 B 56 d 24 const
+rbp 4 restarts 3268 evals 1310468 viol 0
+  best W 0.7529 n 35 B 50 d 6 const
+  best In 0.9904 n 32 B 56 d 1 const

@@ -1,0 +1,17 @@
+base 6 s; heavy_thr 1.5590; heavy rate overall 0.0287; targets ['2020-ERE', '2020-2', '2021-1']
+
+[2020-ERE] train 404,578 (2018-1..2019-2), target 147,380, train heavy rate 0.0500
+  {'target': '2020-ERE', 'n_train': 404578, 'n_target': 147380, 'train_sems': '2018-1..2019-2', 'heavy_rate_train': 0.05, 'heavy_rate_target': 0.0082, 'mean_C_target': 0.3804, 's2_mean': 0.1232, 'sec': 37}
+
+[2020-2] train 608,171 (2018-1..2020-1), target 49,550, train heavy rate 0.0359
+  {'target': '2020-2', 'n_train': 608171, 'n_target': 49550, 'train_sems': '2018-1..2020-1', 'heavy_rate_train': 0.0359, 'heavy_rate_target': 0.0106, 'mean_C_target': 0.4381, 's2_mean': 0.0464, 'sec': 49}
+
+[2021-1] train 657,721 (2018-1..2020-2), target 57,080, train heavy rate 0.0340
+  {'target': '2021-1', 'n_train': 657721, 'n_target': 57080, 'train_sems': '2018-1..2020-2', 'heavy_rate_train': 0.034, 'heavy_rate_target': 0.0081, 'mean_C_target': 0.3854, 's2_mean': 0.0452, 'sec': 54}
+
+  target  n_train  n_target     train_sems  heavy_rate_train  heavy_rate_target  mean_C_target  s2_mean  sec
+2020-ERE   404578    147380 2018-1..2019-2            0.0500             0.0082         0.3804   0.1232   37
+  2020-2   608171     49550 2018-1..2020-1            0.0359             0.0106         0.4381   0.0464   49
+  2021-1   657721     57080 2018-1..2020-2            0.0340             0.0081         0.3854   0.0452   54
+
+wrote <cache-dir>\rank_score\rs_pred_ires0.parquet; total 147 s

@@ -1,0 +1,106 @@
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Policies at three loads, five overlays. Waits in seconds; intervals are paired week-block bootstrap.}
+\label{tab:main}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrllrrrr}
+\toprule
+Load & Policy & p99$_{\mathrm{dl}}$ & Gap closed & Red.\ (\%) & Mean & Max exc. & Harm & Fired (\%) \\
+\midrule
+$\rho = \devnum{0.5}$, $k = \devnum{7.8}$
+ & FCFS                   & \devnum{27.64} & \devnum{0.000 [0.000, 0.000]} & \devnum{0.0 [0.0, 0.0]} & \devnum{0.719} & \devnum{0.0} & \devnum{0.0} & \devnum{100.0} \\
+ & SJF                    & \devnum{10.59} & \devnum{1.000 [1.000, 1.000]} & \devnum{62.0 [58.7, 66.4]} & \devnum{0.228} & \devnum{1034.0} & \devnum{595.9} & \devnum{0.0} \\
+ & SPJF-E                 & \devnum{14.68} & \devnum{0.754 [0.725, 0.776]} & \devnum{46.7 [43.9, 49.9]} & \devnum{0.292} & \devnum{1241.4} & \devnum{237.0} & \devnum{0.0} \\
+ & SPJF-log               & \devnum{14.71} & \devnum{0.754 [0.722, 0.777]} & \devnum{46.7 [43.9, 50.1]} & \devnum{0.296} & \devnum{1236.1} & \devnum{331.0} & \devnum{0.0} \\
+ & Aging(600)             & \devnum{23.83} & \devnum{0.228 [0.180, 0.271]} & \devnum{14.2 [11.4, 16.7]} & \devnum{0.561} & \devnum{306.8} & \devnum{155.8} & \devnum{0.0} \\
+ & Guard(300)             & \devnum{15.58} & \devnum{0.705 [0.678, 0.724]} & \devnum{43.7 [41.1, 46.8]} & \devnum{0.344} & \devnum{192.5} & \devnum{132.1} & \devnum{1.3} \\
+ & Guard-fixed(300)       & \devnum{15.75} & \devnum{0.697 [0.673, 0.717]} & \devnum{43.2 [40.4, 46.8]} & \devnum{0.382} & \devnum{143.0} & \devnum{132.1} & \devnum{2.1} \\
+ & Guard-age(300)         & \devnum{15.58} & \devnum{0.705 [0.678, 0.724]} & \devnum{43.7 [41.1, 46.8]} & \devnum{0.344} & \devnum{192.5} & \devnum{132.1} & \devnum{1.3} \\
+ & Guard-queue(300)       & \devnum{15.43} & \devnum{0.714 [0.688, 0.733]} & \devnum{44.2 [41.3, 47.7]} & \devnum{0.351} & \devnum{189.4} & \devnum{75.1} & \devnum{0.9} \\
+ & Fixed(300)             & \devnum{15.30} & \devnum{0.721 [0.696, 0.738]} & \devnum{44.7 [41.8, 48.0]} & \devnum{0.347} & \devnum{193.0} & \devnum{181.8} & \devnum{0.8} \\
+ & Skip(300)              & \devnum{26.38} & \devnum{0.078 [0.052, 0.107]} & \devnum{4.8 [3.2, 6.9]} & \devnum{0.669} & \devnum{62.1} & \devnum{59.6} & \devnum{45.4} \\
+ & Guard(600)             & \devnum{14.97} & \devnum{0.740 [0.713, 0.760]} & \devnum{45.8 [43.0, 49.1]} & \devnum{0.309} & \devnum{492.2} & \devnum{237.0} & \devnum{0.2} \\
+ & Guard-fixed(600)       & \devnum{15.09} & \devnum{0.733 [0.706, 0.752]} & \devnum{45.4 [42.5, 48.8]} & \devnum{0.325} & \devnum{298.7} & \devnum{237.0} & \devnum{0.4} \\
+ & Guard-age(600)         & \devnum{14.97} & \devnum{0.740 [0.713, 0.760]} & \devnum{45.8 [43.0, 49.1]} & \devnum{0.309} & \devnum{492.2} & \devnum{237.0} & \devnum{0.2} \\
+ & Guard-queue(600)       & \devnum{14.88} & \devnum{0.744 [0.718, 0.765]} & \devnum{46.1 [43.3, 49.4]} & \devnum{0.311} & \devnum{504.5} & \devnum{106.0} & \devnum{0.2} \\
+ & Fixed(600)             & \devnum{14.91} & \devnum{0.742 [0.715, 0.763]} & \devnum{46.0 [43.1, 49.3]} & \devnum{0.309} & \devnum{493.3} & \devnum{237.0} & \devnum{0.1} \\
+ & Skip(600)              & \devnum{24.64} & \devnum{0.184 [0.135, 0.233]} & \devnum{11.5 [8.4, 14.9]} & \devnum{0.624} & \devnum{100.2} & \devnum{63.3} & \devnum{37.3} \\
+ & Guard(1200)            & \devnum{14.78} & \devnum{0.750 [0.723, 0.772]} & \devnum{46.4 [43.7, 49.7]} & \devnum{0.301} & \devnum{996.7} & \devnum{106.0} & \devnum{0.1} \\
+ & Guard-fixed(1200)      & \devnum{14.83} & \devnum{0.747 [0.719, 0.768]} & \devnum{46.2 [43.4, 49.6]} & \devnum{0.303} & \devnum{557.8} & \devnum{237.0} & \devnum{0.1} \\
+ & Guard-age(1200)        & \devnum{14.73} & \devnum{0.751 [0.723, 0.773]} & \devnum{46.5 [43.7, 49.8]} & \devnum{0.293} & \devnum{1049.1} & \devnum{237.0} & \devnum{0.0} \\
+ & Guard-queue(1200)      & \devnum{14.78} & \devnum{0.750 [0.723, 0.772]} & \devnum{46.4 [43.7, 49.7]} & \devnum{0.301} & \devnum{996.7} & \devnum{106.0} & \devnum{0.1} \\
+ & Fixed(1200)            & \devnum{14.70} & \devnum{0.753 [0.724, 0.775]} & \devnum{46.6 [43.8, 49.9]} & \devnum{0.292} & \devnum{1077.0} & \devnum{237.0} & \devnum{0.0} \\
+ & Skip(1200)             & \devnum{21.62} & \devnum{0.367 [0.288, 0.432]} & \devnum{22.8 [17.5, 27.9]} & \devnum{0.571} & \devnum{102.3} & \devnum{67.6} & \devnum{28.8} \\
+ & SPJF-reversed          & \devnum{42.72} & \devnum{-0.862 [-1.038, -0.640]} & \devnum{-53.3 [-63.0, -41.1]} & \devnum{1.334} & \devnum{1240.1} & \devnum{1240.1} & \devnum{0.0} \\
+ & Guard(600)-reversed    & \devnum{43.39} & \devnum{-0.898 [-1.075, -0.676]} & \devnum{-55.6 [-65.6, -43.0]} & \devnum{1.273} & \devnum{497.1} & \devnum{287.1} & \devnum{13.1} \\
+ & SPJF-random            & \devnum{16.82} & \devnum{0.639 [0.588, 0.703]} & \devnum{39.6 [35.1, 46.2]} & \devnum{0.517} & \devnum{1307.7} & \devnum{1276.0} & \devnum{0.0} \\
+ & Guard(600)-random      & \devnum{17.12} & \devnum{0.622 [0.568, 0.689]} & \devnum{38.6 [34.0, 45.4]} & \devnum{0.538} & \devnum{489.9} & \devnum{324.0} & \devnum{2.3} \\
+ & SPJF-top1short         & \devnum{38.24} & \devnum{-0.596 [-0.767, -0.371]} & \devnum{-36.9 [-46.1, -24.1]} & \devnum{1.137} & \devnum{1305.8} & \devnum{1201.7} & \devnum{0.0} \\
+ & Guard(600)-top1short   & \devnum{38.71} & \devnum{-0.623 [-0.804, -0.395]} & \devnum{-38.5 [-48.4, -25.5]} & \devnum{1.112} & \devnum{497.1} & \devnum{273.4} & \devnum{11.4} \\
+\midrule
+$\rho = \devnum{0.8}$, $k = \devnum{5}$
+ & FCFS                   & \devnum{119.35} & \devnum{0.000 [0.000, 0.000]} & \devnum{0.0 [0.0, 0.0]} & \devnum{4.160} & \devnum{0.0} & \devnum{0.0} & \devnum{100.0} \\
+ & SJF                    & \devnum{33.55} & \devnum{1.000 [1.000, 1.000]} & \devnum{71.8 [67.0, 75.1]} & \devnum{0.959} & \devnum{2667.4} & \devnum{1242.3} & \devnum{0.0} \\
+ & SPJF-E                 & \devnum{43.33} & \devnum{0.885 [0.862, 0.899]} & \devnum{63.6 [58.1, 67.4]} & \devnum{1.232} & \devnum{3044.5} & \devnum{469.2} & \devnum{0.0} \\
+ & SPJF-log               & \devnum{44.36} & \devnum{0.873 [0.852, 0.887]} & \devnum{62.7 [57.5, 66.2]} & \devnum{1.252} & \devnum{3055.1} & \devnum{390.5} & \devnum{0.0} \\
+ & Aging(600)             & \devnum{109.83} & \devnum{0.111 [0.082, 0.161]} & \devnum{8.0 [5.9, 11.0]} & \devnum{3.555} & \devnum{673.0} & \devnum{179.1} & \devnum{0.0} \\
+ & Guard(300)             & \devnum{55.94} & \devnum{0.738 [0.697, 0.761]} & \devnum{53.0 [49.1, 55.0]} & \devnum{2.061} & \devnum{209.7} & \devnum{114.1} & \devnum{11.6} \\
+ & Guard-fixed(300)       & \devnum{64.44} & \devnum{0.640 [0.543, 0.699]} & \devnum{45.9 [40.0, 48.7]} & \devnum{2.361} & \devnum{171.6} & \devnum{151.1} & \devnum{20.6} \\
+ & Guard-age(300)         & \devnum{55.94} & \devnum{0.738 [0.697, 0.761]} & \devnum{53.0 [49.1, 55.0]} & \devnum{2.061} & \devnum{209.7} & \devnum{114.1} & \devnum{11.6} \\
+ & Guard-queue(300)       & \devnum{56.13} & \devnum{0.736 [0.694, 0.761]} & \devnum{52.8 [48.9, 54.8]} & \devnum{2.077} & \devnum{210.7} & \devnum{109.5} & \devnum{10.9} \\
+ & Fixed(300)             & \devnum{53.83} & \devnum{0.763 [0.721, 0.785]} & \devnum{54.8 [50.8, 56.7]} & \devnum{2.046} & \devnum{210.9} & \devnum{195.4} & \devnum{10.7} \\
+ & Skip(300)              & \devnum{119.20} & \devnum{0.002 [-0.001, 0.009]} & \devnum{0.1 [-0.1, 0.6]} & \devnum{4.012} & \devnum{64.2} & \devnum{58.8} & \devnum{80.5} \\
+ & Guard(600)             & \devnum{47.47} & \devnum{0.837 [0.815, 0.851]} & \devnum{60.1 [55.2, 63.2]} & \devnum{1.532} & \devnum{507.8} & \devnum{319.6} & \devnum{1.3} \\
+ & Guard-fixed(600)       & \devnum{49.85} & \devnum{0.809 [0.786, 0.824]} & \devnum{58.1 [53.7, 60.6]} & \devnum{1.781} & \devnum{315.4} & \devnum{285.7} & \devnum{4.7} \\
+ & Guard-age(600)         & \devnum{47.47} & \devnum{0.837 [0.815, 0.851]} & \devnum{60.1 [55.2, 63.2]} & \devnum{1.532} & \devnum{507.8} & \devnum{319.6} & \devnum{1.3} \\
+ & Guard-queue(600)       & \devnum{47.69} & \devnum{0.834 [0.814, 0.847]} & \devnum{59.9 [54.9, 63.1]} & \devnum{1.532} & \devnum{508.5} & \devnum{117.7} & \devnum{1.3} \\
+ & Fixed(600)             & \devnum{47.03} & \devnum{0.842 [0.824, 0.853]} & \devnum{60.5 [55.5, 63.6]} & \devnum{1.545} & \devnum{502.6} & \devnum{447.1} & \devnum{1.2} \\
+ & Skip(600)              & \devnum{118.69} & \devnum{0.008 [-0.002, 0.026]} & \devnum{0.6 [-0.1, 1.7]} & \devnum{3.847} & \devnum{97.5} & \devnum{63.5} & \devnum{74.0} \\
+ & Guard(1200)            & \devnum{46.31} & \devnum{0.850 [0.829, 0.865]} & \devnum{61.1 [55.8, 64.5]} & \devnum{1.396} & \devnum{1096.1} & \devnum{117.7} & \devnum{0.4} \\
+ & Guard-fixed(1200)      & \devnum{46.76} & \devnum{0.845 [0.826, 0.857]} & \devnum{60.7 [55.8, 63.8]} & \devnum{1.516} & \devnum{581.8} & \devnum{469.2} & \devnum{0.9} \\
+ & Guard-age(1200)        & \devnum{45.16} & \devnum{0.864 [0.844, 0.876]} & \devnum{62.0 [56.9, 65.4]} & \devnum{1.367} & \devnum{1102.9} & \devnum{370.5} & \devnum{0.3} \\
+ & Guard-queue(1200)      & \devnum{46.31} & \devnum{0.850 [0.829, 0.865]} & \devnum{61.1 [55.8, 64.5]} & \devnum{1.396} & \devnum{1096.1} & \devnum{117.7} & \devnum{0.4} \\
+ & Fixed(1200)            & \devnum{45.32} & \devnum{0.862 [0.842, 0.874]} & \devnum{61.9 [56.8, 65.3]} & \devnum{1.395} & \devnum{1106.3} & \devnum{469.2} & \devnum{0.2} \\
+ & Skip(1200)             & \devnum{117.48} & \devnum{0.022 [0.004, 0.074]} & \devnum{1.6 [0.3, 4.9]} & \devnum{3.607} & \devnum{162.5} & \devnum{83.6} & \devnum{66.1} \\
+ & SPJF-reversed          & \devnum{228.12} & \devnum{-1.277 [-1.406, -1.162]} & \devnum{-91.5 [-101.4, -80.6]} & \devnum{7.739} & \devnum{3387.9} & \devnum{3387.9} & \devnum{0.0} \\
+ & Guard(600)-reversed    & \devnum{232.41} & \devnum{-1.328 [-1.432, -1.238]} & \devnum{-95.1 [-101.1, -87.4]} & \devnum{7.056} & \devnum{513.5} & \devnum{323.4} & \devnum{32.3} \\
+ & SPJF-random            & \devnum{78.52} & \devnum{0.474 [0.410, 0.542]} & \devnum{34.0 [29.4, 38.0]} & \devnum{2.872} & \devnum{3319.4} & \devnum{3257.9} & \devnum{0.0} \\
+ & Guard(600)-random      & \devnum{88.39} & \devnum{0.358 [0.265, 0.459]} & \devnum{25.8 [19.5, 31.6]} & \devnum{3.272} & \devnum{504.5} & \devnum{352.3} & \devnum{13.6} \\
+ & SPJF-top1short         & \devnum{212.54} & \devnum{-1.097 [-1.196, -0.957]} & \devnum{-78.5 [-85.5, -66.6]} & \devnum{6.514} & \devnum{3292.0} & \devnum{3181.8} & \devnum{0.0} \\
+ & Guard(600)-top1short   & \devnum{222.52} & \devnum{-1.213 [-1.310, -1.084]} & \devnum{-86.9 [-92.7, -75.8]} & \devnum{6.249} & \devnum{516.1} & \devnum{306.0} & \devnum{28.1} \\
+\midrule
+$\rho = \devnum{1}$, $k = \devnum{4}$
+ & FCFS                   & \devnum{273.50} & \devnum{0.000 [0.000, 0.000]} & \devnum{0.0 [0.0, 0.0]} & \devnum{10.270} & \devnum{0.0} & \devnum{0.0} & \devnum{100.0} \\
+ & SJF                    & \devnum{43.63} & \devnum{1.000 [1.000, 1.000]} & \devnum{84.0 [79.6, 86.8]} & \devnum{1.696} & \devnum{4755.5} & \devnum{1365.9} & \devnum{0.0} \\
+ & SPJF-E                 & \devnum{62.79} & \devnum{0.916 [0.892, 0.930]} & \devnum{77.0 [71.6, 80.3]} & \devnum{2.294} & \devnum{5904.5} & \devnum{708.8} & \devnum{0.0} \\
+ & SPJF-log               & \devnum{67.17} & \devnum{0.897 [0.872, 0.914]} & \devnum{75.4 [70.2, 78.6]} & \devnum{2.354} & \devnum{5896.6} & \devnum{551.1} & \devnum{0.0} \\
+ & Aging(600)             & \devnum{261.68} & \devnum{0.051 [0.035, 0.074]} & \devnum{4.3 [3.0, 5.9]} & \devnum{9.110} & \devnum{855.6} & \devnum{184.7} & \devnum{0.0} \\
+ & Guard(300)             & \devnum{163.40} & \devnum{0.478 [0.387, 0.602]} & \devnum{40.2 [33.1, 48.5]} & \devnum{5.552} & \devnum{229.1} & \devnum{134.8} & \devnum{28.6} \\
+ & Guard-fixed(300)       & \devnum{223.69} & \devnum{0.217 [0.151, 0.359]} & \devnum{18.2 [12.9, 28.9]} & \devnum{6.382} & \devnum{165.1} & \devnum{158.4} & \devnum{41.5} \\
+ & Guard-age(300)         & \devnum{163.40} & \devnum{0.478 [0.387, 0.602]} & \devnum{40.2 [33.1, 48.5]} & \devnum{5.552} & \devnum{229.1} & \devnum{134.8} & \devnum{28.6} \\
+ & Guard-queue(300)       & \devnum{171.79} & \devnum{0.442 [0.357, 0.576]} & \devnum{37.2 [30.5, 46.6]} & \devnum{5.609} & \devnum{220.0} & \devnum{102.2} & \devnum{28.1} \\
+ & Fixed(300)             & \devnum{169.29} & \devnum{0.453 [0.369, 0.619]} & \devnum{38.1 [31.5, 50.0]} & \devnum{5.506} & \devnum{222.6} & \devnum{208.2} & \devnum{28.3} \\
+ & Skip(300)              & \devnum{273.14} & \devnum{0.001 [-0.001, 0.003]} & \devnum{0.1 [-0.1, 0.2]} & \devnum{10.045} & \devnum{81.3} & \devnum{81.3} & \devnum{90.4} \\
+ & Guard(600)             & \devnum{89.24} & \devnum{0.801 [0.764, 0.842]} & \devnum{67.3 [63.6, 70.0]} & \devnum{3.830} & \devnum{523.7} & \devnum{339.9} & \devnum{7.2} \\
+ & Guard-fixed(600)       & \devnum{116.75} & \devnum{0.682 [0.601, 0.764]} & \devnum{57.3 [51.3, 61.8]} & \devnum{4.732} & \devnum{325.4} & \devnum{292.9} & \devnum{17.5} \\
+ & Guard-age(600)         & \devnum{89.24} & \devnum{0.801 [0.764, 0.842]} & \devnum{67.3 [63.6, 70.0]} & \devnum{3.830} & \devnum{523.7} & \devnum{339.9} & \devnum{7.2} \\
+ & Guard-queue(600)       & \devnum{91.09} & \devnum{0.793 [0.758, 0.833]} & \devnum{66.6 [62.9, 69.3]} & \devnum{3.870} & \devnum{515.8} & \devnum{123.4} & \devnum{7.1} \\
+ & Fixed(600)             & \devnum{86.53} & \devnum{0.813 [0.778, 0.851]} & \devnum{68.3 [64.8, 70.6]} & \devnum{3.861} & \devnum{515.8} & \devnum{465.5} & \devnum{7.2} \\
+ & Skip(600)              & \devnum{272.98} & \devnum{0.002 [-0.004, 0.006]} & \devnum{0.2 [-0.3, 0.5]} & \devnum{9.779} & \devnum{112.4} & \devnum{82.4} & \devnum{86.2} \\
+ & Guard(1200)            & \devnum{79.32} & \devnum{0.844 [0.817, 0.870]} & \devnum{70.9 [66.4, 73.9]} & \devnum{3.080} & \devnum{1110.4} & \devnum{123.4} & \devnum{1.4} \\
+ & Guard-fixed(1200)      & \devnum{83.32} & \devnum{0.827 [0.798, 0.860]} & \devnum{69.5 [65.9, 71.9]} & \devnum{3.703} & \devnum{576.5} & \devnum{522.7} & \devnum{5.8} \\
+ & Guard-age(1200)        & \devnum{72.52} & \devnum{0.874 [0.851, 0.893]} & \devnum{73.4 [68.9, 76.2]} & \devnum{2.947} & \devnum{1117.3} & \devnum{453.3} & \devnum{0.8} \\
+ & Guard-queue(1200)      & \devnum{79.32} & \devnum{0.844 [0.817, 0.870]} & \devnum{70.9 [66.4, 73.9]} & \devnum{3.080} & \devnum{1110.4} & \devnum{123.4} & \devnum{1.4} \\
+ & Fixed(1200)            & \devnum{72.94} & \devnum{0.872 [0.846, 0.893]} & \devnum{73.3 [68.8, 75.9]} & \devnum{3.083} & \devnum{1112.9} & \devnum{708.8} & \devnum{0.7} \\
+ & Skip(1200)             & \devnum{273.08} & \devnum{0.002 [-0.009, 0.013]} & \devnum{0.1 [-0.7, 1.1]} & \devnum{9.354} & \devnum{169.7} & \devnum{105.0} & \devnum{80.7} \\
+ & SPJF-reversed          & \devnum{557.44} & \devnum{-1.235 [-1.383, -1.051]} & \devnum{-103.7 [-112.4, -88.7]} & \devnum{18.890} & \devnum{6295.7} & \devnum{5248.8} & \devnum{0.0} \\
+ & Guard(600)-reversed    & \devnum{546.48} & \devnum{-1.187 [-1.273, -0.961]} & \devnum{-99.7 [-103.8, -82.9]} & \devnum{16.687} & \devnum{534.8} & \devnum{309.1} & \devnum{44.2} \\
+ & SPJF-random            & \devnum{194.78} & \devnum{0.341 [0.264, 0.416]} & \devnum{28.7 [21.8, 35.0]} & \devnum{6.896} & \devnum{6235.5} & \devnum{6173.6} & \devnum{0.0} \\
+ & Guard(600)-random      & \devnum{261.93} & \devnum{0.049 [-0.028, 0.152]} & \devnum{4.1 [-2.4, 12.5]} & \devnum{8.311} & \devnum{520.7} & \devnum{332.9} & \devnum{25.2} \\
+ & SPJF-top1short         & \devnum{523.55} & \devnum{-1.088 [-1.197, -0.940]} & \devnum{-91.4 [-97.9, -79.9]} & \devnum{15.562} & \devnum{6107.8} & \devnum{3396.8} & \devnum{0.0} \\
+ & Guard(600)-top1short   & \devnum{543.63} & \devnum{-1.175 [-1.249, -0.950]} & \devnum{-98.7 [-102.7, -81.7]} & \devnum{14.862} & \devnum{534.7} & \devnum{324.6} & \devnum{40.0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+% Source: outputs/.../main_table.csv, regenerated by scripts/run_main.py; see GENERATED.md
