@@ -64,6 +64,7 @@ from spjf_guard import config as cfgmod  # noqa: E402
 from spjf_guard.data import sealed  # noqa: E402
 from spjf_guard.data.events import static_submission_columns  # noqa: E402
 from spjf_guard.experiment import grids, provenance  # noqa: E402
+from spjf_guard.experiment.adversarial import TOP1SHORT, adversarial_score  # noqa: E402
 from spjf_guard.experiment.consistent import refine_policy  # noqa: E402
 from spjf_guard.experiment.online import (  # noqa: E402
     audit_online,
@@ -137,9 +138,18 @@ def _assert_timeout_bound(outcome: JobResults, fcfs_wait: np.ndarray, promise: f
         raise AssertionError(f"{outcome.policy} exceeds its promise by {excess.max()} us")
 
 
+def _timeout_promise(policy: Policy, servers: int, limit_s: float) -> float | None:
+    """G of Timeout(G); a free threshold, Timeout(theta=X), promises X + (3 - 2/k)L."""
+    if policy.name.startswith("Timeout(theta="):
+        return float(policy.name[14:-1]) + (3.0 - 2.0 / servers) * limit_s
+    if policy.name.startswith("Timeout("):
+        return float(policy.name[8:-1])
+    return None
+
+
 def _check_bound(outcome, fcfs_wait, policy, servers, limit_s) -> None:
     if policy.name.startswith("Timeout("):
-        _assert_timeout_bound(outcome, fcfs_wait, float(policy.name[8:-1]))
+        _assert_timeout_bound(outcome, fcfs_wait, _timeout_promise(policy, servers, limit_s))
     elif policy.wrapper != "none":
         assert_per_job_bounds(outcome, fcfs_wait, policy, servers, limit_s)
 
@@ -156,8 +166,66 @@ def _frozen_log_models(cfg, args, context, pool_terms):
         context["all_terms"],
         expected_scores=context["scores"]["spjf_log"].to_numpy("float64"),
         score_name="spjf_log",
+        events=context["events"],
     )
     return models
+
+
+class _TopShort:
+    """``top1short`` under a refitted model: the jobs of the cell's longest one per cent keep
+    the constant below every score, whatever the model returns for them."""
+
+    def __init__(self, inner, rows: np.ndarray, value: float):
+        self.inner, self.rows, self.value = inner, rows, value
+
+    def predict(self, rows: np.ndarray, histories: np.ndarray) -> np.ndarray:
+        out = self.inner.predict(rows, histories)
+        out[np.isin(rows, self.rows)] = self.value
+        return out
+
+
+class _Learned:
+    """The learned policy's score (train_learned_policy.learned_score) of a refitted model."""
+
+    def __init__(self, inner, linear: np.ndarray):
+        self.inner, self.linear = inner, linear
+
+    def predict(self, rows: np.ndarray, histories: np.ndarray) -> np.ndarray:
+        return np.log(self.inner.predict(rows, histories)) + self.linear[rows]
+
+
+def _learned_linear(path: Path, n_rows: int) -> np.ndarray:
+    """phi_std @ w per submission, from a policy.json beside its phi.npz."""
+    import json
+
+    policy = json.loads(path.read_text(encoding="utf-8"))
+    with np.load(path.parent / "phi.npz") as z:
+        phi_std = z["phi_std"]
+    if len(phi_std) != n_rows:
+        raise SystemExit(f"{path.parent / 'phi.npz'} has {len(phi_std):,} rows, not {n_rows:,}")
+    return phi_std @ np.asarray(policy["weights"], np.float64)
+
+
+def _scoring(cell: dict[str, Any], policy: Policy):
+    """(base scores, the model that rescores a job online) of one policy in one cell."""
+    context, args = _STATE["context"], _STATE["args"]
+    job_row = cell["arrays"]["job_row"]
+    score_name = "spjf_log" if policy.name == LOG_POLICY else "spjf_e"
+    base = context["scores"][score_name].to_numpy("float64")[job_row]
+    models = context["log_models"] if policy.name == LOG_POLICY else context["models"]
+    if args.base_score is None:
+        return base, models
+    if args.base_score == TOP1SHORT:
+        # The model rescores by submission row, so the mislabelled set is closed under
+        # rows: a copy of a row among the longest one per cent is mislabelled too.  On the
+        # primary overlays that adds 5 jobs, tied at the cut, to adversarial.top1short.
+        corrupted = adversarial_score(TOP1SHORT, cell["trace"].service_us / MICROS, base, 0)
+        value = float(corrupted.min())
+        rows = np.unique(job_row[corrupted != base])
+        corrupted[np.isin(job_row, rows)] = value
+        return corrupted, _TopShort(models, rows, value)
+    linear = context["learned_linear"]
+    return np.log(base) + linear[job_row], _Learned(models, linear)
 
 
 def _initialize(config_path: Path, args, pool_terms: list[str], run_signature: str, mult):
@@ -165,6 +233,10 @@ def _initialize(config_path: Path, args, pool_terms: list[str], run_signature: s
     cfg = cfgmod.load(config_path)
     context = prepare_context(cfg, args, pool_terms)
     context["online_index"] = build_online_index(context["recomputer"])
+    if args.base_score not in (None, TOP1SHORT):
+        context["learned_linear"] = _learned_linear(
+            Path(args.base_score), len(context["prepared"].submission_rows)
+        )
     if LOG_POLICY in args.policy_names or args.policy_names == ["all"]:
         context["log_models"] = _frozen_log_models(cfg, args, context, pool_terms)
     _STATE = {
@@ -177,17 +249,15 @@ def _initialize(config_path: Path, args, pool_terms: list[str], run_signature: s
 
 
 def _theta_s(policy: Policy, servers: int, limit_s: float) -> float | None:
-    if not policy.name.startswith("Timeout("):
-        return None
-    return float(policy.name[8:-1]) - (3.0 - 2.0 / servers) * limit_s
+    promise = _timeout_promise(policy, servers, limit_s)
+    return None if promise is None else promise - (3.0 - 2.0 / servers) * limit_s
 
 
-def _refine(variant, trace, policy, servers, cfg, arrays, context, base):
+def _refine(variant, trace, policy, servers, cfg, arrays, context, base, models):
     """(original-clock outcome, refined result, pass rows) of one policy in one cell."""
     window = int(cfg["run"]["segment_tree_window_ranks"])
-    models = context["log_models"] if policy.name == LOG_POLICY else context["models"]
     theta = _theta_s(policy, servers, cfg.limit_s)
-    promise = None if theta is None else float(policy.name[8:-1])
+    promise = _timeout_promise(policy, servers, cfg.limit_s)
     simulator = None if theta is None else _timeout_simulator(promise, servers, cfg.limit_s)
     if variant == "online":
         original = (
@@ -253,14 +323,13 @@ def _run_policy(cell: dict[str, Any], policy: Policy, variant: str) -> dict[str,
     if cached is not None:
         return cached
     started = time.perf_counter()
-    score_name = "spjf_log" if policy.name == LOG_POLICY else "spjf_e"
-    base = context["scores"][score_name].to_numpy("float64")[cell["arrays"]["job_row"]]
+    base, models = _scoring(cell, policy)
     trace = Trace(
         cell["trace"].arrival_us, cell["trace"].service_us, {variant: base}, cfg.limit_s
     )
     refined = replace(policy, score_key=variant)
     original, result, costs = _refine(
-        variant, trace, refined, servers, cfg, cell["arrays"], context, base
+        variant, trace, refined, servers, cfg, cell["arrays"], context, base, models
     )
     rows, replicates = [], {}
     for label, outcome in ((ORIGINAL, original), (variant, result.outcome)):
@@ -296,7 +365,7 @@ def _run_policy(cell: dict[str, Any], policy: Policy, variant: str) -> dict[str,
             cell["arrays"],
             context["online_index"],
             context["recomputer"],
-            context["log_models"] if policy.name == LOG_POLICY else context["models"],
+            models,
             context["baseline_history"],
             base,
         )
@@ -337,10 +406,30 @@ def _run_policy(cell: dict[str, Any], policy: Policy, variant: str) -> dict[str,
     return payload
 
 
+def occurrence_rounds(copy_entry: np.ndarray, class_term: np.ndarray) -> np.ndarray:
+    """Rounds for a trace whose copies carry none: a class-term's j-th copy is round j.
+
+    The single-server trace superposes its own selection of copies and stores round -1
+    for all of them, while the online history names a copy by (class-term, round).
+    `class_term` is per job.
+    """
+    entries, first = np.unique(copy_entry, return_index=True)
+    terms = class_term[first]
+    order = np.lexsort((entries, terms))
+    sorted_terms = terms[order]
+    starts = np.r_[0, np.flatnonzero(sorted_terms[1:] != sorted_terms[:-1]) + 1]
+    rank = np.empty(len(entries), np.int64)
+    rank[order] = np.arange(len(order)) - np.repeat(starts, np.diff(np.r_[starts, len(order)]))
+    lookup = np.empty(int(entries.max()) + 1, np.int64)
+    lookup[entries] = rank
+    return lookup[copy_entry].astype(np.int32)
+
+
 def _load_cell(overlay: int, level: int) -> dict[str, Any]:
     cfg, args = _STATE["cfg"], _STATE["args"]
-    path = args.overlay_dir / f"{args.pool}_rep{overlay}.npz"
+    path = args.overlay_dir / f"{args.overlay_stem}_rep{overlay}.npz"
     trace, servers, labels = load_overlay(path, level, {}, cfg.limit_s)
+    servers = args.servers or servers  # the capacity sweep replays a level's trace at k
     with np.load(path) as source:
         job_row = source["job_row"].astype(np.int64)
         labels["week"] = source["wk"].astype(np.int64)
@@ -351,6 +440,10 @@ def _load_cell(overlay: int, level: int) -> dict[str, Any]:
             "copy_entry": source["copy_entry"].astype(np.int32),
             "copy_round": source["copy_round"].astype(np.int32),
         }
+        if np.all(arrays["copy_round"] < 0):
+            arrays["copy_round"] = occurrence_rounds(
+                arrays["copy_entry"], _STATE["context"]["same_copy"].class_term[job_row]
+            )
         work_s = float(source["W"])
         rho = level_utilisation(cfg, level, servers, work_s, len(source["K"]))
     window = int(cfg["run"]["segment_tree_window_ranks"])
@@ -382,14 +475,18 @@ def _load_cell(overlay: int, level: int) -> dict[str, Any]:
 
 
 def _suite(cfg: cfgmod.Config, args, servers: int) -> list[Policy]:
-    """The named comparators, or every grid point listed in ``--candidates``."""
+    """The named comparators (a free Timeout threshold by its name), every grid point
+    listed in ``--candidates``, or with ``--aging-grid`` the configured credit grid."""
+    if args.aging_grid:
+        credits = cfg["scheduling"]["aging_baseline"]["credit_per_s_grid"]
+        return [aging("spjf_e", float(c), f"Aging(c={float(c):g})") for c in credits]
     if args.candidates is None:
         wanted = args.policy_names
         return [
             policy
             for policy in comparator_suite(cfg, servers)
             if wanted == ["all"] or policy.name in wanted
-        ]
+        ] + [spjf("spjf_e", name) for name in wanted if name.startswith("Timeout(theta=")]
     from select_online import _rows, grid_point
 
     points = [grid_point(row) for row in _rows(args.candidates)]
@@ -460,6 +557,17 @@ def _run_signature(cfg, args, pool_terms) -> tuple[str, str]:
         "pool_terms": list(pool_terms),
         "audit": args.audit,
     }
+    # Absent from a plain run's document, so its signature and checkpoints are unchanged.
+    if args.overlay_stem != args.pool:
+        document["overlay_stem"] = args.overlay_stem
+    if args.servers is not None:
+        document["servers"] = args.servers
+    if args.base_score is not None:
+        document["base_score"] = (
+            args.base_score
+            if args.base_score == TOP1SHORT
+            else sha256_file(Path(args.base_score))
+        )
     return signature(document), implementation
 
 
@@ -476,7 +584,7 @@ def run(cfg, args, pool_terms, outcome) -> int:
     run_signature, implementation = _run_signature(cfg, args, pool_terms)
     overlays = [int(v) for v in args.reps.split(",")]
     levels = [int(v) for v in args.levels.split(",")]
-    mult = _multiplicities(cfg, args.overlay_dir / f"{args.pool}_rep{overlays[0]}.npz")
+    mult = _multiplicities(cfg, args.overlay_dir / f"{args.overlay_stem}_rep{overlays[0]}.npz")
     tasks = [(o, lv) for o in overlays for lv in levels]
     with ProcessPoolExecutor(
         max_workers=args.workers,
@@ -519,7 +627,7 @@ def run(cfg, args, pool_terms, outcome) -> int:
         inputs=[
             *_source_paths(cfg, args.unseal),
             args.scores,
-            *[args.overlay_dir / f"{args.pool}_rep{o}.npz" for o in overlays],
+            *[args.overlay_dir / f"{args.overlay_stem}_rep{o}.npz" for o in overlays],
         ],
         arguments={
             "pool": args.pool,
@@ -531,6 +639,11 @@ def run(cfg, args, pool_terms, outcome) -> int:
             "audit": args.audit,
             "workers": args.workers,
             "unseal": args.unseal,
+            "overlay_stem": args.overlay_stem,
+            "base_score": args.base_score,
+            "aging_grid": args.aging_grid,
+            "servers": args.servers,
+            "second_sealed_evaluation": args.second_sealed_evaluation,
         },
         notes={
             "implementation_sha256": implementation,
@@ -561,6 +674,24 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--unseal", action="store_true")
+    parser.add_argument("--overlay-stem", default=None, help="default: the pool, e.g. k1")
+    parser.add_argument(
+        "--base-score",
+        default=None,
+        help=f"replace the base score: {TOP1SHORT}, or a learned policy.json",
+    )
+    parser.add_argument(
+        "--aging-grid", action="store_true", help="replay every configured aging credit"
+    )
+    parser.add_argument(
+        "--servers", type=int, default=None, help="replay each cell at this k (capacity sweep)"
+    )
+    parser.add_argument(
+        "--second-sealed-evaluation",
+        action="store_true",
+        help="replay other policies on the sealed terms after their one evaluation, into "
+        "an --out-dir of its own (user decision of 2026-10-01; reported as such)",
+    )
     args = parser.parse_args()
     cfg = cfgmod.load(args.config)
     section = cfg["features"]["online_visibility"]
@@ -572,12 +703,23 @@ def main() -> int:
     args.variant_names = args.variants.split(",")
     if not set(args.variant_names) <= set(VARIANTS):
         parser.error(f"variants are {VARIANTS}")
-    chosen = (args.policies, args.variants, args.audit, args.candidates)
-    if args.pool == "sealed" and chosen != (*pinned, int(section["audit_sample"]), None):
+    chosen = (args.policies, args.variants, args.audit, args.candidates, args.base_score)
+    if args.second_sealed_evaluation:
+        first = ROOT / "outputs" / "sealed_online_visibility"
+        if args.pool != "sealed" or args.out_dir is None or args.out_dir.resolve() == first:
+            parser.error("a second sealed evaluation is a sealed run into its own --out-dir")
+    elif args.pool == "sealed" and chosen != (
+        *pinned, int(section["audit_sample"]), None, None
+    ):
         parser.error("the sealed run replays exactly the configured policies and variants")
+    if args.servers is not None and args.pool == "sealed":
+        parser.error("the capacity sweep runs on development pools only")
+    if args.aging_grid and args.candidates is not None:
+        parser.error("--aging-grid replaces the suite; it takes no --candidates")
     pool_terms = list(cfg["overlay"]["pools"][args.pool])
     sealed.guard_semesters(pool_terms, ROOT, unseal=args.unseal)
     args.overlay_dir = args.overlay_dir or cfg.data_path("overlay_dir")
+    args.overlay_stem = args.overlay_stem or args.pool
     score_name = "sealed_scores.parquet" if args.pool == "sealed" else "forward_scores.parquet"
     args.scores = args.scores or cfg.data_path("score_dir", score_name)
     prefix = "dev" if args.pool == "primary" else args.pool

@@ -1,0 +1,15 @@
+rows 900; guarded rows 450; jobs per run [np.int64(17634760)]
+R1 bound violations 0; worst W/bound 0.9511
+R2 (descriptive) runs with a job over the bound 144; jobs 8484; by p_resubmit {0.0: 0, 0.5: 1640, 1.0: 6844}
+groups 150; FCFS highest p99 in 150; SJF lowest in 150
+SPJF-E patience inf: gap 0.831-0.849; gap from first submission 0.831-0.849; largest excess all loads 775.2-5400.4, heaviest load 5400.4-5400.4
+SPJF-E patience 1800.0: gap 0.797-0.846; gap from first submission 0.797-0.846; largest excess all loads 753.3-4774.8, heaviest load 3410.5-4774.8
+SPJF-E patience 300.0: gap 0.734-0.837; gap from first submission 0.734-0.833; largest excess all loads 605.1-1836.7, heaviest load 1450.0-1836.7
+SPJF-E patience 60.0: gap 0.659-0.727; gap from first submission 0.619-0.694; largest excess all loads 220.1-421.2, heaviest load 312.5-421.2
+Guard(600) patience inf: gap 0.813-0.833; gap from first submission 0.813-0.833; largest excess all loads 460.2-515.3, heaviest load 515.3-515.3
+Guard(600) patience 1800.0: gap 0.782-0.873; gap from first submission 0.782-0.873; largest excess all loads 458.7-518.7, heaviest load 512.4-518.7
+Guard(600) patience 300.0: gap 0.743-0.820; gap from first submission 0.743-0.816; largest excess all loads 468.9-517.6, heaviest load 492.0-517.6
+Guard(600) patience 60.0: gap 0.665-0.714; gap from first submission 0.618-0.686; largest excess all loads 220.1-354.3, heaviest load 291.1-354.3
+withdrawn SPJF-E/FCFS on 96 groups with >= 1000 SPJF-E withdrawals: 0.208-0.709
+withdrawn Guard(600)/FCFS on 96 groups with >= 1000 SPJF-E withdrawals: 0.206-0.709
+withdrawn Guard(600)/SPJF-E on 96 groups with >= 1000 SPJF-E withdrawals: 0.976-1.080

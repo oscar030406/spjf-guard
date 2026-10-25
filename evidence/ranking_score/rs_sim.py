@@ -21,6 +21,7 @@ policy groups (--group)
   scores    FCFS, SJF-ref, SPJF with the current M4 log score and with each candidate
   twoclass  the two-class rules at a grid of P(heavy) thresholds
   mech      diagnostic oracles for the misranking decomposition (not deployable)
+  mech_tw   the same oracles on the Tweedie score SPJF-E, the order the scheduler uses
 usage: rs_sim.py --trace primary --rep 0 --rhos 0.5,0.8,1.0 --group scores
 """
 from __future__ import annotations
@@ -117,6 +118,27 @@ def build_scores(group, m4, cand, svc, hvt, taus):
                 v[ix] = tl[ix]
                 pri[f"orc_{tag}{x}"] = v
                 pol.append((f"ORACLE-top{x}pct-{tag}", "pri", f"orc_{tag}{x}"))
+    elif group == "mech_tw":
+        # The same repairs on the scheduler's own score, SPJF-E (Tweedie expected cost, in
+        # seconds): errors on that scale, and a repaired job gets its true cost.
+        tw = cand["tweedie"]
+        pri["tweedie"] = tw
+        pol = [("FCFS", "fcfs", None), ("SJF-ref", "pri", "svc"), ("SPJF-tweedie", "pri", "tweedie")]
+        pri["tw_heavy"] = np.where(hvt, svc, tw)
+        pri["tw_light"] = np.where(hvt, tw, svc)
+        pol += [("ORACLE-on-true-heavy", "pri", "tw_heavy"),
+                ("ORACLE-on-true-light", "pri", "tw_light")]
+        err = svc - tw                                    # + = under-predicted, - = over-predicted
+        n = len(svc)
+        for x in ERR_PCT:
+            k = max(1, int(round(n * x / 100.0)))
+            u = np.argpartition(-err, k)[:k]
+            o = np.argpartition(err, k)[:k]
+            for tag, ix in (("under", u), ("over", o)):
+                v = tw.copy()
+                v[ix] = svc[ix]
+                pri[f"tw_{tag}{x}"] = v
+                pol.append((f"ORACLE-top{x}pct-{tag}", "pri", f"tw_{tag}{x}"))
     else:
         raise SystemExit(group)
     return pol, pri

@@ -1,0 +1,4 @@
+k=1 n=5 h=2: instances 163296, runs 9541152, worst |k(W_P-W_R)-(In-Out)|/(2(k-1)L+Lam) = 1.000, violations 0
+k=2 n=5 h=1: instances 21504, runs 836608, worst |k(W_P-W_R)-(In-Out)|/(2(k-1)L+Lam) = 0.500, violations 0
+k=2 n=5 h=2: instances 163296, runs 6352992, worst |k(W_P-W_R)-(In-Out)|/(2(k-1)L+Lam) = 0.750, violations 0
+k=3 n=5 h=1: instances 21504, runs 677632, worst |k(W_P-W_R)-(In-Out)|/(2(k-1)L+Lam) = 0.500, violations 0

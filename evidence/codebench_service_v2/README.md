@@ -1,22 +1,22 @@
 # CodeBench service side, v2.1: causal cost prediction and the shared pool
 
 **Question.** Can evaluation cost be predicted before the job runs, using only
-information available at its arrival, and does a prediction-driven shared evaluator pool
-beat first-come first-served on the real arrival times?
+information available at its arrival? Does a shared pool of evaluators that orders jobs by
+the prediction beat first-come first-served on the real arrival times?
 
-**Paper items.** The score-objective comparison behind Section 5.1; the 863,149 graded
-submissions of Table 4 (Section 7.1) and the sealed-term exclusions of Section 7.3; the
+**Paper items.** The score-objective comparison behind Section 5.2; the 863,149 graded
+submissions of Table 5 (Section 7.1) and the sealed-term exclusions of Section 7.3; the
 release-delay sensitivity of Supplementary Section S1.3; the field audit of Supplementary
 Section S2.1 (slopes, kill feedback, the 60 s limit); the earlier M4 AUROC 0.9283 of
 Supplementary Sections S3.9 and S5.1; Table S15 (Supplementary Section S3.15); the
 cross-check of the M1–M6 rows of Table S2. Supplementary Section S5.4 names this folder in
 its text.
 
-**Status.** Current. It supersedes the first version of this study, which built its
-history features by submission order rather than by result-availability time and is
-therefore optimistic; that version is not included here.
+**Status.** Current. It supersedes the first version of this study. That version built its
+history features by submission order rather than by result-availability time, and it is
+therefore optimistic. It is not included here.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 

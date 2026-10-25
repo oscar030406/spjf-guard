@@ -8,16 +8,16 @@ promise as Guard(G)?
 
 **Paper items.** The fixed-window paragraph of Section 8.4 (Block(512) on overlay 0, from
 `maxwait_overlay0.csv`). The equal-promise comparison with the clock in the same section
-(Table 8) uses the separate kernel of `evidence/timeout_rule/`.
+(Table 10) uses the separate kernel of `evidence/timeout_rule/`.
 
 **Inputs.** Development overlays `data/derived/overlay_traces/primary_rep0..4.npz` and
-the stored expected-cost score; the package rows of `outputs/dev_tables/main_table.csv`
+the stored expected-cost score. The package rows of `outputs/dev_tables/main_table.csv`
 are read beside the new rows, not recomputed. No sealed data.
 
 **Status.** Done. Each run first checks its kernel as FCFS and as SPJF-E against the
-package's waits. The docstring of `maxwait_baseline.py` says the maximum waiting time
-carries no per-job guarantee; that was written before Proposition `prop:clock` and is
-superseded by it, as `maxwait_equal_promise.py` explains.
+package's waits. The docstring of `maxwait_baseline.py` says that the maximum waiting time
+carries no per-job guarantee. That docstring was written before Proposition `prop:clock` and
+is superseded by it, as `maxwait_equal_promise.py` explains.
 
 | File | What it is |
 | --- | --- |

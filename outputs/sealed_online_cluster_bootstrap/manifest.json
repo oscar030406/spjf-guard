@@ -1,0 +1,56 @@
+{
+  "produced_by": "scripts/run_online_cluster_bootstrap.py",
+  "written_at": "2026-10-25T09:04:05+00:00",
+  "config": {
+    "path": "configs/main.yaml",
+    "present": true,
+    "bytes": 19065,
+    "sha256": "ecd7b34bc4a83fe62b2f777fa136c9ea34ab00b0f9fa2042dbc1ae45c5f5db8d"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/package_ranking_scores/sealed_scores.parquet",
+      "present": true,
+      "bytes": 9112264,
+      "sha256": "104b290542cf3107f9cd59602e147eafb8fccbdd6946c15d565b9c4718b377c2"
+    },
+    {
+      "path": "outputs/sealed_online_visibility/online_cells.csv",
+      "present": true,
+      "bytes": 33578,
+      "sha256": "047dd7776b0936c04e5eae4362086066293bf6323b9572ddb75604cbbb50d71e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "bootstrap_cells.csv",
+      "present": true,
+      "bytes": 549691,
+      "sha256": "f2e1dc935e75b4faccefa4cfa3cff2af330d6bba76d01ae2fc7718252545fa4e"
+    },
+    {
+      "path": "bootstrap_summary.csv",
+      "present": true,
+      "bytes": 2381,
+      "sha256": "88d8b2adce3240343ca1b50802c5225c317d9992bda4dd37125cf54fdc648c1f"
+    },
+    {
+      "path": "bootstrap_draws.csv",
+      "present": true,
+      "bytes": 25760,
+      "sha256": "706c7b9e6599def9dda3380ab979d3e68621eb78162129f42dca07e273f2c9db"
+    }
+  ],
+  "arguments": {
+    "resamples": 100,
+    "workers": 7,
+    "pool": "sealed",
+    "unseal": true
+  },
+  "notes": {
+    "unit": "class-term of the sealed pool, drawn with replacement",
+    "replay": "online (replay_online), frozen expected-cost weights",
+    "held_fixed": "predictor weights and the configured Guard selection",
+    "identity_rows_checked": 60
+  }
+}

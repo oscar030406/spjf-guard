@@ -1,7 +1,7 @@
 # CI pool: held-out refit of the effective capacity
 
 **Question.** The simulator validation of `evidence/firefox_ci/` fits the effective
-capacity to the recorded waits of the whole window, so agreement of the mean is the
+capacity to the recorded waits of the whole window. Therefore, agreement of the mean is the
 objective rather than evidence. Does the validation survive when the fit is frozen on
 one chronological part of the window and tested on another?
 
@@ -12,12 +12,12 @@ sharpness and circularity discussion of Supplementary Section S2.2; the CI capac
 paragraph of Supplementary Section S6.7. Supplementary Section S5.4 names this folder in
 its text.
 
-**Inputs.** The two parquet files already in `data/mozilla_firefox_ci/`; nothing is
+**Inputs.** The two parquet files already in `data/mozilla_firefox_ci/`. Nothing is
 re-downloaded.
 
 **Status.** Current.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
@@ -25,18 +25,18 @@ Absolute paths that were baked into the scripts appear as `<repo-root>` (your ch
 
 Held-out capacity fit for the Firefox CI simulator validation.
 
-`../firefox_ci/` replayed our k-server non-preemptive simulator on the **recorded**
-arrivals and services of two Mozilla Firefox CI hardware worker pools and compared it
-with the **recorded** waits (`out_SUMMARY.txt` §B). The row a reader is told to read —
-`effective k = 156 | priority-then-FIFO | service + setup` on the osx pool, `k = 96` on
-the talos pool — has its effective capacity fitted to the recorded waits of the *whole*
-window, by a criterion that is the agreement of the mean and the p90. Agreement of the
-mean is then the objective, not evidence. This directory refits on one chronological part
-of the window, freezes, and tests on another.
+In `../firefox_ci/`, we replayed our k-server non-preemptive simulator on the **recorded**
+arrivals and services of two Mozilla Firefox CI hardware worker pools. We compared its
+output with the **recorded** waits (`out_SUMMARY.txt` §B). The reader is told to read the
+row `effective k = 156 | priority-then-FIFO | service + setup` on the osx pool, and
+`k = 96` on the talos pool. That row has its effective capacity fitted to the recorded
+waits of the *whole* window, by a criterion that is the agreement of the mean and the p90.
+Agreement of the mean is then the objective, not evidence. Here we refit the capacity on
+one chronological part of the window, freeze it, and test it on another.
 
 **Verdict in one line.** The validation survives out of sample: mean wait within 14%,
-per-hour mean-wait Pearson ≥ 0.94, per-job Spearman ≥ 0.94, while the no-fit baseline
-(k = nominal machine count) is off by a factor of 1.3–2.6. `k_eff` is stable — 155/155/157
+per-hour mean-wait Pearson ≥ 0.94, per-job Spearman ≥ 0.94. In contrast, the no-fit
+baseline (k = nominal machine count) is off by a factor of 1.3–2.6. `k_eff` is stable — 155/155/157
 of 173 on the osx pool, 96/92 of 105 on the talos pool. The p90 does not survive
 unchanged: out of sample it sits at 0.81–1.21 of the recorded p90. Read `out_SUMMARY.txt`
 §F.
@@ -60,15 +60,15 @@ the services and the hourly bucketing are read from the data or fixed in the cod
 
 ## Warm start
 
-Every variant simulates the **whole window once** and the metrics are read off the test
-part's mask, so the queue state crosses the split boundary: nothing is reset and no
-burn-in is discarded. This is exact, not an approximation — under a non-idling
-work-conserving discipline a run's start time depends only on runs that became pending
-before it, so masking a full-window simulation gives the same waits on the test part as
-simulating up to the end of that part. The one cold start that does intrude is in the
-**reverse** splits, whose test part begins at the window's own start where the simulator
-begins empty and the real pool did not; §D of the report repeats every held-out row with
-the first 12 h of the test part dropped, and the shift is small.
+Every variant simulates the **whole window once**, and the metrics are read off the test
+part's mask. Therefore, the queue state crosses the split boundary: nothing is reset and
+no burn-in is discarded. This is exact, not an approximation. Under a non-idling
+work-conserving discipline, a run's start time depends only on runs that became pending
+before it. Therefore, masking a full-window simulation gives the same waits on the test
+part as simulating up to the end of that part. The one cold start that does intrude is in
+the **reverse** splits. Their test part begins at the window's own start, where the
+simulator begins empty and the real pool did not. §D of the report repeats every held-out
+row with the first 12 h of the test part dropped, and the shift is small.
 
 ## What is inside
 
@@ -87,8 +87,8 @@ the first 12 h of the test part dropped, and the shift is small.
 The simulator `simulate_kt`, the loader `load`, the setup estimator `setup_estimate` and
 the priority map `PRIO_RANK` are **imported** from `../firefox_ci/fci_simval.py`, so they
 cannot drift from what was validated there. Nothing in `../firefox_ci/` is written: the
-numba cache is redirected to the cache directory (`NUMBA_CACHE_DIR`) and bytecode writing is
-off, so importing leaves no `__pycache__` behind. The sha256 of every imported file and
+numba cache is redirected to the cache directory (`NUMBA_CACHE_DIR`), and bytecode writing
+is off. Therefore, importing leaves no `__pycache__` behind. The sha256 of every imported file and
 of both parquet files is in the manifest at the top of `out_SUMMARY.txt` and in every
 line of `out_holdout.txt`:
 
@@ -103,7 +103,7 @@ data/.../runs_..._linux-talos-2404.parquet   ff35f4e35f764a2bff11c6c82ff638fe22b
 
 ## How to rerun
 
-Nothing is re-downloaded; the only inputs are the two parquet files already in
+Nothing is re-downloaded. The only inputs are the two parquet files already in
 `data/mozilla_firefox_ci/`. Prefix with
 `env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME PYTHONDONTWRITEBYTECODE=1
 NUMBA_NUM_THREADS=4 OMP_NUM_THREADS=4 uv run --with numpy --with pandas --with pyarrow

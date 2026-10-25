@@ -1,0 +1,226 @@
+{
+  "produced_by": "prechecks/revision_r1/noise_dose/noise_dose.py",
+  "written_at": "2026-10-18T20:39:13+00:00",
+  "config": {
+    "path": "configs/main_frozen_1289aa2.yaml",
+    "present": true,
+    "bytes": 18770,
+    "sha256": "499acb1cd4e27a4e9f95da2296374b50b9fb3af39fbc0864aaa8e4beeb70debe"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/overlay_traces/primary_rep0.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "78d063485a4281f6fd07560a717ee3d9440a93ac11912e8f74f934d8009061c8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep1.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "71a75d2b6df5c46912e00898c55f6e20cf56350f46c61db3fc40d309e622c81d"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep2.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8f021068e70ef21ec6b1a8b1ca1ae327ac6fb7811f61a4cffa6d1697c74d07eb"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep3.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "f59edee819e5e3a87c5d012171b197f2e7239f9e74ea44a4514507cc5040eea8"
+    },
+    {
+      "path": "data/derived/overlay_traces/primary_rep4.npz",
+      "present": true,
+      "bytes": 1498959560,
+      "sha256": "8fd652d5874ef30bb7675e56f6360768e368c47cd67b674567c83e7a10a4a8be"
+    },
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    },
+    {
+      "path": "outputs/selection_v4/selected_parameters.csv",
+      "present": true,
+      "bytes": 2353,
+      "sha256": "060a6b59b15c2fe1a43c175478d79973547274595d23b9646732ea3af5bea83a"
+    },
+    {
+      "path": "prechecks/revision_r1/noise_dose/noise_dose.py",
+      "present": true,
+      "bytes": 24352,
+      "sha256": "c3357607e228047f6c155b5beef861f50f74389f556a8a341e35aacd8506bbb8"
+    },
+    {
+      "path": "scripts/run_main.py",
+      "present": true,
+      "bytes": 38177,
+      "sha256": "2402a35bb0db5cc3959891c206e2a7767626e01e82532f144a2f8c96f1867f26"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "noise_dose_by_seed.csv",
+      "present": true,
+      "bytes": 111199,
+      "sha256": "ac71d893971f22429d3ab19901e58d389398c7536d74bc3dbca345f7ba3ff98e"
+    },
+    {
+      "path": "noise_dose_table.csv",
+      "present": true,
+      "bytes": 39675,
+      "sha256": "532337fff922e412386fbcbae60438a4b0ced9ead76dad545d9143b1d68aa96a"
+    },
+    {
+      "path": "cells/rep0_level0.csv",
+      "present": true,
+      "bytes": 43045,
+      "sha256": "3c08f698222477f76b4cce330c592685c985f5efb2347a1e82c0f76d3bded119"
+    },
+    {
+      "path": "cells/rep0_level1.csv",
+      "present": true,
+      "bytes": 43429,
+      "sha256": "642f5511d213a827634681406132c6c7e10f77cb1905ff0d1ea275cfb3b5dfcb"
+    },
+    {
+      "path": "cells/rep0_level2.csv",
+      "present": true,
+      "bytes": 43518,
+      "sha256": "8059a93b93a789e1fa6daf0b3b6cccec24372b1aae078e78211b81e50bd0dc77"
+    },
+    {
+      "path": "cells/rep1_level0.csv",
+      "present": true,
+      "bytes": 43148,
+      "sha256": "36cb4776b0f496c8fccaf06c0e09a9e8e3b5401a27b3287ac3c529f090edea6f"
+    },
+    {
+      "path": "cells/rep1_level1.csv",
+      "present": true,
+      "bytes": 43665,
+      "sha256": "e389726766ceaddb4141b1041747d7fce6d521ac28d2c6943b23da41674b3d55"
+    },
+    {
+      "path": "cells/rep1_level2.csv",
+      "present": true,
+      "bytes": 43709,
+      "sha256": "fb691aa414c61a0e0e4bb1c5d4b155992837cb185de4657ce28cf0568ddd0833"
+    },
+    {
+      "path": "cells/rep2_level0.csv",
+      "present": true,
+      "bytes": 42948,
+      "sha256": "648a443d2f39a559a9f3263d7e9f32a21494f1a56cd39b4abd5b9a7db9bfe9f6"
+    },
+    {
+      "path": "cells/rep2_level1.csv",
+      "present": true,
+      "bytes": 43285,
+      "sha256": "3e08a3165369e18b6176d210abab67ec9b309acd51660c7bd84bb255aeb8eb75"
+    },
+    {
+      "path": "cells/rep2_level2.csv",
+      "present": true,
+      "bytes": 43611,
+      "sha256": "a1f24f50657873e7cd7060558ed61f5ff87cb5d10108fc2d393e43af02520903"
+    },
+    {
+      "path": "cells/rep3_level0.csv",
+      "present": true,
+      "bytes": 43132,
+      "sha256": "ed5ed3a0747288e69124c1e44e40a5471e998f198ba657787f4beccaecefcdef"
+    },
+    {
+      "path": "cells/rep3_level1.csv",
+      "present": true,
+      "bytes": 43110,
+      "sha256": "c5f26feb4d701b977fd0d2a8682cbb4c6c2008e927d122cff6d66dbbe08d467a"
+    },
+    {
+      "path": "cells/rep3_level2.csv",
+      "present": true,
+      "bytes": 43666,
+      "sha256": "3588d636be03fc930adda325feecd60d4a1e14de85ea418c30235ca7950aad38"
+    },
+    {
+      "path": "cells/rep4_level0.csv",
+      "present": true,
+      "bytes": 43221,
+      "sha256": "55979b6741aaa507649c8788801f34ab3705208cc9b8da5aee1ec1466eb0dd50"
+    },
+    {
+      "path": "cells/rep4_level1.csv",
+      "present": true,
+      "bytes": 43124,
+      "sha256": "e5e3f7fecb2bdecb8587e03cdcec7d6634cece4ef5c87ed18a3f8ca4aabbcfa5"
+    },
+    {
+      "path": "cells/rep4_level2.csv",
+      "present": true,
+      "bytes": 43593,
+      "sha256": "13a7870a6f645e890323dd58166142384390f2242d17f9f56597c73ce6fd6d63"
+    },
+    {
+      "path": "quality/rep0.csv",
+      "present": true,
+      "bytes": 4379,
+      "sha256": "57aaab2b3765d865a5d3db957e2ff34cb39ecc17f89d409f844f32fd26a5c658"
+    },
+    {
+      "path": "quality/rep1.csv",
+      "present": true,
+      "bytes": 4353,
+      "sha256": "537d0afeb5a94dd74dcf84ebb8dea38b1514a819bc0664c5b9be351ce048a8ab"
+    },
+    {
+      "path": "quality/rep2.csv",
+      "present": true,
+      "bytes": 4364,
+      "sha256": "384ceeb755c7c68682b4e43fb2220aac7f4b5938d47ce9608abc8fbb97d2a966"
+    },
+    {
+      "path": "quality/rep3.csv",
+      "present": true,
+      "bytes": 4359,
+      "sha256": "a4ac9c417061db89cff3153e2b09f2b6df821b13b90ff5e3b0544d87b2f2f23e"
+    },
+    {
+      "path": "quality/rep4.csv",
+      "present": true,
+      "bytes": 4354,
+      "sha256": "1fc156d2bfd71174c6fb49fe4ddc59fe83ba2826f6935b06193c136d9f4eef30"
+    }
+  ],
+  "arguments": {
+    "sigmas": [
+      0.0,
+      0.25,
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      3.0
+    ],
+    "noise_seeds": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "random_seeds": [
+      3,
+      1003,
+      2003
+    ],
+    "quality_seed": 20261021,
+    "quality_sample": 2000000
+  },
+  "notes": {
+    "aggregation": "mean over overlays for p99/gap/mean/quality, max over overlays for excess/harm, sum for violations; then mean over seeds"
+  }
+}

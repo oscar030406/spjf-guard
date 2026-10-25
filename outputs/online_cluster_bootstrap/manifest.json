@@ -1,0 +1,54 @@
+{
+  "produced_by": "scripts/run_online_cluster_bootstrap.py",
+  "written_at": "2026-10-06T15:09:28+00:00",
+  "config": {
+    "path": "configs/main.yaml",
+    "present": true,
+    "bytes": 19065,
+    "sha256": "ecd7b34bc4a83fe62b2f777fa136c9ea34ab00b0f9fa2042dbc1ae45c5f5db8d"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    },
+    {
+      "path": "outputs/dev_online_visibility/online_cells.csv",
+      "present": true,
+      "bytes": 170448,
+      "sha256": "543a97d1c7e35d78301e5bfd06f5b1581498b01d3021cb2e893058f537d1806a"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "bootstrap_cells.csv",
+      "present": true,
+      "bytes": 559031,
+      "sha256": "6b07b3ab493639d919991a37e7f111478a90b6d5d62bdae38bc88bfb9dd6e5d2"
+    },
+    {
+      "path": "bootstrap_summary.csv",
+      "present": true,
+      "bytes": 2390,
+      "sha256": "e1c5455f99e17d25eb96c9b5b6fc093128456aaade9c890ecf8a9ba70c8b8190"
+    },
+    {
+      "path": "bootstrap_draws.csv",
+      "present": true,
+      "bytes": 46386,
+      "sha256": "da52e9c7321dfabd738d425af415948c13de062af8e5e5b0eb5f0ac8fd8c302e"
+    }
+  ],
+  "arguments": {
+    "resamples": 100,
+    "workers": 3
+  },
+  "notes": {
+    "unit": "class-term of the primary pool, drawn with replacement",
+    "replay": "online (replay_online), frozen expected-cost weights",
+    "held_fixed": "predictor weights and the configured Guard selection",
+    "identity_rows_checked": 60
+  }
+}

@@ -8,7 +8,7 @@ job cost, is a count loose on the main development trace?
 10, and in Supplementary Sections S4.4 and S4.9.
 
 **Inputs.** `data/derived/overlay_traces/primary_rep0.npz` and `k1_rep0.npz`, field
-`svc`; L = 60 s, the analysis cap of the main trace. No sealed data.
+`svc`. L = 60 s, the analysis cap of the main trace. No sealed data.
 
 **Status.** Done. Mean cost 0.3997 s, median 0.2136 s, L / mean = 150.1 on both files
 (`out_mean_cost_ratio.txt`). The other traces were not computed.

@@ -18,33 +18,38 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PROMISES = (300, 600, 1200)
 LOADS = ((0, "0.5"), (1, "0.8"), (2, "1.0"))
+# Series styles are keys of paper/figures/pgfstyle.tex, the style every figure shares.
 SHAPES = (
-    ("Guard-fixed", "fixed", "o,black"),
-    ("Guard-age", "capped", "triangle*,blue!70!black"),
-    ("Guard-queue", "hybrid", "square*,teal!75!black"),
+    ("Guard-fixed", "fixed", "spjf gfixed"),
+    ("Guard-age", "capped", "spjf gage"),
+    ("Guard-queue", "hybrid", "spjf gqueue"),
 )
-FIXED_MARK = "diamond*,orange!90!black"
-AGING_MARK = "x,very thick,magenta!70!black"
+FIXED_STYLE = "spjf fixed"
+AGING_STYLE = "spjf aging"
+# Panel box width and gap, and the row step, as fractions of \linewidth: three panels
+# fill the text block at \small text with nothing scaled.
+COL_STEP = 0.295
+ROW_STEP = 0.285
 
 HEAD = r"""% Coordinates copied from the CSV fields stated beside each series.
+% Style: figures/pgfstyle.tex; widths are fractions of \linewidth and nothing is scaled,
+% so the text is \small, the caption size.
 \begin{figure}[p]
+\input{figures/pgfstyle}%
 \centering
-\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}
-\pgfplotsset{tradeaxis/.style={width=5cm,height=3.65cm,
+\pgfplotsset{tradeaxis/.style={spjf axis,width=0.27\linewidth,height=0.19\linewidth,
  xmin=0,xmax=1150,ymin=0,ymax=1,xtick={0,300,600,900},
- ytick={0,0.25,0.5,0.75,1},grid=major,grid style={black!10},
- tick label style={font=\scriptsize},label style={font=\scriptsize},
- title style={font=\scriptsize},mark size=2pt}}
+ ytick={0,0.25,0.5,0.75,1},grid=major}}
 """
-TAIL = r"""\end{tikzpicture}}
+TAIL = r"""\end{tikzpicture}
 \caption{Gap--harm trade-offs for every selected budget shape and Fixed($G$), at each
 promise and load (upper rows); validation candidates and per-family selections
 (bottom row). A joint winner coincides with its selected family point. The dashed
 line is the \devnum{300} s validation limit for $G=\devnum{600}$ s; it is shown in
 every panel as a common reference, not as the constraint for every promise.
 The other promise-specific limits follow harm $\le G/2$.
-All budget-family points use original scores. The magenta point is the only selected
+All budget-family points use original scores. The purple cross is the only selected
 aging comparator, Aging(600), with conservative scores and no proved guarantee;
 it is repeated across promise panels for orientation, not retuned at other promises.
 Cross-protocol points do not establish Pareto dominance. Maxima have no population
@@ -65,9 +70,9 @@ def _point(x: str | float, y: str | float) -> str:
     return f"({float(x):.6f},{float(y):.6f})"
 
 
-def _series(mark: str, point: str, source: str, legend: str | None) -> list[str]:
+def _series(style: str, point: str, source: str, legend: str | None) -> list[str]:
     lines = [
-        rf"\addplot[only marks,mark={mark}] coordinates {{{point}}};",
+        rf"\addplot[only marks,{style}] coordinates {{{point}}};",
         f"% Source: {source}",
     ]
     if legend is not None:
@@ -79,7 +84,7 @@ def _axis_open(row: int, col: int, promise: int, title: str, last: bool) -> str:
     options = [
         "tradeaxis",
         f"name=cell{row}{col}",
-        f"at={{({col * 5.35}cm,{-row * 4.1}cm)}}",
+        f"at={{({col * COL_STEP:.3f}\\linewidth,{-row * ROW_STEP:.3f}\\linewidth)}}",
         f"title={{$G={promise}$ s, {title}}}",
     ]
     options.append("ylabel={gap closed}" if col == 0 and row < 3 else "")
@@ -87,10 +92,8 @@ def _axis_open(row: int, col: int, promise: int, title: str, last: bool) -> str:
         options[-1] = "ylabel={worst-cell gap}" if col == 0 else "yticklabels={}"
         options.append("xlabel={maximum harm (s)}")
         if last:
-            options.append(
-                "legend style={at={(0.5,-0.40)},anchor=north,legend columns=3,"
-                "font=\\scriptsize,draw=none}"
-            )
+            # Centred under the middle panel of the bottom row.
+            options.append("legend style={at={(-0.593,-0.40)},anchor=north,legend columns=3}")
     elif col > 0:
         options[-1] = "yticklabels={}"
     return rf"\begin{{axis}}[{','.join(options)}]"
@@ -98,7 +101,7 @@ def _axis_open(row: int, col: int, promise: int, title: str, last: bool) -> str:
 
 def _reference(selection_name: str) -> list[str]:
     return [
-        r"\addplot[black!65,densely dashed,no marks,forget plot] coordinates "
+        r"\addplot[spjf ref,black,forget plot] coordinates "
         r"{(300,0) (300,1)};",
         f"% Source: {selection_name}/selected_parameters.csv, G=600, harm_limit_s=300.",
     ]
@@ -110,11 +113,11 @@ def _upper(args, main, visibility, selection_name) -> list[str]:
         for col, promise in enumerate(PROMISES):
             lines.append(_axis_open(row, col, promise, f"$\\rho={rho}$", False))
             lines += _reference(selection_name)
-            for label, _, mark in SHAPES:
+            for label, _, style in SHAPES:
                 name = f"{label}({promise})"
                 hit = main[(str(level), name)]
                 lines += _series(
-                    mark,
+                    style,
                     _point(hit["harm_s"], hit["gap_closed"]),
                     f"{args.dev_tables_name}/main_table.csv, level={level}, policy={name}, "
                     "harm_s/gap_closed.",
@@ -122,7 +125,7 @@ def _upper(args, main, visibility, selection_name) -> list[str]:
                 )
             hit = main[(str(level), f"Fixed({promise})")]
             lines += _series(
-                FIXED_MARK,
+                FIXED_STYLE,
                 _point(hit["harm_s"], hit["gap_closed"]),
                 f"{args.dev_tables_name}/main_table.csv, level={level}, "
                 f"policy=Fixed({promise}), harm_s/gap_closed.",
@@ -130,7 +133,7 @@ def _upper(args, main, visibility, selection_name) -> list[str]:
             )
             hit = visibility[str(level)]
             lines += _series(
-                AGING_MARK,
+                AGING_STYLE,
                 _point(hit["harm_s"], hit["gap_closed"]),
                 f"outputs/dev_visibility/visibility_comparison.csv, level={level}, "
                 "policy=Aging(600), harm_s/gap_closed.",
@@ -156,21 +159,21 @@ def _bottom(args, selection_name) -> list[str]:
             if float(r["promise_s"]) == promise
         )
         lines.append(
-            r"\addplot[only marks,mark=*,mark size=0.7pt,gray!55,forget plot] coordinates "
+            r"\addplot[only marks,mark=*,mark size=0.7pt,black!35,mark options={line width=0.3pt},forget plot] coordinates "
             f"{{{cloud}}};"
         )
         lines.append(
             f"% Source: {selection_name}/selection_frontier.csv, promise_s={promise}, "
             "worst_harm_s/worst_gap_closed (all candidate rows)."
         )
-        for label, family, mark in SHAPES:
+        for label, family, style in SHAPES:
             hit = next(
                 r
                 for r in selected
                 if r["family"] == family and float(r["promise_s"]) == promise
             )
             lines += _series(
-                mark,
+                style,
                 _point(hit["worst_harm_s"], hit["worst_gap_closed"]),
                 f"{selection_name}/selected_parameters.csv, family={family}, "
                 f"promise_s={promise}.",
@@ -184,13 +187,13 @@ def _bottom(args, selection_name) -> list[str]:
             and math.isinf(float(r["b0_base_s"]))
         )
         lines += _series(
-            FIXED_MARK,
+            FIXED_STYLE,
             _point(hit["worst_harm_s"], hit["worst_gap_closed"]),
             f"{selection_name}/selection_worst.csv, fixed/inf, promise_s={promise}.",
             "Fixed" if last else None,
         )
         lines += _series(
-            AGING_MARK,
+            AGING_STYLE,
             _point(aging["worst_harm_s"], aging["worst_gap_closed"]),
             "outputs/selection_aging/selected_aging.csv, worst_harm_s/worst_gap_closed.",
             "Aging(600), conservative" if last else None,

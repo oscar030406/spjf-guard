@@ -4,8 +4,10 @@
 non-preemptive scheduler sort by — a forward predictor of the mean, a quantile, the
 probability of a heavy job, or a two-part model?
 
-**Paper items.** The asymmetry figures of Section 8.3 (`out_sim_primary_rep0_mech.txt`,
-`out_sim_primary_rep1_mech.txt`) and the waits behind them in Supplementary Section S3.16;
+**Paper items.** The asymmetry figures of Section 8.3 on SPJF-E
+(`out_sim_primary_rep0_mech_tw.txt` to `out_sim_primary_rep4_mech_tw.txt`, from
+`rs_sim.py --group mech_tw`) and on the log-scale score (`out_sim_primary_rep0_mech.txt`,
+`out_sim_primary_rep1_mech.txt`), and the waits behind them in Supplementary Section S3.16;
 Table S14 and its two-class figures in Supplementary Section S3.10
 (`out_table_primary_5reps.txt`, `out_sim_primary_rep0_twoclass.txt`), which Section 8.3
 cites; the fit targets of Supplementary Section S5.1 (`fit_targets.csv`). Supplementary
@@ -16,7 +18,7 @@ Section S5.4 names this folder in its text.
 
 **Status.** Current.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
@@ -24,4 +26,4 @@ Absolute paths that were baked into the scripts appear as `<repo-root>` (your ch
 
 Ranking-score study: which score a prediction-driven non-preemptive scheduler should sort by when job costs are extremely heavy-tailed — forward predictors of E[C_cap], quantiles, P(heavy) and a two-part model on the M4 feature set, each run through the verified simulator of `../codebench_service_v2` (imported read-only).
 
-Files: `rs_common.py` (shared setup and study parameters) -> `rs_fit.py` (rolling-origin predictors) -> `rs_calib.py` (calibration per target semester) -> `rs_sim.py` (scheduling runs) -> `rs_gain.py` (gains + week-block bootstrap CIs) -> `rs_summary.py` (result tables) -> `rs_mech.py` (misranking decomposition); `rs_smoke.py` and `rs_check_threads.py` verify that our training loop reproduces the pipeline's. `out_*.txt` are run logs; `calib_*.csv`, `gain*.csv`, `table_*.csv`, `mech_*.csv` the tables. Predictions and per-trace arrays stay in the local cache directory (`rank_score/`), not here. New files of this study go in this directory; nothing outside it is written.
+Files: `rs_common.py` (shared setup and study parameters) -> `rs_fit.py` (rolling-origin predictors) -> `rs_calib.py` (calibration per target semester) -> `rs_sim.py` (scheduling runs) -> `rs_gain.py` (gains + week-block bootstrap CIs) -> `rs_summary.py` (result tables) -> `rs_mech.py` (misranking decomposition). `rs_smoke.py` and `rs_check_threads.py` verify that our training loop reproduces the pipeline's. `out_*.txt` are run logs, and `calib_*.csv`, `gain*.csv`, `table_*.csv`, `mech_*.csv` are the tables. Predictions and per-trace arrays stay in the local cache directory (`rank_score/`), not here. New files of this study go in this directory. Nothing outside it is written.

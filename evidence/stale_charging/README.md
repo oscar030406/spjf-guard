@@ -2,23 +2,23 @@
 
 **Question.** Theorem 7 (Theorem 3 when this study was run) assumes that a completion is charged to the counter before the
 next dispatch. In a distributed service a server may pull its next job before its report
-arrives. If every charge arrives within delta of its completion, what does the guard
-still promise, is the extra term tight, and which protocol restores Theorem 7?
+arrives. Suppose that every charge arrives within delta of its completion. What does the
+guard still promise? Is the extra term tight? Which protocol restores Theorem 7?
 
 **Paper items.** Proposition 12 and the paragraph after it (Section 6.8); the remark
 closing Section 6.6 that the combined rule keeps its bound when reports arrive late or
 never; the proofs, the lower-bound instances and the check summary in Supplementary
 Section S4.12.
 
-**Inputs.** None from `data/`. Synthetic integer instances only; no sealed data.
+**Inputs.** None from `data/`. Synthetic integer instances only, and no sealed data.
 
 **Status.** Done. The bound In_i < B_max + kL + k(L + delta) holds with 0 violations.
 The first enumeration below covers static keys and constant budgets. Of its
-2,273,660,361 schedules, 720,894,276 test the three statements and the rest the
+2,273,660,361 schedules, 720,894,276 test the three statements, and the rest test the
 clock-union model. It adds 200,000 random instances. A second check with an unrestricted
 adversary is in `maximal_adversary/`. For delta > 0 the bound is attained in the limit
 at k = 1 and at k = 2. Report-before-pull keeps Theorem 7's constants for every delta,
-lost reports included; the lost-report case was tested only in `maximal_adversary/`.
+lost reports included. The lost-report case was tested only in `maximal_adversary/`.
 
 | File | What it is |
 | --- | --- |

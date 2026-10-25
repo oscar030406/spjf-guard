@@ -1,23 +1,24 @@
 # Overtake-budget guard: the kernel, its per-job theorems, and the variants
 
-**Question.** Which budget rule should the FCFS-relative guard use, and does each
-candidate actually hold a per-job bound? `guardkern.py` is the simulator kernel used by
-the main experiment, the cross-domain studies and the identity-residual measurement; its
-docstring states and proves the two per-job theorems.
+**Question.** Which budget rule should the FCFS-relative guard use? Does each candidate
+actually hold a per-job bound? `guardkern.py` is the simulator kernel used by the main
+experiment, the cross-domain studies and the identity-residual measurement. Its docstring
+states and proves the two per-job theorems.
 
 **Paper items.** Indirect: no printed number is read from this folder. `guardkern.py` is
 the simulator kernel of `evidence/main_v3/`, `evidence/cross_domain/`,
-`evidence/firefox_ci/` and `evidence/consolidation/`, whose numbers the paper quotes; the
-guard rows of Tables 5 to 7 come from the package in `src/`. `pareto_tables.txt` is the
-cross-check that `evidence/consolidation/` uses to confirm it replays the same trace.
+`evidence/firefox_ci/` and `evidence/consolidation/`, and the paper quotes numbers from
+these studies. The guard rows of Tables 7 to 9 come from the package in `src/`.
+`pareto_tables.txt` is the cross-check that `evidence/consolidation/` uses to confirm that
+it replays the same trace.
 
 **Inputs.** The primary overlay rebuilt through `evidence/codebench_service_v2/`
-(`build_inputs.py`); the arrays it writes go to the cache directory, not here.
+(`build_inputs.py`). The arrays that it writes go to the cache directory, not here.
 
 **Status.** Current. It supersedes an earlier single-script bound check, which is not
 included here.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
@@ -48,4 +49,4 @@ Run order (each command carries its own parameters; prefix every run with
    `pareto_main.csv`, `pareto_adv.csv`, `pareto_tables.txt`
 
 Everything written by these scripts stays in this directory (plus the npz inputs in the
-cache directory); no other project file is touched.
+cache directory). No other project file is touched.

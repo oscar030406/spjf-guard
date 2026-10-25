@@ -1,0 +1,114 @@
+{
+  "produced_by": "scripts/run_online_visibility.py",
+  "written_at": "2026-10-04T03:36:32+00:00",
+  "config": {
+    "path": "configs/sensitivity_term2019_20260926.yaml",
+    "present": true,
+    "bytes": 19361,
+    "sha256": "883b61d423744d1599e60017a236f2fd3c8dcbe33aa3a891ca62fa6c589f194f"
+  },
+  "inputs": [
+    {
+      "path": "D:/UserData/Desktop/\u56fe\u795e\u7ecf\u7f51\u7edc/data/derived/codebench_cache_r4/ev.parquet",
+      "present": true,
+      "bytes": 67391982,
+      "sha256": "8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451"
+    },
+    {
+      "path": "D:/UserData/Desktop/\u56fe\u795e\u7ecf\u7f51\u7edc/data/derived/sensitivity_term2019/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 20227999,
+      "sha256": "31f8005ef1b81bd2709134b4aa257dd3a2bff37650fa45ecce4dead2bf6e92fa"
+    },
+    {
+      "path": "D:/UserData/Desktop/\u56fe\u795e\u7ecf\u7f51\u7edc/data/derived/sensitivity_term2019/overlay_traces/primary_rep0.npz",
+      "present": true,
+      "bytes": 875416815,
+      "sha256": "1eb9d633ea21b7da4b12eb62497389c423845d7fd49a9ad78172fc0c5d034ac9"
+    },
+    {
+      "path": "D:/UserData/Desktop/\u56fe\u795e\u7ecf\u7f51\u7edc/data/derived/sensitivity_term2019/overlay_traces/primary_rep1.npz",
+      "present": true,
+      "bytes": 875416815,
+      "sha256": "f671581ae07cd3c122419aeee65b3debc50bf145db0684255ac7765fb08b1b0c"
+    },
+    {
+      "path": "D:/UserData/Desktop/\u56fe\u795e\u7ecf\u7f51\u7edc/data/derived/sensitivity_term2019/overlay_traces/primary_rep2.npz",
+      "present": true,
+      "bytes": 875416815,
+      "sha256": "da46a287d9ece34cda9c8bcbdc1ea853871894abffaf8771db3217d82481d9bf"
+    },
+    {
+      "path": "D:/UserData/Desktop/\u56fe\u795e\u7ecf\u7f51\u7edc/data/derived/sensitivity_term2019/overlay_traces/primary_rep3.npz",
+      "present": true,
+      "bytes": 875416815,
+      "sha256": "c88f94c7037c1fcc99596a4bc97489445881a19878d9ee2b10c10b48b1bdfcc2"
+    },
+    {
+      "path": "D:/UserData/Desktop/\u56fe\u795e\u7ecf\u7f51\u7edc/data/derived/sensitivity_term2019/overlay_traces/primary_rep4.npz",
+      "present": true,
+      "bytes": 875416815,
+      "sha256": "f824d43c3d71af6dddf1a24530ca92a170e9d9ecc008fd76c91caa8825d0bcf4"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "online_cells.csv",
+      "present": true,
+      "bytes": 4600,
+      "sha256": "9453497abb0cd81fff5ee05688bf9633f4f7c10947a932ed66b615818413697a"
+    },
+    {
+      "path": "online_comparison.csv",
+      "present": true,
+      "bytes": 1436,
+      "sha256": "a53c00d44adb420ed6e4eebc302905e600d85b2b51fb5de74837bec89be437fe"
+    },
+    {
+      "path": "online_passes.csv",
+      "present": true,
+      "bytes": 699,
+      "sha256": "3f63bfb701644cb1a00693ee06c5212a5354622db49d756df28e3ae30fdce6b9"
+    },
+    {
+      "path": "online_audit.csv",
+      "present": true,
+      "bytes": 334,
+      "sha256": "967b63f4072721b9e33134f49062ad788d0070945057ea6abc87bc2d49623662"
+    },
+    {
+      "path": "online_delta_manifest.csv",
+      "present": true,
+      "bytes": 1397,
+      "sha256": "c1fcd526f104639f3ff4fb16fcd0939bbbcdc31dc9454650af54002ecb397146"
+    },
+    {
+      "path": "online_costs.csv",
+      "present": true,
+      "bytes": 430,
+      "sha256": "48c625ed8a4ad6f59f88ccda16c5629a8a7afb3564555d078a40d931873acaeb"
+    }
+  ],
+  "arguments": {
+    "pool": "primary",
+    "reps": "0,1,2,3,4",
+    "levels": "2",
+    "policies": "SPJF-E,Guard(600)",
+    "candidates": null,
+    "variants": "online",
+    "audit": 2000,
+    "workers": 1,
+    "unseal": false,
+    "overlay_stem": "primary",
+    "base_score": null,
+    "aging_grid": false,
+    "servers": null,
+    "second_sealed_evaluation": false
+  },
+  "notes": {
+    "implementation_sha256": "ac1a1349ddbe511858c3f2e838adcdde925e569f7b915b17468cd02a6b3e1bc5",
+    "online": "every score computed at arrival from own-copy outcomes completed by then; rolling windows ordered by replay completion; terminal pass has zero mismatched jobs",
+    "exact": "monotone per-job withholding (run_consistent_visibility protocol)",
+    "other_class_terms": "exogenous on their original relative clock"
+  }
+}

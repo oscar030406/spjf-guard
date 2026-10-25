@@ -1,0 +1,4 @@
+k=1: sum C_i W_i equal to FCFS in 4946 runs, different in 0
+k=2: worst |sum C_i dW_i| / ((k-1) L T) = 0.2051 (claim < 1)
+k=3: worst |sum C_i dW_i| / ((k-1) L T) = 0.0556 (claim < 1)
+k=4: worst |sum C_i dW_i| / ((k-1) L T) = 0.0216 (claim < 1)

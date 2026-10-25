@@ -7,30 +7,30 @@ original simulator?
 **Answer.** Mostly, with three corrections and three refutations. Rule R was rewritten in
 `rguard_indep.py` from the prose of `report.md`, importing nothing from
 `evidence/reservation_guard/` or `evidence/guard_theory/`. At `k = 1` the bounds held
-across 10.2 million per-job checks with no violation, the maximality claim survives and is
-strengthened, and reservation and refund are shown to be idle there — `overR` equals
-`overC` at `k = 1`, so the working part of the test is the single look-ahead term. At
+across 10.2 million per-job checks with no violation, and the maximality claim survives and
+is strengthened. Reservation and refund are shown to be idle there: `overR` equals
+`overC` at `k = 1`. Therefore, the working part of the test is the single look-ahead term. At
 `k >= 2` maximality is refuted by explicit counterexamples, and one claim recorded as open
 is shown to be false. The verdict section recommends the supplement rather than the main
-text, and names the conservative-backfilling literature the mechanism belongs to.
+text, and names the conservative-backfilling literature that the mechanism belongs to.
 
 **Paper items.** Supplementary Section S7.6 (`paper/sections/S_theory_additions.tex`),
-Propositions S12 to S14: the three readings and the corrected definition pointer
+Propositions S13 to S15: the three readings and the corrected definition pointer
 (`verification.md` Section 4), the decision-table rows C1-a to C1-f, C2-a to C2-c, C3-d,
 C4a-a to C4a-c and C6-c, the `k = 1` reading counts in `out_overR_eq_overC_k1.txt`, and
 the runs in `out_c1_indep.txt`, `out_c1b_indep.txt`, `out_c2a_indep.txt`,
 `out_c2b_indep.txt`, `out_c4b_indep.txt` and `out_t32_indep.txt`; and the sentence of
 Section 9 that charging a cap known at arrival lowers the constant by exactly L.
 
-**Inputs.** None. Exact integer simulation over enumerated instances; no dataset is read
+**Inputs.** None. Exact integer simulation over enumerated instances. No dataset is read
 and no sealed semester is opened.
 
 **Status.** Current. `verification.md` governs wherever it disagrees with
-`evidence/reservation_guard/report.md`. Its Sections 5 and 6 list the sentences the paper
-may and may not state. The notes are in Chinese; the decision table and the log files are
-readable without it.
+`evidence/reservation_guard/report.md`. Its Sections 5 and 6 list the sentences that the paper
+may and may not state. The notes are in Chinese. The decision table and the log files are
+readable without the notes.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 

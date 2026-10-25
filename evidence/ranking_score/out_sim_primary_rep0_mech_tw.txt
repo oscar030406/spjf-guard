@@ -1,0 +1,43 @@
+primary: 40 class-semesters, 44 copies, 30 weeks; refit log score vs cached forward M4: max |diff| = 4.977e-01 on 83,710 of 400,790 rows (refit noise, see CAND note)
+rep 0: 17,634,760 jobs, busiest-hour work 15,247.5 s, k per rho {0.5: 8, 0.8: 5, 1.0: 4}, heavy 181,720 (1.0305%), deadline-window jobs 4,219,556
+
+[primary_rep0_r0.5_mech_tw] k=8, busy-hour rho 0.529  (48 s)
+                        w_p99_dl  w_mean    w_p99  max_heavy  sim_sec
+policy                                                               
+FCFS                     22.1704  0.6024  11.8318   435.0229      6.4
+SJF-ref                   8.3100  0.1884   3.7444  1185.8986      8.8
+SPJF-tweedie             12.1893  0.2397   5.0884  1369.4833      8.8
+ORACLE-on-true-heavy      9.7617  0.2044   4.4222  1192.6234      8.8
+ORACLE-on-true-light      9.6544  0.2083   4.1252  1374.9694      8.1
+ORACLE-top0.1pct-under   11.7499  0.2278   4.9639  1167.4312      8.0
+ORACLE-top0.1pct-over    12.1351  0.2378   5.0626  1369.4851      8.0
+ORACLE-top1.0pct-under    9.7151  0.2039   4.4052  1185.3038      8.1
+ORACLE-top1.0pct-over    11.3621  0.2289   4.9137  1400.4107      7.9
+
+[primary_rep0_r0.8_mech_tw] k=5, busy-hour rho 0.847  (86 s)
+                        w_p99_dl  w_mean    w_p99  max_heavy  sim_sec
+policy                                                               
+FCFS                    109.7080  4.1060  79.8259  1022.8812      6.5
+SJF-ref                  34.1863  0.9655  26.1768  3072.2622      9.7
+SPJF-tweedie             43.8625  1.2304  30.4846  3312.7708      9.2
+ORACLE-on-true-heavy     36.2186  1.0329  27.3975  2996.1009      9.9
+ORACLE-on-true-light     37.2546  1.0633  27.6752  3303.8363      8.5
+ORACLE-top0.1pct-under   40.8697  1.1465  29.5888  3072.2158      8.1
+ORACLE-top0.1pct-over    43.4369  1.2131  30.3190  3346.7875      8.4
+ORACLE-top1.0pct-under   36.2858  1.0310  27.4148  3072.2335      8.4
+ORACLE-top1.0pct-over    41.8357  1.1635  29.7476  3312.7162      7.5
+
+[primary_rep0_r1_mech_tw] k=4, busy-hour rho 1.059  (121 s)
+                        w_p99_dl   w_mean     w_p99  max_heavy  sim_sec
+policy                                                                 
+FCFS                    263.1202  10.0987  210.5271  1542.7545      5.9
+SJF-ref                  42.8808   1.6498   34.6279  5299.5324      8.1
+SPJF-tweedie             62.2255   2.2402   41.6820  6286.2405      8.5
+ORACLE-on-true-heavy     46.0424   1.7845   36.4849  5258.1853      8.3
+ORACLE-on-true-light     48.3779   1.8638   36.8725  6286.2594      8.3
+ORACLE-top0.1pct-under   53.8744   2.0141   39.7433  5299.5238      8.7
+ORACLE-top0.1pct-over    60.7171   2.1902   41.2665  6276.3544      8.2
+ORACLE-top1.0pct-under   45.9629   1.7682   36.2290  5258.1893      8.2
+ORACLE-top1.0pct-over    57.1897   2.0738   40.3978  6258.9226      7.7
+
+total 121 s

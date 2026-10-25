@@ -4,18 +4,18 @@
 non-preemptive simulator reproduce the waits of a queue that actually exists, is shared
 by several teams, is non-preemptive, and records its own waits?
 
-**Paper items.** The CI rows of Table 4 (Section 7.1); the CI rows of Table 9 and the
-top-1% work shares of 3.4% and 5.2% in Section 8.6; the CI pool A and B rows of Table S1
+**Paper items.** The CI rows of Table 5 (Section 7.1); the CI rows of Table 13 and the
+top-1% work shares of 3.4% and 5.2% in Section 8.7; the CI pool A and B rows of Table S1
 (Supplementary Section S1.2) and of Table S3, with the CI provenance paragraph of
 Supplementary Section S2.4. Supplementary Section S5.4 names this folder in its text.
 
 **Inputs.** `data/mozilla_firefox_ci/`, collected from Mozilla's public unauthenticated
 REST APIs. Mozilla publishes no licence for those APIs, so the raw slice is not
-redistributed; `run_collect.sh` re-collects it.
+redistributed. `run_collect.sh` collects it again.
 
 **Status.** Current.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
@@ -24,21 +24,21 @@ Absolute paths that were baked into the scripts appear as `<repo-root>` (your ch
 # firefox_ci — a real shared non-preemptive queue whose waits were recorded
 
 Every queue in this project is simulated. A referee can therefore ask whether the
-congestion we optimise is real. This folder answers that with a trace from a queue that
-exists, that several teams share, that is non-preemptive, and that **records the wait
-itself**: the hardware worker pools of Mozilla's Firefox CI (Taskcluster), read through
-the public unauthenticated REST APIs. Two things are done with it: (1) our `k`-server
-simulator is replayed on the recorded arrivals and services and its output is compared
-with the recorded waits; (2) the predictor, SPJF and the overtake-budget guard are run
-on it under the protocol of `evidence/cross_domain/`.
+congestion that we optimise is real. This folder answers that question with a trace from a
+queue that exists, that several teams share, that is non-preemptive, and that **records the
+wait itself**. The trace comes from the hardware worker pools of Mozilla's Firefox CI
+(Taskcluster), which we read through the public unauthenticated REST APIs. We do two things
+with it. (1) We replay our `k`-server simulator on the recorded arrivals and services and
+compare its output with the recorded waits. (2) We run the predictor, SPJF and the
+overtake-budget guard on it under the protocol of `evidence/cross_domain/`.
 
 Pools, window and split are frozen in `fci_common.py`. Nothing outside this directory
 and `data/mozilla_firefox_ci/` is written, and no education data is read.
 
-Result in one line: the simulator reproduces the recorded wait distribution to within
+The result in short: the simulator reproduces the recorded wait distribution to within
 about 8% at every reported quantile on both pools (per-hour mean wait correlation
-0.95-0.96), the guard's per-job bound holds on every job, and the workload turns out to
-sit near the edge of the method's applicability rather than inside it — read
+0.95-0.96). The guard's per-job bound holds on every job. The workload turns out to sit
+near the edge of the method's applicability rather than inside it. Read
 `out_SUMMARY.txt` sections B, D, E and G.
 
 ## Why these pools
@@ -46,14 +46,15 @@ sit near the edge of the method's applicability rather than inside it — read
 Our model needs a (near-)constant number of executors. Taskcluster's *cloud* worker
 pools autoscale, so `k` is not constant there. The `releng-hardware/*` and
 `proj-autophone/*` pools are physical machines: their size moves only when a machine is
-reimaged or quarantined. Six candidate pools were screened (worker count, recorded
-`started - scheduled`, recorded service, tasks per day); the two that were kept are the
-two largest with substantial recorded wait. The screening numbers are in
+reimaged or quarantined. We screened six candidate pools (worker count, recorded
+`started - scheduled`, recorded service, tasks per day). We kept the two largest pools
+with substantial recorded wait. The screening numbers are in
 `out_collect.txt` and the reasoning in `out_SUMMARY.txt`.
 
-The pure queue wait is `started - scheduled`, not `started - created`: a Taskcluster run
-becomes claimable (`scheduled`) only once the task's dependencies have resolved, so
-`scheduled - created` is dependency wait and is reported separately rather than mixed in.
+The pure queue wait is `started - scheduled`, not `started - created`. The reason is that a
+Taskcluster run becomes claimable (`scheduled`) only once the task's dependencies have
+resolved. Therefore, `scheduled - created` is dependency wait, and we report it separately
+rather than mix it in.
 
 ## Two traps that were verified, not assumed
 
@@ -62,14 +63,14 @@ becomes claimable (`scheduled`) only once the task's dependencies have resolved,
   therefore cannot give the pure queue wait.
 * Treeherder's `submit_timestamp__gte` filter is silently ignored (recorded in
   `docs/related_work/shared_queue_evidence.md` §5.1). `push_id__gte` / `push_id__lte`
-  and `machine_name` do work, and every job query here is chunked on `push_id` and
-  re-split whenever a page comes back full, so the server-side limit cannot drop a row
+  and `machine_name` do work. Every job query here is chunked on `push_id` and split
+  again whenever a page comes back full. Therefore, the server-side limit cannot drop a row
   unseen.
 * Treeherder's push endpoint also ignores `push_id__gte` / `push_id__lte` — it returned
-  today's pushes for a request bounded to three weeks ago. `startdate` / `enddate` work,
-  and the response echoes them back as `push_timestamp__gte` / `__lt`, which is how the
-  filter can be checked. The first coverage run was wasted on this.
-* `queue.listTaskQueues` and per-pool task listings need credentials;
+  today's pushes for a request bounded to three weeks ago. `startdate` / `enddate` work.
+  The response echoes them back as `push_timestamp__gte` / `__lt`, and this echo is how
+  the filter can be checked. The first coverage run was wasted on this.
+* `queue.listTaskQueues` and per-pool task listings need credentials.
   `queue.listWorkers`, `queue.status`, `POST queue/v1/tasks/status` (500 ids per call),
   `queue.task` and all of Treeherder do not.
 
@@ -98,11 +99,11 @@ effective capacity and the setup/teardown time that steps 5 and 7 then use.
 Packages: `requests` for stage 1; `pandas numpy pyarrow numba requests` for 2-5, 7, 8;
 plus `scipy lightgbm` for 6.
 
-`run_collect.sh` exists because a python process doing these API calls degrades on this
-host from ~0.7 s to 15-40 s per call after a few hundred requests, while a process
-started at that moment is fast again. Every stage is resumable — pages are written
-atomically and a page already on disk is skipped — so the driver simply restarts the
-stage. The process also retires itself after `FCI_REQ_LIMIT` (default 150) requests,
+`run_collect.sh` exists because a python process that makes these API calls slows down on
+this host after a few hundred requests, from ~0.7 s to 15-40 s per call. However, a process
+started at that moment is fast again. Every stage is resumable: pages are written
+atomically, and a page already on disk is skipped. Therefore, the driver simply restarts
+the stage. The process also retires itself after `FCI_REQ_LIMIT` (default 150) requests,
 because `timeout(1)` kills the `env`/`uv` wrapper while the python grandchild survives.
 
 Politeness: one process, one request at a time, at most ~3.8 requests/second, a
@@ -110,14 +111,14 @@ descriptive `User-Agent`, exponential backoff on 429/5xx.
 
 **Download budget: this run overran it.** The intended cap was 400 MB and the realised
 total was about 730 MB. `MAX_WIRE_BYTES` in `fci_common.py` is enforced per process, not
-cumulatively across the stages, and the Taskcluster bulk-status endpoint returns about
-1 kB per task uncompressed (844 pages x 0.52 MB = 436 MB on its own). About 140 MB was
+cumulatively across the stages. In addition, the Taskcluster bulk-status endpoint returns
+about 1 kB per task uncompressed (844 pages x 0.52 MB = 436 MB on its own). About 140 MB was
 avoidable waste: talos status pages fetched against an id list that was then narrowed,
-and coverage pages for pushes that turned out to be outside the window. Anyone rerunning
-this should make the cap cumulative (persist the counter to disk) before starting.
+and coverage pages for pushes that turned out to be outside the window. Before you rerun
+this, make the cap cumulative (persist the counter to disk).
 
 The second pool's window is narrowed to 7 days (`POOL_WINDOW` in `fci_common.py`) for
-the same budget reason; the first pool keeps the full 21 days and 255k tasks.
+the same budget reason. The first pool keeps the full 21 days and 255k tasks.
 
 ## `guardkern_snapshot.py`
 
@@ -132,11 +133,11 @@ study started, taken because the original was being revised in parallel. Do not 
       = e8b8578d5b53874440d2f37f285bc422c127512595b544fe5427b5a3acdd1c58
 
 The original changed while this study ran, in parallel work on the guard kernel. Every number in
-`out_SUMMARY.txt` comes from the snapshot, so before quoting them in the paper, diff the
-two files and rerun steps 4-8 if the kernel's behaviour changed.
+`out_SUMMARY.txt` comes from the snapshot. Therefore, before you quote them in the paper,
+diff the two files, and rerun steps 4-8 if the kernel's behaviour changed.
 
 `fci_simval.py` carries a second, independent simulator (the one that supports a
-time-varying `k(t)`); `fci_verify.py` checks it against the snapshot job by job on random
+time-varying `k(t)`). `fci_verify.py` checks it against the snapshot job by job on random
 instances before any result is read, and `fci_simval.py` repeats that check on the real
 trace.
 
@@ -151,5 +152,5 @@ claimed in the paper.
 ## Data
 
 `data/mozilla_firefox_ci/` holds the raw API pages and the assembled parquet. Mozilla
-publishes no licence for these APIs, so the raw slice is not redistributed; see the row
+publishes no licence for these APIs, so the raw slice is not redistributed. See the row
 in `data/README.md`.

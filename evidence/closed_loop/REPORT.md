@@ -1,5 +1,8 @@
 # Closed-loop replay of the development overlays: what changes and what does not
 
+> Note of 2026-10-26: this report covers overlays 0-2. The rerun on overlays 0-4 reproduces those
+> rows exactly, and `out/report_tables.md` and `out/open_vs_closed_mean.csv` hold its tables.
+
 Development data only. Model and edge treatments in `MODEL.md`; numbers regenerated into
 `out/report_tables.md` by `make_tables.py`. Overlays 0-2, load levels 0-2, four policies,
 two edge treatments, 108 cells.

@@ -1,0 +1,7 @@
+first: 20000 jobs, unit 10000 us, D 6000, G 30000, span 10313358 units; conservative: 0 starts differ; mean wait 2.425 units, max 176; backfill.py 5 s, kernel 0.3 s
+first: 20000 jobs, unit 10000 us, D 6000, G 30000, span 10313358 units; slack now+anchor: 0 starts differ; mean wait 2.425 units, max 176; backfill.py 5 s, kernel 0.0 s
+busy slice from job 64212 (job 66212 finds 40 waiting under FCFS; largest FCFS queue in the slice 67)
+busy: 20000 jobs, unit 100000 us, D 600, G 3000, span 304267 units; conservative: 0 starts differ; mean wait 1.839 units, max 70; backfill.py 1 s, kernel 0.0 s
+busy: 20000 jobs, unit 100000 us, D 600, G 3000, span 304267 units; slack now+anchor: 0 starts differ; mean wait 1.832 units, max 85; backfill.py 2 s, kernel 0.1 s
+PASS: 0 starts differ
+exit 0

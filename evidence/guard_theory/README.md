@@ -6,23 +6,23 @@ no stationarity and no assumption on prediction quality?
 
 **Paper items.** `theory.md` is the long form of Section 6 and of the proofs that now
 stand in Supplementary Sections S4 and S8. Those proofs were Appendix A of the manuscript,
-which no longer has an appendix; `paper/sections/A_proofs.tex` is a stub that is no longer
-input. The source comments of Supplementary Sections S4.2 and S8.6 name this directory as
-the check of those proofs, and `rev5_items.py` with `out_rev5_items.txt` (section RR-4) is
-the enumeration beside Proposition S17 in Supplementary Section S8.5.
+which no longer has an appendix. `paper/sections/A_proofs.tex` is a stub that the
+manuscript no longer includes. The source comments of Supplementary Sections S4.2 and S8.6
+name this directory as the check of those proofs. `rev5_items.py` with `out_rev5_items.txt`
+(section RR-4) is the enumeration beside Proposition S22 in Supplementary Section S8.5.
 
-**What is here.** `theory.md` (revision 5) holds the proofs; its section 9 is the
-script-to-log map and its section 10 the referee CHANGELOG. `CHANGES_rev5.md` lists every
+**What is here.** `theory.md` (revision 5) holds the proofs. Its section 9 is the
+script-to-log map, and its section 10 is the referee CHANGELOG. `CHANGES_rev5.md` lists every
 revision-5 edit with before/after text. Three independent exact-integer simulators are
 included, sharing no code with `evidence/guard_variants/guardkern.py`.
 
 **A note on references.** The note cites `docs/referee_readthrough/`, an internal referee
-report that is not distributed with the repository; its findings are reproduced in
+report that is not distributed with the repository. Its findings are reproduced in
 `CHANGES_rev5.md` and in the note's own CHANGELOG.
 
 **Status.** Current (revision 5).
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
@@ -30,18 +30,18 @@ Absolute paths that were baked into the scripts appear as `<repo-root>` (your ch
 
 Self-contained theory work for the FCFS-relative overtake guard.
 
-theory.md holds the proofs (revision 5: revisions 1-3 answer the three referee
+theory.md holds the proofs, in revision 5. Revisions 1-3 answer the three referee
 directories, revision 4 answers the paper draft's general statement of the
-wrapper theorem, revision 5 answers the fourth referee, who read the built
-manuscript -- see docs/referee_readthrough/); its §9 is the script-to-log map
-and its §10 the referee CHANGELOG. CHANGES_rev5.md lists every revision-5 edit
+wrapper theorem, and revision 5 answers the fourth referee, who read the built
+manuscript (see docs/referee_readthrough/). The §9 of theory.md is the script-to-log map,
+and its §10 is the referee CHANGELOG. CHANGES_rev5.md lists every revision-5 edit
 to the note and to the paper's Section 6 / Appendix A, with before/after text
 and the verification behind each.
 
 Three independent exact-integer simulators, all written here and sharing no code
 with evidence/guard_variants/guardkern.py: sim_core.py (pure Python),
 sharp_kernel.py (numba) and gen_budget.py's own kernel (numba, for an arbitrary
-budget rule). run_sharp.py agree cross-checks the first two; gen_budget.py is
+budget rule). run_sharp.py agree cross-checks the first two. The script gen_budget.py is
 cross-checked against the second by replaying Theorem 4C's family through it.
 
 rev5_items.py needs no third-party package at all (sim_core.py only) and runs as
@@ -59,5 +59,5 @@ remaining out_*.txt are revision 1's and are still current.
 A bare out_*.txt cited in theory.md always means a file in this directory. The
 three citations of another directory's logs are written out in full.
 
-numba writes its compilation cache to __pycache__/ (*.nbi, *.nbc); it is a
+numba writes its compilation cache to __pycache__/ (*.nbi, *.nbc). The cache is a
 build artefact, safe to delete, and regenerated on the next run.

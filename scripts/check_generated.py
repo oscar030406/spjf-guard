@@ -156,6 +156,7 @@ DEV_ONLINE = Path("outputs") / "dev_online_visibility"
 SEALED_ONLINE = Path("outputs") / "sealed_online_visibility"
 DEV_CLUSTER = Path("outputs") / "cluster_bootstrap"
 SEALED_CONTRAST = Path("outputs") / "sealed_dev_contrast"
+SEALED_CLUSTER = Path("outputs") / "sealed_online_cluster_bootstrap"
 EXACT_PACKAGE = Path("outputs") / "consistent_paper_tables"
 """Where the sealed run writes.  They are looked for rather than asked for: before the
 sealed run nothing is there and the check is the development one, after it the sealed
@@ -256,6 +257,9 @@ def check_exact_paper_prints() -> tuple[bool, str]:
         sealed_contrast=ROOT / SEALED_CONTRAST
         if (ROOT / SEALED_CONTRAST / "manifest.json").is_file()
         else None,
+        sealed_cluster=ROOT / SEALED_CLUSTER
+        if (ROOT / SEALED_CLUSTER / "manifest.json").is_file()
+        else None,
     )
     if complaints:
         return _complaint_result("exact paper prints", complaints)
@@ -295,7 +299,17 @@ SCANNED = (
 """The file sets that go into the repository.  Everything under `data/` and `outputs/` is
 git-ignored and is skipped, as is any other file git is told to ignore."""
 
-PATH_EXCEPTIONS: dict[str, str] = {}
+PATH_EXCEPTIONS: dict[str, str] = {
+    "docs/sealed_access_log.md": (
+        "append-only ledger; its row of 2026-10-02 quotes the error message of a stopped run "
+        "verbatim, and that message names the output directory on the machine that ran it"
+    ),
+    "protocol_lock_accoding.json": (
+        "records the test command run at the freeze of 2026-10-03, with the interpreter of the "
+        "machine that froze it; nothing reads it back, and the sealed run's manifest holds the "
+        "lock's hash, so the lock stays as written"
+    ),
+}
 """Files allowed to name a machine path, with the reason.  A file earns a place here only
 when the path is the subject of a sentence, never when something reads it."""
 

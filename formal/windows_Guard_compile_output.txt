@@ -1,0 +1,108 @@
+Guard.lean:870:28: warning: `dif_neg` has been deprecated: Use `dite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵n̵e̵g̵d̲i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+Guard.lean:875:55: warning: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+Guard.lean:1117:8: warning: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
+
+Hint: Replace the deprecated name:
+  integral_finset_̵s̵S̲um
+Guard.lean:1121:7: warning: `MeasureTheory.integrable_finset_sum` has been deprecated: Use `MeasureTheory.integrable_finsetSum` instead
+
+Hint: Replace the deprecated name:
+  integrable_finset_̵s̵S̲um
+Guard.lean:1152:65: warning: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+Guard.lean:1380:12: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+Guard.lean:1399:12: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+Guard.lean:1419:14: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+Guard.lean:1420:12: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+Guard.lean:1562:53: warning: `Fin.lt_iff_val_lt_val` has been deprecated: Use `Fin.lt_def` instead
+
+Hint: Replace the deprecated name:
+  F̵i̵n̵.̵l̵t̵_̵i̵f̵f̵_̵v̵a̵l̵_̵l̵t̵_̵v̵a̵l̵F̲i̲n̲.̲l̲t̲_̲d̲e̲f̲
+Guard.lean:1517:31: warning: This simp argument is unused:
+  floorInput_C
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [floorInput_a] at hi hj
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Guard.lean:1611:10: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+Guard.lean:1614:10: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+Guard.lean:1623:13: warning: `Fin.lt_iff_val_lt_val` has been deprecated: Use `Fin.lt_def` instead
+
+Hint: Replace the deprecated name:
+  F̵i̵n̵.̵l̵t̵_̵i̵f̵f̵_̵v̵a̵l̵_̵l̵t̵_̵v̵a̵l̵F̲i̲n̲.̲l̲t̲_̲d̲e̲f̲
+Guard.lean:1666:23: warning: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+Guard.lean:1736:20: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+Guard.lean:1736:39: warning: `dif_pos` has been deprecated: Use `dite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵f̵_̵p̵o̵s̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+Guard.lean:1790:18: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+'Overtake.guard_In' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.guard_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.guard_bound_dup' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.cap_for_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.cap_pos_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.guard_fcfs_of_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.guard_cap_zero_fcfs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.budgetFamily_respects' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.guard_mult' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.timeout_In' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.timeout_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.combined_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.combined_clock_any_reports' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.absolute_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.absolute_fcfs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.absolute_guard' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.absolute_timeout' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.deadline' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.fluidV_isFluid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.fcfs_flow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.maxflow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.fcfs_flow_k1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.late_In' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.late_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.Sched.delayedCharges_of_d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.perServer_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.rbp_In' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.rbp_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.price' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.floor_core' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.floor' depends on axioms: [propext, Classical.choice, Quot.sound]
+WALL=21.848 s PEAK_WS_MB=3547
+EXIT=0

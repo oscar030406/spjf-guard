@@ -1,0 +1,3 @@
+name,family,point_promise_s,b0_base_s,eta,gam_base_s
+CAP-G300-B15-e0.5,capped,300.0,15.0,0.5,0.0
+CAP-G1200-B480-e0.75,capped,1200.0,480.0,0.75,0.0

@@ -1,0 +1,197 @@
+Overtake.lean:1149:6: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+Overtake.lean:1220:29: warning: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+Overtake.lean:1220:29: warning: Unused tactic linter: `omega` does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Overtake.lean:1350:0: warning: automatically included section variable(s) unused in theorem `Overtake.Tight.UJ.flat_busy_final`:
+  hL
+  hK
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hL hK in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+Overtake.lean:1366:164: warning: This simp argument is unused:
+  eq_self_iff_true
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [srvF, hiF, key, lexle, Fin.ext_iff, Fin.val_last, Fin.val_castSucc, ne_eq, reduceCtorEq,
+    not_false_eq_true, not_true_eq_false, UJ.long.injEq, UJ.short0.injEq, UJ.piece.injEq, UJ.newlong.injEq,
+    Fin.val_zero] at hij hs ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1367:20: warning: This simp argument is unused:
+  true_and
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [and_true, true_or, or_true, le_refl] at hij hs ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1409:56: warning: This simp argument is unused:
+  min_fin
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [arr, grid, key, ofsFlat_zero] at hai hti
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1410:56: warning: This simp argument is unused:
+  min_fin
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [arr, grid, key, ofsFlat_zero] at hai hti
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1425:44: warning: Unused tactic linter: `push_cast at hti` does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Overtake.lean:1428:44: warning: Unused tactic linter: `push_cast at hti` does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Overtake.lean:1475:26: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Overtake.lean:1510:81: warning: This simp argument is unused:
+  eq_self_iff_true
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [srvP, hiP, keyP, lexle, Fin.ext_iff, Fin.val_last, Fin.val_castSucc, ne_eq, reduceCtorEq,
+    not_false_eq_true, not_true_eq_false, UJ.long.injEq, UJ.short0.injEq, UJ.piece.injEq, UJ.newlong.injEq,
+    Fin.val_zero] at hij hs ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1511:70: warning: This simp argument is unused:
+  Fin.val_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [srvP, hiP, keyP, lexle, Fin.ext_iff, Fin.val_last, Fin.val_castSucc, ne_eq, reduceCtorEq,
+    not_false_eq_true, not_true_eq_false, eq_self_iff_true, UJ.long.injEq, UJ.short0.injEq, UJ.piece.injEq,
+    UJ.newlong.injEq] at hij hs ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1609:72: warning: This simp argument is unused:
+  min_fin
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [grid, keyP, hiP, ofsCarry_one, ofsCarry_two, cost, dd]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1599:41: warning: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+Overtake.lean:1599:41: warning: Unused tactic linter: `omega` does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Overtake.lean:1683:61: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Overtake.lean:1710:2: warning: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+Overtake.lean:1761:29: warning: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+Overtake.lean:1761:29: warning: Unused tactic linter: `omega` does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Overtake.lean:1857:81: warning: This simp argument is unused:
+  eq_self_iff_true
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [srvF, hiF, key, lexle, Fin.ext_iff, Fin.val_last, Fin.val_castSucc, ne_eq, reduceCtorEq,
+    not_false_eq_true, not_true_eq_false, DJ.long.injEq, DJ.short0.injEq, DJ.piece.injEq, DJ.newlong.injEq] at hij hs ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1859:20: warning: This simp argument is unused:
+  true_and
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [and_true, true_or, or_true, le_refl] at hij hs ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:1938:71: warning: This simp argument is unused:
+  min_fin
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [grid, key, hiF, ofsCarry_one, ofsCarry_two, cost, dd]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:2010:26: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Overtake.lean:2045:81: warning: This simp argument is unused:
+  eq_self_iff_true
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [srvP, hiP, keyP, lexle, Fin.ext_iff, Fin.val_last, Fin.val_castSucc, ne_eq, reduceCtorEq,
+    not_false_eq_true, not_true_eq_false, DJ.long.injEq, DJ.short0.injEq, DJ.piece.injEq, DJ.newlong.injEq] at hij hs ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:2047:20: warning: This simp argument is unused:
+  true_and
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [and_true, true_or, or_true, le_refl] at hij hs ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:2080:0: warning: automatically included section variable(s) unused in theorem `Overtake.Tight.DJ.flat_busy_final`:
+  hL
+  hK
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hL hK in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+Overtake.lean:2135:62: warning: This simp argument is unused:
+  min_fin
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [arr, grid, keyP, key, ofsFlat_zero] at hai hti
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:2136:62: warning: This simp argument is unused:
+  min_fin
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [arr, grid, keyP, key, ofsFlat_zero] at hai hti
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Overtake.lean:2103:41: warning: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+Overtake.lean:2103:41: warning: Unused tactic linter: `omega` does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Overtake.lean:2148:44: warning: Unused tactic linter: `push_cast at hti` does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Overtake.lean:2186:61: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+'Overtake.workload_comparison' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.workload_comparison_k1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.workload_comparison_strict' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.fcfs_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.Sched.busy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.identity_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.identity_bound'' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.identity_k1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.identity_bound_strict' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.sufficient' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.sufficient_In' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.outbound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.necessary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.Tight.tight_up' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.Tight.tight_down' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.tightness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Overtake.workload_comparison_approached' depends on axioms: [propext, Classical.choice, Quot.sound]
+WALL=52.678 s PEAK_WS_MB=3558
+EXIT=0

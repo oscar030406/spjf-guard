@@ -1,0 +1,5 @@
+name,family,point_promise_s,b0_base_s,eta,gam_base_s
+FIX-B274.878,fixed,-1.0,274.878,0.0,0.0
+HYB-G300-B0-g16-e0,hybrid,300.0,0.0,0.0,16.0
+CAP-G1200-B60-e0.95,capped,1200.0,60.0,0.95,0.0
+HYB-G1200-B120-g1-e0.9,hybrid,1200.0,120.0,0.9,1.0

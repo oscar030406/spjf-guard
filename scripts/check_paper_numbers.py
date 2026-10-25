@@ -228,6 +228,11 @@ COINCIDENCE: dict[str, str] = {
         "Guard(300) - Guard-queue(300) difference; the interval is now printed only "
         "inside tab:clock"
     ),
+    "supplementary:tab:s_closed:24": (
+        "the printed 5.609 was the closed-loop p99 of Guard(600), late kept, as a mean over"
+        " overlays 0-2 (prechecks/closed_loop/out/open_vs_closed_mean.csv), not Guard-queue(300);"
+        " Table S21 now gives the mean over overlays 0-4, 6.909"
+    ),
 }
 """Rows of `numbers.csv` whose value matched a package artefact by accident: they are
 reported apart from real leftovers, because dropping them is the right outcome.
@@ -1049,13 +1054,17 @@ def check_sealed_prose(
     exact_comparison: list[dict] | None = None,
     exact_exposure: list[dict] | None = None,
     contrast: list[dict] | None = None,
+    cluster: list[dict] | None = None,
 ) -> list[str]:
     """D2: every sealed figure in prose comes from a pinned sealed output.
 
     The predictor's figures have no table of their own: the paper states them in running
     text, and that text is read wherever it sits.  `contrast` is
     outputs/sealed_dev_contrast/contrast.csv, figures derived from the sealed outputs
-    (scripts/sealed_dev_contrast.py), accepted in the spelling that file prints.
+    (scripts/sealed_dev_contrast.py), accepted in the spelling that file prints.  `cluster`
+    is outputs/sealed_online_cluster_bootstrap/bootstrap_summary.csv, the class-term
+    intervals of the sealed terms (scripts/run_online_cluster_bootstrap.py --pool sealed),
+    accepted at the three decimals of their supplementary table.
     """
     from emit_paper_tables import (
         exact_exposure_values,
@@ -1072,6 +1081,7 @@ def check_sealed_prose(
         or exact_comparison
         or exact_exposure
         or contrast
+        or cluster
     ):
         return []
     values: dict[str, str] = {}
@@ -1082,6 +1092,11 @@ def check_sealed_prose(
     exact_exposure_values(exact_exposure or [], values, "sealed_consistent_visibility")
     known = {normalise(v) for v in values}
     known |= {normalise(row["printed"]) for row in contrast or [] if row["pool"] != "dev"}
+    known |= {
+        "%.3f" % (0.0 if abs(float(row[end])) < 5e-4 else float(row[end]))
+        for row in cluster or []
+        for end in ("point", "lo", "hi")
+    }
     printed, stray = 0, []
     for name, text in _running_text(paper, {} if cache is None else cache).items():
         for value in SEALEDNUM.findall(text):
@@ -1120,6 +1135,7 @@ def run(
     dev_cluster: Path | None = None,
     sealed_prose: bool = True,
     sealed_contrast: Path | None = None,
+    sealed_cluster: Path | None = None,
 ) -> list[str]:
     """Every check that `only` allows; returns the complaints, empty when the paper agrees.
 
@@ -1169,6 +1185,7 @@ def run(
             sealed_exact_rows=sealed_exact_rows,
             prose=sealed_prose,
             sealed_contrast=sealed_contrast,
+            sealed_cluster=sealed_cluster,
         )
     return complaints
 
@@ -1186,6 +1203,7 @@ def _check_sealed(
     sealed_exact_rows: dict[str, list[dict]],
     prose: bool,
     sealed_contrast: Path | None = None,
+    sealed_cluster: Path | None = None,
 ) -> list[str]:
     """Check D: the sealed tables, the sealed exact tables and the sealed prose."""
     complaints: list[str] = []
@@ -1218,6 +1236,9 @@ def _check_sealed(
             exact_comparison=sealed_exact_rows.get("tab:exact_visibility", []),
             exact_exposure=sealed_exact_rows.get("tab:same_copy_exposure", []),
             contrast=read_rows(sealed_contrast / "contrast.csv") if sealed_contrast else [],
+            cluster=read_rows(sealed_cluster / "bootstrap_summary.csv")
+            if sealed_cluster
+            else [],
         )
     return complaints
 
@@ -1237,6 +1258,7 @@ def main() -> int:
     ap.add_argument("--sealed-online-dir", type=Path, default=None)
     ap.add_argument("--dev-cluster-dir", type=Path, default=None)
     ap.add_argument("--sealed-contrast-dir", type=Path, default=None)
+    ap.add_argument("--sealed-cluster-dir", type=Path, default=None)
     ap.add_argument("--only", choices=("A", "B", "C", "D"))
     args = ap.parse_args()
 
@@ -1255,6 +1277,7 @@ def main() -> int:
         args.sealed_online_dir,
         args.dev_cluster_dir,
         sealed_contrast=args.sealed_contrast_dir,
+        sealed_cluster=args.sealed_cluster_dir,
     )
     for complaint in complaints:
         print(f"   FAIL {complaint}")

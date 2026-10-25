@@ -1,9 +1,9 @@
 # Main experiment on CodeBench development data
 
-**Question.** With the ranking score, the capped relative overtake-budget guard whose
-parameters are chosen on validation overlays only, and the per-job bound asserted on
-every simulated job — how much of the FCFS-to-SJF gap does the guarded policy close, and
-at what cost?
+**Question.** The main experiment combines the ranking score, the capped relative
+overtake-budget guard whose parameters are chosen on validation overlays only, and the
+per-job bound asserted on every simulated job. How much of the FCFS-to-SJF gap does the
+guarded policy close, and at what cost?
 
 **Paper items.** `out_main_v31.txt` section 2 (the trace and interval rows of Table S4 in
 Supplementary Section S3.1, and the trace construction of Supplementary Section S5.3),
@@ -21,10 +21,10 @@ Section S5.4 names this directory in its text. `v31/table_main_primary.csv` and
 `out_main_v31.txt` and `out_main_v3.txt`. All three are kept exactly as reported, each
 under its own manifest: v3 in this directory, v3.1 in `v31/`, v3.2 in `v32/`.
 
-**Status.** v3.2 current; v3 and v3.1 kept because the paper cites them and because each
-records what the next version changed.
+**Status.** v3.2 is current. v3 and v3.1 are kept because the paper cites them and because
+each records what the next version changed.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
@@ -34,12 +34,12 @@ Consolidated main experiment on CodeBench development data: the Tweedie ranking 
 capped relative overtake-budget guard whose parameters are chosen on validation semesters
 only, and the k-server per-job bound asserted on every simulated job.
 
-**Read `v32/` first. `out_main_v32.txt` is the current result; it supersedes both
+**Read `v32/` first. `out_main_v32.txt` is the current result. It supersedes both
 `out_main_v31.txt` and `out_main_v3.txt`.** All three are kept exactly as they were
 reported and verified, each under its own manifest and in its own directory:
 
 - v3 — `mv3_*.py`, `out_main_v3.txt`, the `*.csv` in this directory.
-- v3.1 — `v31/`, report `out_main_v31.txt`. Same pipeline, three changes the independent
+- v3.1 — `v31/`, report `out_main_v31.txt`. Same pipeline, three changes that the independent
   verifier asked for in `../main_v3_verify/out_VERDICT.txt`: selection worst-case over
   five validation overlays (F8), a fairly counted finite-skip baseline (F4), and a
   manifest that also hashes the imported modules (F1).
@@ -48,9 +48,9 @@ reported and verified, each under its own manifest and in its own directory:
   searched on pre-stated grids of comparable density, a hybrid family is searched
   alongside them, and the selection's sensitivity and feasible frontier are reported.
 
-Where they disagree, v3.2 is the current result. The main claim is weaker than v3.1's: on
-an equal search the capped budget's margin over the best feasible fixed budget is about
-half what v3.1 reported, and it is not resolved at the lightest load.
+Where they disagree, v3.2 is the current result. The main claim is weaker than v3.1's. On
+an equal search, the capped budget's margin over the best feasible fixed budget is about
+half of what v3.1 reported, and the margin is not resolved at the lightest load.
 
 The rest of this file describes v3.
 
@@ -97,7 +97,7 @@ order and `rs_pred_ires0.parquet` with `../ranking_score/rs_fit.py` before anyth
 Reproducibility: every stage appends to `out_<stage>.txt`, and each invocation's first
 line carries one sha256 over all `mv3_*.py` except `mv3_report.py`. `mv3_report.py`
 recomputes that hash and refuses to write `out_main_v3.txt` if any stage log carries a
-different one, so a reported number can never come from code that has since changed.
+different one. Therefore, a reported number can never come from code that has since changed.
 
 Regenerate: source = `data/codebench/parquet/` 2018-1..2022-2 through the caches above;
 artefact = `out_main_v3.txt` and the `*.csv` tables here; command = the run order above

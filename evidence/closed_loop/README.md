@@ -3,19 +3,20 @@
 **Question.** The paper replays the trace open-loop: arrivals come from the log at their
 recorded instants and do not react to the scheduler. A referee objected that the result
 therefore cannot be read as what a scheduler would achieve against users who wait for one
-result before submitting again. Does the fraction of the FCFS-to-SJF gap that the guard
-closes survive a replay in which each submission is released only after its predecessor
-returns, with the recorded think time preserved?
+result before submitting again. Consider a replay in which each submission is released only
+after its predecessor returns, with the recorded think time preserved. Does the fraction of
+the FCFS-to-SJF gap that the guard closes survive such a replay?
 
 **Answer.** It does, on this trace and under this behavioural model. Every wait falls,
-because a queue that builds up holds back the submissions that would have deepened it,
-but the ordering of the policies and the fraction of the gap closed are intact: 0.734,
-0.827 and 0.800 at the three loads open-loop against 0.825, 0.809 and 0.810 under gating.
+because a queue that builds up holds back the submissions that would have deepened it.
+However, the ordering of the policies and the fraction of the gap closed are intact: 0.740,
+0.837 and 0.801 at the three loads open-loop against 0.833, 0.813 and 0.813 under gating,
+as means over the five overlays.
 The per-job guarantee holds on all 17.6 million jobs of each run. Section 7 of `REPORT.md`
-lists what a sceptic would still attack, starting with the fact that the recorded think
-times were produced on a platform that served each student immediately.
+lists what a sceptic would still attack. The first point is that the recorded think times
+come from a platform that served each student immediately.
 
-**Paper items.** The closed-replay paragraph of Section 8.7; the open-loop limitation of
+**Paper items.** The closed-replay paragraph of Section 8.8; the open-loop limitation of
 Section 9; Supplementary Section S6.5 and Table S21, whose source comments name
 `out/open_vs_closed_mean.csv`, `out/think_time.json`, `out/validation.json`,
 `out/closed_cells.csv`, `out/bootstrap.json` and `out/report_tables.md`.
@@ -31,7 +32,7 @@ submission chains, rebuilt by `build_chains.py`, which must run before
 `run_closed_loop.py`. The numba and bytecode caches under `__pycache__/` were dropped as
 build artefacts.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
@@ -41,11 +42,11 @@ Absolute paths that were baked into the scripts appear as `<repo-root>` (your ch
 
 An empirical study on the **development** overlays only. It answers the referee objection
 that the paper's replay is open-loop: arrivals come from the log at their recorded
-instants and do not react to the scheduler, so the paper cannot claim its result is a
-lower bound on what a scheduler would achieve against reacting users.
+instants and do not react to the scheduler. Therefore, the paper cannot claim that its
+result is a lower bound on what a scheduler would achieve against reacting users.
 
-Nothing here is part of the paper's pipeline. The working copy of this directory is git-excluded and writes
-only inside itself. Every sealed term (CodeBench 2023-1/2023-2/2024-1, the ACcoding id
+Nothing here is part of the paper's pipeline. The working copy of this directory is excluded
+from git, and its scripts write only inside it. Every sealed term (CodeBench 2023-1/2023-2/2024-1, the ACcoding id
 block 80-100 %, OULAD 2014) is untouched: the scripts go through the package's guarded
 loaders with `unseal=False` and read only `data/derived/overlay_traces/primary_rep*.npz`
 and the development event cache.
@@ -78,7 +79,7 @@ env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
 env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
     NUMBA_NUM_THREADS=4 OMP_NUM_THREADS=4 \
     uv run --no-sync python -u evidence/closed_loop/run_closed_loop.py run \
-        --reps 0,1,2 --levels 0,1,2 --keep-late 0,1
+        --reps 0,1,2,3,4 --levels 0,1,2 --keep-late 0,1
 
 env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME \
     NUMBA_NUM_THREADS=4 OMP_NUM_THREADS=4 \
@@ -91,6 +92,6 @@ interrupted run leaves a readable partial file.
 
 ## Where new files go
 
-Results, logs and intermediate arrays go under `out/` and nowhere else; `out/chains/`
-holds the per-overlay chain arrays, everything else sits directly in `out/`. A new
+Results, logs and intermediate arrays go under `out/` and nowhere else. `out/chains/`
+holds the per-overlay chain arrays, and everything else sits directly in `out/`. A new
 measurement gets its own script at this level and its own CSV or JSON in `out/`.

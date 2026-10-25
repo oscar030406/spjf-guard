@@ -1,0 +1,530 @@
+{
+  "produced_by": "scripts/run_accoding_heldout.py",
+  "written_at": "2026-10-03T15:32:02+00:00",
+  "config": {
+    "path": "configs/accoding_heldout_20260928.yaml",
+    "present": true,
+    "bytes": 4302,
+    "sha256": "bbf8c74daa59da41c32fec17e2ed4fc88b9a2358d8a72879d3cd5113930eae68"
+  },
+  "inputs": [
+    {
+      "path": "configs/accoding_heldout_20260928.yaml",
+      "present": true,
+      "bytes": 4302,
+      "sha256": "bbf8c74daa59da41c32fec17e2ed4fc88b9a2358d8a72879d3cd5113930eae68"
+    },
+    {
+      "path": "data/accoding/parquet/contests.parquet",
+      "present": true,
+      "bytes": 18048,
+      "sha256": "dabadabde67d6a62c7affb3a0e8527fbc6b32715d4a048c5b5f14498cceeba37"
+    },
+    {
+      "path": "data/accoding/parquet/problem_tags.parquet",
+      "present": true,
+      "bytes": 26614,
+      "sha256": "28655e50dd26b125073aa6d4e8ae9e57f569262042e6816861a877f20b3a3ce4"
+    },
+    {
+      "path": "data/accoding/parquet/problems.parquet",
+      "present": true,
+      "bytes": 60140,
+      "sha256": "a1dcb63dfc6a91473d737c5ff1e43aece80bbb9320681d42abd4303aa9cb9748"
+    },
+    {
+      "path": "outputs/selection_v4/selected_parameters.csv",
+      "present": true,
+      "bytes": 2353,
+      "sha256": "060a6b59b15c2fe1a43c175478d79973547274595d23b9646732ea3af5bea83a"
+    },
+    {
+      "path": "prechecks/accoding_v2/accoding_v2.py",
+      "present": true,
+      "bytes": 112543,
+      "sha256": "06e0e350c5fc230fd57acec39302fbcd09cb1fa7c78a7f6334692b158c2e2af4"
+    },
+    {
+      "path": "protocol_lock_accoding.json",
+      "present": true,
+      "bytes": 13037,
+      "sha256": "a226ea5ab9ae383c0ec2286e613b7e62dc61c5d06052d4d61e8aa7afb21a7cab"
+    },
+    {
+      "path": "pyproject.toml",
+      "present": true,
+      "bytes": 1029,
+      "sha256": "720eea5068b74df39c98b11652f1e83a1a0f42dce349da5f65ef39124793ec26"
+    },
+    {
+      "path": "scripts/accoding_online.py",
+      "present": true,
+      "bytes": 8158,
+      "sha256": "0134999128fecdfffb8f945632421f9569ce1741f0d031abafc2dc1b629aba74"
+    },
+    {
+      "path": "scripts/freeze_accoding.py",
+      "present": true,
+      "bytes": 3340,
+      "sha256": "d8e35c264bb07b45c64c86660c8c004d27f48100dd19d03c580691ab2619008c"
+    },
+    {
+      "path": "scripts/run_accoding_heldout.py",
+      "present": true,
+      "bytes": 37224,
+      "sha256": "60d6d57e4f3e1a76b2e65cfa10e01140b870d6b5b11ba3a09cd9d00820c8ad0b"
+    },
+    {
+      "path": "src/spjf_guard/__init__.py",
+      "present": true,
+      "bytes": 246,
+      "sha256": "6a10ebfb20278383d6de19e65aae3253dde358dd51e34595012eea64f8247669"
+    },
+    {
+      "path": "src/spjf_guard/config.py",
+      "present": true,
+      "bytes": 10176,
+      "sha256": "045e70f73df675ef06f20efe7d4c29f2fa6d098cbe63b6704b12dcf9a6c5591c"
+    },
+    {
+      "path": "src/spjf_guard/data/__init__.py",
+      "present": true,
+      "bytes": 86,
+      "sha256": "c8b6367797cbd898561e71f1044ef73bdaad6f67bcdeb9ca27210a0df1d267e7"
+    },
+    {
+      "path": "src/spjf_guard/data/archive.py",
+      "present": true,
+      "bytes": 19170,
+      "sha256": "91077c03cf5687b6e62e1ed64bd706c05c1f1d09a7ed4e713b35973244bb1b0d"
+    },
+    {
+      "path": "src/spjf_guard/data/cache.py",
+      "present": true,
+      "bytes": 6596,
+      "sha256": "3a2198794eae62cdfbb58fdc30c098b4902e7ee846b637f186c172c918f14f39"
+    },
+    {
+      "path": "src/spjf_guard/data/clock.py",
+      "present": true,
+      "bytes": 4858,
+      "sha256": "a36e794d35013de599f9e64c70fbb387cdde9304b88d0e6ea83c365929832e5b"
+    },
+    {
+      "path": "src/spjf_guard/data/events.py",
+      "present": true,
+      "bytes": 12508,
+      "sha256": "1e97e13bc4263e5fe2a11506ed8866c34931b4b23371211b6428ebf59415ed63"
+    },
+    {
+      "path": "src/spjf_guard/data/sealed.py",
+      "present": true,
+      "bytes": 14132,
+      "sha256": "a6bf6ecfb2a98a6fe3d6bb0d257920238c55bdc86c64361fd8f7265411f0e3dd"
+    },
+    {
+      "path": "src/spjf_guard/experiment/__init__.py",
+      "present": true,
+      "bytes": 90,
+      "sha256": "d4ef97d020940b4621db21f5d0493e2430461cb0a1da6b07e9a3e1d939977007"
+    },
+    {
+      "path": "src/spjf_guard/experiment/adversarial.py",
+      "present": true,
+      "bytes": 2116,
+      "sha256": "8366a8666433267c752994d1a3bf1d8340df5dc00e0e5ca9717206961ceb421c"
+    },
+    {
+      "path": "src/spjf_guard/experiment/bootstrap.py",
+      "present": true,
+      "bytes": 4636,
+      "sha256": "772aa94028db74734ceba150b5023fd409d6b33b934d7fab48c04e4327c6d5df"
+    },
+    {
+      "path": "src/spjf_guard/experiment/consistent.py",
+      "present": true,
+      "bytes": 16964,
+      "sha256": "0a545296ad69f908a4c42b2f5e8a8f66c6947517fcfda3b8ba7b00aa287ad14d"
+    },
+    {
+      "path": "src/spjf_guard/experiment/grids.py",
+      "present": true,
+      "bytes": 6353,
+      "sha256": "c818befa586718c8e5b228039540a444cd13979488752fe15e5aa5e39406f4f4"
+    },
+    {
+      "path": "src/spjf_guard/experiment/metrics.py",
+      "present": true,
+      "bytes": 2846,
+      "sha256": "704fa09765c860bd4ba5b12395bef7f0f04e7445fc35abdec9988151146f552a"
+    },
+    {
+      "path": "src/spjf_guard/experiment/online.py",
+      "present": true,
+      "bytes": 25357,
+      "sha256": "700049fb93d3f7f222d30243556cab84bddbef4dfb4c5eac5383374b12e0d22b"
+    },
+    {
+      "path": "src/spjf_guard/experiment/online_replay.py",
+      "present": true,
+      "bytes": 21188,
+      "sha256": "25fba72baaedd2c597758e94f46733a5b95345ca75de6ef5e271574af6da0dfa"
+    },
+    {
+      "path": "src/spjf_guard/experiment/overlay.py",
+      "present": true,
+      "bytes": 17599,
+      "sha256": "4ea7ac4aff0387ff2c85a957996ef7385c9bd44e700ce20d9c60cc7d23d02f25"
+    },
+    {
+      "path": "src/spjf_guard/experiment/paper_tables.py",
+      "present": true,
+      "bytes": 23273,
+      "sha256": "e0d1659c9e880a034bd60b5e80e6e18308f38a4515e8856e72a58c43aef53e1f"
+    },
+    {
+      "path": "src/spjf_guard/experiment/parallel.py",
+      "present": true,
+      "bytes": 7014,
+      "sha256": "cd5fea5b792e7afa6eb97a744cceb1e2cd46a246bc54c213a05f9a61769c93a4"
+    },
+    {
+      "path": "src/spjf_guard/experiment/predictor_metrics.py",
+      "present": true,
+      "bytes": 6107,
+      "sha256": "229eedee4853e8e2348b5ac57e9c053112bae8ddcc52f1f72d12d29333786543"
+    },
+    {
+      "path": "src/spjf_guard/experiment/provenance.py",
+      "present": true,
+      "bytes": 5684,
+      "sha256": "4fed2e981a95eb4ad72508d39d690c6ba848cc5ee98bb37344cdfb358a207fa9"
+    },
+    {
+      "path": "src/spjf_guard/experiment/report.py",
+      "present": true,
+      "bytes": 5239,
+      "sha256": "926ff97971b548d9b020a10991d95087f4ada828fee10f31da5b9a63fe2b93ce"
+    },
+    {
+      "path": "src/spjf_guard/experiment/reproduce.py",
+      "present": true,
+      "bytes": 7676,
+      "sha256": "b1921178d8afaae8da95cdf9518c8aaef23fe0faeae9151cb8c5aa9393aa5df9"
+    },
+    {
+      "path": "src/spjf_guard/experiment/select.py",
+      "present": true,
+      "bytes": 8218,
+      "sha256": "2374a4afcd71e7bdb07d7ab07a4c26a9a1d07da55f7932e6d21fcc24dcb24060"
+    },
+    {
+      "path": "src/spjf_guard/experiment/visibility.py",
+      "present": true,
+      "bytes": 18599,
+      "sha256": "3850f739a15afd29281e12d54cad44763bd733d411b489daeeac1c220a1e99fa"
+    },
+    {
+      "path": "src/spjf_guard/experiment/visibility_controls.py",
+      "present": true,
+      "bytes": 24020,
+      "sha256": "68394aba499229e008f41fe8632f71204c168f29eaf9c32b0f291aac4f6f2363"
+    },
+    {
+      "path": "src/spjf_guard/features/__init__.py",
+      "present": true,
+      "bytes": 291,
+      "sha256": "82c22cfeb0c0c1b2026495f9185d1c63964e8aa8a9298ce39e2f31a442fc3b18"
+    },
+    {
+      "path": "src/spjf_guard/features/causal.py",
+      "present": true,
+      "bytes": 6252,
+      "sha256": "9d2d5c1d03be3acb80c75d4c64c644a787cce81f82a07dd881e2376f01a12eae"
+    },
+    {
+      "path": "src/spjf_guard/features/refine.py",
+      "present": true,
+      "bytes": 20662,
+      "sha256": "5fb5a0582255f831f95ee9109ea2c867952b664e6fe7cf64534cb745c4f09105"
+    },
+    {
+      "path": "src/spjf_guard/features/sweep.py",
+      "present": true,
+      "bytes": 15628,
+      "sha256": "76f116e7b4756e3896b0d54d9193bbebb71c2448fffed175d9cf01667cf499e2"
+    },
+    {
+      "path": "src/spjf_guard/predict/__init__.py",
+      "present": true,
+      "bytes": 264,
+      "sha256": "d4e810ff79620bb77e1db4eb44df419d0315f43fd967ee5b77faed31dd60b854"
+    },
+    {
+      "path": "src/spjf_guard/predict/forward.py",
+      "present": true,
+      "bytes": 12626,
+      "sha256": "2ab7cb24a8186b89d523aba4c50ddb98c2d287d289aacad16b0d05d65f7aff64"
+    },
+    {
+      "path": "src/spjf_guard/predict/scores.py",
+      "present": true,
+      "bytes": 4781,
+      "sha256": "1b09f5bb438927dbfff1b249ae1ba6bee3c81f88f82d48ac70b041c1f8f15f65"
+    },
+    {
+      "path": "src/spjf_guard/sim/__init__.py",
+      "present": true,
+      "bytes": 993,
+      "sha256": "b4b0aa81eb8c907f469a21ba0bd3dc67a24c8842c6d5e97afaf7634a21489fdb"
+    },
+    {
+      "path": "src/spjf_guard/sim/bounds.py",
+      "present": true,
+      "bytes": 10840,
+      "sha256": "6bd64b495d3eb8408d4e466ce8b189101903f144a793dcfad1095fc2533d13f9"
+    },
+    {
+      "path": "src/spjf_guard/sim/kernel.py",
+      "present": true,
+      "bytes": 16410,
+      "sha256": "f70ad598ff79962a1eb2a6794130f2458fa5c093269ef3d67d4a51cd91800f88"
+    },
+    {
+      "path": "src/spjf_guard/sim/policy.py",
+      "present": true,
+      "bytes": 7576,
+      "sha256": "a4142ff0146f2457ffe41c1ff11ac195384bcb194ffda32e8febda485c3ae54a"
+    },
+    {
+      "path": "src/spjf_guard/sim/reference.py",
+      "present": true,
+      "bytes": 4852,
+      "sha256": "26bcdd2cece39afd792faa807be7c414f1b21b16ff1e43e8cfe261c0ae86a9bc"
+    },
+    {
+      "path": "src/spjf_guard/sim/runner.py",
+      "present": true,
+      "bytes": 6483,
+      "sha256": "ba743787396147525b8ba1aadfa5306cffd564a7934f30d50199e18fa7851745"
+    },
+    {
+      "path": "src/spjf_guard/sim/tightness.py",
+      "present": true,
+      "bytes": 5957,
+      "sha256": "7583d56cd7f7573e92e52fdc807390d68e4a044f8211c233d6d29117fc91fde6"
+    },
+    {
+      "path": "tests/test_accoding_heldout.py",
+      "present": true,
+      "bytes": 23916,
+      "sha256": "a06e8bcb21739e85b343c13b4cd3aeaadfadaee571eddab07d946654d2c6dba4"
+    },
+    {
+      "path": "uv.lock",
+      "present": true,
+      "bytes": 59291,
+      "sha256": "fb3628e168d60608c8f721b60d83f23655ea61aeca804ad68eb1638cef60483e"
+    },
+    {
+      "path": "outputs/selection_v4/selected_parameters.csv",
+      "present": true,
+      "bytes": 2353,
+      "sha256": "060a6b59b15c2fe1a43c175478d79973547274595d23b9646732ea3af5bea83a"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "anchors.csv",
+      "present": true,
+      "bytes": 13310,
+      "sha256": "cc953741d257bf5c669d35725dfb89e9a541d6320c08aa5ad95c8a76cf024355"
+    },
+    {
+      "path": "metrics.csv",
+      "present": true,
+      "bytes": 110776,
+      "sha256": "74ccc0f408236a8945ab9037297f72cb04ad3b56c622bbf6976076cb7b293960"
+    },
+    {
+      "path": "predictor_metrics.csv",
+      "present": true,
+      "bytes": 6203,
+      "sha256": "4689e47589bb83fd8f29713df06279504f52591f4f9f72a2675acb0f5e30895e"
+    },
+    {
+      "path": "run.log",
+      "present": true,
+      "bytes": 1915,
+      "sha256": "31b55c14e9e5be0d2591f1128c7faa57335d10e81f3f8cbae5054583df76502c"
+    },
+    {
+      "path": "summary.csv",
+      "present": true,
+      "bytes": 23087,
+      "sha256": "118260bb5f48260a1815cf33b54332afbc89046b7ab6fb35c05e8d767efd1369"
+    },
+    {
+      "path": "tail_shares.csv",
+      "present": true,
+      "bytes": 476,
+      "sha256": "1f4fc69838140b872aec817d7b32f73836c991153002b263df99731fb68ba118"
+    },
+    {
+      "path": "trace_calibration.csv",
+      "present": true,
+      "bytes": 176,
+      "sha256": "017faaef55c15514534fbc134ac4303f32e79422b570679ccd4ceee3f9f5bcd7"
+    }
+  ],
+  "arguments": {
+    "block": "sealed",
+    "params": "outputs/selection_v4/selected_parameters.csv",
+    "out_dir": "outputs/accoding_heldout_sealed_online_v2",
+    "unseal": true
+  },
+  "notes": {
+    "evaluated_rows": 809330,
+    "evaluated_judged_rows": 807171,
+    "development_max_id": 3246173,
+    "heavy_threshold_ms": 1314.0,
+    "development_filtered_sha256": "320f5772c58d800dca849ccebc306441063c7b0f842ca52f675c8d87fddfde68",
+    "evaluated_filtered_sha256": "3e4d639ae1885249b69ccb0dc07398033dcb9b853cbb81c6ce0b6cfb2ce14450",
+    "submissions_read": "Arrow id predicate; whole submissions file never hashed",
+    "predictor": {
+      "models": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "train_sample_rows": 1000000,
+      "train_sample_seed": 12345,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "num_leaves": 31,
+      "rounds": 244,
+      "selection_source": "evidence/accoding_v2/out_accoding_v2.txt, stage pred lag0_select",
+      "regression_objective": "regression",
+      "regression_target": "log1p(time_cost_ms / 1000)",
+      "heavy_objective": "binary",
+      "lgb_fixed": {
+        "learning_rate": 0.05,
+        "min_data_in_leaf": 100,
+        "feature_fraction": 0.8,
+        "bagging_fraction": 0.8,
+        "bagging_freq": 1,
+        "num_threads": 4,
+        "verbose": -1,
+        "force_row_wise": true
+      },
+      "lgb_seed_offsets": {
+        "bagging_seed": 7,
+        "feature_fraction_seed": 13,
+        "data_random_seed": 19
+      },
+      "ensemble_rule": "float32 arithmetic mean of predictions over seeds, as load_preds",
+      "score_model": "M4",
+      "score_key": "accoding_m4_log",
+      "policy_label": "SPJF-E",
+      "score_note": "Historical Table 9 label; actually log1p regression, not expected-cost Tweedie."
+    },
+    "trace_rules": {
+      "shapes": [
+        "poisson",
+        "deadline"
+      ],
+      "calibration_seed": 300,
+      "seeds": [
+        300,
+        301,
+        302,
+        303,
+        304
+      ],
+      "busy_work_target_s": 14400.0,
+      "busy_work_target_kind": "pinned precheck BUSY_WORK_TARGET",
+      "compression_rule": "precheck calib_scale on each evaluated block, shape and seed 300",
+      "compression_search": {
+        "lo": 1e-07,
+        "hi": 10.0,
+        "iterations": 60,
+        "midpoint": "geometric"
+      },
+      "compression_application": "precheck apply_scale, compress episode starts only",
+      "capacity_kind": "pinned from development trace.json; never retuned on evaluated block",
+      "loads": [
+        {
+          "rho": 0.5,
+          "k": 8
+        },
+        {
+          "rho": 0.8,
+          "k": 5
+        },
+        {
+          "rho": 1.0,
+          "k": 4
+        }
+      ],
+      "gamma": 0.7208696319231445,
+      "tau_h": 0.5,
+      "shape_kind": "pinned cbshape.json, codebench_v2_cache ev.parquet, 469360 rows, 28 bins",
+      "cbshape_source_sha256": "6b0c51fb881fcf0d5d0db95b103bbb39bfd1ce4e0d1910c58c1647873f5b2726",
+      "trace_source_sha256": "3a51c2f50a121ed009bc5da3cefc5425e44222f8a5f5a902ae5af8d7ed253787",
+      "episode_cap_h": 72.0,
+      "practice_chunk": 2000,
+      "practice_min_duration_s": 600.0,
+      "missing_contest_duration_s": 3600.0,
+      "anchor_rule": "each contest's first id among all rows up to the evaluated block's end, with metadata start_time, running maximum",
+      "anchor_kind": "on dev-test equal to the precheck development anchors (checked); on the sealed tail the development and sealed rows",
+      "svc_fixed_s": 0.5,
+      "service_cap_s": 30.5,
+      "service_rule": "min(time_cost_ms / 1000 + svc_fixed_s, service_cap_s)",
+      "service_kind": "pinned precheck main service assumption and development maximum",
+      "rank_rule": "stable order by quantised integer-microsecond arrival, then original input index",
+      "precheck_reference_scales": {
+        "poisson": 0.014892232655028845,
+        "deadline": 0.01485765840468662
+      }
+    },
+    "parameters": [
+      {
+        "family": "joint",
+        "promise_s": 300.0,
+        "b0_base_s": 60.0,
+        "eta": 0.5,
+        "gam_base_s": 0.0
+      },
+      {
+        "family": "joint",
+        "promise_s": 600.0,
+        "b0_base_s": 120.0,
+        "eta": 0.75,
+        "gam_base_s": 0.0
+      },
+      {
+        "family": "joint",
+        "promise_s": 1200.0,
+        "b0_base_s": 120.0,
+        "eta": 0.0,
+        "gam_base_s": 16.0
+      }
+    ],
+    "bound_job_checks": 145290780,
+    "versions": {
+      "python": "3.12.13 (main, Mar 24 2026, 22:57:53) [MSC v.1944 64 bit (AMD64)]",
+      "platform": "Windows",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6",
+      "lightgbm": "4.7.0",
+      "pyarrow": "25.0.1",
+      "numba": "0.67.0",
+      "pyyaml": "6.0.3"
+    }
+  }
+}

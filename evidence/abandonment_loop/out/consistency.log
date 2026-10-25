@@ -1,0 +1,11 @@
+rows 900 cells 15 dup 0
+guarded rows 450 R1 violations total 0 worst ratio 0.9511128977286532
+R2 over bound rows>0: 144 of 450 ; total jobs 8484
+R2 over-bound by p: {0.0: 0.0, 0.5: 1640.0, 1.0: 6844.0}
+seconds max 18.3
+inf rows matched to closed_loop: 36
+  p99_dl_s n 36 max abs diff 0.0
+  mean_s n 36 max abs diff 0.0
+  max_s n 36 max abs diff 0.0
+  max_excess_s n 27 max abs diff 0.0
+  worst_ratio_to_bound n 9 max abs diff 0.0

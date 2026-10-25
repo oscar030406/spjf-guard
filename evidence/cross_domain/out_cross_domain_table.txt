@@ -1,9 +1,9 @@
 ====================================================================================================
 CROSS-DOMAIN CHECK OF THE SPJF + OVERTAKE-BUDGET-GUARD METHOD
 ====================================================================================================
-Education side quoted from: prechecks/guard_variants/out_grid_rep0_L{0,1,2}_M4_1.txt (rep0, M4 predictor) and prechecks/ranking_score/out_table_primary_5reps.txt
-                            prechecks/accoding_v2/out_accoding_v2.txt (audit l.114-120, prediction l.390-396, deadline_rho0.8_main l.899-911)
-New side: prechecks/cross_domain/out_audit_*.txt, out_predict_*.txt, out_sim_*.txt (this study).
+Education side quoted from: evidence/guard_variants/out_grid_rep0_L{0,1,2}_M4_1.txt (rep0, M4 predictor) and evidence/ranking_score/out_table_primary_5reps.txt
+                            evidence/accoding_v2/out_accoding_v2.txt (audit l.114-120, prediction l.390-396, deadline_rho0.8_main l.899-911)
+New side: evidence/cross_domain/out_audit_*.txt, out_predict_*.txt, out_sim_*.txt (this study).
 
 -- A. cost distribution (how heavy is the tail) ---------------------------------------------
 trace                                  unit     median       mean        p99  top1% work  top5% work       L used
@@ -32,7 +32,7 @@ trace / load                                         k   FCFS p99  FCFS p99/L  g
 CodeBench busy-hour rho=0.50                       4-8      22.17        0.37     0.735     1244.8 =   21 L
 CodeBench busy-hour rho=0.78                       4-8     109.71        1.83     0.861     3055.1 =   51 L
 CodeBench busy-hour rho=1.06                       4-8     263.12        4.39     0.892     5882.9 =   98 L
-ACcoding poisson rho=0.8 (synthetic arrivals)        -      0.648      0.0212     0.980      601.7 =   20 L
+ACcoding poisson rho=0.8 (synthetic arrivals)        -      1.531      0.0502     0.980      601.7 =   20 L
 azure busy-hour rho=0.5                             30     166.38      0.5802     0.797     1137.9 = 3.97 L
 azure busy-hour rho=0.8                             19     690.15      2.4066     0.869     2162.9 = 7.54 L
 azure busy-hour rho=1.0                             15    1209.65      4.2181     0.858     2887.2 = 10.07 L

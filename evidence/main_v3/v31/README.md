@@ -1,25 +1,25 @@
 v3.1 of the consolidated main experiment: the same pipeline as `../mv3_*.py`, re-run under
-its own manifest with the three changes the independent verifier asked for in
+its own manifest with the three changes that the independent verifier asked for in
 `../../main_v3_verify/out_VERDICT.txt`. The v3 report `../out_main_v3.txt` and its stage
-logs are untouched; v3.1 writes `../out_main_v31.txt`. This directory is a separate
-manifest, which is why it is a subdirectory: `../mv3_report.py`'s refusal rule scans
-`../out_*.txt` and must not see logs from other code.
+logs are untouched. v3.1 writes `../out_main_v31.txt`. This directory has its own
+manifest, and that is why it is a subdirectory. The refusal rule of `../mv3_report.py` scans
+`../out_*.txt`, and logs from other code must not be there.
 
 What changed, and only this:
 
 - **F8, selection.** Guard parameters are chosen worst-case over **five** validation
   overlays as well as the three load levels (15 cells): feasible = harm ≤ G/2 in every
   cell, objective = the deadline-window p99 gap closed in the worst cell. The identical
-  rule is applied to the fixed-budget family (`FIXSEL`), so "capped beats fixed at equal
-  promise" is decided against the best *feasible* fixed budget rather than against
-  B0 = Bmax, which the rule rejects at every G.
-- **F4, the baseline.** The finite-skip baseline is charged at **dispatch** —
-  `v31_skipkern.py`, whose docstring proves `W ≤ W_FCFS + (N + 2k − 2)L/k` — and gets the
-  largest N that still promises G (34 instead of 30 at k = 4, G = 600 s). v3's
+  rule is applied to the fixed-budget family (`FIXSEL`). Therefore, "capped beats fixed at
+  equal promise" is decided against the best *feasible* fixed budget. It is not decided
+  against B0 = Bmax, which the rule rejects at every G.
+- **F4, the baseline.** The finite-skip baseline is charged at **dispatch**, and it gets the
+  largest N that still promises G (34 instead of 30 at k = 4, G = 600 s). Its kernel is
+  `v31_skipkern.py`, whose docstring proves `W ≤ W_FCFS + (N + 2k − 2)L/k`. v3's
   completion-charged variant stays beside it as `SKIPC`.
 - **F1, the manifest.** The manifest hashes the imported modules (`guardkern.py`, the v2.1
-  pipeline, the referee simulator, `rs_fit.py`) as well as this study's scripts; the data
-  artefacts are hashed too and logged by the build stage.
+  pipeline, the referee simulator, `rs_fit.py`) as well as this study's scripts. The data
+  artefacts are hashed too, and the build stage logs them.
 
 Run order (prefix: `env -u PYTHONHOME -u PYTHONPATH -u UV_INTERNAL__PYTHONHOME uv run
 --with pandas --with numpy --with scipy --with pyarrow --with lightgbm --with numba
@@ -41,8 +41,8 @@ v31_report.py                                     ~5 s   -> ../out_main_v31.txt
 ```
 
 Caches: as in `../README.md` (`<cache-dir>/cb_v2_cache_r4`,
-`<cache-dir>/rank_score/rs_pred_ires0.parquet`, `<cache-dir>/mv3/r1s_forward.parquet`);
-this study's own traces and bootstrap replicates go to `<cache-dir>/mv31/`.
+`<cache-dir>/rank_score/rs_pred_ires0.parquet`, `<cache-dir>/mv3/r1s_forward.parquet`).
+This study's own traces and bootstrap replicates go to `<cache-dir>/mv31/`.
 
 Regenerate: source = the caches above; artefact = `../out_main_v31.txt` and the `*.csv`
 here; command = the run order above; check = `v31_report.py` exits non-zero and writes

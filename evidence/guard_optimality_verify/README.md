@@ -6,24 +6,24 @@ study under review?
 
 **Answer.** With corrections. `verification.md` is the complete report: corrected
 statements, proofs, verdicts, a literature check and a recommendation on where each
-result belongs in the paper. `sim.py` is an independently written event simulator and
-`check_t1.py`, `check_t2.py`, `check_t3.py` are the numerical attacks, each with its own
+result belongs in the paper. `sim.py` is an independently written event simulator.
+`check_t1.py`, `check_t2.py` and `check_t3.py` are the numerical attacks, each with its own
 captured log.
 
 **Paper items.** Supplementary Sections S7.1 (Table S26), S7.2 (Proposition S6), S7.3
 (Lemma S7), S7.4 (the truncated-Pareto illustration) and S9.1, whose source comments name
 `verification.md`, `literature_check.md`, `out_t1.txt`, `out_t2.txt` and `out_t3.txt`.
 
-**Inputs.** None. Exact simulation over constructed instances; no dataset is read and no
+**Inputs.** None. Exact simulation over constructed instances. No dataset is read and no
 sealed semester is opened.
 
 **Status.** Current. It governs wherever it disagrees with the optimality note.
 
 **One reference does not resolve here.** `sim.py` names `prechecks/guard_optimality/`,
-the note under review, which has no copy in this folder; the sentence around it says what
+the note under review, which has no copy in this folder. The sentence around it says what
 the file was. The `__pycache__/` bytecode was dropped.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout), `<cache-dir>` (a scratch directory outside the repository) and `<python-root>` (the interpreter install); set them before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout), `<cache-dir>` (a scratch directory outside the repository) and `<python-root>` (the interpreter install). Set them before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 

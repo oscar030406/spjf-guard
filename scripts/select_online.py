@@ -97,6 +97,21 @@ def candidates(cfg, selection: Path, top: int) -> list[dict]:
     return list(chosen.values())
 
 
+def every_candidate(cfg) -> list[dict]:
+    """Every configured grid point, for the full reselection (``candidates --all``)."""
+    return [
+        {
+            "name": point.name,
+            "family": point.family,
+            "point_promise_s": point.promise_s,
+            "b0_base_s": point.b0_base_s,
+            "eta": point.eta,
+            "gam_base_s": point.gam_base_s,
+        }
+        for point in grids.grid_points(cfg["scheduling"]["selection"]["grids"], cfg.promises_s)
+    ]
+
+
 def _cells(cfg, rows, points, variant) -> list[sel.Cell]:
     out = []
     by_name = {p.name: p for p in points}
@@ -123,12 +138,14 @@ def _cells(cfg, rows, points, variant) -> list[sel.Cell]:
     return out
 
 
-def choose(cfg, cells_csv: Path, candidates_csv: Path) -> list[dict]:
+def choose(
+    cfg, cells_csv: Path, candidates_csv: Path, variants=("original", "online")
+) -> list[dict]:
     points = [grid_point(r) for r in _rows(candidates_csv)]
     rows = _rows(cells_csv)
     harm_fraction = float(cfg["scheduling"]["selection"]["harm_fraction"])
     out = []
-    for variant in ("original", "online"):
+    for variant in variants:
         cells = _cells(cfg, rows, points, variant)
         for choice in sel.choose(cells, harm_fraction):
             out.append({"variant": variant, **vars(choice)})
@@ -143,13 +160,18 @@ def main() -> int:
     ap.add_argument("--top", type=int, default=4)
     ap.add_argument("--candidates", type=Path, default=OUT / "candidates.csv")
     ap.add_argument("--cells", type=Path, default=OUT / "validation" / "online_cells.csv")
+    ap.add_argument("--all", action="store_true", help="candidates: every grid point")
+    ap.add_argument("--choices", type=Path, default=OUT / "online_choices.csv")
+    ap.add_argument("--variants", default="original,online")
     args = ap.parse_args()
     cfg = cfgmod.load(args.config)
     if args.action == "candidates":
-        path = _write(candidates(cfg, args.selection, args.top), args.candidates)
+        rows = every_candidate(cfg) if args.all else candidates(cfg, args.selection, args.top)
+        path = _write(rows, args.candidates)
         print(f"wrote {path}")
         return 0
-    path = _write(choose(cfg, args.cells, args.candidates), OUT / "online_choices.csv")
+    chosen = choose(cfg, args.cells, args.candidates, tuple(args.variants.split(",")))
+    path = _write(chosen, args.choices)
     print(f"wrote {path}")
     return 0
 

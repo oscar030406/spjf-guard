@@ -1,8 +1,8 @@
 # data
 
-This package contains no raw data. The manuscript's Data Availability Statement says we
-redistribute none of the source datasets, so each one has to be downloaded from its
-publisher and saved at the path given below. The code reads these paths as written
+This package contains no raw data. The manuscript's Data Availability Statement says that
+we redistribute none of the source datasets. Therefore, download each one from its
+publisher and save it at the path given below. The code reads these paths as written
 (the `data` section of `configs/main.yaml`, relative to the package root).
 
 ## Datasets
@@ -17,15 +17,15 @@ publisher and saved at the path given below. The code reads these paths as writt
 | LPC-EGEE 2004 (Parallel Workloads Archive) | Supplementary Sections S6.4, S6.6, S6.7 | <https://www.cs.huji.ac.il/labs/parallel/workload/l_lpc/> | `evidence/lpc_egee/raw/LPC-EGEE-2004-1.2-cln.swf.gz` | free for research; acknowledge Emmanuel Medernach (data provider) and the Parallel Workloads Archive |
 | Mozilla Firefox CI, two hardware worker pools | the recorded-wait check of Sections 7.2 and 8.6, Supplementary S2.2–S2.3 | collected from the public, unauthenticated Taskcluster and Treeherder APIs by `evidence/firefox_ci/run_collect.sh` | `data/mozilla_firefox_ci/` (written by that script) | no licence statement; attributed to Mozilla; not redistributed |
 
-The sealed CodeBench semesters 2023-1, 2023-2 and 2024-1 are read only by the frozen
-procedure in `docs/sealed_run_procedure.md`; without the `--unseal` flag and the
-protocol lock, the code refuses to open them.
+Only the frozen procedure in `docs/sealed_run_procedure.md` reads the sealed CodeBench
+semesters 2023-1, 2023-2 and 2024-1. Without the `--unseal` flag and the protocol lock,
+the code refuses to open them.
 
 ## Checksums of the files we used
 
-SHA-256, computed on 2026-09-29 from the files the reported runs read. The three sealed
+SHA-256, computed on 2026-09-29 from the files that the reported runs read. The three sealed
 archives match the hashes recorded in `protocol_lock.json` at the freeze. The Firefox CI
-slice has no checksum: the API expires old pages, so a new download is not byte-identical.
+slice has no checksum: old pages of the API expire, so a new download is not byte-identical.
 
 ```text
 777d5d30343575ef007ec92afab4e177969652ba0d730c96aeaa1b8a514d5d13  data/codebench/archives/cb_dataset_2016_1_v1.81.tar.gz
@@ -61,8 +61,8 @@ d1b28303dea802ad87b4484e1196e878e06824850b9a4fe8aa34693439fe87e9  data/vle.csv
 
 ## What the pipeline writes here
 
-Everything else under `data/` is derived and rebuilt by the commands in the top-level
-README: `data/codebench/parquet/` (`scripts/parse_archive.py`),
+Everything else under `data/` is derived data, which the commands in the top-level
+README rebuild: `data/codebench/parquet/` (`scripts/parse_archive.py`),
 `data/derived/codebench_cache_r4/` (`scripts/build_cache.py`),
 `data/derived/package_ranking_scores/` (`scripts/fit_scores.py`) and
 `data/derived/overlay_traces/` (`scripts/build_overlays.py`). None of it is included:

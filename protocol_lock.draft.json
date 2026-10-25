@@ -1,5 +1,5 @@
 {
-  "written_at": "2026-09-27T05:41:10-04:00",
+  "written_at": "2026-10-26T01:42:32-04:00",
   "status": "draft",
   "config": {
     "path": "configs/main.yaml",
@@ -610,12 +610,20 @@
   "code": {
     "files": [
       {
+        "path": "scripts/accoding_online.py",
+        "sha256": "0134999128fecdfffb8f945632421f9569ce1741f0d031abafc2dc1b629aba74"
+      },
+      {
         "path": "scripts/assess_consistent_selection.py",
         "sha256": "57903aa93d81cb90b1d7686cd81e03c1e249cc8d031f01839cc72a8442be95c7"
       },
       {
         "path": "scripts/build_cache.py",
         "sha256": "4699e82911fe5d12efa203f752fd99b849e5e828b5b8b34643adbdc89efd5d0a"
+      },
+      {
+        "path": "scripts/build_coending_overlays.py",
+        "sha256": "14217cb1666a794a012e15bfb3fd8eae979bb339e067ac9a561afb35800fa874"
       },
       {
         "path": "scripts/build_overlays.py",
@@ -631,7 +639,7 @@
       },
       {
         "path": "scripts/check_generated.py",
-        "sha256": "560adb92e63cae2024e1e2c92a750ed6e073de79befaf5767ee7af73e1834798"
+        "sha256": "d83352280618341905bbb74565d08f0edd1938827a6cbca810f02af4340b5e43"
       },
       {
         "path": "scripts/check_overlays.py",
@@ -639,7 +647,7 @@
       },
       {
         "path": "scripts/check_paper_numbers.py",
-        "sha256": "4da37c89de93e50ef398c92788ac5af73b671de2469b588e3c9fa4db0837ea85"
+        "sha256": "b47167ba4144505e2feb5d8ae2b6c0797bbd452f2a3c58fc42d8dcc8c319c00d"
       },
       {
         "path": "scripts/check_preserved_outputs.py",
@@ -663,7 +671,7 @@
       },
       {
         "path": "scripts/emit_gap_harm_figure.py",
-        "sha256": "94b681ebddc6f2d4b9186a169b8f3140d35d7ed5651f064d9bf48d18420de6ee"
+        "sha256": "9a17e3afddb4e6995c0150f75107e274c0b2930f31e1853f91e7a9fb250e53de"
       },
       {
         "path": "scripts/emit_paper_tables.py",
@@ -674,8 +682,16 @@
         "sha256": "51b564d12d6536e5904d1e2838d96e06bc6e82e51b049e961ab07435133dd732"
       },
       {
+        "path": "scripts/fast_refine.py",
+        "sha256": "c9b4077d07b998d10da227d5d01f3e3cb46a0146b0fff045887bdd4dbf0cbdf4"
+      },
+      {
         "path": "scripts/fit_scores.py",
         "sha256": "8f2b8d9e2133239b9bba2470750b6c0674226a1f0d298c1d9e2c5367f207c37f"
+      },
+      {
+        "path": "scripts/freeze_accoding.py",
+        "sha256": "d8e35c264bb07b45c64c86660c8c004d27f48100dd19d03c580691ab2619008c"
       },
       {
         "path": "scripts/freeze_protocol.py",
@@ -694,8 +710,16 @@
         "sha256": "ea5b01b2142dbac736de4ef0f466fb4b1bd7b98aba2d07d0d3c0672d4aacc40d"
       },
       {
+        "path": "scripts/run_accoding_heldout.py",
+        "sha256": "60d6d57e4f3e1a76b2e65cfa10e01140b870d6b5b11ba3a09cd9d00820c8ad0b"
+      },
+      {
         "path": "scripts/run_cluster_bootstrap.py",
         "sha256": "bf73ceca138d8059ee34562ddfa9532a655ac71d473117cd27626edab7dfd52b"
+      },
+      {
+        "path": "scripts/run_coending_online.py",
+        "sha256": "6a3214f8b4ad3972bc7f295a2a226a94642725190b88d2d9f9d2b4edf78e13d6"
       },
       {
         "path": "scripts/run_consistent_visibility.py",
@@ -706,8 +730,12 @@
         "sha256": "2402a35bb0db5cc3959891c206e2a7767626e01e82532f144a2f8c96f1867f26"
       },
       {
+        "path": "scripts/run_online_cluster_bootstrap.py",
+        "sha256": "019dec919ab6dc00836b4e5357fd5a20dc4b684249ce3fe4c769658099d840e1"
+      },
+      {
         "path": "scripts/run_online_visibility.py",
-        "sha256": "e19a241d25d3eb394d1b1aa2f1051e72cfae5bd18ec11998c290dee63154f1e4"
+        "sha256": "12bd5cd0ccc20ab75d4c4885e43238bc0d84f6ca72a4923bcc5a0465ddb98038"
       },
       {
         "path": "scripts/run_visibility.py",
@@ -723,11 +751,15 @@
       },
       {
         "path": "scripts/select_online.py",
-        "sha256": "5e15136989615cc8da9f1194e232ce4ce296108dae1feca51798aee454b0c163"
+        "sha256": "7ba0cd5109f2b603b05aeb4ba415c55ff17c1e4703dfe4881f72b248721d0f9a"
       },
       {
         "path": "scripts/select_parameters.py",
         "sha256": "ab99fd77a09c04e4643ab23ffe44055a7e62083cfe1b0e6be1b71276fa1921b6"
+      },
+      {
+        "path": "scripts/train_learned_policy.py",
+        "sha256": "9505cc780d8dd049920ba6e483f5afb9887ec2a763c1756832f8694b738500cb"
       },
       {
         "path": "src/spjf_guard/__init__.py",
@@ -894,6 +926,10 @@
         "sha256": "b34a8fb2571de94b077c8ce6692c3a0c9c98bf839754b2df87dc6b4a37acb914"
       },
       {
+        "path": "tests/test_accoding_heldout.py",
+        "sha256": "a06e8bcb21739e85b343c13b4cd3aeaadfadaee571eddab07d946654d2c6dba4"
+      },
+      {
         "path": "tests/test_adversarial.py",
         "sha256": "76813f4c9d3b4c55b65f338a788b0e98f3669e6559e3d4b9097a6cfa6188152c"
       },
@@ -904,6 +940,14 @@
       {
         "path": "tests/test_cluster_bootstrap.py",
         "sha256": "0b5cf4c632cb72ec9a0ca4cd0446faa2ccdb14465c29d021ed329a74af1e334a"
+      },
+      {
+        "path": "tests/test_coending_online.py",
+        "sha256": "db9a6cf804f224df7e7cfec7a61c5e7b049b09f8964029e37f02809310ae083d"
+      },
+      {
+        "path": "tests/test_coending_overlays.py",
+        "sha256": "bdef7be6e7f1aeaa269ef0d92918406095f43594702b29ba9b0c2bcf456824b9"
       },
       {
         "path": "tests/test_consistent_cells.py",
@@ -950,6 +994,10 @@
         "sha256": "0dbce0ff763b77b6251e30933ead60f87fbc2e225629e112202228acca7f56a4"
       },
       {
+        "path": "tests/test_fast_refine.py",
+        "sha256": "4ffc021b12ab2d6aff721ea52e316bcf68bf9b203f0b305aa1147b095e4ccfed"
+      },
+      {
         "path": "tests/test_feature_refine.py",
         "sha256": "097b0f1589d7e658af64f4e758cbe43eaffcc8b19f73aa80f5bafb1a677985d5"
       },
@@ -970,8 +1018,20 @@
         "sha256": "a14e8d4ea678f8271f2a1a15656ef132f787ba6f1a3eb669e3b66484dd0cad0d"
       },
       {
+        "path": "tests/test_online_base_score.py",
+        "sha256": "f4792f90dd8e0de160ca42c2bcd5ad5b6eb7191779baf356a5199658f15012da"
+      },
+      {
+        "path": "tests/test_online_cluster_bootstrap.py",
+        "sha256": "e02e653fe3ffca8e42bf4461d0c81a5abcc2ff1f3488ea80b979169b9e3fccf7"
+      },
+      {
         "path": "tests/test_online_paired_differences.py",
         "sha256": "19cef539f157983a0b5f1c82387b6247f691d086502570ee7bf1833e875320fe"
+      },
+      {
+        "path": "tests/test_online_suites.py",
+        "sha256": "8509759cf873d77a04d860c622884f17c1292e1f4b41d3f9e9d57c0537e29555"
       },
       {
         "path": "tests/test_online_visibility.py",
@@ -1019,7 +1079,7 @@
       },
       {
         "path": "tests/test_sealed_paper_tables.py",
-        "sha256": "0b8012f8f9dc90b1c4c8b805a3d9efc4a36b483f00620ee26343bd5f7cb4a765"
+        "sha256": "d4d61b290fb412658dd65bffdf99c23077f0bc8365e048eea554e3c1ff594403"
       },
       {
         "path": "tests/test_sim_crosscheck_prechecks.py",
@@ -1046,7 +1106,7 @@
         "sha256": "b005dfb795cb9fc285ef4a52994b8310411f7f960d3586f501b79a140cfdaab4"
       }
     ],
-    "digest": "c9781a9a2810218dfb738507d87205ddbaa92f3c82b6559ff9c8c9e8cc22a06a"
+    "digest": "af76d9dd60013a36c7b1a3f0e3fb25028064d74f847e0a8f60aefff2fbaa87d6"
   },
   "inputs": {
     "artefacts": [

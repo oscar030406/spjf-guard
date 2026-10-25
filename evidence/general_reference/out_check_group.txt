@@ -1,0 +1,5 @@
+k=1: group identity exact in 13694 groups, different in 0
+SJF runs: groups with intra(g) > 0: 0 (claim 0)
+k=2: worst |err| / (2(k-1)L|g|) = 0.5000 (claim < 1); worst |err| / (2(k-1)L) = 1.5000 (does one constant suffice?)
+k=3: worst |err| / (2(k-1)L|g|) = 0.4167 (claim < 1); worst |err| / (2(k-1)L) = 0.7917 (does one constant suffice?)
+k=4: worst |err| / (2(k-1)L|g|) = 0.2778 (claim < 1); worst |err| / (2(k-1)L) = 0.6111 (does one constant suffice?)

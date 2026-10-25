@@ -1,0 +1,21 @@
+{
+  "instances": 18503,
+  "window_errors_skipped": 1497,
+  "mismatches": 0,
+  "by_mode": {
+    "SCORE": 5133,
+    "FCFS": 5014,
+    "GUARD": 8356
+  },
+  "instances_with_window_rebuild": 896,
+  "abandon_events": 173050,
+  "resubmissions": 102055,
+  "withdrawn": 70995,
+  "guarded_instances": 8356,
+  "r1_additive_violations": 0,
+  "r1_multiplicative_violations": 0,
+  "r2_instances_over_bound": 156,
+  "r2_jobs_over_bound": 255,
+  "r2_worst_excess_minus_bound": 93,
+  "first_mismatch": null
+}

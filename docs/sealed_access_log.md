@@ -51,5 +51,47 @@
 | 2026-09-25 | `scripts/run_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | 策略一致可见性比较写到 outputs/sealed_visibility，耗时 1039 秒 | 运行者 | 否 |
 | 2026-09-25 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 6623 s | 运行者 | 否 |
 | 2026-09-25 | `scripts/run_consistent_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | exact visibility outputs written to outputs/sealed_consistent_visibility in 11240 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 3424 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 3513 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 2743 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 3300 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 3392 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 2662 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 2617 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 2565 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 2269 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 2639 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1698 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1777 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1718 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | 运行中断，未产出（IndexError: index 2 is out of bounds for axis 0 with size 1） | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | 运行中断，未产出（IndexError: index 1 is out of bounds for axis 0 with size 1） | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | 运行中断，未产出（IndexError: index 2 is out of bounds for axis 0 with size 1） | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1681 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | 运行中断，未产出（IndexError: index 1 is out of bounds for axis 0 with size 1） | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1596 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 206 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1316 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1266 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1187 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 1259 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 946 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 921 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 898 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 854 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 533 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 740 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 904 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 504 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 502 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 497 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 468 s | 运行者 | 否 |
+| 2026-10-01 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 6187 s | 运行者 | 否 |
+| 2026-10-02 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 140 s | 运行者 | 否 |
+| 2026-10-02 | `scripts/run_online_visibility.py` | 封存学期 2023-1, 2023-2, 2024-1 | online replay written in 152 s | 运行者 | 否 |
+| 2026-10-02 | `scripts/run_accoding_heldout.py` | accoding-sealed-id-block [0.80, 1.00] | 运行中断于AssertionError: SPJF-E: no online fixed point in 200 iterations，未产出汇总表 | 运行者 | 否 |
+| 2026-10-02 | `scripts/run_accoding_heldout.py` | accoding-sealed-id-block [0.80, 1.00] | 运行中断于FileExistsError: output directory is not empty: D:\UserData\Desktop\图神经网络\outputs\accoding_heldout_sealed_online，未产出汇总表 | 运行者 | 否 |
+| 2026-10-03 | `scripts/run_accoding_heldout.py` | accoding-sealed-id-block [0.80, 1.00] | outputs/accoding_heldout_sealed_online_v2: anchors.csv, manifest.json, metrics.csv, predictor_metrics.csv, run.log, summary.csv, tail_shares.csv, trace_calibration.csv | 运行者 | 否 |
+| 2026-10-25 | `scripts/run_online_cluster_bootstrap.py` | 封存学期 2023-1, 2023-2, 2024-1 | 100 online class-term resamples; 60 identity rows | 运行者 | 否 |
 
 上表是全部记录，冻结前后都一样：冻结之前，行里只有计数、字节数与划分边界，没有对任何封存学期或 ACcoding 封存块算过开销分布、预测或调度结果；冻结之后，封存运行每开一次也各占一行，中断的那一次同样有行，输出栏写明停在哪一步。

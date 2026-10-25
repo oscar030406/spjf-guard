@@ -14,7 +14,7 @@ Only the induced order of a score reaches the scheduler, never its level.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
@@ -47,11 +47,17 @@ class ForwardRun:
 
 @dataclass
 class FrozenM4Models:
-    """Original-score models and design rows used by exact visibility refinement."""
+    """Original-score models and design rows used by exact visibility refinement.
+
+    ``refit_heavy`` holds, for each target whose cut-offs were refit on its training rows,
+    the heavy flag of every event under those cut-offs; a history rebuilt for one of that
+    target's jobs has to read these flags (features.refine.M4HistoryRecomputer).
+    """
 
     models: dict[str, Any]
     design: np.ndarray
     semester: np.ndarray
+    refit_heavy: dict[str, np.ndarray] = field(default_factory=dict)
 
     def predict(self, submission_rows: np.ndarray, histories: np.ndarray) -> np.ndarray:
         indices = np.asarray(submission_rows, np.int64)
@@ -118,13 +124,17 @@ def fit_frozen_m4_models(
     all_terms: Sequence[str],
     expected_scores: np.ndarray | None = None,
     score_name: str = "spjf_e",
+    *,
+    events: pd.DataFrame,
 ) -> tuple[FrozenM4Models, np.ndarray, np.ndarray, np.ndarray]:
     """Refit the original M4 weights once and verify their stored predictions.
 
     Returns the frozen models, the authoritative M4 history rows, and the original
-    arrival/availability arrays.  The current protocol uses fixed cut-offs for all
-    development targets; refusing a target-specific cut-off here prevents refinement
-    from silently scoring with a different design than the fitted model.
+    arrival/availability arrays.  Each target gets the design fit_forward gave it
+    (_design_for_target, the original variant's M4/global/all-results reading): when the
+    fixed cut-offs would include its own rows, its model, its design and history rows and
+    the heavy flags its rebuilt histories read all come from the cut-offs refit on its
+    training rows.
     """
     arrival, availability = arrival_and_availability(prepared, clock)
     features = feature_frame(prepared, arrival, availability)
@@ -132,6 +142,7 @@ def fit_frozen_m4_models(
     design = design_matrix(static, features, arrival[rows])
     columns = column_index(GROUPS["M4"])
     selected_design = np.ascontiguousarray(design[:, columns], np.float32)
+    history = features[list(HIST_COLS)].to_numpy(np.float32, copy=True)
     semester = prepared.semester[rows]
     first, order = term_order(prepared.semester, arrival, all_terms)
     available = availability[rows]
@@ -139,20 +150,37 @@ def fit_frozen_m4_models(
     spec = SCORE_SPECS[score_name]
     label = spec.target_of(executed)
     settings = lgb_parameters(cfg_predictor, spec)
+    fixed = {
+        "terms": list(cfg_predictor["fixed_cutoff_terms"]),
+        "threshold": prepared.heavy_threshold,
+        "cuts": prepared.tercile_cuts,
+    }
     models: dict[str, Any] = {}
+    refit_heavy: dict[str, np.ndarray] = {}
     reproduced = np.full(len(rows), np.nan, np.float64)
-    fixed_terms = list(cfg_predictor["fixed_cutoff_terms"])
-    core = np.isin(semester, fixed_terms)
     for target in [str(term) for term in order if term in targets]:
         prior = [term for term in order if first[term] < first[target]]
         train = np.isin(semester, prior) & (available < first[target])
-        if not train[core].all():
-            raise ValueError(
-                f"{target} needs target-specific cut-offs; exact refinement requires "
-                "the matching frozen target design"
-            )
         test = semester == target
-        model = _fit_model(settings, selected_design[train], label[train])
+        target_design, threshold, cuts, source = _design_for_target(
+            design,
+            prepared,
+            static,
+            clock,
+            arrival,
+            train,
+            events,
+            fixed,
+            limit_s,
+            "M4",
+            "global",
+            False,
+        )
+        if source == REFIT_CUTOFFS:
+            selected_design[test] = target_design[np.ix_(test, columns)]
+            history[test] = selected_design[test, -len(HIST_COLS) :]
+            refit_heavy[target] = prepared.with_cutoffs(threshold, cuts).heavy
+        model = _fit_model(settings, target_design[np.ix_(train, columns)], label[train])
         models[target] = model
         reproduced[test] = model.predict(selected_design[test])
         if expected_scores is not None:
@@ -169,9 +197,10 @@ def fit_frozen_m4_models(
             "refitted frozen M4 weights do not reproduce the stored original scores; "
             f"{int((delta > 0).sum()):,} rows differ, worst {float(delta.max()):.3e}"
         )
-    history = features[list(HIST_COLS)].to_numpy(np.float32)
     return (
-        FrozenM4Models(models=models, design=selected_design, semester=semester),
+        FrozenM4Models(
+            models=models, design=selected_design, semester=semester, refit_heavy=refit_heavy
+        ),
         history,
         arrival,
         availability,

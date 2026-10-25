@@ -1,0 +1,25 @@
+T3 ('h=0', 1): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.000, violations 0
+T3 ('h=0', 2): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('h=0', 3): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('h=0', 4): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('h=1', 1): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.000, violations 0
+T3 ('h=1', 2): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('h=1', 3): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('h=1', 4): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('h=2', 1): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 1.000, violations 0
+T3 ('h=2', 2): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.667, violations 0
+T3 ('h=2', 3): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.526, violations 0
+T3 ('h=2', 4): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('h=5', 1): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 1.000, violations 0
+T3 ('h=5', 2): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.750, violations 0
+T3 ('h=5', 3): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('h=5', 4): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+T3 ('strict', 1): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 1.000, violations 0
+T3 ('strict', 2): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.733, violations 0
+T3 ('strict', 3): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.632, violations 0
+T3 ('strict', 4): worst |k(W_P-W_R)-(In-Out)| / (2(k-1)L+Lam) = 0.500, violations 0
+G  guard on R's order: worst k*excess / (B+(3k-2)L+Lam) = 0.938, violations 0
+A  burst   0: excess of i = 3, In = 3, Out = 0, Lam = 0
+A  burst   5: excess of i = 8, In = 3, Out = 0, Lam = 5
+A  burst  20: excess of i = 23, In = 3, Out = 0, Lam = 20
+A  burst  80: excess of i = 83, In = 3, Out = 0, Lam = 80

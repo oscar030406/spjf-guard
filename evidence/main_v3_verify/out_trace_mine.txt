@@ -1,2 +1,0 @@
-numbers checked against MY simulator's cells: 1016; not covered (cells missing): 108
-mismatches: 0

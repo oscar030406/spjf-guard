@@ -9,27 +9,27 @@ independent-simulator figures: the 5.7 billion checks of Section 8.5 and the job
 agreement over 17,634,760 jobs and 22 policies in Supplementary Section S3.16.
 Supplementary Section S5.4 cites `out_VERDICT.txt` beside the earlier-pipeline validation.
 
-**Reading the logs.** In these logs *builder* means the original implementation under
-review and *mine* the independent re-implementation written here; the two are compared
-job for job.
+**Reading the logs.** In these logs, *builder* means the original implementation under
+review, and *mine* means the independent re-implementation written here. The two are
+compared job for job.
 
 **Status.** Current as the v3 verification. Its findings F1, F4 and F8 are what produced
 version 3.1 of the main experiment.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
 ## Original study notes
 
 Adversarial verification of `../main_v3`. Nothing in `../main_v3` or anywhere else in the
-project is modified; this directory holds only my own scripts, logs and verdict. The
+project is modified. This directory holds only my own scripts, logs and verdict. The
 builder's traces and per-cell outputs are read from the local cache directory
-(`<cache-dir>/mv3/`); my own large files go to `<cache-dir>/mv3_verify/`.
+(`<cache-dir>/mv3/`). My own large files go to `<cache-dir>/mv3_verify/`.
 
 The simulator here is written from the policy definitions in `docs/research_plan.md`
 chapters 4-5. It does not import `guardkern.py`, `refsim.py` or
-`service_precheck_v2.py`; the only thing taken from the builder is the input (arrival
+`service_precheck_v2.py`. The only things taken from the builder are the input (arrival
 times, true service times, ranking scores, deadline-window and heavy flags) and, for the
 comparison, its stored per-cell numbers.
 

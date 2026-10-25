@@ -1,0 +1,27 @@
+gate 1 original G= 300.0 fixed   FIX-B329.671             equal in all 14 columns
+gate 1 original G= 300.0 capped  CAP-G300-B60-e0.5        equal in all 14 columns
+gate 1 original G= 300.0 hybrid  HYB-G300-B120-g4-e0      equal in all 14 columns
+gate 1 original G= 300.0 joint   CAP-G300-B60-e0.5        equal in all 14 columns
+gate 1 original G= 600.0 fixed   FIX-B981.126             equal in all 14 columns
+gate 1 original G= 600.0 capped  CAP-G600-B120-e0.75      equal in all 14 columns
+gate 1 original G= 600.0 hybrid  HYB-G600-B120-g16-e0     equal in all 14 columns
+gate 1 original G= 600.0 joint   CAP-G600-B120-e0.75      equal in all 14 columns
+gate 1 original G=1200.0 fixed   FIX-B2029.96             equal in all 14 columns
+gate 1 original G=1200.0 capped  CAP-G1200-B360-e0.75     equal in all 14 columns
+gate 1 original G=1200.0 hybrid  HYB-G1200-B120-g16-e0    equal in all 14 columns
+gate 1 original G=1200.0 joint   HYB-G1200-B120-g16-e0    equal in all 14 columns
+gate 1 online   G= 300.0 fixed   FIX-B274.878             equal in all 14 columns
+gate 1 online   G= 300.0 capped  CAP-G300-B15-e0.5        equal in all 14 columns
+gate 1 online   G= 300.0 hybrid  HYB-G300-B0-g16-e0       equal in all 14 columns
+gate 1 online   G= 300.0 joint   CAP-G300-B15-e0.5        equal in all 14 columns
+gate 1 online   G= 600.0 fixed   FIX-B981.126             equal in all 14 columns
+gate 1 online   G= 600.0 capped  CAP-G600-B120-e0.75      equal in all 14 columns
+gate 1 online   G= 600.0 hybrid  HYB-G600-B120-g16-e0     equal in all 14 columns
+gate 1 online   G= 600.0 joint   HYB-G600-B120-g16-e0     equal in all 14 columns
+gate 1 online   G=1200.0 fixed   FIX-B2029.96             equal in all 14 columns
+gate 1 online   G=1200.0 capped  CAP-G1200-B60-e0.95      equal in all 14 columns
+gate 1 online   G=1200.0 hybrid  HYB-G1200-B120-g1-e0.9   equal in all 14 columns
+gate 1 online   G=1200.0 joint   HYB-G1200-B120-g1-e0.9   equal in all 14 columns
+gate 2 online: this rule at G=600 picks Aging(c=0.1) (worst gap 0.08984453718472284, worst harm 283.82912400000004); select_aging._choose picks credit 0.1; equal, credit 0.1
+gate 2 original: this rule at G=600 picks Aging(c=0.1) (worst gap 0.10161691609949437, worst harm 227.48636); select_aging._choose picks credit 0.1; equal, credit 0.1
+0 gate failures

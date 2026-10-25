@@ -1,12 +1,13 @@
 # Independent verification of the main experiment (v3.1)
 
 **Question.** Do the numbers of `evidence/main_v3/out_main_v31.txt`, and the Section 8
-tables built from them, hold up under a second implementation — and is the fixed-budget
-grid the comparison rests on fine enough to be fair?
+tables built from them, hold up under a second implementation? Is the fixed-budget grid
+that the comparison rests on fine enough to be fair?
 
 **Paper items.** None printed. Finding G1 of `out_VERDICT.txt` is why version 3.2 of the
-main experiment exists, whose drop-one-cell sensitivity Supplementary Section S5.6 quotes;
-`out_paper.txt` pins by sha256 the version of `paper/sections/` it checked.
+main experiment exists. Supplementary Section S5.6 quotes the drop-one-cell sensitivity of
+that version. `out_paper.txt` pins by sha256 the version of `paper/sections/` that it
+checked.
 
 **Reading the logs.** *Builder* means the implementation under review, *mine* the one
 written here. 50 cells, 804 guarded runs and 13,921,826,346 per-job bound checks were run
@@ -14,7 +15,7 @@ on this directory's own waits.
 
 **Status.** Current as the v3.1 verification.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
@@ -22,23 +23,24 @@ Absolute paths that were baked into the scripts appear as `<repo-root>` (your ch
 
 Adversarial verification of `../main_v3/out_main_v31.txt` and `../main_v3/v31/`, and of
 the Section 8 tables of `../../paper/sections/08_experiments.tex`. Nothing outside this
-directory is modified; my own large files go to `<cache-dir>/mv31_verify/`.
+directory is modified. My own large files go to `<cache-dir>/mv31_verify/`.
 
 What is written here, and by whom
 ---------------------------------
 
 - `wskip.py` is **mine**: a dispatch-charged finite-skip simulator written from the
-  definition in `paper/sections/06_theory.tex` (Remark `rem:counts`, equation `eq:skip`),
-  in two implementations — a literal exact-arithmetic reference that recomputes `cnt[q]`
-  for the whole waiting set and takes `min(fired)`, and a numba kernel that uses the
-  identity `cnt[head] = TD - head`. Neither imports `v31_skipkern`.
+  definition in `paper/sections/06_theory.tex` (Remark `rem:counts`, equation `eq:skip`).
+  It has two implementations. The first is a literal exact-arithmetic reference that
+  recomputes `cnt[q]` for the whole waiting set and takes `min(fired)`. The second is a
+  numba kernel that uses the identity `cnt[head] = TD - head`. Neither imports
+  `v31_skipkern`.
 - The work-budget guard, FCFS and the pure-prediction order are **reused** from the v3
   verifier's `../main_v3_verify/vsim.py`
   (sha256 `3a01397a754a98c46062f0c7eb48660c4207ef716d34f1bbee2e8e71bd3eb4ee`), which was
   written independently of the builder and which v3.1 does not touch. Reuse is only
-  admissible after re-validation: `wrevalidate.py` checks it against an exact rational
-  brute force written here and against the builder's `guardkern` on 2,500 random small
-  instances before any conclusion uses it.
+  admissible after re-validation. Before any conclusion uses it, `wrevalidate.py` checks it
+  on 2,500 random small instances against an exact rational brute force written here and
+  against the builder's `guardkern`.
 - Everything else — metrics, aggregation, the selection rule, the bootstrap, the bound
   assertions, the finer fixed-budget grid — is written here.
 
@@ -77,6 +79,6 @@ Footprint note: the first command was run without `--no-project` and `uv` create
 
 Concurrency note: the paper was being edited in parallel while this ran (every file
 in `paper/sections/` was rewritten between 00:37 and 00:59 on 2026-09-20). `out_paper.txt`
-pins the exact version it checked by sha256; rerun `wpaper.py` after any further edit.
+pins by sha256 the exact version that it checked. Rerun `wpaper.py` after any further edit.
 `evidence/main_v3/` and `evidence/main_v3/v31/` were not touched during the run: the
 report and every csv still carry their 22:41-22:43 timestamps.

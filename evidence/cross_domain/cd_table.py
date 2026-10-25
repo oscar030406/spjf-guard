@@ -40,6 +40,7 @@ EDU = {
         "tail_top1_runtime": 0.2905, "tail_top5_runtime": 0.6483,
         "tail_top1_service": 0.1224, "tail_top5_service": 0.2896,
         "auroc": 0.9266, "auprc": 0.5267, "spearman": 0.6924, "rmse_log": 0.2714,
+        "fcfs_p99_rho08": 1.531,  # l.900, the FCFS row (0.648 is SPJF-M1, l.902)
         "gap_p99_rho08": 0.980, "spjf_max_excess_rho08": 601.7,
         "guard_B15_gap_p99": 0.739, "guard_B15_max_excess": 9.4,
     },
@@ -123,7 +124,7 @@ def main():
                       f"{f99:10.2f} {f99/60.0:11.2f} {gap:9.3f} "
                       f"{exc:10.1f} = {exc/60.0:4.0f} L")
         C.log(fh, f"{'ACcoding poisson rho=0.8 (synthetic arrivals)':46s} {'-':>7s} "
-                  f"{0.648:10.3f} {0.648/30.5:11.4f} {0.980:9.3f} "
+                  f"{EDU['accoding']['fcfs_p99_rho08']:10.3f} {EDU['accoding']['fcfs_p99_rho08']/30.5:11.4f} {0.980:9.3f} "
                   f"{601.7:10.1f} = {601.7/30.5:4.0f} L")
         for w in ("azure", "netbatch"):
             sim = pd.read_csv(os.path.join(C.HERE, f"sim_{w}.csv"))

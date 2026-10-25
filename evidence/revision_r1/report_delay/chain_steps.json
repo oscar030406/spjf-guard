@@ -1,0 +1,284 @@
+[
+ {
+  "name": "report_delay_rep0_L2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "0",
+   "--level",
+   "2",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep1_L2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "1",
+   "--level",
+   "2",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep2_L2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "2",
+   "--level",
+   "2",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep3_L2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "3",
+   "--level",
+   "2",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep4_L2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "4",
+   "--level",
+   "2",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep0_L1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "0",
+   "--level",
+   "1",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep1_L1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "1",
+   "--level",
+   "1",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep2_L1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "2",
+   "--level",
+   "1",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep3_L1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "3",
+   "--level",
+   "1",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep4_L1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "4",
+   "--level",
+   "1",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep0_L0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "0",
+   "--level",
+   "0",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep1_L0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "1",
+   "--level",
+   "0",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep2_L0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "2",
+   "--level",
+   "0",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep3_L0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "3",
+   "--level",
+   "0",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_rep4_L0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/run_delay.py",
+   "run",
+   "--overlay",
+   "4",
+   "--level",
+   "0",
+   "--resume"
+  ]
+ },
+ {
+  "name": "report_delay_summary",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/report_delay/summarize.py"
+  ]
+ }
+]

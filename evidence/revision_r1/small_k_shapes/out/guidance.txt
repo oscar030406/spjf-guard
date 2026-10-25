@@ -1,0 +1,24 @@
+bound violations 0 over 4,723,993,155 job-checks
+adequate = shortfall <= 0.05 of the gap and worst harm <= G/2 (pre-registered, REPORT.md 1)
+k1, G = 300: Guard-default: adequate 0/3, shortfall max 0.164 median 0.113; Guard-fixed: adequate 1/3, shortfall max 0.273 median 0.207; Fixed: adequate 0/3, shortfall max -0.031 median -0.038
+k1, G = 600: Guard-default: adequate 0/3, shortfall max 0.079 median 0.060; Guard-fixed: adequate 1/3, shortfall max 0.097 median 0.071; Fixed: adequate 0/3, shortfall max -0.010 median -0.012
+k1, G = 1200: Guard-default: adequate 3/3, shortfall max 0.035 median 0.023; Guard-fixed: adequate 3/3, shortfall max 0.043 median 0.028; Fixed: adequate 1/3, shortfall max -0.001 median -0.001
+k1L16, G = 300: Guard-default: adequate 0/3, shortfall max 0.232 median 0.128; Guard-fixed: adequate 1/3, shortfall max 0.323 median 0.223; Fixed: adequate 0/3, shortfall max -0.010 median -0.043
+k1L16, G = 600: Guard-default: adequate 0/3, shortfall max 0.136 median 0.056; Guard-fixed: adequate 1/3, shortfall max 0.175 median 0.067; Fixed: adequate 0/3, shortfall max -0.009 median -0.014
+k1L16, G = 1200: Guard-default: adequate 3/3, shortfall max 0.045 median 0.019; Guard-fixed: adequate 2/3, shortfall max 0.059 median 0.024; Fixed: adequate 1/3, shortfall max -0.000 median -0.001
+k2, G = 300: Guard-default: adequate 1/3, shortfall max 0.244 median 0.121; Guard-fixed: adequate 1/3, shortfall max 0.279 median 0.150; Fixed: adequate 0/3, shortfall max -0.016 median -0.036
+k2, G = 600: Guard-default: adequate 2/3, shortfall max 0.105 median 0.044; Guard-fixed: adequate 2/3, shortfall max 0.101 median 0.042; Fixed: adequate 1/3, shortfall max -0.005 median -0.006
+k2, G = 1200: Guard-default: adequate 3/3, shortfall max 0.034 median 0.019; Guard-fixed: adequate 3/3, shortfall max 0.039 median 0.019; Fixed: adequate 2/3, shortfall max 0.001 median 0.000
+k3, G = 300: Guard-default: adequate 1/3, shortfall max 0.291 median 0.185; Guard-fixed: adequate 1/3, shortfall max 0.284 median 0.173; Fixed: adequate 0/3, shortfall max 0.006 median -0.031
+k3, G = 600: Guard-default: adequate 2/3, shortfall max 0.142 median 0.045; Guard-fixed: adequate 2/3, shortfall max 0.119 median 0.038; Fixed: adequate 1/3, shortfall max -0.005 median -0.005
+k3, G = 1200: Guard-default: adequate 3/3, shortfall max 0.047 median 0.020; Guard-fixed: adequate 2/3, shortfall max 0.052 median 0.022; Fixed: adequate 1/3, shortfall max 0.004 median 0.001
+across k (k1L16 -> k2 -> k3, same construction; k1 = published traces):
+  Guard-default shortfall, G = 300, load 0.5: -0.007 -> 0.006 -> 0.031 (k1 0.004)
+  Guard-default shortfall, G = 300, load 0.8: 0.128 -> 0.121 -> 0.185 (k1 0.113)
+  Guard-default shortfall, G = 300, load 0.95: 0.232 -> 0.244 -> 0.291 (k1 0.164)
+  Guard-default shortfall, G = 600, load 0.5: 0.008 -> 0.009 -> 0.014 (k1 0.016)
+  Guard-default shortfall, G = 600, load 0.8: 0.056 -> 0.044 -> 0.045 (k1 0.060)
+  Guard-default shortfall, G = 600, load 0.95: 0.136 -> 0.105 -> 0.142 (k1 0.079)
+  Guard-default shortfall, G = 1200, load 0.5: 0.002 -> 0.005 -> 0.007 (k1 0.004)
+  Guard-default shortfall, G = 1200, load 0.8: 0.019 -> 0.019 -> 0.020 (k1 0.023)
+  Guard-default shortfall, G = 1200, load 0.95: 0.045 -> 0.034 -> 0.047 (k1 0.035)

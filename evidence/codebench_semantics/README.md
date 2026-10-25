@@ -5,8 +5,8 @@
 limit apply? Every cost model in the paper is built on the answers.
 
 **Paper items.** No source comment names this folder. Its findings are what Section 7.1
-states about the main log: the stamp is the moment the result was written, and no run
-after 2019-08-28 lasts longer than 60 s, which gives the limit `L` = 60 s used in Sections
+states about the main log. The stamp is the moment when the result was written, and no run
+after 2019-08-28 lasts longer than 60 s. This gives the limit `L` = 60 s used in Sections
 6 and 8. The field audit of Supplementary Section S2.1 states the same facts and cites
 `evidence/codebench_audit/` and `evidence/codebench_service_v2/`.
 
@@ -18,18 +18,18 @@ student-log data and the web pages are the publisher's copyright. Rebuild the ca
 
 **Status.** Current.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 
 ## Original study notes
 
-What the CodeBench `EXECUTION TIME` field and the `== SUBMITION/TEST (...)` header time mean, tested on DEV semesters 2018-1..2022-2: run `build_cache.py` first (streams archives into `cache/`, no code or keystroke text kept), then `t1_lag.py` (must precede `t3_t4_t5.py`/`refine_checks.py`/`extra_checks.py`, which read `cache/t1_matched.parquet`), `t2_gaps.py`, `t2_file_order.py`, `inspect_long_runs.py`; each script's stdout is the matching `out_*.txt`. The publisher's official web pages were read as fetched on 2026-09-18; they are the publisher's copyright and are not redistributed here.
+What the CodeBench `EXECUTION TIME` field and the `== SUBMITION/TEST (...)` header time mean, tested on DEV semesters 2018-1..2022-2: run `build_cache.py` first (streams archives into `cache/`, no code or keystroke text kept), then `t1_lag.py` (must precede `t3_t4_t5.py`/`refine_checks.py`/`extra_checks.py`, which read `cache/t1_matched.parquet`), `t2_gaps.py`, `t2_file_order.py`, `inspect_long_runs.py`. Each script's stdout is the matching `out_*.txt`. We read the publisher's official web pages in the version fetched on 2026-09-18. They are the publisher's copyright and are not redistributed here.
 
 Verdicts (2026-09-19, adopted in `docs/research_plan.md` §2.2): SUBMITION header = result time (high confidence); EXECUTION TIME = wall-clock seconds from start to end of one evaluation, startup included (medium); scope over test cases unresolved; 60 s limit from Sept 2019; TEST header meaning unresolved; the platform runs each student's code in their own Docker container (no shared queue).
 
-Maintainer letter: we wrote to the dataset maintainers on 2026-09-19, at the address given on the platform's official contact page, copying the author of the dataset descriptor paper. 13 questions: 8 on fields and timestamps, 5 on the release statistics from `../codebench_audit/out_counts_reconcile.txt`. Every number in the letter was checked against `out_t3_t4_t5.txt`, `out_t2_file_order.txt`, `out_refine_checks.txt`, `out_extra_checks.txt` and `../codebench_audit/out_counts_reconcile.txt` before it was sent. No reply had arrived when this folder was assembled; record any reply here.
+Maintainer letter: we wrote to the dataset maintainers on 2026-09-19, at the address given on the platform's official contact page, with a copy to the author of the paper that describes the dataset. 13 questions: 8 on fields and timestamps, 5 on the release statistics from `../codebench_audit/out_counts_reconcile.txt`. Every number in the letter was checked against `out_t3_t4_t5.txt`, `out_t2_file_order.txt`, `out_refine_checks.txt`, `out_extra_checks.txt` and `../codebench_audit/out_counts_reconcile.txt` before it was sent. No reply had arrived when this folder was assembled. Record any reply here.
 
-Correction after sending: question 8 says 1,172 zero-time SUBMITION blocks; counting the parquet directly gives 1,671 in 2020-ERE..2022-2 (the semantics cache covered 1,172 of them). The question itself stands.
+Correction after sending: question 8 says 1,172 zero-time SUBMITION blocks. Counting the parquet directly gives 1,671 in 2020-ERE..2022-2 (the semantics cache covered 1,172 of them). The question itself stands.
 
 Skeptic re-check: `verify_independent.py build` then `verify_independent.py analyze > verify_independent.txt` (own parser and matching, semesters 2018-2/2019-2/2021-2/2022-1, results per class; cache in `cache/verify_independent/`).

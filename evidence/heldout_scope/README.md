@@ -6,10 +6,10 @@ the two disagree?
 
 **Answer.** They disagree in two places, both recorded as findings with a remedy list.
 The paper says in the introduction and in Section 7 that part of *every* trace was
-sealed; only CodeBench has a sealed pipeline that can be run, and the Azure, Netbatch and
-two CI workloads have no sealed part at all — `sealed.py` does not mention them. The
+sealed. However, only CodeBench has a sealed pipeline that can be run. The Azure, Netbatch
+and two CI workloads have no sealed part at all, and `sealed.py` does not mention them. The
 sealed list itself is accurate where it is defined. The audit also confirms that, at the
-time it was written, no sealed run had happened: the repository held only
+time when it was written, no sealed run had happened: the repository held only
 `protocol_lock.draft.json`, which is the gate in `sealed.py`.
 
 **Paper items.** The development and sealed-data paragraph of Section 7.3 (findings G1–G6)
@@ -19,12 +19,12 @@ and one location in Supplementary Section S5.1 (Q2).
 comes from the code, the configuration, the logs, the `out_*.txt` files and the paper
 source. No sealed semester is touched.
 
-**Status.** Current as a pre-freeze audit. The notes are in Chinese; the finding table is
+**Status.** Current as a pre-freeze audit. The notes are in Chinese. The finding table is
 readable from the file and section references alone.
 
-**Not copied here.** Nothing; both files are present.
+**Not copied here.** Nothing. Both files are present.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout), `<cache-dir>` (a scratch directory outside the repository) and `<python-root>` (the interpreter install); set them before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout), `<cache-dir>` (a scratch directory outside the repository) and `<python-root>` (the interpreter install). Set them before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 

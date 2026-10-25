@@ -4,9 +4,9 @@
 `evidence/codebench_service_v2/` reproduce on a second, independent online judge
 (ACcoding, Beihang University)?
 
-**Paper items.** The ACcoding sizes of Table 4 (Section 7.1) and the sealed-block count of
+**Paper items.** The ACcoding sizes of Table 5 (Section 7.1) and the sealed-block count of
 Section 7.3; the ACcoding difference M5 − M4 quoted in Section 4.3; the ACcoding guard
-entry of Table 9 (Section 8.6, block `sim poisson_rho0.8_main`); the ACcoding column of
+entry of Table 13 (Section 8.7, block `sim poisson_rho0.8_main`); the ACcoding column of
 Table S2 (Supplementary Section S1.5), the lag sensitivity of Supplementary Section S1.3,
 and the ACcoding rows, both per-job limits and the id-to-time check of Table S3 and
 Supplementary Section S2.4. Supplementary Section S5.4 names this folder in its text.
@@ -15,9 +15,12 @@ Supplementary Section S2.4. Supplementary Section S5.4 names this folder in its 
 beyond counting rows and reading the first id.
 
 **Status.** Current. It supersedes the first ACcoding pre-check, which is not included
-here.
+here. The ACcoding held-out runs, including the sealed run of 3 October 2026, import a
+later version of `accoding_v2.py` from `prechecks/accoding_v2/accoding_v2.py`.
+`protocol_lock_accoding.json` records the hash of the file at that path. That version adds
+the streaming history state and the features of the online replay.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 

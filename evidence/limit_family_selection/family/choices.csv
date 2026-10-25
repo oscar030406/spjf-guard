@@ -1,0 +1,61 @@
+clock,promise_s,family,name,from_family,worst_gap_closed,worst_harm_s,worst_promise_s,harm_limit_s,n_feasible,n_candidates,note
+online,300.0,Guard-fixed,FIX-B274.878,Guard-fixed,0.052390871354889186,138.981184,233.71949999999998,150.0,21,27,
+online,300.0,Guard-age,CAP-G300-B15-e0.5,Guard-age,0.23263228195563584,128.18800099999999,300.0,150.0,14,54,
+online,300.0,Guard-queue,HYB-G300-B0-g16-e0,Guard-queue,0.19750159322572658,141.015367,300.0,150.0,7,18,
+online,300.0,Skip,Skip(n=4),Skip,-0.0032809285614508682,56.857356,165.0,150.0,3,3,
+online,300.0,Timeout,Timeout(theta=60),Timeout,0.0025590699687809944,104.755419,225.0,150.0,3,5,
+online,300.0,Aging,Aging(c=1),Aging,0.004827499770187935,219.929518,,150.0,0,11,no feasible configuration; fell back to the smallest worst-cell harm
+online,300.0,Block,Block(8),Block,0.0004048048651694949,87.888898,,150.0,1,4,
+online,300.0,Guard,CAP-G300-B15-e0.5,Guard-age,0.23263228195563584,128.18800099999999,300.0,150.0,42,99,
+online,300.0,winner,CAP-G300-B15-e0.5,Guard-age,0.23263228195563584,128.18800099999999,300.0,150.0,42,99,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+online,300.0,winner_with_promise,CAP-G300-B15-e0.5,Guard-age,0.23263228195563584,128.18800099999999,300.0,150.0,42,99,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+online,600.0,Guard-fixed,FIX-B981.126,Guard-fixed,0.432415517524422,297.550575,410.2815,300.0,31,35,
+online,600.0,Guard-age,CAP-G600-B120-e0.75,Guard-age,0.5795298665401986,293.31199100000003,600.0,300.0,30,54,
+online,600.0,Guard-queue,HYB-G600-B120-g16-e0,Guard-queue,0.5914717199210761,165.493808,600.0,300.0,9,18,
+online,600.0,Skip,Skip(n=4),Skip,-0.0032809285614508682,56.857356,165.0,300.0,5,5,
+online,600.0,Timeout,Timeout(theta=60),Timeout,0.0025590699687809944,104.755419,225.0,300.0,5,6,
+online,600.0,Aging,Aging(c=0.1),Aging,0.08984453718472284,283.82912400000004,,300.0,3,11,
+online,600.0,Block,Block(512),Block,0.03120465306969445,287.60609900000003,,300.0,4,4,
+online,600.0,Guard,HYB-G600-B120-g16-e0,Guard-queue,0.5914717199210761,165.493808,600.0,300.0,70,107,
+online,600.0,winner,HYB-G600-B120-g16-e0,Guard-queue,0.5914717199210761,165.493808,600.0,300.0,70,107,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+online,600.0,winner_with_promise,HYB-G600-B120-g16-e0,Guard-queue,0.5914717199210761,165.493808,600.0,300.0,70,107,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+online,1200.0,Guard-fixed,FIX-B2029.96,Guard-fixed,0.6365990293472172,550.476043,672.4895,600.0,35,39,
+online,1200.0,Guard-age,CAP-G1200-B60-e0.95,Guard-age,0.7013798109119117,485.652152,1200.0,600.0,44,54,
+online,1200.0,Guard-queue,HYB-G1200-B120-g1-e0.9,Guard-queue,0.7030524480667077,542.4667370000001,1200.0,600.0,15,18,
+online,1200.0,Skip,Skip(n=4),Skip,-0.0032809285614508682,56.857356,165.0,600.0,6,6,
+online,1200.0,Timeout,Timeout(theta=480),Timeout,0.3705837640117764,499.495782,645.0,600.0,6,8,
+online,1200.0,Aging,Aging(c=0.03),Aging,0.2505741642480106,409.14379,,600.0,4,11,
+online,1200.0,Block,Block(512),Block,0.03120465306969445,287.60609900000003,,600.0,4,4,
+online,1200.0,Guard,HYB-G1200-B120-g1-e0.9,Guard-queue,0.7030524480667077,542.4667370000001,1200.0,600.0,94,111,
+online,1200.0,winner,HYB-G1200-B120-g1-e0.9,Guard-queue,0.7030524480667077,542.4667370000001,1200.0,600.0,94,111,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+online,1200.0,winner_with_promise,HYB-G1200-B120-g1-e0.9,Guard-queue,0.7030524480667077,542.4667370000001,1200.0,600.0,94,111,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+original,300.0,Guard-fixed,FIX-B329.671,Guard-fixed,0.17632458776455667,131.80208199999998,247.41775,150.0,22,27,
+original,300.0,Guard-age,CAP-G300-B60-e0.5,Guard-age,0.424289274016463,122.75569800000001,300.0,150.0,15,54,
+original,300.0,Guard-queue,HYB-G300-B120-g4-e0,Guard-queue,0.35483201249534063,116.249557,300.0,150.0,7,18,
+original,300.0,Skip,Skip(n=4),Skip,-0.0015673011250872798,56.857356,165.0,150.0,3,3,
+original,300.0,Timeout,Timeout(theta=60),Timeout,0.002041540209161292,104.915454,225.0,150.0,3,5,
+original,300.0,Aging,Aging(c=1),Aging,0.005905709411737779,175.662312,,150.0,0,11,no feasible configuration; fell back to the smallest worst-cell harm
+original,300.0,Block,Block(8),Block,0.0004093072605758334,87.888898,,150.0,1,4,
+original,300.0,Guard,CAP-G300-B60-e0.5,Guard-age,0.424289274016463,122.75569800000001,300.0,150.0,44,99,
+original,300.0,winner,CAP-G300-B60-e0.5,Guard-age,0.424289274016463,122.75569800000001,300.0,150.0,44,99,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+original,300.0,winner_with_promise,CAP-G300-B60-e0.5,Guard-age,0.424289274016463,122.75569800000001,300.0,150.0,44,99,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+original,600.0,Guard-fixed,FIX-B981.126,Guard-fixed,0.608248915642638,288.18680500000005,410.2815,300.0,31,35,
+original,600.0,Guard-age,CAP-G600-B120-e0.75,Guard-age,0.7215763991634792,293.45379,600.0,300.0,30,54,
+original,600.0,Guard-queue,HYB-G600-B120-g16-e0,Guard-queue,0.7162866631488837,152.154055,600.0,300.0,9,18,
+original,600.0,Skip,Skip(n=4),Skip,-0.0015673011250872798,56.857356,165.0,300.0,5,5,
+original,600.0,Timeout,Timeout(theta=60),Timeout,0.002041540209161292,104.915454,225.0,300.0,5,6,
+original,600.0,Aging,Aging(c=0.1),Aging,0.10161691609949437,227.48636,,300.0,3,11,
+original,600.0,Block,Block(128),Block,0.01421193079631306,228.485886,,300.0,3,4,
+original,600.0,Guard,CAP-G600-B120-e0.75,Guard-age,0.7215763991634792,293.45379,600.0,300.0,70,107,
+original,600.0,winner,CAP-G600-B120-e0.75,Guard-age,0.7215763991634792,293.45379,600.0,300.0,70,107,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+original,600.0,winner_with_promise,CAP-G600-B120-e0.75,Guard-age,0.7215763991634792,293.45379,600.0,300.0,70,107,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+original,1200.0,Guard-fixed,FIX-B2029.96,Guard-fixed,0.725554004877892,560.338925,672.4895,600.0,35,39,
+original,1200.0,Guard-age,CAP-G1200-B360-e0.75,Guard-age,0.7272254917586123,482.163584,1020.0,600.0,43,54,
+original,1200.0,Guard-queue,HYB-G1200-B120-g16-e0,Guard-queue,0.7274880696692714,152.154055,1200.0,600.0,17,18,
+original,1200.0,Skip,Skip(n=4),Skip,-0.0015673011250872798,56.857356,165.0,600.0,6,6,
+original,1200.0,Timeout,Timeout(theta=480),Timeout,0.518047993569505,490.474669,645.0,600.0,6,8,
+original,1200.0,Aging,Aging(c=0.03),Aging,0.31025237512441595,322.625147,,600.0,4,11,
+original,1200.0,Block,Block(512),Block,0.056856541698730514,323.314857,,600.0,4,4,
+original,1200.0,Guard,HYB-G1200-B120-g16-e0,Guard-queue,0.7274880696692714,152.154055,1200.0,600.0,95,111,
+original,1200.0,winner,HYB-G1200-B120-g16-e0,Guard-queue,0.7274880696692714,152.154055,1200.0,600.0,95,111,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"
+original,1200.0,winner_with_promise,HYB-G1200-B120-g16-e0,Guard-queue,0.7274880696692714,152.154055,1200.0,600.0,95,111,"families present: ['Aging', 'Block', 'Guard', 'Guard-age', 'Guard-fixed', 'Guard-queue', 'Skip', 'Timeout']"

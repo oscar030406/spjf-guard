@@ -1,0 +1,1187 @@
+[
+ {
+  "name": "build_traces",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/build_traces.py",
+   "--ks",
+   "2,3"
+  ]
+ },
+ {
+  "name": "cells_k1u50_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u50_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u50_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u50_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u50_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u50_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u50_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u50_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u50_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u50_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u80_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u80_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u80_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u80_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u80_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u80_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u80_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u80_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u80_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u80_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u95_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u95_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u95_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u95_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u95_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u95_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u95_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u95_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1u95_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/steady_online_g18b/overlays/k1u95_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u50_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u50_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u50_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u50_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u50_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u50_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u50_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u50_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u50_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u50_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u80_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u80_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u80_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u80_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u80_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u80_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u80_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u80_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u80_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u80_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u95_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u95_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u95_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u95_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u95_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u95_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u95_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u95_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k2u95_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k2u95_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u50_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u50_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u50_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u50_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u50_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u50_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u50_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u50_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u50_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u50_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u80_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u80_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u80_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u80_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u80_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u80_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u80_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u80_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u80_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u80_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u95_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u95_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u95_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u95_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u95_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u95_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u95_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u95_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k3u95_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k3u95_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "build_traces_k1L16",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/build_traces.py",
+   "--ks",
+   "1",
+   "--listings",
+   "16"
+  ]
+ },
+ {
+  "name": "cells_k1L16u50_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u50_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u50_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u50_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u50_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u50_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u50_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u50_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u50_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u50_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u80_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u80_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u80_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u80_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u80_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u80_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u80_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u80_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u80_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u80_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u95_rep0",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u95_rep0.npz",
+   "--overlay",
+   "0",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u95_rep1",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u95_rep1.npz",
+   "--overlay",
+   "1",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u95_rep2",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u95_rep2.npz",
+   "--overlay",
+   "2",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u95_rep3",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u95_rep3.npz",
+   "--overlay",
+   "3",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "cells_k1L16u95_rep4",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/run_cells.py",
+   "--trace",
+   "outputs/revision_r1/small_k_shapes/overlays/k1L16u95_rep4.npz",
+   "--overlay",
+   "4",
+   "--out-dir",
+   "outputs/revision_r1/small_k_shapes/cells"
+  ]
+ },
+ {
+  "name": "final_table",
+  "env": {
+   "OMP_NUM_THREADS": "2",
+   "MKL_NUM_THREADS": "2",
+   "NUMBA_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/small_k_shapes/final_table.py"
+  ]
+ }
+]

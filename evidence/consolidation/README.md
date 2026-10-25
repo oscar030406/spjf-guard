@@ -1,22 +1,22 @@
 # Dedicated containers versus a shared evaluator pool
 
-**Question.** Nobody has measured the idle rate of a per-student container, and nobody
-has computed how many dedicated containers it takes to match a shared pool of size k at
-the same wait percentile. Both numbers are computed here from the existing CodeBench
+**Question.** Nobody has measured the idle rate of a per-student container. Nobody has
+computed how many dedicated containers it takes to match a shared pool of size k at the
+same wait percentile. This study computes both numbers from the existing CodeBench
 development trace, with no new data.
 
 **Paper items.** The 1,636 containers alive at the 99th percentile, their 0.12% busy share
-and the 14 servers that replace them, in Section 7.2 and Section 9; the reconstruction
+and the 14 servers that replace them, in Section 7.2; the reconstruction
 range and the server counts in Supplementary Section S2.3. All come from
 `out_SUMMARY.txt`, which states in its own words what may and may not be claimed from it.
 
 **Inputs.** `data/codebench/parquet/{events,logins}/<semester>.parquet` and the parse
-cache of `evidence/codebench_service_v2/`. Only the six 60 s-limit development semesters
-are used; the sealed semesters are never opened.
+cache of `evidence/codebench_service_v2/`. Only the six development semesters with the
+60 s limit are used. The sealed semesters are never opened.
 
 **Status.** Current.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 

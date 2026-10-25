@@ -1,0 +1,3 @@
+anchor_rule,shape,scale,calibration_busy_work_s,calibration_seed
+rows_to_block_end,poisson,10.0,30922.250000004955,300
+rows_to_block_end,deadline,10.0,25263.41200000311,300

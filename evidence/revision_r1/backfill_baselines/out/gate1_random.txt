@@ -1,0 +1,6 @@
+after 1000: {'instances': 1000, 'jobs': 7512, 'A cbf != ref': 0, 'A cbf != backfill.py': 0, 'A slack != ref': 0, 'A slack != backfill.py': 0, 'A cbf != FCFS': 0, 'B cbf != ref_est': 0, 'B slack != ref_est': 0, 'B fallback differs': 0, 'ref_est(D) != backfill_ref': 0}
+after 2000: {'instances': 2000, 'jobs': 15170, 'A cbf != ref': 0, 'A cbf != backfill.py': 0, 'A slack != ref': 0, 'A slack != backfill.py': 0, 'A cbf != FCFS': 0, 'B cbf != ref_est': 0, 'B slack != ref_est': 0, 'B fallback differs': 0, 'ref_est(D) != backfill_ref': 0}
+after 3000: {'instances': 3000, 'jobs': 22708, 'A cbf != ref': 0, 'A cbf != backfill.py': 0, 'A slack != ref': 0, 'A slack != backfill.py': 0, 'A cbf != FCFS': 0, 'B cbf != ref_est': 0, 'B slack != ref_est': 0, 'B fallback differs': 0, 'ref_est(D) != backfill_ref': 0}
+after 4000: {'instances': 4000, 'jobs': 30252, 'A cbf != ref': 0, 'A cbf != backfill.py': 0, 'A slack != ref': 0, 'A slack != backfill.py': 0, 'A cbf != FCFS': 0, 'B cbf != ref_est': 0, 'B slack != ref_est': 0, 'B fallback differs': 0, 'ref_est(D) != backfill_ref': 0}
+observed (not asserted): {'B overruns': 7583, 'B fallbacks': 0, 'A slack != FCFS': 593}
+PASS: 0 mismatches [14 s]

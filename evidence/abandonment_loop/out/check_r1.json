@@ -1,0 +1,35 @@
+{
+  "overlay": 0,
+  "level": 2,
+  "combo": "60:0.5",
+  "SJF": {
+    "n_served": 17559412,
+    "max_abs_diff_us": 0,
+    "fcfs_r1_s": 0.9,
+    "fcfs_open_on_s": 11.2
+  },
+  "SPJF-E": {
+    "n_served": 17548397,
+    "max_abs_diff_us": 0,
+    "fcfs_r1_s": 0.8,
+    "fcfs_open_on_s": 11.1
+  },
+  "Guard(300)": {
+    "n_served": 17547804,
+    "max_abs_diff_us": 0,
+    "fcfs_r1_s": 0.8,
+    "fcfs_open_on_s": 11.5
+  },
+  "Guard(600)": {
+    "n_served": 17547717,
+    "max_abs_diff_us": 0,
+    "fcfs_r1_s": 0.8,
+    "fcfs_open_on_s": 11.0
+  },
+  "Guard(1200)": {
+    "n_served": 17548098,
+    "max_abs_diff_us": 0,
+    "fcfs_r1_s": 0.8,
+    "fcfs_open_on_s": 11.2
+  }
+}

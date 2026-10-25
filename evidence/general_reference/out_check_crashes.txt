@@ -1,0 +1,2 @@
+C1 identity with crashes: worst (lhs)/(2(k-1)L + L N) = 0.667, violations 0, jobs that break the crash-free bound 434
+C2 guard with crashes: worst gap/(B + (3k-2)L + L N) = 0.889, violations 0, jobs that break the crash-free bound 73

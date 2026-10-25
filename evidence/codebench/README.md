@@ -1,7 +1,8 @@
 # CodeBench archives: parser and first arrival-side pre-check
 
-**Question.** Can the 18 semester archives of the CodeBench CS1 judge log be parsed into
-a per-semester table, and does an hourly deadline-driven load model survive on them?
+**Question.** Can the 18 semester archives of the CodeBench judge log, which comes from CS1
+(introductory programming) courses, be parsed into a per-semester table? Does an hourly
+deadline-driven load model survive on them?
 
 **Paper items.** The parser is the head of the CodeBench data path described in Section 7
 (`paper/sections/07_data.tex`). Section P4 of `out_codebench.txt` is the source of the
@@ -11,13 +12,13 @@ week-ahead forecast of runs per class in Section 7.2 (log-scale RMSE 1.243, 1.15
 
 **Inputs.** `data/codebench/archives/cb_dataset_<semester>_v1.81.tar.gz`, the publisher's
 per-semester archives, all 18 semesters. The parse reads the sealed semesters 2023-1,
-2023-2 and 2024-1 too, for their sizes and time ranges only; no result is computed on them
+2023-2 and 2024-1 too, for their sizes and time ranges only. No result is computed on them
 (see `../README.md`).
 
-**Status.** Current for the parse; the arrival-side model in `out_codebench.txt` was an
-early direction, and only its P4 forecast is used in the paper.
+**Status.** Current for the parse. The arrival-side model in `out_codebench.txt` was an
+early direction, and the paper uses only its P4 forecast.
 
-Absolute paths that were baked into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository); set both before rerunning. Raw data is not redistributed with this folder — see `data/README.md` for where each dataset comes from.
+Absolute paths that were written into the scripts appear as `<repo-root>` (your checkout) and `<cache-dir>` (a scratch directory outside the repository). Set both before you rerun a script. Raw data is not redistributed with this folder. `data/README.md` says where each dataset comes from.
 
 ---
 

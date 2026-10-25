@@ -1,0 +1,13 @@
+cold-task rows 1092; distinct users 101, tasks 219, assignments 58
+user         G1-M4   dSpear +0.1464 [+0.1025, +0.1883]  (2000 usable resamples)
+user         G0U-M4   dSpear +0.1419 [+0.1028, +0.1801]  (2000 usable resamples)
+user         G1-G0U  dSpear +0.0045 [-0.0145, +0.0235]  (2000 usable resamples)
+task         G1-M4   dSpear +0.1464 [+0.1038, +0.1894]  (2000 usable resamples)
+task         G0U-M4   dSpear +0.1419 [+0.1005, +0.1834]  (2000 usable resamples)
+task         G1-G0U  dSpear +0.0045 [-0.0140, +0.0242]  (2000 usable resamples)
+assignment   G1-M4   dSpear +0.1464 [+0.0722, +0.2236]  (2000 usable resamples)
+assignment   G0U-M4   dSpear +0.1419 [+0.0649, +0.2195]  (2000 usable resamples)
+assignment   G1-G0U  dSpear +0.0045 [-0.0136, +0.0251]  (2000 usable resamples)
+user x task  G1-M4   dSpear +0.1464 [+0.0790, +0.2208]  (2000 usable resamples)
+user x task  G0U-M4   dSpear +0.1419 [+0.0801, +0.2103]  (2000 usable resamples)
+user x task  G1-G0U  dSpear +0.0045 [-0.0262, +0.0388]  (2000 usable resamples)

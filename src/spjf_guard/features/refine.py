@@ -8,6 +8,7 @@ outcome does not undo the fact that the record arrived.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from math import log1p
 
@@ -97,10 +98,22 @@ def _exercise_summary(
 
 
 class M4HistoryRecomputer:
-    """Indexed original-clock histories used to rebuild selected M4 rows."""
+    """Indexed original-clock histories used to rebuild selected M4 rows.
 
-    def __init__(self, prepared: Prepared, arrival: np.ndarray, availability: np.ndarray):
+    ``refit_heavy`` maps a term whose cut-offs were refit on its training rows to the heavy
+    flag of every event under them (predict.forward.FrozenM4Models.refit_heavy); a target
+    of that term reads those flags, every other target the prepared data's own.
+    """
+
+    def __init__(
+        self,
+        prepared: Prepared,
+        arrival: np.ndarray,
+        availability: np.ndarray,
+        refit_heavy: Mapping[str, np.ndarray] = {},
+    ):
         self.prepared = prepared
+        self.refit_heavy = refit_heavy
         self.arrival = np.asarray(arrival, np.float64)
         self.availability = np.asarray(availability, np.float64)
         self.submission_events = prepared.submission_rows.astype(np.int64)
@@ -289,7 +302,7 @@ class M4HistoryRecomputer:
             user_rows = self._released(user_rows, target, same_copy_lag_s, True)
             pair_rows = self._released(pair_rows, target, same_copy_lag_s, True)
             event_rows = self._released(event_rows, target, same_copy_lag_s, False)
-        out = self._outcome_fields(baseline, ex_rows, user_rows, pair_rows, event_rows)
+        out = self._outcome_fields(target, baseline, ex_rows, user_rows, pair_rows, event_rows)
         if withhold_other_pool_classes:
             self._other_class_arrivals(target, out, pool_terms)
         if len(out) != len(HIST_COLS):
@@ -379,10 +392,11 @@ class M4HistoryRecomputer:
             np.r_[self.availability[external], own_release[mine]],
             self.arrival,
         )
-        return self._outcome_fields(baseline, *pieces, event_rows)  # type: ignore[call-arg]
+        return self._outcome_fields(target, baseline, *pieces, event_rows)  # type: ignore[call-arg]
 
     def _outcome_fields(
         self,
+        target: int,
         baseline: np.ndarray,
         ex_rows: np.ndarray,
         user_rows: np.ndarray,
@@ -391,17 +405,19 @@ class M4HistoryRecomputer:
     ) -> np.ndarray:
         ex_events = self.submission_events[ex_rows]
         user_events = self.submission_events[user_rows]
+        term = str(self.prepared.semester[self.submission_events[target]])
+        heavy = self.refit_heavy.get(term, self.prepared.heavy)
         out = np.asarray(baseline, np.float32).copy()
         out[1:9] = _exercise_summary(
             self.prepared.log_cost[ex_events],
             self.prepared.error[ex_events],
-            self.prepared.heavy[ex_events],
+            heavy[ex_events],
             self.prepared.n_testcases[ex_events],
         )
         out[10:16] = _summary(
             self.prepared.log_cost[user_events],
             self.prepared.error[user_events],
-            self.prepared.heavy[user_events],
+            heavy[user_events],
         )
         if len(pair_rows):
             pair_event = self.submission_events[_latest(pair_rows, self.sub_arrival)]

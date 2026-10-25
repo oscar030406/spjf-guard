@@ -166,8 +166,9 @@ def prepare_context(
         pool_terms,
         all_terms,
         expected_scores=scores["spjf_e"].to_numpy("float64"),
+        events=events,
     )
-    recomputer = M4HistoryRecomputer(prepared, arrival, availability)
+    recomputer = M4HistoryRecomputer(prepared, arrival, availability, models.refit_heavy)
     targets = np.flatnonzero(np.isin(prepared.semester[prepared.submission_rows], pool_terms))
     sample = np.random.default_rng(20260922).choice(
         targets, min(512, len(targets)), replace=False

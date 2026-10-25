@@ -1,8 +1,14 @@
-English translation of `docs/sealed_access_log.md`, which is the authoritative, append-only record; rows added there after 2026-09-27 are not translated here.
+This file is an English translation of `docs/sealed_access_log.md`. That file is the authoritative, append-only record. Rows that were added there after 2026-10-03 are not translated here.
 
 # Sealed-term access ledger
 
-Sealed terms: CodeBench 2023-1, 2023-2, 2024-1; ACcoding ids 80%–100%; OULAD academic year 2014. Every time a script reads sealed data, a row is added below: date, script, what was read, what was output, whether anyone looked at the output, and whether the output influenced the design. What this guards against is "changing the method after seeing the test results".
+Sealed terms are the parts of the data that are held back until the method is frozen:
+
+- CodeBench 2023-1, 2023-2, 2024-1
+- ACcoding ids 80%–100%
+- OULAD academic year 2014
+
+Every time a script reads sealed data, a row is added below. Each row gives the date, the script, what was read and what was output. It also records whether anyone looked at the output and whether the output influenced the design. The purpose of this ledger is to prevent "changing the method after seeing the test results".
 
 | Date | Script | What was read | Output | Who looked | Influenced the design |
 |---|---|---|---|---|---|
@@ -53,5 +59,46 @@ Sealed terms: CodeBench 2023-1, 2023-2, 2024-1; ACcoding ids 80%–100%; OULAD a
 | 2026-09-25 | `scripts/run_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | Policy-consistent visibility comparison written to outputs/sealed_visibility, elapsed 1039 seconds | The operator | No |
 | 2026-09-25 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 6623 s | The operator | No |
 | 2026-09-25 | `scripts/run_consistent_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | exact visibility outputs written to outputs/sealed_consistent_visibility in 11240 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 3424 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 3513 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 2743 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 3300 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 3392 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 2662 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 2617 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 2565 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 2269 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 2639 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1698 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1777 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1718 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | The run stopped and produced no output (IndexError: index 2 is out of bounds for axis 0 with size 1) | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | The run stopped and produced no output (IndexError: index 1 is out of bounds for axis 0 with size 1) | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | The run stopped and produced no output (IndexError: index 2 is out of bounds for axis 0 with size 1) | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1681 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | The run stopped and produced no output (IndexError: index 1 is out of bounds for axis 0 with size 1) | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1596 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 206 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1316 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1266 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1187 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 1259 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 946 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 921 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 898 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 854 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 533 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 740 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 904 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 504 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 502 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 497 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 468 s | The operator | No |
+| 2026-10-01 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 6187 s | The operator | No |
+| 2026-10-02 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 140 s | The operator | No |
+| 2026-10-02 | `scripts/run_online_visibility.py` | Sealed terms 2023-1, 2023-2, 2024-1 | online replay written in 152 s | The operator | No |
+| 2026-10-02 | `scripts/run_accoding_heldout.py` | accoding-sealed-id-block [0.80, 1.00] | The run stopped and produced no summary table (AssertionError: SPJF-E: no online fixed point in 200 iterations) | The operator | No |
+| 2026-10-02 | `scripts/run_accoding_heldout.py` | accoding-sealed-id-block [0.80, 1.00] | The run stopped and produced no summary table (FileExistsError: output directory is not empty: <repo-root>\outputs\accoding_heldout_sealed_online) | The operator | No |
+| 2026-10-03 | `scripts/run_accoding_heldout.py` | accoding-sealed-id-block [0.80, 1.00] | outputs/accoding_heldout_sealed_online_v2: anchors.csv, manifest.json, metrics.csv, predictor_metrics.csv, run.log, summary.csv, tail_shares.csv, trace_calibration.csv | The operator | No |
 
-The table above is the complete record, the same before and after the freeze: before the freeze, the rows contain only counts, byte counts and split boundaries, and no cost distribution, prediction or scheduling result was computed on any sealed term or on the ACcoding sealed block; after the freeze, each opening of the sealed run also has its own row, the interrupted one included, with the output column stating at which step it stopped.
+The table above is the complete record, both before and after the freeze. The freeze is the commit of the protocol lock, a file of hashes that fixes the method. Before the freeze, the rows contain only counts, byte counts and split boundaries. At that stage, no cost distribution, prediction or scheduling result was computed on any sealed term or on the ACcoding sealed block. After the freeze, each start of a sealed run also has its own row, including the interrupted one. For the interrupted run, the output column gives the step at which it stopped.

@@ -1,0 +1,274 @@
+[
+ {
+  "name": "bf_gate1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/gate1_random.py"
+  ]
+ },
+ {
+  "name": "bf_gate2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/gate2_prefix.py"
+  ]
+ },
+ {
+  "name": "bf_o0_l0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "0",
+   "--level",
+   "0"
+  ]
+ },
+ {
+  "name": "bf_o0_l1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "0",
+   "--level",
+   "1"
+  ]
+ },
+ {
+  "name": "bf_o0_l2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "0",
+   "--level",
+   "2"
+  ]
+ },
+ {
+  "name": "bf_o1_l0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "1",
+   "--level",
+   "0"
+  ]
+ },
+ {
+  "name": "bf_o1_l1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "1",
+   "--level",
+   "1"
+  ]
+ },
+ {
+  "name": "bf_o1_l2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "1",
+   "--level",
+   "2"
+  ]
+ },
+ {
+  "name": "bf_o2_l0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "2",
+   "--level",
+   "0"
+  ]
+ },
+ {
+  "name": "bf_o2_l1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "2",
+   "--level",
+   "1"
+  ]
+ },
+ {
+  "name": "bf_o2_l2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "2",
+   "--level",
+   "2"
+  ]
+ },
+ {
+  "name": "bf_o3_l0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "3",
+   "--level",
+   "0"
+  ]
+ },
+ {
+  "name": "bf_o3_l1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "3",
+   "--level",
+   "1"
+  ]
+ },
+ {
+  "name": "bf_o3_l2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "3",
+   "--level",
+   "2"
+  ]
+ },
+ {
+  "name": "bf_o4_l0",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "4",
+   "--level",
+   "0"
+  ]
+ },
+ {
+  "name": "bf_o4_l1",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "4",
+   "--level",
+   "1"
+  ]
+ },
+ {
+  "name": "bf_o4_l2",
+  "env": {
+   "NUMBA_NUM_THREADS": "2",
+   "OMP_NUM_THREADS": "2"
+  },
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/run_backfill.py",
+   "--rep",
+   "4",
+   "--level",
+   "2"
+  ]
+ },
+ {
+  "name": "bf_table",
+  "cmd": [
+   "{python}",
+   "-u",
+   "evidence/revision_r1/backfill_baselines/make_table.py"
+  ]
+ }
+]

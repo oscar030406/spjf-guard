@@ -1,0 +1,87 @@
+{
+  "produced_by": "scripts/run_online_visibility.py",
+  "written_at": "2026-09-27T18:24:53+00:00",
+  "config": {
+    "path": "configs/main.yaml",
+    "present": true,
+    "bytes": 19065,
+    "sha256": "ecd7b34bc4a83fe62b2f777fa136c9ea34ab00b0f9fa2042dbc1ae45c5f5db8d"
+  },
+  "inputs": [
+    {
+      "path": "data/derived/codebench_cache_r4/ev.parquet",
+      "present": true,
+      "bytes": 67391982,
+      "sha256": "8e37c80715369880ef7652b35f24e1bc15f41d72c47ac87aa3b2c1bd81739451"
+    },
+    {
+      "path": "data/derived/package_ranking_scores/forward_scores.parquet",
+      "present": true,
+      "bytes": 18334242,
+      "sha256": "25c632585ad80bb5414acdce500e15cd82515f93f8e6cc4c4ed3997d347e734e"
+    },
+    {
+      "path": "data/derived/overlay_traces/k1_rep0.npz",
+      "present": true,
+      "bytes": 170099287,
+      "sha256": "bff92632842a813af1d20b9bab7ac2093497c4d05be0835d744f91650ed79e0e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "online_cells.csv",
+      "present": true,
+      "bytes": 11437,
+      "sha256": "1a1dae18cc1611363ab7150c88c670e5410b96caed0eac07bd09e9ce415b0bcd"
+    },
+    {
+      "path": "online_comparison.csv",
+      "present": true,
+      "bytes": 14712,
+      "sha256": "350a4970e6466715bce058186f4a7776d756c3f2aab547e4ecb605c7770b0acf"
+    },
+    {
+      "path": "online_passes.csv",
+      "present": true,
+      "bytes": 1716,
+      "sha256": "783130921492e7334295ffc831e3b22d10fc0c2a6af80d3dffd807e7d4365618"
+    },
+    {
+      "path": "online_audit.csv",
+      "present": true,
+      "bytes": 826,
+      "sha256": "9062ea1f7b875507cf46663233dce5b0c0411c34b9b9e1f7a0d09a8cc54ca1f5"
+    },
+    {
+      "path": "online_delta_manifest.csv",
+      "present": true,
+      "bytes": 3435,
+      "sha256": "014695ddbb439ec12ea9571f344c09c42c7d1ddf673279eee3ca5c7e4e8b208c"
+    },
+    {
+      "path": "online_costs.csv",
+      "present": true,
+      "bytes": 1085,
+      "sha256": "f339b78f52b18b88197997da9455304cd79d014537bb4c24fb9b84b90399acf4"
+    }
+  ],
+  "arguments": {
+    "pool": "primary",
+    "reps": "0",
+    "levels": "0",
+    "policies": "all",
+    "candidates": null,
+    "variants": "online",
+    "audit": 2000,
+    "workers": 1,
+    "unseal": false,
+    "overlay_stem": "k1",
+    "base_score": null
+  },
+  "notes": {
+    "implementation_sha256": "2c1edae67e70ed93149244b0e8ed15e48a21ba32df6f8466b39221b394cce417",
+    "online": "every score computed at arrival from own-copy outcomes completed by then; rolling windows ordered by replay completion; terminal pass has zero mismatched jobs",
+    "exact": "monotone per-job withholding (run_consistent_visibility protocol)",
+    "other_class_terms": "exogenous on their original relative clock"
+  }
+}

@@ -268,3 +268,37 @@ def test_a_sealed_visibility_figure_is_a_known_prose_source(tmp_path):
         }
     ]
     assert cpn.check_sealed_prose(paper, [], comparison, []) == []
+
+
+def test_a_sealed_class_term_interval_is_a_known_prose_source(tmp_path):
+    """At the three decimals of its table: a negative end keeps its sign, and an end within
+    half a unit of zero is printed as 0.000."""
+    paper = tmp_path / "paper"
+    paper.mkdir()
+    (paper / "08_experiments.tex").write_text(
+        "class-terms give [\\sealednum{$-$0.043}, \\sealednum{0.894}], a difference up to "
+        "\\sealednum{0.000}, and no \\sealednum{0.512}\n",
+        encoding="utf-8",
+    )
+    cluster = [
+        {
+            "level": "2",
+            "quantity": "Guard(600)|online",
+            "point": "0.7054",
+            "resamples": "100",
+            "lo": "-0.04312",
+            "hi": "0.89404",
+            "sd": "0.21",
+        },
+        {
+            "level": "0",
+            "quantity": "Guard(600)|online - SPJF-E|online",
+            "point": "-0.0151",
+            "resamples": "100",
+            "lo": "-0.0553",
+            "hi": "-0.0002",
+            "sd": "0.014",
+        },
+    ]
+    complaints = cpn.check_sealed_prose(paper, [], [], [], cluster=cluster)
+    assert len(complaints) == 1 and "0.512" in complaints[0]

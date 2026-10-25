@@ -8,8 +8,8 @@ is the published copy of that material. The mapping is one-to-one on the folder 
 
 File names, directory layout and log contents are unchanged, so any path in a paper
 comment can be rewritten by replacing the first component. The table below lists every
-path the paper currently names, with the place that names it, so the change can be made
-and checked line by line.
+path that the paper named when this folder was assembled, with the place that names it, so
+that the change can be made and checked line by line.
 
 ## Paths named in paper source comments
 
@@ -83,6 +83,12 @@ and checked line by line.
 | `S_theory_additions.tex:293` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
 | `S_theory_additions.tex:340` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
 | `S_theory_additions.tex:360` | `prechecks/reservation_guard_verify/out_overR_eq_overC_k1.txt` | `evidence/reservation_guard_verify/out_overR_eq_overC_k1.txt` |
+| `S_theory_additions.tex:188` | `prechecks/general_reference/out_check_conservation.txt` | `evidence/general_reference/out_check_conservation.txt` |
+| `S_theory_additions.tex:188` | `prechecks/general_reference/out_check_group.txt` | `evidence/general_reference/out_check_group.txt` |
+| `S_theory_additions.tex:575` | `prechecks/public_cap_guard/out_check_public_cap.txt` | `evidence/public_cap_guard/out_check_public_cap.txt` |
+| `S_theory_additions.tex:711` | `prechecks/general_reference/out_check_general_reference.txt` | `evidence/general_reference/out_check_general_reference.txt` |
+| `S_theory_additions.tex:711` | `prechecks/general_reference/out_check_exhaustive.txt` | `evidence/general_reference/out_check_exhaustive.txt` |
+| `S_theory_additions.tex:774` | `prechecks/general_reference/out_check_crashes.txt` | `evidence/general_reference/out_check_crashes.txt` |
 | `S_theory_additions.tex:401` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
 | `S_theory_additions.tex:410` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
 | `S_theory_additions.tex:427` | `prechecks/reservation_guard_verify/verification.md` | `evidence/reservation_guard_verify/verification.md` |
@@ -150,16 +156,23 @@ and checked line by line.
 | `supplementary.tex:3399` | `prechecks/guard_optimality_verify/verification.md` | `evidence/guard_optimality_verify/verification.md` |
 
 Line numbers are as of the state of `paper/` when this folder was assembled, and the
-manuscript was being edited at the time; the path strings are what to search for, not the
-line numbers.
+manuscript was being edited at the time. Search for the path strings, not the line
+numbers.
 
 ## Studies the paper names that are not published here
 
-Two working directories are still named from inside this folder and have no copy of their
-own: `prechecks/guard_optimality`, the optimality note that `guard_optimality_verify`
-checks, and `prechecks/recorded_queue_hunt`, the trace search whose conclusion
-`weakness1_attack/AUDIT_A.md` carries and corrects. Neither is named in a paper source
-comment. `evidence/README.md` says why each was left out.
+Files inside this folder still name two working directories that have no copy of their
+own. The first is `prechecks/guard_optimality`, the optimality note that
+`guard_optimality_verify` checks. The second is `prechecks/recorded_queue_hunt`, a trace
+search. `weakness1_attack/AUDIT_A.md` carries its conclusion and corrects it. No source
+comment of the paper names either of them. `evidence/README.md` says why each was left out.
+
+A third, `prechecks/llm_batching`, is named in one source comment of the revision
+(Supplementary Section S13.4, `backfill/backfill.py`). It holds the reference
+implementations against which `revision_r1/backfill_baselines` checked its kernel. It
+belongs to a separate study whose results are not published. The outputs of these gates
+(the checks against the reference implementations) are kept in
+`evidence/revision_r1/backfill_baselines/out/`.
 
 ## Paths named elsewhere in the repository
 
@@ -177,16 +190,16 @@ way if only the paper is updated.
 | `08_experiments.tex` (second physical run, source comment) | `prechecks/platform_testbed/records/summary.json`, `simulator_replay.json` | `evidence/platform_testbed/records/summary.json`, `simulator_replay.json` |
 | `supplementary.tex` (platform back-end section, source comments) | `prechecks/platform_testbed/records/summary.json`, `simulator_replay.json`, `results.md` | `evidence/platform_testbed/records/summary.json`, `simulator_replay.json`, `results.md` |
 
-`prechecks/main_v3/v31/primary_rep*.npz` is the one row that does not map. Those overlay
-traces are rebuilt into the cache directory by `v31_build.py` and are not on disk under
-that path; `scripts/check_overlays.py` needs them rebuilt before it can compare against
-them. The row in `GENERATED.md` should say so.
+`prechecks/main_v3/v31/primary_rep*.npz` is the one row that does not map.
+`v31_build.py` rebuilds those overlay traces into the cache directory, and they are not on
+disk under that path. `scripts/check_overlays.py` needs them rebuilt before it can compare
+against them. The row in `GENERATED.md` should say so.
 
 ## Inside the copied files
 
-`.md`, `.py`, `.sh` and `.ps1` files in this folder had their own `prechecks/…`
-cross-references rewritten to `evidence/…`, so the studies point at each other correctly. The `out_*.txt`
-run logs were **not** touched — they are run output and still print `prechecks/<study>/`.
+In the `.md`, `.py`, `.sh` and `.ps1` files of this folder, we rewrote the `prechecks/…`
+cross-references to `evidence/…`, so the studies point at each other correctly. We did
+**not** touch the `out_*.txt` run logs. They are run output and still print `prechecks/<study>/`.
 Read those as `evidence/<study>/`.
 
 ## Paths added with the clock, absolute-bound and late-report sections (2026-09-23)
@@ -202,3 +215,35 @@ Read those as `evidence/<study>/`.
 | `supplementary.tex` (S4.12 sources) | `prechecks/stale_charging/derivation.md` | `evidence/stale_charging/derivation.md` |
 | `supplementary.tex` (S4.12 sources) | `prechecks/stale_charging/maximal_adversary/` | `evidence/stale_charging/maximal_adversary/` |
 | `05`, `06`, `09`, `supplementary.tex` (the ratio 150) | `prechecks/cost_ratio/out_mean_cost_ratio.txt` | `evidence/cost_ratio/out_mean_cost_ratio.txt` |
+
+## Paths added with the first revision (2026-10)
+
+The revision's source comments name two kinds of path. `prechecks/…` paths map as above.
+`outputs/revision_r1/<study>/<file>` paths name results that git does not track. Their
+copies are at `evidence/revision_r1/<study>/out/<file>`. A file name that follows a path in
+the same comment is in the same folder. Locations are given by section, because the
+revision moved most line numbers.
+
+| paper location | current path | new path |
+| --- | --- | --- |
+| `fig_noise_dose.tex` (header); `08_experiments.tex`, §8.3 (Figure 4 paragraph) | `outputs/revision_r1/noise_dose/noise_dose_table.csv` | `evidence/revision_r1/noise_dose/out/noise_dose_table.csv` |
+| `fig_noise_dose.tex` (header) | `prechecks/revision_r1/noise_dose/noise_dose.py` | `evidence/revision_r1/noise_dose/noise_dose.py` |
+| `fig_noise_dose.tex`, `fig_bound_observed.tex`, `fig_operating_region.tex` (headers and generated blocks) | `prechecks/revision_r1/figures/make_<label>.py` | `evidence/revision_r1/figures/make_<label>.py` |
+| `fig_bound_observed.tex` (header and generated block) | `prechecks/limit_family_selection/limit/limit_summary.csv` | `evidence/limit_family_selection/limit/limit_summary.csv` |
+| `07_data.tex`, §7.3 (validation-only reselection) | `prechecks/limit_family_selection/family/select_families.py`, `choices.csv`, `evaluation.csv`, `gates.txt` | `evidence/limit_family_selection/family/`, same names |
+| `08_experiments.tex`, §8.4 (backfilling paragraph, Table 11) | `outputs/revision_r1/backfill_baselines/backfill_cells.csv`, `backfill_table.csv`, `tab_backfill_body.tex` | `evidence/revision_r1/backfill_baselines/out/`, same names |
+| `08_experiments.tex`, §8.4; `supplementary.tex`, S13.4 | `prechecks/revision_r1/backfill_baselines/` (`REPORT.md`, `make_tex_table.py`) | `evidence/revision_r1/backfill_baselines/` |
+| `supplementary.tex`, S13.4 | `prechecks/llm_batching/backfill/backfill.py` | **not published** — see above |
+| `08_experiments.tex`, §8.5 (sources of Table 12) | `outputs/revision_r1/small_k_shapes/bound_summary.csv`, `outputs/revision_r1/report_delay/summary.csv`, `outputs/revision_r1/report_delay/cells/rep*_L*.csv` | `evidence/revision_r1/small_k_shapes/out/bound_summary.csv`, `evidence/revision_r1/report_delay/out/summary.csv`, `evidence/revision_r1/report_delay/out/cells/rep*_L*.csv` |
+| `08_experiments.tex`, §8.6 | `outputs/revision_r1/small_k_shapes/guidance.csv`, `guidance.txt`, `shape_table.csv`, `bound_summary.csv` | `evidence/revision_r1/small_k_shapes/out/`, same names |
+| `08_experiments.tex`, §8.6 | `prechecks/revision_r1/small_k_shapes/REPORT.md` | `evidence/revision_r1/small_k_shapes/REPORT.md` |
+| `08_experiments.tex`, §8.8 (abandonment paragraph); `supplementary.tex`, S13.3 | `prechecks/abandonment_loop/MODEL.md`, `REPORT.md`, `out/cells.csv` | `evidence/abandonment_loop/`, same names |
+| `08_experiments.tex`, §8.8; `supplementary.tex`, S13.3 | `prechecks/revision_r1/abandonment/summary_numbers.py`, `make_tex_table.py` | `evidence/revision_r1/abandonment/`, same names |
+| `08_experiments.tex`, §8.8; `supplementary.tex`, S13.3 | `outputs/revision_r1/abandonment/summary_numbers.txt`, `tab_s_abandon_body.tex` | `evidence/revision_r1/abandonment/out/`, same names |
+| `08_experiments.tex`, §8.9 (Table 14) | `outputs/revision_r1/report_delay/summary.csv`; `prechecks/revision_r1/report_delay/REPORT.md` | `evidence/revision_r1/report_delay/out/summary.csv`; `evidence/revision_r1/report_delay/REPORT.md` |
+| `08_experiments.tex`, §8.9 and §8.10 (physical run) | `prechecks/weakness1_attack/physical_numbers.json` | `evidence/weakness1_attack/physical_numbers.json` |
+| `08_experiments.tex`, §8.10 (Table 15) | `outputs/revision_r1/guard_overhead/table.md`, `measure.json` | `evidence/revision_r1/guard_overhead/out/`, same names |
+| `supplementary.tex`, S13.1 (Table S35) | `outputs/revision_r1/small_k_shapes/tab_s_small_k_body.tex`; `prechecks/revision_r1/small_k_shapes/make_tex_table.py` | `evidence/revision_r1/small_k_shapes/out/tab_s_small_k_body.tex`; `evidence/revision_r1/small_k_shapes/make_tex_table.py` |
+| `supplementary.tex`, S13.2 (Table S36) | `outputs/revision_r1/accoding_sealed/tab_s_accoding_sealed_body.tex`; `prechecks/revision_r1/accoding_sealed/make_tex_table.py` | `evidence/revision_r1/accoding_sealed/out/tab_s_accoding_sealed_body.tex`; `evidence/revision_r1/accoding_sealed/make_tex_table.py` |
+| `supplementary.tex`, S13.5 (Table S38) | `outputs/revision_r1/online_cluster/tab_s_online_cluster_body.tex`; `prechecks/revision_r1/online_cluster/make_tex_table.py` | `evidence/revision_r1/online_cluster/out/tab_s_online_cluster_body.tex`; `evidence/revision_r1/online_cluster/make_tex_table.py` |
+| `supplementary.tex`, S13.5 (Table S39) | `outputs/revision_r1/sealed_online_cluster/tab_s_sealed_online_cluster_body.tex`; `prechecks/revision_r1/sealed_online_cluster/make_tex_table.py` | `evidence/revision_r1/sealed_online_cluster/out/tab_s_sealed_online_cluster_body.tex`; `evidence/revision_r1/sealed_online_cluster/make_tex_table.py` |

@@ -182,3 +182,25 @@ def test_other_class_complete_withholding_matches_record_mask():
             target, baseline[target], withhold_other_pool_classes=True, pool_terms={"s"}
         )
         np.testing.assert_array_equal(changed, reference[target])
+
+
+def test_a_term_with_refit_cut_offs_reads_its_own_heavy_flags():
+    """A target whose cut-offs were refit rebuilds the sweep run under those cut-offs, and
+    every other target the sweep under the prepared data's own."""
+    prepared, arrival, available = _random_prepared(400)
+    prepared.semester[200:] = "refit"
+    refit = SimpleNamespace(**vars(prepared))
+    refit.heavy = (prepared.log_cost > 1.0).astype(float)
+    fixed = feature_frame(prepared, arrival, available)[list(HIST_COLS)].to_numpy()
+    refitted = feature_frame(refit, arrival, available)[list(HIST_COLS)].to_numpy()
+    in_refit = prepared.semester[prepared.submission_rows] == "refit"
+    assert not np.array_equal(fixed[in_refit], refitted[in_refit])
+    baseline = np.where(in_refit[:, None], refitted, fixed)
+    indexed = M4HistoryRecomputer(prepared, arrival, available, {"refit": refit.heavy})
+    rebuilt = np.vstack([indexed.recompute(i, row) for i, row in enumerate(baseline)])
+    np.testing.assert_array_equal(rebuilt, baseline)
+    for target in range(len(baseline)):
+        own = indexed.same_copy_sources(target)
+        release = available[prepared.submission_rows[own]]
+        visible = indexed.recompute_visible(target, baseline[target], own, release)
+        np.testing.assert_array_equal(visible, rebuilt[target])

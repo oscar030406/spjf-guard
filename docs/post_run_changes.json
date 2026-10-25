@@ -3,13 +3,13 @@
   "files": [
     {
       "path": "scripts/check_paper_numbers.py",
-      "sha256": "4da37c89de93e50ef398c92788ac5af73b671de2469b588e3c9fa4db0837ea85",
-      "why": "Check C looked for every sourced numbers.csv row under \\devnum{}, so a sealed figure quoted in prose (a 'sealed.' key) always failed; it now looks under the key's own macro. run() gains sealed_prose so that a pass that reads no exact or online output can leave the sealed prose to the pass that reads them all. 2026-09-26: run() and --sealed-contrast-dir add the figures of outputs/sealed_dev_contrast/contrast.csv (rows not from the development pool) to the known sources of sealed prose."
+      "sha256": "638d49f970f2744fad71d31ece19c3537683c5e225528f2d12d762a3a56d9a00",
+      "why": "Check C looked for every sourced numbers.csv row under \\devnum{}, so a sealed figure quoted in prose (a 'sealed.' key) always failed; it now looks under the key's own macro. run() gains sealed_prose so that a pass that reads no exact or online output can leave the sealed prose to the pass that reads them all. 2026-09-26: run() and --sealed-contrast-dir add the figures of outputs/sealed_dev_contrast/contrast.csv (rows not from the development pool) to the known sources of sealed prose. 2026-10-23 (commit 19cbc30, E-SC1): once outputs/sealed_online_cluster_bootstrap/ has its manifest, the point and both ends of each row of its bootstrap_summary.csv, at three decimals, are known sources of sealed prose. 2026-10-26: COINCIDENCE gains supplementary:tab:s_closed:24, the old closed-loop p99 5.609 that Table S21 no longer prints after the rerun on overlays 0-4."
     },
     {
       "path": "scripts/check_generated.py",
-      "sha256": "560adb92e63cae2024e1e2c92a750ed6e073de79befaf5767ee7af73e1834798",
-      "why": "The legacy paper-prints pass (outputs/paper_tables) reads no exact or online output; once the sealed exact run exists it leaves the sealed prose to check_exact_paper_prints, which checks it against every sealed output. 2026-09-26: that pass also reads outputs/sealed_dev_contrast when its manifest exists. 2026-09-27: the machine-path gate also looks for D: drive paths and scans paper/*.tex and paper/**/*.md; the one path exception, for a git-ignored file the scan already skips, is removed, so a clean clone passes the hygiene test."
+      "sha256": "d83352280618341905bbb74565d08f0edd1938827a6cbca810f02af4340b5e43",
+      "why": "The legacy paper-prints pass (outputs/paper_tables) reads no exact or online output; once the sealed exact run exists it leaves the sealed prose to check_exact_paper_prints, which checks it against every sealed output. 2026-09-26: that pass also reads outputs/sealed_dev_contrast when its manifest exists. 2026-09-27: the machine-path gate also looks for D: drive paths and scans paper/*.tex and paper/**/*.md; the one path exception, for a git-ignored file the scan already skips, is removed, so a clean clone passes the hygiene test. 2026-10-20: four documented path exceptions, each a record whose path is the subject of a row: the append-only sealed access ledger (a stopped run's error message names its output directory), the ACcoding protocol lock (the test command of its freeze names the interpreter; the sealed run's manifest holds the lock's hash), and two notes about the authors' machine (a folder inventory and a decision log). No check reads these paths. Later on 2026-10-20: the folder inventory and the decision log name those folders by drive and relative path instead, and their two exceptions are removed. The published package leaves both notes out, and there the test that every exception names an existing file failed. 2026-10-23 (commit 19cbc30, E-SC1): the exact paper-prints pass hands the sealed class-term summary to check_paper_numbers when its manifest exists."
     },
     {
       "path": "tests/test_eval_scores.py",
@@ -23,8 +23,8 @@
     },
     {
       "path": "tests/test_sealed_paper_tables.py",
-      "sha256": "0b8012f8f9dc90b1c4c8b805a3d9efc4a36b483f00620ee26343bd5f7cb4a765",
-      "why": "Tests for the two check_paper_numbers changes: a sourced sealed figure in prose counts as printed under \\sealednum{}, and a pass told to leave the sealed prose alone does not count an unknown figure."
+      "sha256": "d4d61b290fb412658dd65bffdf99c23077f0bc8365e048eea554e3c1ff594403",
+      "why": "Tests for the two check_paper_numbers changes: a sourced sealed figure in prose counts as printed under \\sealednum{}, and a pass told to leave the sealed prose alone does not count an unknown figure. 2026-10-23 (commit 19cbc30, E-SC1): a test that the ends of a sealed class-term interval in prose count as printed at three decimals, and that a figure from no source is still reported."
     },
     {
       "path": "scripts/online_paired_differences.py",
@@ -65,6 +65,126 @@
       "path": "tests/test_sealed_dev_contrast.py",
       "sha256": "4cd37e7bef02a41cabed408434a7f03177414db4cd634ea9e29a1bd8fda8b91a",
       "why": "New on 2026-09-26: tests of scripts/sealed_dev_contrast.py and of the number check accepting its sealed figures but not its development ones."
+    },
+    {
+      "path": "scripts/run_online_visibility.py",
+      "sha256": "24e921ec8209d6472de2e104df2f3d2c73b407432000c45352db221354ca3b1f",
+      "why": "2026-09-27: two options for the revision's development runs, both absent from a plain run's signature document: --overlay-stem replays another trace of the same pool (the single-server k1 trace, whose copies carry no round, get round j for a class-term's j-th copy), and --base-score replaces the base score (the top1short corruption, closed under submission rows, or a learned policy.json). The sealed run is refused with either option; with neither, every function returns what it returned before, which the rerun of the 36 earlier validation candidates checks value by value. 2026-10-01: three more options, each absent from a plain run: --aging-grid replays the configured aging credits on the online score (the online reselection of the credit), a policy named Timeout(theta=X) replays a free threshold whose promise is X + (3 - 2/k)L, and --second-sealed-evaluation lets the sealed terms replay other policies into an out-dir of their own (user decision of 2026-10-01, reported as an evaluation after the one sealed run). Timeout(G) keeps its threshold arithmetic, so earlier rows are unchanged (tests/test_online_suites.py). Also --servers k replays each cell's trace at k servers for the capacity sweep (development pools only; k enters the signature document only when given). 2026-10-03: _frozen_log_models hands fit_frozen_m4_models the event frame, its new keyword; nothing else changes."
+    },
+    {
+      "path": "scripts/select_online.py",
+      "sha256": "7ba0cd5109f2b603b05aeb4ba415c55ff17c1e4703dfe4881f72b248721d0f9a",
+      "why": "2026-09-27: 'candidates --all' lists every grid point (258) and 'choose' takes --cells, --candidates, --choices and --variants, so the full online and exact reselections are chosen by the same rule; the default call writes the earlier online_choices.csv byte for byte. No sealed command runs it."
+    },
+    {
+      "path": "scripts/build_coending_overlays.py",
+      "sha256": "14217cb1666a794a012e15bfb3fd8eae979bb339e067ac9a561afb35800fa874",
+      "why": "New on 2026-09-27: builds the primary overlays with co-ending runs merged (earliest arrival kept, largest capped cost) or dropped, for the co-ending sensitivity; development pool only."
+    },
+    {
+      "path": "scripts/run_online_cluster_bootstrap.py",
+      "sha256": "019dec919ab6dc00836b4e5357fd5a20dc4b684249ce3fe4c769658099d840e1",
+      "why": "New on 2026-09-27: the class-term cluster bootstrap under the online replay; the same draws as run_cluster_bootstrap, a class-term drawn twice gets distinct rounds so the two copies keep separate histories; resample -1 must reproduce the online development cells. Development pool only. 2026-10-02 (commit c0ca6e5): a per-row checkpoint for each overlay job, so a stopped job resumes at its last row; a resumed part is byte-identical to an uninterrupted one. Supplementary Table S38 comes from this version. 2026-10-23 (commit 7345855, E-SC1): --pool sealed --unseal draws the class-terms of the sealed terms in the same way, with the frozen sealed scores; resample -1 must reproduce outputs/sealed_online_visibility/online_cells.csv, and the read goes through the protocol lock and the sealed access ledger. The default (primary pool) is unchanged, so Table S38 is unchanged. Supplementary Table S39 comes from this version."
+    },
+    {
+      "path": "scripts/train_learned_policy.py",
+      "sha256": "9505cc780d8dd049920ba6e483f5afb9887ec2a763c1756832f8694b738500cb",
+      "why": "New on 2026-09-27: a scoring policy log(SPJF-E) + w.phi(static submission features), w found by the cross-entropy method on the validation pool, unguarded; development data only."
+    },
+    {
+      "path": "scripts/run_accoding_heldout.py",
+      "sha256": "60d6d57e4f3e1a76b2e65cfa10e01140b870d6b5b11ba3a09cd9d00820c8ad0b",
+      "why": "New on 2026-09-28: the ACcoding held-out pipeline (train, validation, dev-test and sealed-tail blocks by row position); its sealed mode reads the tail only after freeze_accoding.py records the lock. 2026-10-01 to 2026-10-03 (commits f553800, 453e3b0, 084399c): every scored policy is also replayed on the online clock, with the scores of one causal pass (scripts/accoding_online.py) through LightGBM's single-row scorer. protocol_lock_accoding.json, frozen at b101bd4 on 2026-10-03, records this version, which made the sealed run of that day (Supplementary Section S13.2)."
+    },
+    {
+      "path": "scripts/freeze_accoding.py",
+      "sha256": "d8e35c264bb07b45c64c86660c8c004d27f48100dd19d03c580691ab2619008c",
+      "why": "New on 2026-09-28: freezes the ACcoding held-out configuration, code and parameters before the one sealed-tail run."
+    },
+    {
+      "path": "tests/test_accoding_heldout.py",
+      "sha256": "a06e8bcb21739e85b343c13b4cd3aeaadfadaee571eddab07d946654d2c6dba4",
+      "why": "New on 2026-09-27/28: tests of the script of the same name (no sealed data). 2026-10-01 to 2026-10-03 (commits f553800, 453e3b0, 084399c): tests of the online clock: the one-pass scores equal the iterated fixed point, and the single-row and batch scorers agree bit for bit. protocol_lock_accoding.json records this version."
+    },
+    {
+      "path": "tests/test_coending_overlays.py",
+      "sha256": "bdef7be6e7f1aeaa269ef0d92918406095f43594702b29ba9b0c2bcf456824b9",
+      "why": "New on 2026-09-27/28: tests of the script of the same name (no sealed data)."
+    },
+    {
+      "path": "tests/test_online_base_score.py",
+      "sha256": "f4792f90dd8e0de160ca42c2bcd5ad5b6eb7191779baf356a5199658f15012da",
+      "why": "New on 2026-09-27: tests of run_online_visibility's --base-score models (top1short, learned) and of the rounds given to the k1 trace's copies (no sealed data)."
+    },
+    {
+      "path": "tests/test_online_cluster_bootstrap.py",
+      "sha256": "e02e653fe3ffca8e42bf4461d0c81a5abcc2ff1f3488ea80b979169b9e3fccf7",
+      "why": "New on 2026-09-27/28: tests of the script of the same name (no sealed data)."
+    },
+    {
+      "path": "scripts/run_coending_online.py",
+      "sha256": "6a3214f8b4ad3972bc7f295a2a226a94642725190b88d2d9f9d2b4edf78e13d6",
+      "why": "New on 2026-09-28: the online replay on the co-ending overlays; each worker refits and verifies the frozen model on the unmodified data, then rebuilds the own-copy history index and recomputer on the variant's job set. Development pool only."
+    },
+    {
+      "path": "tests/test_coending_online.py",
+      "sha256": "db9a6cf804f224df7e7cfec7a61c5e7b049b09f8964029e37f02809310ae083d",
+      "why": "New on 2026-09-28: tests of scripts/run_coending_online.py (no sealed data)."
+    },
+    {
+      "path": "scripts/fast_refine.py",
+      "sha256": "c9b4077d07b998d10da227d5d01f3e3cb46a0146b0fff045887bdd4dbf0cbdf4",
+      "why": "New, not used by any run: a numba recompute_visible for the online replay, equal bit for bit to src/spjf_guard/features/refine.py on 20,000 captured pauses; kept for a later run, src untouched"
+    },
+    {
+      "path": "tests/test_fast_refine.py",
+      "sha256": "4ffc021b12ab2d6aff721ea52e316bcf68bf9b203f0b305aa1147b095e4ccfed",
+      "why": "New: pins fast_refine's pairwise mean and rolling summary to numpy and refine._summary bit for bit"
+    },
+    {
+      "path": "tests/test_online_suites.py",
+      "sha256": "8509759cf873d77a04d860c622884f17c1292e1f4b41d3f9e9d57c0537e29555",
+      "why": "Tests the aging credit grid, free Timeout thresholds and the second-sealed-evaluation gate added to run_online_visibility.py on 2026-10-01."
+    },
+    {
+      "path": "scripts/accoding_online.py",
+      "sha256": "0134999128fecdfffb8f945632421f9569ce1741f0d031abafc2dc1b629aba74",
+      "why": "New on 2026-10-03 (commits 453e3b0, 084399c): the online clock of the ACcoding held-out evaluation. Scores are computed in one causal pass (simulate_kernel's loop from the package helpers, paused before an unscored arrival) and handed to online_fixed_point as its start, which confirms them in its first round. Imported only by scripts/run_accoding_heldout.py; protocol_lock_accoding.json records this version. It reads no CodeBench term and changes no result of the frozen CodeBench run."
+    },
+    {
+      "path": "scripts/emit_gap_harm_figure.py",
+      "sha256": "9a17e3afddb4e6995c0150f75107e274c0b2930f31e1853f91e7a9fb250e53de",
+      "why": "Revision of 2026-10-19 (commit 406ec0a, reviewer 2, comment 1): Supplementary Figure S1 takes the style shared by all figures (paper/figures/pgfstyle.tex) and is no longer scaled; the plotted coordinates, the files read and the selection marked are unchanged."
+    },
+    {
+      "path": "src/spjf_guard/predict/forward.py",
+      "sha256": "8b884c70dcc3d14b60dd3103f4d90e6454029eb5af5a7ded1b663f658fffa835",
+      "why": "2026-10-03: fit_frozen_m4_models takes the event frame (keyword events) and gives each target the design fit_forward gave it (_design_for_target, the original variant's M4/global/all-results reading). A target whose fixed cut-offs would include its own rows (2019-2 in configs/sensitivity_term2019_20260926.yaml) was refused; its model, design and history rows now come from the cut-offs refit on its training rows, and FrozenM4Models.refit_heavy carries their heavy flags. Every target of configs/main.yaml, development and sealed, uses the fixed cut-offs, for which the function returns what it returned before: the online replay of overlay 0, level 2 (SPJF-E, Guard(600)) reproduces outputs/dev_online_visibility, and both frozen refits reproduce the stored primary-pool scores bit for bit."
+    },
+    {
+      "path": "src/spjf_guard/features/refine.py",
+      "sha256": "0293b7ca9a8eb1fa8755e37cf67dea3b3002644bea80374bd4975c5ad4a86e48",
+      "why": "2026-10-03: M4HistoryRecomputer takes refit_heavy (term -> heavy flags under the cut-offs refit for that term, from FrozenM4Models.refit_heavy); a target of such a term reads those flags in its two heavy-rate fields. With none given, as for every target of configs/main.yaml, every row is rebuilt as before."
+    },
+    {
+      "path": "scripts/run_consistent_visibility.py",
+      "sha256": "bb326e495016498720649cb8290528040bc6e2eaba9700399d55a48c5d7f0da4",
+      "why": "2026-10-03: prepare_context hands fit_frozen_m4_models the event frame and the history recomputer the frozen models' refit heavy flags (src/spjf_guard/predict/forward.py and features/refine.py of the same date); for configs/main.yaml both calls return what they returned before."
+    },
+    {
+      "path": "scripts/run_archived_scores_online.py",
+      "sha256": "0c31fb75ad0f14d25b57d9ae20bcc3f9eafce8ea1a0463b69dcaea1c0ffb76e9",
+      "why": "New on 2026-10-03: the archived ranking-score fits of evidence/ranking_score (Table S14; the log column is SPJF-M4refit of Table S16) replayed online through run_online_visibility. Each worker refits rs_fit's models with LightGBM's row-wise histograms forced and asserts that they reproduce every stored primary-pool prediction; the run signature also hashes this file and the stored predictions. Development pool only; no sealed data."
+    },
+    {
+      "path": "tests/test_frozen_m4.py",
+      "sha256": "ae08efb3b4ea3508b584b269bc428373261567d7944da67ba96ce86969390630",
+      "why": "2026-10-03: a target with refit cut-offs is frozen on the design its forward fit used: on a four-term toy the frozen models reproduce fit_forward's scores, the history rows and heavy flags are those of the refit sweep, and a rebuilt history scores as stored."
+    },
+    {
+      "path": "tests/test_feature_refine.py",
+      "sha256": "a66b83a5d8c08c0e703d250ee3ba6a7e640ef3b830a5a2ca1f4bef229e1a578b",
+      "why": "2026-10-03: a term with refit cut-offs reads its own heavy flags in recompute and recompute_visible; every other term reads the prepared data's."
     }
   ]
 }
