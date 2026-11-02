@@ -93,7 +93,7 @@ acknowledgement or consensus round is needed for the reports. The account over[q
 only on the set of reports received, and a duplicate report only raises it. Therefore, the
 bound still holds. The guard's decision is the same on every replica that has the same history.
 A replica whose reports lag by at most δ is a scheduler with charges δ late
-(Proposition 12).
+(Proposition 3).
 
 The implementation stores no account per job. over[q] = TC − F(q), one Fenwick prefix sum
 for any waiting job. A job takes about 50 bytes: one Fenwick cell, one `zs` entry, one

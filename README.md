@@ -348,9 +348,9 @@ is what writes that file. Rows marked *no computation* are definitions or illust
 |---|---|
 | Section 6: the identity, the guard bound, the necessity of a work budget and the price of the guarantee | `formal/` (Lean 4; Supplementary Section S12 lists what it covers) |
 | Section 6 and Supplementary S4, S8: the identity, the guard bound, tightness | `evidence/guard_theory/` |
-| Proposition 10 (maximum waiting time) and Table 10 | `evidence/timeout_rule/`, `evidence/new_theory_refutation/` |
-| Proposition 11 (absolute bound) and Section 8.5 | `evidence/envelope_bound/` |
-| Proposition 12 (late completion reports) and Section 8.9 | `evidence/stale_charging/`, `evidence/revision_r1/report_delay/` |
+| Proposition 1 (maximum waiting time) and Table 10 | `evidence/timeout_rule/`, `evidence/new_theory_refutation/` |
+| Proposition 2 (absolute bound) and Section 8.5 | `evidence/envelope_bound/` |
+| Proposition 3 (late completion reports) and Section 8.9 | `evidence/stale_charging/`, `evidence/revision_r1/report_delay/` |
 | The cost ratio 150 (Sections 1, 6.4, 10) | `evidence/cost_ratio/` |
 | Supplementary S7.1–S7.4 | `evidence/guard_optimality_verify/` |
 | Supplementary S7.3, S7.7, S7.8 (Propositions S8, S17–S19) | `evidence/general_reference/` |

@@ -6,9 +6,9 @@ P-abs? This bound is (V_i^- + B_max)/k + (2 - 1/k)L for guarded policies and
 anyone state before about the fluid comparison (L1) and a maximum-waiting-time rule
 (P-clock)?
 
-Paper items: Proposition 11 and the operator rule B_max = kD - sigma - (2k-1)L (Section
+Paper items: Proposition 2 and the operator rule B_max = kD - sigma - (2k-1)L (Section
 6.7, "An Absolute Bound from the Arrival Log", first drafted in
-`evidence/timeout_rule/draft_clock_main.tex`); the check of Proposition 11 on 304 runs,
+`evidence/timeout_rule/draft_clock_main.tex`); the check of Proposition 2 on 304 runs,
 the absolute-bound paragraph and the sigma forecast with its margin in Section 8.5; the
 related-work sentence on maximum waiting times (Section 2.3); the bibliography of the new
 text.
@@ -52,7 +52,7 @@ Source: `out_summarise_tight.txt:3-14`; per row in `tight_bound.csv` and
 and Fixed at G = 300, 600, 1200 s, all with B_max = k(G - (3 - 2/k)L), L = 60 s. At k = 1
 the FCFS rows sit on the bound for every job (3,209,347 ties, `envelope_bound.csv` row
 k1_rep0 FCFS), as P-abs predicts. At k = 1 the tight and old bounds coincide (shift 0) and P-abs
-reduces to Theorem 7 (Theorem 3 when this study was run).
+reduces to Theorem 3.
 
 Sigma forecast (part b), from `envelope_sigma_validation.csv`, validation sigma computed at
 the primary k of each level (`out_tight_bound.txt:310-336`). The paired validation sigma

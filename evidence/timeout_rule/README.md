@@ -3,7 +3,7 @@
 Question: does a maximum waiting time (serve the oldest job once it has waited theta)
 keep the guard's FCFS-relative promise? What does it give up at the same promise?
 
-Paper items: Proposition 10 and the charge comparison (Section 6.6), the related-work
+Paper items: Proposition 1 and the charge comparison (Section 6.6), the related-work
 sentence on maximum waiting times (Section 2.3), the introduction's contribution list,
 Table 10 and the equal-excess comparison (Section 8.4), the Guard(300) figures of the
 fixed-window paragraph in the same section, the check summary in Supplementary Section

@@ -6,8 +6,8 @@ bound and the rule that combines the clock with the guard. Which statements surv
 line-by-line reading and an adversarial search, and in what wording?
 
 **Paper items.** Lemma S5 (the fluid comparison), the counterexamples and the check
-summary of Supplementary Section S4.11; the wording of Proposition 10 and of the combined
-rule (Section 6.6) and of Proposition 11 (Section 6.7).
+summary of Supplementary Section S4.11; the wording of Proposition 1 and of the combined
+rule (Section 6.6) and of Proposition 2 (Section 6.7).
 
 **Inputs.** None from `data/`. Synthetic integer instances only, and no sealed data. The
 text under test is `evidence/timeout_rule/draft_clock_main.tex` and

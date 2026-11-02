@@ -1,9 +1,9 @@
 # Late completion charges: a check with the strongest adversary
 
-**Question.** Does Proposition 12 (Proposition 3 when this study was run) survive an adversary that is not limited to static
+**Question.** Does Proposition 3 survive an adversary that is not limited to static
 priority keys and fixed delays? Are its constants attained for k >= 2?
 
-**Paper items.** Proposition 12 (Section 6.8): the sentence that states that the bound is
+**Paper items.** Proposition 3 (Section 6.8): the sentence that states that the bound is
 attained in the limit at k = 1 and k = 2 for delta > 0. Supplementary Section S4.12: the
 k >= 2 instances, the per-server variant and the paragraph describing the checks.
 

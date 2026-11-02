@@ -1,6 +1,6 @@
 # Late completion reports
 
-**Question.** Reviewer 1, Comment 3, and Reviewer 2, Comment 4: Proposition 12 bounds the
+**Question.** Reviewer 1, Comment 3, and Reviewer 2, Comment 4: Proposition 3 bounds the
 guard when completion reports arrive up to δ late. What does such a delay cost on the real
 load, and does every job stay within the bound?
 
