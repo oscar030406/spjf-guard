@@ -411,6 +411,9 @@ checkout.
 
 The code is released under the MIT licence (`LICENSE`). The licence does not cover the
 datasets. Each dataset keeps its publisher's terms. To cite this package, cite the
-manuscript and this archive: Guo, Y.; Lin, Z.; Huo, C.; Song, Y. Code and data for "Prediction-Driven
+article and this archive. The article: Guo, Y.; Lin, Z.; Huo, C.; Song, Y.
+Prediction-Driven Non-Preemptive Scheduling with Bounded Overtaking: A Per-Job Wait
+Guarantee. Mathematics 2026, 14, 4020, doi:10.3390/math14214020. The archive:
+Guo, Y.; Lin, Z.; Huo, C.; Song, Y. Code and data for "Prediction-Driven
 Non-Preemptive Scheduling with Bounded Overtaking: A Per-Job Wait Guarantee", version
 1.1.0-revision. Zenodo, 2026, doi:10.5281/zenodo.23643805. `CITATION.cff` gives the same in machine-readable form.
